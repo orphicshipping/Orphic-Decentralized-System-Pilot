@@ -215,6 +215,8 @@ The [F2 checker](docs/PROOF_WORKLOADS.md) prepares exact finite-homology calcula
 
 ### Temperature measurement and qualification
 
+A retained [public TCLab temperature experiment](docs/TEMPERATURE_RECORDINGS.md) exercises offline acquisition-file import, observation export and Session save/reopen. The importer binds the original 201-row CSV to a reviewed source manifest, preserves irregular elapsed host times, and keeps T1/T2 sensor temperatures separate from Q1/Q2 heater-command percentages. This archived experiment does not establish a calibrated polymer measurement or supply shell/core, measured heat-power or independent-reference inputs to the thermal estimator.
+
 There are two separate computational paths: affine conversion of 1–64 sensor observations with joint raw/calibration covariance, and [thermal estimation from recordings](docs/MEASURED_THERMAL.md). The latter takes already-calibrated shell, power and ambient streams, retains a held-out core reference, and does not propagate its retained input uncertainty. These paths have separate contracts and no automatic handoff. The temperature processing profile also supplies a separate numerical checker against an exact rational first-order reference. Its PASS/FAIL and verification occurrence remain distinct from processing acceptance and physical qualification; inspect the audit even when the graph completes.
 
 Prepare the synthetic processing profile with `python -m ciw.agent_mcp temperature-config --output-dir results/temperature-agent`. It intentionally has an incomplete uncertainty budget, so acceptance remains indeterminate. The [agent protocol](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) explains serving it and supplying an operator-prepared request.

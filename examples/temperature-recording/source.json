@@ -1,0 +1,24 @@
+{
+  "schema": "ciw.temperature-recording-source.v1",
+  "raw_sha256": "sha256:0be6231c36b8f5b1d05ee999ad7d5ec06cc66a39bc7392c7cdf85d57a5d034d7",
+  "origin": "public_experimental_recording",
+  "producer": "APMonitor/arduino TCLab",
+  "source_url": "https://raw.githubusercontent.com/APMonitor/arduino/f36e65a70dd7122d1829883899e40e56bf6c4279/2_Regression/Hybrid_MIMO/Python_GEKKO/data.txt",
+  "revision": "f36e65a70dd7122d1829883899e40e56bf6c4279",
+  "license": "Apache-2.0",
+  "protocol_url": "https://github.com/APMonitor/arduino/blob/f36e65a70dd7122d1829883899e40e56bf6c4279/2_Regression/Hybrid_MIMO/Python_GEKKO/generate_data.py",
+  "columns": {
+    "time": "Time (sec)",
+    "T1": " Temperature 1",
+    "T2": " Temperature 2",
+    "Q1": " Heater 1",
+    "Q2": " Heater 2"
+  },
+  "clock": {
+    "time_kind": "elapsed_host_time"
+  },
+  "time_unit": "s",
+  "temperature_unit": "degC",
+  "command_unit": "%",
+  "source_description": "Publisher-supplied archived TCLab experiment, 201 rows. Adjacent hardware code timestamps host elapsed time before separate T1/T2 queries and then sends same-row Q1/Q2 commands; initial readings precede time zero. Heater percentages are commands, not measured power. Serial, calibration, covariance and timing uncertainty are unknown. No run attestation links this code revision to these bytes. This import is not a fresh experiment or polymer qualification."
+}

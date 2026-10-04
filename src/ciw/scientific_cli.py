@@ -39,6 +39,19 @@ def main(argv: list[str] | None = None) -> int:
     command = commands.add_parser("catalog")
     command.add_argument("capability", nargs="?")
     command.add_argument("--json", action="store_true")
+    command = commands.add_parser("import-temperature", help="Retain a reviewed temperature CSV; no device contact")
+    command.add_argument("--csv", type=Path, required=True)
+    command.add_argument("--manifest", type=Path, required=True)
+    command.add_argument("--output-dir", type=Path, required=True)
+    command.add_argument("--json", action="store_true")
+    command = commands.add_parser("inspect-temperature", help="Recheck retained temperature bytes offline")
+    command.add_argument("--recording", type=Path, required=True)
+    command.add_argument("--json", action="store_true")
+    command = commands.add_parser("temperature-observations", help="Export T1/T2 records with unknown uncertainty explicit")
+    command.add_argument("--recording", type=Path, required=True)
+    command.add_argument("--channel", choices=["T1", "T2"], required=True)
+    command.add_argument("--output", type=Path, required=True)
+    command.add_argument("--json", action="store_true")
     command = commands.add_parser("observations")
     command.add_argument("--workspace", type=Path, required=True)
     command.add_argument("--workspace-sha256", required=True)
@@ -83,6 +96,32 @@ def main(argv: list[str] | None = None) -> int:
             command.add_argument("--entity", required=True)
     args = parser.parse_args(argv)
     try:
+        if args.command in {"import-temperature", "inspect-temperature", "temperature-observations"}:
+            from .temperature_recording import import_recording, inspect_recording, observation_stream, MAX_BYTES
+            from .control_contracts import save_new
+            if args.command == "import-temperature":
+                from .temperature_recording_session import make_source
+                from .session import Session
+                with args.csv.open("rb") as stream:
+                    raw = stream.read(MAX_BYTES + 1)
+                recording = import_recording(raw, load(args.manifest))
+                source = make_source(recording)
+                # Validation precedes creation; existing output is never replaced.
+                args.output_dir.mkdir(parents=True, exist_ok=False)
+                save_new(args.output_dir / "recording.json", recording)
+                save_new(args.output_dir / "run.json", source)
+                session = Session(source, args.output_dir)
+                session.save_workspace(args.output_dir / "workspace.json")
+                value = {**inspect_recording(recording), "workspace": str(args.output_dir / "workspace.json")}
+            else:
+                recording = load(args.recording)
+                if args.command == "inspect-temperature":
+                    value = inspect_recording(recording)
+                else:
+                    value = observation_stream(recording, args.channel)
+                    save_new(args.output, value)
+            _show(value, args.json)
+            return 0
         if args.command == "catalog":
             _show(scientific.catalog(args.capability), args.json)
             return 0
