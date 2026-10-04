@@ -1,11 +1,22 @@
 from copy import deepcopy
 import json
+import os
 from pathlib import Path
 import re
+import shutil
 import subprocess
+import tempfile
 import pytest
 from ciw.control_contracts import bytes_ref
 from ciw.foundry_childhood import ChildhoodBinding,evaluate_data,policy,bounded_state_equal,source
+
+
+def remove_test_project(path):
+    # A failing regression must not strand its deliberately long cache tree.
+    assert path.resolve().parent == Path(tempfile.gettempdir()).resolve()
+    assert path.name.startswith('1792-childhood-foundry-')
+    target = '\\\\?\\' + str(path) if os.name == 'nt' else str(path)
+    if Path(target).exists(): shutil.rmtree(target)
 
 @pytest.fixture
 def captured():
@@ -47,7 +58,8 @@ def test_numeric_json_bound_does_not_erase_identity():
 @pytest.mark.parametrize('newline', [b'\n', b'\r\n'], ids=['LF', 'CRLF'])
 @pytest.mark.parametrize('mutation', [None, 'project.godot', 'foundry/childhood_slice.gd'],
                          ids=['unchanged', 'project-mutated', 'script-mutated'])
-def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, monkeypatch, newline, mutation):
+@pytest.mark.parametrize('long_cache', [False, True], ids=['ordinary-cache', 'long-cache'])
+def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, monkeypatch, newline, mutation, long_cache):
     game_root = tmp_path / 'source'
     game = game_root / 'game'
     (game / 'foundry').mkdir(parents=True)
@@ -60,10 +72,35 @@ def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, m
     executable.write_bytes(b'fake engine for adapter test')
     binding = ChildhoodBinding(executable, game_root, bytes_ref(executable.read_bytes()))
     calls = []
+    isolated_roots = []
+    outside = tmp_path / 'outside'
+    outside.mkdir()
+    sentinel = outside / 'keep.txt'
+    sentinel.write_bytes(b'outside the temporary project')
+    native_run = subprocess.run
 
     def fake_engine(command, **kwargs):
         calls.append(command)
         isolated_game = Path(command[command.index('--path') + 1])
+        assert not str(isolated_game).startswith('\\\\?\\')
+        isolated_roots.append(isolated_game.parent)
+        if long_cache and '--editor' in command:
+            # Godot can create these long editor-cache names even when ordinary
+            # Windows Python paths cannot stat or remove the resulting files.
+            cache = isolated_game / '.godot/editor' / ('native-cache-' + 'x' * 220 + '.cfg')
+            assert len(str(cache)) > 260
+            assert len(cache.name.encode('utf-8')) < 255
+            extended = Path('\\\\?\\' + str(cache)) if os.name == 'nt' else cache
+            extended.parent.mkdir(parents=True)
+            extended.write_bytes(b'generated cache')
+            # Directory links inside the private tree must be removed as links;
+            # cleanup must never traverse into another directory.
+            junction = isolated_game.parent / 'outside-junction'
+            if os.name == 'nt':
+                native_run(['cmd', '/c', 'mklink', '/J', str(junction), str(outside)],
+                           check=True, capture_output=True)
+            else:
+                junction.symlink_to(outside, target_is_directory=True)
         isolated_project = (isolated_game / 'project.godot').read_bytes()
         assert re.sub(rb'config/name="1792-foundry-[0-9a-f]{32}"',
                       b'config/name="1792"', isolated_project) == original_project
@@ -77,11 +114,36 @@ def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, m
         return subprocess.CompletedProcess(command, 0, 'native test log\n', '')
 
     monkeypatch.setattr('ciw.foundry_childhood.subprocess.run', fake_engine)
-    if mutation:
-        with pytest.raises(ValueError, match='^ENGINE_MUTATED_SOURCE$'):
-            binding.invoke(source(binding.lock), {'nonce': 'test-native-byte-preservation'})
-    else:
-        capture = binding.invoke(source(binding.lock), {'nonce': 'test-native-byte-preservation'})
-        assert capture['observations'] == capture['request']
-    assert len(calls) == 2
-    assert (game / 'project.godot').read_bytes() == original_project
+    try:
+        if mutation:
+            with pytest.raises(ValueError, match='^ENGINE_MUTATED_SOURCE$'):
+                binding.invoke(source(binding.lock), {'nonce': 'test-native-byte-preservation'})
+        else:
+            capture = binding.invoke(source(binding.lock), {'nonce': 'test-native-byte-preservation'})
+            assert capture['observations'] == capture['request']
+        assert len(calls) == 2
+        assert (game / 'project.godot').read_bytes() == original_project
+        assert sentinel.read_bytes() == b'outside the temporary project'
+        assert all(not path.exists() for path in isolated_roots)
+    finally:
+        for path in set(isolated_roots): remove_test_project(path)
+
+
+@pytest.mark.parametrize('body_failure', [False, True], ids=['cleanup-only', 'body-and-cleanup'])
+def test_isolated_project_does_not_suppress_cleanup_errors(monkeypatch, body_failure):
+    from ciw.foundry_childhood import _isolated_project
+    root = None
+    def blocked_cleanup(*args, **kwargs):
+        raise PermissionError('cleanup deliberately blocked')
+    try:
+        with monkeypatch.context() as patch:
+            patch.setattr(shutil, 'rmtree', blocked_cleanup)
+            with pytest.raises(PermissionError, match='cleanup deliberately blocked') as error:
+                with _isolated_project() as root:
+                    (root / 'temporary.txt').write_bytes(b'private generated data')
+                    if body_failure: raise ValueError('ENGINE_MUTATED_SOURCE')
+            if body_failure:
+                assert isinstance(error.value.__context__, ValueError)
+                assert str(error.value.__context__) == 'ENGINE_MUTATED_SOURCE'
+    finally:
+        if root is not None: remove_test_project(root)

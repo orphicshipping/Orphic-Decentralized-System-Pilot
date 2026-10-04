@@ -1,9 +1,11 @@
 """Input-driven 1792 childhood recipe on the existing NET production substrate."""
 from __future__ import annotations
+from contextlib import contextmanager
 from copy import deepcopy
 from fractions import Fraction as F
 from pathlib import Path
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -167,6 +169,21 @@ def compile_plan(run):
              [_graph('native-childhood',OP,{'nonce':uuid.uuid4().hex},model=MODEL)],checks)])
 
 
+@contextmanager
+def _isolated_project():
+    parent=str(Path(tempfile.gettempdir()).resolve())
+    if os.name=='nt' and not parent.startswith('\\\\?\\'):
+        parent='\\\\?\\UNC\\'+parent[2:] if parent.startswith('\\\\') else '\\\\?\\'+parent
+    # Keep the extended path in TemporaryDirectory itself, including its
+    # finalizer, so Windows can remove long generated editor-cache filenames.
+    # Godot still receives ordinary paths; no cleanup error is suppressed.
+    with tempfile.TemporaryDirectory(prefix='1792-childhood-foundry-',dir=parent) as directory:
+        if os.name=='nt':
+            if directory.startswith('\\\\?\\UNC\\'): directory='\\\\'+directory[8:]
+            elif directory.startswith('\\\\?\\'): directory=directory[4:]
+        yield Path(directory)
+
+
 class ChildhoodBinding:
     def __init__(self,executable,game_root,expected_sha256):
         self.executable=Path(executable).resolve(strict=True);self.root=Path(game_root).resolve(strict=True)
@@ -184,8 +201,7 @@ class ChildhoodBinding:
         if run['metadata']['game_scenario']['parameters']['source_lock']!=self.lock: raise ValueError('SOURCE_BINDING')
         keys(params,{'nonce'});request={'nonce':params['nonce'],'source_lock_id':self.lock['source_lock_id']}
         started=time.monotonic()
-        with tempfile.TemporaryDirectory(prefix='1792-childhood-foundry-') as directory:
-            root=Path(directory)
+        with _isolated_project() as root:
             for name,raw in self.sources.items():
                 path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
             project=root/'game/project.godot'
