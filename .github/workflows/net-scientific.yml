@@ -42,6 +42,26 @@ jobs:
           PYTEST
       - name: Build candidate wheel
         run: python -m build --wheel
+      - name: Provider-free measured thermal installed qualification
+        shell: bash
+        run: |
+          python - <<'PYMEASURED'
+          import os, pathlib, subprocess, sys
+          root = pathlib.Path.cwd()
+          wheels = list((root / 'dist').glob('*.whl'))
+          assert len(wheels) == 1
+          subprocess.run([sys.executable, '-m', 'pip', 'install', '--force-reinstall', '--no-deps', str(wheels[0])], check=True)
+          subprocess.run([sys.executable, '-I', '-B', str(root / 'scripts/check_measured_thermal_installed.py'),
+                          '--wheel-dir', str(root / 'dist'),
+                          '--output-dir', str(root / 'measured-thermal-installed')],
+                         cwd=pathlib.Path(os.environ['RUNNER_TEMP']), check=True)
+          PYMEASURED
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: net-measured-thermal-installed-${{ matrix.os }}
+          path: measured-thermal-installed/
+          if-no-files-found: error
       - name: Exact public CSR source and installed NET qualification
         shell: bash
         run: |
