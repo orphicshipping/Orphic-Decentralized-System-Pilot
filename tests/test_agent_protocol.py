@@ -397,3 +397,125 @@ def test_large_valid_mcp_response_is_not_rejected_as_source_text(configured):
     out=io.BytesIO();assert serve(host,io.BytesIO(b'\n'.join(encode(m) for m in messages)+b'\n'),out)==0
     assert not json.loads(out.getvalue().splitlines()[-1])['result']['isError']
     assert len(out.getvalue().splitlines()[-1])>65536
+
+
+
+def loader_profile(tmp_path, inputs):
+    profile = tmp_path / "profile.json"
+    save_new(profile, {
+        "schema": "ciw.agent-host-profile.v1", "inputs": inputs,
+        "output_dir": "agent-output", "allow_operations": [], "candidate_domains": {},
+        "comparisons": {}, "check_suites": {}, "max_executions": 1, "max_nodes": 1,
+    })
+    return profile
+
+
+def test_profile_input_count_refuses_before_bound_file_reads(tmp_path, monkeypatch):
+    import ciw.agent_mcp as mcp
+
+    profile = loader_profile(tmp_path, {f"input{i}": "missing.json" for i in range(65)})
+    original_read = mcp._read
+    reads = []
+
+    def read(path):
+        reads.append(path)
+        assert path == profile, "An over-count profile read a bound file"
+        return original_read(path)
+
+    monkeypatch.setattr(mcp, "_read", read)
+    with pytest.raises(ValueError, match="At most 64"):
+        from_profile(profile)
+    assert reads == [profile]
+    assert not (tmp_path / "agent-output").exists()
+
+
+@pytest.mark.parametrize("alias,location,message", [
+    ("../path", "missing.json", "opaque identifier"),
+    ("a-shadow", "missing.json", "reserved"),
+    ("invalid", None, "local file"),
+    ("invalid", "", "local file"),
+    ("invalid", 1, "local file"),
+])
+def test_profile_binding_shapes_refuse_before_any_bound_file_reads(tmp_path, monkeypatch, alias, location, message):
+    import ciw.agent_mcp as mcp
+
+    profile = loader_profile(tmp_path, {"earlier": "missing.json", alias: location})
+    original_read = mcp._read
+    reads = []
+
+    def read(path):
+        reads.append(path)
+        assert path == profile, "Malformed bindings allowed an earlier input read"
+        return original_read(path)
+
+    monkeypatch.setattr(mcp, "_read", read)
+    with pytest.raises(ValueError, match=message):
+        from_profile(profile)
+    assert reads == [profile]
+    assert not (tmp_path / "agent-output").exists()
+
+
+def test_profile_unique_byte_budget_stops_before_later_inputs(tmp_path, monkeypatch):
+    import ciw.agent_api as api
+    import ciw.agent_mcp as mcp
+
+    raws = [encode({"fixture": "first"}), encode({"fixture": "second"})]
+    for index, raw in enumerate(raws):
+        (tmp_path / f"input{index}.json").write_bytes(raw)
+    profile = loader_profile(tmp_path, {
+        "first": "input0.json", "second": "input1.json", "third": "never-opened.json"})
+    # Scale the shared production budget to small real files; the rejected
+    # documents need not reach the later artifact-schema validation phase.
+    limit = sum(map(len, raws)) - 1
+    monkeypatch.setattr(api, "MAX_TOTAL", limit)
+    monkeypatch.setattr(mcp, "MAX_TOTAL", limit)
+    original_read = mcp._read
+    reads = []
+
+    def read(path):
+        reads.append(path.name)
+        return original_read(path)
+
+    monkeypatch.setattr(mcp, "_read", read)
+    with pytest.raises(ValueError, match="artifact budget"):
+        from_profile(profile)
+    assert reads == ["profile.json", "input0.json", "input1.json"]
+    assert not (tmp_path / "agent-output").exists()
+
+
+def test_profile_duplicate_bytes_share_budget_and_whitespace_keeps_identity(tmp_path, monkeypatch):
+    import ciw.agent_api as api
+    import ciw.agent_mcp as mcp
+
+    raw = encode(experiment("loader", model_id="oscillator", nodes=[{
+        "node_id": "statistics", "operation_id": "statistics.v1", "parameters": {"channel": "q"},
+        "inputs": {}, "depends_on": []}]))
+    spaced = b"\n" + raw + b"\n"
+    for name, content in (("first.json", raw), ("copy.json", raw), ("spaced.json", spaced)):
+        (tmp_path / name).write_bytes(content)
+    bindings = {f"input{i:02d}": "first.json" for i in range(62)}
+    bindings.update(copy="copy.json", spaced="spaced.json")
+    profile = loader_profile(tmp_path, bindings)
+    limit = len(raw) + len(spaced)
+    monkeypatch.setattr(api, "MAX_TOTAL", limit)
+    monkeypatch.setattr(mcp, "MAX_TOTAL", limit)
+    original_host = mcp.AgentHost
+    captured = {}
+
+    def host(**arguments):
+        captured.update(arguments["inputs"])
+        return original_host(**arguments)
+
+    monkeypatch.setattr(mcp, "AgentHost", host)
+    with from_profile(profile) as loaded:
+        inputs = loaded.capabilities()["inputs"]
+        assert len(inputs) == 64
+        assert inputs["input00"]["artifact_id"] == inputs["copy"]["artifact_id"]
+        assert inputs["spaced"]["artifact_id"] != inputs["copy"]["artifact_id"]
+        assert inputs["copy"]["sha256"] == bytes_ref(raw)
+        assert inputs["spaced"]["sha256"] == bytes_ref(spaced)
+        assert len({binding["artifact_id"] for binding in inputs.values()}) == 2
+    assert captured["input00"] is captured["copy"]
+    assert captured["spaced"] == spaced
+    assert (tmp_path / "first.json").read_bytes() == raw
+    assert (tmp_path / "spaced.json").read_bytes() == spaced

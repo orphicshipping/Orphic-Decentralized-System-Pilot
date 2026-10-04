@@ -7,13 +7,14 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+from hashlib import sha256
 import json
 import os
 from pathlib import Path
 import sys
 from typing import BinaryIO
 
-from .agent_api import AgentHost, MAX_DOCUMENT, encode, parse
+from .agent_api import AgentHost, MAX_DOCUMENT, MAX_TOTAL, encode, identifier, parse
 from .agent_tools import descriptions
 from .control_contracts import keys, save_new, json_tree
 from .session import loads_json
@@ -176,6 +177,14 @@ def _profile(path: Path) -> tuple[Path, dict]:
         raise ValueError("Unsupported host profile")
     if type(value["inputs"]) is not dict or type(value["allow_operations"]) is not list:
         raise ValueError("Invalid explicit host bindings")
+    if len(value["inputs"]) > 64:
+        raise ValueError("At most 64 explicit input bindings")
+    for alias, location in value["inputs"].items():
+        identifier(alias)
+        if alias.startswith("a-"):
+            raise ValueError("Input aliases cannot use the reserved artifact-handle prefix")
+        if type(location) is not str or not location:
+            raise ValueError("Operator input location must be a local file")
     return path, value
 
 
@@ -190,11 +199,19 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     elif leakage_backend is not None:
         raise ValueError("Native leakage backend requires the explicit leakage instrument selector")
     path, value = _profile(path)
-    inputs = {}
+    inputs, retained = {}, {}
+    total = 0
     for alias, location in value["inputs"].items():
-        if type(location) is not str or not location:
-            raise ValueError("Operator input location must be a local file")
-        inputs[alias] = _read((path.parent / location).resolve(strict=True))
+        raw = _read((path.parent / location).resolve(strict=True))
+        # Match AgentHost's raw-byte artifact identity and unique-byte budget.
+        # Share identical buffers without canonicalizing the submitted records.
+        key = "a-" + sha256(raw).hexdigest()
+        if key not in retained:
+            if total + len(raw) > MAX_TOTAL:
+                raise ValueError("Host input artifact budget exceeded")
+            retained[key] = raw
+            total += len(raw)
+        inputs[alias] = retained[key]
     output = value["output_dir"]
     if output is not None and (type(output) is not str or not output):
         raise ValueError("Invalid operator output directory")
