@@ -4,7 +4,7 @@
 source span to a declared operation, mathematics, relations, invariants and retained
 experiments without acquiring the specialist repository's scientific authority.
 
-This branch implements a bounded developer workflow, not just schema names:
+NET implements this bounded developer workflow:
 
 ```text
 committed source -> symbol/span -> retained selection -> agent context / offline view
@@ -16,13 +16,13 @@ committed source -> symbol/span -> retained selection -> agent context / offline
 
 ## Try the real source workflow
 
-From a checkout containing this branch, install the project and capture the
+From a current NET checkout, install the project and capture the
 existing statistics provider. No selected code is imported or executed.
 
 ```sh
 python -m pip install -e '.[dev]'
-net object index --repo-root . --repository giasonpooni/Notations-Engineering-Terminal --revision HEAD --path src/ciw/adapters/oscillator.py --output results/object-index.json
-net object capture --repo-root . --repository giasonpooni/Notations-Engineering-Terminal --revision HEAD --path src/ciw/adapters/oscillator.py --symbol compute_statistics --declaration examples/computational-objects/statistics.json --editable --output results/object-selection.json
+net object index --repo-root . --repository atomtrapping/Notations-Engineering-Terminal --revision HEAD --path src/ciw/adapters/oscillator.py --output results/object-index.json
+net object capture --repo-root . --repository atomtrapping/Notations-Engineering-Terminal --revision HEAD --path src/ciw/adapters/oscillator.py --symbol compute_statistics --declaration examples/computational-objects/statistics.json --editable --output results/object-selection.json
 net object context results/object-selection.json --output results/object-context.json
 net object view results/object-selection.json --output results/object-inspector.html
 ```
@@ -129,5 +129,8 @@ non-execution, strict typed comparison and real existing Session executions.
 `validation/source_selection_browser.py` exercises the actual offline page.
 
 The parent Session, Workbench, operation registry, numerical kernels, runtime pins,
-licenses and existing workflow gates are unchanged. This remains a stacked draft
-extension of the NET control branch, not a main-branch release or deployment.
+licenses and existing workflow gates remain responsible for execution. This
+workflow is present in merged source; release qualification remains a separate
+[research-release gate](QUALIFIED_RELEASE.md). Declared mathematics and retained
+comparisons have the scope described in the
+[model validity and evidence guide](MODEL_VALIDITY_AND_EVIDENCE.md).

@@ -63,17 +63,19 @@ jobs:
       - name: Installed wheel outside source checkout
         shell: bash
         run: |
-          python -m venv installed-irrigation
+          IRRIGATION_ENV="$RUNNER_TEMP/installed-irrigation"
+          python -m venv "$IRRIGATION_ENV"
           if [[ "$RUNNER_OS" == "Windows" ]]; then
-            IRRIGATION_PYTHON="$PWD/installed-irrigation/Scripts/python.exe"
-            IRRIGATION_NET="$PWD/installed-irrigation/Scripts/net.exe"
+            IRRIGATION_PYTHON="$IRRIGATION_ENV/Scripts/python.exe"
+            IRRIGATION_NET="$IRRIGATION_ENV/Scripts/net.exe"
           else
-            IRRIGATION_PYTHON="$PWD/installed-irrigation/bin/python"
-            IRRIGATION_NET="$PWD/installed-irrigation/bin/net"
+            IRRIGATION_PYTHON="$IRRIGATION_ENV/bin/python"
+            IRRIGATION_NET="$IRRIGATION_ENV/bin/net"
           fi
           "$IRRIGATION_PYTHON" -m pip install dist/*.whl
           "$IRRIGATION_PYTHON" scripts/check_irrigation_installed.py --python "$IRRIGATION_PYTHON" --net "$IRRIGATION_NET" --wheel dist/*.whl --output-dir "$RUNNER_TEMP/installed-irrigation-smoke"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
         with:
           name: irrigation-${{ matrix.os }}-${{ matrix.python }}
           path: |
