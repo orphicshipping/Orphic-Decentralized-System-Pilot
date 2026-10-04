@@ -9,7 +9,7 @@ BIPM data using a separately built, installed NET wheel:
 
 The current retained run passed all 147 cases on source revision
 `f2ac42373f7ffae551ea297ecc6580c4de56028e`.
-Thirteen integrity tests also passed. See [validation-summary.json](validation-summary.json)
+Nineteen integrity tests also passed. See [validation-summary.json](validation-summary.json)
 for the exact wheel digest, module digests, environment, execution scope and the
 separate historical run identity. This is local test evidence; it does not assert
 that remote CI executed the benchmark.
@@ -103,3 +103,17 @@ admission, retained execution, result-to-ledger delivery, correlated experimenta
 uncertainty, the NET thermal inverse model, a full leakage workflow, or held-out
 physical accuracy. Reference snapshots are immutable and are not continuously
 monitored for publisher corrections.
+
+## Output and runtime troubleshooting
+
+The CLI reserves a new report before reading the corpus or executing numerical
+cases. It creates missing parent directories, refuses existing reports without
+rerunning the benchmark, and reports unwritable destinations as `blocked_output`
+JSON with a suggested next step. Input/runtime failures are retained in the new
+report with their exception type and message. stdout always includes the report
+path when a report was saved.
+
+Wheel validation compares the complete installed package inventory with the
+candidate archive, then checks every file's contents and the imported module
+origins. Omitting a package file or duplicating an archive member is refused,
+even if the supplied wheel SHA256 matches that altered archive.

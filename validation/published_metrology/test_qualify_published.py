@@ -6,8 +6,9 @@ Set NET_QUALIFICATION_CORPUS, NET_QUALIFICATION_WHEEL and
 NET_QUALIFICATION_WHEEL_SHA256 explicitly before running.
 Only manifest-declared files are copied into disposable workspace directories.
 """
-from contextlib import contextmanager
+from contextlib import contextmanager, redirect_stdout
 import hashlib
+import io
 import importlib.util
 import json
 import math
@@ -16,6 +17,7 @@ from pathlib import Path
 import shutil
 import tempfile
 import unittest
+from unittest import mock
 
 HERE = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location('net_published_qualification_under_test', HERE / 'qualify_published.py')
@@ -143,6 +145,46 @@ class QualificationIntegrityTests(unittest.TestCase):
                 runner.qualify(CORPUS, altered, runner.digest(altered))
 
 
+    def test_wheel_with_omitted_package_file_is_refused(self):
+        import zipfile
+        with tempfile.TemporaryDirectory(prefix='qualification-wheel-') as name:
+            altered = Path(name) / WHEEL.name
+            with zipfile.ZipFile(WHEEL) as original, zipfile.ZipFile(altered, 'w') as output:
+                self.assertIn('ciw/__init__.py', original.namelist())
+                for entry in original.infolist():
+                    if entry.filename != 'ciw/__init__.py':
+                        output.writestr(entry, original.read(entry.filename))
+            with self.assertRaisesRegex(ValueError, 'package inventory differs'):
+                runner.qualify(CORPUS, altered, runner.digest(altered))
+
+    def test_wheel_with_duplicate_package_file_is_refused(self):
+        import warnings
+        import zipfile
+        with tempfile.TemporaryDirectory(prefix='qualification-wheel-') as name:
+            altered = Path(name) / WHEEL.name
+            with zipfile.ZipFile(WHEEL) as original, zipfile.ZipFile(altered, 'w') as output:
+                for entry in original.infolist():
+                    output.writestr(entry, original.read(entry.filename))
+                with warnings.catch_warnings():
+                    warnings.simplefilter('ignore', UserWarning)
+                    output.writestr('ciw/__init__.py', original.read('ciw/__init__.py'))
+            with self.assertRaisesRegex(ValueError, 'duplicate files'):
+                runner.qualify(CORPUS, altered, runner.digest(altered))
+
+
+    def test_extra_archive_bytecode_is_not_ignored_as_installed_cache(self):
+        import zipfile
+        for path in ('ciw/uninstalled_extra.pyc', 'ciw/__pycache__/extra.cpython-312.pyc'):
+            with self.subTest(path=path), tempfile.TemporaryDirectory(prefix='qualification-wheel-') as name:
+                altered = Path(name) / WHEEL.name
+                with zipfile.ZipFile(WHEEL) as original, zipfile.ZipFile(altered, 'w') as output:
+                    for entry in original.infolist():
+                        output.writestr(entry, original.read(entry.filename))
+                    output.writestr(path, b'uninstalled bytecode fixture')
+                with self.assertRaisesRegex(ValueError, 'package inventory differs'):
+                    runner.qualify(CORPUS, altered, runner.digest(altered))
+
+
 class NumericalAcceptanceTests(unittest.TestCase):
     def test_wrong_observed_result_fails_without_changing_expected(self):
         result = runner.check_value(3.0, 1.0, 0.01, 0.01)
@@ -166,6 +208,51 @@ class NumericalAcceptanceTests(unittest.TestCase):
                 path.write_text('{"result":' + literal + '}', encoding='utf-8')
                 with self.subTest(literal=literal), self.assertRaises(ValueError):
                     runner.read_json(path)
+
+
+class CommandLineOutputTests(unittest.TestCase):
+    def invoke(self, output):
+        capture = io.StringIO()
+        with redirect_stdout(capture):
+            result = runner.main(['--root', str(CORPUS), '--wheel', str(WHEEL),
+                                  '--wheel-sha256', WHEEL_SHA256, '--output', str(output)])
+        return result, json.loads(capture.getvalue())
+
+    def test_existing_report_is_refused_before_processing(self):
+        with tempfile.TemporaryDirectory(prefix='qualification-cli-') as name:
+            output = Path(name) / 'report.json'
+            output.write_text('retained previous result', encoding='utf-8')
+            with mock.patch.object(runner, 'qualify') as qualify:
+                code, summary = self.invoke(output)
+            qualify.assert_not_called()
+            self.assertEqual(code, 1)
+            self.assertEqual(summary['status'], 'blocked_output')
+            self.assertIsNone(summary['report'])
+            self.assertEqual(output.read_text(), 'retained previous result')
+            self.assertIn('Choose a new writable output path', summary['error'])
+
+    def test_input_failure_retains_report_with_error_type(self):
+        with tempfile.TemporaryDirectory(prefix='qualification-cli-') as name:
+            output = Path(name) / 'new-parent' / 'report.json'
+            with mock.patch.object(runner, 'qualify', side_effect=FileNotFoundError('missing corpus workbook')):
+                code, summary = self.invoke(output)
+            retained = json.loads(output.read_text())
+            self.assertEqual(code, 1)
+            self.assertEqual(summary['report'], str(output.resolve()))
+            self.assertEqual(retained['status'], 'blocked_input_or_environment')
+            self.assertEqual(retained['error_type'], 'FileNotFoundError')
+            self.assertIn('missing corpus workbook', retained['error'])
+
+    def test_invalid_output_parent_is_reported_without_processing(self):
+        with tempfile.TemporaryDirectory(prefix='qualification-cli-') as name:
+            parent = Path(name) / 'occupied-parent'
+            parent.write_text('keep', encoding='utf-8')
+            with mock.patch.object(runner, 'qualify') as qualify:
+                code, summary = self.invoke(parent / 'report.json')
+            qualify.assert_not_called()
+            self.assertEqual(code, 1)
+            self.assertEqual(summary['status'], 'blocked_output')
+            self.assertEqual(parent.read_text(), 'keep')
 
 
 if __name__ == '__main__':

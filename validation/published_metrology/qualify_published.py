@@ -89,14 +89,29 @@ def verify_install(wheel_path, expected_sha256, modules):
     if digest(wheel_path) != expected_sha256:
         raise ValueError('Wheel differs from explicitly supplied SHA256')
     dist = importlib.metadata.distribution('computational-instrumentation-workbench')
+    def package_file(name):
+        return (name.startswith('ciw/') and not name.endswith('/')
+                and '__pycache__' not in name.split('/') and not name.endswith('.pyc'))
+
+    if dist.files is None:
+        raise ValueError('Installed distribution has no package file inventory')
+    installed_names = {item.as_posix() for item in dist.files if package_file(item.as_posix())}
     checked = 0
     with zipfile.ZipFile(wheel_path) as wheel:
-        for name in wheel.namelist():
-            if name.startswith('ciw/') and not name.endswith('/'):
-                installed = Path(dist.locate_file(name)).resolve()
-                if digest(installed) != hashlib.sha256(wheel.read(name)).hexdigest():
-                    raise ValueError('Installed package differs from wheel: ' + name)
-                checked += 1
+        # Every archive member participates; only installed runtime caches
+        # are excluded from the metadata inventory above.
+        names = [name for name in wheel.namelist() if name.startswith('ciw/') and not name.endswith('/')]
+        if len(names) != len(set(names)):
+            raise ValueError('Wheel package inventory contains duplicate files')
+        if not installed_names or set(names) != installed_names:
+            missing = sorted(installed_names - set(names))
+            extra = sorted(set(names) - installed_names)
+            raise ValueError(f'Wheel package inventory differs from installed distribution: missing={missing}, extra={extra}')
+        for name in names:
+            installed = Path(dist.locate_file(name)).resolve()
+            if digest(installed) != hashlib.sha256(wheel.read(name)).hexdigest():
+                raise ValueError('Installed package differs from wheel: ' + name)
+            checked += 1
     if checked == 0:
         raise ValueError('Wheel contains no ciw package files')
     for name, module in modules.items():
@@ -252,20 +267,32 @@ def qualify(root, wheel_path, expected_sha256):
     }
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--root', type=Path, required=True, help='External corpus with original sources and pinned derived fixtures')
     parser.add_argument('--wheel', type=Path, required=True)
     parser.add_argument('--wheel-sha256', required=True)
     parser.add_argument('--output', type=Path, required=True, help='New report path; existing evidence is never replaced')
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    output = args.output.resolve()
     try:
-        report = qualify(args.root.resolve(), args.wheel.resolve(), args.wheel_sha256)
-    except Exception as exc:
-        report = {'status': 'blocked_input_or_environment', 'error': str(exc)}
-    with args.output.open('x', encoding='utf-8') as stream:
-        stream.write(json.dumps(report, indent=2, allow_nan=False) + '\n')
-    print(json.dumps({k: report[k] for k in ('status', 'summary', 'error') if k in report}))
+        output.parent.mkdir(parents=True, exist_ok=True)
+        # Reserve a fresh report before processing data, so an occupied or
+        # unwritable destination fails immediately without rerunning the cases.
+        with output.open('x', encoding='utf-8') as stream:
+            try:
+                report = qualify(args.root.resolve(), args.wheel.resolve(), args.wheel_sha256)
+            except Exception as exc:
+                report = {'schema': 'net.published-experiment-software-qualification.v1',
+                          'status': 'blocked_input_or_environment',
+                          'error_type': type(exc).__name__, 'error': str(exc)}
+            stream.write(json.dumps(report, indent=2, allow_nan=False) + '\n')
+    except OSError as exc:
+        report = {'status': 'blocked_output', 'error_type': type(exc).__name__,
+                  'error': f'Cannot create new report at {output}: {exc}. Choose a new writable output path.'}
+    summary = {k: report[k] for k in ('status', 'summary', 'error_type', 'error') if k in report}
+    summary['report'] = str(output) if report['status'] != 'blocked_output' else None
+    print(json.dumps(summary))
     return 0 if report['status'] == 'passed_bounded_kernel_reproduction' else 1
 
 

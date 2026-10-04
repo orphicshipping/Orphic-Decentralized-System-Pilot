@@ -1,6 +1,6 @@
 {
   "schema": "net.published-experiment-software-qualification.v1",
-  "generated_at_utc": "2026-10-04T19:23:11.842871+00:00",
+  "generated_at_utc": "2026-10-04T19:48:51.619821+00:00",
   "status": "passed_bounded_kernel_reproduction",
   "scope": "Version-specific software reproduction of published calibrated-experiment data reductions.",
   "tested_artifact": {
@@ -29,7 +29,7 @@
       700
     ]
   },
-  "runner_sha256": "76b157f128825d6e3eecf8458aea1431fea2a50ef5b157974205ca388752dec1",
+  "runner_sha256": "87106ccb025ac21bec4704a25f015e50f3866ec7afc588a01c3d254fd86d2b3c",
   "inputs_manifest_sha256": "fdcaab8ab0254c92c08352e6b977b93860e27ba3d27be4ace27d8fef496add8c",
   "reference_kind": "Author-published workbook caches and printed table values; no outputs fitted to NET results.",
   "harness_disclosures": [
@@ -54,10 +54,10 @@
   "source_data_distributed": false,
   "full_results_retained_locally": true,
   "integrity_regressions": {
-    "tests": 13,
-    "passed": 13,
+    "tests": 19,
+    "passed": 19,
     "failed": 0,
-    "duration_seconds": 2.448
+    "duration_seconds": 7.168
   },
   "historical_run": {
     "source": "NET-metrology-corpus-0.2 qualification/report.json",
@@ -65,5 +65,8 @@
     "wheel_sha256": "93321a2814c4d9c65dcbf34b645f44e4248d9e9148a150a433cf298f30ed7b33",
     "summary": "147 bounded cases passed in the historical run; this metadata is not the current run result."
   },
-  "package_files_matched_to_build_source": 390
+  "package_files_matched_to_build_source": 390,
+  "tested_harness_local_commit": "20525683b7c3716d05f32b96d2e393f9dbe72d6f",
+  "tested_harness_tree": "297276426009679aaf39b0499e8cfdb92c1cdff0",
+  "runtime_note": "Reran the improved harness against the existing isolated wheel from the unchanged f2ac42373 NET package; no new wheel build was needed."
 }
