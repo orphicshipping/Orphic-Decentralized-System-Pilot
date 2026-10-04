@@ -5,6 +5,7 @@
 [Notation Systems](https://notation.systems) · [Quickstart](#quickstart) ·
 [Instruments](docs/INSTRUMENTS.md) · [Integration coverage](docs/INTEGRATION_COVERAGE.md) ·
 [Temperature processing and pilot plan](#temperature-measurement-and-qualification) ·
+[Model validity](docs/MODEL_VALIDITY_AND_EVIDENCE.md) ·
 [Research release](docs/QUALIFIED_RELEASE.md) · [Documentation](docs)
 
 **NET** combines small numerical instruments with records of their inputs,
@@ -51,6 +52,16 @@ The [instrument catalogue](docs/INSTRUMENTS.md) and
 provider requirements, client adapters and planning records. A callable feature,
 a passing numerical check, a guide and an experimentally validated instrument
 are different forms of evidence.
+
+NET uses explicit mathematical models, covariance propagation and checked
+workflow invariants to make calculations auditable and reproducible. Evidence
+is scoped to each model and procedure: a conservation residual or independent
+numerical comparison supports its stated checks, while a cryptographic proof
+supports execution of its bound program. Neither establishes that a model fits
+an installed physical system. The [validity and evidence guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md)
+identifies current domains, remaining experimental work and the gates for
+extending a model. There is no project-wide formal correctness or production
+certification claim.
 
 ## Polymer workflows
 
@@ -139,10 +150,11 @@ The migration and qualification guides record the current dependency closure.
 `net fluid` retains a time-dependent two-reservoir exchange model with a
 bidirectionally coupled compliant boundary, and a separate periodic linear
 surface-wave profile. In-repository reference implementations,
-mass/energy/interface-work checks, and temporal/spatial refinement test the
-declared equations and configurations. The [fluid guide](docs/FLUID_DYNAMICS.md)
-includes runnable commands, model equations, a numerically checked scalar-state handoff, and explicit
-expansion routes. The existing FlowState snapshot estimator and runtime pin remain
+mass/energy/interface-work checks, and temporal/spatial refinement assess
+retained cases within their declared numerical domains. The
+[fluid guide](docs/FLUID_DYNAMICS.md) includes runnable commands, model equations,
+a numerically checked scalar-state handoff, and explicit expansion routes.
+The existing FlowState snapshot estimator and runtime pin remain
 unchanged; experimental validation and general molecular/CFD coupling remain
 unestablished.
 

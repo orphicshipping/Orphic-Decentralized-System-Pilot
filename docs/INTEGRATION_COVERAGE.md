@@ -21,6 +21,28 @@ work that has not supplied the stated executable path. These are implementation
 categories, not scientific or physical qualification levels. CI configuration
 is a runnable test definition, not evidence that its latest run passed.
 
+## Current source addendum — 2026-10-04
+
+Inspected source: `554bb1540ef1b621af9e08f2d632095ca958150d`, matching the
+refreshed inventory above. These selected paths extend the historical
+2026-10-03 audit; their source presence does not report a new execution of all
+providers or qualify the full research release. The
+[model validity and evidence guide](MODEL_VALIDITY_AND_EVIDENCE.md) explains how
+to read declared limits, numerical checks and physical evidence separately.
+
+| Current path | Source and operating guide | Evidence boundary |
+| --- | --- | --- |
+| Local MCP agent interface | [Implementation](../src/ciw/agent_mcp.py), [protocol and qualification](NET_AGENT_PROTOCOL.md) | Bounded local tools use existing execution, observation, comparison and replay contracts. A served profile or successful transport check does not qualify its scientific model or authorize equipment. |
+| Affine temperature processing | `metrology.temperature.process.v1`: [contract](../src/ciw/temperature_contract.py), [processor](../src/ciw/temperature_processing.py), [MCP profile](NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile), [tests](../tests/test_temperature_processing.py) | 1–64 observations, full joint raw/calibration covariance, declared applicability, optional installed correction and conditional sample-instant acceptance. Applicability is checked against submitted declarations; traceability, authenticated acquisition and physical qualification remain unestablished. |
+| Thermal estimation from recordings | `ciw.measured-thermal.v1`: [guide](MEASURED_THERMAL.md), [contract](../src/ciw/measured_thermal.py), [tests](../tests/test_measured_thermal_review.py) | Already-calibrated shell, power and ambient streams feed the Python estimator; a held-out core stream supports comparison. Input uncertainty is retained but is not propagated by this kernel. Fixtures are simulated, and numerical comparison does not establish installed-chain validity. |
+| Coupled thermal/thermoelastic references | [System composition](SYSTEM_COMPOSITION.md), [workflow](../src/ciw/system_workflow.py), [tests](../tests/test_system_workflow.py) | A thermal rod and quasi-static axial mechanics have bounded balance, analytic and refinement checks. Coupling is one-way; constitutive extensions and experimental material validation require separate evidence. |
+| Polymer temperature pilot | [Qualification protocol](TEMPERATURE_QUALIFICATION.md), [setup record](../examples/temperature/pilot-setup.json), [conformity guide](TEMPERATURE_PRODUCT_CONFORMITY.md) | A programme and unfilled records for one installed measurement chain. Actual hardware, installation, operating envelope, required uncertainty and experimental results remain required. PINN/gPINN comparison and a temperature-specific SP1 guest remain planned. |
+
+The affine temperature and recorded-thermal workflows have separate contracts and
+no automatic handoff. Preserve observation/estimate labels, units, time/location
+semantics, uncertainty and lineage when preparing a study. Neither a calibration
+record hash nor a computation proof establishes the physical calibration chain.
+
 ## Shared host and provider-free foundations
 
 | Surface | Merged implementation and tests | Scope and remaining gate |
