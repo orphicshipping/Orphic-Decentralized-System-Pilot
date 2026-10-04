@@ -338,11 +338,11 @@ def test_exactly_one_seam_references_the_operation_trace_and_only_for_typing():
             for node in ast.walk(ast.parse(path.read_text())):
                 # real imports only -- "operations" also occurs as prose
                 if isinstance(node, ast.ImportFrom) and (node.module or "").startswith("operations"):
-                    importers.append(str(path.relative_to(REPO)))
+                    importers.append(path.relative_to(REPO).as_posix())
                 elif isinstance(node, ast.Import):
                     for alias in node.names:
                         if alias.name.startswith("operations"):
-                            importers.append(str(path.relative_to(REPO)))
+                            importers.append(path.relative_to(REPO).as_posix())
     assert importers == ["experiment/step.py"]
 
     # ...and that single import is annotation-only
