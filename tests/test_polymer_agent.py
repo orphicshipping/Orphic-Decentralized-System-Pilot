@@ -102,7 +102,7 @@ def test_polymer_advertisement_does_not_grant_other_graph_operations(tmp_path, m
     with pytest.raises(ValueError, match="not enabled"):
         host.call("net_execute", {"source": "source", "graph": "baseline", "attempt": "denied"})
     assert host.capabilities()["execution_budget"]["used"] == 0
-    assert list((profile.parent / "agent-output").iterdir()) == []
+    assert {p.name for p in (profile.parent / "agent-output").iterdir()} == {".agent-state"}
 
 
 def test_dependent_graph_requires_an_exact_typed_assessment_edge(tmp_path):

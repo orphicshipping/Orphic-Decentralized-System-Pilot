@@ -22,6 +22,7 @@ from .control_plane import CapabilityRegistry, ParameterSpace, experiment, plan_
 from .control_checks import compare, inspect_record
 from .check_suite import evaluate, plan, validate_plan
 from .session import Session, loads_json
+from .agent_recovery import RecoveryStore
 
 MAX_DOCUMENT = 8 * 1024 * 1024
 MAX_TOTAL = 64 * 1024 * 1024
@@ -99,7 +100,11 @@ class AgentHost:
     def __init__(self, *, registry: CapabilityRegistry, inputs: dict[str, bytes],
                  output_dir: Path | None = None, allow_operations: tuple[str, ...] = (),
                  candidate_domains: dict | None = None, comparisons: dict | None = None,
-                 check_suites: dict | None = None, max_executions: int = 8, max_nodes: int = 8):
+                 check_suites: dict | None = None, max_executions: int = 8, max_nodes: int = 8,
+                 resume: bool = False):
+        self._recovery = None
+        if type(resume) is not bool or (resume and output_dir is None):
+            raise ValueError("Resume requires an explicit operator output directory")
         if type(allow_operations) is not tuple or len(allow_operations) > 64 or any(type(x) is not str for x in allow_operations):
             raise ValueError("Execution grants must be an explicit bounded tuple")
         for item in (candidate_domains, comparisons, check_suites):
@@ -180,11 +185,101 @@ class AgentHost:
             target = Path(output_dir).expanduser().absolute()
             if any(parent.is_symlink() for parent in (target, *target.parents)):
                 raise ValueError("Output path must not traverse symbolic links")
-            target.mkdir(parents=False, exist_ok=False)
+            if resume:
+                if not target.is_dir():
+                    raise ValueError("Missing agent output directory; cannot resume")
+            else:
+                target.mkdir(parents=False, exist_ok=False)
             self._output = target.resolve(strict=True)
             self._output_stat = (self._output.stat().st_dev, self._output.stat().st_ino)
+            try:
+                self._recovery = RecoveryStore(self._output, resume=resume)
+                if resume:
+                    self._restore_checkpoint()
+                else:
+                    self._checkpoint()
+            except BaseException:
+                self.close()
+                raise
         if self._allow and self._output is None:
             raise ValueError("Executable access requires a fresh operator-owned output directory")
+
+    def close(self):
+        """Release the writer lock; closing never executes or completes an attempt."""
+        if self._recovery is not None:
+            self._recovery.close()
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
+    def __del__(self):
+        self.close()
+
+    def _checkpoint(self):
+        if self._recovery is not None:
+            self._recovery.save({"schema": "ciw.agent-recovery.v1",
+                "policy": parse(self._policy_bytes), "aliases": self._aliases,
+                "artifacts": {key: len(raw) for key, raw in self._artifacts.items()},
+                "generated": sorted(self._generated), "domains": self._domains,
+                "attempts": self._attempts}, self._artifacts)
+
+    def _restore_checkpoint(self):
+        state, artifacts = self._recovery.load()
+        keys(state, {"schema", "policy", "aliases", "artifacts", "generated", "domains", "attempts"})
+        if (state["schema"] != "ciw.agent-recovery.v1" or state["aliases"] != self._aliases
+                or state["policy"] != parse(self._policy_bytes)):
+            raise ValueError("Resume input bindings or host policy differ from retained state")
+        if any(artifacts.get(key) != raw for key, raw in self._artifacts.items()):
+            raise ValueError("Resume frozen input bytes differ from retained state")
+        if (type(state["generated"]) is not list or len(set(state["generated"])) != len(state["generated"])
+                or set(state["generated"]) - artifacts.keys()
+                or type(state["domains"]) is not dict or type(state["attempts"]) is not dict
+                or len(state["attempts"]) > self._maximum):
+            raise ValueError("Invalid agent recovery state")
+        for raw in artifacts.values():
+            _validated(parse(raw))
+        initial_domains = deepcopy(self._domains)
+        for key, domains in state["domains"].items():
+            if key not in artifacts or domains not in initial_domains.values():
+                raise ValueError("Recovered candidate domain is outside operator policy")
+            graph = parse(artifacts[key])
+            plan_graph(graph, self._registry)
+            nodes = {node["node_id"]: node for node in graph["nodes"]}
+            for name, domain in domains.items():
+                space = ParameterSpace.from_dict(domain)
+                names = space.to_dict()["parameters"]
+                space.validate({parameter: nodes[name]["parameters"][parameter] for parameter in names})
+        if any(state["domains"].get(key) != value for key, value in initial_domains.items()):
+            raise ValueError("Recovered initial candidate domains changed")
+        self._artifacts, self._bytes = artifacts, sum(map(len, artifacts.values()))
+        self._generated = set(state["generated"])
+        self._domains = state["domains"]
+        for attempt, saved in state["attempts"].items():
+            identifier(attempt)
+            keys(saved, {"request", "response", "state"})
+            keys(saved["request"], {"source", "experiment", "host_policy_sha256"})
+            if saved["request"]["host_policy_sha256"] != self._host_policy:
+                raise ValueError("Recovered attempt policy mismatch")
+            for binding in (saved["request"]["source"], saved["request"]["experiment"]):
+                if binding != self._binding(binding["artifact_id"]):
+                    raise ValueError("Recovered attempt input mismatch")
+            response = saved["response"]
+            if (saved["state"] not in {"claimed", "finished"} or type(response) is not dict
+                    or response.get("attempt") != attempt or response.get("authority") != AUTHORITY
+                    or response.get("reused_response") is not False
+                    or response.get("status") not in {"completed", "incomplete", "failed"}
+                    or type(response.get("artifacts")) is not dict):
+                raise ValueError("Invalid recovered attempt response")
+            for binding in response["artifacts"].values():
+                if binding != self._binding(binding["artifact_id"]):
+                    raise ValueError("Recovered attempt output mismatch")
+            if saved["state"] == "claimed" and (response["status"] != "incomplete"
+                    or response.get("execution_outcome") != "unknown"):
+                raise ValueError("Interrupted attempt must retain an unknown outcome")
+        self._attempts = state["attempts"]
 
     def _put(self, raw: bytes, *, generated: bool = False) -> str:
         parse(raw)
@@ -224,6 +319,8 @@ class AgentHost:
         current = path.stat()
         if (current.st_dev, current.st_ino) != self._output_stat:
             raise ValueError("Output directory identity changed")
+        if self._recovery is not None:
+            self._recovery.check_current()
         return path
 
     def _retain(self, value: dict) -> dict:
@@ -238,6 +335,7 @@ class AgentHost:
             with path.open("xb") as stream:
                 stream.write(raw)
         key = self._put(raw, generated=True)
+        self._checkpoint()
         return self._binding(key)
 
     def capabilities(self) -> dict:
@@ -251,6 +349,9 @@ class AgentHost:
             "check_suites": deepcopy(self._suites), "output_enabled": self._output is not None,
             "execution_budget": {"used": len(self._attempts), "maximum": self._maximum,
                                  "max_nodes_per_graph": self._max_nodes},
+            "attempts": [{"attempt": key, "status": item["response"]["status"],
+                          "execution_outcome": item["response"].get("execution_outcome", "recorded")}
+                         for key, item in sorted(self._attempts.items())],
             "authority": deepcopy(AUTHORITY)}
 
     def inspect(self, artifact: str, selector: list | None = None, offset: int = 0, limit: int = 32) -> dict:
@@ -338,6 +439,7 @@ class AgentHost:
         plan_graph(proposed, self._registry)
         binding = self._retain(proposed)
         self._domains[binding["artifact_id"]] = deepcopy(domains)
+        self._checkpoint()
         return {"candidate": binding, "baseline": self._binding(key), "changes": deepcopy(changes),
                 "executed": False, "authority": deepcopy(AUTHORITY)}
 
@@ -367,13 +469,19 @@ class AgentHost:
             self._registry.operations.get(node["operation_id"])
         if encode(self._registry.catalog()) != self._catalog:
             raise ValueError("Registry changed after host policy was frozen")
+        # Commit the retry identity before creating a Session or invoking a provider.
+        # A crash after this checkpoint has an unknown outcome and never auto-replays.
+        interrupted = {"attempt": attempt, "status": "incomplete", "reused_response": False,
+            "execution_outcome": "unknown", "reason": "Execution was interrupted or its outcome was not durably recorded; explicit review is required",
+            "artifacts": {}, "authority": deepcopy(AUTHORITY)}
+        self._attempts[attempt] = {"request": request, "response": interrupted, "state": "claimed"}
+        self._checkpoint()
         directory = root / attempt
-        directory.mkdir(exist_ok=False)
         response = {"attempt": attempt, "status": "failed", "reused_response": False,
                     "artifacts": {}, "authority": deepcopy(AUTHORITY)}
-        self._attempts[attempt] = {"request": request, "response": response}
         session = None
         try:
+            directory.mkdir(exist_ok=False)
             save_new(directory / "request.json", request)
             save_new(directory / "experiment.json", value)
             session = Session(run, directory, operations=self._registry.operations)
@@ -395,6 +503,8 @@ class AgentHost:
                 except Exception:
                     response["workspace_retention"] = "failed; inspect operator output directory"
         save_new(directory / "response.json", response)
+        self._attempts[attempt] = {"request": request, "response": response, "state": "finished"}
+        self._checkpoint()
         return deepcopy(response)
 
     def replay(self, original_attempt: str, new_attempt: str) -> dict:
@@ -403,7 +513,7 @@ class AgentHost:
         if new_attempt == original_attempt:
             raise ValueError("Replay requires a new attempt identifier")
         if original_attempt not in self._attempts:
-            raise ValueError("Unknown attempt in this host process")
+            raise ValueError("Unknown attempt in this retained host")
         source = self._attempts[original_attempt]["request"]
         return self.execute(source["source"]["artifact_id"], source["experiment"]["artifact_id"], new_attempt)
 
