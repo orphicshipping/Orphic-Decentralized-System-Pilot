@@ -5,14 +5,20 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "computational-instrumentation-workbench"
 version = "0.1.0"
-description = "Terminal-first computational instruments with synchronized optional Godot views"
+description = "Retained investigations and bounded numerical models with optional provider integrations"
 license = "AGPL-3.0-or-later"
 license-files = ["LICENSE"]
 requires-python = ">=3.11"
 dependencies = ["numpy==2.4.3", "websockets==16.0"]
 
+[project.urls]
+Repository = "https://github.com/atomtrapping/Notations-Engineering-Terminal"
+Documentation = "https://github.com/atomtrapping/Notations-Engineering-Terminal/blob/main/docs/quickstart.md"
+Issues = "https://github.com/atomtrapping/Notations-Engineering-Terminal/issues"
+
 [project.optional-dependencies]
 dev = ["pytest==9.0.2", "PyYAML==6.0.3"]
+numerical-checks = ["scipy==1.17.1"]
 columnar = ["pyarrow==25.0.1"]
 bench-models = ["jsonschema==4.26.0"]
 legibility = ["cryptography==46.0.0"]

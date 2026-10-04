@@ -1,47 +1,64 @@
 # Notations Engineering Terminal
 
-**A programmable scientific and engineering workbench for measurement, state estimation, simulation and interactive worlds.**
+**A local workbench for retained investigations, bounded numerical models and optional instrument integrations.**
 
 [Notation Systems](https://notation.systems) · [Quickstart](#quickstart) ·
 [Instruments](docs/INSTRUMENTS.md) · [Integration coverage](docs/INTEGRATION_COVERAGE.md) ·
-[Temperature pilot](#temperature-measurement-and-qualification) ·
+[Temperature processing and pilot plan](#temperature-measurement-and-qualification) ·
 [Research release](docs/QUALIFIED_RELEASE.md) · [Documentation](docs)
 
-**NET** brings modular computational instruments into one engineering monorepo.
-It connects observations, models, parameters, geometry, execution and verification
-in retained investigations. The same substrate supports materials and process
-development, machinery instrumentation, scientific experiments, and game and
-simulation production.
+**NET** combines small numerical instruments with records of their inputs,
+assumptions, execution and checks. The built-in examples are synthetic and the
+physical models are deliberately narrow. Optional providers and client adapters
+extend particular workflows; the catalogue does not establish a validated
+metrology system, general CFD solver or game-production platform.
+
+The canonical repository is
+[atomtrapping/Notations-Engineering-Terminal](https://github.com/atomtrapping/Notations-Engineering-Terminal).
+The former `atomtrapping/Notations-Systems-Terminal` and
+`giasonpooni/Notations-Engineering-Terminal` URLs redirect here (checked
+2026-10-04). The distribution is `computational-instrumentation-workbench`, the
+Python import is `ciw`, and `net` and `ciw` are its command entry points. These
+compatibility names identify this same package; imported modules retain their
+own package identities.
 
 The working loop is **author → run → observe → compare → modify → check**.
 Inputs, assumptions, results, failed attempts and explicit checks remain
 inspectable. Reopening an investigation reads its retained state; an explicit
 replay creates a new execution.
 
-## What NET contains
+## What runs today
 
-| Area | Implemented surfaces and guides |
-| --- | --- |
-| Investigation and execution | Sessions, operation and capability registries, retained runs, save/reopen, explicit replay and runtime preflight. [Instrument catalogue](docs/INSTRUMENTS.md). |
-| Typed composition and design | Workflow composition, parameterized Boards, declared input/output contracts and coupled thermomechanical reference configurations. [Workflow algebra](docs/WORKFLOW_ALGEBRA.md) · [Scientific workflows](docs/NET_SCIENTIFIC_WORKFLOWS.md) · [System composition](docs/SYSTEM_COMPOSITION.md). |
-| Evolving workflow structure | Bounded typed hypergraph rewriting, invariant checks, retained transformation dependencies, alternative paths and explicit schedule comparisons. [Hypergraph rewriting](docs/HYPERGRAPH_REWRITE.md). |
-| Measurement and estimation | Raw observations, affine calibration with joint covariance, time reconciliation, telemetry, state estimation and bounded observation-design workflows. [Temperature pilot](#temperature-measurement-and-qualification) · [Integration coverage](docs/INTEGRATION_COVERAGE.md). |
-| Scientific models and testbeds | Coupled thermal/thermoelastic references, thermal recording comparisons, bounded impact and atmospheric models, and geometric calculations. [System composition](docs/SYSTEM_COMPOSITION.md) · [Thermal recordings](docs/MEASURED_THERMAL.md) · [Atmospheric engine](docs/ATMOSPHERIC_ENGINE.md). |
-| Polymer processing | Cycle metrology, scoped cooling and pressure-arrival estimates, evidence-linked copilot context, and bounded control simulations for injection and extrusion blow molding. [Polymer processing](docs/POLYMER_PROCESSING.md). |
-| Evidence and representation | Typed contracts, identity-bound representations, source correction and dependency status, and signed human/reasoning/vision bundles. [Correction loop](docs/CORRECTION_LOOP.md) · [Legibility instrument](docs/LEGIBILITY.md). |
-| Interactive worlds | Supported BIM, spatial and geometric interfaces; native computation and bounded Blender/Godot/Bevy development workflows. [Technical reference](TECHNICAL_REFERENCE.md). |
+| Surface | Implemented calculation or behavior | Evidence boundary |
+| --- | --- | --- |
+| Investigation host | Local sessions, retained successes and failures, save/reopen and explicit replay | Reopen reads records without executing providers. |
+| Impact | Fixed-step velocity Verlet for unilateral spring contact; other bounded benchmark profiles | Synthetic low-dimensional fixtures, not material qualification. |
+| Liquid exchange and waves | Four-state linear reservoir/piston ODE with implicit midpoint; separate periodic linear surface wave | Numerical mass, energy and interface-work checks for the declared equations; no experimental validation or general CFD. |
+| Thermal estimation | Python two-capacity model, Joseph covariance update and held-out core comparison | Built-in recordings are simulated; calibration authenticity and physical accuracy remain unestablished. |
+| Temperature processing | Affine conversion and first-order joint covariance for declared samples | Conditional software calculation; the installed measurement pilot and product assessment are plans. |
+| Polymer | Cycle statistics, lumped cooling and pressure-arrival estimates, bounded control examples | Model assumptions and synthetic numerical checks, not qualified polymer process engineering. |
+| Workflow declarations | Typed composition and bounded hypergraph transformations | Structural checks do not calculate physical behavior. |
+| Optional integrations | Explicit provider bindings, SP1 integer-heat proof path, BIM and Blender/Godot/Bevy clients | Installation and profile-specific execution evidence required; absent providers refuse. A saved proof is historical on inspection. |
 
-Support is specific to each profile. The coverage matrix identifies callable
-operations, provider requirements, recorded checks and remaining qualification.
-Runtime availability, numerical agreement and experimental physical validation
-are separate conditions.
+[Runnable domain examples](docs/DOMAIN_EXAMPLES.md) exercise the built-in paths
+from an installed wheel. [Numerical comparisons](docs/EXTERNAL_NUMERICAL_COMPARISONS.md)
+compare selected equations with third-party numerical code and a heat-equation
+solution. They are maintained in this repository and are not independent
+external replication or physical validation.
+
+The [instrument catalogue](docs/INSTRUMENTS.md) and
+[coverage matrix](docs/INTEGRATION_COVERAGE.md) distinguish built-in calculations,
+provider requirements, client adapters and planning records. A callable feature,
+a passing numerical check, a guide and an experimentally validated instrument
+are different forms of evidence.
 
 ## Polymer workflows
 
 Run `net polymer demo --output-dir polymer-demo` for a saved cycle report and audit,
-or `net polymer qualify --output-dir polymer-qualification` to exercise both
-process profiles and the complete agent workflow. Retained native calibration
-import and the finite qualification evidence are described in the
+or `net polymer qualify --output-dir polymer-qualification` to exercise the
+synthetic qualification campaign for both process profiles and their agent workflow.
+Here `qualify` names software checks, not physical process qualification.
+Retained native calibration import and the finite qualification evidence are described in the
 [operator guide](docs/POLYMER_PROCESSING.md).
 
 `net polymer leakage` adds retained coolant-volume and material-mass accounting
@@ -51,16 +68,18 @@ setup and runnable examples; an unaccounted deficit does not establish its cause
 
 ## Temperature measurement and qualification
 
-The first metrology pilot targets **polymer temperature during a heating cycle**.
-NET provides two separate processing paths and the records needed to qualify a
-specific installed measurement chain:
+The proposed first metrology pilot targets **polymer temperature during a
+heating cycle**. It has not been performed: no installed sensor/readout,
+polymer/range-specific reference comparison or complete experimental uncertainty
+budget is supplied. Two processing paths are implemented; the pilot and
+conformity records below are planning templates.
 
-| Need | Available path | Scope |
+| Status | Path | Scope |
 | --- | --- | --- |
-| Convert sensor observations and propagate uncertainty | [Temperature MCP profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) | Affine calibration for 1–64 samples, full joint raw/calibration covariance, optional declared installed correction, and conditional acceptance. |
-| Estimate core temperature from retained recordings | [Measured thermal workflow](docs/MEASURED_THERMAL.md) | Already-calibrated shell, power and ambient streams feed a conventional estimator; a held-out core reference supports a separate comparison. |
-| Qualify the installed measurement chain | [Pilot protocol](docs/TEMPERATURE_QUALIFICATION.md) and [setup record](examples/temperature/pilot-setup.json) | Reference comparisons, repeatability, environmental effects, uncertainty, held-out validation and maintenance. |
-| Assess the supplied product for a market | [Product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) | Product/configuration scope, applicable requirements, evidence, laboratory credentials, review and reassessment. |
+| Implemented: observation conversion and uncertainty | [Temperature MCP profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) | Affine calibration for 1–64 samples, full joint raw/calibration covariance, optional declared installed correction, and conditional acceptance. |
+| Implemented: retained-recording core estimate | [Measured thermal workflow](docs/MEASURED_THERMAL.md) | Already-calibrated shell, power and ambient streams feed a conventional estimator; a held-out core reference supports a separate comparison. |
+| Planned: installed measurement qualification | [Pilot protocol](docs/TEMPERATURE_QUALIFICATION.md) and [setup record](examples/temperature/pilot-setup.json) | Reference comparisons, repeatability, environmental effects, uncertainty, held-out validation and maintenance. |
+| Unassessed: product conformity | [Product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) | Product/configuration scope, applicable requirements, evidence, laboratory credentials, review and reassessment. |
 
 Prepare and serve the synthetic MCP processing example:
 
@@ -101,9 +120,8 @@ licences. Shared contracts connect them through declared interfaces.
 | Evidence and verification | Provenance, reference checks, correction dependencies and explicit admission boundaries. |
 | Representations and clients | Human, reasoning, spatial and visual projections of retained state. |
 
-The Python package remains **`ciw`**; **`net`** is the composition and control CLI.
-Both extend the existing Computational Instrumentation Workbench runtime.
-Evidence, operation, execution and verification identities remain separate.
+The distribution and entry-point names are listed above. Evidence, operation,
+execution and verification identities remain separate.
 NET retains investigation records; canonical evidence/state authority stays at
 its declared evidence and admission interfaces.
 
@@ -120,11 +138,11 @@ The migration and qualification guides record the current dependency closure.
 
 `net fluid` retains a time-dependent two-reservoir exchange model with a
 bidirectionally coupled compliant boundary, and a separate periodic linear
-surface-wave profile. Independent references, mass/energy/interface-work
-checks, and temporal/spatial refinement qualify their declared numerical
-domains. The [fluid guide](docs/FLUID_DYNAMICS.md) includes runnable commands,
-model equations, a qualified scalar-state handoff, and explicit expansion
-routes. The existing FlowState snapshot estimator and runtime pin remain
+surface-wave profile. In-repository reference implementations,
+mass/energy/interface-work checks, and temporal/spatial refinement test the
+declared equations and configurations. The [fluid guide](docs/FLUID_DYNAMICS.md)
+includes runnable commands, model equations, a numerically checked scalar-state handoff, and explicit
+expansion routes. The existing FlowState snapshot estimator and runtime pin remain
 unchanged; experimental validation and general molecular/CFD coupling remain
 unestablished.
 
@@ -223,15 +241,18 @@ provide the detailed status. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)
 preserves the earlier reference and historical terminology; current module
 guides take precedence for later additions.
 
-## Organization and licence
+## Attribution and licence
 
-NET is shared infrastructure developed by **Notation Systems Inc.** across
-**Notations Gaming**, **Notation Manufacturing** and **Notations Laboratories**:
-interactive worlds, design and manufacturing systems, and scientific research
-and validation.
+Project materials use **Notation Systems Inc.**, **Notations Gaming**,
+**Notation Manufacturing** and **Notations Laboratories** as declared
+organizational names. The repository is not evidence of corporate registration,
+laboratory accreditation or product certification.
 
 **© 2026 Giason Pooni, for original contributions.** The root code is governed by
-the existing [LICENSE](LICENSE). Imported modules retain their own licences and
-upstream notices. Project-owned original assets use the
+the existing [AGPL-3.0-or-later licence](LICENSE). Imported modules retain their
+own licences and upstream notices, recorded in [the manifest](instruments/manifest.json).
+A manifest is an inventory, not clearance for a combined distribution. Review
+[the distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source)
+for the actual components and deployment. Project-owned original assets use the
 [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md). Repository publication
 does not change those terms or confer evidence, signing or execution authority.
