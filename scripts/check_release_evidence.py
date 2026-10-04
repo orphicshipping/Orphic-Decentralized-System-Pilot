@@ -9,6 +9,7 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -33,7 +34,12 @@ def strict_json(raw):
         return result
     def constant(value):
         raise ValueError(f"nonfinite JSON value: {value}")
-    return json.loads(raw, object_pairs_hook=pairs, parse_constant=constant)
+    def finite_float(value):
+        number = float(value)
+        if not math.isfinite(number):
+            raise ValueError("nonfinite JSON number: " + value)
+        return number
+    return json.loads(raw, object_pairs_hook=pairs, parse_constant=constant, parse_float=finite_float)
 
 
 def read_json(path):
@@ -263,6 +269,9 @@ def assess_workflow(requirement, record, sha, repository):
     artifacts = record.get("artifacts", [])
     if not isinstance(artifacts, list) or any(not isinstance(item, dict) for item in artifacts):
         return errors + ["invalid artifacts evidence"]
+    artifact_ids = [item.get("id") for item in artifacts]
+    if any(not positive_int(value) for value in artifact_ids) or len(set(artifact_ids)) != len(artifact_ids):
+        return errors + ["invalid or duplicate artifact identities"]
     for name in requirement.get("artifacts", []):
         named = [item for item in artifacts if item.get("name") == name]
         try:

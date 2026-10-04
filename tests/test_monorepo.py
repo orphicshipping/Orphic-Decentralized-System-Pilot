@@ -580,3 +580,152 @@ def test_named_cache_data_cannot_exempt_executable_files(checkout, scope):
     audit = monorepo.verify_imports if scope == "import" else monorepo.verify_terminal_source
     with pytest.raises(ValueError, match="untracked"):
         audit(checkout)
+
+
+@pytest.fixture
+def compact_imports(tmp_path, monkeypatch):
+    """Exercise real Git history/index/bytes without cloning all 21 providers."""
+    root = tmp_path / "compact-imports"
+    root.mkdir()
+    monorepo.git(root, "init", "--quiet")
+    monorepo.git(root, "config", "user.name", "Import audit fixture")
+    monorepo.git(root, "config", "user.email", "import-audit@example.invalid")
+    monorepo.git(root, "config", "core.autocrlf", "false")
+    files = {"empty": b"", "binary": b"\x00\xff\r\n", "space caf\u00e9.py": b"value = 1\n"}
+    for name, data in files.items():
+        (root / name).write_bytes(data)
+    monorepo.git(root, "add", "--all")
+    monorepo.git(root, "commit", "--quiet", "-m", "Original source")
+    revision = monorepo.git(root, "rev-parse", "HEAD").decode().strip()
+    tree = monorepo.git(root, "rev-parse", "HEAD^{tree}").decode().strip()
+    modules = []
+    for role in ("first", "second"):
+        prefix = "imports/" + role
+        path = root / prefix
+        path.mkdir(parents=True)
+        for name, data in files.items():
+            (path / name).write_bytes(data)
+        modules.append({"role": role, "path": prefix, "import_revision": revision,
+                        "import_tree": tree, "runtime_revision": revision})
+    for name in files:
+        (root / name).unlink()
+    (root / "scripts").mkdir()
+    (root / "scripts/tool.py").write_bytes(b"# Terminal tooling\n")
+    monorepo.git(root, "add", "--all")
+    monorepo.git(root, "commit", "--quiet", "-m", "Preserved imports")
+    monkeypatch.setattr(monorepo, "load_manifest", lambda supplied: {"modules": modules})
+    return root, modules
+
+
+def test_import_audit_reads_each_tracked_file_once_and_batches_git_queries(compact_imports, monkeypatch):
+    root, modules = compact_imports
+    reads, calls = {}, []
+    original_read, original_git = Path.read_bytes, monorepo.git
+
+    def read(path):
+        if path.is_relative_to(root) and ".git" not in path.relative_to(root).parts:
+            relative = path.relative_to(root).as_posix()
+            reads[relative] = reads.get(relative, 0) + 1
+        return original_read(path)
+
+    def git(path, *arguments):
+        calls.append(arguments)
+        return original_git(path, *arguments)
+
+    monkeypatch.setattr(Path, "read_bytes", read)
+    monkeypatch.setattr(monorepo, "git", git)
+    assert monorepo.verify_imports(root) == {m["role"]: m["import_tree"] for m in modules}
+    assert len(reads) == 7
+    assert set(reads.values()) == {1}
+    assert sum(arguments[0] == "ls-tree" for arguments in calls) == 1
+    assert sum(arguments[:2] == ("diff", "--cached") for arguments in calls) == 1
+    assert sum(arguments[:2] == ("ls-files", "--others") for arguments in calls) == 2
+    assert sum(arguments[:2] == ("ls-files", "--stage") for arguments in calls) == 2
+
+
+@pytest.mark.parametrize("change", ["bytes", "missing", "directory", "index", "index_mode", "untracked", "empty_bytes"])
+def test_import_audit_compact_refusals_and_fresh_bytes(compact_imports, change):
+    root, _ = compact_imports
+    monorepo.verify_imports(root)
+    path = root / "imports/first" / ("empty" if change == "empty_bytes" else "binary")
+    if change in {"bytes", "empty_bytes"}:
+        monorepo.git(root, "update-index", "--assume-unchanged", str(path.relative_to(root)))
+        path.write_bytes(path.read_bytes() + b"changed")
+    elif change == "missing":
+        path.unlink()
+    elif change == "directory":
+        path.unlink()
+        path.mkdir()
+    elif change == "index":
+        original = path.read_bytes()
+        path.write_bytes(b"staged change")
+        monorepo.git(root, "add", str(path.relative_to(root)))
+        path.write_bytes(original)
+    elif change == "index_mode":
+        monorepo.git(root, "update-index", "--chmod=+x", str(path.relative_to(root)))
+    else:
+        shadow = root / "imports/first/.pytest_cache/shadow"
+        shadow.parent.mkdir()
+        shadow.write_bytes(b"untracked source")
+        (root / ".git/info/exclude").write_text("/imports/first/.pytest_cache/\n")
+    with pytest.raises((ValueError, subprocess.CalledProcessError)):
+        monorepo.verify_imports(root)
+
+
+@pytest.mark.parametrize("change", ["head", "index"])
+def test_import_audit_refuses_identity_drift_during_byte_pass(compact_imports, monkeypatch, change):
+    root, modules = compact_imports
+    path = root / "scripts/tool.py"
+    original = Path.read_bytes
+    changed = False
+
+    def read(candidate):
+        nonlocal changed
+        data = original(candidate)
+        if candidate == path and not changed:
+            changed = True
+            if change == "head":
+                monorepo.git(root, "update-ref", "HEAD", modules[0]["import_revision"])
+            else:
+                monorepo.git(root, "update-index", "--cacheinfo", "100644",
+                             monorepo.git(root, "rev-parse", "HEAD:imports/first/binary").decode().strip(),
+                             "scripts/tool.py")
+        return data
+
+    monkeypatch.setattr(Path, "read_bytes", read)
+    with pytest.raises(ValueError, match="(?:revision changed|index differs)"):
+        monorepo.verify_imports(root)
+    assert changed
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="Windows does not expose POSIX executable mode bits")
+def test_import_audit_refuses_compact_mode_drift(compact_imports):
+    root, _ = compact_imports
+    (root / "imports/first/binary").chmod(0o755)
+    with pytest.raises(ValueError, match="executable mode"):
+        monorepo.verify_imports(root)
+
+
+@pytest.mark.parametrize("change", ["bytes", "head"])
+def test_import_audit_rechecks_checkout_after_import_identity_phase(compact_imports, monkeypatch, change):
+    root, _ = compact_imports
+    original = monorepo.git
+    changed = False
+    tree = original(root, "rev-parse", "HEAD^{tree}").decode().strip()
+    next_revision = original(root, "commit-tree", tree, "-p", "HEAD", "-m", "Concurrent identity").decode().strip()
+
+    def git(path, *arguments):
+        nonlocal changed
+        result = original(path, *arguments)
+        if arguments[:2] == ("ls-files", "--others") and not changed:
+            changed = True
+            if change == "bytes":
+                (root / "imports/first/binary").write_bytes(b"concurrent working drift")
+            else:
+                original(root, "update-ref", "HEAD", next_revision)
+        return result
+
+    monkeypatch.setattr(monorepo, "git", git)
+    with pytest.raises(ValueError, match="(?:working file differs|revision changed)"):
+        monorepo.verify_imports(root)
+    assert changed

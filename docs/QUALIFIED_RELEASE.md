@@ -16,6 +16,12 @@ starting commit, retained integration inputs, PR dispositions, and blockers. The
 [capability ledger](../release/capability-ledger.json) separates documented
 implementation, installation evidence, local availability, and qualification.
 
+The current repository is `atomtrapping/Notations-Engineering-Terminal`.
+The live qualification policy uses that canonical address; the collector refuses
+API redirects and checks the repository identity. Dated baseline observations
+and release-scope snapshots retain the repository name and URLs observed when
+they were recorded, before the rename.
+
 ## First milestone and acceptance
 
 1. Qualify the combined #135/#137 infrastructure, #144 shared contracts,

@@ -34,7 +34,15 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install -e ".[dev]"
-      - run: python -m pytest -q
+      - name: Run full Python regression suite with diagnostic evidence
+        run: python -m pytest -q --durations=20 -o faulthandler_timeout=300 --junitxml=python-tests.xml
+      - name: Retain Python regression results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ciw-python-tests-${{ matrix.os }}-${{ matrix.python }}
+          path: python-tests.xml
+          if-no-files-found: warn
 
   plsr-terminal:
     env:

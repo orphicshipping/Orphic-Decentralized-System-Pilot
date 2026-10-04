@@ -400,7 +400,7 @@ def test_opaque_native_npm_launcher_is_refused_even_when_its_version_probe_succe
     native.chmod(0o755)
 
     def discover(command, path=None):
-        return str(native) if command == "npm" else original(command, path=path)
+        return str(native) if Path(command).name == "npm" else original(command, path=path)
 
     monkeypatch.setattr(module.shutil, "which", discover)
     report = module.inspect_workspace(root=root, groups=["web"], node_bin=directory)
@@ -511,3 +511,194 @@ def test_unknown_group_is_rejected_before_any_source_or_tool_probe(doctor):
     with pytest.raises(ValueError, match="registered"):
         module.inspect_workspace(root=root, groups=["unexpected"])
     assert state["source_calls"] == 0
+
+
+def test_invalid_version_encoding_is_a_retained_refusal(doctor, tools):
+    module, root, _ = doctor
+    _, versions, _ = tools
+    versions["uv"] = UnicodeDecodeError("utf-8", bytes([255]), 0, 1, "invalid start byte")
+    report = module.inspect_workspace(root=root, groups=["surface"])
+    check = _checks(report, "surface")["uv"]
+    assert report["status"] == check["status"] == "refused"
+    assert check["error_type"] == "UnicodeDecodeError"
+    assert report["qualification"] == "not_performed"
+
+
+def test_relative_tool_search_is_not_misrepresented_across_gate_directories(doctor, tools, monkeypatch):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    child_bin = root / "bin"
+    child_bin.mkdir()
+    expected = child_bin / "uv"
+    expected.write_text("#!/bin/sh" + chr(10))
+    expected.chmod(0o755)
+    # The caller and child each have a different bin/uv; only the latter is
+    # available to the gate executing with cwd=root and PATH=bin.
+    monkeypatch.chdir(directory.parent)
+    monkeypatch.setenv("PATH", "bin")
+    report = module.inspect_workspace(root=root, groups=["surface"])
+    selected = _checks(report, "surface")["uv"]
+    if os.name != "nt":
+        assert report["status"] == selected["status"] == "refused"
+        assert "working directory" in selected["reason"]
+        assert calls == []
+    else:
+        assert report["status"] == "available"
+        assert selected["entrypoint"] == str(expected)
+        assert calls[0][0][0] == str(expected)
+        assert calls[0][1]["cwd"] == root
+        assert calls[0][1]["env"]["PATH"] == "bin"
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows implicit executable search semantics")
+@pytest.mark.parametrize("suppress_current_directory", [False, True])
+def test_windows_real_lookup_does_not_probe_a_caller_directory_tool(doctor, tools, monkeypatch, suppress_current_directory):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    # These files are never executed: only actual shutil.which discovery is
+    # used; the existing version subprocess fixture remains mocked.
+    for path in (directory.parent / "uv.exe", root / "uv.exe", directory / "uv.exe"):
+        path.write_bytes(b"owned lookup fixture")
+    monkeypatch.chdir(directory.parent)
+    monkeypatch.setenv("PATH", str(directory))
+    monkeypatch.setenv("PATHEXT", ".EXE")
+    if suppress_current_directory:
+        monkeypatch.setenv("NoDefaultCurrentDirectoryInExePath", "1")
+    else:
+        monkeypatch.delenv("NoDefaultCurrentDirectoryInExePath", raising=False)
+    monkeypatch.setattr(module, "shutil", shutil)
+    with monkeypatch.context() as child_context:
+        child_context.chdir(root)
+        expected = Path(shutil.which("uv", path=str(directory))).absolute()
+    report = module.inspect_workspace(root=root, groups=["surface"])
+    selected = _checks(report, "surface")["uv"]
+    assert report["status"] == "available"
+    assert Path(selected["entrypoint"]) == expected
+    assert Path(calls[0][0][0]) == expected
+
+
+@pytest.mark.parametrize("compiler", ["rustc", "rustdoc"])
+def test_relative_compiler_environment_is_refused_without_probe(doctor, tools, monkeypatch, compiler):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    child_bin = root / "bin"
+    child_bin.mkdir()
+    candidate = child_bin / compiler
+    candidate.write_text("#!/bin/sh" + chr(10))
+    candidate.chmod(0o755)
+    monkeypatch.chdir(directory.parent)
+    monkeypatch.setenv(compiler.upper(), "bin/" + compiler)
+    report = module.inspect_workspace(root=root, groups=["operations"])
+    assert report["status"] == "refused"
+    selected = _checks(report, "operations")[compiler]
+    assert selected["status"] == "refused"
+    assert "relative" in selected["reason"].lower()
+    assert "absolute" in selected["reason"].lower()
+    assert "entrypoint" not in selected
+    assert all(Path(command[0]).stem != compiler for command, _ in calls)
+    assert _checks(report, "operations")["rust_toolchain_context"]["status"] == "refused"
+
+
+@pytest.mark.parametrize("compiler", ["rustc", "rustdoc"])
+@pytest.mark.parametrize("entry", ["bin", ""])
+def test_selected_relative_compiler_path_is_refused_without_probe(doctor, tools, monkeypatch, compiler, entry):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    selected_bin = root / entry
+    selected_bin.mkdir(exist_ok=True)
+    candidate = selected_bin / compiler
+    candidate.write_text("#!/bin/sh" + chr(10))
+    candidate.chmod(0o755)
+    monkeypatch.setenv("NoDefaultCurrentDirectoryInExePath", "1")
+    selected = module._tool(compiler, root, {"PATH": entry + os.pathsep + str(directory)})
+    assert selected["status"] == "refused"
+    assert "working directory" in selected["reason"]
+    assert calls == []
+
+
+@pytest.mark.parametrize("compiler", ["rustc", "rustdoc"])
+def test_unused_relative_path_does_not_refuse_absolute_compiler_selection(doctor, tools, monkeypatch, compiler):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    monkeypatch.setenv("NoDefaultCurrentDirectoryInExePath", "1")
+    selected = module._tool(compiler, root, {"PATH": "missing" + os.pathsep + str(directory)})
+    assert selected["status"] == "available"
+    assert Path(selected["entrypoint"]) == directory / compiler
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("compiler", ["rustc", "rustdoc"])
+def test_absolute_compiler_environment_binding_survives_relative_path(doctor, tools, compiler):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    selected = module._tool(compiler, root, {"PATH": "bin"}, supplied=str(directory / compiler))
+    assert selected["status"] == "available"
+    assert Path(selected["entrypoint"]) == directory / compiler
+    assert len(calls) == 1
+
+
+@pytest.mark.parametrize("name", ["cargo", "uv"])
+def test_posix_selected_relative_launch_is_refused_without_probe(doctor, tools, monkeypatch, name):
+    module, root, _ = doctor
+    _, _, calls = tools
+    selected_bin = root / "bin"
+    selected_bin.mkdir()
+    candidate = selected_bin / name
+    candidate.write_text("#!/bin/sh" + chr(10))
+    candidate.chmod(0o755)
+    # Exercise the POSIX launch branch with inert files on every host.
+    # This is inspect-only branch coverage, not a POSIX subprocess qualification.
+    monkeypatch.setattr(module, "os", SimpleNamespace(**{**vars(os), "name": "posix"}))
+    selected = module._tool(name, root, {"PATH": "bin"})
+    assert selected["status"] == "refused"
+    assert "working directory" in selected["reason"]
+    assert calls == []
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows implicit compiler lookup semantics")
+@pytest.mark.parametrize("compiler", ["rustc", "rustdoc"])
+def test_windows_implicit_compiler_directory_is_refused_without_probe(doctor, tools, monkeypatch, compiler):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    for candidate in (root / (compiler + ".exe"), directory / (compiler + ".exe")):
+        candidate.write_bytes(b"owned lookup fixture")
+    monkeypatch.setenv("PATHEXT", ".EXE")
+    monkeypatch.delenv("NoDefaultCurrentDirectoryInExePath", raising=False)
+    monkeypatch.setattr(module, "shutil", shutil)
+    selected = module._tool(compiler, root, {"PATH": str(directory)})
+    assert selected["status"] == "refused"
+    assert "working directory" in selected["reason"]
+    assert calls == []
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Windows PATHEXT and implicit lookup semantics")
+def test_windows_selected_node_directory_ignores_caller_shadowing(doctor, tools, monkeypatch):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    for path in (directory.parent / "node.exe", directory.parent / "npm.cmd",
+                 directory / "node.exe", directory / "npm.cmd"):
+        path.write_bytes(b"owned lookup fixture")
+    monkeypatch.chdir(directory.parent)
+    monkeypatch.setenv("PATHEXT", ".EXE;.CMD")
+    monkeypatch.delenv("NoDefaultCurrentDirectoryInExePath", raising=False)
+    monkeypatch.setattr(module, "shutil", shutil)
+    report = module.inspect_workspace(root=root, groups=["web"], node_bin=directory)
+    checks = _checks(report, "web")
+    assert Path(checks["node"]["entrypoint"]) == directory / "node.exe"
+    assert Path(checks["npm"]["entrypoint"]) == directory / "npm.cmd"
+    assert [Path(command[0]).parent for command, _ in calls] == [directory, directory]
+    # Native npm is still deliberately unqualified by this launcher policy.
+    assert checks["node_npm_context"]["status"] == report["status"] == "refused"
+
+
+@pytest.mark.skipif(os.name != "nt", reason="Python 3.11 Windows PATHEXT compatibility")
+def test_python311_windows_lookup_keeps_pathext_on_absolute_candidates(doctor, monkeypatch):
+    module, root, _ = doctor
+    selected = root / "tools"
+    selected.mkdir()
+    tool = selected / "uv.EXE"
+    tool.write_bytes(b"owned lookup fixture")
+    monkeypatch.setenv("PATHEXT", ".COM;.EXE;.BAT;.CMD")
+    monkeypatch.setattr(module, "shutil", shutil)
+    module.sys.version_info = (3, 11, 9)
+    assert Path(module._which_at_root("uv", root, str(selected))) == tool

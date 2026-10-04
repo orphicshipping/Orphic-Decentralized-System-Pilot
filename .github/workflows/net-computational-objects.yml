@@ -39,7 +39,7 @@ jobs:
           PY
       - name: Real committed provider capture and offline view
         run: |
-          net object capture --repo-root . --repository giasonpooni/Notations-Engineering-Terminal --revision HEAD --path src/ciw/adapters/oscillator.py --symbol compute_statistics --declaration examples/computational-objects/statistics.json --editable --output source-evidence/selection.json
+          net object capture --repo-root . --repository "${{ github.repository }}" --revision HEAD --path src/ciw/adapters/oscillator.py --symbol compute_statistics --declaration examples/computational-objects/statistics.json --editable --output source-evidence/selection.json
           net object context source-evidence/selection.json --output source-evidence/context.json
           net object view source-evidence/selection.json --output source-evidence/inspector.html
       - name: Actual Chromium inspection

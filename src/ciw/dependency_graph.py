@@ -57,14 +57,18 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
             source_kind=source["kind"], evidence_id=source["evidence_id"], label=source["label"])
     for execution in executions.values():
         deps = [execution["evidence_id"]]
-        if execution["operation_id"] == "system.compile.v1":
-            source_id = execution.get("parameters", {}).get("source_id")
-            if type(source_id) is str and source_id in sources:
-                deps.append(source_id)
-        deps.extend(dependency_result_ids(execution["operation_id"], execution.get("parameters", {})))
-        upstream = execution.get("parameters", {}).get("source_result_id")
-        if upstream is not None:
-            deps.append(upstream)
+        # Refused attempts retain the caller's original parameters, which may
+        # contain invalid or missing references. Only completed occurrences
+        # have a validated result contract from which to project these edges.
+        if execution["status"] == "completed":
+            if execution["operation_id"] == "system.compile.v1":
+                source_id = execution.get("parameters", {}).get("source_id")
+                if type(source_id) is str and source_id in sources:
+                    deps.append(source_id)
+            deps.extend(dependency_result_ids(execution["operation_id"], execution.get("parameters", {})))
+            upstream = execution.get("parameters", {}).get("source_result_id")
+            if upstream is not None:
+                deps.append(upstream)
         add(execution["execution_id"], "execution", deps,
             operation_id=execution["operation_id"], outcome=execution["status"])
     for result in results.values():
