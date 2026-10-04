@@ -40,7 +40,13 @@ while True:
 def pipe(tmp_path, mode='ok', timeout=1):
     p=tmp_path/'worker.py'
     p.write_text(WORKER)
-    return _Pipe([sys.executable,'-u',str(p),mode],cwd=tmp_path,timeout=timeout)
+    python = sys.executable
+    if sys.platform == 'win32':
+        # A venv redirector can spawn a second process, so Popen.pid differs
+        # from the worker's os.getpid(). This double needs only the stdlib;
+        # launch its base interpreter directly and retain the real PID check.
+        python = getattr(sys, '_base_executable', None) or python
+    return _Pipe([python,'-u',str(p),mode],cwd=tmp_path,timeout=timeout)
 
 
 def test_one_process_handles_large_framed_requests_and_clean_close(tmp_path):

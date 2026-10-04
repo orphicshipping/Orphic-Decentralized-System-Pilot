@@ -7,6 +7,10 @@ open a device, apply calibration, fit parameters or launch Julia.
 
 The original `thermal-observer` synthetic source and runtime remain unchanged.
 
+On Windows, use a short checkout, build and results path. Qualification encountered
+legacy path-length limits in packaging and retained-workspace writes; the same
+source passed from shorter paths. Long-path support remains an open host gate.
+
 ## Run, inspect and replay
 
 Start with a retained workspace, then supply a recording source:
