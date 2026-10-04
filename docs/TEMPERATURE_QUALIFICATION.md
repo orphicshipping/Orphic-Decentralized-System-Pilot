@@ -77,6 +77,47 @@ that workflow. Any future handoff must preserve units, location/time semantics,
 observation versus estimate labels, covariance and acquisition/calibration
 lineage. Neither workflow supplies the physical pilot data or qualification.
 
+## Independent numerical audit
+
+`metrology.temperature.verify.v1` consumes the actual retained processing result
+through a typed dependency. The default temperature MCP graph now runs processing
+and this checker as separate operations. The audit binds the request, processing
+report, result and execution identities, checker contract and runtime; each fresh
+execution has its own verification occurrence. Existing processing-only profiles
+remain usable. Reopening a workspace validates historical structure and bindings
+without running a new numerical comparison.
+
+The checker uses exact rational arithmetic on the binary64 inputs to derive affine
+values and the full first-order `J C J^T`, adds the declared independent covariance
+and installed correction, and checks squared standard uncertainties against the
+reference variances. Each numerical comparison permits
+`16 * 2^-52 * sum(abs(reference terms)) + 64 * 2^-1074` absolute error. This fixed
+floating-point allowance scales with the terms, including cancellation; it is
+not a guaranteed forward-error bound for every accepted input, a physical error
+budget or an enclosure added to the acceptance interval. A structurally valid
+processing result can therefore fail the numerical audit. The synthetic suite
+includes an extreme covariance case where an intermediate product underflows
+before multiplication by a large sensitivity; the checker reports FAIL rather
+than treating input acceptance as evidence of adequate precision.
+The checker independently reconstructs the sample-only interval decisions from
+the reported values, uncertainties and multiplier.
+
+Malformed source/report contracts refuse; coherent but numerically inconsistent
+outputs produce a retained audit `FAIL`. `PASS` supports only those finite checks
+under the stated allowance. Counts and maximum errors/allowances stay visible.
+Correctly retaining unavailable samples can pass the audit with no numerical
+values compared; this does not validate missing data. Processing acceptance can
+remain `indeterminate` while the audit passes. The ordinary processing result
+keeps `not_verified`; a fresh numerical audit is neither an SP1 proof nor a
+physical qualification. Saved audit hashes alone do not authenticate a claimed
+PASS; call the checker again for a fresh comparison.
+
+Source qualification includes exact dyadic covariance cases, correlated inputs,
+installed corrections, applicability boundaries and unavailable observations,
+plus deliberately resealed wrong outputs. The dedicated CI lane also installs
+the wheel and exercises processing/check/replay with an independent MCP client.
+These are software fixtures, not physical heating-cycle evidence.
+
 ## Freeze the pilot before confirmatory experiments
 
 Define the target as polymer temperature at a named location and time, with a

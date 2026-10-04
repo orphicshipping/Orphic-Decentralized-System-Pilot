@@ -15,6 +15,13 @@ machine-readable [release scope](../release/release-scope.json) records the
 starting commit, retained integration inputs, PR dispositions, and blockers. The
 [capability ledger](../release/capability-ledger.json) separates documented
 implementation, installation evidence, local availability, and qualification.
+The ledger is a manual inventory; its current-source additions do not alter the
+selected CI policy or update the dated release-scope snapshot. The collector
+does not read that inventory or decide physical qualification. The
+[model validity and evidence guide](MODEL_VALIDITY_AND_EVIDENCE.md) records the
+numerical domains, experimental gaps and review criteria for extending selected
+merged models. Research-release acceptance does not certify a production
+measurement chain or product.
 
 The current repository is `atomtrapping/Notations-Engineering-Terminal`.
 The live qualification policy uses that canonical address; the collector refuses
@@ -163,8 +170,11 @@ failure, and retrying unchanged credentials does not resolve it.
 | One application pilot | Polymer/thermal investigation, with two reference workflows | Agreed held-out measurement criteria and a reproducible retained investigation |
 | Hardened pilot | Packaging, recovery, limits and compatibility policy | Demonstrated recovery and upgrade/compatibility behavior with operator documentation |
 
-The pilot selection is provisional. Measured validation must be specified
-before making application claims. Broad multiphysics, autonomous research,
+The selected application pilot is polymer temperature during a heating cycle;
+its [measurement-chain protocol](TEMPERATURE_QUALIFICATION.md) leaves the actual
+hardware, operating range and required uncertainty open. Measured validation
+must be specified and completed before making application performance claims.
+Broad multiphysics, autonomous research,
 private-provider qualification, and commissioned equipment control remain
 separate workstreams.
 

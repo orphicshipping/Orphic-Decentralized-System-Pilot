@@ -298,11 +298,13 @@ def polymer_config(destination: Path, process: str = "injection_molding") -> Pat
 def temperature_config(destination: Path, request: dict | None = None) -> Path:
     """Create synthetic temperature declarations and graph without processing."""
     from .temperature_contract import example_request
-    from .temperature_workflow import PROCESS, make_source
+    from .temperature_workflow import PROCESS, VERIFY, make_source
     request = example_request() if request is None else request
     source = make_source(request)
     graph = experiment("agent-temperature-processing", model_id="declared-affine-temperature.v1", nodes=[
         {"node_id": "processing", "operation_id": PROCESS, "parameters": {}, "inputs": {}, "depends_on": []},
+        {"node_id": "verification", "operation_id": VERIFY, "parameters": {},
+         "inputs": {"processing": {"node_id": "processing", "port": "result"}}, "depends_on": []},
     ])
     destination = destination.expanduser().absolute()
     destination.mkdir(parents=False, exist_ok=False)
@@ -311,8 +313,8 @@ def temperature_config(destination: Path, request: dict | None = None) -> Path:
     save_new(destination / "experiment.json", graph)
     profile = {"schema": "ciw.agent-host-profile.v1", "inputs": {
         "source": "source.json", "baseline": "experiment.json"}, "output_dir": "agent-output",
-        "allow_operations": [PROCESS], "candidate_domains": {}, "comparisons": {}, "check_suites": {},
-        "max_executions": 8, "max_nodes": 1}
+        "allow_operations": [PROCESS, VERIFY], "candidate_domains": {}, "comparisons": {}, "check_suites": {},
+        "max_executions": 8, "max_nodes": 2}
     save_new(destination / "profile.json", profile)
     return destination / "profile.json"
 

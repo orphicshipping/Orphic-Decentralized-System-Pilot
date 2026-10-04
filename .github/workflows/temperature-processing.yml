@@ -5,6 +5,8 @@ on:
       - 'src/ciw/temperature_*.py'
       - 'src/ciw/agent_mcp.py'
       - 'src/ciw/operations/schemas.py'
+      - 'src/ciw/session.py'
+      - 'scripts/check_temperature_mcp.py'
       - 'tests/test_temperature_*.py'
       - 'docs/TEMPERATURE_QUALIFICATION.md'
       - 'examples/temperature/**'
@@ -29,7 +31,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -e '.[dev]' build
       - name: Numerical and MCP contracts plus existing boundary regressions
-        run: python -m pytest -q tests/test_temperature_processing.py tests/test_temperature_agent.py tests/test_agent_protocol.py tests/test_polymer_agent.py tests/test_polymer_metrology.py tests/test_control_plane.py tests/test_check_suite.py tests/test_operation_runner.py tests/test_operation_failure_retention.py tests/test_operation_publication.py tests/test_covariance_records.py -o addopts= --junitxml=temperature-contracts.xml
+        run: python -m pytest -q tests/test_temperature_processing.py tests/test_temperature_verification.py tests/test_temperature_agent.py tests/test_agent_protocol.py tests/test_polymer_agent.py tests/test_polymer_metrology.py tests/test_control_plane.py tests/test_check_suite.py tests/test_operation_runner.py tests/test_operation_failure_retention.py tests/test_operation_publication.py tests/test_covariance_records.py tests/test_dependency_refusals.py -o addopts= --junitxml=temperature-contracts.xml
       - run: python -m build --wheel
       - name: Installed wheel tests outside source imports
         shell: bash
@@ -43,8 +45,12 @@ jobs:
           with tempfile.TemporaryDirectory() as tmp:
               location=subprocess.check_output([sys.executable,'-I','-c','import ciw.temperature_workflow; print(ciw.temperature_workflow.__file__)'],cwd=tmp,env=env,text=True)
               assert not pathlib.Path(location.strip()).resolve().is_relative_to(root)
-              subprocess.run([sys.executable,'-I','-m','pytest','-q',str(root/'tests/test_temperature_processing.py'),str(root/'tests/test_temperature_agent.py'),'-o','pythonpath=','-o','addopts=','--junitxml='+str(root/'temperature-installed.xml')],cwd=tmp,env=env,check=True)
+              subprocess.run([sys.executable,'-I','-m','pytest','-q',str(root/'tests/test_temperature_processing.py'),str(root/'tests/test_temperature_verification.py'),str(root/'tests/test_temperature_agent.py'),'-o','pythonpath=','-o','addopts=','--junitxml='+str(root/'temperature-installed.xml')],cwd=tmp,env=env,check=True)
           PY
+      - name: Independent installed MCP client for processing and numerical audit
+        run: |
+          python -m pip install mcp==1.26.0
+          python -I scripts/check_temperature_mcp.py --output-dir temperature-sdk
       - name: Refuse missing tests or skipped qualification
         shell: bash
         run: |
@@ -63,4 +69,5 @@ jobs:
           path: |
             temperature-contracts.xml
             temperature-installed.xml
+            temperature-sdk/
             dist/*.whl

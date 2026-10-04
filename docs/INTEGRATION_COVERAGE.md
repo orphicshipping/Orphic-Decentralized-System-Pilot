@@ -12,6 +12,28 @@ executable and dependency closure. A named operation, capability record or
 source file establishes neither qualification nor physical validity. An
 unavailable provider must refuse rather than manufacture a result.
 
+## Current source addendum — 2026-10-04
+
+Inspected source: `554bb1540ef1b621af9e08f2d632095ca958150d`. The dated
+baseline above remains a historical observation. This addendum records selected
+merged paths added since that baseline; it does not report a new execution of
+all providers or qualify the full research release. The
+[model validity and evidence guide](MODEL_VALIDITY_AND_EVIDENCE.md) explains how
+to read declared limits, numerical checks and physical evidence separately.
+
+| Current path | Source and operating guide | Evidence boundary |
+| --- | --- | --- |
+| Local MCP agent interface | [Implementation](../src/ciw/agent_mcp.py), [protocol and qualification](NET_AGENT_PROTOCOL.md) | Bounded local tools use existing execution, observation, comparison and replay contracts. A served profile or successful transport check does not qualify its scientific model or authorize equipment. |
+| Affine temperature processing | `metrology.temperature.process.v1`: [contract](../src/ciw/temperature_contract.py), [processor](../src/ciw/temperature_processing.py), [MCP profile](NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile), [tests](../tests/test_temperature_processing.py) | 1–64 observations, full joint raw/calibration covariance, declared applicability, optional installed correction and conditional sample-instant acceptance. Applicability is checked against submitted declarations; traceability, authenticated acquisition and physical qualification remain unestablished. |
+| Thermal estimation from recordings | `ciw.measured-thermal.v1`: [guide](MEASURED_THERMAL.md), [contract](../src/ciw/measured_thermal.py), [tests](../tests/test_measured_thermal_review.py) | Already-calibrated shell, power and ambient streams feed the Python estimator; a held-out core stream supports comparison. Input uncertainty is retained but is not propagated by this kernel. Fixtures are simulated, and numerical comparison does not establish installed-chain validity. |
+| Coupled thermal/thermoelastic references | [System composition](SYSTEM_COMPOSITION.md), [workflow](../src/ciw/system_workflow.py), [tests](../tests/test_system_workflow.py) | A thermal rod and quasi-static axial mechanics have bounded balance, analytic and refinement checks. Coupling is one-way; constitutive extensions and experimental material validation require separate evidence. |
+| Polymer temperature pilot | [Qualification protocol](TEMPERATURE_QUALIFICATION.md), [setup record](../examples/temperature/pilot-setup.json), [conformity guide](TEMPERATURE_PRODUCT_CONFORMITY.md) | A programme and unfilled records for one installed measurement chain. Actual hardware, installation, operating envelope, required uncertainty and experimental results remain required. PINN/gPINN comparison and a temperature-specific SP1 guest remain planned. |
+
+The affine temperature and recorded-thermal workflows have separate contracts and
+no automatic handoff. Preserve observation/estimate labels, units, time/location
+semantics, uncertainty and lineage when preparing a study. Neither a calibration
+record hash nor a computation proof establishes the physical calibration chain.
+
 ## Shared host and provider-free foundations
 
 | Surface | Merged implementation and tests | Scope and remaining gate |
@@ -73,7 +95,7 @@ inside `ciw.native-interop.v1`.
 | Adaptive self-calibration | Calibrated windows, residual monitoring and estimation exist. This increment ran a synthetic encoder-offset proposal/review/corrected execution with transitive staleness and offline reopen. | Continuous correction policy, actual instrument/reference evidence and held-out physical improvement. Local review acceptance is not physical calibration or ESM admission. |
 | Executable claim graph / safety case | Scoped provider checks, proof profiles and project declarations exist. New predicted/estimated claims depend on retained artifact identities and can become stale. | Checker/premise/operational-policy graph, workload-specific safety proof and hybrid-system proof where needed. New claims remain `not_verified`; no regulator acceptance is claimed. |
 | Language-neutral engineering model | Bounded native contracts and genuine historical cross-language cases exist. | Shared thermal plant/sensor model, observer comparison, covariance transform and constrained measurement choice across Python/Julia. |
-| AI researcher through MCP | Bounded local stdio server with explicit builtin, polymer, leakage, temperature and measured-thermal profiles; retained attempts support explicit process reconnect. [Agent protocol](NET_AGENT_PROTOCOL.md). | Each additional instrument needs its own binding and qualification. Interrupted work remains incomplete; remote authentication, multi-customer isolation and physical/equipment authority are not supplied. |
+| AI researcher through MCP | Bounded local stdio server with explicit builtin, polymer, leakage, temperature and measured-thermal profiles; retained attempts support explicit process reconnect. [Agent protocol](NET_AGENT_PROTOCOL.md). The historical audit predates this interface; see the [current source addendum](#current-source-addendum--2026-10-04). | Each additional instrument needs its own binding and qualification. Interrupted work remains incomplete; remote authentication, multi-customer isolation and physical/equipment authority are not supplied. |
 | Device authorization and operation | Scientific paths refuse equipment authority; [gateway contract](DEVICE_GATEWAY.md) and [acceptance plan](DEVICE_GATEWAY_ACCEPTANCE.md) are specified. | Trusted issuer/policy, durable dispatch/recovery, simulator qualification and separately commissioned hardware. Acceptance cases are not results. |
 | Broad mathematical platform | Local covariance, linear stability, geometry, free-energy, bounded QP and scalar interval profiles exist. | General nonlinear UQ, multi-frame GA, streaming TDA, hybrid CPS proofs and general symbolic/numeric compilation remain provider research. |
 
