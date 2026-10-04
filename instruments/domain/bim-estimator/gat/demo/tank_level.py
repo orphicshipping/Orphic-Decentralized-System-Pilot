@@ -21,7 +21,7 @@ from gat.session import GatSession
 
 _DEMO = Path(__file__).resolve().parent
 _CAL = _DEMO / "harness_fixtures" / "tank-t1-calibration-v1.json"
-_MEAS = _DEMO / "harness_fixtures" / "tank-t1-rci.jsonl"
+_MEAS = _DEMO / "harness_fixtures" / "tank-t1-rci-record-v1.json"
 
 
 def run_tank_level(output_dir: str | Path) -> dict[str, object]:
@@ -32,10 +32,9 @@ def run_tank_level(output_dir: str | Path) -> dict[str, object]:
               calibration.indicated_unit, calibration.canonical_unit)
     if actual != expected:
         raise ValueError("tank demo calibration must identify IndustrialSlot:TANK-T1.Level in metres")
-    records = [json.loads(line) for line in _MEAS.read_text(encoding="utf-8").splitlines() if line.strip()]
-    if len(records) != 1 or not isinstance(records[0], dict):
-        raise ValueError("tank demo requires exactly one RCI observation")
-    record = records[0]
+    record = json.loads(_MEAS.read_text(encoding="utf-8"))
+    if not isinstance(record, dict):
+        raise ValueError("tank demo requires one RCI observation object")
     quality = record.get("quality")
     if not isinstance(quality, dict) or quality.get("acquisition") != "received" or quality.get("calibration") != "applicable":
         raise ValueError("tank demo requires a received observation with applicable calibration")

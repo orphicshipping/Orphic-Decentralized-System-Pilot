@@ -35,6 +35,10 @@ class TankLevelDemoTests(unittest.TestCase):
         self.assertNotEqual(report["receipt"]["prior_world_digest"], report["world_digest"])
         self.assertAlmostEqual(report["posterior"]["mean"], float(Fraction(6033, 2504)), places=12)
 
+    def test_packaged_record_matches_original_rci_fixture(self):
+        original = ROOT / "gat/demo/harness_fixtures/tank-t1-rci.jsonl"
+        self.assertEqual(json.loads(tank_level._MEAS.read_text()), json.loads(original.read_text()))
+
     def test_repeated_demo_reproduces_state_and_evidence_identity(self):
         with tempfile.TemporaryDirectory() as directory:
             first = tank_level.run_tank_level(Path(directory) / "first")
