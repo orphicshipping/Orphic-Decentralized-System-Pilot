@@ -34,6 +34,7 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 | One worked RMS calculation, retained selection and explicit replay | [Retained RMS lesson](LEARNING.md) |
 | Local dependencies, exact expected identities and unperformed checks | [Read-only profile diagnostics](DOCTOR.md) |
 | Provider-free index of existing surfaces; not discovery or qualification | [Capability index](CAPABILITIES.md) |
+| Offline tooling map and declared capability inspector | [Tooling visualizer](TOOLING_VISUALIZER.md) |
 | Retained native heading candidates and matrix contributions | [Curved-path study](CURVED_PATH_STUDY.md) |
 | Equations, assumptions and bounded what-if previews | [Mathematical model exploration](MODEL_EXPLORATION.md) |
 | Named but unimplemented research directions | [Unimplemented directions](UNIMPLEMENTED_DIRECTIONS.md) |

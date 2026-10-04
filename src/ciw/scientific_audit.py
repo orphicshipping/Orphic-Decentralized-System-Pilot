@@ -13,7 +13,7 @@ from pathlib import Path
 # Keys refer to the existing operator catalog. Values name review evidence;
 # they cannot introduce commands, workflows, providers, or executable bindings.
 COMMAND_REVIEWS = {
-    "catalog": "operator_catalog", "doctor": "operator_doctor",
+    "catalog": "operator_catalog", "visualize": "tooling_visualizer", "doctor": "operator_doctor",
     "start": "operator_start", "workbench": "operator_workbench",
     "provision": "operator_provision", "legibility": "legibility_workflow",
     "polymer": "polymer_workflow", "rewrite": "hypergraph_rewrite",
