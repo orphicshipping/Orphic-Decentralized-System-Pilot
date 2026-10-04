@@ -1,0 +1,171 @@
+{
+  "schema": "ciw.temperature-product-conformity-plan.v1",
+  "status": "draft_unassessed",
+  "purpose": "Manually reviewed product and market assessment for the temperature pilot; not an executable request or conformity certificate.",
+  "guidance_review_date": "2026-10-04",
+  "guidance": "../../docs/TEMPERATURE_PRODUCT_CONFORMITY.md",
+  "measurement_plan": "pilot-setup.json",
+  "product_conformity": "not_established",
+  "software_enforces_release_decision": false,
+  "record_control": {
+    "record_id": null,
+    "revision": null,
+    "owner": null,
+    "reviewer": null,
+    "reviewed_at": null,
+    "supersedes_record": null
+  },
+  "product_definition": {
+    "product_name_and_model": null,
+    "manufacturer_and_responsible_economic_operators": null,
+    "delivery_form_and_supplied_system_boundary": null,
+    "intended_use_and_customer_claims": null,
+    "intended_users_and_environment": null,
+    "installation_and_operating_restrictions": null,
+    "networking_and_remote_processing": null,
+    "heater_control_alarm_or_safety_function": null,
+    "supplied_configuration_id": null,
+    "bill_of_materials_and_hardware_revisions": null,
+    "sensor_readout_power_supply_enclosure_and_cables": null,
+    "radio_modules_and_integration_conditions": null,
+    "firmware_and_software_release_identities": null,
+    "installation_instructions_and_system_integrations": null,
+    "tested_sample_to_supplied_configuration_mapping": null
+  },
+  "current_repository_capability": {
+    "operation": "metrology.temperature.process.v1",
+    "scope": "Processing declared observations with affine calibration, covariance and conditional numerical acceptance.",
+    "defines_customer_product_scope": false,
+    "physical_qualification": "not_established",
+    "calibration_traceability": "not_established",
+    "origin_authentication": "not_established",
+    "sp1_proof": "not_generated"
+  },
+  "target_markets": [],
+  "screening_topics_to_consider_if_market_selected": {
+    "EU_EEA": [
+      "CE_product_scope_and_assessment_route",
+      "EMC",
+      "LVD",
+      "RED_including_applicable_cybersecurity_requirements",
+      "RoHS",
+      "machinery_and_safety_integration",
+      "CRA_scope_and_applicable_dates",
+      "legal_metrology_category_and_intended_use"
+    ],
+    "Great_Britain": [
+      "product_regulations_and_permitted_CE_or_UKCA_route"
+    ],
+    "Northern_Ireland": [
+      "separate_product_rules_and_CE_or_CE_UKNI_route"
+    ],
+    "United_States": [
+      "FCC_authorization_and_labeling",
+      "workplace_electrical_approval"
+    ],
+    "Canada": [
+      "province_territory_electrical_approval",
+      "ISED_radio_and_emissions"
+    ],
+    "cross_market": [
+      "customer_management_system_requirements",
+      "calibration_laboratory_scope",
+      "other_product_specific_obligations"
+    ]
+  },
+  "requirement_assessments": [],
+  "standards_register": [],
+  "evidence_register": [],
+  "market_decisions": [],
+  "entry_templates": {
+    "instructions": "Copy each shape into the corresponding array. Empty arrays are unreviewed inventories. Templates are not completed evidence or decisions; see the guidance for review conditions.",
+    "target_market": {
+      "market_id": null,
+      "country_and_subnational_jurisdiction": null,
+      "planned_supply_date": null,
+      "supply_and_installation_arrangement": null,
+      "responsible_operator": null
+    },
+    "requirement_assessment": {
+      "requirement_id": null,
+      "market_id": null,
+      "legal_instrument_or_scheme_and_version": null,
+      "source_urls_or_retained_source_refs": [],
+      "source_reviewed_at": null,
+      "effective_dates_and_transitional_rules": null,
+      "applicability": "unassessed",
+      "product_facts_scope_exclusions_and_rationale": null,
+      "assessment_route_and_required_body_scope": null,
+      "required_evidence": [],
+      "evidence_refs": [],
+      "evidence_review_status": "not_reviewed",
+      "open_gaps_and_responsible_owner": [],
+      "reviewer": null,
+      "reviewed_at": null
+    },
+    "standard": {
+      "standard_id": null,
+      "identifier_edition_amendments_and_adoption": null,
+      "requirement_refs": [],
+      "applicable_clauses_and_claimed_role": null,
+      "harmonized_or_designated_listing_scope_restrictions_and_dates": null,
+      "source_refs_and_review_date": null
+    },
+    "evidence": {
+      "evidence_id": null,
+      "kind": null,
+      "record_location_and_optional_digest": null,
+      "issuer_date_and_revision": null,
+      "product_configuration_or_test_sample": null,
+      "method_conditions_results_and_limitations": null,
+      "certificate_or_body_scope_and_validity_if_relevant": null,
+      "requirement_refs": [],
+      "review_status": "not_reviewed",
+      "reviewer_and_review_date": null
+    },
+    "market_decision": {
+      "market_id": null,
+      "supplied_configuration_id": null,
+      "requirement_refs": [],
+      "assessment_review_status": "not_reviewed",
+      "unresolved_requirements_and_restrictions": [],
+      "manual_release_decision": "not_reviewed",
+      "permitted_claims_and_markings_with_evidence_refs": [],
+      "technical_file_declarations_instructions_and_label_refs": [],
+      "responsible_signatory": null,
+      "decision_date": null
+    }
+  },
+  "calibration_laboratory_review": {
+    "laboratory_and_accreditation_body": null,
+    "accreditation_requirement_and_basis": null,
+    "accreditation_scope_record": null,
+    "quantity_method_range_and_uncertainty_capability": null,
+    "calibration_result_uncertainty_and_chain_refs": [],
+    "installed_chain_validation_refs": [],
+    "review_status": "not_reviewed",
+    "reviewer_and_review_date": null
+  },
+  "maintenance": {
+    "responsible_owner": null,
+    "production_and_configuration_controls": null,
+    "retention_periods_and_basis": null,
+    "support_reporting_and_corrective_action_procedures": null,
+    "reassessment_triggers": [
+      "product_boundary_intended_use_or_market_change",
+      "hardware_power_radio_or_installation_change",
+      "firmware_software_model_or_safety_function_change",
+      "applicable_law_standard_or_certificate_scope_change",
+      "incident_failed_check_or_new_evidence"
+    ],
+    "affected_units_configurations_customers_and_reports": null,
+    "claim_or_result_withdrawal_and_replacement_procedure": null,
+    "metrological_requalification_and_recalibration_links": null
+  },
+  "open_items": [
+    "Define the actual supplied product and responsible entities.",
+    "Select markets, installation jurisdictions and supply dates.",
+    "Assign the assessment owner and reviewer.",
+    "Review applicability, collect configuration-specific evidence and record separate market decisions."
+  ]
+}

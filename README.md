@@ -1,10 +1,11 @@
-# Notations Systems Terminal
+# Notations Engineering Terminal
 
 **A programmable scientific and engineering workbench for measurement, state estimation, simulation and interactive worlds.**
 
 [Notation Systems](https://notation.systems) · [Quickstart](#quickstart) ·
 [Instruments](docs/INSTRUMENTS.md) · [Integration coverage](docs/INTEGRATION_COVERAGE.md) ·
-[Technical reference](TECHNICAL_REFERENCE.md) · [Documentation](docs)
+[Temperature pilot](#temperature-measurement-and-qualification) ·
+[Research release](docs/QUALIFIED_RELEASE.md) · [Documentation](docs)
 
 **NET** brings modular computational instruments into one engineering monorepo.
 It connects observations, models, parameters, geometry, execution and verification
@@ -24,8 +25,8 @@ replay creates a new execution.
 | Investigation and execution | Sessions, operation and capability registries, retained runs, save/reopen, explicit replay and runtime preflight. [Instrument catalogue](docs/INSTRUMENTS.md). |
 | Typed composition and design | Workflow composition, parameterized Boards, declared input/output contracts and coupled thermomechanical reference configurations. [Workflow algebra](docs/WORKFLOW_ALGEBRA.md) · [Scientific workflows](docs/NET_SCIENTIFIC_WORKFLOWS.md) · [System composition](docs/SYSTEM_COMPOSITION.md). |
 | Evolving workflow structure | Bounded typed hypergraph rewriting, invariant checks, retained transformation dependencies, alternative paths and explicit schedule comparisons. [Hypergraph rewriting](docs/HYPERGRAPH_REWRITE.md). |
-| Measurement and estimation | Calibration, time reconciliation, telemetry, covariance propagation, state estimation and bounded observation-design workflows. [Integration coverage](docs/INTEGRATION_COVERAGE.md). |
-| Scientific models and testbeds | Bounded impact and atmospheric models, thermal observers, geometric calculations and domain-specific numerical checks. [Atmospheric engine](docs/ATMOSPHERIC_ENGINE.md). |
+| Measurement and estimation | Raw observations, affine calibration with joint covariance, time reconciliation, telemetry, state estimation and bounded observation-design workflows. [Temperature pilot](#temperature-measurement-and-qualification) · [Integration coverage](docs/INTEGRATION_COVERAGE.md). |
+| Scientific models and testbeds | Coupled thermal/thermoelastic references, thermal recording comparisons, bounded impact and atmospheric models, and geometric calculations. [System composition](docs/SYSTEM_COMPOSITION.md) · [Thermal recordings](docs/MEASURED_THERMAL.md) · [Atmospheric engine](docs/ATMOSPHERIC_ENGINE.md). |
 | Polymer processing | Cycle metrology, scoped cooling and pressure-arrival estimates, evidence-linked copilot context, and bounded control simulations for injection and extrusion blow molding. [Polymer processing](docs/POLYMER_PROCESSING.md). |
 | Evidence and representation | Typed contracts, identity-bound representations, source correction and dependency status, and signed human/reasoning/vision bundles. [Correction loop](docs/CORRECTION_LOOP.md) · [Legibility instrument](docs/LEGIBILITY.md). |
 | Interactive worlds | Supported BIM, spatial and geometric interfaces; native computation and bounded Blender/Godot/Bevy development workflows. [Technical reference](TECHNICAL_REFERENCE.md). |
@@ -34,6 +35,8 @@ Support is specific to each profile. The coverage matrix identifies callable
 operations, provider requirements, recorded checks and remaining qualification.
 Runtime availability, numerical agreement and experimental physical validation
 are separate conditions.
+
+## Polymer workflows
 
 Run `net polymer demo --output-dir polymer-demo` for a saved cycle report and audit,
 or `net polymer qualify --output-dir polymer-qualification` to exercise both
@@ -46,10 +49,42 @@ through the existing pinned FlowState kernels, with full covariance, replay and
 independent numerical audits. The [leakage guide](docs/leakage.md) includes provider
 setup and runnable examples; an unaccounted deficit does not establish its cause.
 
-A [retained thermal recording workflow](docs/MEASURED_THERMAL.md) now connects
-calibrated-observation declarations to the existing estimator and a held-out core
-reference comparison. Its software fixture demonstrates ingestion and replay;
-physical qualification remains a separate measured-pilot gate.
+## Temperature measurement and qualification
+
+The first metrology pilot targets **polymer temperature during a heating cycle**.
+NET provides two separate processing paths and the records needed to qualify a
+specific installed measurement chain:
+
+| Need | Available path | Scope |
+| --- | --- | --- |
+| Convert sensor observations and propagate uncertainty | [Temperature MCP profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) | Affine calibration for 1–64 samples, full joint raw/calibration covariance, optional declared installed correction, and conditional acceptance. |
+| Estimate core temperature from retained recordings | [Measured thermal workflow](docs/MEASURED_THERMAL.md) | Already-calibrated shell, power and ambient streams feed a conventional estimator; a held-out core reference supports a separate comparison. |
+| Qualify the installed measurement chain | [Pilot protocol](docs/TEMPERATURE_QUALIFICATION.md) and [setup record](examples/temperature/pilot-setup.json) | Reference comparisons, repeatability, environmental effects, uncertainty, held-out validation and maintenance. |
+| Assess the supplied product for a market | [Product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) | Product/configuration scope, applicable requirements, evidence, laboratory credentials, review and reassessment. |
+
+Prepare and serve the synthetic MCP processing example:
+
+```sh
+python -m ciw.agent_mcp temperature-config --output-dir temperature-agent
+python -m ciw.agent_mcp serve --instrument temperature --profile temperature-agent/profile.json
+```
+
+The example deliberately has an incomplete uncertainty budget, so acceptance
+remains indeterminate. To supply an operator-prepared processing request, add
+`--request /absolute/path/request.json` to the configuration command above and
+use a fresh output directory. The pilot and conformity planning records are not
+executable requests.
+
+Raw observations, calibrated sensing-element temperatures and polymer estimates
+retain distinct labels. The affine and thermal-recording paths have separate
+contracts and no automatic handoff. Their software fixtures establish processing
+behaviour; physical qualification still requires the actual sensor/readout,
+installation, polymer, operating range, uncertainty requirement and experiments.
+
+PINN/gPINN comparison and a temperature-specific SP1 guest remain programme work.
+The existing [SP1 heat workload](docs/PROVED_HEAT.md) has its own bounded
+computational claim. Numerical acceptance, computation proofs, metrological
+traceability and product conformity each require their own evidence.
 
 ## One repository, modular instruments
 
@@ -169,23 +204,24 @@ dependencies.
 
 ## Development and qualification
 
-NET is in active development. Merged implementations, development branches and
-planned capabilities are tracked separately. Broader fluid dynamics, configurable
-sensor fusion, atom-trapping simulation and implicit geometry are extension
-workstreams; their individual source and qualification records determine availability.
-The expanded legibility operator workflow is tracked in
-[PR #128](https://github.com/atomtrapping/Notations-Systems-Terminal/pull/128).
+NET is in active development. The [research-release plan](docs/QUALIFIED_RELEASE.md),
+[capability ledger](release/capability-ledger.json) and
+[qualification policy](release/qualification-policy.json) distinguish implemented
+features, installed/operator evidence and the remaining release gates. A merged
+feature is not a declaration that the full research release or a physical
+measurement system has been qualified.
 
-Numerical checks are scoped to a declared model and configuration. Production
-metrology requires calibrated observations and experimental evidence. Machinery
-control requires its own commissioning and authorization. Cryptographic integrity
-does not establish physical truth or current source dependencies.
+Use the instrument's operating guide for its supported model, configuration,
+provider requirements and retained checks. Production metrology needs calibrated
+observations and experimental validation; machinery control needs separate
+commissioning and authorization. Cryptographic integrity does not establish
+physical truth or current source dependencies.
 
 [Integration coverage](docs/INTEGRATION_COVERAGE.md), the
-[concerns audit](docs/CONCERNS_AUDIT_2026-10-03.md), and each instrument's operating
-guide provide the detailed status. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)
-preserves the earlier detailed reference and its historical terminology; current
-module guides take precedence for later additions.
+[superrepo audit](docs/SUPERREPO_AUDIT_2026-10-04.md), and each instrument's guide
+provide the detailed status. [TECHNICAL_REFERENCE.md](TECHNICAL_REFERENCE.md)
+preserves the earlier reference and historical terminology; current module
+guides take precedence for later additions.
 
 ## Organization and licence
 
