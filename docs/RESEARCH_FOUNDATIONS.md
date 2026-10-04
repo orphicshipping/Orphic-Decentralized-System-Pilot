@@ -355,10 +355,11 @@ This should not be confused with physical coarse-graining. Molecular →
 mesoscale → continuum mappings require domain-specific mathematics and
 validation.
 
-## 10. Conceptual inspirations not yet formal dependencies
+## 10. Categorical adaptations and conceptual research directions
 
-The following ideas are useful research lenses but are **not current
-implementation foundations**.
+The status of each idea below is specific to its implementation. Bounded
+categorical adaptations and finite measure calculations now have executable
+contracts; broader structures remain research concepts.
 
 ### Moduli spaces — Riemann, Teichmüller, Grothendieck, Mumford, Mirzakhani
 
@@ -369,10 +370,39 @@ equivalence relation and quotient structure have been defined.
 
 ### Category theory — Eilenberg and Mac Lane and later applied/compositional work
 
-Category theory supplies useful language for objects, morphisms, composition
-and commuting diagrams. NET currently treats it as a possible specification and
-verification language. A diagrammatic resemblance is not itself a categorical
-implementation.
+Category theory supplies language for objects, morphisms, composition and
+commuting diagrams. NET now implements bounded adaptations through the
+[typed workflow algebra](WORKFLOW_ALGEBRA.md),
+[semantic capabilities](SEMANTIC_CAPABILITIES.md) and
+[finite representation-preservation checks](FINITE_REPRESENTATION_PRESERVATION.md).
+The algebra tests identity, associativity, permutation inversion and dataflow
+interchange within its accepted domain. Semantic engine lowering is described
+as functor-like; finite engine agreement is not a naturality proof.
+
+The mathematical background includes Patterson, Spivak and Vagner,
+[Wiring diagrams as normal forms for computing in symmetric monoidal categories](https://arxiv.org/abs/2101.12046)
+(2021). NET's declared effects, permissions, finite bounds and production-stage
+barriers retain their own implementation semantics. Neither a diagrammatic
+resemblance nor the regression tests establish machine-checked categorical
+semantics, arbitrary scientific equivalence or unrestricted categorical closure.
+
+### Finite measure theory and representation preservation
+
+The finite preservation implementation evaluates exact rational probability
+pushforwards, conditional expectations and conditional variances on explicitly
+declared finite spaces. It also checks every state in the intervention square
+`P(N(x)) = B(P(x))`, including zero-probability states, and retains failures.
+Matching output distributions is a separate, weaker check. The
+[finite contract](FINITE_REPRESENTATION_PRESERVATION.md) specifies the 1–64-label
+bounds, total maps, zero-mass behavior and complete arithmetic example.
+
+These are established mathematical constructions adapted to NET's representation
+and evidence records. The primary formal reference is
+[Mathlib's measure pushforward and map composition](https://leanprover-community.github.io/mathlib4_docs/Mathlib/MeasureTheory/Measure/Map.html).
+Mathlib is not a runtime dependency or a certificate for the Python implementation.
+Declared finite probabilities do not establish empirical calibration, a general
+continuous-measure engine, or adequacy of a physical model. Higher categories,
+sheaves and general information-geometric architectures remain conceptual.
 
 ### Musical instruments and scientific instruments
 
