@@ -51,6 +51,55 @@ secret is provisioned. The SP1 gate additionally retains its existing RAM/disk,
 toolchain, guest-identity, genuine-proof and negative-test requirements. Native
 unit-test success is not cryptographic qualification.
 
+## Trusted-run access and installation repair — 2026-10-04
+
+The push/main runs at `68084b67be8d8345351bcdd6e3ce62aafb8a868d` failed
+before provider tests because the credential was empty, including
+[telemetry](https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769523)
+and [acquired stream](https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769591).
+Their event expressions already permit the secret on trusted main pushes.
+This is distinct from intentional withholding on pull requests; logs establish
+that the secret was unavailable to those jobs, not whether it was absent or
+restricted in account settings. The helper now checks event policy
+first and gives different diagnostics for untrusted events, missing credentials
+and malformed values. Every refusal still fails qualification. Its Git helper
+uses the configuring Python interpreter, avoiding a later bare `python` lookup
+that can resolve to an unavailable Windows application alias.
+
+A repository administrator must configure `CIW_PROVIDER_READ_TOKEN` under
+**Settings → Secrets and variables → Actions** for
+`atomtrapping/Notations-Engineering-Terminal`, using a read-only credential for
+the selected provider repositories. If supplied by an organization secret,
+allow this consuming repository; an environment-only secret is not available
+to jobs that declare no environment. Verify the credential's provider repository
+selection, expiry and any required approval/authorization. Keep the value out
+of logs, artifacts and issue text. Then dispatch the affected unchanged gate
+on the selected immutable candidate and inspect its actual checkout and
+scientific results. Configuration success is not qualification.
+
+The spatial provider is now canonically
+`atomtrapping/Notations-FrameMapper-RunTime` (repository ID `1347707016`). The
+existing execution pin `acc6a4c43dd1d28e3fc6890dadf5cd2b4ae40125` was verified
+at tree `6fd52b3a1bd4f27ec73eedc814368a94bc4695fc`, with its original
+`tools/ciw-local-frame` worker and tests. That repository is currently private;
+the workflow uses the same trusted-event credential policy and exact pin.
+A public PR receives no private access and cannot qualify that provider.
+The published FrameMapper import has a different revision and does not replace
+this missing execution history. No private source is imported by this repair.
+
+The established [public provider gates](../scripts/check_public_provider_gate.py)
+can use already retained history for their four declared compositions; the
+[alternative-source guide](CI_ALTERNATIVE_SOURCES.md) describes provider-owned
+and local pinned-checkout routes. Migrating another gate requires its complete
+exact provider set and unchanged checks; an arbitrary public branch or current
+import cannot substitute for a required private pin.
+
+Irrigation CI previously created its installed environment inside the source
+checkout while the installed gate expressly refused that location. The workflow
+now creates that environment under `RUNNER_TEMP`, preserving the outside-source
+check, and uploads receipts even after a failed gate. Passing source tests alone
+does not close the installed qualification.
+
 ## Reproduction
 
 ```sh

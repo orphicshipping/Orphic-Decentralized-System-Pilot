@@ -40,15 +40,20 @@ PROVIDERS = frozenset(name.lower() for name in (
     "Notations-State-Inference-Engine", "Notations-State-Ledger",
     "Notations-State-Recompiler", "Notations-Surface-RunTime",
     "Notations-Telemetry-Engine", "Notations-Yield-Weighted-Runtime",
-    "Polygon-Trajectory-Experiments",
+    "Polygon-Trajectory-Experiments", "Notations-FrameMapper-RunTime",
 ))
 TOKEN_ENV = "CIW_PROVIDER_READ_TOKEN"
 
 
 def read_token() -> str:
     token = os.environ.get(TOKEN_ENV, "")
-    if not token or len(token) > 4096 or any(c.isspace() for c in token):
-        raise ValueError("Private provider qualification requires the read-only CIW_PROVIDER_READ_TOKEN secret; no credentials were configured and no tests were qualified")
+    if not token:
+        raise ValueError("CIW_PROVIDER_READ_TOKEN is empty or unavailable to this job. "
+                         "Configure the selected-repository Actions secret and its repository access; "
+                         "see docs/CI_INBOX_RECOVERY.md. No credentials were configured and no provider tests were qualified")
+    if len(token) > 4096 or any(c.isspace() for c in token):
+        raise ValueError("CIW_PROVIDER_READ_TOKEN has an invalid format; its value is never printed. "
+                         "No credentials were configured and no provider tests were qualified")
     return token
 
 
@@ -81,13 +86,14 @@ def credential(request: str, token: str) -> str:
 
 def configuration(helper: Path) -> dict[str, str]:
     path = helper.resolve().as_posix()
-    if any(c in path for c in "\r\n"):
+    interpreter = Path(sys.executable).resolve().as_posix()
+    if any(c in path + interpreter for c in "\r\n"):
         raise ValueError("Invalid credential-helper path")
     return {
         "GIT_CONFIG_COUNT": "3",
         "GIT_CONFIG_KEY_0": "credential.helper", "GIT_CONFIG_VALUE_0": "",
         "GIT_CONFIG_KEY_1": "credential.helper",
-        "GIT_CONFIG_VALUE_1": "!python " + shlex.quote(path) + " credential",
+        "GIT_CONFIG_VALUE_1": "!" + shlex.quote(interpreter) + " " + shlex.quote(path) + " credential",
         "GIT_CONFIG_KEY_2": "credential.useHttpPath", "GIT_CONFIG_VALUE_2": "true",
         "GIT_TERMINAL_PROMPT": "0", "GCM_INTERACTIVE": "never",
     }
@@ -105,12 +111,14 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args != ["configure"]:
             raise ValueError("Use configure or the Git credential protocol")
-        read_token()
         if os.environ.get("GITHUB_ACTIONS") != "true":
             raise ValueError("CI credential configuration is restricted to GitHub Actions")
         event, ref = os.environ.get("GITHUB_EVENT_NAME"), os.environ.get("GITHUB_REF")
         if event != "workflow_dispatch" and not (event == "push" and (ref == "refs/heads/main" or (ref or "").startswith("refs/tags/"))):
-            raise ValueError("Private credentials are not enabled for pull-request or unreviewed push jobs")
+            raise ValueError("Private credentials are intentionally unavailable for pull-request or unreviewed push jobs; "
+                             "run the unchanged qualification on a trusted main/tag push or manual run. "
+                             "No credentials were configured and no provider tests were qualified")
+        read_token()
         if os.environ.get("GIT_CONFIG_COUNT") not in (None, "", "0"):
             raise ValueError("Refuse to overwrite existing process Git configuration")
         destination = os.environ.get("GITHUB_ENV")
