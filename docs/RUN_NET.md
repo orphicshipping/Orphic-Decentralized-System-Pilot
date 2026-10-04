@@ -93,6 +93,29 @@ integrity is separately unassessed. The impact import currently accepts its
 documented Session-v2 contract and refuses correction-journal v4 workspaces
 whose dependency eligibility has not been qualified by that adapter.
 
+## Inspect refurbished hardware
+
+The [hardware workflow](HARDWARE_REFURBISHMENT.md) imports a normalized equipment
+configuration and characterization records, evaluates declared numeric checks,
+and exports a customer-facing report. It uses the core package; no optional
+provider or physical device is required for the synthetic example:
+
+```text
+net hardware example --output hardware-request.json
+net hardware run hardware-request.json --output-dir results/hardware
+net hardware inspect results/hardware
+net hardware replay results/hardware --output-dir results/hardware-replay
+net hardware report results/hardware --output hardware-review.html
+```
+
+Every output path must be new. Inspection reads retained state without provider
+execution; replay evaluates the same retained input in a fresh execution.
+The report includes failed and indeterminate outcomes as well as passing checks.
+Outcome exit codes are `0` for PASS, `2` for FAIL and `3` for INDETERMINATE;
+invalid or inconsistent input is refused with `1`. A nonzero outcome does not
+mean that the report failed to export. Passing declared checks is not product
+certification or release approval; imported source claims are not authenticated.
+
 ## Plan daily irrigation
 
 The installed [agriculture and irrigation instrument](IRRIGATION.md) accepts declared

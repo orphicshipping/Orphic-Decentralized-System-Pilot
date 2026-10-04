@@ -78,6 +78,9 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         if not isinstance(runtime, dict) or not runtime:
             raise AdapterRefusal("invalid_runtime_identity", "An operation must identify its numerical runtime")
         finite_tree(runtime, "runtime identity")
+        if operation_id == "hardware.assess.v1":
+            from ..hardware_workflow import validate_runtime
+            validate_runtime(runtime)
         execution["runtime"] = runtime
         # A provider receives detached scientific evidence, never live mutable state.
         # Cached provider objects remain provider-owned. Detach the returned
@@ -160,6 +163,9 @@ def validate_execution(execution: dict, run: dict, revision: int, results: dict)
     runtime = execution.get("runtime")
     if runtime is not None and (not isinstance(runtime, dict) or not runtime):
         raise ValueError("Invalid execution runtime identity")
+    if operation_id == "hardware.assess.v1":
+        from ..hardware_workflow import validate_runtime
+        validate_runtime(runtime, allow_absent=execution.get("status") == "refused")
     if operation_id in {"fluid.reservoir.simulate.v1", "fluid.reservoir.verify.v1",
                         "fluid.wave.simulate.v1", "fluid.wave.verify.v1"}:
         from ..fluid_workflow import validate_runtime

@@ -21,6 +21,7 @@ QUALIFICATION = (
     "free-energy.yml",
     "geodesic-references.yml",
     "geometry-research.yml",
+    "hardware.yml",
     "identified-design.yml",
     "integrated-modules.yml",
     "proved-heat.yml",

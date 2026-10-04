@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('hardware', 'hardware_cli', 'Import hardware observations, assess refurbishment criteria and export retained evidence'),
     ('catalog', 'operator_catalog', 'Discover every command surface and declared scientific provider requirement'),
     ('doctor', 'operator_doctor', 'Check local dependency and explicit provider identity metadata'),
     ('start', 'operator_start', 'Run and retain the bounded first-use installation check'),

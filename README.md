@@ -6,6 +6,7 @@
 [Instruments](docs/INSTRUMENTS.md) · [Integration coverage](docs/INTEGRATION_COVERAGE.md) ·
 [Temperature pilot](#temperature-measurement-and-qualification) ·
 [Model validity](docs/MODEL_VALIDITY_AND_EVIDENCE.md) ·
+[Hardware refurbishment](docs/HARDWARE_REFURBISHMENT.md) ·
 [Research release](docs/QUALIFIED_RELEASE.md) · [Documentation](docs)
 
 **NET** brings modular computational instruments into one engineering monorepo.
@@ -29,6 +30,7 @@ replay creates a new execution.
 | Measurement and estimation | Raw observations, affine calibration with joint covariance, time reconciliation, telemetry, state estimation and bounded observation-design workflows. [Temperature pilot](#temperature-measurement-and-qualification) · [Integration coverage](docs/INTEGRATION_COVERAGE.md). |
 | Scientific models and testbeds | Coupled thermal/thermoelastic references, thermal recording comparisons, bounded impact and atmospheric models, and geometric calculations. [System composition](docs/SYSTEM_COMPOSITION.md) · [Thermal recordings](docs/MEASURED_THERMAL.md) · [Atmospheric engine](docs/ATMOSPHERIC_ENGINE.md). |
 | Polymer processing | Cycle metrology, scoped cooling and pressure-arrival estimates, evidence-linked copilot context, and bounded control simulations for injection and extrusion blow molding. [Polymer processing](docs/POLYMER_PROCESSING.md). |
+| Hardware refurbishment | Configuration identity, imported characterization, declared numeric acceptance checks, retained replay and customer-facing HTML reports. [Hardware operator guide](docs/HARDWARE_REFURBISHMENT.md). |
 | Evidence and representation | Typed contracts, identity-bound representations, source correction and dependency status, and signed human/reasoning/vision bundles. [Correction loop](docs/CORRECTION_LOOP.md) · [Legibility instrument](docs/LEGIBILITY.md). |
 | Interactive worlds | Supported BIM, spatial and geometric interfaces; native computation and bounded Blender/Godot/Bevy development workflows. [Technical reference](TECHNICAL_REFERENCE.md). |
 
@@ -46,6 +48,21 @@ an installed physical system. The [validity and evidence guide](docs/MODEL_VALID
 identifies current domains, remaining experimental work and the gates for
 extending a model. There is no project-wide formal correctness or production
 certification claim.
+
+## Hardware refurbishment
+
+`net hardware` binds operator-imported characterization records to an exact
+equipment configuration and evaluates a declared numeric acceptance plan.
+Retained investigations preserve the input request and execution/result
+identities; inspection reads saved state and explicit replay creates a fresh
+execution. An HTML report presents the configuration, declared source, checks
+and limitations for customer review.
+
+Start with `net hardware example --output hardware-request.json`, then follow
+the [hardware operator guide](docs/HARDWARE_REFURBISHMENT.md). The example is
+synthetic. This first workflow performs no live acquisition, sanitization,
+firmware flashing or physical control. Passing its checks does not certify
+equipment or authorize its release for sale.
 
 ## Polymer workflows
 

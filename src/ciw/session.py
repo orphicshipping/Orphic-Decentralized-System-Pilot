@@ -168,6 +168,9 @@ def _validate_evidence(run: dict) -> None:
     elif run["instrument"] == "irrigation-configuration-declaration.v1":
         from .irrigation_workflow import source_request
         source_request(run)
+    elif run["instrument"] == "hardware-observation-declaration.v1":
+        from .hardware_workflow import source_request
+        source_request(run)
 
 
 def _recording_file(run: dict) -> str:
