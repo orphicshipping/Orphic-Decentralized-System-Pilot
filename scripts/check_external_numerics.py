@@ -16,6 +16,7 @@ import os
 from pathlib import Path
 import platform
 import sys
+import tempfile
 
 import numpy as np
 
@@ -303,6 +304,37 @@ def run_comparisons():
     }
 
 
+def _publish_report(output, serialized):
+    """Publish complete bytes without replacing an existing path.
+
+    A same-directory hard link makes the final name visible only after writing
+    and closing the staged file. Filesystems without hard links fail closed;
+    this provides atomic visibility, not a power-loss durability guarantee.
+    """
+    output.parent.mkdir(parents=True, exist_ok=True)
+    staged = None
+    published = False
+    try:
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", newline="\n",
+                                         prefix=".external-numerics-", suffix=".tmp",
+                                         dir=output.parent, delete=False) as stream:
+            staged = Path(stream.name)
+            stream.write(serialized)
+            stream.flush()
+            os.fsync(stream.fileno())
+        # Unlike replace/rename, link never overwrites a destination on either OS.
+        os.link(staged, output)
+        published = True
+    finally:
+        if staged is not None:
+            try:
+                staged.unlink()
+            except OSError as error:
+                state = "Published report is complete." if published else "No new report was published."
+                print(f"External numerical comparisons could not remove temporary report "
+                      f"{staged}: {error}. {state}", file=sys.stderr)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, help="Write a new JSON report; existing paths are refused")
@@ -325,10 +357,7 @@ def main(argv=None):
         serialized = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
         try:
-            args.output.parent.mkdir(parents=True, exist_ok=True)
-            # Exclusive creation also protects a report created after the preflight.
-            with args.output.open("x", encoding="utf-8") as stream:
-                stream.write(serialized)
+            _publish_report(args.output, serialized)
         except OSError as error:
             print(f"External numerical comparisons could not save report: {error}", file=sys.stderr)
             return 1

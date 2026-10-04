@@ -28,8 +28,16 @@ report. The script returns zero only on `PASS`; numerical failures and execution
 exceptions return nonzero, with a failure report when the output can be written.
 The output path must be new: an existing report is refused before computation,
 and a file created by another process during computation is also preserved.
-Choose a separate filename for each run. File errors produce a concise diagnostic
-and a nonzero exit status.
+Choose a separate filename for each run. Complete report bytes are first written,
+flushed, synced and closed in a temporary file beside the destination. A hard
+link then publishes the final path atomically without replacement. Interrupted or
+failed writes do not expose a partial final report. Filesystems without hard-link
+support fail explicitly; there is no overwrite or copy fallback. Temporary-file
+cleanup failures name the file on stderr and preserve the original failure, or
+state that the published report is complete. This is an atomic-visibility
+contract, not a power-loss durability guarantee. Errors that prevent publication
+produce a concise diagnostic and a nonzero exit status; a cleanup-only warning
+after successful publication preserves the comparison result.
 
 An exception or nonfinite result in one case is retained as that case's `FAIL`;
 the remaining independent cases still run. Inspect the named case's `error` or

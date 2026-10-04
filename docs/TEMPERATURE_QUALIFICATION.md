@@ -3,12 +3,41 @@
 Status: pilot protocol and conditional software calculation. No physical
 qualification data, calibrated instrument, installed-chain validation, trained
 PINN/gPINN, or temperature SP1 proof is supplied by this increment. The planning
-record in [pilot-setup.json](../examples/temperature/pilot-setup.json) deliberately
-leaves hardware, ranges, uncertainty requirements and acceptance thresholds open.
+record in [pilot-setup.json](../examples/temperature/pilot-setup.json) cites a
+published polymer heating experiment and a NIST reference method, and separates
+proposed ranges and uncertainty targets from published facts. Actual installed
+hardware, calibration evidence and physical qualification remain unresolved.
 It is not an executable processing request. The separate
 [product-conformity assessment](TEMPERATURE_PRODUCT_CONFORMITY.md) records the
 supplied product, target markets, applicable requirements and reviewed evidence;
 its [template](../examples/temperature/conformity-assessment.json) starts unassessed.
+
+## Review retained processing and decisions
+
+After an MCP execution saves a workspace, inspect that exact attempt:
+
+```sh
+net inspect workspace results/temperature-agent/agent-output/first/workspace.json
+net inspect workspace results/temperature-agent/agent-output/first/workspace.json --json
+```
+
+The text view separates raw observations, calibrated sensor temperatures and
+polymer estimates. It shows invalid samples, declared applicability, uncertainty
+omissions, operational acceptance and sample-decision counts. Each saved
+numerical audit stays attached to its exact processing occurrence, including
+repeated executions with identical report content. All retained audit outcomes,
+failed checks and comparison counts are shown; an absent audit is explicit.
+
+Inspection validates retained structure and dependency bindings without starting
+another processing execution or running a fresh numerical audit. Saved audits
+are historical, unauthenticated records. Their `PASS` does not authenticate the
+inputs, change the generic verification status or establish physical
+qualification. Review comparison counts alongside invalid samples: an audit can
+pass with no valid temperature values available to compare, while still counting
+identity and abstention checks. Per-check counts expose that distinction.
+Acceptance covers submitted sample instants only. Exit status zero means inspection completed, even when a
+retained audit is `FAIL` or acceptance is indeterminate. The unchanged `--json`
+view supplies individual values, covariance and complete retained records.
 
 ## What the software result means
 
