@@ -35,6 +35,7 @@ COMMAND_REVIEWS = {
     "simulation": "simulation_control", "simulate": "simulation_study",
     "math": "math_inspector", "view": "information_display",
     "check": "check_suite", "science": "scientific",
+    "reference-compare": "reference_comparison", "timing": "transport_timing",
     "providers": "control_plane", "capabilities": "control_plane",
     "inspect": "computational_objects", "compare": "computational_objects",
     "run": "control_plane", "demo": "control_plane",

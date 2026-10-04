@@ -133,6 +133,41 @@ missing artifacts, mismatched commitments and failed verification exit two.
 
 ## Verification and limits
 
+### Completed Linux campaign
+
+The [4 October 2026 campaign](https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769525)
+completed successfully on Linux x86-64 at `main` commit
+`68084b67be8d8345351bcdd6e3ce62aafb8a868d`. Its installed-wheel gate ran
+**132 tests with no failures or skips**, including genuine proof generation,
+fresh replay, retained-proof verification, corrupted-proof rejection, and
+rejection of rebound input and output statements. The guest recipe rebuilt
+against the committed ELF identity. Native hosts came from the exact pinned
+build cache; proof execution and verification were performed afresh.
+
+| Recorded stage or artifact | Original | Replay |
+| --- | ---: | ---: |
+| Proof bytes | 2,778,024 | 2,778,024 |
+| Combined prove-and-verify time, seconds | 231.55 | 231.10 |
+| Additional verification time, seconds | 83.34 | 83.36 |
+| Largest waited-child peak RSS, bytes | 10,207,600,640 | 10,076,995,584 |
+
+These are observations from one campaign, not capacity or worst-case guarantees.
+The [machine-readable evidence record](evidence/proved-heat-2026-10-04.json)
+retains the exact commit, run/job links, reported gate and build identities,
+stage measurements and artifact metadata. The
+[original evidence artifact](https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769525/artifacts/11310607458)
+expires on 2 January 2027 under its current GitHub retention policy. Its archive
+digest was reported by GitHub and the upload log; this documentation review did
+not download and independently hash the archive or rerun its proofs locally.
+
+This closes the genuine heat gate for the named campaign. It does not qualify
+new affine or temperature guests, larger workloads, privacy, physical model
+accuracy, calibration or equipment operation. A current host still needs the
+pinned Linux backend and artifacts before executing or freshly verifying a
+proof. Native Windows inspection of these reports does not perform that work.
+
+### Repeat the gate
+
 ```sh
 python scripts/check_proved_heat.py \
   --scr-repo /path/to/scr \

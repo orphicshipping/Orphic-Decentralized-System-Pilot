@@ -296,9 +296,15 @@ Preserving average behavior or even the resulting distribution does not establis
 | Fresh SP1 verification | The registered computation bound to the required public statement, under its assumptions | Calibration, model validity, training correctness or equipment permission |
 | Calibration and independent physical experiments | Performance for the reviewed measurement chain and conditions | Transfer to new installations, conditions and continued stability |
 
-The [model-validity guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md) separates computational domain, physical applicability and validation coverage. The [integration matrix](docs/INTEGRATION_COVERAGE.md), [capability ledger](release/capability-ledger.json) and [research-release plan](docs/QUALIFIED_RELEASE.md) record detailed status. This documentation update reports no new physical experiments, full-release qualification or genuine SP1 proof campaign.
+The [model-validity guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md) separates computational domain, physical applicability and validation coverage. The [integration matrix](docs/INTEGRATION_COVERAGE.md), [capability ledger](release/capability-ledger.json) and [research-release plan](docs/QUALIFIED_RELEASE.md) record detailed status. No physical experiments or full-release qualification are established by the software checks below. Separately, the registered heat profile has a [successful real SP1 campaign](docs/PROVED_HEAT.md) at its recorded pinned revision; that result does not extend to other guests or physical models.
 
 Current software supports bounded research workflows. Missing providers refuse; unknown uncertainty remains unknown; unqualified configurations retain their status. Equipment control, remote multi-user deployment and hard real-time operation need their own implemented and qualified interfaces. Source correction can change dependency status without erasing historical results.
+
+### Work toward qualification
+
+Two executable checks begin closing practical evidence gaps. `net reference-compare` compares aligned observation streams with an explicitly declared joint uncertainty budget, including cross-stream correlation. It retains PASS, FAIL or INDETERMINATE and can recompute the saved result. `net timing` records bounded loopback Workbench request times and failures against an optional observed budget. These checks supply reviewable computational evidence; they do not assign physical qualification or hard real-time status.
+
+The [qualification progress guide](docs/QUALIFICATION_PROGRESS.md) gives commands, decision rules and the remaining physical-experiment, provider, remote-access and SP1 gates. Missing uncertainty stays indeterminate, and expanding scope requires an implemented contract and evidence.
 
 ### Extend an instrument through a reviewable contract
 

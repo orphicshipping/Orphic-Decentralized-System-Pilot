@@ -49,5 +49,7 @@ COMMANDS = (
     ('math', 'math_inspector', 'Derive bounded covariance and innovation display diagnostics'),
     ('view', 'math_visual', 'Create a local interactive mathematical inspector'),
     ('check', 'check_suite', 'Apply a declared numerical check plan to retained evidence'),
+    ('reference-compare', 'reference_comparison', 'Compare aligned observations under an explicit joint uncertainty budget'),
+    ('timing', 'transport_timing', 'Retain bounded local transport timing observations and failed samples'),
     ('science', 'scientific_cli', 'Existing scientific workflows: catalog, run, replay, inspect, state, observations, study, replay-study'),
 )

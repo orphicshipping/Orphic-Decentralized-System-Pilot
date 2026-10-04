@@ -15,7 +15,8 @@ def test_catalog_is_complete_without_binding_or_processes(monkeypatch):
     assert value["read_only"] is True and value["authorizes_execution"] is False
     assert {row["workflow"] for row in value["workflows"]} == set(OPERATIONS)
     assert {row["command"] for row in value["commands"]} >= {
-        "net start", "net workbench", "net provision", "net atmosphere", "net science", "net inspect", "net polymer", "net fluid"}
+        "net start", "net workbench", "net provision", "net atmosphere", "net science", "net inspect", "net polymer", "net fluid",
+        "net reference-compare", "net timing"}
     assert all(row["qualification"] == "not_performed_by_catalog" for row in value["workflows"])
     thermal = next(row for row in value["workflows"] if row["workflow"] == "thermal-observer")
     assert thermal["available"] is True and thermal["providers"] == {}
@@ -36,6 +37,7 @@ def test_cli_catalog_and_existing_nested_help(capsys):
     assert json.loads(capsys.readouterr().out)["schema"] == "ciw.operator-catalog.v1"
     import pytest
     for command in (["--help"], ["science", "--help"], ["foundry", "childhood", "--help"],
+                    ["reference-compare", "--help"], ["timing", "--help"],
                     ["fluid", "--help"], ["polymer", "--help"], ["doctor", "--help"], ["legibility", "--help"], ["workbench", "--help"]):
         with pytest.raises(SystemExit) as exit_:
             net.main(command)

@@ -77,6 +77,10 @@ that workflow. Any future handoff must preserve units, location/time semantics,
 observation versus estimate labels, covariance and acquisition/calibration
 lineage. Neither workflow supplies the physical pilot data or qualification.
 
+## Paired reference comparison
+
+The separate [`net reference-compare` command](QUALIFICATION_PROGRESS.md#1-reference-comparison-with-declared-uncertainty) can compare aligned scalar observation streams under a declared joint uncertainty budget. It preserves temporal and cross-stream covariance, binds the exact inputs, and makes guardbanded decisions at the supplied sample instants. It does not create the missing pilot records or establish their uncertainty budget. The thermal observer's conditional covariance is insufficient for a total-comparison claim without the remaining input, model, installation and timing contributions.
+
 ## Independent numerical audit
 
 `metrology.temperature.verify.v1` consumes the actual retained processing result
