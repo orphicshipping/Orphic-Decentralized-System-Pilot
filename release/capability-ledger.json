@@ -2,7 +2,7 @@
   "schema_version": 1,
   "candidate_sha": null,
   "qualification_status": "not_assessed_on_release_candidate",
-  "note": "Implemented paths in this integration await execution on its exact immutable candidate SHA. CI metadata, scripted synthetic acceptance, independent human usability, and physical validation are separate evidence requirements.",
+  "note": "Implemented paths in this integration await execution on its exact immutable candidate SHA. CI metadata, scripted synthetic acceptance, independent human usability, and physical validation are separate evidence requirements. This is a manual evidence inventory, not an executable qualification gate. Additional capability entries do not expand the selected CI policy or declare a release qualified.",
   "capabilities": [
     {
       "id": "public_core",
@@ -151,8 +151,110 @@
         "Both platform journeys and aggregate gate complete on exact candidate",
         "No source-to-binary attestation or physical authority inferred"
       ]
+    },
+    {
+      "id": "temperature_processing",
+      "source_references": [
+        "docs/TEMPERATURE_QUALIFICATION.md",
+        "docs/NET_AGENT_PROTOCOL.md",
+        "src/ciw/temperature_contract.py",
+        "src/ciw/temperature_processing.py"
+      ],
+      "implemented": "affine_joint_covariance_and_conditional_acceptance_via_MCP",
+      "installable": "requires_candidate_wheel_evidence",
+      "available": "operator_environment_not_checked",
+      "qualified": "not_assessed",
+      "numerical_scope": "One sensor/readout, 1-64 samples; first-order propagation; declared applicability; acceptance at submitted sample instants.",
+      "physical_validation": "not_established",
+      "required_evidence": [
+        "Candidate-bound source and installed MCP/processing checks, including boundary and refusal cases",
+        "Assessment of higher-order and arithmetic effects for the intended measurement model",
+        "Installed dynamic reference comparisons, documented calibration chain and complete uncertainty budget",
+        "Untouched heating cycles, reviewed operating envelope and maintenance/withdrawal criteria"
+      ]
+    },
+    {
+      "id": "measured_thermal",
+      "source_references": [
+        "docs/MEASURED_THERMAL.md",
+        "src/ciw/measured_thermal.py",
+        "src/ciw/measured_thermal_workflow.py"
+      ],
+      "implemented": "retained_stream_ingress_python_two_capacity_estimation_and_held_out_comparison",
+      "installable": "requires_candidate_wheel_evidence",
+      "available": "operator_environment_not_checked",
+      "qualified": "not_assessed",
+      "numerical_scope": "1-128 equally spaced rows; already-calibrated inputs; shell-only conditioning; input/model/clock uncertainty retained but not propagated.",
+      "physical_validation": "not_established",
+      "required_evidence": [
+        "Candidate-bound recording, held-out-reference isolation, covariance-lineage and replay checks",
+        "Installed chain and time/location semantics validated with original acquisition records",
+        "Independent heating-cycle comparison and model discrepancy with adequate propagated uncertainty"
+      ]
+    },
+    {
+      "id": "bounded_fluid_models",
+      "source_references": [
+        "docs/FLUID_DYNAMICS.md",
+        "src/ciw/fluid_reservoir_contract.py",
+        "src/ciw/fluid_wave_contract.py"
+      ],
+      "implemented": "linear_reservoir_compliant_boundary_and_periodic_linear_wave_profiles",
+      "installable": "requires_candidate_wheel_evidence",
+      "available": "operator_environment_not_checked",
+      "qualified": "not_assessed",
+      "numerical_scope": "Separate lumped incompressible exchange and linear shallow-water domains; no general molecular/CFD coupling.",
+      "physical_validation": "not_established",
+      "required_evidence": [
+        "Candidate-bound independent references, conservation/interface-work and refinement checks",
+        "Boundary and unsupported-regime refusal evidence",
+        "Held-out physical experiments and uncertainty before application performance claims"
+      ]
+    },
+    {
+      "id": "hypergraph_rewriting",
+      "source_references": [
+        "docs/HYPERGRAPH_REWRITE.md",
+        "src/ciw/hypergraph_rewrite.py"
+      ],
+      "implemented": "fixed_typed_rules_and_bounded_exploration",
+      "installable": "requires_candidate_wheel_evidence",
+      "available": "operator_environment_not_checked",
+      "qualified": "not_assessed",
+      "numerical_scope": "Structural declarations and retained derivations; 64 nodes, 128 edges, 32 rules; valid truncated histories do not establish exhaustive coverage.",
+      "physical_validation": "not_established",
+      "required_evidence": [
+        "Candidate-bound rule invariants, boundary/refusal and truncation checks",
+        "Fresh derivation verification and schedule comparison for the stated bounded cases",
+        "Separate numerical and physical qualification for models represented by the graph"
+      ]
+    },
+    {
+      "id": "proved_heat",
+      "source_references": [
+        "docs/PROVED_HEAT.md",
+        "src/ciw/proved_heat.py",
+        "scripts/check_proved_heat.py"
+      ],
+      "implemented": "registered_integer_jacobi_SP1_guest_and_fresh_verifier_path",
+      "installable": "requires_candidate_wheel_evidence",
+      "available": "operator_environment_not_checked",
+      "qualified": "not_assessed",
+      "numerical_scope": "3-32 cells, 0-64 steps, integer magnitude at most 2^40; dimensionless outputs; expected guest and commitments required.",
+      "physical_validation": "not_established",
+      "required_evidence": [
+        "Exact guest/toolchain/runtime closure and actual proof plus fresh verification on the candidate",
+        "Expected-program and public-output binding with wrong-identity/modified-input refusal cases",
+        "Separate guest, numerical contract and qualification for any temperature-processing extension"
+      ]
     }
   ],
   "baseline_source_commit": "ffad7dba2b258339b27170e071c0de431f6f2aef",
-  "candidate_ref": "release/net-research-candidate"
+  "candidate_ref": "release/net-research-candidate",
+  "current_source_review": {
+    "commit": "554bb1540ef1b621af9e08f2d632095ca958150d",
+    "date": "2026-10-04",
+    "scope": "Added domain/evidence records for merged temperature, measured thermal, fluid, rewriting and heat-proof paths; no new physical or release-candidate qualification.",
+    "guide": "docs/MODEL_VALIDITY_AND_EVIDENCE.md"
+  }
 }
