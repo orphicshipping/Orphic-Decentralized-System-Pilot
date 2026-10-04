@@ -221,6 +221,17 @@ Prepare the synthetic processing profile with `python -m ciw.agent_mcp temperatu
 
 The [pilot protocol](docs/TEMPERATURE_QUALIFICATION.md), [setup record](examples/temperature/pilot-setup.json), [product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) support planning for an installed chain. The setup now cites a published polymer heating experiment and a NIST reference method, with proposed targets distinguished from published facts and missing calibration evidence. A [pilot-readiness inventory](docs/TEMPERATURE_PILOT_READINESS.md) checks declarations and records unresolved evidence; it does not establish physical qualification. These records are not executable processing requests. Raw observations, sensing-element temperatures and polymer estimates keep distinct labels.
 
+After a processing run, review its retained decisions and numerical audits:
+
+```text
+net inspect workspace results/temperature-agent/agent-output/first/workspace.json
+```
+
+The view shows invalid samples, uncertainty omissions and every saved audit bound
+to its processing occurrence. Historical audit PASS, operational acceptance and
+physical qualification remain separate. Inspection performs no fresh numerical
+audit; add `--json` for complete records and individual values.
+
 To inspect the pilot's missing declarations by stage:
 
 ```text

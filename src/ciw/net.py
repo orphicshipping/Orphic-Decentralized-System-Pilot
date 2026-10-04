@@ -109,6 +109,10 @@ def _show(value: dict, as_json: bool) -> None:
             print(f"  {check['status']}: {check['name']}")
     if "session" in value:
         print(f"Session: {value['session']['session_id']}; executions: {len(value['executions'])}; results: {len(value['results'])}")
+    if value.get("schema") == "ciw.workspace-inspection.v1":
+        from .temperature_review import summary_lines
+        for line in summary_lines(value["results"]):
+            print(line)
     print("Physical validation: not performed; reproducibility is not established by inspection.")
 
 

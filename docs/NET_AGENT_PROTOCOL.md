@@ -288,6 +288,12 @@ at at most 128 entries, and MCP input lines to 1 MiB. Counts refuse rather than
 silently truncate scientific data. Execution/node budgets are operator-set and
 capped at 64 each. Discovery reports remaining execution capacity.
 
+Profile loading checks the 64-binding limit and every alias/location shape before
+opening bound files. It enforces the 64 MiB unique-byte budget as documents are
+read, stopping before later inputs or output creation on overflow. Identical
+input bytes share retained storage; different encodings retain different raw-byte
+identities. A single document is still bounded at 8 MiB during its read.
+
 The process is sequential; it does not advertise asynchronous tasks, preemptive
 cancellation or an autonomous background worker. Registered providers retain their
 own timeout/resource controls. No source-path argument, executable argument or
