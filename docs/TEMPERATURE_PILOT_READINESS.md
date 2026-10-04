@@ -13,6 +13,17 @@ python -m ciw.temperature_readiness \
   --output results/temperature-pilot-readiness.json
 ~~~
 
+For a shorter view of the missing and invalid declarations, add `--summary`:
+
+~~~sh
+python -m ciw.temperature_readiness \
+  --setup examples/temperature/pilot-setup.json --summary
+~~~
+
+The summary names the affected fields by stage and includes the plan and report
+identities. Combine `--summary` with `--output` to read this view while retaining
+the same JSON report. Without `--summary`, stdout remains JSON for existing tools.
+
 The optional output is create-only. Exit status is 0 when required declarations
 are complete for review, 1 when fields remain missing or numerically invalid, and
 2 for malformed contracts or file errors. The current plan is expected to return
@@ -23,10 +34,17 @@ are complete for review, 1 when fields remain missing or numerically invalid, an
 The report binds the complete input plan by content identity and inventories four
 stages: setup definition, confirmatory design, qualification-evidence inventory,
 and maintenance definition. Model-comparison and temperature-SP1 declaration
-lists are separate; selecting a model target or proposing proof work enables its
-list. Unrequested optional work does not block the conventional plan.
+lists are separate. A partially filled model target or a declared comparison
+margin enables the model list, so incomplete intended work stays visible. Shared
+split, OOD and discrepancy records alone do not select a model. An explicit SP1
+opt-out leaves its list unrequested unless concrete proof fields are supplied;
+conflicting supplied fields still require review. Unrequested optional work does
+not block the conventional plan.
 
 Null, empty, placeholder or partially populated structured records are missing.
+Exact placeholder spellings with spaces or hyphens (such as `not supplied` and
+`not-implemented`) are treated like their underscore forms, including inside
+structured records. Evidence origin must also be substantive text.
 Unknown plan fields, asserted physical qualification, and SP1-derived physical
 qualification refuse. Product-conformity declarations remain unassessed. Selected numeric
 fields have explicit formats:

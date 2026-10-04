@@ -6,6 +6,7 @@ Hashes detect damaged retained bytes, not an authenticated operator history.
 from __future__ import annotations
 
 from hashlib import sha256
+import errno
 import json
 import os
 from pathlib import Path
@@ -32,6 +33,25 @@ def _regular(path: Path) -> None:
         raise ValueError("Missing or unsafe agent recovery file")
 
 
+def _stream_from_native_handle(handle, adopt, release):
+    """Transfer native ownership to a descriptor, then to its file object."""
+    try:
+        descriptor = adopt(handle)
+    except BaseException:
+        release(handle)
+        raise
+    try:
+        return os.fdopen(descriptor, "r+b", buffering=0)
+    except BaseException:
+        try:
+            os.close(descriptor)
+        except OSError as exc:
+            # A failed file-object constructor may already have closed it.
+            if exc.errno != errno.EBADF:
+                raise
+        raise
+
+
 def _open_lock(path: Path):
     if path.is_symlink():
         raise ValueError("Unsafe agent recovery lock")
@@ -41,15 +61,19 @@ def _open_lock(path: Path):
         import ctypes
         import msvcrt
         from ctypes import wintypes
-        create = ctypes.WinDLL("kernel32", use_last_error=True).CreateFileW
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        create = kernel.CreateFileW
         create.argtypes = [wintypes.LPCWSTR, wintypes.DWORD, wintypes.DWORD,
                            wintypes.LPVOID, wintypes.DWORD, wintypes.DWORD, wintypes.HANDLE]
         create.restype = wintypes.HANDLE
+        release = kernel.CloseHandle
+        release.argtypes = [wintypes.HANDLE]
+        release.restype = wintypes.BOOL
         handle = create(str(path), 0xC0000000, 7, None, 4, 0x80, None)
         if handle == ctypes.c_void_p(-1).value:
             raise ctypes.WinError(ctypes.get_last_error())
-        descriptor = msvcrt.open_osfhandle(handle, os.O_RDWR | os.O_BINARY)
-        stream = os.fdopen(descriptor, "r+b", buffering=0)
+        stream = _stream_from_native_handle(handle,
+            lambda value: msvcrt.open_osfhandle(value, os.O_RDWR | os.O_BINARY), release)
     else:
         stream = path.open("a+b", buffering=0)
     try:
