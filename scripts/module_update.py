@@ -21,7 +21,7 @@ import time
 import tomllib
 import uuid
 
-from monorepo import (_PATHS, _generated_file, load_manifest, verify_imports,
+from monorepo import (_PATHS, _cleanup_failed_worktree, _generated_file, _git_timeout, load_manifest, verify_imports,
                       verify_terminal_source, worktree_mutation_lock)
 
 SCHEMA = "notations.module-update-plan.v1"
@@ -50,7 +50,7 @@ def _git(root, *arguments, data=None):
     command, environment = _command(root, arguments)
     return subprocess.run(
         command,
-        input=data, env=environment, check=True, capture_output=True, timeout=30,
+        input=data, env=environment, check=True, capture_output=True, timeout=_git_timeout(arguments),
     ).stdout
 
 
@@ -188,7 +188,11 @@ def _detached(root, revision):
         created = False
         try:
             with worktree_mutation_lock(root):
-                _git(root, "worktree", "add", "--detach", str(path), revision)
+                try:
+                    _git(root, "worktree", "add", "--detach", str(path), revision)
+                except BaseException:
+                    _cleanup_failed_worktree(root, path, runner=_git)
+                    raise
             created = True
             yield path
         finally:

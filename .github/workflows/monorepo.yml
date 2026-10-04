@@ -48,7 +48,7 @@ jobs:
           mkdir -p results/monorepo-audit
           python scripts/superrepo.py list --json > results/monorepo-audit/modules.json
           python scripts/monorepo.py > results/monorepo-audit/source-audit.json
-          python -m pytest -vv --tb=short tests/test_monorepo.py tests/test_superrepo.py tests/test_worktree_lock.py tests/test_superrepo_doctor.py tests/test_module_update.py tests/test_monorepo_web.py tests/test_monorepo_domain_reporting.py tests/test_scientific_gate_reports.py --junitxml results/monorepo-audit/migration-tests.xml
+          python -m pytest -vv --tb=short tests/test_monorepo.py tests/test_superrepo.py tests/test_worktree_lock.py tests/test_worktree_lifecycle.py tests/test_superrepo_doctor.py tests/test_module_update.py tests/test_monorepo_web.py tests/test_monorepo_domain_reporting.py tests/test_scientific_gate_reports.py --junitxml results/monorepo-audit/migration-tests.xml
       - name: Show retained reports for evidence review
         if: always()
         run: >-

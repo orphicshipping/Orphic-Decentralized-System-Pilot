@@ -171,6 +171,12 @@ def _generated_file(path, boundary, *, environments=False, package_metadata=Fals
     return False
 
 
+def _git_timeout(arguments):
+    # Full retained-source checkouts may take longer than metadata queries,
+    # especially on Windows while independent qualification lanes are active.
+    return 300 if tuple(arguments[:2]) in {("worktree", "add"), ("worktree", "remove")} else 30
+
+
 def git(root, *arguments):
     environment = dict(os.environ)
     # Repository selection is explicit; caller environment cannot replace it.
@@ -180,8 +186,21 @@ def git(root, *arguments):
     return subprocess.run(
         ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", "-c",
          "core.autocrlf=false", "-C", str(root), *arguments],
-        env=environment, check=True, capture_output=True, timeout=30,
+        env=environment, check=True, capture_output=True, timeout=_git_timeout(arguments),
     ).stdout
+
+
+def _cleanup_failed_worktree(root, path, *, runner=None):
+    """Remove only a registered path owned by the failed managed add."""
+    runner = git if runner is None else runner
+    target = Path(path).resolve()
+    for field in runner(root, "worktree", "list", "--porcelain", "-z").split(b"\0"):
+        if field.startswith(b"worktree ") and Path(os.fsdecode(field[9:])).resolve() == target:
+            # Interrupted Git adds can retain their own initializing lock.
+            # This exact helper-owned path is the only eligible registration;
+            # unrelated worktrees and stale metadata must remain untouched.
+            runner(root, "worktree", "remove", "--force", "--force", str(path))
+            return
 
 
 @contextmanager
@@ -501,7 +520,11 @@ def provider_worktrees(root=ROOT, revisions="runtime", roles=None, overrides=Non
                 path = Path(temporary) / module["role"]
                 revision = overrides.get(module["role"], module[revisions + "_revision"])
                 with worktree_mutation_lock(root):
-                    git(root, "worktree", "add", "--detach", str(path), revision)
+                    try:
+                        git(root, "worktree", "add", "--detach", str(path), revision)
+                    except BaseException:
+                        _cleanup_failed_worktree(root, path)
+                        raise
                 created.append(path)
                 providers[module["role"]] = path
             yield providers
