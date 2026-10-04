@@ -260,6 +260,11 @@ ciw send workspace.save
 
 `analysis.stats` creates a new result; the other commands inspect or save the session. Save before stopping the server. Restarting reopens retained state without rerunning numerical operations. The service defaults to loopback. The [installed-tool guide](docs/RUN_NET.md) and [operator readiness guide](docs/OPERATOR_READINESS.md) cover further profiles.
 
+The canonical repository is [atomtrapping/Notations-Engineering-Terminal](https://github.com/atomtrapping/Notations-Engineering-Terminal).
+The distribution name is `computational-instrumentation-workbench`, its Python
+import is `ciw`, and its commands are `net` and `ciw`. Imported packages retain
+their own identities and licences in the [module manifest](instruments/manifest.json).
+
 ## 6. Worked example: representation and intervention
 
 This provider-free example connects the mathematical framework to an actual command. It supplies four equally weighted labels with observable values 270, 274, 290 and 294 K, grouped into two coarse labels. The temperatures are synthetic arithmetic values, not physical measurements.
@@ -300,6 +305,18 @@ The [model-validity guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md) separates comput
 
 Current software supports bounded research workflows. Missing providers refuse; unknown uncertainty remains unknown; unqualified configurations retain their status. Equipment control, remote multi-user deployment and hard real-time operation need their own implemented and qualified interfaces. Source correction can change dependency status without erasing historical results.
 
+### Reproducible numerical examples
+
+The [nine installed-package examples](docs/DOMAIN_EXAMPLES.md) exercise bounded
+oscillator, impact, fluid, thermal, polymer, temperature and structural-rewrite
+paths. Their retained reports identify the wheel, input artifacts and outcomes.
+The separate [independent numerical comparisons](docs/EXTERNAL_NUMERICAL_COMPARISONS.md)
+compare reservoir trajectories with SciPy integration and polymer cooling with
+homogeneous and convective-slab references. These checks separate arithmetic
+agreement from spatial-model discrepancy; they do not establish installed-chain
+physical performance. Their [Linux/Windows workflow](.github/workflows/review-examples.yml)
+retains success and failure evidence.
+
 ### Extend an instrument through a reviewable contract
 
 1. Define the task, state variables, representations, units, clocks and validity domain; state the decision or query the instrument must support.
@@ -325,3 +342,5 @@ The sources support their stated mathematical or technical subjects. NET's adapt
 NET is shared infrastructure developed by **Notation Systems Inc.** across **Notations Gaming**, **Notation Manufacturing** and **Notations Laboratories**: interactive worlds, design and manufacturing systems, and scientific research and validation. [Notation Systems](https://notation.systems).
 
 **© 2026 Giason Pooni, for original contributions.** The root code is governed by the existing [LICENSE](LICENSE). Imported modules retain their own licences and upstream notices. Project-owned original assets use the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md). Repository publication does not change those terms or confer evidence, signing or execution authority.
+
+Imported-component inventory does not establish clearance for a combined distribution; see the [distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source).

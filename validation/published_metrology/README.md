@@ -8,8 +8,8 @@ BIPM data using a separately built, installed NET wheel:
 - 5 helium-leak root-sum-square uncertainty reductions from printed Table 12.
 
 The current retained run passed all 147 cases on source revision
-`f2ac42373f7ffae551ea297ecc6580c4de56028e`.
-Nineteen integrity tests also passed. See [validation-summary.json](validation-summary.json)
+`1f086a30d13193f25847f329e98571479b287369`.
+Twenty integrity tests also passed. See [validation-summary.json](validation-summary.json)
 for the exact wheel digest, module digests, environment, execution scope and the
 separate historical run identity. This is local test evidence; it does not assert
 that remote CI executed the benchmark.
@@ -50,7 +50,7 @@ The original source URLs and attribution are in
 ## Reproduce with an installed wheel
 
 The runner pins both numerical module files to the bytes in revision
-`f2ac42373f7ffae551ea297ecc6580c4de56028e`.
+`1f086a30d13193f25847f329e98571479b287369`.
 Build from that source revision, or from this benchmark branch whose NET package
 is unchanged. Build timestamps can change the whole-wheel digest; record the
 digest of the wheel actually installed and pass it explicitly. A different
@@ -117,3 +117,7 @@ Wheel validation compares the complete installed package inventory with the
 candidate archive, then checks every file's contents and the imported module
 origins. Omitting a package file or duplicating an archive member is refused,
 even if the supplied wheel SHA256 matches that altered archive.
+
+Ctrl+C retains an `interrupted` JSON report and exits 130. This report explicitly
+states that no complete qualification result was retained; it contains no
+passing case count. Start a new report path for a subsequent attempt.

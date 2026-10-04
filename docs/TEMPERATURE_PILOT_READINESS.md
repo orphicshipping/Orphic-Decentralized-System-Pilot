@@ -60,6 +60,11 @@ acquisition dataset or complete traceability/installed-uncertainty dossier was
 located. Published plots and averages are not used as fresh observations,
 training data or independent validation.
 
+The separate [public polymer temperature dataset assessment](POLYMER_TEMPERATURE_DATASETS.md)
+records inspected academic archives, NIST catalog candidates, import gaps and
+measurand differences for a conditional model-comparison benchmark. Those
+records do not qualify the proposed installed measurement chain.
+
 [NIST's thermocouple calibration service](https://www.nist.gov/pml/sensor-science/temperature-humidity/thermocouples-calibrations-services)
 provides a primary reference-method basis. A service capability does not become
 this proposed chain's calibration certificate or uncertainty contribution.
@@ -98,4 +103,3 @@ bias, RMSE, maximum error and missing counts separately for in-envelope and
 OOD conditions. Bind candidate weights, preprocessing and training declarations.
 Synthetic fixtures can qualify these software checks, but cannot authenticate
 training history, establish model discrepancy or replace held-out physical data.
-

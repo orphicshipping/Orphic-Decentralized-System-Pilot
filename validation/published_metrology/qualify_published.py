@@ -18,7 +18,7 @@ import zipfile
 
 
 HERE = Path(__file__).resolve().parent
-REFERENCE_KERNEL_REVISION = 'f2ac42373f7ffae551ea297ecc6580c4de56028e'
+REFERENCE_KERNEL_REVISION = '1f086a30d13193f25847f329e98571479b287369'
 LEGACY_WHEEL_PATH = 'software/computational_instrumentation_workbench-0.1.0-py3-none-any.whl'
 FIXTURE_HASHES = {
     'kriss-kernel-oracles.json': '06fb6c7e1777ef3095137705cdc4480bdd52b3ebc9fb193fb237d6215116f413',
@@ -282,6 +282,10 @@ def main(argv=None):
         with output.open('x', encoding='utf-8') as stream:
             try:
                 report = qualify(args.root.resolve(), args.wheel.resolve(), args.wheel_sha256)
+            except KeyboardInterrupt:
+                report = {'schema': 'net.published-experiment-software-qualification.v1',
+                          'status': 'interrupted', 'error_type': 'KeyboardInterrupt',
+                          'error': 'Interrupted by operator; no complete qualification result is retained.'}
             except Exception as exc:
                 report = {'schema': 'net.published-experiment-software-qualification.v1',
                           'status': 'blocked_input_or_environment',
@@ -293,7 +297,7 @@ def main(argv=None):
     summary = {k: report[k] for k in ('status', 'summary', 'error_type', 'error') if k in report}
     summary['report'] = str(output) if report['status'] != 'blocked_output' else None
     print(json.dumps(summary))
-    return 0 if report['status'] == 'passed_bounded_kernel_reproduction' else 1
+    return 130 if report['status'] == 'interrupted' else (0 if report['status'] == 'passed_bounded_kernel_reproduction' else 1)
 
 
 if __name__ == '__main__':

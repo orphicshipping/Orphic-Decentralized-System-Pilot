@@ -255,5 +255,20 @@ class CommandLineOutputTests(unittest.TestCase):
             self.assertEqual(parent.read_text(), 'keep')
 
 
+    def test_operator_interruption_retains_report_and_returns_130(self):
+        with tempfile.TemporaryDirectory(prefix='qualification-cli-') as name:
+            output = Path(name) / 'interrupted.json'
+            with mock.patch.object(runner, 'qualify', side_effect=KeyboardInterrupt):
+                code, summary = self.invoke(output)
+            retained = json.loads(output.read_text())
+            self.assertEqual(code, 130)
+            self.assertEqual(summary['status'], 'interrupted')
+            self.assertEqual(retained['error_type'], 'KeyboardInterrupt')
+            self.assertEqual(summary['report'], str(output.resolve()))
+            self.assertNotIn('summary', retained)
+            self.assertNotIn('cases', retained)
+            self.assertIn('no complete qualification result', retained['error'])
+
+
 if __name__ == '__main__':
     unittest.main()
