@@ -25,6 +25,10 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
         return [parameters[field]["result_id"] for field in system_fields
                 if isinstance(parameters.get(field), dict)
                 and isinstance(parameters[field].get("result_id"), str)]
+    if operation_id == "metrology.temperature.verify.v1":
+        candidate = parameters.get("processing")
+        identity = candidate.get("result_id") if type(candidate) is dict else None
+        return [identity] if type(identity) is str else []
     if operation_id == "irrigation.verify.v1":
         candidate = parameters.get("candidate")
         identity = candidate.get("result_id") if type(candidate) is dict else None
@@ -37,6 +41,9 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
 
 
 def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
+    if operation_id == "metrology.temperature.verify.v1":
+        from ..temperature_workflow import validate_live_dependency
+        validate_live_dependency(parameters, retained)
     if operation_id == "irrigation.verify.v1":
         from ..irrigation_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)
@@ -75,6 +82,7 @@ _BUILTIN_ROLES = {"statistics.v1": "analysis", "spectrum.periodogram.v1": "analy
                 "polymer.control-simulate.v1": "backend",
                 "polymer.verify-cycle.v1": "verification",
                 "metrology.temperature.process.v1": "backend",
+                "metrology.temperature.verify.v1": "verification",
                 "irrigation.plan.v1": "backend",
                 "irrigation.verify.v1": "verification",
                 "leakage.assess-balance.v1": "backend",
@@ -151,7 +159,7 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
         from ..polymer_workflow import validate_payload as validator
     elif operation_id in {"leakage.assess-balance.v1", "leakage.verify-balance.v1"}:
         from ..leakage_workflow import validate_payload as validator
-    elif operation_id == "metrology.temperature.process.v1":
+    elif operation_id in {"metrology.temperature.process.v1", "metrology.temperature.verify.v1"}:
         from ..temperature_workflow import validate_payload as validator
     elif operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
                           "system.compare.v1", "system.study.v1"}:

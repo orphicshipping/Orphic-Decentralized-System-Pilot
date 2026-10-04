@@ -91,10 +91,21 @@ planning record and is not an executable request. Profiles freeze the supplied
 source; editing `request.json` later does not alter that source.
 
 Discover with `net_capabilities`, then call `net_execute` with source `source`,
-graph `baseline`, and a fresh attempt identifier. The sole operation is
-`metrology.temperature.process.v1`. `net_replay` creates fresh execution/result
-identities; retry preserves the earlier response. Read-only workspace restoration
-checks structure and commitments without rerunning processing or proving it.
+graph `baseline`, and a fresh attempt identifier. The generated graph executes
+`metrology.temperature.process.v1`, then `metrology.temperature.verify.v1` against
+that exact retained result. Both operations require explicit execution grants.
+The checker independently compares the affine values and joint covariance with
+an exact rational first-order reference, then checks the reported sample decisions.
+Its own numerical PASS/FAIL and verification occurrence stay separate from
+processing acceptance and physical qualification. A completed graph can contain
+a numerical FAIL; inspect the audit's status. The original processing result
+keeps its ordinary `not_verified` envelope.
+
+`net_replay` creates fresh processing, checker and verification identities;
+retry preserves the earlier response. Read-only workspace restoration checks
+structure and commitments without rerunning processing or numerical checking.
+Existing processing-only profiles remain usable. The source declaration's
+original manifest remains unchanged; it does not grant the new checker authority.
 Calibration and acceptance rules cannot be varied through candidate parameters.
 
 Commitments cover canonical structured observation declarations, not original
