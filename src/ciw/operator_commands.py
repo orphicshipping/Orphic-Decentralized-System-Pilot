@@ -7,6 +7,7 @@ from __future__ import annotations
 # (command, module, purpose)
 COMMANDS = (
     ('catalog', 'operator_catalog', 'Discover every command surface and declared scientific provider requirement'),
+    ('visualize', 'tooling_visualizer', 'Export an offline tooling map and capability inspector from the existing catalog'),
     ('doctor', 'operator_doctor', 'Check local dependency and explicit provider identity metadata'),
     ('start', 'operator_start', 'Run and retain the bounded first-use installation check'),
     ('workbench', 'operator_workbench', 'Start or resume the persistent local Session service'),

@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="__CSP__">
+  <title>NETS · Tooling explorer</title>
+  <style>__STYLE__</style>
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="brand" href="#"><span class="brand-mark" aria-hidden="true">N</span><span>NETS</span><span class="brand-sub">ENGINEERING WORKSPACE</span></a>
+      <div class="top-actions"><span class="snapshot"><span class="snapshot-mark" aria-hidden="true"></span>Offline catalogue</span><button id="theme-toggle" class="quiet-button" type="button" aria-pressed="false">Light theme</button></div>
+    </header>
+    <div class="heading">
+      <div><p class="eyebrow">NOTATIONS SYSTEMS TERMINAL</p><h1>Tooling explorer<span class="heading-period">.</span></h1><p class="intro">Find a capability. Trace its requirements. Inspect the contract.</p></div>
+      <p id="inventory" class="inventory"></p>
+    </div>
+    <nav class="scopes" aria-label="Catalogue views">
+      <button type="button" data-scope="workflows" aria-pressed="true">Scientific workflows <span id="workflow-count"></span></button>
+      <button type="button" data-scope="operations" aria-pressed="false">Built-in operations <span id="operation-count"></span></button>
+      <button type="button" data-scope="commands" aria-pressed="false">Command surfaces <span id="command-count"></span></button>
+    </nav>
+    <main class="workspace">
+      <aside class="catalogue" aria-label="Tool catalogue">
+        <div class="library-heading"><h2>Library</h2><span class="library-label">INDEX</span></div>
+        <label class="search-label" for="search">Find a tool</label>
+        <div class="search-field"><input id="search" type="search" placeholder="Search tools, providers…" autocomplete="off" aria-keyshortcuts="/"><kbd aria-hidden="true">/</kbd></div>
+        <label class="filter-label" for="binding-filter">Session declaration</label>
+        <select id="binding-filter"><option value="all">All workflows</option><option value="builtin">Available without bindings</option><option value="external">Explicit bindings required</option></select>
+        <div class="result-line"><span id="result-count" role="status" aria-live="polite"></span><button id="clear-search" type="button">Clear filters</button></div>
+        <div id="tool-list" class="tool-list" aria-label="Matching tools"></div>
+      </aside>
+      <section class="canvas-panel" aria-label="Tool relationship map">
+        <div class="panel-heading"><div><p class="eyebrow">RELATIONSHIP MAP</p><h2 id="map-title">Loading catalogue</h2></div><button id="focus-map" class="quiet-button" type="button" aria-pressed="false">Focus map</button></div>
+        <p id="map-description" class="map-description">Declarations from the NET catalogue.</p>
+        <div class="map-topline"><span id="map-summary"></span><span class="readonly">Read only</span></div>
+        <div id="map" class="map"><svg id="connections" aria-hidden="true"></svg><div id="map-columns" class="map-columns"></div></div>
+        <div class="map-foot"><span><i class="legend-dot capability-dot"></i>Capability</span><span><i class="legend-dot workflow-dot"></i>Selected tool</span><span><i class="legend-dot provider-dot"></i>Requirement</span><span class="map-hint">Select a node to explore</span></div>
+        <div class="boundary"><strong>Catalogue declarations.</strong> Session availability is unbound; local runtimes and scientific qualification remain unchecked.</div>
+      </section>
+      <aside class="inspector" aria-label="Capability inspector"><div class="inspector-heading"><p class="eyebrow">CAPABILITY INSPECTOR</p><span id="selection-kind"></span></div><div id="inspector-content"></div></aside>
+    </main>
+    <footer><span class="footer-source">Source <code>net catalog --json</code></span><span class="footer-shortcuts"><kbd>/</kbd> Search <span>·</span> <kbd>Esc</kbd> Back / clear</span><span id="action-status" role="status" aria-live="polite">Local snapshot · no execution</span></footer>
+  </div>
+  <div id="tooling-data" hidden>__DATA__</div>
+  <script>__SCRIPT__</script>
+</body>
+</html>
