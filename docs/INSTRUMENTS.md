@@ -16,6 +16,8 @@ reuse those operations; a planning guide supplies no operation by itself.
 
 | Tool and role | Category | Workbench status | Entry point |
 | --- | --- | --- | --- |
+| Asset and refurbishment operations | Built-in local business workflow | Durable asset/work-order history, exact parts and costs, current-evidence review gates, declared customer/warranty/return handoff and portable CSV/JSON | `net refurb`; [operating guide](REFURBISHMENT_OPERATIONS.md) |
+| Bench acquisition and diagnostic import | Bounded read-only collectors and data imports | Inventory, SMART/diagnostic raw-byte binding, licensed public/synthetic examples, data-only maintenance plans; no physical qualification or destructive execution | `net bench`; [bench guide](HARDWARE_BENCH.md) |
 | Hardware characterization and refurbishment checks | Built-in assessment of imported records | Configuration identities, declared numeric acceptance checks, retained inspection/replay and customer HTML reports; physical qualification and source authenticity remain unestablished | `net hardware example`, `configuration`, `run`, `inspect`, `replay`, `report`; [operator guide](HARDWARE_REFURBISHMENT.md) |
 | `analytic-damped-oscillator.v1` | Built-in data generator and analysis kernels | Deterministic synthetic source; callable statistics and periodogram | `python -m ciw demo`, `analyze stats`, `analyze spectrum` |
 | Polymer cycle metrology and bounded control | Built-in bounded workflow; optional native ingress | Explicit injection/extrusion-blow quantitative features and retained native calibration ingress, scoped cooling reference, copilot context and toy control; numerical consistency does not establish physical qualification | `net polymer demo`, `qualify`, `summary`, `export`, `run-ingress`; [operator guide](POLYMER_PROCESSING.md), [explicit agent profile](NET_AGENT_PROTOCOL.md#polymer-cycle-profile) |
@@ -232,7 +234,7 @@ before extending the snapshot fixture to a new measurement arrangement.
 ## Covariance provenance and JSPT operations
 
 The [covariance guide](COVARIANCE.md) gives exact setup, schema, commands and
-limits for the RCI v2 → FSRT v2 → JSPT path. Exact source revisions are retained
+limits for the RCI v2 â†’ FSRT v2 â†’ JSPT path. Exact source revisions are retained
 in [`adapter-runtimes.json`](../src/ciw/adapter-runtimes.json), including historical
 pins needed by older saved investigations. Numerical calculations stay in the
 domain repositories; the workbench validates and retains their artifacts.

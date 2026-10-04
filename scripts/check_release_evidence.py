@@ -315,6 +315,20 @@ def evaluate(policy, evidence, sha):
     paths = [row.get("path") for row in records]
     if any(not isinstance(path, str) for path in paths) or len(set(paths)) != len(paths):
         raise ValueError("invalid or duplicate workflow evidence")
+    # A GitHub identity cannot belong to two workflow paths. Per-workflow
+    # consistency alone would let an inconsistent saved snapshot reuse evidence.
+    owners = {"run": {}, "job": {}, "artifact": {}}
+    for record in records:
+        collections = {"run": [record.get("run")], "job": record.get("jobs", []),
+                       "artifact": record.get("artifacts", [])}
+        for kind, items in collections.items():
+            if not isinstance(items, list):
+                continue  # The workflow validator reports malformed collections.
+            for item in items:
+                if isinstance(item, dict) and positive_int(item.get("id")):
+                    owner = owners[kind].setdefault(item["id"], record["path"])
+                    if owner != record["path"]:
+                        raise ValueError(f"duplicate {kind} identity across workflows")
     rows = []
     for requirement in policy["required_workflows"]:
         matches = [row for row in records if row["path"] == requirement["path"]]

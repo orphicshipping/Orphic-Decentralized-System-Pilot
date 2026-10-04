@@ -1,0 +1,14 @@
+{
+  "source": "Prometheus smartctl_exporter upstream test fixture",
+  "source_url": "https://raw.githubusercontent.com/prometheus-community/smartctl_exporter/6274decc61212cc61e58796cc3b8cf5cfa035809/testdata/INTEL_SSDPE2KX080T8_1.json",
+  "revision": "6274decc61212cc61e58796cc3b8cf5cfa035809",
+  "license": "Apache-2.0",
+  "license_url": "https://raw.githubusercontent.com/prometheus-community/smartctl_exporter/6274decc61212cc61e58796cc3b8cf5cfa035809/LICENSE",
+  "raw_sha256": "sha256:2fd5253bb0792ac6472db1add36feb757218b8d42dee40d60752cfa73d6b68cf",
+  "license_sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+  "raw_bytes": 1735,
+  "origin": "external_public_test_fixture",
+  "physical_acquisition": "not_authenticated",
+  "identifiers": "upstream serial/firmware/build fields already REDACTED",
+  "derivation": "NET examples change identity and selected health fields; generated scenarios are synthetic, not statistically calibrated."
+}

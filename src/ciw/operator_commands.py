@@ -6,6 +6,8 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
+    ('bench', 'hardware_bench_cli', 'Capture inventory and import bounded bench diagnostics with source provenance'),
     ('hardware', 'hardware_cli', 'Import hardware observations, assess refurbishment criteria and export retained evidence'),
     ('catalog', 'operator_catalog', 'Discover every command surface and declared scientific provider requirement'),
     ('doctor', 'operator_doctor', 'Check local dependency and explicit provider identity metadata'),

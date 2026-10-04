@@ -15,6 +15,8 @@ machine-readable [release scope](../release/release-scope.json) records the
 starting commit, retained integration inputs, PR dispositions, and blockers. The
 [capability ledger](../release/capability-ledger.json) separates documented
 implementation, installation evidence, local availability, and qualification.
+The dated scope snapshot retains the original 46-job/12-workflow plan; the live
+policy now additionally requires hardware and refurbishment qualification.
 The ledger is a manual inventory; its current-source additions do not alter the
 selected CI policy or update the dated release-scope snapshot. The collector
 does not read that inventory or decide physical qualification. The
@@ -38,10 +40,16 @@ they were recorded, before the rename.
    required for exact provider provisioning.
 2. Select one full commit SHA after integration. Review the
    [CI policy](../release/qualification-policy.json) against its actual workflow
-   definitions. The policy declares 46 required jobs across 12 workflows, including the
+   definitions. The policy declares 55 required jobs across 14 workflows, including the
    integrated matrices, real OCI execution, installed Legibility checks and
    three correction/replay journeys, and one identical candidate wheel
-   exercised on Linux and Windows. Missing or renamed jobs block acceptance.
+   exercised on Linux and Windows. The original 46 jobs remain required; four
+   hardware jobs and five refurbishment jobs additionally qualify the asset
+   lifecycle and recorded diagnostic-import workflow. The latter builds one
+   wheel and checks the same bytes on Linux/Windows with Python 3.11/3.12.
+   Its diagnostics and customer reports establish software/data behavior, not
+   physical equipment qualification or independent human acceptance. The policy
+   requires 44 retained artifacts. Missing or renamed jobs block acceptance.
 3. Complete the selected public source, independent-wheel, installed-package,
    replay, Linux/Windows, and deployment lanes on that commit. Run the evidence
    collector and inspect retained artifacts. An old branch's green run cannot
@@ -98,7 +106,8 @@ CI metadata and retained-artifact presence requirements were satisfied.
 
 The gate requires the latest eligible push/manual run for each named workflow,
 exact repository/path/SHA and attempt identities, completed successful required
-jobs, and current-attempt, nonempty, unexpired named artifacts. Missing,
+jobs, and current-attempt, nonempty, unexpired named artifacts. Run, job and
+artifact identities cannot be reused under different workflow paths. Missing,
 queued, cancelled, neutral, skipped-required or failed checks cannot become
 passes. A newer failing run supersedes an older green one. Collection rejects
 observed changes in pagination, run state, or latest-run identity; this remains

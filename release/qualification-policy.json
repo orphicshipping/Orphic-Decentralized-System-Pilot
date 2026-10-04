@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "repository": "atomtrapping/Notations-Engineering-Terminal",
-  "scope": "Integrated public research baseline: independent packages, installed operator journeys, typed composition including real OCI, and Legibility. CI metadata and artifact presence do not establish independent-human or physical qualification.",
+  "scope": "Integrated public research baseline: independent packages, installed operator journeys, typed composition including real OCI, and Legibility. CI metadata and artifact presence do not establish independent-human or physical qualification. Hardware refurbishment and asset/bench software journeys are required; recorded or synthetic diagnostic inputs do not establish physical or independent-human qualification.",
   "required_workflows": [
     {
       "path": ".github/workflows/monorepo.yml",
@@ -190,6 +190,42 @@
         "operator-artifact-tests",
         "operator-readiness-ubuntu-24.04",
         "operator-readiness-windows-latest"
+      ],
+      "allowed_skipped_jobs": [],
+      "excluded_jobs": {}
+    },
+    {
+      "path": ".github/workflows/hardware.yml",
+      "jobs": [
+        "qualification (ubuntu-24.04, 3.11)",
+        "qualification (ubuntu-24.04, 3.12)",
+        "qualification (windows-latest, 3.11)",
+        "qualification (windows-latest, 3.12)"
+      ],
+      "artifacts": [
+        "hardware-ubuntu-24.04-3.11",
+        "hardware-ubuntu-24.04-3.12",
+        "hardware-windows-latest-3.11",
+        "hardware-windows-latest-3.12"
+      ],
+      "allowed_skipped_jobs": [],
+      "excluded_jobs": {}
+    },
+    {
+      "path": ".github/workflows/refurbishment.yml",
+      "jobs": [
+        "candidate-wheel",
+        "installed-journey (ubuntu-24.04, 3.11)",
+        "installed-journey (ubuntu-24.04, 3.12)",
+        "installed-journey (windows-latest, 3.11)",
+        "installed-journey (windows-latest, 3.12)"
+      ],
+      "artifacts": [
+        "refurbishment-candidate-wheel",
+        "refurbishment-ubuntu-24.04-3.11",
+        "refurbishment-ubuntu-24.04-3.12",
+        "refurbishment-windows-latest-3.11",
+        "refurbishment-windows-latest-3.12"
       ],
       "allowed_skipped_jobs": [],
       "excluded_jobs": {}

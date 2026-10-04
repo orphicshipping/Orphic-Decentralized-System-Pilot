@@ -2,9 +2,9 @@
 
 **A compositional scientific and engineering instrumentation system: mathematical contracts, retained experiments, and scoped verification.**
 
-Technical whitepaper and entry manual · Notation Systems Inc. · Documentation baseline: 2026-10-04
+Technical whitepaper and entry manual Â· Notation Systems Inc. Â· Documentation baseline: 2026-10-04
 
-[Quickstart](#quickstart) · [Operator manual](docs/OPERATOR_MANUAL.md) · [Architecture diagrams](docs/SYSTEM_ARCHITECTURE.md) · [Instruments](docs/INSTRUMENTS.md) · [Model validity](docs/MODEL_VALIDITY_AND_EVIDENCE.md) · [Hardware refurbishment](docs/HARDWARE_REFURBISHMENT.md)
+[Quickstart](#quickstart) Â· [Operator manual](docs/OPERATOR_MANUAL.md) Â· [Architecture diagrams](docs/SYSTEM_ARCHITECTURE.md) Â· [Instruments](docs/INSTRUMENTS.md) Â· [Model validity](docs/MODEL_VALIDITY_AND_EVIDENCE.md) Â· [Hardware refurbishment](docs/HARDWARE_REFURBISHMENT.md)
 
 ## Abstract
 
@@ -43,7 +43,7 @@ NET's primary category is a **compositional computational instrumentation system
 
 The industrial purpose is to make a result usable beyond the program that first produced it: another person should be able to identify its source, reproduce the supported computation, inspect its assumptions and determine what further evidence is needed for a decision. Examples include comparing process cycles, evaluating a sensor configuration, transporting correlated uncertainty, checking a model reduction, and preparing a result for independent computation checking.
 
-The operating loop is **author → run → observe → compare → modify → check**. Inputs, failed attempts and prior results remain inspectable. Reopening reads retained state; replay is an explicit new execution.
+The operating loop is **author â†’ run â†’ observe â†’ compare â†’ modify â†’ check**. Inputs, failed attempts and prior results remain inspectable. Reopening reads retained state; replay is an explicit new execution.
 
 NET is the public engineering workbench within the broader Notation Systems stack. Acquisition, canonical evidence admission, deployment policy and equipment interfaces retain their declared responsibilities. The [stack map](docs/STACK.md) describes those relationships and integration status; a responsibility diagram does not imply an automatic end-to-end adapter.
 
@@ -112,7 +112,7 @@ p_Y(y)=\sum_{P(x)=y}p(x),\qquad
 \quad\text{when }p_Y(y)>0.
 $$
 
-NET's finite checker uses exact rational arithmetic on 1–64 labels per space. Zero-mass fibres retain their labels and an undefined conditional result. The pushforward construction is established mathematics; see the [Mathlib formal reference](https://leanprover-community.github.io/mathlib4_docs/Mathlib/MeasureTheory/Measure/Map.html). Mathlib is a reference, not a proof certificate for NET's Python code.
+NET's finite checker uses exact rational arithmetic on 1â€“64 labels per space. Zero-mass fibres retain their labels and an undefined conditional result. The pushforward construction is established mathematics; see the [Mathlib formal reference](https://leanprover-community.github.io/mathlib4_docs/Mathlib/MeasureTheory/Measure/Map.html). Mathlib is a reference, not a proof certificate for NET's Python code.
 
 For affine uncertainty transport $y=Ax+b$ with fixed $A,b$ and finite second moments, $C_y=A C_x A^{\mathsf T}$. A differentiable nonlinear measurement model may instead use the local approximation $C_y\approx J C_x J^{\mathsf T}$. NET retains quantity order, correlation, units and covariance sources; it does not supply missing physical assumptions. Finite probability preservation, measurement uncertainty and metrological traceability are distinct concepts. The [JCGM publications](https://www.bipm.org/en/committees/jc/jcgm/publications) provide measurement-model and uncertainty background; each NET profile states which treatment it implements.
 
@@ -171,7 +171,7 @@ The useful question is: *does this proof verify for the intended compiled progra
 
 The shared operation `ciw.proved-heat.v1` runs SCR's native integer Jacobi calculation, produces an SP1 proof, checks native/guest input and output commitments, and invokes a separate verifier bound to the registered full ELF. A successful result requires those checks; a failed proof cannot silently become an unproved success.
 
-This profile accepts 3–32 cells, 0–64 steps, and integer magnitudes at most `2^40`, with fixed endpoints, dimensionless values and mandatory empty native configuration. Mathematical settings belong to the fixed guest or its consumed input. Interior updates use
+This profile accepts 3â€“32 cells, 0â€“64 steps, and integer magnitudes at most `2^40`, with fixed endpoints, dimensionless values and mandatory empty native configuration. Mathematical settings belong to the fixed guest or its consumed input. Interior updates use
 
 ```text
 next[i] = current[i] + trunc_toward_zero(
@@ -215,7 +215,7 @@ The [F2 checker](docs/PROOF_WORKLOADS.md) prepares exact finite-homology calcula
 
 ### Temperature measurement and qualification
 
-There are two separate computational paths: affine conversion of 1–64 sensor observations with joint raw/calibration covariance, and [thermal estimation from recordings](docs/MEASURED_THERMAL.md). The latter takes already-calibrated shell, power and ambient streams, retains a held-out core reference, and does not propagate its retained input uncertainty. These paths have separate contracts and no automatic handoff. The temperature processing profile also supplies a separate numerical checker against an exact rational first-order reference. Its PASS/FAIL and verification occurrence remain distinct from processing acceptance and physical qualification; inspect the audit even when the graph completes.
+There are two separate computational paths: affine conversion of 1â€“64 sensor observations with joint raw/calibration covariance, and [thermal estimation from recordings](docs/MEASURED_THERMAL.md). The latter takes already-calibrated shell, power and ambient streams, retains a held-out core reference, and does not propagate its retained input uncertainty. These paths have separate contracts and no automatic handoff. The temperature processing profile also supplies a separate numerical checker against an exact rational first-order reference. Its PASS/FAIL and verification occurrence remain distinct from processing acceptance and physical qualification; inspect the audit even when the graph completes.
 
 Prepare the synthetic processing profile with `python -m ciw.agent_mcp temperature-config --output-dir results/temperature-agent`. It intentionally has an incomplete uncertainty budget, so acceptance remains indeterminate. The [agent protocol](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) explains serving it and supplying an operator-prepared request.
 
@@ -231,18 +231,17 @@ The [pilot protocol](docs/TEMPERATURE_QUALIFICATION.md), [setup record](examples
 
 ## Hardware refurbishment
 
-`net hardware` binds operator-imported characterization records to an exact
-equipment configuration and evaluates a declared numeric acceptance plan.
-Retained investigations preserve the input request and execution/result
-identities; inspection reads saved state and explicit replay creates a fresh
-execution. An HTML report presents the configuration, declared source, checks
-and limitations for customer review.
+NET connects a local asset registry to retained hardware assessment and bench-data imports. Equipment intake, serial/configuration history, diagnosis, parts and costs, repairs, reassessment, explicit release review, customer records, warranties and returns are available through `net refurb`.
 
-Start with `net hardware example --output hardware-request.json`, then follow
-the [hardware operator guide](docs/HARDWARE_REFURBISHMENT.md). The example is
-synthetic. This first workflow performs no live acquisition, sanitization,
-firmware flashing or physical control. Passing its checks does not certify
-equipment or authorize its release for sale.
+```sh
+net refurb demo --output-dir results/refurb-demo-001
+net bench example --case pass --output-dir results/bench-demo-001
+net hardware run results/bench-demo-001/request.json --output-dir results/bench-run-001
+```
+
+The business demonstration writes a searchable offline desk, customer report, exact-cost inventory/accounting CSVs, a portable archive and a restored registry. Bench examples retain a licensed, commit-pinned public SMART fixture and labeled synthetic derivatives. Read-only inventory and supported SMART capture are available; sanitization/provisioning remain data-only plans and imported completion declarations.
+
+The [operating guide](docs/REFURBISHMENT_OPERATIONS.md), [bench guide](docs/HARDWARE_BENCH.md) and [hardware assessment guide](docs/HARDWARE_REFURBISHMENT.md) describe the boundaries. Examples perform no physical qualification. A software assessment does not establish safety, calibration, data erasure, source authenticity or automatic release authority.
 
 ## Quickstart
 
@@ -296,7 +295,7 @@ net morphism finite-verify results/finite-demo/registry.json results/finite-demo
 | Coarse probabilities | 1/2, 1/2 | 1/2, 1/2 |
 | Conditional means | 272 K, 292 K | 272 K, 292 K |
 | Original/integrated conditional mean | 282 K / 282 K | 282 K / 282 K |
-| Expected within-group variance | 4 K² | 4 K² |
+| Expected within-group variance | 4 KÂ² | 4 KÂ² |
 | Resulting distributions match | Yes | Yes |
 | State-level intervention square | PASS | FAIL; two counterexamples |
 
@@ -356,6 +355,6 @@ The sources support their stated mathematical or technical subjects. NET's adapt
 
 NET is shared infrastructure developed by **Notation Systems Inc.** across **Notations Gaming**, **Notation Manufacturing** and **Notations Laboratories**: interactive worlds, design and manufacturing systems, and scientific research and validation. [Notation Systems](https://notation.systems).
 
-**© 2026 Giason Pooni, for original contributions.** The root code is governed by the existing [LICENSE](LICENSE). Imported modules retain their own licences and upstream notices. Project-owned original assets use the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md). Repository publication does not change those terms or confer evidence, signing or execution authority.
+**Â© 2026 Giason Pooni, for original contributions.** The root code is governed by the existing [LICENSE](LICENSE). Imported modules retain their own licences and upstream notices. Project-owned original assets use the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md). Repository publication does not change those terms or confer evidence, signing or execution authority.
 
 Imported-component inventory does not establish clearance for a combined distribution; see the [distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source).

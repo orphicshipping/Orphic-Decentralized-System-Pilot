@@ -35,6 +35,7 @@ RELEASE = (
     "declared-workloads.yml", "calibrated-observable.yml", "identified-design.yml",
     "calibrated-window.yml", "proved-heat.yml", "system-composition.yml",
     "legibility.yml", "release-operator.yml", "operator-readiness.yml",
+    "hardware.yml", "refurbishment.yml",
 )
 RELEASE_AUXILIARY = ("release-evidence.yml",)
 DOCS_ONLY = (

@@ -385,6 +385,36 @@ class AssessmentTests(unittest.TestCase):
         self.assert_blocked()
 
 
+    def test_workflow_cannot_reuse_another_workflows_run_job_or_artifact_identity(self):
+        for identity in ("run", "job", "artifact"):
+            with self.subTest(identity=identity):
+                self.policy, self.evidence = policy_fixture(), evidence_fixture()
+                requirement = deepcopy(self.requirement)
+                requirement["path"] = ".github/workflows/second.yml"
+                self.policy["required_workflows"].append(requirement)
+                second = deepcopy(self.record)
+                second["path"] = second["run"]["path"] = requirement["path"]
+                second["run"]["id"] = 1001
+                for job in second["jobs"]:
+                    job["id"] += 1000
+                    job["run_id"] = 1001
+                second["artifacts"][0]["id"] += 1000
+                second["artifacts"][0]["workflow_run"]["id"] = 1001
+                self.evidence["workflows"].append(second)
+                self.assertEqual(self.report()["status"], "ci_pass")
+                if identity == "run":
+                    second["run"]["id"] = self.record["run"]["id"]
+                    for job in second["jobs"]:
+                        job["run_id"] = self.record["run"]["id"]
+                    second["artifacts"][0]["workflow_run"]["id"] = self.record["run"]["id"]
+                elif identity == "job":
+                    second["jobs"][0]["id"] = self.record["jobs"][0]["id"]
+                else:
+                    second["artifacts"][0]["id"] = self.record["artifacts"][0]["id"]
+                self.assert_refused()
+
+
+
 class PolicyAndRunSelectionTests(unittest.TestCase):
     def test_candidate_requires_full_lowercase_sha(self):
         self.assertEqual(gate.candidate_sha(SHA), SHA)
@@ -659,6 +689,76 @@ class OfflineCommandTests(unittest.TestCase):
                 self.assertIn("release evidence error", stderr)
                 self.assertFalse((output / "report.json").exists())
                 self.assertNotIn("ci_pass:", stdout)
+
+
+class RefurbishmentReleasePolicyTests(unittest.TestCase):
+    """The public candidate must include the new software lanes, without skips."""
+
+    NEW_LANES = (".github/workflows/hardware.yml", ".github/workflows/refurbishment.yml")
+
+    def setUp(self):
+        self.policy = gate.read_json(Path(__file__).resolve().parents[1] / "release/qualification-policy.json")
+        gate.validate_policy(self.policy)
+        self.evidence = evidence_fixture()
+        self.evidence["repository"] = self.policy["repository"]
+        self.evidence["workflows"] = []
+        for workflow_index, requirement in enumerate(self.policy["required_workflows"]):
+            record = deepcopy(evidence_fixture()["workflows"][0])
+            record["path"] = record["run"]["path"] = requirement["path"]
+            record["run"]["id"] = 1001 + workflow_index
+            record["run"]["head_repository"]["full_name"] = self.policy["repository"]
+            job = record["jobs"][0]
+            record["jobs"] = [dict(job, id=100000 + workflow_index * 100 + index,
+                                  name=name, run_id=record["run"]["id"])
+                              for index, name in enumerate(requirement["jobs"] + requirement["allowed_skipped_jobs"])]
+            for job in record["jobs"]:
+                if job["name"] in requirement["allowed_skipped_jobs"]:
+                    job["conclusion"] = "skipped"
+            artifact = record["artifacts"][0]
+            record["artifacts"] = [dict(artifact, id=200000 + workflow_index * 100 + index,
+                                       name=name, workflow_run={"id": record["run"]["id"], "head_sha": SHA})
+                                   for index, name in enumerate(requirement["artifacts"])]
+            self.evidence["workflows"].append(record)
+
+    def test_complete_candidate_includes_both_platforms_and_python_versions(self):
+        self.assertEqual(gate.evaluate(self.policy, self.evidence, SHA)["status"], "ci_pass")
+        for path, job_prefix, artifact_prefix in (
+            (self.NEW_LANES[0], "qualification", "hardware"),
+            (self.NEW_LANES[1], "installed-journey", "refurbishment"),
+        ):
+            requirement = next(item for item in self.policy["required_workflows"] if item["path"] == path)
+            self.assertEqual(requirement["excluded_jobs"], {})
+            self.assertEqual(requirement["allowed_skipped_jobs"], [])
+            for os_name in ("ubuntu-24.04", "windows-latest"):
+                for python in ("3.11", "3.12"):
+                    self.assertIn(f"{job_prefix} ({os_name}, {python})", requirement["jobs"])
+                    self.assertIn(f"{artifact_prefix}-{os_name}-{python}", requirement["artifacts"])
+        wheel = next(item for item in self.policy["required_workflows"] if item["path"] == self.NEW_LANES[1])
+        self.assertIn("candidate-wheel", wheel["jobs"])
+        self.assertIn("refurbishment-candidate-wheel", wheel["artifacts"])
+
+    def test_missing_new_workflow_blocks_release(self):
+        for path in self.NEW_LANES:
+            with self.subTest(path=path):
+                evidence = deepcopy(self.evidence)
+                evidence["workflows"] = [item for item in evidence["workflows"] if item["path"] != path]
+                self.assertEqual(gate.evaluate(self.policy, evidence, SHA)["status"], "blocked")
+
+    def test_every_new_job_must_succeed_and_retain_its_artifacts(self):
+        for workflow_index, record in enumerate(self.evidence["workflows"]):
+            if record["path"] not in self.NEW_LANES:
+                continue
+            for job_index, job in enumerate(record["jobs"]):
+                for conclusion in ("failure", "skipped", "neutral", "cancelled"):
+                    with self.subTest(path=record["path"], job=job["name"], conclusion=conclusion):
+                        evidence = deepcopy(self.evidence)
+                        evidence["workflows"][workflow_index]["jobs"][job_index]["conclusion"] = conclusion
+                        self.assertEqual(gate.evaluate(self.policy, evidence, SHA)["status"], "blocked")
+            for artifact_index, artifact in enumerate(record["artifacts"]):
+                with self.subTest(path=record["path"], missing_artifact=artifact["name"]):
+                    evidence = deepcopy(self.evidence)
+                    del evidence["workflows"][workflow_index]["artifacts"][artifact_index]
+                    self.assertEqual(gate.evaluate(self.policy, evidence, SHA)["status"], "blocked")
 
 
 if __name__ == "__main__":

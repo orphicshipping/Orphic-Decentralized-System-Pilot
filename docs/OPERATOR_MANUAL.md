@@ -366,3 +366,7 @@ public-tool examples, use [RUN_NET](RUN_NET.md). For operator gates and provider
 provisioning, use [operator readiness](OPERATOR_READINESS.md). For protocol and
 extension work, use [PROTOCOL](PROTOCOL.md), [integration coverage](INTEGRATION_COVERAGE.md)
 and [development checks](DEVELOPMENT.md).
+
+## Asset and bench operations
+
+Use [asset and refurbishment operations](REFURBISHMENT_OPERATIONS.md) for intake, repair orders, customer handoff and portable inventory/accounting exports. Use [bench acquisition and import](HARDWARE_BENCH.md) for local inventory, bounded diagnostics and retained public/synthetic examples. `net refurb demo --output-dir results/refurb-demo-001` creates an offline desk and customer report for the complete synthetic lifecycle.

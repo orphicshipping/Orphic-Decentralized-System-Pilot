@@ -1,0 +1,169 @@
+name: Installed refurbishment and recorded bench qualification
+
+on:
+  push:
+    branches: [main, 'release/**']
+    tags: ['**']
+  pull_request:
+    paths:
+      - 'src/ciw/**'
+      - 'tests/test_refurbishment*.py'
+      - 'tests/test_hardware_bench*.py'
+      - 'scripts/check_refurbishment_installed.py'
+      - 'scripts/check_hardware_installed.py'
+      - 'scripts/operator_artifact.py'
+      - 'pyproject.toml'
+      - 'release/qualification-policy.json'
+      - '.github/workflows/refurbishment.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || (github.event_name == 'push' && github.ref) || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  candidate-wheel:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    outputs:
+      revision: ${{ steps.identity.outputs.revision }}
+      wheel_sha256: ${{ steps.identity.outputs.wheel_sha256 }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install declared wheel build dependencies
+        run: python -c "import subprocess, sys, tomllib; p = tomllib.load(open('pyproject.toml', 'rb')); subprocess.run([sys.executable, '-m', 'pip', 'install', *p['build-system']['requires'], 'wheel'], check=True)"
+      - name: Build one portable candidate wheel
+        run: python -m pip wheel . --no-deps --no-build-isolation --wheel-dir dist
+      - name: Seal wheel bytes and exact candidate identity
+        id: identity
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          revision = subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip()
+          subprocess.run([sys.executable, 'scripts/operator_artifact.py', 'seal',
+              '--wheel-dir', 'dist', '--manifest', 'dist/refurbishment-wheel.json',
+              '--revision', revision], check=True)
+          manifest = json.loads(Path('dist/refurbishment-wheel.json').read_text(encoding='utf-8'))
+          with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as stream:
+              stream.write('revision=' + revision + '\n')
+              stream.write('wheel_sha256=' + manifest['wheel_sha256'] + '\n')
+          PYTHON
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: refurbishment-candidate-wheel
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 14
+
+  installed-journey:
+    needs: candidate-wheel
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - name: Preserve source bytes and Windows paths
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.longpaths true
+          git config --global core.autocrlf false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ needs.candidate-wheel.outputs.revision }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+        with:
+          name: refurbishment-candidate-wheel
+          path: candidate-wheel
+      - name: Verify the downloaded candidate before installation
+        env:
+          CANDIDATE_REVISION: ${{ needs.candidate-wheel.outputs.revision }}
+          CANDIDATE_WHEEL_SHA256: ${{ needs.candidate-wheel.outputs.wheel_sha256 }}
+        shell: bash
+        run: python scripts/operator_artifact.py verify --wheel-dir candidate-wheel --manifest candidate-wheel/refurbishment-wheel.json --revision "$CANDIDATE_REVISION" --sha256 "$CANDIDATE_WHEEL_SHA256"
+      - name: Install the candidate with declared test dependencies
+        run: python -c "import pathlib, subprocess, sys; wheels = list(pathlib.Path('candidate-wheel').glob('*.whl')); assert len(wheels) == 1; subprocess.run([sys.executable, '-m', 'pip', 'install', str(wheels[0]) + '[dev]'], check=True)"
+      - name: Installed registry and recorded bench contracts
+        shell: bash
+        run: python -m pytest -q -o pythonpath= tests/test_refurbishment*.py tests/test_hardware_bench*.py --junitxml=refurbishment-tests.xml
+      - name: Require complete software contract qualification
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import json
+          import platform
+          from pathlib import Path
+          import subprocess
+          import sys
+          import xml.etree.ElementTree as ET
+          suites = list(ET.parse('refurbishment-tests.xml').getroot().iter('testsuite'))
+          count = sum(int(s.attrib['tests']) for s in suites)
+          if not count or any(int(s.attrib[k]) for s in suites for k in ('failures', 'errors', 'skipped')):
+              raise SystemExit('Refurbishment contracts require positive test count and zero failures, errors or skips')
+          report = {'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], text=True).strip(),
+                    'python': sys.version, 'platform': platform.platform(), 'tests': count,
+                    'failures': 0, 'errors': 0, 'skipped': 0, 'scope': 'software_and_recorded_data',
+                    'physical_validation': 'not_performed', 'independent_human_acceptance': 'not_performed'}
+          Path('refurbishment-contracts.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          PYTHON
+      - name: Fresh installed asset, bench and customer-report journey outside checkout
+        env:
+          CANDIDATE_REVISION: ${{ needs.candidate-wheel.outputs.revision }}
+          CANDIDATE_WHEEL_SHA256: ${{ needs.candidate-wheel.outputs.wheel_sha256 }}
+        shell: bash
+        run: |
+          python - <<'PYTHON'
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          root = Path.cwd()
+          temporary = Path(os.environ['RUNNER_TEMP'])
+          environment = temporary / 'refurbishment-environment'
+          subprocess.run([sys.executable, '-m', 'venv', str(environment)], check=True)
+          installed_python = environment / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+          installed_net = environment / ('Scripts/net.exe' if os.name == 'nt' else 'bin/net')
+          artifact = root / 'candidate-wheel'
+          subprocess.run([sys.executable, str(root / 'scripts/operator_artifact.py'), 'verify',
+              '--wheel-dir', str(artifact), '--manifest', str(artifact / 'refurbishment-wheel.json'),
+              '--revision', os.environ['CANDIDATE_REVISION'],
+              '--sha256', os.environ['CANDIDATE_WHEEL_SHA256']], check=True)
+          wheels = list(artifact.glob('*.whl'))
+          if len(wheels) != 1:
+              raise RuntimeError('Expected the single downloaded candidate wheel')
+          subprocess.run([str(installed_python), '-m', 'pip', 'install', '--no-compile', str(wheels[0])], check=True)
+          subprocess.run([str(installed_python), '-I', '-B', str(root / 'scripts/check_refurbishment_installed.py'),
+              '--python', str(installed_python), '--net', str(installed_net), '--wheel', str(wheels[0]),
+              '--output-dir', str(temporary / 'refurbishment-acceptance')], cwd=temporary, check=True)
+          PYTHON
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: refurbishment-${{ matrix.os }}-${{ matrix.python }}
+          path: |
+            refurbishment-tests.xml
+            refurbishment-contracts.json
+            candidate-wheel/refurbishment-wheel.json
+            ${{ runner.temp }}/refurbishment-acceptance/**
+          if-no-files-found: error
+          retention-days: 14
