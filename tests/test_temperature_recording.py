@@ -213,3 +213,32 @@ def test_noncanonical_and_invalid_base64_are_refused():
         seal(bundle)
         with pytest.raises(ValueError, match="base64"):
             recording.validate_recording(bundle)
+
+
+@pytest.mark.parametrize("column,index", [("time", 0), ("T1", 1), ("T2", 2), ("Q1", 3), ("Q2", 4)])
+def test_nonzero_decimal_underflow_is_refused_instead_of_becoming_zero(column, index):
+    cells = ["0", "20", "21", "0", "10"]
+    cells[index] = "1e-999"
+    raw = ("time,T1,T2,Q1,Q2\n" + ",".join(cells) + "\n").encode()
+    with pytest.raises(ValueError, match=f"CSV record 2, column {column}:.*silent conversion to zero"):
+        recording.import_recording(*fixture_source(raw))
+
+
+def test_signed_and_exponential_zero_remain_valid_and_missing_temperature_stays_null():
+    raw = b"time,T1,T2,Q1,Q2\n0,-0e-999,,0e999999999999999999999999,-0\n"
+    bundle = recording.import_recording(*fixture_source(raw))
+    assert bundle["rows"][0]["T1"] == 0.0
+    assert bundle["rows"][0]["T2"] is None
+    assert bundle["rows"][0]["Q1"] == bundle["rows"][0]["Q2"] == 0.0
+    assert base64.b64decode(bundle["raw_bytes_b64"]) == raw
+
+
+@pytest.mark.parametrize("row,column", [
+    ("2,NaN,21,0,0", "T1"),
+    ("2,20,21,0,101", "Q2"),
+    ("0,20,21,0,0", "time"),
+])
+def test_invalid_later_cell_identifies_its_csv_record_and_quantity(row, column):
+    raw = ("time,T1,T2,Q1,Q2\n0,20,21,0,0\n" + row + "\n").encode()
+    with pytest.raises(ValueError, match=f"CSV record 3, column {column}:"):
+        recording.import_recording(*fixture_source(raw))

@@ -103,6 +103,10 @@ def _numeric(value, *, nullable=False):
         raise ValueError("Recording cells require finite decimal numbers; only temperatures may be empty")
     result = float(value)
     number(result)
+    # Inspect the already-validated significand without parsing an unbounded exponent.
+    nonzero_significand = any(char in "123456789" for char in value.lower().split("e", 1)[0])
+    if result == 0.0 and nonzero_significand:
+        raise ValueError("Nonzero decimal is too small to retain as a numeric value; refusing silent conversion to zero")
     return result
 
 
@@ -116,15 +120,21 @@ def _rows(raw, manifest):
         indices = {name: header.index(column) for name, column in columns.items()}
         rows, previous = [], None
         for row in reader:
+            record_number = len(rows) + 2  # Header is record 1, independent of quoted CSV lines.
             if len(rows) >= MAX_ROWS or len(row) != 5:
-                raise ValueError("Recording row count or row width exceeds the declared profile")
-            values = {name: _numeric(row[index], nullable=name in CHANNELS)
-                      for name, index in indices.items()}
+                raise ValueError(f"CSV record {record_number}: recording row count or row width exceeds the declared profile")
+            values = {}
+            for name, index in indices.items():
+                try:
+                    values[name] = _numeric(row[index], nullable=name in CHANNELS)
+                except ValueError as exc:
+                    raise ValueError(f"CSV record {record_number}, column {name}: {exc}") from exc
             stamp = values.pop("time")
             if stamp < 0 or previous is not None and stamp <= previous:
-                raise ValueError("Recording times must be nonnegative and strictly increasing")
-            if any(not 0 <= values[channel] <= 100 for channel in COMMANDS):
-                raise ValueError("Heater command percentages must lie in [0, 100]")
+                raise ValueError(f"CSV record {record_number}, column time: recording times must be nonnegative and strictly increasing")
+            for channel in COMMANDS:
+                if not 0 <= values[channel] <= 100:
+                    raise ValueError(f"CSV record {record_number}, column {channel}: heater command percentages must lie in [0, 100]")
             rows.append({"row_number": len(rows) + 2, "time_s": stamp, **values})
             previous = stamp
         if not rows:

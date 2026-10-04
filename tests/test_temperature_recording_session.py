@@ -151,3 +151,43 @@ def test_sample_index_cannot_be_relabelled_seconds():
     manifest["clock"]["time_kind"] = "nominal_sample_index"
     with pytest.raises(ValueError, match="sample indices"):
         import_recording((EXAMPLE / "data.csv").read_bytes(), manifest)
+
+
+def test_cli_numeric_refusal_identifies_source_cell_before_creating_output(tmp_path, capsys):
+    from ciw.control_contracts import bytes_ref
+
+    raw = b"Time (sec), Temperature 1, Temperature 2, Heater 1, Heater 2\n0,1e-999,21,0,0\n"
+    manifest = load(EXAMPLE / "source.json")
+    manifest.update(origin="test_fixture", raw_sha256=bytes_ref(raw))
+    csv_path, manifest_path = tmp_path / "input.csv", tmp_path / "source.json"
+    csv_path.write_bytes(raw)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    output = tmp_path / "refused-import"
+    assert main(["import-temperature", "--csv", str(csv_path), "--manifest", str(manifest_path),
+                 "--output-dir", str(output), "--json"]) == 1
+    captured = capsys.readouterr()
+    refusal = json.loads(captured.err)
+    assert captured.out == ""
+    assert refusal["status"] == "refused"
+    assert "CSV record 2, column T1" in refusal["reason"]
+    assert "silent conversion to zero" in refusal["reason"]
+    assert not output.exists()
+    assert csv_path.read_bytes() == raw
+
+
+def test_single_sample_with_missing_temperature_survives_session_reopen(tmp_path):
+    from ciw.control_contracts import bytes_ref
+
+    raw = b"Time (sec), Temperature 1, Temperature 2, Heater 1, Heater 2\n0,,21,0,0\n"
+    manifest = load(EXAMPLE / "source.json")
+    manifest.update(origin="test_fixture", raw_sha256=bytes_ref(raw))
+    retained = import_recording(raw, manifest)
+    session = Session(make_source(retained), tmp_path / "initial-single-sample")
+    workspace = session.save_workspace(session.output_dir / "workspace.json")
+    reopened = Session.from_workspace(workspace, output_dir=tmp_path / "reopened-single-sample")
+    exported = observation_stream(source_recording(reopened.run), "T1")
+    assert len(exported["observations"]) == 1
+    assert exported["observations"][0]["value"] is None
+    assert exported["observations"][0]["clock"]["time_s"] == 0.0
+    assert exported["observations"][0]["provenance"]["semantics"] == "simulated"
+    assert reopened.executions == reopened.results == {}

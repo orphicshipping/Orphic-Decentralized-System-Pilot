@@ -26,9 +26,10 @@ net science import-temperature \
 net science inspect-temperature --recording results/tclab/recording.json --json
 ```
 
-Import writes `recording.json`, `run.json` and `workspace.json`. The retained
-recording binds the source bytes and manifest; the run and workspace make the
-temperature channels available through the existing Session. Inspection checks
+Import writes `recording.json`, `run.json`, `workspace.json`, and the Session's
+content-addressed `recording-<digest>.json` source copy. The retained recording
+binds the source bytes and manifest; the run and workspace make the temperature
+channels available through the existing Session. Inspection checks
 the retained recording and reconstructs its summary without fetching the
 source, contacting an instrument or acquiring another sample. Reprocessing the
 archive does not repeat the experiment.
@@ -75,6 +76,13 @@ experimental-recording interpretation. A synthetic fixture keeps simulated
 semantics; changing an origin label cannot promote it to a measured recording.
 Validation refuses altered bindings and malformed or unsupported input instead
 of filling missing measurement semantics with defaults.
+
+CSV refusal messages identify the record number (including the header as
+record 1) and quantity column where possible. Missing temperature cells stay
+null. Nonzero decimals too small for the numeric representation are refused
+instead of becoming zero; original source bytes are never rewritten. Choose a
+fresh output directory when importing, and a new output filename when exporting;
+existing evidence is not replaced.
 
 Device serial, calibration evidence, absolute acquisition time, clock
 uncertainty and measurement covariance are not supplied by this example and
