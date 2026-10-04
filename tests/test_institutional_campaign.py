@@ -133,3 +133,93 @@ def test_changed_installed_binding_invalidates_passing_lanes(tmp_path, monkeypat
     report = driver.campaign(campaign_args(tmp_path))
     assert report['counts'] == {'passed': 3, 'failed': 0, 'not_run': 0}
     assert report['status'] == 'FAIL' and report['binding_after']['status'] == 'FAIL'
+
+@pytest.mark.parametrize('field,value', [('passed', True), ('passed', 1.0), ('failed', False), ('failed', 0.0)])
+def test_numerical_evidence_counts_must_be_integers(tmp_path, field, value):
+    data = {'schema': 'net.institutional-numerical-tests.v1',
+            'status': 'PASS_WITH_UNTESTED_PHYSICAL_SCOPE',
+            'counts': {'passed': 1, 'failed': 0}, 'checks': [{'status': 'PASS'}],
+            'real_data_counts': {'observations': 1}, 'scope': 'software only', 'blocked': []}
+    path = tmp_path / 'report.json'
+    path.write_text(json.dumps(data))
+    assert driver.lane_summary('numerics', path)['counts']['passed'] == 1
+    data['counts'][field] = value
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match='consistent passing evidence'):
+        driver.lane_summary('numerics', path)
+
+
+@pytest.mark.parametrize('value', [True, 1.0])
+def test_epa_complete_pair_row_count_must_be_integer(tmp_path, value):
+    data = {'schema': 'net.institutional-epa-campaign.v1', 'software_test_status': 'PASS',
+            'counts': {'rows': 1, 'groups': 1, 'sites': 1, 'complete_pairs': 1, 'missing_pairs': 0},
+            'diagnostic_policy': {'atol': 0}, 'limits': ['software only'],
+            'groups': [{'rows': 1, 'missing_pairs': 0, 'group': {'site': 'retained-site'},
+                        'complete_pairs_only': {'rows': 1, 'independent_decimal_metrics':
+                                                {'rmse': 0, 'max_abs_error': 0, 'max_tolerance_excess': 0}}}]}
+    path = tmp_path / 'report.json'
+    path.write_text(json.dumps(data))
+    assert driver.lane_summary('epa', path)['counts']['rows'] == 1
+    data['groups'][0]['complete_pairs_only']['rows'] = value
+    path.write_text(json.dumps(data))
+    with pytest.raises(ValueError, match='complete-pair counts'):
+        driver.lane_summary('epa', path)
+
+
+def test_progress_identifies_all_lanes_and_failure_without_stopping(tmp_path, monkeypatch):
+    monkeypatch.setattr(driver, 'sys', SimpleNamespace(flags=SimpleNamespace(isolated=1, utf8_mode=1),
+        version='test runtime', executable='test-python'))
+    monkeypatch.setattr(driver, 'installed_binding', lambda wheel: {'wheel_sha256': 'a' * 64})
+    monkeypatch.setattr(driver, 'run_lane', lambda name, *args:
+        {'name': name, 'status': 'FAIL' if name == 'academic' else 'PASS',
+         **({'message': 'source hash mismatch'} if name == 'academic' else {})})
+    progress = []
+    report = driver.campaign(campaign_args(tmp_path), progress=progress.append)
+    assert report['counts'] == {'passed': 2, 'failed': 1, 'not_run': 0}
+    assert any('[2/3] academic: FAIL - source hash mismatch' in line for line in progress)
+    assert any('[3/3] epa: PASS' in line for line in progress)
+    assert all(any(f'Running {name}; log:' in line for line in progress)
+               for name in ('numerics', 'academic', 'epa'))
+    assert 'after the run' in progress[-1]
+
+
+@pytest.mark.parametrize('quiet', [False, True])
+def test_cli_keeps_json_stdout_and_points_to_failed_lane_log(tmp_path, monkeypatch, capsys, quiet):
+    def failed_campaign(args, progress=None):
+        if progress is not None:
+            progress('Running academic lane')
+        return {'status': 'FAIL', 'counts': {'passed': 2, 'failed': 1, 'not_run': 0},
+                'binding_after': {'status': 'PASS'},
+                'lanes': [{'name': 'academic', 'status': 'FAIL',
+                           'message': 'source hash mismatch', 'log': 'academic/process.log'}]}
+    monkeypatch.setattr(driver, 'campaign', failed_campaign)
+    argv = []
+    for name in ('corpus-root', 'thermal-dir', 'cwru-dir', 'output-dir', 'wheel'):
+        argv.extend(['--' + name, str(tmp_path / name)])
+    assert driver.main(argv + (['--quiet'] if quiet else [])) == 1
+    captured = capsys.readouterr()
+    summary = json.loads(captured.out)
+    assert summary['failed_lanes'][0]['message'] == 'source hash mismatch'
+    assert summary['failed_lanes'][0]['log'] == str((tmp_path / 'output-dir/academic/process.log').resolve())
+    assert captured.err == ('' if quiet else 'Running academic lane\n')
+
+
+def test_closed_progress_stream_does_not_interrupt_or_lose_evidence(tmp_path, monkeypatch):
+    monkeypatch.setattr(driver, 'sys', SimpleNamespace(flags=SimpleNamespace(isolated=1, utf8_mode=1),
+        version='test runtime', executable='test-python'))
+    monkeypatch.setattr(driver, 'installed_binding', lambda wheel: {'wheel_sha256': 'a' * 64})
+    lanes = []
+    def lane(name, *args):
+        lanes.append(name)
+        return {'name': name, 'status': 'PASS'}
+    monkeypatch.setattr(driver, 'run_lane', lane)
+    attempts = []
+    def closed_stream(message):
+        attempts.append(message)
+        raise BrokenPipeError('progress consumer closed')
+    args = campaign_args(tmp_path)
+    report = driver.campaign(args, progress=closed_stream)
+    assert report['status'] == 'PASS'
+    assert lanes == ['numerics', 'academic', 'epa']
+    assert len(attempts) == 1
+    assert json.loads((args.output_dir / 'campaign.json').read_text()) == report

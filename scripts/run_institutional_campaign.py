@@ -66,7 +66,8 @@ def lane_summary(name, path):
         if (data.get("schema") != "net.institutional-numerical-tests.v1" or
                 data.get("status") != "PASS_WITH_UNTESTED_PHYSICAL_SCOPE" or
                 not isinstance(counts, dict) or not isinstance(checks, list) or not checks or
-                counts.get("failed") != 0 or counts.get("passed") != len(checks) or
+                not _count(counts.get("failed")) or counts["failed"] != 0 or
+                not _count(counts.get("passed"), positive=True) or counts["passed"] != len(checks) or
                 any(not isinstance(check, dict) or check.get("status") != "PASS" for check in checks) or
                 not isinstance(data.get("real_data_counts"), dict) or
                 not all(_count(value, positive=True) for value in data["real_data_counts"].values()) or
@@ -119,7 +120,8 @@ def lane_summary(name, path):
             raise ValueError("EPA group counts or site identity are incomplete")
         complete = group["rows"] - group["missing_pairs"]
         pair_report = group.get("complete_pairs_only")
-        if complete and (not isinstance(pair_report, dict) or pair_report.get("rows") != complete or
+        if complete and (not isinstance(pair_report, dict) or
+                         not _count(pair_report.get("rows"), positive=True) or pair_report["rows"] != complete or
                          not isinstance(pair_report.get("independent_decimal_metrics"), dict) or
                          any(not _nonnegative(pair_report["independent_decimal_metrics"].get(key))
                              for key in ("rmse", "max_abs_error", "max_tolerance_excess"))):
@@ -170,7 +172,17 @@ def run_lane(name, script, arguments, report_name, destination, env):
     return entry
 
 
-def campaign(args):
+def campaign(args, progress=None):
+    def announce(message):
+        nonlocal progress
+        if progress is not None:
+            try:
+                progress(message)
+            except OSError:
+                # A closed progress consumer must not interrupt the campaign
+                # or prevent its final evidence from being retained.
+                progress = None
+
     destination = args.output_dir.resolve()
     if destination.is_relative_to(ROOT):
         raise ValueError("--output-dir must be outside the checkout")
@@ -199,6 +211,7 @@ def campaign(args):
             raise ValueError("Run with python -I -X utf8")
         if work.is_relative_to(destination) or work.is_relative_to(ROOT):
             raise ValueError("--work-dir must be outside both campaign outputs and checkout")
+        announce("Checking the installed candidate wheel before running data lanes.")
         report["binding_before"] = {"status": "PASS", **installed_binding(wheel)}
         env = {key: value for key, value in os.environ.items() if key not in {"PYTHONPATH", "PYTHONHOME"}}
         academic_args = ["--source-dir", str(args.cwru_dir.resolve()),
@@ -215,13 +228,18 @@ def campaign(args):
             ("academic", "check_academic_data.py", academic_args, "academic-checks.json"),
             ("epa", "check_epa_real_data.py", ["--corpus", str(args.corpus_root.resolve())], "report.json"),
         ]
-        for name, script, arguments, result in lanes:
+        for index, (name, script, arguments, result) in enumerate(lanes, start=1):
             # A failed lane never prevents the remaining independent lanes.
-            report["lanes"].append(run_lane(name, ROOT / "scripts" / script,
-                                           arguments, result, destination, env))
+            announce(f"[{index}/{len(lanes)}] Running {name}; log: {destination / name / 'process.log'}")
+            outcome = run_lane(name, ROOT / "scripts" / script,
+                               arguments, result, destination, env)
+            report["lanes"].append(outcome)
+            detail = f" - {outcome['message']}" if outcome.get("message") else ""
+            announce(f"[{index}/{len(lanes)}] {name}: {outcome['status']}{detail}")
     except Exception as exc:
         report.update(error_type=type(exc).__name__, message=str(exc))
     finally:
+        announce("Checking the installed candidate wheel after the run.")
         try:
             report["binding_after"] = {"status": "PASS", **installed_binding(wheel)}
             if report.get("binding_before") != report["binding_after"]:
@@ -249,14 +267,27 @@ def main(argv=None):
     parser.add_argument("--rwth-response", type=Path, help="Optional already acquired response; no acquisition is attempted")
     parser.add_argument("--stfe-source-root", type=Path)
     parser.add_argument("--stfe-revision")
+    parser.add_argument("--quiet", action="store_true", help="Suppress progress on stderr; retain the JSON result on stdout")
     args = parser.parse_args(argv)
     try:
-        report = campaign(args)
+        report = campaign(args, progress=None if args.quiet else
+                          lambda message: print(message, file=sys.stderr, flush=True))
     except (OSError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
-    print(json.dumps({"status": report["status"], "counts": report["counts"],
-                      "report": str(args.output_dir.resolve() / "campaign.json")}))
+    summary = {"status": report["status"], "counts": report["counts"],
+               "report": str(args.output_dir.resolve() / "campaign.json")}
+    problems = [{"lane": lane["name"], "status": lane["status"],
+                 "message": lane.get("message", "Inspect the retained lane report"),
+                 "log": str(args.output_dir.resolve() / lane["log"])}
+                for lane in report["lanes"] if lane["status"] != "PASS"]
+    if report.get("message"):
+        summary["error"] = report["message"]
+    elif report["binding_after"]["status"] != "PASS":
+        summary["error"] = report["binding_after"]["message"]
+    if problems:
+        summary["failed_lanes"] = problems
+    print(json.dumps(summary))
     return 0 if report["status"] == "PASS" else 1
 
 

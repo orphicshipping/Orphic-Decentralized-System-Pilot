@@ -92,3 +92,16 @@ This campaign covers the explicitly reported numerical kernels, native data
 contracts and local CLI/provider processing. It does not assert calibrated
 thermal-estimator qualification, hardware performance, State Ledger admission,
 or end-to-end MCP operation.
+
+## Follow progress and troubleshoot
+
+The command reports each lane starting and finishing on stderr, including its
+retained process-log path. stdout contains one final JSON object for automation.
+Use `--quiet` to suppress progress while keeping that JSON summary. A nonzero
+exit includes the failed lane names, failure reasons and log paths, or the
+preflight/wheel-binding error. Independent lanes still run after a lane fails.
+
+If the command refuses an existing output directory, choose a new output path;
+previous evidence is never overwritten. If a lane fails, inspect the indicated
+`process.log` and `outcome.json`, correct the reported input/runtime problem, and
+start a new campaign. Preserve the failed run alongside its replacement.
