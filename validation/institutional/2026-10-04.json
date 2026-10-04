@@ -1,0 +1,182 @@
+{
+  "schema": "net.institutional-publication-evidence.v1",
+  "tested_source_commit": "f80040e43926502b8576fb88e6b5faf425054fbd",
+  "base_pull_request": 158,
+  "base_commit": "5504b628eda77517a85a905e349fbe155399d607",
+  "python": "3.12.13",
+  "wheel_sha256": "a7fdf191ba6f58f363a3c3412a4e7375a4f1fea6114d6abc5680fdb7b7e63f9e",
+  "focused_regressions": {
+    "failed": 0,
+    "seconds": 135.03,
+    "passed": 328,
+    "suites": [
+      "test_academic_data",
+      "test_institutional_campaign",
+      "test_institutional_numerics",
+      "test_installed_wheel_binding",
+      "test_instruments",
+      "test_agent_protocol",
+      "test_agent_recovery",
+      "test_temperature_agent",
+      "test_temperature_verification",
+      "test_temperature_readiness",
+      "test_measured_thermal_agent"
+    ]
+  },
+  "institutional_campaign": {
+    "lanes": [
+      {
+        "name": "numerics",
+        "status": "PASS",
+        "summary": {
+          "status": "PASS_WITH_UNTESTED_PHYSICAL_SCOPE",
+          "counts": {
+            "passed": 42,
+            "failed": 0
+          },
+          "real_data_counts": {
+            "NIST_Lew_observations": 200,
+            "Oxford_temperature_rows": 8661,
+            "Oxford_temperature_values": 25983,
+            "native_transport_rows": 128
+          },
+          "scope": "NET source-neutral mean/minimum/maximum/RMS and periodogram kernels; native observation serialization, comparison validation, CLI inspect/compare. NumAcc4 is an additional constructed stress benchmark. NIST sample standard deviation and lag correlation are independent Decimal corpus checks because NET does not implement those statistics.",
+          "blocked": [
+            "Full measured-thermal estimator requires independently measured power, sensor calibration/application evidence, acquisition epoch and devices, justified NET model parameters and frozen acceptance criteria not supplied by Oxford source.",
+            "No physical accuracy, sensor uncertainty coverage, metrological traceability, hardware execution or State Ledger admission is established.",
+            "These helpers are direct numerical APIs; no generic real-data Workbench statistics adapter or end-to-end MCP instrument claim is made.",
+            "Oxford cycle 2 inspected for software arithmetic only; no fit, model choice or physical acceptance threshold was selected from it."
+          ]
+        },
+        "report_sha256": "b18d06cc600dab11af1aac5182c31018d8dc0c73777c5ccc139c2ae946c587ed"
+      },
+      {
+        "name": "academic",
+        "status": "PASS",
+        "summary": {
+          "status": "PASS",
+          "source_rows_processed": 851671,
+          "stfe": {
+            "status": "PASS",
+            "window_count": 640,
+            "samples_per_window": 32,
+            "max_absolute_error": 0.0,
+            "window_selection": "At most requested count per channel, deterministic evenly spread nonoverlapping complete 32-sample windows; no model fitting.",
+            "replay_identity_checks": 5,
+            "missing_observation_refusals": 5,
+            "unknown_uncertainty_preserved": true
+          },
+          "adapter_boundary": {
+            "record_reader": "PASS",
+            "operation_route": "BLOCKED",
+            "refusal": {
+              "code": "unsupported_operation",
+              "message": "Adapter does not support spectrum.periodogram.v1"
+            },
+            "default_registered_instruments": [
+              "analytic-damped-oscillator.v1"
+            ],
+            "action": "Add an explicitly bound measured-series adapter; do not rename measured vibration as an analytic oscillator."
+          },
+          "scope": "Software processing and boundary checks on real published university measurements; not physical qualification.",
+          "limitations": [
+            "Source amplitude units and calibration uncertainty are unverified; no SI amplitude or accuracy claim.",
+            "STFE times represent offline replay sample ticks. Original event/receipt times are unavailable.",
+            "Unknown covariance remains unknown; no fabricated uncertainty or independence assumption.",
+            "Baseline sample rate remains unverified, so baseline Hz spectra are not calculated.",
+            "No classification training, health threshold selection, or predictive physical model validation."
+          ]
+        },
+        "report_sha256": "457e871229517c95e1744cb8070010565e7eec9445fbb3c8b59391b9bf9a9f07"
+      },
+      {
+        "name": "epa",
+        "status": "PASS",
+        "summary": {
+          "software_test_status": "PASS",
+          "counts": {
+            "rows": 10672,
+            "groups": 72,
+            "sites": 4,
+            "complete_pairs": 9362,
+            "missing_pairs": 1310
+          },
+          "diagnostic_policy": {
+            "atol": 0.0,
+            "rtol": 0.0,
+            "meaning": "Exact equality diagnostic, not EPA or physical acceptance"
+          },
+          "limits": [
+            "No calibration fitting or traceable gas certificates",
+            "No cross-site UTC synchronization; site local-standard clock preserved",
+            "QA codes retained without reinterpretation",
+            "Complete-pair subset is explicitly counted; all-row missing evidence remains indeterminate",
+            "No physical NET qualification; diagnostic FAIL does not mean software failure"
+          ]
+        },
+        "report_sha256": "7106eb787b4bf5be54e37515131870b0ec5ffd259846c9ec1ee403d44e013c83"
+      }
+    ],
+    "elapsed_s": 68.05655640002806,
+    "status": "PASS",
+    "counts": {
+      "passed": 3,
+      "failed": 0,
+      "not_run": 0
+    }
+  },
+  "installed_mcp": [
+    {
+      "passed": 14,
+      "name": "builtins"
+    },
+    {
+      "passed": 7,
+      "name": "temperature"
+    },
+    {
+      "passed": 8,
+      "name": "measured-thermal"
+    }
+  ],
+  "installed_examples": {
+    "passed": 9,
+    "elapsed_s": 107.86441879998893,
+    "status": "PASS",
+    "suite_timeout_s": 540,
+    "per_example_timeout_s": 120
+  },
+  "reproduction_guide": "docs/INSTITUTIONAL_TESTING.md",
+  "limitations": [
+    "The entire root suite was not rerun after Windows fixture corrections. Earlier full-suite failures and focused remediation remain historical evidence, not a full-suite green claim.",
+    "MCP and domain-example checks use their declared software fixtures; real institutional data is exercised in the three separate campaign lanes.",
+    "Published measurements do not establish physical qualification, hardware performance, traceable calibration or State Ledger admission.",
+    "Original institutional datasets and local raw evidence archives are external inputs and are not included in this source change."
+  ],
+  "retained_reports": [
+    {
+      "sha256": "3ee608f90425408d8882e97ad78d5cbbfc4fa958d56ae0ccd0d1f3eb2d059aa4",
+      "path": "focused.xml"
+    },
+    {
+      "sha256": "620f9e2574bfb7404ce9586f45ff2985a494a47dd92ce240c5771968621fc8c1",
+      "path": "institutional-campaign/campaign.json"
+    },
+    {
+      "sha256": "ca758b7fb7b9f2f314ee8c5f0f6f9c5163168813a5f19a7aef5638bb2f41b35d",
+      "path": "mcp-builtins/report.json"
+    },
+    {
+      "sha256": "c51816a241cc02459532ec8f41ab9bd1d48e614c60e148c75fafdcaaca2630d6",
+      "path": "mcp-temperature/report.json"
+    },
+    {
+      "sha256": "e82c7e7cff28311cfa79f3e243ebac05355a2719deaa703ae034ba1c8ac4b5f4",
+      "path": "mcp-thermal/report.json"
+    },
+    {
+      "sha256": "d63fa9104bd290eaab36838de1f0b2b2ce3bb0687ffbcbee5363e8c597fead4f",
+      "path": "domain-examples/report.json"
+    }
+  ]
+}
