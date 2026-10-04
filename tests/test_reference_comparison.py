@@ -292,3 +292,95 @@ def test_published_report_roundtrips_at_exact_byte_limit_and_refuses_one_byte_ov
     assert not refused.exists()
     assert comparison.main(["verify", str(output)]) == 1
     capsys.readouterr()
+
+@pytest.mark.parametrize("case,code", [("pass", 0), ("fail", 2), ("unknown", 3)])
+def test_summary_is_optional_and_preserves_complete_json_artifacts(case, code, tmp_path, capsys):
+    root = tmp_path / case
+    assert comparison.main(["demo", "--case", case, "--output-dir", str(root), "--summary"]) == code
+    human = capsys.readouterr().out
+    expected = comparison.compare(**comparison.example_request(case))
+    assert human.startswith(expected["outcome"]["status"] + ": conditional paired reference comparison")
+    assert "Source: synthetic" in human
+    assert "values compared: 2/2 left samples; right samples: 2" in human
+    assert "paired-difference standard uncertainty <= 0.5 K" in human
+    assert "Uncertainty (operator-declared):" in human
+    assert "Physical qualification: not established; empirical coverage: not established" in human
+    assert str((root / "report.json").resolve()) in human
+    raw = (root / "report.json").read_bytes()
+    assert json.loads(raw) == expected
+    assert comparison.main(["verify", str(root / "report.json"), "--summary"]) == code
+    assert capsys.readouterr().out == human
+    fresh = tmp_path / "fresh.json"
+    assert comparison.main(["run", str(root / "request.json"), "--output", str(fresh), "--summary"]) == code
+    assert fresh.read_bytes() == raw
+    assert "Report:" in capsys.readouterr().out
+    assert comparison.main(["verify", str(fresh)]) == code
+    assert json.loads(capsys.readouterr().out) == expected
+
+
+def test_summary_handles_no_compared_samples_and_rejects_forgery():
+    request = comparison.example_request("unknown")
+    request["left"] = record("observation-stream", observations=[])
+    _rebind(request)
+    report = comparison.compare(**request)
+    human = comparison.summary(report)
+    assert "INDETERMINATE" in human
+    assert "missing evidence" in human
+    assert "values compared: 0/0 left samples; right samples: 2" in human
+    assert "Sample decisions: 0 PASS, 0 FAIL, 0 INDETERMINATE" in human
+    assert "Descriptive differences:" not in human
+    report["outcome"]["status"] = "PASS"
+    seal(report)
+    with pytest.raises(ValueError, match="recomputed"):
+        comparison.summary(report)
+
+
+@pytest.mark.parametrize("arguments", [["--help"], ["demo", "--help"], ["run", "--help"], ["verify", "--help"]])
+def test_help_explains_scope_exit_codes_and_summary(arguments, capsys):
+    with pytest.raises(SystemExit) as exit_info:
+        comparison.main(arguments)
+    assert exit_info.value.code == 0
+    help_text = " ".join(capsys.readouterr().out.split())
+    assert "0 PASS" in help_text
+    assert "3 INDETERMINATE" in help_text
+    assert "1 input/output refusal" in help_text
+    assert "never physical qualification" in help_text
+    if len(arguments) > 1:
+        assert "--summary" in help_text
+        assert "saved reports remain complete JSON" in help_text
+
+
+@pytest.mark.parametrize("command", ["run", "verify"])
+@pytest.mark.parametrize("payload", [
+    "[" * 2000 + "0" + "]" * 2000,
+    "[" * 30 + "0" + "]" * 30,
+    '{"value":' + "9" * 5000 + "}",
+    '{"value":1e999}',
+    '{"left":null,"right":[],"policy":true}',
+])
+def test_hostile_json_is_a_clean_refusal_without_output(command, payload, tmp_path, capsys):
+    path, output = tmp_path / "input.json", tmp_path / "report.json"
+    path.write_text(payload, encoding="utf-8")
+    arguments = [command, str(path), "--summary"]
+    if command == "run":
+        arguments.extend(["--output", str(output)])
+    assert comparison.main(arguments) == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    assert captured.err.startswith("reference comparison: ")
+    assert "Traceback" not in captured.err
+    assert not output.exists()
+
+
+def test_singular_common_mode_covariance_cancels_only_paired_difference():
+    request = _constant_case(delta=0.0, variance=1.0)
+    request["policy"]["uncertainty"]["joint_covariance"]["matrix"] = [[1.0] * 4 for _ in range(4)]
+    request["policy"].update(max_abs_error=0.0, max_standard_uncertainty=0.0)
+    _rebind(request)
+    report = comparison.compare(**request)
+    assert report["outcome"]["status"] == "PASS"
+    assert report["outcome"]["difference_covariance"] == [[0.0, 0.0], [0.0, 0.0]]
+    assert request["left"]["observations"][0]["uncertainty"]["matrix"] == [[1.0]]
+    human = comparison.summary(report)
+    assert "paired-difference standard uncertainty <= 0 K" in human
+    assert "Physical qualification: not established" in human

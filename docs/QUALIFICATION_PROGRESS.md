@@ -7,8 +7,13 @@ bounded local transport timing. It does not promote either result to physical
 qualification, hard real-time certification or a privacy guarantee.
 
 The existing [temperature pilot protocol](TEMPERATURE_QUALIFICATION.md) remains
-the experimental plan. Its hardware, intended conditions, independent reference
-and acceptance thresholds must be supplied before an installation can be assessed.
+the experimental plan, with a [literature-based industrial setup and readiness
+inventory](TEMPERATURE_PILOT_READINESS.md). A separate
+[PMMA feasibility proposal](TEMPERATURE_PILOT_CANDIDATE.md) develops a slower
+metrology study with explicit sensing, reference and uncertainty requirements.
+It complements the selected pilot without replacing its material or targets.
+Published facts and proposed choices remain separate from the missing
+installed-chain measurements.
 
 | Limitation | Executable progress in this increment | Next evidence required |
 | --- | --- | --- |
@@ -44,10 +49,15 @@ identities. It does not interpolate, convert units or silently align clocks.
 The demo creates synthetic request files that show the complete input structure.
 
 ```sh
-net reference-compare demo --case pass --output-dir results/reference-pass
-net reference-compare demo --case fail --output-dir results/reference-fail
-net reference-compare demo --case unknown --output-dir results/reference-unknown
+net reference-compare demo --case pass --output-dir results/reference-pass --summary
+net reference-compare demo --case fail --output-dir results/reference-fail --summary
+net reference-compare demo --case unknown --output-dir results/reference-unknown --summary
 ```
+
+`--summary` presents the disposition, per-sample counts and reasons, paired-difference
+limits and declared uncertainty scope in a short text report. The saved request
+and report remain complete JSON. Omit the flag when piping command output to
+another program. It is also available on `run` and `verify`.
 
 For a supplied request, run the calculation and recompute its saved
 report using the retained inputs:
@@ -118,9 +128,15 @@ retain an inconclusive result.
 With a local Workbench running, collect a short campaign:
 
 ```sh
-net timing run --url ws://127.0.0.1:8765 --samples 5 --timeout 3 --budget-ms 50 --output timing-report.json
-net timing inspect timing-report.json
+net timing run --url ws://127.0.0.1:8765 --samples 5 --timeout 3 --budget-ms 50 --output timing-report.json --summary
+net timing inspect timing-report.json --summary
 ```
+
+`--summary` shows attempted/successful/failed sample counts, timeouts, the
+successful-only percentile population and budget disposition. Missing or invalid
+aggregates display as unavailable. The retained JSON is unchanged; omit the flag
+for the existing machine-readable output. Input and file errors explain which
+setting or path condition needs correction without echoing endpoint credentials.
 
 The command uses read-only `session.get` requests. It measures client-observed
 elapsed time for each fresh connection, including connection, protocol handling
@@ -138,7 +154,8 @@ when its retained campaign failed. Read `summary.status` for the campaign outcom
 Only loopback WebSocket endpoints are accepted by this initial profile. URL
 credentials, query strings and fragments are refused. Sample count, per-request
 timeout and total nominal request budget are bounded. Each write requires a fresh
-path. Inspecting a report validates its structure and derived summary; it does
+path. The same 4,000,000-byte limit applies to publication and inspection, so
+a published report can be reopened. Inspecting a report validates its structure and derived summary; it does
 not remeasure the service or authenticate the retained timestamps.
 
 An observed budget pass establishes only what happened during that campaign.
@@ -151,6 +168,36 @@ before any snapshot is disclosed, authorization for each action and event,
 principal/session isolation, TLS termination, bounded resource use and tests for
 cross-user leakage, unauthorized mutation, reconnects and concurrency. The local
 server's existing shared-session locking does not supply those properties.
+
+### Diagnose an incomplete result
+
+| Observation | Next action |
+| --- | --- |
+| Comparison is INDETERMINATE with unknown/incomplete budget | Review the missing contributions and cross-source relationship; retain unknown until evidence supports a complete budget |
+| Comparison has incompatible quantity, frame or clock semantics | Correct the source mapping or implement a justified transformation; do not relabel coordinates or units to force agreement |
+| Comparison exceeds its uncertainty ceiling or overlaps the allowed band | Inspect the retained per-sample intervals and budget; improve the measurement or revise the proposed design before a new predeclared trial |
+| Timing has failed samples | Inspect failure counts and check that the local Workbench is available; timeout records remain part of the campaign |
+| Timing identity changes | Start a new campaign on one unchanged session/run/evidence identity |
+| Timing exceeds its observed budget | Review server load and host conditions; record another campaign in a fresh path after changes |
+| Output already exists | Choose a new destination; preserve the previous report for comparison |
+
+### Installed software acceptance
+
+The [operator readiness workflow](../.github/workflows/operator-readiness.yml)
+now runs the comparison/timing contract tests and a separate installed-package
+command campaign on Windows and Linux. The latter checks all three comparison
+dispositions, human summaries, tamper rejection, preservation of prior results,
+live socket requests, observed budget breaches and retained timeouts. Its script
+requires isolated Python and refuses editable/source-checkout imports:
+
+```sh
+python -I -B scripts/check_qualification_commands.py --output-dir results/qualification-commands
+```
+
+Install the wheel into a virtual environment outside the checkout first. The
+script retains each command receipt and `qualification.json`, including failures.
+A passing campaign covers these software paths on the tested installation; it
+does not supply the physical pilot records.
 
 ## 3. Extend bounded workflows through qualification
 

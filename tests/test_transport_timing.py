@@ -240,3 +240,178 @@ def test_derived_timeout_total_cannot_be_replaced_by_boolean():
     report["record_digest"] = timing._digest(report)
     with pytest.raises(ValueError, match="parameters"):
         timing.validate_report(report)
+
+
+def test_readable_run_summary_preserves_saved_json_and_failure_exit(tmp_path, capsys):
+    target = tmp_path / "report.json"
+    with patch.object(timing, "request_remote", new=AsyncMock(side_effect=[response(), TimeoutError("server-secret")])), \
+            patch.object(timing.time, "perf_counter_ns", side_effect=[0, 10_000_000, 20_000_000, 3_020_000_000]):
+        assert timing.main(["run", "--samples", "2", "--budget-ms", "50", "--output", str(target), "--summary"]) == 1
+    text = capsys.readouterr().out
+    assert "Campaign: incomplete" in text
+    assert "2 attempted; 1 successful; 1 failed (1 timeouts)" in text
+    assert "Successful-only latency (1 samples; nearest-rank percentiles): p50 10.000 ms; p95 10.000 ms; max 10.000 ms" in text
+    assert "1 of 2 attempts exceeded it (0 successful samples)" in text
+    assert "Hard real-time qualified: false" in text
+    assert "Client timeout does not cancel server computation" in text
+    assert "server-secret" not in text
+    report = timing.validate_report(read_json(target))
+    assert report["summary"]["status"] == "incomplete"
+    assert len(report["samples"]) == 2
+    assert timing.main(["inspect", str(target), "--summary"]) == 0
+    inspected = capsys.readouterr().out
+    assert "Report integrity: valid" in inspected and "Campaign: incomplete" in inspected
+
+
+@pytest.mark.parametrize("outcomes,expected", [
+    ([TimeoutError(), TimeoutError()], "no successful samples"),
+    ([response(), response(session="changed")], "session, run, or evidence identity changed"),
+])
+def test_summary_explains_unavailable_metrics(tmp_path, capsys, outcomes, expected):
+    target = tmp_path / "report.json"
+    timing.write_report(target, observed((1, 2), outcomes=outcomes))
+    assert timing.main(["inspect", str(target), "--summary"]) == 0
+    text = capsys.readouterr().out
+    assert f"Successful-only latency: unavailable; {expected}" in text
+    assert "Observed budget: not specified" in text
+    assert "p50" not in text
+
+
+@pytest.mark.parametrize("options,expected", [
+    (["--samples", "101"], "samples must be an integer from 1 to 100"),
+    (["--timeout", "31"], "timeout must be at most 30 seconds"),
+    (["--samples", "100", "--timeout", "2"], "samples * timeout at most 120 seconds"),
+    (["--budget-ms", "nan"], "budget_ms must be a finite positive number"),
+    (["--url", "ws://name:url-secret@127.0.0.1"], "Use a loopback WebSocket URL"),
+])
+def test_cli_parameter_errors_are_actionable_and_do_not_probe(tmp_path, capsys, options, expected):
+    target = tmp_path / "new-directory" / "report.json"
+    with patch.object(timing, "request_remote", new=AsyncMock()) as transport:
+        assert timing.main(["run", "--output", str(target), *options]) == 2
+        transport.assert_not_awaited()
+    output = capsys.readouterr()
+    assert expected in output.err
+    assert "url-secret" not in output.err and not output.out
+    assert not target.parent.exists()
+
+
+@pytest.mark.parametrize("options", [
+    ["--samples", "ws://user:parse-secret@127.0.0.1"],
+    ["--timeout", "ws://user:parse-secret@127.0.0.1"],
+    ["--summary=ws://user:parse-secret@127.0.0.1"],
+    ["--unexpected=ws://user:parse-secret@127.0.0.1"],
+])
+def test_argument_parser_never_echoes_credentials_in_invalid_values(tmp_path, capsys, options):
+    with pytest.raises(SystemExit) as error:
+        timing.main(["run", "--output", str(tmp_path / "report.json"), *options])
+    assert error.value.code == 2
+    assert "parse-secret" not in capsys.readouterr().err
+
+
+@pytest.mark.parametrize("kind,expected", [
+    ("missing", "Report file was not found"),
+    ("json", "Report is not valid UTF-8 JSON"),
+    ("encoding", "Report is not valid UTF-8 JSON"),
+    ("digest", "Report validation failed"),
+])
+def test_inspection_failure_messages_are_actionable_and_sanitized(tmp_path, capsys, kind, expected):
+    target = tmp_path / "report.json"
+    if kind == "json":
+        target.write_text('{"file-secret"', encoding="utf-8")
+    elif kind == "encoding":
+        target.write_bytes(bytes([255]))
+    elif kind == "digest":
+        report = observed((1,))
+        report["host"]["release"] = "file-secret"
+        target.write_text(json.dumps(report), encoding="utf-8")
+    assert timing.main(["inspect", str(target), "--summary"]) == 2
+    captured = capsys.readouterr()
+    assert expected in captured.err and "file-secret" not in captured.err
+    assert not captured.out
+
+
+def test_blocked_output_path_fails_before_network(tmp_path, capsys):
+    blocked = tmp_path / "parent-file"
+    blocked.write_text("preserve", encoding="utf-8")
+    with patch.object(timing, "request_remote", new=AsyncMock()) as transport:
+        assert timing.main(["run", "--output", str(blocked / "report.json")]) == 2
+        transport.assert_not_awaited()
+    assert "parent paths are directories" in capsys.readouterr().err
+    assert blocked.read_text() == "preserve"
+
+
+def test_existing_output_error_preserves_file_and_explains_next_step(tmp_path, capsys):
+    target = tmp_path / "report.json"
+    target.write_text("preserve", encoding="utf-8")
+    assert timing.main(["run", "--output", str(target)]) == 2
+    assert "choose a new --output path" in capsys.readouterr().err
+    assert target.read_text() == "preserve"
+
+
+def test_writer_reader_share_exact_byte_limit_without_newline_expansion(tmp_path, capsys, monkeypatch):
+    report = observed((1,))
+    encoded = (json.dumps(report, indent=2, allow_nan=False) + "\n").encode("utf-8")
+    target = tmp_path / "report.json"
+    monkeypatch.setattr(timing, "MAX_REPORT_BYTES", len(encoded))
+    timing.write_report(target, report)
+    assert target.read_bytes() == encoded
+    assert timing.main(["inspect", str(target), "--summary"]) == 0
+    capsys.readouterr()
+    monkeypatch.setattr(timing, "MAX_REPORT_BYTES", len(encoded) - 1)
+    refused = tmp_path / "new-dir" / "refused.json"
+    with pytest.raises(timing.ReportSizeError):
+        timing.write_report(refused, report)
+    assert not refused.parent.exists()
+    assert timing.main(["inspect", str(target)]) == 2
+    assert "byte limit" in capsys.readouterr().err
+
+
+def test_maximum_identity_campaign_can_be_published_and_inspected(tmp_path, capsys):
+    outcomes = []
+    for index in range(100):
+        identity = chr(0x10000 + index) * 512
+        outcomes.append(response(session=identity, run=identity, evidence=identity))
+    with patch.object(timing, "request_remote", new=AsyncMock(side_effect=outcomes)), \
+            patch.object(timing.time, "perf_counter_ns", side_effect=range(200)):
+        report = asyncio.run(timing.measure_transport(samples=100, timeout_s=1))
+    target = tmp_path / "large-report.json"
+    timing.write_report(target, report)
+    assert 1_000_000 < target.stat().st_size <= timing.MAX_REPORT_BYTES
+    assert timing.main(["inspect", str(target), "--summary"]) == 0
+    assert "Campaign: invalid_identity_change" in capsys.readouterr().out
+
+
+def test_malformed_failure_error_is_cleanly_refused():
+    report = observed((1,), outcomes=[TimeoutError()])
+    report["samples"][0]["error"] = {"invalid": "failure"}
+    with pytest.raises(ValueError, match="Invalid failed sample"):
+        timing.validate_report(report)
+
+
+@pytest.mark.parametrize("command", [[], ["run"], ["inspect"]])
+def test_help_describes_bounds_and_distinct_inspect_success(command, capsys):
+    with pytest.raises(SystemExit) as error:
+        timing.main([*command, "--help"])
+    assert error.value.code == 0
+    output = " ".join(capsys.readouterr().out.split())
+    if command == ["run"]:
+        assert "1 to 100" in output and "at most 30 seconds" in output and "120 seconds" in output
+    elif command == ["inspect"]:
+        assert "not that the measured campaign passed" in output
+    else:
+        assert "including a failed campaign" in output
+
+
+@pytest.mark.parametrize("failure,expected", [
+    (PermissionError("file-secret"), "choose a writable directory"),
+    (OSError(28, "file-secret"), "Not enough storage"),
+    (OSError("file-secret"), "supporting atomic hard-link creation"),
+])
+def test_publication_errors_are_actionable_without_leaking_exception_text(tmp_path, capsys, failure, expected):
+    report = observed((1,))
+    with patch.object(timing, "measure_transport", new=AsyncMock(return_value=report)), \
+            patch.object(timing, "write_report", side_effect=failure):
+        assert timing.main(["run", "--output", str(tmp_path / "report.json")]) == 2
+    output = capsys.readouterr()
+    assert expected in output.err and "file-secret" not in output.err
+    assert not output.out

@@ -1,10 +1,13 @@
 from copy import deepcopy
+from fractions import Fraction
 import math
 
 import pytest
 
 from ciw.operations.runner import digest, seal
-from ciw.temperature_contract import AUTHORITY, example_request, validate_request
+from ciw.temperature_contract import (
+    AUTHORITY, LEGACY_NUMERICAL_CONTRACT, NUMERICAL_CONTRACT, example_request, validate_request,
+)
 from ciw.temperature_processing import process_request, validate_report
 
 
@@ -335,3 +338,73 @@ def test_maximum_64_sample_profile_retains_all_covariance_axes():
     assert len(report["calibrated_sensor_temperature"]["covariance_K2"]) == 64
     assert report["calibrated_sensor_temperature"]["samples"][-1]["status"] == "computed_from_declarations"
     validate_report(request, report)
+
+
+@pytest.mark.parametrize("left,entry,right", [
+    (2.0**-39, math.ulp(0.0), 2.0**39),
+    (-2.0**-39, math.ulp(0.0), 2.0**39),
+    (2.0**-39, -math.ulp(0.0), 2.0**39),
+    (2.0**-39, math.ulp(0.0), -2.0**39),
+    (2.0**-39, math.ulp(0.0), 2.0**38),
+    (2.0**-39, math.ulp(0.0), 3 * 2.0**37),
+    (2.0**-39, math.ulp(0.0), 3 * 2.0**38),
+    (2.0**-39, math.ulp(0.0), 5 * 2.0**38),
+    (-2.0**-39, math.ulp(0.0), 2.0**38),
+    (2.0**-39, 2.0**-1022, 2.0**39),
+])
+def test_subnormal_covariance_product_preserves_sign_and_final_rounding(left, entry, right):
+    from ciw.temperature_processing import _covariance_product
+
+    reference = Fraction(left) * Fraction(entry) * Fraction(right)
+    result = _covariance_product(left, entry, right)
+    # Dyadic fixtures exercise recovered minimum subnormals, ties to even,
+    # legitimate final underflow, and recovery across the normal boundary.
+    assert result == float(reference)
+    if result == 0:
+        assert math.copysign(1.0, result) == (-1.0 if reference < 0 else 1.0)
+
+
+def test_scaled_covariance_products_against_exact_nondyadic_reference():
+    from ciw.temperature_processing import _covariance_product
+
+    epsilon, smallest = Fraction(1, 2**52), Fraction(math.ulp(0.0))
+    for left in (1e-12, -7e-12, 0.03125):
+        for entry in (1e-312, -3.7e-310, math.ulp(0.0), math.nextafter(2.0**-1022, 0.0)):
+            for right in (1e12, -9.3e11, 1e-12):
+                reference = Fraction(left) * Fraction(entry) * Fraction(right)
+                actual = Fraction(_covariance_product(left, entry, right))
+                assert abs(actual - reference) <= 2 * epsilon * abs(reference) + smallest
+
+
+def test_new_procedure_identity_preserves_supported_historical_report_readback(monkeypatch):
+    request = example_request()
+    current = process_request(request)
+    assert current["numerical_contract"] == NUMERICAL_CONTRACT
+    assert current["numerical_contract"]["id"] == "net.temperature.affine-first-order.v2"
+    legacy = deepcopy(current)
+    legacy["numerical_contract"] = deepcopy(LEGACY_NUMERICAL_CONTRACT)
+    legacy["identities"]["procedure_ref"] = digest(LEGACY_NUMERICAL_CONTRACT)
+    seal(legacy)
+    assert legacy["identities"]["procedure_ref"] != current["identities"]["procedure_ref"]
+    assert legacy["record_digest"] != current["record_digest"]
+    def forbidden(*args, **kwargs):
+        raise AssertionError("Historical report validation must not execute propagation")
+    monkeypatch.setattr("ciw.temperature_processing._sensor_output", forbidden)
+    validate_report(request, legacy)
+    validate_report(request, current)
+    assert legacy["numerical_contract"]["id"] == "net.temperature.affine-first-order.v1"
+
+
+@pytest.mark.parametrize("change", ["mismatched_procedure", "changed_arithmetic", "unknown_revision"])
+def test_resealed_unsupported_or_detached_arithmetic_contract_is_refused(change):
+    request = example_request()
+    report = process_request(request)
+    if change == "mismatched_procedure":
+        report["numerical_contract"] = deepcopy(LEGACY_NUMERICAL_CONTRACT)
+    else:
+        field = "arithmetic" if change == "changed_arithmetic" else "id"
+        report["numerical_contract"][field] = "unsupported"
+        report["identities"]["procedure_ref"] = digest(report["numerical_contract"])
+    seal(report)
+    with pytest.raises(ValueError):
+        validate_report(request, report)

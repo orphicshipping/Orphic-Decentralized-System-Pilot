@@ -258,24 +258,69 @@ def _load(path):
         raw = stream.read(MAX_BYTES + 1)
     if not raw or len(raw) > MAX_BYTES:
         raise ValueError("Reference comparison file exceeds 2 MiB or is empty")
-    return _bounded(loads_json(raw.decode("utf-8")))
+    try:
+        return _bounded(loads_json(raw.decode("utf-8")))
+    except RecursionError as exc:
+        raise ValueError("Reference comparison JSON nesting exceeds the parser limit") from exc
+
+
+def summary(report: dict) -> str:
+    """Format a freshly recomputed report without changing its retained contract."""
+    from collections import Counter
+    validate_report(report)
+    outcome, policy = report["outcome"], report["request"]["policy"]
+    uncertainty = policy["uncertainty"]
+    counts = Counter(row["status"] for row in outcome["samples"])
+    reasons = Counter(row["reason"] for row in outcome["samples"])
+    unit = policy["unit"]
+    display = lambda value: value.replace("_", " ")
+    lines = [
+        f'{outcome["status"]}: conditional paired reference comparison',
+        f'Reason: {display(outcome["reason"])}',
+        f'Source: {display(policy["source_kind"])}; values compared: '
+        f'{outcome["compared_sample_count"]}/{outcome["sample_count"]} left samples; '
+        f'right samples: {len(report["request"]["right"]["observations"])}',
+        'Sample decisions: ' + ', '.join(f'{counts[status]} {status}' for status in ("PASS", "FAIL", "INDETERMINATE")),
+        f'Limits: absolute difference <= {policy["max_abs_error"]:g} {unit}; '
+        f'paired-difference standard uncertainty <= {policy["max_standard_uncertainty"]:g} {unit}; '
+        f'coverage factor k={policy["coverage_factor"]:g}',
+        f'Uncertainty (operator-declared): {display(uncertainty["status"])}; '
+        f'{display(uncertainty["scope"])}; {display(uncertainty["relationship"])}',
+    ]
+    if reasons:
+        lines.append('Sample reasons: ' + '; '.join(f'{display(reason)}: {count}' for reason, count in sorted(reasons.items())))
+    if outcome["metrics"] is not None:
+        metrics = outcome["metrics"]
+        lines.append(f'Descriptive differences: max absolute {metrics["max_abs_error"]:.6g} {unit}; '
+                     f'RMS {metrics["rmse"]:.6g} {unit}; signed mean {metrics["signed_mean_difference"]:.6g} {unit}')
+    lines.append('Physical qualification: ' + display(report["authority"]["physical_qualification"]) +
+                 '; empirical coverage: ' + display(report["authority"]["empirical_coverage"]))
+    return "\n".join(lines)
+
 
 def main(argv=None):
     import argparse
-    import json
     from pathlib import Path
     import sys
     from .control_contracts import save_new
-    parser = argparse.ArgumentParser(description=__doc__)
+    exits = ("Exit codes: 0 PASS, 2 FAIL, 3 INDETERMINATE, 1 input/output refusal. "
+             "Argument syntax errors use argparse exit code 2. "
+             "PASS is a conditional pointwise comparison, never physical qualification.")
+    parser = argparse.ArgumentParser(description=__doc__, epilog=exits)
     commands = parser.add_subparsers(dest="command", required=True)
-    run = commands.add_parser("run")
-    run.add_argument("request", type=Path)
-    run.add_argument("--output", type=Path, required=True)
-    verify = commands.add_parser("verify")
-    verify.add_argument("report", type=Path)
-    demo = commands.add_parser("demo")
-    demo.add_argument("--case", choices=("pass", "fail", "unknown"), default="pass")
-    demo.add_argument("--output-dir", type=Path, required=True)
+    run = commands.add_parser("run", help="Compare retained streams under their explicit uncertainty policy", epilog=exits)
+    run.add_argument("request", type=Path, help="JSON object containing left/right observation streams and policy (up to 2 MiB)")
+    run.add_argument("--output", type=Path, required=True, help="Create the full JSON report; existing files are never overwritten")
+    verify = commands.add_parser("verify", help="Recompute a saved report and reject altered decisions", epilog=exits)
+    verify.add_argument("report", type=Path, help="Previously saved full comparison report to recompute (up to 2 MiB)")
+    demo = commands.add_parser("demo", help="Write an explicitly synthetic worked example and its comparison", epilog=exits)
+    demo.add_argument("--case", choices=("pass", "fail", "unknown"), default="pass",
+                      help="Synthetic comparison outcome to demonstrate (default: pass)")
+    demo.add_argument("--output-dir", type=Path, required=True,
+                      help="Create a new directory containing request.json and report.json")
+    for command in (run, verify, demo):
+        command.add_argument("--summary", action="store_true",
+                             help="Print a concise human summary instead of JSON; saved reports remain complete JSON")
     args = parser.parse_args(argv)
     try:
         if args.command == "verify":
@@ -291,7 +336,10 @@ def main(argv=None):
                 save_new(args.output_dir / "report.json", report)
             else:
                 save_new(args.output, report)
-        print(json.dumps(report, indent=2, allow_nan=False))
+        print(summary(report) if args.summary else json.dumps(report, indent=2, allow_nan=False))
+        if args.summary:
+            path = args.report if args.command == "verify" else args.output_dir / "report.json" if args.command == "demo" else args.output
+            print(f'Report: {path.resolve()}')
         return {"PASS": 0, "FAIL": 2, "INDETERMINATE": 3}[report["outcome"]["status"]]
     except (ValueError, TypeError, OSError, OverflowError) as exc:
         print("reference comparison: " + str(exc), file=sys.stderr)

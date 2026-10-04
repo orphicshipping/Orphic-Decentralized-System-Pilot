@@ -25,6 +25,7 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 | Multi-provider assembly and local deployment | [Workbench assembly](WORKBENCH_ASSEMBLY.md) |
 | Current executable paths and remaining gates | [Integration coverage](INTEGRATION_COVERAGE.md) |
 | Uncertainty-aware reference comparison, local timing and remaining qualification work | [Qualification progress](QUALIFICATION_PROGRESS.md) |
+| Sourced polymer-temperature design choices, assumptions and evidence gaps | [Temperature pilot candidate](TEMPERATURE_PILOT_CANDIDATE.md) |
 | Capability claims checked against merged source | [Concerns audit, 2026-10-03](CONCERNS_AUDIT_2026-10-03.md) |
 | Source correction, dependent-claim staleness and retained history | [Retained correction loop](CORRECTION_LOOP.md) |
 | User-facing instruments and exact commands | [Instrument catalogue](INSTRUMENTS.md) |

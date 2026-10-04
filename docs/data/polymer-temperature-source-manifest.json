@@ -1,0 +1,252 @@
+{
+  "manifest_type": "public_dataset_byte_audit",
+  "manifest_version": 1,
+  "purpose": "Retain identities of actually retrieved public source bytes and bounded file observations for polymer-temperature dataset screening.",
+  "method": {
+    "network_reads": "Public HTTPS requests; source archive bytes and selected uncompressed members inspected in memory.",
+    "archive_sha256_scope": "Exact downloaded ZIP response bytes, before any extraction or normalization.",
+    "member_sha256_scope": "Exact uncompressed archive-member bytes, before parsing or normalization.",
+    "metadata_sha256_scope": "Exact downloaded Zenodo API JSON response bytes.",
+    "inspection_extent": "Archive inventories and selected members only; this is not a complete quality review of every record.",
+    "relationship_to_prior_assessment": "These hashes identify a fresh bounded reread. They are not retrospective hashes of the earlier inspection.",
+    "original_dataset_bytes_embedded": false,
+    "original_dataset_bytes_written_to_disk_by_this_audit": false,
+    "numerical_observation_rows_embedded": false,
+    "source_files_modified": false
+  },
+  "authority": {
+    "installed_chain_physical_qualification": "not_established",
+    "metrological_traceability": "not_established",
+    "original_acquisition_authentication": "not_established",
+    "source_byte_identity": "computed_for_retrieved_responses",
+    "model_performance": "not_evaluated",
+    "equipment_approval": "not_established"
+  },
+  "datasets": [
+    {
+      "source_id": "bremen_resistance_welding",
+      "record": {
+        "record_id": 18875080,
+        "record_url": "https://zenodo.org/records/18875080",
+        "record_doi": "https://doi.org/10.5281/zenodo.18875080",
+        "concept_doi": "https://doi.org/10.5281/zenodo.18875079",
+        "version_label_in_api": null,
+        "publication_date": "2026-03-05",
+        "record_modified_at": "2026-03-07T12:15:31.271529+00:00",
+        "api_url": "https://zenodo.org/api/records/18875080",
+        "metadata_retrieved_at_utc": "2026-10-04T18:54:07.614308+00:00",
+        "metadata_byte_count": 13008,
+        "metadata_sha256": "b6aa49965fbc67446f9dbacf4be77bf9e52f2657046a9c1799d646c8fc6222ed",
+        "api_license_id": "cc-by-4.0",
+        "archive_declared_byte_count": 18918396,
+        "archive_declared_md5": "6af2564896deeac597bb45b7bc583f3e",
+        "archive_url": "https://zenodo.org/records/18875080/files/RW_Data.zip?download=1"
+      },
+      "landing_page_version_label": "v1",
+      "archive": {
+        "name": "RW_Data.zip",
+        "requested_url": "https://zenodo.org/records/18875080/files/RW_Data.zip?download=1",
+        "final_response_url": "https://zenodo.org/records/18875080/files/RW_Data.zip?download=1",
+        "retrieval_started_utc": "2026-10-04T18:54:21.838855+00:00",
+        "retrieval_completed_utc": "2026-10-04T18:54:48.642532+00:00",
+        "retrieved_byte_count": 18918396,
+        "computed_sha256": "fa9c72f0a2ff35699c7d5e8aa6625394a2fdf65d30678aebee730c63ed2d2318",
+        "published_size_matches_retrieved": true,
+        "provider_published_md5_compared": false,
+        "entry_count_including_directories": 42
+      },
+      "inspected_members": [
+        {
+          "member_path": "RW_250221_V13/RW_250221_V13_machine_data.csv",
+          "uncompressed_byte_count": 40899,
+          "computed_sha256": "58fed977b3ec7709d2d44bfafe01a49de996183c423bc73268bf7757e3fa44ac",
+          "observed_format": "semicolon-delimited CSV; decimal comma; UTF-8-compatible",
+          "record_count_excluding_header": 300,
+          "first_timestamp_as_stored": "21.02.2025 14:45:28",
+          "last_timestamp_as_stored": "21.02.2025 14:50:27",
+          "explicit_timezone_in_timestamp": false,
+          "timestamp_delta_s": {
+            "minimum": 1,
+            "median": 1,
+            "maximum": 1,
+            "nonpositive_count": 0
+          },
+          "temperature_channel_observations": [
+            {
+              "channel": "Temperatur 1",
+              "minimum_as_stored": 29,
+              "maximum_as_stored": 180.4,
+              "distinct_value_count": 283,
+              "count_equal_to_3276_7": 0
+            },
+            {
+              "channel": "Temperatur 2",
+              "constant_value_as_stored": 3276.7,
+              "count_equal_to_3276_7": 300
+            },
+            {
+              "channel": "Temperatur 3",
+              "constant_value_as_stored": 3276.7,
+              "count_equal_to_3276_7": 300
+            },
+            {
+              "channel": "Temperatur 4",
+              "constant_value_as_stored": 3276.7,
+              "count_equal_to_3276_7": 300
+            }
+          ],
+          "interpretation_limit": "Channels 2-4 require explicit validity/sentinel mapping. No supplied instrument-status definition was established that proves these values are invalid or missing."
+        },
+        {
+          "member_path": "RW_250221_V13/RW_250221_V13_thermography_edge_temperature.csv",
+          "uncompressed_byte_count": 196383,
+          "computed_sha256": "41df73dbda77d8494ebaba16b9e21ddc961af919fd66110057fefa123594d9f8",
+          "record_count_excluding_header": 4051,
+          "first_absolute_timestamp_as_stored": "2025-02-21 13:45:32.689000",
+          "last_absolute_timestamp_as_stored": "2025-02-21 13:46:53.638000",
+          "explicit_timezone_in_timestamp": false,
+          "relative_time_span_s": [
+            0,
+            80.949
+          ],
+          "first_eight_relative_time_deltas_s": [
+            0.019,
+            0.02,
+            0.018,
+            0.02,
+            0.019,
+            0.019,
+            0.019,
+            0.02
+          ],
+          "relative_time_delta_summary_s_rounded": {
+            "minimum": 0.018,
+            "median": 0.02,
+            "maximum": 0.021,
+            "nonpositive_count": 0
+          },
+          "nominal_rate_implied_by_median_delta_hz": 50,
+          "documentation_rate_hz": 25,
+          "documentation_rate_source_url": "https://zenodo.org/records/18875080",
+          "rate_assessment": "Inspected V13 relative timestamps conflict with the documented 25 Hz.",
+          "clock_assessment": "Machine and IR absolute timestamps differ by approximately one hour. Starts need not represent the same event, and neither timestamp gives a timezone; synchronization must not be inferred or silently repaired."
+        }
+      ],
+      "experiment_metadata": {
+        "requested_url": "https://zenodo.org/records/18875080/files/experiments_metadata.json?download=1",
+        "final_response_url": "https://zenodo.org/records/18875080/files/experiments_metadata.json?download=1",
+        "retrieval_started_utc": "2026-10-04T18:54:21.839856+00:00",
+        "retrieval_completed_utc": "2026-10-04T18:54:22.739562+00:00",
+        "retrieved_byte_count": 6931,
+        "computed_sha256": "5d1d950ca74ebe608af30104cda4e1d5be7a471a5c1335f43139d62b069b6fa6",
+        "strict_json_parse_passed": false,
+        "parser_error": {
+          "message": "Expecting ',' delimiter",
+          "line_one_based": 170,
+          "column_one_based": 2,
+          "character_zero_based": 5284
+        },
+        "archive_inventory_assessment": "Metadata names RW_260116_V02; inspected ZIP contains only RW_260116_V01 for that date."
+      },
+      "license": {
+        "status": "conflicting_source_declarations",
+        "api_license_id": "cc-by-4.0",
+        "api_evidence_url": "https://zenodo.org/api/records/18875080",
+        "landing_page_description_license": "CC BY-ND 4.0",
+        "supplied_license_file": {
+          "requested_url": "https://zenodo.org/records/18875080/files/LICENSE_CC_BY_ND_4.0.txt?download=1",
+          "final_response_url": "https://zenodo.org/records/18875080/files/LICENSE_CC_BY_ND_4.0.txt?download=1",
+          "retrieval_started_utc": "2026-10-04T18:54:46.989976+00:00",
+          "retrieval_completed_utc": "2026-10-04T18:54:47.623454+00:00",
+          "retrieved_byte_count": 753,
+          "computed_sha256": "b52e86f7b80f2c25ec26755bf6dc4c637efc766dfe55c7ae89b948d2d370f6da",
+          "license_stated_in_file": "CC BY-ND 4.0",
+          "full_license_url_stated_in_file": "https://creativecommons.org/licenses/by-nd/4.0/"
+        },
+        "use_assessment": "Conflicting license declarations recorded; no original or modified dataset is bundled in this assessment or manifest."
+      }
+    },
+    {
+      "source_id": "montpellier_pa66_dmta",
+      "record": {
+        "record_id": 7257481,
+        "record_url": "https://zenodo.org/records/7257481",
+        "record_doi": "https://doi.org/10.5281/zenodo.7257481",
+        "concept_doi": "https://doi.org/10.5281/zenodo.7257480",
+        "version_label_in_api": null,
+        "publication_date": "2022-10-27",
+        "record_modified_at": "2022-10-27T14:26:27.870087+00:00",
+        "api_url": "https://zenodo.org/api/records/7257481",
+        "metadata_retrieved_at_utc": "2026-10-04T18:54:07.510951+00:00",
+        "metadata_byte_count": 6093,
+        "metadata_sha256": "3dfcd8b9e9b0df3d5aaa8469d2c24f149c0f4842ab8cde12efb0f785e6e724ff",
+        "api_license_id": "cc-by-4.0",
+        "archive_declared_byte_count": 1601134,
+        "archive_declared_md5": "b49472229e7d11e7221272350b747acb",
+        "archive_url": "https://zenodo.org/records/7257481/files/PA66_Temperature.zip?download=1"
+      },
+      "landing_page_version_label": "v1",
+      "archive": {
+        "name": "PA66_Temperature.zip",
+        "requested_url": "https://zenodo.org/records/7257481/files/PA66_Temperature.zip?download=1",
+        "final_response_url": "https://zenodo.org/records/7257481/files/PA66_Temperature.zip?download=1",
+        "retrieval_started_utc": "2026-10-04T18:54:21.839856+00:00",
+        "retrieval_completed_utc": "2026-10-04T18:54:25.195111+00:00",
+        "retrieved_byte_count": 1601134,
+        "computed_sha256": "d3f79d9af9815384bcd981f2a20360d3634045ddaff5673069b00d19efe19f78",
+        "published_size_matches_retrieved": true,
+        "provider_published_md5_compared": false,
+        "entry_count_including_directories": 96,
+        "temperature_text_member_count_excluding_MACOSX_metadata": 66
+      },
+      "inspected_members": [
+        {
+          "member_path": "PA66_Temperature/313/PA_1Hz.txt",
+          "uncompressed_byte_count": 88603,
+          "computed_sha256": "caa6019f1e28f2fe9c343e46d3bd140ec1e7b16779622a4fc16c8db4df8a3020",
+          "observed_format": "whitespace-delimited text",
+          "header_as_stored": "time (s) temperature (K)",
+          "record_count_excluding_header": 5577,
+          "time_span_s": [
+            0,
+            179.872
+          ],
+          "temperature_difference_range_K": [
+            -0.0417,
+            0.0423
+          ],
+          "semantic_note": "Prior paper/README inspection identified the quantity as loaded-minus-dummy sample temperature, despite the abbreviated member header. This archive hash establishes byte identity, not that semantic interpretation.",
+          "semantic_source_urls": [
+            "https://zenodo.org/records/7257481/files/readme.rtf?download=1",
+            "https://jtcam.episciences.org/11087/pdf"
+          ]
+        }
+      ],
+      "license": {
+        "status": "api_declaration_observed",
+        "api_license_id": "cc-by-4.0",
+        "api_evidence_url": "https://zenodo.org/api/records/7257481",
+        "license_url": "https://creativecommons.org/licenses/by/4.0/",
+        "use_assessment": "Declared license and source link recorded; no original or modified dataset is bundled in this assessment or manifest."
+      }
+    }
+  ],
+  "catalog_only_candidates": {
+    "nist_abs_matex_mds2_2658": {
+      "catalog_url": "https://catalog.data.gov/dataset/temperature-profiles-of-acrylonitrile-butadiene-styrene-abs-during-bench-scale-material-ex",
+      "scope": "Catalog and primary-paper facts only in companion assessment.",
+      "archive_or_data_bytes_verified": false,
+      "computed_sha256": null,
+      "prior_download_result": "HTTP 524 for ABS_210_3_336.txt",
+      "retried_in_this_audit": false
+    },
+    "nist_pmma_gasification_mds2_2940": {
+      "catalog_url": "https://catalog.data.gov/dataset/experimental-measurements-for-pyrolysis-model-validation-anaerobic-gasification-of-pmma-un",
+      "scope": "Catalog facts only in companion assessment.",
+      "archive_or_data_bytes_verified": false,
+      "computed_sha256": null,
+      "retried_in_this_audit": false
+    }
+  },
+  "created_at_utc": "2026-10-04 18:57:41 UTC"
+}
