@@ -92,6 +92,13 @@ def main(argv=None):
             return {allRequirementsVisible, requirementCount: requirements.length, maxEndpointError: Math.max(0, ...errors), scrollTop: map.scrollTop};
         }""")
 
+    def focus_in_view(page):
+        return page.evaluate("""() => {
+            const node = document.activeElement, rect = node.getBoundingClientRect();
+            return node !== document.body && rect.width > 0 && rect.height > 0 &&
+                rect.top >= 0 && rect.left >= 0 && rect.bottom <= innerHeight && rect.right <= innerWidth;
+        }""")
+
     def observe(page):
         page.on("pageerror", lambda error: errors.append(str(error)))
         page.on("console", lambda message: errors.append(message.text) if message.type == "error" else None)
@@ -182,6 +189,26 @@ def main(argv=None):
             page.locator('#tool-list [data-tool-id="calibrated-observable"]').press("Enter")
             check("Keyboard activation preserves focus on the selected tool", page.evaluate('document.activeElement.dataset.toolId') == "calibrated-observable")
 
+            for width in (320, 390, 1024):
+                page.set_viewport_size({"width": width, "height": 844})
+                for action in ("Back", "Escape"):
+                    provider = page.locator('#map .map-node[data-requirement-id="tbrt"]')
+                    provider.click()
+                    if action == "Back":
+                        page.get_by_role("button", name="← Back to tool", exact=True).press("Enter")
+                    else:
+                        page.keyboard.press("Escape")
+                    expect(provider).to_be_focused()
+                    check(f"{action} returns visible focus to the map provider at {width}px", focus_in_view(page))
+                tab(page, "bindings")
+                binding = page.locator('#inspector-content .requirement[data-requirement-id="tbrt"]')
+                binding.press("Enter")
+                page.keyboard.press("Escape")
+                expect(binding).to_be_focused()
+                check(f"Provider return preserves visible inspector binding focus at {width}px", focus_in_view(page))
+                tab(page, "overview")
+            page.set_viewport_size({"width": 1440, "height": 1050})
+
             page.locator("#focus-map").click()
             page.locator("#focus-map").focus()
             page.keyboard.press("/")
@@ -234,7 +261,9 @@ def main(argv=None):
             expect(page.locator("#inspector-content .command-box code").last).to_have_text("ciw serve --help")
             check("Session-only workflow displays a runnable help command", True)
 
+            page.locator("#focus-map").click()
             page.locator('[data-scope="operations"]').click()
+            check("Changing catalogue views reveals the library and inspector", page.locator(".catalogue").is_visible() and page.locator(".inspector").is_visible() and "map-focused" not in (page.locator(".workspace").get_attribute("class") or ""))
             check("Built-in operation list matches catalog", page.locator("#tool-list .tool").count() == len(operations))
             check("Workflow filter is hidden in operation scope", page.locator("#binding-filter").is_hidden() and page.locator(".filter-label").is_hidden())
             operation_id = next(iter(operations))
@@ -264,6 +293,18 @@ def main(argv=None):
             expect(page.locator("#inspector-content .command-box code")).to_have_text(commands["net board"]["help_command"])
             expect(page.locator("#map-title")).to_have_text("net board")
             check("Board command search leads to its exact help command", True)
+
+            for width in (320, 390, 1024, 1440):
+                page.set_viewport_size({"width": width, "height": 844 if width < 1440 else 1050})
+                tab(page, "overview")
+                page.locator("#focus-map").click()
+                page.locator("#map .map-node.provider").press("Enter")
+                commands_tab = page.locator('[data-inspector-tab="commands"]')
+                expect(commands_tab).to_have_attribute("aria-pressed", "true")
+                expect(commands_tab).to_be_focused()
+                check(f"Help-command activation reveals and focuses Commands at {width}px", page.locator(".inspector").is_visible() and focus_in_view(page) and "map-focused" not in (page.locator(".workspace").get_attribute("class") or ""))
+                if width == 320:
+                    page.screenshot(path=str(root / "tooling-mobile-command-help.png"))
 
             # Controlled browser API outcomes exercise offline permission failures
             # without reading or writing the operator's actual system clipboard.

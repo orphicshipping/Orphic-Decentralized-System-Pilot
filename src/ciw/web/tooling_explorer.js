@@ -90,8 +90,14 @@
     if (restoreFocus) {
       const area = origin === "inspector" ? inspector : columns;
       const target = Array.from(area.querySelectorAll("[data-requirement-id]")).find(node => matchesRequirement(node, req));
-      (target || inspector.querySelector(`[data-inspector-tab="${state.inspectorTab}"]`))?.focus({preventScroll: true});
+      (target || inspector.querySelector(`[data-inspector-tab="${state.inspectorTab}"]`))?.focus();
     }
+  }
+  function inspectCommands() {
+    state.inspected = null; state.inspectionOrigin = null; state.inspectorTab = "commands";
+    setMapFocus(false); renderInspector();
+    if (innerWidth <= 1180) inspector.closest(".inspector").scrollIntoView({block: "start", behavior: "instant"});
+    inspector.querySelector('[data-inspector-tab="commands"]').focus();
   }
   function renderList() {
     const focusedTool = list.contains(document.activeElement) ? document.activeElement.dataset.toolId : null;
@@ -174,7 +180,7 @@
     const right = mapColumn(state.scope === "commands" ? "Inspect usage" : "Requirements");
     reqs.forEach(req => requirementNode(right, req));
     if (state.scope === "workflows" && !reqs.length) right.append(make("p", "map-note", "No external provider bindings declared"));
-    if (state.scope === "commands") mapNode(right, row.help_command, "provider", "HELP COMMAND", () => {state.inspected = null; state.inspectorTab = "commands"; renderInspector();});
+    if (state.scope === "commands") mapNode(right, row.help_command, "provider", "HELP COMMAND", inspectCommands);
     highlightRequirement(); requestAnimationFrame(drawConnections);
   }
   function highlightRequirement() {
@@ -267,6 +273,7 @@
   byId("binding-filter").addEventListener("change", () => {state.inspected = null; state.inspectionOrigin = null; render();});
   byId("clear-search").addEventListener("click", clearFilters);
   document.querySelectorAll("[data-scope]").forEach(control => control.addEventListener("click", () => {
+    setMapFocus(false);
     state.scope = control.dataset.scope; state.selected = null; state.inspected = null; state.inspectionOrigin = null; state.inspectorTab = "overview";
     byId("search").value = ""; byId("binding-filter").value = "all";
     document.querySelectorAll("[data-scope]").forEach(tab => tab.setAttribute("aria-pressed", String(tab === control)));

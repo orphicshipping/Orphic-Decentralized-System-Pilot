@@ -4,35 +4,48 @@ For the current public component inventory and integration boundaries, see the
 [systems catalog](SYSTEMS_CATALOG.md), [Notation Systems stack map](STACK.md)
 and [this component's role](STACK_ROLE.md).
 
-This catalogue records tools that can be used through the workbench and the
-contracts needed to reproduce their results. An external tool is listed as
-integrated only after its workbench entry point, saved evidence and replay path
-have been exercised together.
+This catalogue distinguishes callable built-in calculations, optional bound
+providers, client integrations and planning guides. A provider entry means a
+bounded adapter exists; execution still requires the exact runtime and inputs
+in its operating guide. Historical integration evidence does not qualify a new
+checkout or a physical instrument.
 
-The [integration coverage matrix](INTEGRATION_COVERAGE.md) records complete
-execution paths, profile coverage and the next concrete connections between
-existing benches.
+The [integration coverage matrix](INTEGRATION_COVERAGE.md) names selected
+implemented paths, source/test evidence and remaining gates. Client interfaces
+reuse those operations; a planning guide supplies no operation by itself.
 
-| Tool and role | Workbench status | Entry point |
+| Tool and role | Category | Workbench status | Entry point |
+| --- | --- | --- | --- |
+| `analytic-damped-oscillator.v1` | Built-in data generator and analysis kernels | Deterministic synthetic source; callable statistics and periodogram | `python -m ciw demo`, `analyze stats`, `analyze spectrum` |
+| Polymer cycle metrology and bounded control | Built-in bounded workflow; optional native ingress | Explicit injection/extrusion-blow quantitative features and retained native calibration ingress, scoped cooling reference, copilot context and toy control; numerical consistency does not establish physical qualification | `net polymer demo`, `qualify`, `summary`, `export`, `run-ingress`; [operator guide](POLYMER_PROCESSING.md), [explicit agent profile](NET_AGENT_PROTOCOL.md#polymer-cycle-profile) |
+| `ciw.julia-oscillator.v1` | Optional bound provider | Typed Julia `OrdinaryDiffEqTsit5` provider seam; Python analytic oracle and retained replay are implemented, external runtime gate remains explicit. Inspection includes an educational model card; offline what-if previews remain hypothetical until submitted as a new execution. | `ciw julia-oscillator create`, `inspect`, `preview`, `replay`; [Julia operating guide](JULIA_OSCILLATOR.md), [model exploration](MODEL_EXPLORATION.md) |
+| RCI measurement-chain/calibration adapter | Optional bound provider | Integrated experimental pinned subprocess; synthetic mass fixture | `python -m ciw investigation create`, `inspect`, `replay` |
+| FSRT state-estimation operation | Optional bound provider | Integrated experimental pinned subprocess; one simultaneous two-reservoir snapshot | Same investigation; shared `operation.execute` after explicit runtime binding |
+| Parameterized Lyapunov Stability Runtime (PLSR) verification operation | Optional bound provider | Integrated experimental terminal operation; Python 3.12+ and optional `plsr` extra | `python -m ciw plsr import`, `evaluate`, `inspect`, `replay` |
+| Retained scalar telemetry script | Optional bound provider | Pinned PPDA projection, STFE window mean, GSIE predict/update, SET replay verification, optional CBSR receipt | `python -m ciw telemetry create`, `inspect`, `replay`; [contract and guide](TELEMETRY.md) |
+| Calibrated observable process experiment | Optional bound provider | Pinned FSRT, TBRT, MCUR, OIT, GSIE, CBSR, FDIR and SET; ICRH conformance/replay profile | `python -m ciw calibrated-observable create`, `inspect`, `replay`; [contract and guide](CALIBRATED_OBSERVABLE.md) |
+| Identified model and budgeted next observation | Optional bound provider | Retained calibrated experiment plus pinned SIDT, OIT, GSIE, EDSPT and YWIR; ICRH `identified-budgeted-observation.v1` | `python3.12 -m ciw identified-design create`, `inspect`, `replay`; [contract and guide](IDENTIFIED_DESIGN.md) |
+| JSPT covariance propagation | Optional bound provider | Pinned operation over retained RCI/FSRT covariance artifacts | `python -m ciw covariance`, `covariance-replay`; [guide](COVARIANCE.md) |
+| GTE circle investigation | Optional bound provider | Pinned projection, local covariance, held candidate and replay | `python -m ciw geodesic create`, `inspect`, `replay`; [guide](GTE.md) |
+| Flat Torus Geodesic Reference | Optional bound provider | Pinned native area-one lattice and winding trajectory, shared inspection/replay | `ciw serve --flat-torus-repo /trusted/ftr`; [contract](GEODESIC_REFERENCES.md) |
+| Curved Surface Geodesic Sensitivity | Optional bound provider | Pinned native constant-curvature Jacobi transfer and declared covariance | `ciw serve --curved-surface-repo /trusted/csg`; [contract](GEODESIC_REFERENCES.md); [candidate study](CURVED_PATH_STUDY.md) |
+| Reaction A-to-B benchmark | Optional bound provider | Bounded Catalyst/Cantera profiles on the native SCR operation; mathematical reference only | [Domain, provider qualification and operator gate](REACTION_BENCHMARK.md) |
+| Scalar linearization requirement | Optional bound provider | JuliaIntervals enclosure of a declared polynomial remainder; exact rational containment check | [Interval profile, outcomes and qualification](INTERVAL_REQUIREMENT.md) |
+| SCR/SP1 registered heat computation | Optional bound provider | Bounded integer execution and proof verification; exact Linux runtime required | `ciw serve --computation-repo ... --computation-engine ... --sp1-prover ... --sp1-heat-guest ...`; [full setup and contract](PROVED_HEAT.md) |
+| Variational free-energy sensor fusion | Optional bound provider | Synthetic curved-surface inference with native CSG/GSIE/PLSR, exact Gaussian reference and retained model failure cases | `ciw serve --free-energy-stack-root /trusted/free-energy`; [mathematics, setup and six cases](VARIATIONAL_FREE_ENERGY.md) |
+| GPU energy to accuracy | Built-in analysis; optional GPU capture | NVML/CUDA capture requires supported hardware and driver; retained-log analysis and replay run without a GPU | `ciw energy probe`, `record`, `replay`; [contract and operating guide](ENERGY_ACCURACY.md) |
+
+Additional built-in examples include the [two-capacity thermal observer](CONTRACT_FOUNDATIONS.md#thermal-observer-reference)
+and [encoder-position workflow](INTEGRATION_COVERAGE.md#shared-host-and-provider-free-foundations).
+Their numerical contracts are bounded; synthetic fixtures do not establish
+calibration or held-out physical agreement.
+
+| Interface or proposal | Category | Available scope |
 | --- | --- | --- |
-| `analytic-damped-oscillator.v1` | Integrated built-in synthetic instrument | `python -m ciw demo`, `analyze stats`, `analyze spectrum` |
-| Polymer cycle metrology and bounded control | Explicit injection/extrusion-blow quantitative features and retained native calibration ingress, scoped cooling reference, copilot context and toy control; numerical consistency does not establish physical qualification | `net polymer demo`, `qualify`, `summary`, `export`, `run-ingress`; [operator guide](POLYMER_PROCESSING.md), [explicit agent profile](NET_AGENT_PROTOCOL.md#polymer-cycle-profile) |
-| `ciw.julia-oscillator.v1` | Typed Julia `OrdinaryDiffEqTsit5` provider seam; Python analytic oracle and retained replay are implemented, external runtime gate remains explicit. Inspection includes an educational model card; offline what-if previews remain hypothetical until submitted as a new execution. | `ciw julia-oscillator create`, `inspect`, `preview`, `replay`; [Julia operating guide](JULIA_OSCILLATOR.md), [model exploration](MODEL_EXPLORATION.md) |
-| RCI measurement-chain/calibration adapter | Integrated experimental pinned subprocess; synthetic mass fixture | `python -m ciw investigation create`, `inspect`, `replay` |
-| FSRT state-estimation operation | Integrated experimental pinned subprocess; one simultaneous two-reservoir snapshot | Same investigation; shared `operation.execute` after explicit runtime binding |
-| Parameterized Lyapunov Stability Runtime (PLSR) verification operation | Integrated experimental terminal operation; Python 3.12+ and optional `plsr` extra | `python -m ciw plsr import`, `evaluate`, `inspect`, `replay` |
-| Retained scalar telemetry script | Pinned PPDA projection, STFE window mean, GSIE predict/update, SET replay verification, optional CBSR receipt | `python -m ciw telemetry create`, `inspect`, `replay`; [contract and guide](TELEMETRY.md) |
-| Calibrated observable process experiment | Pinned FSRT, TBRT, MCUR, OIT, GSIE, CBSR, FDIR and SET; ICRH conformance/replay profile | `python -m ciw calibrated-observable create`, `inspect`, `replay`; [contract and guide](CALIBRATED_OBSERVABLE.md) |
-| Identified model and budgeted next observation | Retained calibrated experiment plus pinned SIDT, OIT, GSIE, EDSPT and YWIR; ICRH `identified-budgeted-observation.v1` | `python3.12 -m ciw identified-design create`, `inspect`, `replay`; [contract and guide](IDENTIFIED_DESIGN.md) |
-| JSPT covariance propagation | Pinned operation over retained RCI/FSRT covariance artifacts | `python -m ciw covariance`, `covariance-replay`; [guide](COVARIANCE.md) |
-| GTE circle investigation | Pinned projection, local covariance, held candidate and replay | `python -m ciw geodesic create`, `inspect`, `replay`; [guide](GTE.md) |
-| Flat Torus Geodesic Reference | Pinned native area-one lattice and winding trajectory, shared inspection/replay | `ciw serve --flat-torus-repo /trusted/ftr`; [contract](GEODESIC_REFERENCES.md) |
-| Curved Surface Geodesic Sensitivity | Pinned native constant-curvature Jacobi transfer and declared covariance | `ciw serve --curved-surface-repo /trusted/csg`; [contract](GEODESIC_REFERENCES.md); [candidate study](CURVED_PATH_STUDY.md) |
-| Reaction A-to-B benchmark | Bounded Catalyst/Cantera profiles on the native SCR operation; mathematical reference only | [Domain, provider qualification and operator gate](REACTION_BENCHMARK.md) |
-| Scalar linearization requirement | JuliaIntervals enclosure of a declared polynomial remainder; exact rational containment check | [Interval profile, outcomes and qualification](INTERVAL_REQUIREMENT.md) |
-| SCR/SP1 registered heat computation | Bounded integer execution and proof verification; exact Linux runtime required | `ciw serve --computation-repo ... --computation-engine ... --sp1-prover ... --sp1-heat-guest ...`; [full setup and contract](PROVED_HEAT.md) |
-| Variational free-energy sensor fusion | Synthetic curved-surface inference with native CSG/GSIE/PLSR, exact Gaussian reference and retained model failure cases | `ciw serve --free-energy-stack-root /trusted/free-energy`; [mathematics, setup and six cases](VARIATIONAL_FREE_ENERGY.md) |
-| GPU energy to accuracy | Actual NVML/CUDA host capture; built-in retained-log analysis, shared view and replay | `ciw energy probe`, `record`, `replay`; [contract and operating guide](ENERGY_ACCURACY.md) |
+| [NET agent MCP adapter](NET_AGENT_PROTOCOL.md) | Client integration | Implemented local, sequential JSON-RPC 2.0 stdio tools profile for MCP `2025-11-25` and `2025-06-18`; operator-bound calls to existing operations. Source tests and an official SDK client gate exist; broader ecosystem interoperability is not certified. |
+| [Terminal/WebSocket and optional Godot viewport](quickstart.md) | Client integration | Inspection and interaction with supported workbench operations; installing a view does not supply external providers or a new scientific kernel. |
+| [Device gateway](DEVICE_GATEWAY.md) and [acceptance plan](DEVICE_GATEWAY_ACCEPTANCE.md) | Planning guides | Proposed authorization/dispatch boundary and acceptance cases; these documents are not completed hardware commissioning results. |
+| [Julia/SP1 F2 topology](JULIA_SP1.md) | Planning guide | Planned topology contract; no corresponding available operation is claimed. |
 
 ## Identified model and budgeted next observation
 
@@ -48,7 +61,7 @@ checks the retained graph and original/replay bindings.
 The prediction and ranking are conditional on an identified point model;
 parameter uncertainty remains unknown. This operation creates no acquisition
 command, token spending reservation, model-adoption action or ESM admission.
-The [coverage matrix](INTEGRATION_COVERAGE.md#delivered-identified-observation-decision)
+The [coverage matrix](INTEGRATION_COVERAGE.md#scientific-provider-operations)
 records the executable boundary and remaining connections.
 
 ## Calibrated observable process experiment
@@ -163,8 +176,8 @@ python -m ciw send workspace.save
 Reopening validates and restores the recording, selection and existing results
 without rerunning calculations. Existing evidence, result and execution IDs are
 preserved. An explicit new analysis creates new execution and result IDs. The
-[quickstart replay instructions](quickstart.md#reopen-an-investigation) explain
-result inspection and selection persistence.
+[quickstart recording instructions](quickstart.md#analyze-a-retained-recording)
+cover result inspection and selection updates.
 
 ### Validation and limits
 
@@ -347,7 +360,8 @@ authorize equipment or admit a physical claim.
 
 ## Bounded mathematical geometry
 
-Three native providers are available through the shared session:
+Three optional external providers have bounded adapters in the shared session;
+each requires its explicit pinned runtime binding:
 `covariance-geometry` computes affine-invariant SPD distance and geodesics;
 `mesh-path` computes shortest mesh-edge paths with Euclidean lower bounds;
 `translation-flow` retains exact rational square-tiled trajectories and explicit

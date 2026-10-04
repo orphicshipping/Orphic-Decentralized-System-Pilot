@@ -40,6 +40,11 @@ ordinary Tab and Enter keyboard navigation. Copy actions keep keyboard focus.
 If browser clipboard access is unavailable, the command is selected for manual
 copying and instructions appear beside it; press Ctrl+C or Command+C.
 
+Changing catalogue views leaves map focus so the new library and inspector are
+visible. Selecting a help-command node opens and focuses the Commands view.
+Back and Escape return to the provider control you used and bring that control
+into view, including on a narrow screen.
+
 The page works offline with embedded assets and a Content Security Policy that
 disables network connections. Exporting and inspecting it do not provision,
 bind, execute or qualify providers. Availability and binding labels describe
@@ -73,7 +78,9 @@ pins, all four inspector views, exact Source records, keyboard focus and
 shortcuts, normalized workflow search and filters, capability navigation,
 matching active connectors, map focus, command help and typed ports. Clipboard
 checks cover exact command text, pending requests, focus preservation and the
-manual-copy fallback when access is denied. Map checks
+manual-copy fallback when access is denied. Navigation checks verify visible
+focus after provider return, catalogue-view changes and help-command activation
+across narrow and wide viewports. Map checks
 verify the default provider cards remain visible and connectors stay aligned
 after internal scrolling, resizing and selection changes. It also checks
 hostile strings as inert text and both themes at five widths from 320 to
