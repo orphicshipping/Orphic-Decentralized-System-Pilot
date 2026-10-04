@@ -101,6 +101,10 @@ Commitments cover canonical structured observation declarations, not original
 acquisition file bytes or authenticated origin. The complete qualification
 protocol and the future optional SP1 boundary are described in
 [TEMPERATURE_QUALIFICATION.md](TEMPERATURE_QUALIFICATION.md).
+Product conformity is assessed separately using the
+[product and market record](TEMPERATURE_PRODUCT_CONFORMITY.md). That planning
+record is not consumed by the MCP profile, and a processing acceptance result
+does not authorize conformity claims or product markings.
 
 ### Grok Build
 

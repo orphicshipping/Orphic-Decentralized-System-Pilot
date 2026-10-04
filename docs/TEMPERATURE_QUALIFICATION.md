@@ -5,7 +5,10 @@ qualification data, calibrated instrument, installed-chain validation, trained
 PINN/gPINN, or temperature SP1 proof is supplied by this increment. The planning
 record in [pilot-setup.json](../examples/temperature/pilot-setup.json) deliberately
 leaves hardware, ranges, uncertainty requirements and acceptance thresholds open.
-It is not an executable processing request.
+It is not an executable processing request. The separate
+[product-conformity assessment](TEMPERATURE_PRODUCT_CONFORMITY.md) records the
+supplied product, target markets, applicable requirements and reviewed evidence;
+its [template](../examples/temperature/conformity-assessment.json) starts unassessed.
 
 ## What the software result means
 
@@ -52,7 +55,7 @@ acquisition files separately; a later signed acquisition contract must specify
 byte encoding, signer identity and verification. A calibration-document hash is
 an identity aid, not a traceability chain.
 
-Distinguish four decisions:
+Distinguish five decisions:
 
 | Decision | Question answered | Required evidence |
 | --- | --- | --- |
@@ -60,8 +63,9 @@ Distinguish four decisions:
 | Operational acceptance | Does the calculated result satisfy the supplied rule? | A frozen rule applied to the result and declared uncertainty |
 | Evidence completeness | Are the required experimental records and reviews present? | The evidence matrix below, with reviewer and unresolved gaps |
 | Physical qualification | Does the installed chain meet its intended measurement requirement? | Reviewed comparison experiments and an adequate uncertainty model over the claimed envelope |
+| Product conformity | Does the supplied configuration satisfy applicable requirements for the selected market and intended use? | Product-specific applicability assessment, conformity procedure, reviewed evidence and responsible sign-off |
 
-An operational acceptance result cannot promote either of the last two states.
+An operational acceptance result cannot promote any of the last three states.
 Filled evidence references establish an inventory; references still require
 technical review. Synthetic processing examples establish no physical result.
 

@@ -51,7 +51,9 @@ prepares a synthetic temperature measurement-processing profile for the existing
 MCP interface. It preserves raw observations, joint calibration covariance and
 separate sensor/polymer estimates; incomplete budgets produce indeterminate
 acceptance. The [temperature pilot protocol](docs/TEMPERATURE_QUALIFICATION.md)
-records the physical experiments still required. See the
+records the physical experiments still required. A separate
+[product-conformity assessment](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) provides
+the product, market and evidence record for the pilot. See the
 [MCP launch instructions](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile).
 
 ## One repository, modular instruments

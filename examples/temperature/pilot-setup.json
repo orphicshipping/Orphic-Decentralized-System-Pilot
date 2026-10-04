@@ -4,6 +4,12 @@
   "purpose": "Planning record for one installed polymer heating-cycle temperature chain; not an executable processing request.",
   "evidence_origin": "no_experimental_data_supplied",
   "physical_qualification": "not_established",
+  "product_conformity_assessment": {
+    "record": "conformity-assessment.json",
+    "status": "unassessed",
+    "product_conformity": "not_established",
+    "independent_of_processing_acceptance": true
+  },
   "protocol": {
     "version": null,
     "owner": null,
