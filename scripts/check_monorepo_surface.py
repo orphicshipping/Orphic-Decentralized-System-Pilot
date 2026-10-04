@@ -68,13 +68,32 @@ def _run(arguments, *, cwd: Path, log: Path, bindings=None, timeout=600) -> str:
     with log.open("ab") as stream:
         stream.write(("\n$ " + " ".join(display) + "\n").encode())
         stream.flush()
-        result = subprocess.run(command, cwd=cwd, env=environment, stdout=subprocess.PIPE,
-                                stderr=subprocess.STDOUT, timeout=timeout, check=False)
+        try:
+            result = subprocess.run(command, cwd=cwd, env=environment, stdout=subprocess.PIPE,
+                                    stderr=subprocess.STDOUT, timeout=timeout, check=False)
+        except subprocess.TimeoutExpired as error:
+            # Retain partial diagnostic output without changing the timeout failure.
+            captured = error.stdout
+            if isinstance(captured, str):
+                captured = captured.encode("utf-8")
+            if captured:
+                stream.write(captured)
+            raise
         stream.write(result.stdout)
     if result.returncode:
         raise RuntimeError(f"Command failed ({result.returncode}): {' '.join(display[:5])}\n"
                            + result.stdout.decode(errors="replace")[-9000:])
     return result.stdout.decode()
+
+
+def _suite_timeout(value: str) -> int:
+    try:
+        seconds = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("suite timeout must be an integer from 1 to 7200 seconds") from error
+    if not 1 <= seconds <= 7200:
+        raise argparse.ArgumentTypeError("suite timeout must be an integer from 1 to 7200 seconds")
+    return seconds
 
 
 def _python(path: Path, temporary: Path, log: Path) -> Path:
@@ -376,6 +395,17 @@ def _terminal_input_proof(revision: str) -> dict:
             "unchanged_file_bytes":records}
 
 
+def _full_scientific_suite(python: Path, suite: Path, source: Path, output: Path,
+                           log: Path, expected_skips: list, *, timeout: int) -> dict:
+    junit = output / "surface-full-tests.xml"
+    _run([python,"-I","-m","pytest","-q","-rs","-o","pythonpath=","--import-mode=importlib",
+          "--junitxml",junit,"tests"],cwd=suite,log=log,timeout=timeout)
+    return {**_surface_junit(junit,expected_skips), "timeout_seconds":timeout,
+        "selection":"all original tests, including numerical markers; imports installed wheel",
+        "original_test_hashes":{str(path.relative_to(source)):sha256(path.read_bytes()).hexdigest()
+                                for path in sorted((source / "tests").rglob("*.py"))}}
+
+
 def qualify(args, report: dict, output: Path, log: Path) -> None:
     if sys.version_info < (3, 11):
         raise ValueError("Surface requires Python 3.11 or newer")
@@ -410,13 +440,8 @@ def qualify(args, report: dict, output: Path, log: Path) -> None:
                             for name,wheel in (("surface",surface),("terminal",ciw))}
         suite = temporary / "surface-suite"; _copy_source(source,suite)
         expected_skips = json.loads(_run([python,"-I","-c",_EXPECTED_SKIPS,suite],cwd=temporary,log=log))
-        junit = output / "surface-full-tests.xml"
-        _run([python,"-I","-m","pytest","-q","-rs","-o","pythonpath=","--import-mode=importlib",
-              "--junitxml",junit,"tests"],cwd=suite,log=log,timeout=3600)
-        report["full_scientific_suite"] = {**_surface_junit(junit,expected_skips),
-            "selection":"all original tests, including numerical markers; imports installed wheel",
-            "original_test_hashes":{str(path.relative_to(source)):sha256(path.read_bytes()).hexdigest()
-                                    for path in sorted((source / "tests").rglob("*.py"))}}
+        report["full_scientific_suite"] = _full_scientific_suite(
+            python,suite,source,output,log,expected_skips,timeout=args.suite_timeout)
         _run([python,"-I","-m","ruff","check","."],cwd=suite,log=log)
         report["original_lint_passed"] = True
         # Original run_experiment.py inserts its sibling src directory. Run the
@@ -593,6 +618,8 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir",type=Path,default=ROOT / "results/monorepo-surface")
     parser.add_argument("--uv",type=Path,help="uv executable for the original locked contract lane")
+    parser.add_argument("--suite-timeout",type=_suite_timeout,default=3600,
+                        help="full scientific suite wall-time budget in seconds (1-7200; default: 3600)")
     parser.add_argument("--resume-remaining",action="store_true",
                         help="Revalidate successful science/artifact evidence after the initial fixture failure, then rerun remaining profiles")
     parser.add_argument("--resume-from",type=Path,
@@ -609,7 +636,8 @@ def main(argv=None) -> int:
         "verification_id":verification_id,
         "created_at":datetime.now(timezone.utc).isoformat(),"terminal_revision":None,
         "python_version":sys.version,"platform":platform.platform(),"minimum_python":"3.11",
-        "dependencies":REQUIREMENTS,"claim_scope":SCOPE,"independent_verification":False,
+        "dependencies":REQUIREMENTS,"suite_timeout_seconds":args.suite_timeout,
+        "claim_scope":SCOPE,"independent_verification":False,
         "admission":"not_performed","log":str(log)}
     try:
         if args.resume_remaining:

@@ -229,6 +229,13 @@ environment rather than claiming frozen-uv reproduction. Surface separately
 runs its original locked contract lane with `uv sync --locked`; that lane's
 report records the original lock and the environment actually reproduced.
 
+Surface's full scientific suite has a 3600-second wall-time budget. On a slower
+host, `--suite-timeout 7200` extends that budget; the accepted range is 1-7200
+seconds. The report records the selected budget and retains it with completed
+scientific evidence when resuming later phases. A timeout remains a failure and
+retains captured output in the command log. The original test selection, skip
+validation, numerical tolerances and other phase budgets remain unchanged.
+
 Nested module workflows are retained source configuration; GitHub discovers
 the root [monorepo workflow](../.github/workflows/monorepo.yml). Its jobs use
 complete Git history and retain per-lane evidence. Configured Python/platform

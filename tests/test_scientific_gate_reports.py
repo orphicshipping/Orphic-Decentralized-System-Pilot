@@ -97,3 +97,80 @@ def test_test_hashes_match_declared_paths_and_detect_byte_mutation(monkeypatch, 
     test_file.write_bytes(original + b"# changed after execution\n")
     assert set(gate._test_hashes(tmp_path)) == set(expected)
     assert gate._test_hashes(tmp_path) != expected
+
+
+@pytest.mark.parametrize("captured", ["completed ρ test\n".encode("utf-8"), "completed ρ test\n", None])
+def test_surface_timeout_preserves_partial_output_and_original_failure(monkeypatch, tmp_path, captured):
+    from subprocess import TimeoutExpired
+
+    gate = _gate(monkeypatch, "check_monorepo_surface")
+    failure = TimeoutExpired(["fixture", "run"], 7, output=captured)
+
+    def timeout(*args, **kwargs):
+        assert kwargs["timeout"] == 7
+        raise failure
+
+    monkeypatch.setattr(gate.subprocess, "run", timeout)
+    log = tmp_path / "commands.log"
+    with pytest.raises(TimeoutExpired) as caught:
+        gate._run(["fixture", "run"], cwd=tmp_path, log=log, timeout=7)
+    assert caught.value is failure
+    expected = captured.encode("utf-8") if isinstance(captured, str) else captured
+    assert log.read_bytes() == b"\n$ fixture run\n" + (expected or b"")
+
+
+@pytest.mark.parametrize("value", ["0", "-1", "7201", "1.5", "true", "false", "nan", "inf"])
+def test_surface_cli_refuses_invalid_suite_timeout(monkeypatch, tmp_path, value):
+    gate = _gate(monkeypatch, "check_monorepo_surface")
+    with pytest.raises(SystemExit) as caught:
+        gate.main(["--suite-timeout", value, "--output-dir", str(tmp_path)])
+    assert caught.value.code == 2
+    assert not (tmp_path / "report.json").exists()
+
+
+@pytest.mark.parametrize("arguments,expected", [([], 3600), (["--suite-timeout", "1"], 1),
+                                             (["--suite-timeout", "7200"], 7200)])
+def test_surface_records_selected_suite_budget(monkeypatch, tmp_path, arguments, expected):
+    gate = _gate(monkeypatch, "check_monorepo_surface")
+    revision = "a" * 40
+    monkeypatch.setattr(gate, "_git", lambda *args: revision)
+    monkeypatch.setattr(gate, "verify_terminal_source", lambda **kwargs: {"revision": revision})
+    observed = []
+
+    def qualify(args, report, output, log):
+        observed.append(args.suite_timeout)
+
+    monkeypatch.setattr(gate, "qualify", qualify)
+    assert gate.main(["--output-dir", str(tmp_path), *arguments]) == 0
+    assert observed == [expected]
+    report = json.loads((tmp_path / "report.json").read_text(encoding="utf-8"))
+    assert report["suite_timeout_seconds"] == expected
+
+
+def test_surface_full_suite_uses_budget_without_changing_selection(monkeypatch, tmp_path):
+    from subprocess import TimeoutExpired
+
+    gate = _gate(monkeypatch, "check_monorepo_surface")
+    failure = TimeoutExpired(["fixture"], 7200)
+
+    def timeout(command, *, cwd, log, timeout):
+        assert command == [sys.executable, "-I", "-m", "pytest", "-q", "-rs", "-o", "pythonpath=",
+                           "--import-mode=importlib", "--junitxml", tmp_path / "surface-full-tests.xml", "tests"]
+        assert timeout == 7200
+        raise failure
+
+    monkeypatch.setattr(gate, "_run", timeout)
+    with pytest.raises(TimeoutExpired) as caught:
+        gate._full_scientific_suite(sys.executable, tmp_path, tmp_path, tmp_path,
+                                    tmp_path / "commands.log", [], timeout=7200)
+    assert caught.value is failure
+
+
+def test_surface_completed_science_retains_its_actual_budget(monkeypatch, tmp_path):
+    gate = _gate(monkeypatch, "check_monorepo_surface")
+    monkeypatch.setattr(gate, "_run", lambda *args, **kwargs: "")
+    monkeypatch.setattr(gate, "_surface_junit", lambda *args: {"tests": 799, "passed": 777, "skipped": 22})
+    result = gate._full_scientific_suite(sys.executable, tmp_path, tmp_path, tmp_path,
+                                         tmp_path / "commands.log", [], timeout=7200)
+    assert result["timeout_seconds"] == 7200
+    assert (result["tests"], result["passed"], result["skipped"]) == (799, 777, 22)
