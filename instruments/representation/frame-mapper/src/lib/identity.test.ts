@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readFileSync, readdirSync, statSync } from 'node:fs';
-import { join } from 'node:path';
+import { join, relative } from 'node:path';
 import { PRODUCT, VERSION, REPO_URL, userAgent, isWellFormedUserAgent } from './identity';
 
 const SRC = join(process.cwd(), 'src');
@@ -17,13 +17,13 @@ function walk(dir: string, out: string[] = []): string[] {
 /**
  * `identity.ts` and this file both quote the malformed forms on purpose —
  * one to document what it prevents, one to assert the detector fires on
- * them. Excluding exactly these two, by name, is the smallest exclusion
+ * them. Excluding exactly these two native paths is the smallest exclusion
  * that does not blind the check to anything else; the module's own output
  * is covered by the unit tests above, which is what makes the exclusion
  * safe rather than convenient.
  */
-const SELF = ['identity.ts', 'identity.test.ts'];
-const FILES = walk(SRC).filter(f => !SELF.some(s => f.endsWith(`/${s}`)));
+const SELF = new Set(['identity.ts', 'identity.test.ts'].map(name => join(SRC, 'lib', name)));
+const FILES = walk(SRC).filter(f => !SELF.has(f));
 
 describe('the product token', () => {
   it('is one token — the defect this module exists for', () => {
@@ -91,7 +91,7 @@ describe('every outbound identity in the tree, not just the module', () => {
         // are a separate mechanism with their own reason, and they are
         // well-formed anyway.
         if (!isWellFormedUserAgent(ua)) {
-          offenders.push(`${f.replace(process.cwd() + '/', '')}: ${ua}`);
+          offenders.push(`${relative(process.cwd(), f)}: ${ua}`);
         }
       }
     }
@@ -101,7 +101,7 @@ describe('every outbound identity in the tree, not just the module', () => {
   it('no source file still points at the wrong repository', () => {
     const offenders = FILES
       .filter(f => readFileSync(f, 'utf8').includes('simplifaisoul'))
-      .map(f => f.replace(process.cwd() + '/', ''));
+      .map(f => relative(process.cwd(), f));
     expect(offenders, `wrong repository URL in:\n${offenders.join('\n')}`).toEqual([]);
   });
 
@@ -112,7 +112,7 @@ describe('every outbound identity in the tree, not just the module', () => {
     for (const f of FILES) {
       const src = readFileSync(f, 'utf8');
       for (const m of src.matchAll(/Payload Terminal[-/]\S/g)) {
-        offenders.push(`${f.replace(process.cwd() + '/', '')}: ${m[0]}`);
+        offenders.push(`${relative(process.cwd(), f)}: ${m[0]}`);
       }
     }
     expect(offenders, `display name used as an identifier:\n${offenders.join('\n')}`).toEqual([]);
