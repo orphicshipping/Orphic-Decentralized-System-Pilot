@@ -12,6 +12,7 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 
 | Need | Page |
 | --- | --- |
+| DC electronics repair, refurbishment and retrofit cases | [Electronics repair](ELECTRONICS_REPAIR.md) |
 | Install and check the public Terminal/Legibility workflows together | [Run NET](RUN_NET.md) |
 | Product scope, operating model and scientific workspace | [Workbench overview](WORKBENCH_OVERVIEW.md) |
 | Current provider map and loose-tool collapse rule | [Systems catalog](SYSTEMS_CATALOG.md) |
@@ -69,6 +70,7 @@ or inspecting a record does not establish provider availability.
 | NET command plane and typed composition | [Control plane](NET_CONTROL_PLANE.md) · [Workflow algebra](WORKFLOW_ALGEBRA.md) |
 | Semantic capabilities, container composition and selective recomputation | [Semantic capabilities](SEMANTIC_CAPABILITIES.md) · [Containers](CONTAINER_CALCULUS.md) · [Needle](NEEDLE.md) |
 | Parameterized Boards, offline editing and live evidence views | [System Board](SYSTEM_BOARD.md) · [Offline editor](SYSTEM_BOARD_VISUAL.md) · [Evidence viewer](VISUAL_SYSTEM_BOARD.md) |
+| Published physical measurements, uncertainty plots and source inspection | [Measurement evidence visualizer](MEASUREMENT_VISUALIZER.md) |
 | Preservation contracts, finite morphisms and evidence-bound expansion | [Preservation](PRESERVATION_CONTRACTS.md) · [Finite morphisms](FINITE_REPRESENTATION_PRESERVATION.md) · [Expansion](EVIDENCE_BOUND_EXPANSION.md) |
 | Visual gates and identity-preserving evidence projections | [Representation gates](VISUAL_REPRESENTATION_GATES.md) · [Evidence projection](VISUAL_EVIDENCE_PROJECTION.md) |
 | Dry hydrostatic atmospheric state, independent quadrature and typed provider handoffs | [Atmospheric engine](ATMOSPHERIC_ENGINE.md) |
