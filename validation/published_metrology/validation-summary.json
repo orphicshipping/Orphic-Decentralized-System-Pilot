@@ -1,0 +1,69 @@
+{
+  "schema": "net.published-experiment-software-qualification.v1",
+  "generated_at_utc": "2026-10-04T19:23:11.842871+00:00",
+  "status": "passed_bounded_kernel_reproduction",
+  "scope": "Version-specific software reproduction of published calibrated-experiment data reductions.",
+  "tested_artifact": {
+    "distribution": "computational-instrumentation-workbench",
+    "version": "0.1.0",
+    "reference_kernel_git_revision": "f2ac42373f7ffae551ea297ecc6580c4de56028e",
+    "wheel_sha256": "e28b5b1e31337aba9eefdcacdf7a40217789f558dbac0e9e2de0d104324c187a",
+    "module_sha256": {
+      "temperature_processing": "f4dea340ebf3250ee8fca7c4a7d5f9b148f216c8f9dda58302ab8709bec73dea",
+      "calibrated_window": "49ff8049eda6ae470df7d0fb374e6e96e51dd3709439a11fbc6cdc8eaa502350"
+    },
+    "installed_package_files_matched_to_wheel": 390,
+    "python": "3.12.13",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "summary": {
+    "cases": 147,
+    "passed": 147,
+    "failed": 0,
+    "thermocouple_nominal_range_C": [
+      200,
+      1000
+    ],
+    "GHP_budget_range_C": [
+      200,
+      700
+    ]
+  },
+  "runner_sha256": "76b157f128825d6e3eecf8458aea1431fea2a50ef5b157974205ca388752dec1",
+  "inputs_manifest_sha256": "fdcaab8ab0254c92c08352e6b977b93860e27ba3d27be4ace27d8fef496add8c",
+  "reference_kind": "Author-published workbook caches and printed table values; no outputs fitted to NET results.",
+  "harness_disclosures": [
+    "Affine checks are static linearized reference temperature plus published thermocouple deviation, converted to kelvin.",
+    "time_s=0 and zero covariance are harness-only placeholders required by private _sensor_output; their output is discarded. They do not declare actual time or zero measurement uncertainty.",
+    "Only nominal temperature is checked by affine cases; temperature uncertainty is not qualified.",
+    "The reference kernel revision identifies pinned module bytes; the runner does not independently attest the full wheel build provenance.",
+    "RSS uses the published diagonal-covariance reduction, not a physical independence claim.",
+    "Tolerances describe numerical reproduction/printed precision, not instrument accuracy or measurement uncertainty."
+  ],
+  "not_qualified": [
+    "Full MCP admission, acquisition, retained execution and result-to-ledger delivery with these sources",
+    "NET thermal inverse model, core-temperature prediction, or leakage inventory assessment",
+    "Correlated uncertainty propagation against experimental covariance data",
+    "Independent held-out physical accuracy, repeatability or drift claims",
+    "Thermocouple reference serial/certificate chain missing from KRISS workbook",
+    "Use outside the exact tested source rows and numerical conditions"
+  ],
+  "correction_status": "Source snapshots pinned; external corrections not continuously monitored. Source, fixture or module changes require rerun and review.",
+  "build_source_commit": "f2ac42373f7ffae551ea297ecc6580c4de56028e",
+  "build_method": "python -m build --wheel --no-isolation on clean source, installed into a fresh virtual environment; runner executed with python -I outside the checkout.",
+  "source_data_distributed": false,
+  "full_results_retained_locally": true,
+  "integrity_regressions": {
+    "tests": 13,
+    "passed": 13,
+    "failed": 0,
+    "duration_seconds": 2.448
+  },
+  "historical_run": {
+    "source": "NET-metrology-corpus-0.2 qualification/report.json",
+    "reference_git_revision": "f59bd7569c26107f677956e58f2abbaefbf300c4",
+    "wheel_sha256": "93321a2814c4d9c65dcbf34b645f44e4248d9e9148a150a433cf298f30ed7b33",
+    "summary": "147 bounded cases passed in the historical run; this metadata is not the current run result."
+  },
+  "package_files_matched_to_build_source": 390
+}
