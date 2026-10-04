@@ -1,5 +1,5 @@
 import csv
-from decimal import Decimal
+from decimal import Decimal, localcontext
 import io
 import json
 from pathlib import Path
@@ -83,6 +83,27 @@ def test_inclusive_interval_rules(value, u, lo, hi, expected):
 def test_invalid_decimal_refused(value):
     with pytest.raises(ValueError):
         dec(value)
+
+
+@pytest.mark.parametrize("precision", [8, 28, 100])
+@pytest.mark.parametrize("sign", ["", "-"])
+@pytest.mark.parametrize("token", [
+    "1000000000000.0000000000000000000001",
+    "0.00000000000000000000000099999999999999999999999999999999",
+])
+def test_exact_endpoint_domain_does_not_round_outside_tokens(precision, sign, token):
+    with localcontext() as context:
+        context.prec = precision
+        with pytest.raises(ValueError, match="supported endpoint range"):
+            dec(sign + token)
+
+
+@pytest.mark.parametrize("precision", [8, 28, 100])
+@pytest.mark.parametrize("token", ["0", "1e-24", "-1e-24", "1e12", "-1e12"])
+def test_endpoint_domain_preserves_exact_inclusive_boundaries(precision, token):
+    with localcontext() as context:
+        context.prec = precision
+        assert dec(token) == Decimal(token)
 
 
 def test_current_and_correction_conversion(case):

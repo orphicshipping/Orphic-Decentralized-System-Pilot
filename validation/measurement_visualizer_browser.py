@@ -61,6 +61,14 @@ async function download(page,button,name){const [item]=await Promise.all([page.w
   check('Flagged record issue visible',await page.locator('#record-issue').isVisible());
   await page.locator('.plot-point[data-record-id="'+thermal[2].id+'"]').focus();
   await page.keyboard.press('Enter');await selectedParity(page,thermal[2].id,'thermal');
+  await page.setViewportSize({width:1420,height:1080});
+  await page.evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  check('Plot keyboard focus survives resize',await page.evaluate(()=>document.activeElement.getAttribute('data-record-id'))===thermal[2].id);
+  check('Resize preserves selected source record',(await snapshot(page)).selected_id===thermal[2].id);
+  await page.keyboard.press('Tab');
+  check('Keyboard navigation continues to next plot record after resize',await page.evaluate(()=>document.activeElement.getAttribute('data-record-id'))===thermal[3].id);
+  await page.keyboard.press('Enter');await selectedParity(page,thermal[3].id,'thermal');
+  await page.setViewportSize({width:1500,height:1080});
   await page.locator('#measurement-rows tr[data-record-id="'+thermal[3].id+'"] button').focus();
   await page.keyboard.press('Space');await selectedParity(page,thermal[3].id,'thermal');
   const selected=await download(page,'#export-selected','selected-thermal.json');

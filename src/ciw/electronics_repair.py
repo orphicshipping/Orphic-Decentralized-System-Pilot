@@ -36,7 +36,9 @@ def dec(token, *, nonnegative=False, positive=False):
             re.fullmatch(r"[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:[eE][+-]?\d{1,2})?", token),
             "Require a bounded exact decimal string")
     value = Decimal(token)
-    require(value.is_finite() and (value == 0 or Decimal("1e-24") <= abs(value) <= Decimal("1e12")),
+    # Decimal.__abs__ rounds under the caller's context. Domain validation must
+    # compare the original token, including digits immediately beyond a bound.
+    require(value.is_finite() and (value == 0 or Decimal("1e-24") <= value.copy_abs() <= Decimal("1e12")),
             "Decimal exceeds supported endpoint range")
     require(not nonnegative or value >= 0, "Require a nonnegative value")
     require(not positive or value > 0, "Require a positive value")
