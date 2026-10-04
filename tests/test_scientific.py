@@ -46,7 +46,7 @@ def test_catalog_uses_existing_routes_without_binding(monkeypatch):
     monkeypatch.setattr(api.Workbench, "bind_workflow", forbidden)
     value = api.catalog()
     assert value["authorizes_execution"] is False
-    assert len(value["operations"]) == 23
+    assert len(value["operations"]) == 24
     assert all(row["qualification"] == "not_performed_by_catalog" for row in value["operations"])
     assert {row["source_kind"] for row in api.catalog("geometry")["operations"]} == {
         "geometric-circle", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow"}

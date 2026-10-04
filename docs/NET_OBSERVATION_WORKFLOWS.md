@@ -55,8 +55,10 @@ selected from the file itself demonstrates content binding, not independently
 trusted provenance or a producer signature.
 
 Supported stages are `predicted`, `posterior`, and `measurement`. Exact bundle
-selection is mandatory; there is no newest-result fallback. This first producer
-adapter accepts only the existing `thermal-observer` workflow. It does not claim
+selection is mandatory; there is no newest-result fallback. The synthetic view
+accepts the existing `thermal-observer` workflow. The additive
+[`measured-thermal` exporter](MEASURED_THERMAL.md) emits standard scalar streams
+for posterior core, shell measurement and held-out reference stages. It does not claim
 to handle generic Julia workers, FSRT, arbitrary sensors or engine scenes.
 
 ## What the view retains

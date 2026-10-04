@@ -80,7 +80,19 @@ root=pathlib.Path.cwd(); mode=sys.argv[1]
 for _ in range(10):
     request=root/'request.json'
     while not request.exists():time.sleep(.001)
-    value=json.loads(request.read_bytes());request.unlink()
+    # Windows can transiently deny access while this fixture polls the file.
+    # The parent already publishes a closed file by atomic rename. Retry only
+    # that access error here; production mailbox failures still fail closed.
+    read_deadline=time.monotonic()+1.0
+    while True:
+        try:
+            raw_request=request.read_bytes()
+            break
+        except PermissionError:
+            if os.name!='nt' or time.monotonic()>=read_deadline:
+                raise
+            time.sleep(.002)
+    value=json.loads(raw_request);request.unlink()
     if mode=='die':sys.exit(3)
     if mode=='timeout':time.sleep(5);sys.exit(3)
     if mode=='log':

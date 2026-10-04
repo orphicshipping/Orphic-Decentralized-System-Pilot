@@ -13,10 +13,11 @@ This increment connects three useful paths:
 3. Supply NET parameter-domain candidates to the **existing CSR heading study**,
    which keeps the trajectory, sensitivity, covariance and comparison calculations.
 
-The implementation adds three small modules and an early `science` dispatch in
-`ciw.net`. It uses the existing `Session.handle`, `Workbench`, workflow registry,
-source readers and replay machinery. There is no second graph engine, copied
-estimator, new native operation ID, changed pin or extra mandatory dependency.
+The scientific-command facade uses the existing `Session.handle`, `Workbench`,
+workflow registry, source readers and replay machinery. Additive workflow adapters
+have explicit operation identities: `measured-thermal` registers
+`ciw.measured-thermal.v1` while reusing the existing thermal reference. Provider
+selection, runtime pins and replay checks remain owned by each workflow.
 
 ## Find the existing operations
 
@@ -27,7 +28,9 @@ net science catalog geometry --json
 net science catalog estimate --json
 ```
 
-The 23 indexed routes are existing operations, not 23 newly built providers.
+The 24 indexed routes use the shared Workbench lifecycle. The additive
+[measured-thermal recording adapter](MEASURED_THERMAL.md) reuses the existing
+thermal kernel; the other routes retain their prior contracts.
 `instrument_highlights` gives navigation aids, **not** the exact required source
 set. Each original workflow owns its required roles, source schema, pins and
 qualification gates. `available` describes the current process binding, not
@@ -43,6 +46,7 @@ cannot bind or launch a provider; private repositories are never scanned or clon
 | Schematic eligibility, sensitivities and Lyapunov conditions | `schematic-assessment`, `schematic-companions`, `identified-stability`: SRA, JSPT, PLSR |
 | BIM quantity evidence | `bim-quantity`: CSE |
 | Geometry and conditional covariance | `geometric-circle`, `curved-path-transfer`, `flat-torus-reference`, `covariance-geometry`, `mesh-path`, `translation-flow` |
+| Retained calibrated thermal recordings and held-out comparison | [`measured-thermal`](MEASURED_THERMAL.md): existing Python thermal kernel |
 | Existing computation/reference and exchange operations | `numerical-heat`, `native-interop`, `julia-oscillator`, `thermal-observer`, `instrument-exchange` |
 
 `instrument-exchange` uses the existing SET contract validator. **ICRH remains an
@@ -119,8 +123,10 @@ net science inspect --workspace results/curvature-001/workspace.json \
 
 Add `--instrument` with an instrument identity from the retained inspection to
 select that instrument's existing panel. Inspection uses the original workspace
-and native readers in temporary scratch storage. It does not bind providers from
-saved runtime paths, advance a simulation, re-run a solver or confer admission.
+and native readers in temporary scratch storage. Validators may recompute bounded
+reference values to check retained numerical consistency. This creates no new
+execution, binds no provider from a saved path, and confers no admission. Explicit
+replay is the operation that creates fresh execution and result occurrences.
 
 Native operations retain their existing execution/result/verification records.
 They are **not** wrapped in a duplicate `ciw.operation-result.v1` to fit the newer

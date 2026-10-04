@@ -42,6 +42,7 @@ _ROUTES = {
     "instrument-exchange": (("conformance", "replay"), ("SET",)),
     "julia-oscillator": (("simulate", "reference"), ("Julia",)),
     "thermal-observer": (("estimate", "reference"), ("NET thermal reference",)),
+    "measured-thermal": (("measure", "estimate", "compare"), ("NET measured thermal",)),
 }
 
 

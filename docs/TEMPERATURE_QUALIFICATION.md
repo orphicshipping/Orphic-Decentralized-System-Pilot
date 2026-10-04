@@ -69,6 +69,14 @@ An operational acceptance result cannot promote any of the last three states.
 Filled evidence references establish an inventory; references still require
 technical review. Synthetic processing examples establish no physical result.
 
+The companion [thermal recording workflow](MEASURED_THERMAL.md) consumes
+already-calibrated shell, core-reference, power and ambient streams for a
+conventional core estimate and held-out comparison. The affine MCP processor
+here has a separate input/output contract; it is not automatically wired into
+that workflow. Any future handoff must preserve units, location/time semantics,
+observation versus estimate labels, covariance and acquisition/calibration
+lineage. Neither workflow supplies the physical pilot data or qualification.
+
 ## Freeze the pilot before confirmatory experiments
 
 Define the target as polymer temperature at a named location and time, with a
