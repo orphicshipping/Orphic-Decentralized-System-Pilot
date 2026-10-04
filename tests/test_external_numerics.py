@@ -108,3 +108,80 @@ def test_nonfinite_cooling_number_cannot_pass(cooling):
     corrupt = deepcopy(result)
     corrupt["cooling"]["temperature_k"] = float("nan")
     assert comparison.compare_cooling(request, corrupt)["status"] == "FAIL"
+
+
+@pytest.mark.parametrize("failure_kind", ["exception", "nonfinite"])
+def test_one_failed_case_preserves_other_case_evidence(monkeypatch, failure_kind):
+    original = comparison.compare_reservoir
+    calls = 0
+
+    def damaged_case(request, result):
+        nonlocal calls
+        calls += 1
+        if calls == 2:
+            if failure_kind == "exception":
+                raise RuntimeError("reference integration failed")
+            return {"status": "FAIL", "error_value": float("nan")}
+        return original(request, result)
+
+    monkeypatch.setattr(comparison, "compare_reservoir", damaged_case)
+    report = comparison.run_comparisons()
+    assert calls == 4
+    assert report["status"] == "FAIL"
+    assert [row["status"] for row in report["reservoir"].values()] == ["PASS", "FAIL", "PASS", "PASS"]
+    failed = list(report["reservoir"].values())[1]
+    assert "RuntimeError" in failed["error"] if failure_kind == "exception" else "ValueError" in failed["error"]
+    assert len(report["polymer_cooling"]) == 9
+    assert all(row["status"] == "PASS" for row in report["polymer_cooling"].values())
+    assert report["versions"]["scipy"] and report["tolerances"] and report["source_sha256"]
+    json.dumps(report, allow_nan=False)
+
+
+def test_existing_report_is_refused_before_computation(tmp_path, monkeypatch, capsys):
+    destination = tmp_path / "comparison.json"
+    original = b'{"previous": "retained evidence"}\n'
+    destination.write_bytes(original)
+
+    def should_not_run():
+        pytest.fail("Existing report must be refused before comparison")
+
+    monkeypatch.setattr(comparison, "run_comparisons", should_not_run)
+    assert comparison.main(["--output", str(destination)]) == 1
+    assert destination.read_bytes() == original
+    assert "Choose a new report path" in capsys.readouterr().err
+
+
+def test_report_created_during_comparison_is_not_overwritten(tmp_path, monkeypatch, capsys):
+    destination = tmp_path / "comparison.json"
+
+    def racing_report():
+        destination.write_text("other retained evidence", encoding="utf-8")
+        return {"status": "PASS"}
+
+    monkeypatch.setattr(comparison, "run_comparisons", racing_report)
+    assert comparison.main(["--output", str(destination)]) == 1
+    assert destination.read_text(encoding="utf-8") == "other retained evidence"
+    assert "could not save report" in capsys.readouterr().err
+
+
+def test_invalid_output_parent_has_clear_nonzero_diagnostic(tmp_path, monkeypatch, capsys):
+    parent = tmp_path / "occupied"
+    parent.write_text("keep", encoding="utf-8")
+    monkeypatch.setattr(comparison, "run_comparisons", lambda: {"status": "PASS"})
+    assert comparison.main(["--output", str(parent / "report.json")]) == 1
+    assert parent.read_text(encoding="utf-8") == "keep"
+    assert "could not save report" in capsys.readouterr().err
+
+
+
+def test_inaccessible_output_is_reported_before_computation(tmp_path, monkeypatch, capsys):
+    def inaccessible(_path):
+        raise PermissionError("output parent is inaccessible")
+
+    def should_not_run():
+        pytest.fail("Inaccessible output must be refused before comparison")
+
+    monkeypatch.setattr(comparison.Path, "exists", inaccessible)
+    monkeypatch.setattr(comparison, "run_comparisons", should_not_run)
+    assert comparison.main(["--output", str(tmp_path / "report.json")]) == 1
+    assert "could not inspect output" in capsys.readouterr().err

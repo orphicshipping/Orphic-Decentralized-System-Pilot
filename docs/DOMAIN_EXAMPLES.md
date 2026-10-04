@@ -39,7 +39,12 @@ Change to the parent directory, replacing `NET` with the checkout directory and 
 python -I NET/scripts/check_domain_examples.py --wheel wheelhouse/computational_instrumentation_workbench-0.1.0-py3-none-any.whl --source-revision FULL_CANDIDATE_GIT_SHA --output-dir domain-example-results
 ```
 
-The directory must not already exist. `report.json` records all nine outcomes and elapsed seconds, Python/platform/package versions, candidate revision, runner digest, wheel SHA-256, checked installed package bytes, and artifact digests. Each example retains its own `outcome.json`, process log, numerical outputs and relevant workflow records. The measured fixture is copied and hashed. The wheel is bound using its installed direct-URL hash and a byte comparison of every packaged `ciw` file. Imported `ciw` modules must remain inside that installation.
+The directory must not already exist. The console JSON identifies failed examples
+and their available `process.log` and `commands.log` paths; an installation or
+binding refusal also includes its reason. A CLI refusal printed as JSON on stdout
+is retained in the command log and the failure diagnostic.
+
+`report.json` records all nine outcomes and elapsed seconds, Python/platform/package versions, candidate revision, runner digest, wheel SHA-256, checked installed package bytes, and artifact digests. Each example retains its own `outcome.json`, process log, numerical outputs and relevant workflow records. The measured fixture is copied and hashed. The wheel is bound using its installed direct-URL hash and a byte comparison of every packaged `ciw` file. Imported `ciw` modules must remain inside that installation.
 
 `candidate_revision` is a caller-supplied checkout identity; the runner does not prove that a caller built the wheel from that Git commit. Wheel and script digests separately identify the bytes exercised. CI builds the wheel immediately after checking out `github.sha`, and uses that SHA in both the candidate and job-outcome manifests. Local runs with uncommitted edits must be described as such rather than presented as evidence for the unmodified base commit.
 
@@ -50,11 +55,11 @@ Each example gets at most 120 seconds, and the whole example loop shares a 540-s
 The independent SciPy checks are a separate optional-dependency path. Install the same wheel with its pinned numerical extra:
 
 ```text
-python -m pip install "../wheelhouse/computational_instrumentation_workbench-0.1.0-py3-none-any.whl[numerical-checks]"
+python -m pip install "wheelhouse/computational_instrumentation_workbench-0.1.0-py3-none-any.whl[numerical-checks]"
 python -I NET/scripts/check_external_numerics.py --output external-numerics.json
 ```
 
-Run the second command from outside the checkout and adjust the wheel path for that working directory. This comparison checks reservoir trajectories against independent SciPy DOP853 integration and polymer cooling against a homogeneous cooling ODE plus a converged 64-term convective-slab solution. It distinguishes numerical agreement within the homogeneous model from discrepancy caused by internal temperature gradients; it does not turn synthetic agreement into physical validation. See [EXTERNAL_NUMERICAL_COMPARISONS.md](EXTERNAL_NUMERICAL_COMPARISONS.md).
+Run both commands from the parent directory used above, with the example environment active. Choose a new report filename for each run; existing reports are refused. This comparison checks reservoir trajectories against independent SciPy DOP853 integration and polymer cooling against a homogeneous cooling ODE plus a converged 64-term convective-slab solution. It distinguishes numerical agreement within the homogeneous model from discrepancy caused by internal temperature gradients; it does not turn synthetic agreement into physical validation. See [EXTERNAL_NUMERICAL_COMPARISONS.md](EXTERNAL_NUMERICAL_COMPARISONS.md).
 
 For a separate assessment of real academic and government polymer-temperature records, see [POLYMER_TEMPERATURE_DATASETS.md](POLYMER_TEMPERATURE_DATASETS.md). Those records are not bundled or exercised by this synthetic example campaign; import and physical-qualification gaps remain explicit.
 

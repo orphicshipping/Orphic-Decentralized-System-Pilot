@@ -26,6 +26,15 @@ isolated command imports the installed package, so reinstall after changing the
 models. CI runs the same checker against a built wheel and retains its JSON
 report. The script returns zero only on `PASS`; numerical failures and execution
 exceptions return nonzero, with a failure report when the output can be written.
+The output path must be new: an existing report is refused before computation,
+and a file created by another process during computation is also preserved.
+Choose a separate filename for each run. File errors produce a concise diagnostic
+and a nonzero exit status.
+
+An exception or nonfinite result in one case is retained as that case's `FAIL`;
+the remaining independent cases still run. Inspect the named case's `error` or
+failed `checks`, alongside the retained versions and tolerances. Dependency or
+fixture-construction failures that prevent a campaign remain report-level errors.
 The optional test module skips when SciPy is absent; the dedicated CI job installs
 `numerical-checks` and requires the script to pass.
 

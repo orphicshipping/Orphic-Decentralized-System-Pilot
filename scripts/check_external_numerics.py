@@ -15,6 +15,7 @@ import math
 import os
 from pathlib import Path
 import platform
+import sys
 
 import numpy as np
 
@@ -266,13 +267,24 @@ def compare_cooling(request, estimate):
                                         "convective_slab_volume_average": slab_remaining_time}}
 
 
+def _run_case(request, calculate, compare):
+    """Retain a failed case without losing the other independent comparisons."""
+    try:
+        result = compare(request, calculate(request))
+        # A nonfinite result is a failed case, never invalid JSON for the campaign.
+        json.dumps(result, allow_nan=False)
+        return result
+    except Exception as error:
+        return {"status": "FAIL", "error": f"{type(error).__name__}: {error}"}
+
+
 def run_comparisons():
     import scipy
     from ciw import fluid_reservoir_solver, polymer_models
 
-    reservoirs = {name: compare_reservoir(request, fluid_reservoir_solver.simulate(request))
+    reservoirs = {name: _run_case(request, fluid_reservoir_solver.simulate, compare_reservoir)
                   for name, request in reservoir_cases().items()}
-    cooling = {name: compare_cooling(request, polymer_models.engineering_estimate(request))
+    cooling = {name: _run_case(request, polymer_models.engineering_estimate, compare_cooling)
                for name, request in cooling_cases().items()}
     return {
         "schema": "ciw.external-numerical-comparison.v1", "scope": SCOPE,
@@ -293,8 +305,16 @@ def run_comparisons():
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, help="Write the full JSON report here; otherwise print it")
+    parser.add_argument("--output", type=Path, help="Write a new JSON report; existing paths are refused")
     args = parser.parse_args(argv)
+    try:
+        if args.output and (args.output.exists() or args.output.is_symlink()):
+            print(f"External numerical comparisons refused: output already exists: {args.output}. "
+                  "Choose a new report path.", file=sys.stderr)
+            return 1
+    except OSError as error:
+        print(f"External numerical comparisons could not inspect output: {error}", file=sys.stderr)
+        return 1
     try:
         report = run_comparisons()
         # JSON must remain machine-readable even if a regression produced NaN.
@@ -304,8 +324,14 @@ def main(argv=None):
                   "status": "FAIL", "error": f"{type(error).__name__}: {error}"}
         serialized = json.dumps(report, indent=2, sort_keys=True) + "\n"
     if args.output:
-        args.output.parent.mkdir(parents=True, exist_ok=True)
-        args.output.write_text(serialized, encoding="utf-8")
+        try:
+            args.output.parent.mkdir(parents=True, exist_ok=True)
+            # Exclusive creation also protects a report created after the preflight.
+            with args.output.open("x", encoding="utf-8") as stream:
+                stream.write(serialized)
+        except OSError as error:
+            print(f"External numerical comparisons could not save report: {error}", file=sys.stderr)
+            return 1
         print(f"External numerical comparisons: {report['status']}; report: {args.output}")
     else:
         print(serialized, end="")

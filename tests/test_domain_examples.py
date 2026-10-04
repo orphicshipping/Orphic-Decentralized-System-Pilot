@@ -74,3 +74,36 @@ def test_total_budget_exhaustion_is_retained_as_failure(tmp_path, monkeypatch):
     assert report["status"] == "FAIL"
     assert all(row["status"] == "FAIL" and "suite budget was exhausted" in row["message"]
                for row in report["examples"])
+
+
+
+def test_cli_failure_retains_structured_stdout_reason(tmp_path, monkeypatch):
+    import ciw.net
+
+    def refused(_args):
+        print(json.dumps({"status": "REFUSED", "reason": "outside declared domain"}))
+        return 1
+
+    monkeypatch.setattr(ciw.net, "main", refused)
+    with pytest.raises(ValueError, match="outside declared domain.*commands.log"):
+        examples.cli(tmp_path, "fluid", "run")
+    assert "outside declared domain" in (tmp_path / "commands.log").read_text(encoding="utf-8")
+
+
+def test_cli_summary_identifies_failed_example_and_existing_logs(tmp_path, monkeypatch, capsys):
+    wheel = tmp_path / "candidate.whl"
+    wheel.write_bytes(b"fixture")
+    output = tmp_path / "results"
+    case = output / "temperature"
+    case.mkdir(parents=True)
+    (case / "process.log").write_text("retained failure", encoding="utf-8")
+    monkeypatch.setattr(examples, "qualify", lambda *args: {
+        "status": "FAIL", "elapsed_s": 0.5, "examples": [
+            {"name": "temperature", "status": "FAIL", "message": "Example process failed"},
+            {"name": "polymer", "status": "PASS"}], "message": "Campaign incomplete"})
+    assert examples.main(["--wheel", str(wheel), "--source-revision", "a" * 40,
+                          "--output-dir", str(output)]) == 1
+    result = json.loads(capsys.readouterr().out)
+    assert result["message"] == "Campaign incomplete"
+    assert result["failed_examples"] == [{"name": "temperature", "message": "Example process failed",
+                                          "logs": [str((case / "process.log").resolve())]}]
