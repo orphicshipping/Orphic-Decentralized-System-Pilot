@@ -25,11 +25,11 @@ def test_creation_read_open_context_and_no_wal(tmp_path):
         assert store.list_assets()==[]
         fill(store)
         with pytest.raises(FileExistsError): RefurbishmentStore.create(path)
-        assert store.verify('NS-DEMO-0001')['event_count']==11
+        assert store.verify('NS-DEMO-0001')['event_count']==12
     with pytest.raises(ValueError,match='closed'): store.list_assets()
     assert not Path(str(path)+'-wal').exists() and not Path(str(path)+'-journal').exists()
     published=tmp_path/'published.sqlite'; os.link(path,published)
-    with RefurbishmentStore(published) as reopened: assert reopened.get_asset('NS-DEMO-0001')['revision']==11
+    with RefurbishmentStore(published) as reopened: assert reopened.get_asset('NS-DEMO-0001')['revision']==12
     with pytest.raises(ValueError,match='persistent'): RefurbishmentStore.create(':memory:')
 
 

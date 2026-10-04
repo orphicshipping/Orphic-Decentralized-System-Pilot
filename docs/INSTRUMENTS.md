@@ -234,7 +234,7 @@ before extending the snapshot fixture to a new measurement arrangement.
 ## Covariance provenance and JSPT operations
 
 The [covariance guide](COVARIANCE.md) gives exact setup, schema, commands and
-limits for the RCI v2 â†’ FSRT v2 â†’ JSPT path. Exact source revisions are retained
+limits for the RCI v2 → FSRT v2 → JSPT path. Exact source revisions are retained
 in [`adapter-runtimes.json`](../src/ciw/adapter-runtimes.json), including historical
 pins needed by older saved investigations. Numerical calculations stay in the
 domain repositories; the workbench validates and retains their artifacts.

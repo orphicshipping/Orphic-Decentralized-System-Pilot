@@ -62,6 +62,8 @@ The registry is local and single-organization. Operator names are declarations, 
 
 The command templates and [contract](../src/ciw/refurbishment_contract.py) define exact fields and bounded types. Costs are **integer minor units**, with a currency and explicit decimal exponent fixed at intake. For CAD with exponent 2, `1250` means CAD 12.50. There is no automatic tax, exchange-rate, revenue-recognition or accounting-policy calculation.
 
+After a repair, record a new `diagnose` declaration with the observed current condition before collecting fresh evidence. The demonstration explicitly records this post-repair condition; NET never invents an equipment grade from a numerical pass.
+
 Repairs, configuration changes and new evidence invalidate prior assessment/review decisions. Evidence captured before a repair cannot be reused to approve the repaired state. Original decisions remain in history. There is no automatic equipment release or physical actuation.
 
 ## Bench evidence

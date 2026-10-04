@@ -81,7 +81,7 @@ def test_csv_is_exact_and_neutralizes_formula_cells(populated, tmp_path):
     assert cost["parts_cost_minor"] == "2500" and cost["labor_cost_minor"] == "3000"
     assert cost["total_cost_minor"] == "5500"
     before = inventory.read_bytes()
-    with pytest.raises(OSError):
+    with pytest.raises(FileExistsError, match="Choose a fresh output filename"):
         export_csv(populated, inventory)
     assert inventory.read_bytes() == before
 

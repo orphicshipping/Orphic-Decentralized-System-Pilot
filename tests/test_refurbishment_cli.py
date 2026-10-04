@@ -76,6 +76,7 @@ def test_complete_retained_demo_restores_and_invalidates_return(tmp_path):
     with RefurbishmentStore(root / "restored.sqlite3") as store:
         asset = store.get_asset(result["asset_id"])
         assert asset["stage"] == "released" and asset["current_release_id"] == "release-1"
+        assert asset["condition"] == "Refurbished - synthetic example"
         assert store.registry_id != result["registry_id"]
     assert "DEMONSTRATION" in (root / "customer-report.html").read_text(encoding="utf-8")
     assert "PASS" in (root / "customer-report.html").read_text(encoding="utf-8")

@@ -416,6 +416,7 @@ def example_commands(asset_id="NS-DEMO-0001", actor="Synthetic fixture"):
         ("diagnose", {"condition":"Synthetic repair required", "findings":"Simulated firmware revision", "evidence_ids":[]}),
         ("record_repair", {"repair_id":"repair-1", "description":"Simulated service", "parts":[{"part_id":"part-1", "description":"Synthetic part", "quantity":2, "unit_cost_minor":1250}], "labor_cost_minor":3000, "other_cost_minor":0, "evidence_ids":[]}),
         ("replace_configuration", {"configuration":updated, "reason":"Synthetic firmware revision"}),
+        ("diagnose", {"condition":"Refurbished - synthetic example", "findings":"Simulated service complete; collect new observations before review", "evidence_ids":[]}),
         ("record_evidence", {"evidence_id":"evidence-1", "kind":"diagnostic", "configuration_ref":hardware.configuration_ref(updated),
                              "source_kind":"synthetic", "content_ref":digest(observations), "summary":"Synthetic observations", "record":observations}),
         ("reassess", {"assessment_id":"assessment-1", "request":request, "evidence_ids":["evidence-1"]}),

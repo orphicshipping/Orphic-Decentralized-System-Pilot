@@ -13,6 +13,8 @@ from .operations.runner import digest
 def publish_bytes(path: Path, raw: bytes) -> None:
     """Publish a complete, new file without replacing existing destinations."""
     path = Path(path)
+    if path.exists() or path.is_symlink():
+        raise FileExistsError(f"Output already exists: {path}. Choose a fresh output filename.")
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=".net-report-", dir=path.parent) as directory:
         staged = Path(directory) / "report"
@@ -20,7 +22,10 @@ def publish_bytes(path: Path, raw: bytes) -> None:
             stream.write(raw)
             stream.flush()
             os.fsync(stream.fileno())
-        os.link(staged, path)
+        try:
+            os.link(staged, path)
+        except FileExistsError:
+            raise FileExistsError(f"Output already exists: {path}. Choose a fresh output filename.") from None
 
 
 def money(amount: int, currency: str, exponent: int) -> str:
