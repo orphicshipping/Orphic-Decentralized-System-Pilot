@@ -26,11 +26,11 @@ import uuid
 import venv
 
 if __package__:
-    from .check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _utf8_python_command, _wheel
+    from .check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _test_hashes, _utf8_python_command, _wheel
     from .check_monorepo_inference import _validate, _worktree
     from .monorepo import ROOT, _retained, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 else:
-    from check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _utf8_python_command, _wheel
+    from check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _test_hashes, _utf8_python_command, _wheel
     from check_monorepo_inference import _validate, _worktree
     from monorepo import ROOT, _retained, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 
@@ -110,11 +110,6 @@ def _probe(python: Path, wheels: dict, temporary: Path, log: Path) -> dict:
                 for name, wheel in wheels.items()}
     return json.loads(_run_bound([python, "-I", "-c", _IMPORT_PROBE, json.dumps(expected)],
                                 cwd=temporary, log=log))
-
-
-def _test_hashes(source: Path) -> dict[str, str]:
-    return {str(path.relative_to(source)): sha256(path.read_bytes()).hexdigest()
-            for path in sorted((source / "tests").rglob("*.py"))}
 
 
 def _suite(source: Path, target: Path, *, source_root="src", package_path=None) -> tuple[Path, dict]:

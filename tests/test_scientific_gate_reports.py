@@ -81,3 +81,19 @@ def test_utf8_selection_leaves_other_commands_and_caller_arguments_unchanged(mon
     before = list(command)
     assert gate._utf8_python_command(command) == before
     assert command == before
+
+
+@pytest.mark.parametrize("name", ["check_monorepo", "check_monorepo_math"])
+def test_test_hashes_match_declared_paths_and_detect_byte_mutation(monkeypatch, tmp_path, name):
+    from hashlib import sha256
+
+    gate = _gate(monkeypatch, name)
+    test_file = tmp_path / "tests" / "nested" / "test_example.py"
+    test_file.parent.mkdir(parents=True)
+    original = b"def test_example():\n    assert True\n"
+    test_file.write_bytes(original)
+    expected = {"tests/nested/test_example.py": sha256(original).hexdigest()}
+    assert gate._test_hashes(tmp_path) == expected
+    test_file.write_bytes(original + b"# changed after execution\n")
+    assert set(gate._test_hashes(tmp_path)) == set(expected)
+    assert gate._test_hashes(tmp_path) != expected

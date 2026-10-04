@@ -69,14 +69,42 @@ def _run(arguments, *, cwd: Path, log: Path, stdin: bytes | None = None, timeout
             display[index] = "<inline-sha256:" + sha256(command[index].encode()).hexdigest() + ">"
     with log.open("ab") as stream:
         stream.write(("\n$ " + " ".join(display) + "\n").encode())
-        result = subprocess.run(command, cwd=cwd, env=environment, input=stdin,
-                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                timeout=timeout, check=False)
+        stream.flush()
+        try:
+            result = subprocess.run(command, cwd=cwd, env=environment, input=stdin,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                    timeout=timeout, check=False)
+        except subprocess.TimeoutExpired as error:
+            # Keep the tests' partial evidence even when the wall-time budget
+            # expires. Preserve the original timeout so it can never be success.
+            captured = error.stdout
+            if isinstance(captured, str):
+                captured = captured.encode("utf-8")
+            if captured:
+                stream.write(captured)
+            raise
         stream.write(result.stdout)
     if result.returncode:
         raise RuntimeError(f"Command failed ({result.returncode}): {' '.join(display[:4])}\n"
                            + result.stdout.decode(errors="replace")[-8000:])
     return result.stdout.decode()
+
+
+def _suite_timeout(value: str) -> int:
+    try:
+        seconds = int(value)
+    except ValueError as error:
+        raise argparse.ArgumentTypeError("suite timeout must be an integer from 1 to 7200 seconds") from error
+    if not 1 <= seconds <= 7200:
+        raise argparse.ArgumentTypeError("suite timeout must be an integer from 1 to 7200 seconds")
+    return seconds
+
+
+def _default_suite(python: Path, source: Path, output: Path, log: Path, *, timeout: int) -> dict:
+    junit = output / "flowstate-default-tests.xml"
+    _run([python, "-I", "-m", "pytest", "-q", "-rs", "--junitxml", junit],
+         cwd=source, log=log, timeout=timeout)
+    return _junit(junit, DEFAULT_DAF_SKIPS)
 
 
 def _python(path: Path, temporary: Path, log: Path) -> Path:
@@ -296,10 +324,8 @@ def _qualify(args, report: dict, output: Path, log: Path) -> None:
             expected_source = {"source": str(source), "distribution": module["distribution"], "version": module["version"]}
             report["source_installation"] = json.loads(_run(
                 [source_python, "-I", "-c", _SOURCE_PROBE, json.dumps(expected_source)], cwd=temporary, log=log))
-            junit = output / "flowstate-default-tests.xml"
-            _run([source_python, "-I", "-m", "pytest", "-q", "-rs", "--junitxml", junit],
-                 cwd=source, log=log, timeout=2700)
-            report["source_tests"] = {**_junit(junit, DEFAULT_DAF_SKIPS),
+            report["source_tests"] = {**_default_suite(source_python, source, output, log,
+                                                        timeout=args.suite_timeout),
                 "selection": "original default addopts: not slow; extended tests included",
                 "source_revision": module["import_revision"], "source_tree": module["import_tree"]}
             if args.full_reproduction:
@@ -321,6 +347,8 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--sensitivity-root", type=Path,
                         help="Explicit external Sensitivity repository; otherwise materialize its optional-extra pin from retained history")
+    parser.add_argument("--suite-timeout", type=_suite_timeout, default=2700, metavar="SECONDS",
+                        help="Default source-suite wall-time budget, 1..7200 seconds (default: 2700); test selection is unchanged")
     parser.add_argument("--full-reproduction", action="store_true",
                         help="Additionally run original public slow report reproductions; private DAF export stays unqualified")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "results/monorepo-flowstate")
@@ -334,6 +362,7 @@ def main(argv=None) -> int:
         "created_at": datetime.now(timezone.utc).isoformat(), "terminal_revision": None,
         "python_version": sys.version, "platform": platform.platform(), "minimum_python": "3.12",
         "dependencies": DEPENDENCIES, "claim_scope": SCOPE, "independent_verification": False,
+        "suite_timeout_seconds": args.suite_timeout,
         "canonicalAdmission": False, "admission": "not_performed", "private_daf_qualified": False,
         "log": str(log)}
     try:

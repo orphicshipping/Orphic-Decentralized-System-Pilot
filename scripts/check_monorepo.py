@@ -103,6 +103,12 @@ def _copy_source(source: Path, target: Path) -> None:
         ".pytest_cache", ".venv", ".venv*"))
 
 
+def _test_hashes(source: Path) -> dict[str, str]:
+    """Bind original test bytes to portable repository-relative path keys."""
+    return {path.relative_to(source).as_posix(): sha256(path.read_bytes()).hexdigest()
+            for path in sorted((source / "tests").rglob("*.py"))}
+
+
 @contextmanager
 def _set_checkout(supplied: Path | None, temporary: Path, log: Path):
     """Bind the legacy exchange pin locally unless an external root is explicit."""

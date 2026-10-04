@@ -1,5 +1,6 @@
 """Host/transport tests. Python child fixtures are NOT native Godot evidence."""
 from copy import deepcopy
+import errno
 from pathlib import Path
 import json
 import os
@@ -7,6 +8,7 @@ import sys
 import threading
 import time
 from unittest.mock import patch
+from types import SimpleNamespace
 
 import pytest
 
@@ -196,3 +198,142 @@ def test_inspector_cannot_execute_saved_data(tmp_path,monkeypatch):
     monkeypatch.setattr(native.subprocess,'Popen',lambda *a,**kw:pytest.fail('engine started'))
     (tmp_path/'study.json').write_text('{"program":"do not execute"}')
     with pytest.raises(ValueError):inspect(tmp_path)
+
+
+@pytest.mark.parametrize('mode', ['echo', 'nonce'])
+def test_windows_response_open_denial_retries_without_relaxing_identity(tmp_path, monkeypatch, mode):
+    transport = mailbox(tmp_path, mode)
+    original = Path.open
+    attempts = []
+
+    def transient(path, *args, **kwargs):
+        if path == tmp_path / 'response.json' and args == ('rb',):
+            attempts.append(path)
+            if len(attempts) <= 2:
+                raise PermissionError(errno.EACCES, 'transient response sharing denial')
+        return original(path, *args, **kwargs)
+
+    # The real child starts with the host's process-group semantics. Only the
+    # parent's response-open filter models Windows on other CI platforms.
+    monkeypatch.setattr(native, 'os', SimpleNamespace(**{**vars(os), 'name': 'nt'}))
+    monkeypatch.setattr(Path, 'open', transient)
+    try:
+        if mode == 'echo':
+            assert transport.exchange('fixture', {'value': 7}) == {'value': 7}
+        else:
+            with pytest.raises(AdapterRefusal, match='identity mismatch'):
+                transport.exchange('fixture', {})
+            assert transport.closed and transport.process.poll() is not None
+        assert len(attempts) >= 3
+    finally:
+        transport.close()
+
+
+def test_windows_permanent_response_denial_uses_original_deadline(tmp_path, monkeypatch):
+    transport = mailbox(tmp_path, 'echo', timeout=5)
+    original = Path.open
+    attempts = []
+
+    def denied(path, *args, **kwargs):
+        if path == tmp_path / 'response.json' and args == ('rb',):
+            attempts.append(path)
+            raise PermissionError(errno.EACCES, 'persistent response sharing denial')
+        return original(path, *args, **kwargs)
+
+    # Waiting for the real child does not advance this clock. Once an open is
+    # denied, the next two observations straddle the original five-second end.
+    clock = lambda: 0.0 if not attempts else 4.9 if len(attempts) == 1 else 5.1
+    monkeypatch.setattr(native, 'time', SimpleNamespace(monotonic=clock, sleep=time.sleep))
+    monkeypatch.setattr(native, 'os', SimpleNamespace(**{**vars(os), 'name': 'nt'}))
+    monkeypatch.setattr(Path, 'open', denied)
+    try:
+        with pytest.raises(AdapterRefusal, match='deadline'):
+            transport.exchange('fixture', {})
+        assert len(attempts) == 2
+        assert transport.closed and transport.process.poll() is not None
+    finally:
+        transport.close()
+
+
+@pytest.mark.parametrize('platform,error_number,winerror', [('posix', errno.EACCES, None),
+    ('nt', errno.EPERM, None), ('nt', errno.EACCES, 123)])
+def test_unrelated_response_open_errors_are_not_retried(tmp_path, monkeypatch, platform, error_number, winerror):
+    transport = mailbox(tmp_path, 'echo')
+    original = Path.open
+    attempts = []
+
+    def denied(path, *args, **kwargs):
+        if path == tmp_path / 'response.json' and args == ('rb',):
+            attempts.append(path)
+            error = PermissionError(error_number, 'unrelated response denial')
+            if winerror is not None:
+                error.winerror = winerror
+            raise error
+        return original(path, *args, **kwargs)
+
+    monkeypatch.setattr(native, 'os', SimpleNamespace(**{**vars(os), 'name': platform}))
+    monkeypatch.setattr(Path, 'open', denied)
+    try:
+        with pytest.raises(AdapterRefusal, match='unrelated response denial'):
+            transport.exchange('fixture', {})
+        assert len(attempts) == 1
+        assert transport.closed and transport.process.poll() is not None
+    finally:
+        transport.close()
+
+
+def test_response_open_retry_rechecks_symlink_refusal(tmp_path, monkeypatch):
+    transport = mailbox(tmp_path, 'echo')
+    original_open, original_symlink = Path.open, Path.is_symlink
+    attempts = []
+
+    def denied(path, *args, **kwargs):
+        if path == tmp_path / 'response.json' and args == ('rb',):
+            attempts.append(path)
+            raise PermissionError(errno.EACCES, 'transient response sharing denial')
+        return original_open(path, *args, **kwargs)
+
+    def substituted(path):
+        return bool(attempts) if path == tmp_path / 'response.json' else original_symlink(path)
+
+    monkeypatch.setattr(native, 'os', SimpleNamespace(**{**vars(os), 'name': 'nt'}))
+    monkeypatch.setattr(Path, 'open', denied)
+    monkeypatch.setattr(Path, 'is_symlink', substituted)
+    try:
+        with pytest.raises(AdapterRefusal, match='not a regular file'):
+            transport.exchange('fixture', {})
+        assert len(attempts) == 1
+        assert transport.closed and transport.process.poll() is not None
+    finally:
+        transport.close()
+
+
+def test_windows_response_retry_cannot_open_after_the_original_deadline(tmp_path, monkeypatch):
+    transport = mailbox(tmp_path, 'echo', timeout=5)
+    original = Path.open
+    attempts = []
+    expired = []
+
+    def transient(path, *args, **kwargs):
+        if path == tmp_path / 'response.json' and args == ('rb',):
+            attempts.append(path)
+            if len(attempts) == 1:
+                raise PermissionError(errno.EACCES, 'transient response sharing denial')
+        return original(path, *args, **kwargs)
+
+    def sleep(seconds):
+        if attempts:
+            expired.append(True)
+        time.sleep(seconds)
+
+    clock = lambda: 5.1 if expired else 4.9 if attempts else 0.0
+    monkeypatch.setattr(native, 'time', SimpleNamespace(monotonic=clock, sleep=sleep))
+    monkeypatch.setattr(native, 'os', SimpleNamespace(**{**vars(os), 'name': 'nt'}))
+    monkeypatch.setattr(Path, 'open', transient)
+    try:
+        with pytest.raises(AdapterRefusal, match='deadline'):
+            transport.exchange('fixture', {})
+        assert len(attempts) == 1
+        assert transport.closed and transport.process.poll() is not None
+    finally:
+        transport.close()

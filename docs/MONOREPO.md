@@ -210,6 +210,12 @@ python scripts/superrepo.py check --group measurement --group math --output-dir 
 ```
 
 FlowState's default selection follows its original `not slow` configuration.
+The default source suite has a 2700-second wall-time budget. On a slower host,
+`--suite-timeout 5400` extends that budget without changing the test selection;
+the accepted range is 1–7200 seconds and the report records the selected value.
+A timed-out run remains failed and retains captured output in its command log.
+The separate slow reproduction lane keeps its own timeout.
+
 To run its additional public slow reproduction lane:
 
 ```sh

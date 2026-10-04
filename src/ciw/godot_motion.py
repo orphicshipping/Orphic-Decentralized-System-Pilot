@@ -9,6 +9,7 @@ from __future__ import annotations
 from copy import deepcopy
 from hashlib import file_digest
 from importlib.resources import files
+import errno
 import os
 from pathlib import Path
 import re
@@ -131,15 +132,37 @@ class _Mailbox:
                 out.write(raw)
             os.replace(pending, request_path)
             end = time.monotonic() + self.timeout
-            while not response_path.exists():
-                if self.error or self.process.poll() is not None:
-                    raise ValueError(self.error or "Engine exited before responding")
-                if time.monotonic() >= end:
+            retrying_open = False
+            while True:
+                if retrying_open and time.monotonic() >= end:
                     raise TimeoutError("Engine command deadline exceeded")
-                time.sleep(.002)
-            require(not response_path.is_symlink(), "Engine response is not a regular file")
-            with response_path.open("rb") as stream:
-                raw = stream.read(LIMIT + 1)
+                while not response_path.exists():
+                    if self.error or self.process.poll() is not None:
+                        raise ValueError(self.error or "Engine exited before responding")
+                    if time.monotonic() >= end:
+                        raise TimeoutError("Engine command deadline exceeded")
+                    time.sleep(.002)
+                require(not response_path.is_symlink(), "Engine response is not a regular file")
+                try:
+                    stream = response_path.open("rb")
+                except PermissionError as error:
+                    # CPython's Windows io.open can transiently report EACCES
+                    # (errno 13, winerror None) after atomic publication. Retry
+                    # only that observed open failure within the original
+                    # deadline; content reads and validation are never retried.
+                    if (os.name != "nt" or error.errno != errno.EACCES
+                            or getattr(error, "winerror", None) is not None):
+                        raise
+                    if self.error or self.process.poll() is not None:
+                        raise ValueError(self.error or "Engine exited before responding") from error
+                    if time.monotonic() >= end:
+                        raise TimeoutError("Engine command deadline exceeded") from error
+                    time.sleep(.002)
+                    retrying_open = True
+                    continue
+                with stream:
+                    raw = stream.read(LIMIT + 1)
+                break
             require(len(raw) <= LIMIT, "Engine response exceeds byte budget")
             reply = _json(raw)
             keys(reply, {"schema", "sequence", "nonce", "status", "data", "error"})
