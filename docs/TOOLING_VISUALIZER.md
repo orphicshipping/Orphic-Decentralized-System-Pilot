@@ -16,6 +16,8 @@ Search by workflow, capability or provider role. Spaces, hyphens and underscores
 are interchangeable for search, and every word must match: `calibrated observable`
 finds `calibrated-observable`. Click a capability in the map to use it as a filter,
 or a provider requirement to inspect its full declared revision and identity.
+Capability selection reveals and focuses the search field so you can refine the
+filter immediately with the keyboard, including when leaving map focus.
 Connections show catalog relationships, not execution order or data flow. The
 active connection follows provider inspection, pointer hover and keyboard focus.
 
@@ -34,7 +36,9 @@ more room to inspect relationships. Inspecting a provider returns to the full
 layout so its details are visible. Press `/` to focus search when not editing a
 field; this also leaves map focus so the search is visible. Press `Escape` to
 return from a provider, clear an active search or filter, or exit map focus. The selection and inspector controls also work with
-ordinary Tab and Enter keyboard navigation.
+ordinary Tab and Enter keyboard navigation. Copy actions keep keyboard focus.
+If browser clipboard access is unavailable, the command is selected for manual
+copying and instructions appear beside it; press Ctrl+C or Command+C.
 
 The page works offline with embedded assets and a Content Security Policy that
 disables network connections. Exporting and inspecting it do not provision,
@@ -67,7 +71,9 @@ The script navigates generated `file:` pages and saves HTML, screenshots and
 `browser-report.json` into a new directory. It checks catalog parity, provider
 pins, all four inspector views, exact Source records, keyboard focus and
 shortcuts, normalized workflow search and filters, capability navigation,
-matching active connectors, map focus, command help and typed ports. Map checks
+matching active connectors, map focus, command help and typed ports. Clipboard
+checks cover exact command text, pending requests, focus preservation and the
+manual-copy fallback when access is denied. Map checks
 verify the default provider cards remain visible and connectors stay aligned
 after internal scrolling, resizing and selection changes. It also checks
 hostile strings as inert text and both themes at five widths from 320 to

@@ -265,10 +265,49 @@ def main(argv=None):
             expect(page.locator("#map-title")).to_have_text("net board")
             check("Board command search leads to its exact help command", True)
 
+            # Controlled browser API outcomes exercise offline permission failures
+            # without reading or writing the operator's actual system clipboard.
+            page.evaluate("""() => {
+                window.clipboardAttempts = [];
+                Object.defineProperty(navigator, "clipboard", {configurable: true, value: {
+                    writeText: text => {window.clipboardAttempts.push(text); return new Promise(resolve => {window.completeCopy = resolve;});}
+                }});
+            }""")
+            copy_button = page.locator("#inspector-content .copy-command")
+            copy_button.focus()
+            copy_button.press("Enter")
+            expect(copy_button).to_have_attribute("aria-disabled", "true")
+            check("Pending clipboard copy preserves keyboard focus", copy_button.evaluate("element => element === document.activeElement"))
+            copy_button.press("Enter")
+            check("Repeated activation does not duplicate a pending clipboard request", page.evaluate("window.clipboardAttempts") == [commands["net board"]["help_command"]])
+            page.evaluate("window.completeCopy()")
+            expect(copy_button).to_have_text("Copied")
+            check("Successful copy preserves focus and the exact catalog command", copy_button.evaluate("element => element === document.activeElement") and page.evaluate("window.clipboardAttempts") == [commands["net board"]["help_command"]])
+            expect(page.locator("#inspector-content .copy-feedback")).to_have_text("Command copied. Nothing executed.")
+            page.evaluate("""() => {
+                Object.defineProperty(navigator, "clipboard", {configurable: true, value: {
+                    writeText: async () => {throw new Error("Permission denied for browser regression");}
+                }});
+            }""")
+            copy_button.press("Enter")
+            expect(copy_button).to_have_text("Copy unavailable")
+            command_text = page.locator("#inspector-content .command-box code")
+            expect(command_text).to_be_focused()
+            check("Denied clipboard access selects the exact command for manual copying", page.evaluate("String(window.getSelection())") == commands["net board"]["help_command"])
+            expect(page.locator("#inspector-content .copy-feedback")).to_contain_text("Command selected")
+            check("Manual copy instructions are visible beside the command", page.locator("#inspector-content .copy-feedback").is_visible())
+            page.screenshot(path=str(root / "tooling-copy-fallback.png"), full_page=True)
+
             page.locator('[data-scope="workflows"]').click()
             page.locator('#tool-list [data-tool-id="calibrated-observable"]').click()
             capability = default["capabilities"][0]
-            page.locator("#map .capability").filter(has_text=capability).first.click()
+            page.locator("#focus-map").click()
+            capability_button = page.locator("#map .capability").filter(has_text=capability).first
+            capability_button.focus()
+            capability_button.press("Enter")
+            expect(page.locator("#search")).to_be_focused()
+            check("Keyboard capability filtering reveals and focuses search", page.locator("#search").is_visible() and "map-focused" not in (page.locator(".workspace").get_attribute("class") or ""))
+            check("Capability filter text is selected for immediate refinement", page.locator("#search").evaluate("element => element.selectionStart === 0 && element.selectionEnd === element.value.length"))
             check("Clicking a capability searches that declaration", page.locator("#search").input_value() == capability)
             check("Capability navigation narrows to matching workflows", page.locator("#tool-list .tool").count() == len([row for row in catalog["workflows"] if capability.lower() in searchable(row)]))
             page.locator("#clear-search").click()
@@ -320,7 +359,8 @@ def main(argv=None):
     report = {"status": "failed" if failure else "passed", "count": len(checks), "checks": checks,
               "failure": failure, "errors": errors, "external_requests": external,
               "browser_version": browser_version, "offline_document_mode": "file",
-              "provider_execution": "not_performed", "catalog_counts": {
+              "provider_execution": "not_performed",
+              "clipboard_permission_states": "Controlled pending, success and denial; system clipboard untouched", "catalog_counts": {
                   "workflows": len(workflows), "operations": len(operations), "commands": len(commands)}}
     (root / "browser-report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
     print(json.dumps(report, indent=2))

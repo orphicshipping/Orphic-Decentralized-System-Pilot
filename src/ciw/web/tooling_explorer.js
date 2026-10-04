@@ -24,24 +24,46 @@
   function fact(parent, name, value) {const dl = make("dl", "fact"); dl.append(make("dt", null, name), make("dd", null, value === null || value === undefined ? "Not declared" : typeof value === "object" ? JSON.stringify(value) : String(value))); parent.append(dl);}
   function raw(parent, value, open = false) {const details = make("details", "source-record"); details.open = open; details.append(make("summary", null, "Inspect source declaration"), make("pre", null, JSON.stringify(value, null, 2))); parent.append(details);}
   function command(parent, text, label) {
-    const box = make("div", "command-box"); box.append(make("code", null, text));
+    const box = make("div", "command-box"), commandText = make("code", null, text);
+    commandText.tabIndex = -1; box.append(commandText);
+    const feedback = make("p", "copy-feedback"); feedback.hidden = true;
     const original = label || "Copy command";
-    let feedbackTimer;
+    let feedbackTimer, copying = false;
+    function announce(message) {
+      feedback.textContent = message; feedback.hidden = false;
+      byId("action-status").textContent = message;
+    }
     const copy = button(original, "copy-command", async () => {
-      clearTimeout(feedbackTimer); copy.disabled = true; copy.textContent = "Copying…";
+      if (copying) return;
+      copying = true; clearTimeout(feedbackTimer);
+      copy.setAttribute("aria-disabled", "true"); copy.textContent = "Copying…";
       try {
         await navigator.clipboard.writeText(text);
+        if (!box.isConnected) return;
         copy.textContent = "Copied"; copy.classList.add("is-copied");
-        byId("action-status").textContent = "Command copied. Nothing executed.";
+        announce("Command copied. Nothing executed.");
       } catch (_) {
+        if (!box.isConnected) return;
         copy.textContent = "Copy unavailable";
-        byId("action-status").textContent = "Clipboard unavailable. Select the command text to copy it.";
+        if (document.activeElement === copy) {
+          commandText.focus({preventScroll: true});
+          const selection = window.getSelection(), range = document.createRange();
+          range.selectNodeContents(commandText); selection.removeAllRanges(); selection.addRange(range);
+          announce("Clipboard unavailable. Command selected; press Ctrl+C or \u2318C to copy.");
+        } else {
+          announce("Clipboard unavailable. Select the command text and use your copy shortcut.");
+        }
       } finally {
-        copy.disabled = false;
+        copying = false; copy.removeAttribute("aria-disabled");
         feedbackTimer = setTimeout(() => {if (copy.isConnected) {copy.textContent = original; copy.classList.remove("is-copied");}}, 1800);
       }
     });
-    box.append(copy); parent.append(box);
+    box.append(copy, feedback); parent.append(box);
+  }
+  function filterCapability(capability) {
+    setMapFocus(false); byId("search").value = capability;
+    state.inspected = null; state.inspectionOrigin = null;
+    render(); byId("search").focus(); byId("search").select();
   }
   function tags(parent, values) {const group = make("div", "tag-list"); values.forEach(value => group.append(make("span", "tag", value))); parent.append(group);}
   function setMapFocus(enabled) {
@@ -146,7 +168,7 @@
     const left = mapColumn(state.scope === "commands" ? "Surface" : "Capabilities");
     if (state.scope === "commands") left.append(make("p", "map-note", "NET command plane"));
     else if (!(row.capabilities || []).length) left.append(make("p", "map-note", "No capability tags declared"));
-    else row.capabilities.forEach(capability => mapNode(left, capability, "capability", null, () => {byId("search").value = capability; state.inspected = null; render();}));
+    else row.capabilities.forEach(capability => mapNode(left, capability, "capability", null, () => filterCapability(capability)));
     const middle = mapColumn(state.scope === "workflows" ? "Workflow" : state.scope === "operations" ? "Operation" : "Command");
     mapNode(middle, state.scope === "workflows" ? title(row.workflow) : idOf(row), "selected", row.role ? readable(row.role) : state.scope === "operations" ? "BUILT-IN" : "CLI SURFACE");
     const right = mapColumn(state.scope === "commands" ? "Inspect usage" : "Requirements");

@@ -54,8 +54,9 @@ button, input, select { font: inherit; }
 button { color: inherit; cursor: pointer; }
 button, input, select { border: 1px solid var(--line); border-radius: 6px; background: var(--panel); }
 button:hover { background-color: var(--hover); border-color: var(--faint); }
-button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible, .command-box code:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 button:disabled { cursor: default; }
+button[aria-disabled="true"] { cursor: progress; }
 a { color: inherit; }
 input, select { color: var(--text); padding: 10px 11px; width: 100%; min-width: 0; font-size: 12px; }
 input::placeholder { color: var(--faint); }
@@ -173,6 +174,7 @@ kbd { font: 10px var(--mono); color: var(--muted); border: 1px solid var(--line)
 .requirement span { color: var(--muted); font-size: 10px; line-height: 1.6; display: block; margin-top: 7px; }
 .command-box { background: var(--canvas); padding: 13px; border: 1px solid var(--line); border-radius: 5px; margin-top: 9px; }
 .command-box code { font-size: 12px; display: block; line-height: 1.8; white-space: pre-wrap; overflow-wrap: anywhere; }
+.copy-feedback { margin-top: 10px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 .copy-command { border: 1px solid var(--line); border-radius: 4px; background: var(--raised); color: var(--accent-text); padding: 5px 8px; margin-top: 12px; font-size: 10px; }
 .back-button { background: none; border: 0; border-radius: 0; color: var(--accent-text); font-size: 11px; padding: 0 0 17px; }
 .empty-state { padding: 28px 10px; color: var(--muted); font-size: 12px; line-height: 1.8; }
