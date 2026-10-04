@@ -1,8 +1,8 @@
 {
   "schema": "ciw.temperature-pilot-plan.v1",
-  "status": "draft_requires_physical_setup_and_agreed_acceptance_criteria",
+  "status": "literature_based_candidate_requires_physical_build_and_qualification",
   "purpose": "Planning record for one installed polymer heating-cycle temperature chain; not an executable processing request.",
-  "evidence_origin": "no_experimental_data_supplied",
+  "evidence_origin": "published_design_reference_no_local_experimental_data",
   "physical_qualification": "not_established",
   "product_conformity_assessment": {
     "record": "conformity-assessment.json",
@@ -11,7 +11,7 @@
     "independent_of_processing_acceptance": true
   },
   "protocol": {
-    "version": null,
+    "version": "literature-candidate.1",
     "owner": null,
     "technical_reviewer": null,
     "freeze_date": null,
@@ -20,75 +20,149 @@
   "measurand": {
     "quantity": "polymer_temperature_during_heating_cycle",
     "reported_unit": "K",
-    "target_location_and_coordinate_frame": null,
-    "spatial_averaging_convention": null,
-    "time_origin_and_averaging_convention": null,
-    "instrumented_or_undisturbed_polymer_target": null,
-    "polymer_grade_and_lot": null,
-    "specimen_geometry_and_conditioning": null,
-    "material_state_and_excluded_transitions": null,
+    "target_location_and_coordinate_frame": "Proposed coupon-centred coordinates; thermocouple junction 1 mm below the heated face; as-installed survey required.",
+    "spatial_averaging_convention": "Local sensing-junction result; effective sensing volume and spatial gradient correction require characterization.",
+    "time_origin_and_averaging_convention": "Proposed acquisition-clock origin at first indicated 323.15 K crossing; retain unsmoothed samples and arrival times.",
+    "instrumented_or_undisturbed_polymer_target": "Instrumented specimen local polymer temperature; undisturbed-material temperature is outside the initial claim.",
+    "polymer_grade_and_lot": {
+      "selected_material": "Polycarbonate, following Rodrigues2021 PC/#600 case",
+      "grade": null,
+      "lot": null,
+      "conditioning_record": null
+    },
+    "specimen_geometry_and_conditioning": {
+      "literature_dimensions_mm": [
+        30,
+        20,
+        4
+      ],
+      "selected_surface_finish": "600-mesh preparation",
+      "as_built_dimensions": null,
+      "conditioning_record": null
+    },
+    "material_state_and_excluded_transitions": {
+      "proposed_state": "solid",
+      "grade_specific_transition_and_exclusion_record": null
+    },
     "sensor_observation_label": "raw_observation",
     "calibrated_output_label": "calibrated_sensing_element_temperature",
     "installed_output_label": "local_polymer_temperature_estimate",
-    "optional_model_output_target": null
+    "optional_model_output_target": "Proposed same local instrumented-polymer temperature; no core or field reconstruction in the initial comparison."
   },
   "measurement_chain": {
-    "sensor_type_model_serial": null,
-    "readout_model_serial_firmware": null,
-    "raw_quantity_and_unit": null,
-    "installation_method_and_drawing": null,
-    "position_tolerance": null,
+    "sensor_type_model_serial": {
+      "published_sensor": "K-type thermocouple",
+      "selected_unit_serial": null,
+      "wire_diameter_and_junction_geometry": null
+    },
+    "readout_model_serial_firmware": {
+      "published_architecture": "MAX31855, ATMEGA2560, USB text logging",
+      "selected_unit_serial": null,
+      "firmware_identity": null
+    },
+    "raw_quantity_and_unit": "Proposed MAX31855 indicated temperature after internal thermocouple conversion, explicitly converted to K; retain original acquisition bytes and fault flags. Subsequent affine correction is not global EMF linearization.",
+    "installation_method_and_drawing": {
+      "published_arrangement": "Epoxy-fixed subsurface junction; opposite face on steel support",
+      "as_installed_drawing_and_photo": null
+    },
+    "position_tolerance": {
+      "proposed_tolerance_m": 0.0001,
+      "as_installed_survey": null
+    },
     "thermal_contact_and_insertion_assessment": null,
     "calibration_record": null,
-    "reference_instrument_and_calibration_chain": null,
+    "reference_instrument_and_calibration_chain": {
+      "proposed_method": "Independent calibrated reference; controlled-bath comparison informed by NIST thermocouple service",
+      "instrument_identity": null,
+      "certificate_and_uncertainty_chain": null
+    },
     "reference_response_time_and_placement": null,
-    "acquisition_clock_and_alignment": null,
-    "original_acquisition_record_retention": null,
-    "authentication_contract_if_required": null
+    "acquisition_clock_and_alignment": {
+      "proposed_method": "Preserve device sequence, acquisition timestamp and host arrival timestamp; independently measure latency and clock drift",
+      "alignment_evidence": null
+    },
+    "original_acquisition_record_retention": "Proposed immutable original-byte retention with content hashes, acquisition metadata and fault records; normalized MCP declarations remain separately identified.",
+    "authentication_contract_if_required": "Origin authentication is not established; define signed acquisition separately if required by the pilot recipient."
   },
   "operating_envelope": {
-    "temperature_range_K": null,
-    "heating_and_cooling_rate_range_K_per_s": null,
-    "cycle_profiles_and_duration_s": null,
-    "ambient_conditions": null,
-    "sampling_interval_s": null,
-    "allowed_timing_uncertainty_s": null,
-    "allowed_installations_devices_and_operators": null,
-    "missing_and_saturation_policy": null,
+    "temperature_range_K": [
+      323.15,
+      353.15
+    ],
+    "heating_and_cooling_rate_range_K_per_s": [
+      -0.1,
+      0.1
+    ],
+    "cycle_profiles_and_duration_s": {
+      "published_record_duration_s": 300,
+      "proposed_maximum_MCP_window_samples": 64,
+      "full_cycle_covariance_handoff": null
+    },
+    "ambient_conditions": {
+      "proposed_temperature_range_K": [
+        293.15,
+        298.15
+      ],
+      "measured_ambient_record": null
+    },
+    "sampling_interval_s": 0.2,
+    "allowed_timing_uncertainty_s": 0.01,
+    "allowed_installations_devices_and_operators": "Proposed claim restricted to one identified chain and installation; no device-family generalization.",
+    "missing_and_saturation_policy": "Retain acquisition faults and missing samples; never replace observations with estimates; numerical acceptance remains indeterminate when required observations are unavailable.",
     "unsupported_conditions_policy": "flag_or_refuse_until_separately_qualified"
   },
   "acceptance_criteria": {
-    "customer_decision_and_specification": null,
-    "required_uncertainty_K": null,
-    "coverage_convention_probability_and_factor": null,
-    "bias_and_error_limits_K": null,
-    "reproducibility_limit_K": null,
-    "reference_comparison_rule": null,
-    "operational_accept_reject_indeterminate_rule": null,
-    "pinn_gpinn_improvement_or_noninferiority_margin": null,
+    "customer_decision_and_specification": "Provisional research targets chosen for planning; no customer acceptance agreement or demonstrated performance is implied.",
+    "required_uncertainty_K": 2.0,
+    "coverage_convention_probability_and_factor": {
+      "proposed_expanded_uncertainty_factor": 2.0,
+      "target_coverage_probability": 0.95,
+      "basis": "Planning target only; distribution and achieved coverage must be justified experimentally"
+    },
+    "bias_and_error_limits_K": {
+      "proposed_absolute_bias_limit": 1.0,
+      "proposed_maximum_absolute_difference": 2.0,
+      "status": "Design targets only; reference uncertainty must enter the comparison"
+    },
+    "reproducibility_limit_K": 1.0,
+    "reference_comparison_rule": "Proposed matched-location/time differences with reference uncertainty and covariance; independently require maximum uncertainty and bias limits.",
+    "operational_accept_reject_indeterminate_rule": "Proposed closed uncertainty-interval containment at submitted instants only; physical qualification and between-sample excursions remain separate.",
+    "pinn_gpinn_improvement_or_noninferiority_margin": {
+      "planned_rule": "Freeze a cycle-level noninferiority margin after preliminary variance estimates and before held-out outcomes",
+      "margin_K": null
+    },
     "evidence_completeness_review": "pending",
     "physical_qualification_review": "pending"
   },
   "experiment_design": {
     "independent_unit": "specimen_and_complete_heating_cycle",
-    "static_comparison_points_and_sequences": null,
-    "dynamic_profiles_and_conditions": null,
-    "replication_across_days_installations_operators_devices": null,
-    "randomization_and_blocking": null,
+    "static_comparison_points_and_sequences": "Proposed 323.15, 338.15 and 353.15 K controlled-bath comparisons in both directions, plus before/after checks; characterize the complete readout channel.",
+    "dynamic_profiles_and_conditions": "Proposed slow heating with separately recorded intermittent cooling; record actual rate, ambient, placement and reference response. Do not adopt literature transient averages as instantaneous bounds.",
+    "replication_across_days_installations_operators_devices": "Proposed independent specimens/cycles across days and reinstallations; cross operators where feasible. Choose counts after preliminary variance estimation.",
+    "randomization_and_blocking": "Proposed day/installation blocks with randomized feasible profile order; preserve specimen thermal history.",
     "preliminary_variance_estimates": null,
     "confirmatory_sample_size_and_precision_power_rationale": null,
-    "development_tuning_and_confirmatory_split_manifest": null,
+    "development_tuning_and_confirmatory_split_manifest": {
+      "planned_grouping": "Keep specimen and whole cycle together; reserve complete days/installations for confirmatory assessment where feasible",
+      "frozen_record_ids": null
+    },
     "split_constraint": "keep_specimens_and_cycles_grouped_and_final_reference_data_untouched",
-    "additional_held_out_day_lot_installation_groups": null,
-    "within_envelope_validation_conditions": null,
-    "separate_ood_stress_conditions": null,
-    "independent_instrument_or_laboratory_comparison": null
+    "additional_held_out_day_lot_installation_groups": "Proposed held-out days and reinstallations for the single-chain claim; additional lots require a separately supported claim.",
+    "within_envelope_validation_conditions": "Proposed interior and endpoint temperature/rate conditions with uncertainty-aware independent reference comparisons.",
+    "separate_ood_stress_conditions": "Proposed rates beyond the declared envelope, changed contact/placement, drift, missingness and saturation; require unsupported/indeterminate behaviour.",
+    "independent_instrument_or_laboratory_comparison": {
+      "proposed_route": "Independent calibrated reference and, where feasible, external laboratory comparison",
+      "retained_comparison_record": null
+    }
   },
   "uncertainty_evidence": {
     "measurement_model_and_source_ledger": null,
     "joint_raw_gain_offset_covariance_record": null,
     "reference_and_fit_double_counting_review": null,
-    "resolution_noise_drift_hysteresis": null,
+    "resolution_noise_drift_hysteresis": {
+      "required_effects": "Readout quantization, noise, cold-junction compensation, internal linearization, fit residual, drift and hysteresis",
+      "measured_evidence": null
+    },
     "installed_lag_gradients_contact_insertion_timing": null,
     "correction_cross_covariance_assessment": null,
     "model_discrepancy_and_condition_dependence": null,
@@ -113,5 +187,41 @@
     "workload_performance_and_cost": null,
     "claim": "specified_processing_of_committed_inputs_only",
     "physical_qualification_inferred": false
+  },
+  "source_selection": {
+    "status": "design_reference_selected_not_physical_procurement_or_dataset_acquisition",
+    "apparatus_reference": {
+      "id": "Rodrigues2021",
+      "url": "https://revistas.ufpr.br/reterm/article/view/80462",
+      "doi": "10.5380/reterm.v20i1.80462",
+      "selected_case": "Polycarbonate, 600-mesh surface",
+      "published_readout_resolution_K": 0.25,
+      "published_transient_rate_K_s": 0.0339,
+      "published_baseline_temperature_K": 347.04,
+      "source_locator": "Methods and Table 3; rate unit follows surrounding prose"
+    },
+    "reference_method": {
+      "url": "https://www.nist.gov/pml/sensor-science/temperature-humidity/thermocouples-calibrations-services",
+      "published_capability": "SPRT bath comparison; expanded uncertainty 0.1 K at 90 degrees Celsius",
+      "limitation": "Service capability is not this pilot's calibration, installed uncertainty or a transferred certificate"
+    },
+    "proposed_not_source_measurements": {
+      "temperature_and_rate_envelopes": "Selected candidate window around the published case; instantaneous rate coverage is unestablished",
+      "required_uncertainty_and_error_limits": "Engineering research targets, informed by readout resolution and reference capability; not published achieved uncertainties or customer-agreed criteria",
+      "timing_and_position_targets": "Proposed design tolerances; no achieved timing or placement evidence",
+      "calibration_points": "Proposed coverage of the pilot window; no measurements performed"
+    },
+    "dataset_suitability": {
+      "usable_as": "Apparatus/protocol design reference",
+      "not_usable_as": "Independent confirmatory dataset or traceability chain",
+      "gaps": [
+        "No machine-readable raw-data link located in the inspected paper",
+        "No reference certificate or complete installed uncertainty established",
+        "Air-cycle timing and independent heat input are insufficient for a bounded physics-informed validation dataset"
+      ],
+      "current_software_limit": "Published duration and sampling imply about 1500 observations; affine processing admits at most 64 per request. Preserve complete cycles externally; do not silently truncate, downsample or claim covariance across independent windows."
+    },
+    "retention": "Paraphrased facts and primary-source links only; no paper PDF or figure redistribution",
+    "selection_review": "2026-10-04"
   }
 }

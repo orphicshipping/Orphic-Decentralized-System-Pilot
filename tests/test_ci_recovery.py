@@ -5,6 +5,7 @@ import ast
 import importlib.util
 import io
 import os
+import shlex
 from pathlib import Path
 import subprocess
 import sys
@@ -37,6 +38,7 @@ def test_workbench_is_normal_python_without_runtime_source_expansion():
     'atomtrapping/Parameterized-Lyapunov-Stability-Runtime.git',
     'atomtrapping/Notations-Compute-Runtime.git',
     'atomtrapping/notations-data-intake',
+    'atomtrapping/Notations-FrameMapper-RunTime.git',
 ])
 def test_helper_answers_only_an_allowlisted_repo(path):
     request = 'protocol=https\nhost=github.com\npath=' + path + '\n\n'
@@ -61,11 +63,16 @@ def test_helper_refuses_unbound_or_ambiguous_destinations(wire_request):
 
 def test_configuration_contains_no_token_and_quotes_paths(tmp_path, monkeypatch):
     helper = tmp_path / "directory with spaces" / "helper's file.py"
+    interpreter = tmp_path / "Python with spaces" / "python's executable"
     monkeypatch.setenv('CIW_PROVIDER_READ_TOKEN', 'test-secret')
+    monkeypatch.setattr(access.sys, 'executable', str(interpreter))
     config = access.configuration(helper)
     assert 'test-secret' not in str(config)
     assert config['GIT_CONFIG_COUNT'] == '3'
     assert config['GIT_CONFIG_VALUE_0'] == ''
+    assert shlex.split(config['GIT_CONFIG_VALUE_1'][1:]) == [
+        interpreter.resolve().as_posix(), helper.resolve().as_posix(), 'credential',
+    ]
     assert config['GIT_CONFIG_VALUE_2'] == 'true'
     assert config['GIT_TERMINAL_PROMPT'] == '0'
 
@@ -87,6 +94,56 @@ def test_unreviewed_events_never_configure_credentials(tmp_path, monkeypatch, ev
     monkeypatch.setenv('GITHUB_REF', ref)
     monkeypatch.setenv('GITHUB_ENV', str(destination))
     assert access.main(['configure']) == 2
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize('event,ref', [
+    ('push', 'refs/heads/main'), ('push', 'refs/tags/v0.1.0'),
+    ('workflow_dispatch', 'refs/heads/main'),
+])
+def test_trusted_missing_secret_has_actionable_diagnostic_without_writing(tmp_path, monkeypatch, capsys, event, ref):
+    destination = tmp_path / 'env'
+    monkeypatch.delenv('CIW_PROVIDER_READ_TOKEN', raising=False)
+    for key, value in {'GITHUB_ACTIONS': 'true', 'GITHUB_EVENT_NAME': event,
+                       'GITHUB_REF': ref, 'GITHUB_ENV': str(destination)}.items():
+        monkeypatch.setenv(key, value)
+    assert access.main(['configure']) == 2
+    message = capsys.readouterr().err
+    assert 'empty or unavailable' in message
+    assert 'docs/CI_INBOX_RECOVERY.md' in message
+    assert 'no provider tests were qualified' in message
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize('event,ref', [
+    ('pull_request', 'refs/pull/1/merge'),
+    ('pull_request_target', 'refs/heads/main'),
+    ('push', 'refs/heads/unreviewed'),
+])
+def test_event_refusal_precedes_any_secret_read(tmp_path, monkeypatch, capsys, event, ref):
+    destination = tmp_path / 'env'
+    for key, value in {'GITHUB_ACTIONS': 'true', 'GITHUB_EVENT_NAME': event,
+                       'GITHUB_REF': ref, 'GITHUB_ENV': str(destination)}.items():
+        monkeypatch.setenv(key, value)
+    def forbidden():
+        pytest.fail('An untrusted event attempted to read the provider secret')
+    monkeypatch.setattr(access, 'read_token', forbidden)
+    assert access.main(['configure']) == 2
+    assert 'intentionally unavailable' in capsys.readouterr().err
+    assert not destination.exists()
+
+
+@pytest.mark.parametrize('token', ['synthetic invalid token', 'x' * 4097], ids=['whitespace', 'too-long'])
+def test_malformed_secret_is_not_echoed_or_written(tmp_path, monkeypatch, capsys, token):
+    destination = tmp_path / 'env'
+    for key, value in {'CIW_PROVIDER_READ_TOKEN': token, 'GITHUB_ACTIONS': 'true',
+                       'GITHUB_EVENT_NAME': 'push', 'GITHUB_REF': 'refs/heads/main',
+                       'GITHUB_ENV': str(destination)}.items():
+        monkeypatch.setenv(key, value)
+    assert access.main(['configure']) == 2
+    output = capsys.readouterr()
+    assert 'invalid format' in output.err
+    assert token not in output.out + output.err
     assert not destination.exists()
 
 

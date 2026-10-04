@@ -81,7 +81,7 @@ jobs:
           report=json.load(open('agent-sdk-evidence/report.json'))
           assert report['status']=='passed' and report['check_count']==14
           assert len(set(report['execution_ids']))==3
-          for path,count in [('thermal-contracts.xml',263),('thermal-installed.xml',176)]:
+          for path,count in [('thermal-contracts.xml',285),('thermal-installed.xml',198)]:
               suites=list(ET.parse(path).getroot().iter('testsuite'))
               assert sum(int(s.attrib['tests']) for s in suites)==count
               assert all(int(s.attrib[k])==0 for s in suites for k in ('failures','errors','skipped'))
