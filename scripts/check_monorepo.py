@@ -80,9 +80,19 @@ def _run(arguments, *, cwd: Path, log: Path, timeout: int = 300) -> str:
         display[code_index] = "<inline-sha256:" + sha256(command[code_index].encode()).hexdigest() + ">"
     with log.open("ab") as stream:
         stream.write(("\n$ " + " ".join(display) + "\n").encode())
-        result = subprocess.run(command, cwd=cwd, env=_environment(),
-                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                timeout=timeout, check=False)
+        stream.flush()
+        try:
+            result = subprocess.run(command, cwd=cwd, env=_environment(),
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                    timeout=timeout, check=False)
+        except subprocess.TimeoutExpired as error:
+            # Retain partial diagnostics while preserving timeout as failure.
+            captured = error.stdout
+            if isinstance(captured, str):
+                captured = captured.encode("utf-8")
+            if captured:
+                stream.write(captured)
+            raise
         stream.write(result.stdout)
     if result.returncode:
         tail = result.stdout.decode(errors="replace")[-6000:]

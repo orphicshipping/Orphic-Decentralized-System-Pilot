@@ -85,9 +85,19 @@ def _run(arguments, *, cwd: Path, temporary: Path, log: Path, timeout=600) -> st
     command = _command(arguments, cwd=cwd, environment=environment)
     with log.open("ab") as stream:
         stream.write(("\n$ " + " ".join(command) + "\n").encode())
-        result = subprocess.run(command, cwd=cwd, env=environment,
-                                stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
-                                timeout=timeout, check=False)
+        stream.flush()
+        try:
+            result = subprocess.run(command, cwd=cwd, env=environment,
+                                    stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                    timeout=timeout, check=False)
+        except subprocess.TimeoutExpired as error:
+            # Retain partial diagnostics while preserving timeout as failure.
+            captured = error.stdout
+            if isinstance(captured, str):
+                captured = captured.encode("utf-8")
+            if captured:
+                stream.write(captured)
+            raise
         stream.write(result.stdout)
     if result.returncode:
         raise RuntimeError(f"Web command failed ({result.returncode}): {' '.join(command[:5])}\n"

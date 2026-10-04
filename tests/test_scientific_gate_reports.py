@@ -99,24 +99,30 @@ def test_test_hashes_match_declared_paths_and_detect_byte_mutation(monkeypatch, 
     assert gate._test_hashes(tmp_path) != expected
 
 
+@pytest.mark.parametrize("name", ["check_monorepo", "check_monorepo_inference",
+                                 "check_monorepo_math", "check_monorepo_operations",
+                                 "check_monorepo_surface"])
 @pytest.mark.parametrize("captured", ["completed ρ test\n".encode("utf-8"), "completed ρ test\n", None])
-def test_surface_timeout_preserves_partial_output_and_original_failure(monkeypatch, tmp_path, captured):
+def test_scientific_timeout_preserves_partial_output_and_original_failure(monkeypatch, tmp_path, name, captured):
     from subprocess import TimeoutExpired
 
-    gate = _gate(monkeypatch, "check_monorepo_surface")
+    gate = _gate(monkeypatch, name)
     failure = TimeoutExpired(["fixture", "run"], 7, output=captured)
+    log = tmp_path / "commands.log"
+    previous = b"previous completed command\n"
+    log.write_bytes(previous)
 
     def timeout(*args, **kwargs):
         assert kwargs["timeout"] == 7
+        assert log.read_bytes() == previous + b"\n$ fixture run\n"
         raise failure
 
     monkeypatch.setattr(gate.subprocess, "run", timeout)
-    log = tmp_path / "commands.log"
     with pytest.raises(TimeoutExpired) as caught:
         gate._run(["fixture", "run"], cwd=tmp_path, log=log, timeout=7)
     assert caught.value is failure
     expected = captured.encode("utf-8") if isinstance(captured, str) else captured
-    assert log.read_bytes() == b"\n$ fixture run\n" + (expected or b"")
+    assert log.read_bytes() == previous + b"\n$ fixture run\n" + (expected or b"")
 
 
 @pytest.mark.parametrize("value", ["0", "-1", "7201", "1.5", "true", "false", "nan", "inf"])

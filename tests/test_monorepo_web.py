@@ -91,3 +91,25 @@ def test_windows_tool_selection_refuses_cwd_dependent_path(web, monkeypatch, tmp
 def test_posix_launch_preserves_original_contract(web, monkeypatch, tmp_path):
     monkeypatch.setattr(web, "sys", SimpleNamespace(platform="linux"))
     assert web._command(["npm", "--version"], cwd=tmp_path, environment={}) == ["npm", "--version"]
+
+
+@pytest.mark.parametrize("captured", ["completed ρ test\n".encode("utf-8"), "completed ρ test\n", None])
+def test_web_timeout_preserves_partial_output_and_original_failure(web, monkeypatch, tmp_path, captured):
+    from subprocess import TimeoutExpired
+
+    failure = TimeoutExpired(["fixture", "run"], 7, output=captured)
+    log = tmp_path / "commands.log"
+    previous = b"previous completed command\n"
+    log.write_bytes(previous)
+
+    def timeout(*args, **kwargs):
+        assert kwargs["timeout"] == 7
+        assert log.read_bytes() == previous + b"\n$ fixture run\n"
+        raise failure
+
+    monkeypatch.setattr(web.subprocess, "run", timeout)
+    with pytest.raises(TimeoutExpired) as caught:
+        web._run(["fixture", "run"], cwd=tmp_path, temporary=tmp_path, log=log, timeout=7)
+    assert caught.value is failure
+    expected = captured.encode("utf-8") if isinstance(captured, str) else captured
+    assert log.read_bytes() == previous + b"\n$ fixture run\n" + (expected or b"")
