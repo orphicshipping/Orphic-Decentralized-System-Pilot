@@ -75,6 +75,7 @@ _BUILTIN_ROLES = {"statistics.v1": "analysis", "spectrum.periodogram.v1": "analy
                 "polymer.control-simulate.v1": "backend",
                 "polymer.verify-cycle.v1": "verification",
                 "metrology.temperature.process.v1": "backend",
+                "measured-thermal.assess.v1": "state_estimator",
                 "irrigation.plan.v1": "backend",
                 "irrigation.verify.v1": "verification",
                 "leakage.assess-balance.v1": "backend",
@@ -153,6 +154,8 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
         from ..leakage_workflow import validate_payload as validator
     elif operation_id == "metrology.temperature.process.v1":
         from ..temperature_workflow import validate_payload as validator
+    elif operation_id == "measured-thermal.assess.v1":
+        from ..measured_thermal_agent import validate_payload as validator
     elif operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
                           "system.compare.v1", "system.study.v1"}:
         from ..system_workflow import validate_payload as validator

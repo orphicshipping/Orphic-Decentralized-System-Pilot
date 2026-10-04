@@ -31,10 +31,12 @@ A local MCP client launches:
 python -m ciw.agent_mcp serve --profile /absolute/path/agent-demo/profile.json
 ```
 
-Use the installed Python executable's absolute path in agent settings. Each host
-requires a new output directory; reconnecting to an already-used output directory
-refuses rather than silently continuing or overwriting it. Rebind retained files
-as explicit inputs to a new read-only profile when inspecting prior work.
+Use the installed Python executable's absolute path in agent settings. A new host
+requires a new output directory. To reconnect to a retained host, launch the same
+profile and instrument with `serve --resume`. Resume requires matching frozen
+inputs and host policy, validates retained state, and obtains an exclusive writer
+lock. It does not dispatch scientific work. Retained files can also be rebound as
+explicit inputs to a separate read-only profile.
 
 ### Polymer cycle profile
 
@@ -105,6 +107,42 @@ Product conformity is assessed separately using the
 [product and market record](TEMPERATURE_PRODUCT_CONFORMITY.md). That planning
 record is not consumed by the MCP profile, and a processing acceptance result
 does not authorize conformity claims or product markings.
+
+### Measured thermal profile
+
+Bind an existing [measured thermal source](MEASURED_THERMAL.md) using an operator
+command, then launch the fixed profile:
+
+```sh
+python -m ciw.agent_mcp measured-thermal-config --source /absolute/path/source.json --output-dir thermal-agent
+python -m ciw.agent_mcp serve --instrument measured-thermal --profile /absolute/path/thermal-agent/profile.json
+```
+
+The source must contain the four declared, already calibrated streams and their
+retained evidence. This MCP adapter accepts at most **48 KiB of exact source
+JSON**, matching the generic transport's scalar-string bound; larger inputs
+refuse before creating a profile. The native thermal ingress retains its
+separate 1 MiB limit. No recording is truncated to fit. Profile creation validates and preserves the exact source
+bytes; it does not acquire readings, apply calibration or calculate an estimate.
+The repository's `examples/measured-thermal/source.json` is a **simulated test
+fixture**, suitable for checking installation and transport only.
+
+Call `net_execute` with `source: "source"`, `graph: "baseline"` and a new attempt
+identifier. The single `measured-thermal.assess.v1` adapter delegates to the
+existing measured thermal workflow. Inspect its graph-run artifact with selector
+`["nodes", "assessment", "result", "data"]`. The returned data contains the exact
+source reference, source origin, native scientific bundle, and correction status.
+Within the bundle, `steps[0].result.data` retains the conditional covariance,
+held-out comparison, calibration declarations and their limitations. Core
+reference values remain excluded from estimator conditioning.
+
+Restart the server with `--resume` and repeat the same attempt to retrieve its
+saved response without executing again. `net_replay` with a new attempt explicitly
+creates fresh execution and result identities. The correction status is
+`not_checked; no_state_ledger_handoff_performed`: retaining this bundle does not
+establish a complete correction or admission chain. Physical validation remains
+`not_established`; input, model and clock uncertainty remain retained but not
+propagated by the existing kernel.
 
 ### Grok Build
 
@@ -192,9 +230,16 @@ Every intentional execution gets fresh CIW execution/result identities. An
 `attempt` is an adapter retry key, not an execution identity. Repeating the same
 attempt and same frozen request returns the prior response without running again;
 a different request under the same attempt refuses. Failures consume the attempt.
-Retry handling is process-local. A process crash is not automatically resumed,
-and a new output root is required for another host. Retained request/response
-files are transport receipts, not a competing scientific execution ledger.
+Retry identities, frozen inputs, policy, artifact bytes and consumed attempt
+budgets are checkpointed in the operator output directory. The host records an
+incomplete attempt before dispatch. After explicit `--resume`, completed attempts
+return their original response and retained identities. An interrupted attempt
+returns `incomplete`; execution may have happened, so retry never automatically
+dispatches it again. An intentional replay requires a new attempt and operator
+review of possible prior effects. This provides durable local duplicate
+suppression, not exactly-once external effects or a resumable background job
+scheduler. Missing, changed or corrupt recovery state refuses. An older output
+directory without recovery metadata cannot be silently migrated.
 
 Workspace reopening creates a temporary reader Session internally. Its transient
 session ID is omitted from the agent response rather than mislabelled as the
@@ -215,9 +260,9 @@ operation IDs to the agent. The stdio serving function is `serve(host, reader,
 writer)`. The launch configuration never imports a provider named in JSON.
 
 The stock CLI defaults to the two existing builtin operations and executes only
-the explicitly allowed subset. Its fixed `--instrument polymer` opt-in selects
-the four existing polymer operations; profile data never loads a provider by
-name. Other scientific routes, the native
+the explicitly allowed subset. Fixed selectors also expose polymer, leakage, temperature and
+measured-thermal registries; profile data never loads a provider by name. Leakage
+still requires its pinned native provider. Other scientific routes, the native
 oscillator branches, Godot/Bevy runtimes and Blender authoring are **not** silently
 merged, automatically installed or universally qualified by this interface.
 The operator must provision and qualify each adapter on the relevant integration
@@ -258,6 +303,14 @@ dependency, not a new NET installation requirement. The gate refuses missing or
 skipped cases and retains source, wheel, transcript, original CIW records and
 reports. Native-engine, actual Grok-model, remote-hosting and repository-wide CI
 qualification remain separate.
+
+The thermal extension also runs `scripts/check_measured_thermal_mcp.py` with
+`python -I`, an exact installed wheel and an explicit source path. It checks the
+installed package against wheel bytes before and after two separate MCP server
+processes, inspects retained scientific scope after reconnect, and distinguishes
+same-attempt retrieval from fresh replay. Recovery regressions separately cover
+interrupted attempts, changed bindings, corruption and concurrent writers. These
+checks do not establish a physical pilot or hosted multi-customer access.
 
 Protocol references:
 - https://modelcontextprotocol.io/specification/2025-11-25/basic/transports
