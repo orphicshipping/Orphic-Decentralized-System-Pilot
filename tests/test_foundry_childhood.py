@@ -58,9 +58,7 @@ def test_numeric_json_bound_does_not_erase_identity():
 @pytest.mark.parametrize('newline', [b'\n', b'\r\n'], ids=['LF', 'CRLF'])
 @pytest.mark.parametrize('mutation', [None, 'project.godot', 'foundry/childhood_slice.gd'],
                          ids=['unchanged', 'project-mutated', 'script-mutated'])
-@pytest.mark.parametrize('long_cache', [False, pytest.param(True,
-    marks=pytest.mark.skipif(os.name != 'nt', reason='Actual Windows extended-path cleanup'))],
-    ids=['ordinary-cache', 'long-cache'])
+@pytest.mark.parametrize('long_cache', [False, True], ids=['ordinary-cache', 'long-cache'])
 def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, monkeypatch, newline, mutation, long_cache):
     game_root = tmp_path / 'source'
     game = game_root / 'game'
@@ -89,16 +87,20 @@ def test_native_binding_preserves_project_bytes_and_detects_mutation(tmp_path, m
         if long_cache and '--editor' in command:
             # Godot can create these long editor-cache names even when ordinary
             # Windows Python paths cannot stat or remove the resulting files.
-            cache = isolated_game / '.godot/editor' / ('native-cache-' + 'x' * 180 + '.cfg')
+            cache = isolated_game / '.godot/editor' / ('native-cache-' + 'x' * 220 + '.cfg')
             assert len(str(cache)) > 260
-            extended = Path('\\\\?\\' + str(cache))
+            assert len(cache.name.encode('utf-8')) < 255
+            extended = Path('\\\\?\\' + str(cache)) if os.name == 'nt' else cache
             extended.parent.mkdir(parents=True)
             extended.write_bytes(b'generated cache')
-            # Directory junctions inside the private tree must be removed as
-            # links; cleanup must never traverse into another directory.
+            # Directory links inside the private tree must be removed as links;
+            # cleanup must never traverse into another directory.
             junction = isolated_game.parent / 'outside-junction'
-            native_run(['cmd', '/c', 'mklink', '/J', str(junction), str(outside)],
-                       check=True, capture_output=True)
+            if os.name == 'nt':
+                native_run(['cmd', '/c', 'mklink', '/J', str(junction), str(outside)],
+                           check=True, capture_output=True)
+            else:
+                junction.symlink_to(outside, target_is_directory=True)
         isolated_project = (isolated_game / 'project.godot').read_bytes()
         assert re.sub(rb'config/name="1792-foundry-[0-9a-f]{32}"',
                       b'config/name="1792"', isolated_project) == original_project
