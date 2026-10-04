@@ -1,10 +1,12 @@
 # Integration coverage and evidence boundaries
 
-Source audit: **2026-10-03**, baseline
-`cbb1db3aa2ad7287c2587b5e542f6a7d90cfb88f`. This matrix names merged source
-surfaces and their tests; it does not report a new execution of every provider.
-The [concerns audit](CONCERNS_AUDIT_2026-10-03.md) separates source inspection
-from historical qualification and explains changes relative to the critique.
+Source audit refreshed: **2026-10-04**, inspected baseline
+`554bb1540ef1b621af9e08f2d632095ca958150d`. This is a selected inventory of
+implemented source surfaces and their tests, not an exhaustive operation list
+or a new execution report for every provider. The refresh checks the MCP
+implementation, protocol guide, tests and workflow, and clarifies inventory
+categories. The [2026-10-03 concerns audit](CONCERNS_AUDIT_2026-10-03.md) is a
+historical record at its own stated baseline, not the current inventory.
 
 **Implemented** means a callable implementation and associated contracts are
 present. **Bound provider** additionally requires the operator's exact checkout,
@@ -12,12 +14,19 @@ executable and dependency closure. A named operation, capability record or
 source file establishes neither qualification nor physical validity. An
 unavailable provider must refuse rather than manufacture a result.
 
+Read the inventory in four categories: built-in kernels execute repository-owned
+calculations; optional bound providers require separately provisioned runtimes;
+client integrations expose existing operations or views; planning guides describe
+work that has not supplied the stated executable path. These are implementation
+categories, not scientific or physical qualification levels. CI configuration
+is a runnable test definition, not evidence that its latest run passed.
+
 ## Current source addendum — 2026-10-04
 
-Inspected source: `554bb1540ef1b621af9e08f2d632095ca958150d`. The dated
-baseline above remains a historical observation. This addendum records selected
-merged paths added since that baseline; it does not report a new execution of
-all providers or qualify the full research release. The
+Inspected source: `554bb1540ef1b621af9e08f2d632095ca958150d`, matching the
+refreshed inventory above. These selected paths extend the historical
+2026-10-03 audit; their source presence does not report a new execution of all
+providers or qualify the full research release. The
 [model validity and evidence guide](MODEL_VALIDITY_AND_EVIDENCE.md) explains how
 to read declared limits, numerical checks and physical evidence separately.
 
@@ -43,13 +52,43 @@ record hash nor a computation proof establishes the physical calibration chain.
 | Retained source, result, failure, save/reopen and replay | [workbench](../src/ciw/workbench.py), [attempts](../src/ciw/workflow_attempts.py); [session tests](../tests/test_workbench_session.py), [failure-history tests](../tests/test_workflow_failure_history.py) | Implemented catalog and explicit fresh replay. Reopen performs no provider execution. Retained terminal failures are not crash recovery for in-flight work. |
 | Encoder/gearbox/leadscrew configuration | `ciw.encoder-position.v1`: [manifest](../src/ciw/machine_manifest.py), [workflow](../src/ciw/machine_workflow.py); [manifest tests](../tests/test_machine_manifest.py), [lifecycle tests](../tests/test_machine_workflow.py) | Implemented evidence-backed, read-only position profile and first-order joint covariance. No document authenticity check, physical commissioning, firmware loading or actuation. |
 | Typed project declaration and dependency status | `ciw.project-graph.v1`: [model](../src/ciw/project_model.py), [workflow](../src/ciw/project_workflow.py); [model tests](../tests/test_project_model.py), [lifecycle tests](../tests/test_project_workflow.py) | Implemented append-only typed declarations, separate physical/computation/evidence edges and `needs_reevaluation` for changed pinned inputs. Does not execute declared graph computations or bind every workbench result automatically. |
-| Local correction journal and retained-artifact claim graph | [journal](../src/ciw/correction_journal.py), [dependency projection](../src/ciw/dependency_graph.py), [runnable correction gate](../scripts/check_correction_loop.py) | Added in this increment: append-only predicted/estimated claims, source correction proposals and final local reviews. Accepted reviews mark withdrawn source aliases and transitive descendants stale; prior bytes remain unchanged. Reviewer names are declarations, not authenticated principals. Claims stay `not_verified`, unadmitted and unauthorized. Unknown native input references remain explicit. |
+| Local correction journal and retained-artifact claim graph | [journal](../src/ciw/correction_journal.py), [dependency projection](../src/ciw/dependency_graph.py), [runnable correction gate](../scripts/check_correction_loop.py) | Implemented append-only predicted/estimated claims, source correction proposals and final local reviews. Accepted reviews mark withdrawn source aliases and transitive descendants stale; prior bytes remain unchanged. Reviewer names are declarations, not authenticated principals. Claims stay `not_verified`, unadmitted and unauthorized. Unknown native input references remain explicit. |
 | Data-only scalar reference import | [reference contract](../src/ciw/reference_evidence.py), [session tests](../tests/test_correction_session.py) | Retains exact reference source bytes and declared quantity, origin, unit, frame, timestamp and uncertainty. Reference-dependent claims can become stale independently of model outputs. No executable operation or physical acquisition is supplied. |
 | Synthetic thermal observer and sensor choice | `ciw.thermal-observer.v1`: [contract](../src/ciw/thermal_contract.py), [reference](../src/ciw/thermal_reference.py), [workflow](../src/ciw/thermal_workflow.py); [contract tests](../tests/test_thermal_contract.py), [lifecycle tests](../tests/test_thermal_workflow.py) | Implemented Python two-capacity model, dropout-aware Joseph update and bounded sensor selection. Julia thermal worker and held-out physical measurements remain separate gates. |
 | Retained measured thermal ingress and held-out core comparison | `ciw.measured-thermal.v1`: [contract](../src/ciw/measured_thermal.py), [workflow](../src/ciw/measured_thermal_workflow.py), [tests](../tests/test_measured_thermal.py), [review regressions](../tests/test_measured_thermal_review.py), [operator guide](MEASURED_THERMAL.md) | Four exact-byte observation streams; existing Python thermal kernel; shell-only conditioning; retained calibration declarations and clock/frame/uncertainty; numerical comparison and fresh replay. Test fixture is simulated. Calibration application/authenticity and physical validation remain unestablished. |
 | Capability listing and preflight | [capabilities](../src/ciw/capabilities.py), [doctor](../src/ciw/doctor.py); [capability tests](../tests/test_capabilities.py), [doctor tests](../tests/test_doctor.py) | Implemented data-only listing and local preflight. No universal profile discovery or composition registry; `authorizes_execution: false`, qualification `not_performed`. |
 | Legibility compilation, signatures and installed operator path | [guide](LEGIBILITY.md), [operator guide](RUN_NET.md), [compiler](../src/ciw/legibility.py), [installed check](../scripts/check_operator_installed.py); [preflight tests](../tests/test_doctor_legibility.py) | Synchronized human/reasoning/vision records, explicit signing/trust and read-only impact import. The Legibility doctor checks installed dependency metadata without executing cryptography. Numerical verification, integrity, issuer trust, currentness and physical validation remain distinct; no canonical admission or actuation. |
 | Retained educational/reference calculations | [learning](../src/ciw/learning.py), [linear response](../src/ciw/linear_response.py), [exact response](../src/ciw/exact_response.py); [learning tests](../tests/test_learning.py), [exact-response tests](../tests/test_exact_response.py) | Implemented narrow teaching/checking surfaces. No universal curriculum, theorem prover or equipment authority. |
+
+## Local agent and client integration
+
+The [MCP adapter](../src/ciw/agent_mcp.py) is implemented over the existing
+[agent API](../src/ciw/agent_api.py). It is a bounded, sequential JSON-RPC 2.0
+stdio server with one UTF-8 JSON message per line, a 1 MiB input-line limit and
+a 4,096 request-ID budget per connection. It negotiates MCP `2025-11-25` or
+`2025-06-18` and implements `initialize`, `notifications/initialized`, `ping`,
+`tools/list` and `tools/call`. It exposes operator-bound inputs and allowed
+operations; it adds no scientific solver or mandatory MCP package dependency.
+Remote HTTP, batch requests, resources, prompts, sampling, tasks, subscriptions
+and general shell execution are outside this profile. See the
+[agent protocol](NET_AGENT_PROTOCOL.md) for setup, retries and retained records.
+
+[Agent tests](../tests/test_agent_protocol.py) cover discovery, actual built-in
+dispatch, malformed requests, bounded stdio frames, refusal, retry/replay and
+retention, including a real CLI subprocess. The
+[dedicated workflow](../.github/workflows/net-agent-mcp.yml) configures source
+and installed-wheel tests on Ubuntu and Windows plus an
+[official Python MCP SDK client campaign](../scripts/check_agent_mcp.py), with
+`mcp==1.26.0` as a test-only dependency. That campaign exercises the built-in
+profile; its reference-self comparison checks transport and records, not an
+independent numerical result. These checks do not certify all MCP clients or
+protocol features, an actual model session, native providers, remote hosting,
+or physical equipment. Workflow presence alone is not a passing execution
+receipt for this checkout.
+
+The terminal, WebSocket and optional Godot views are also client surfaces.
+Their existence does not expand the numerical or physical scope of the
+operations they display.
 
 ## Scientific provider operations
 
@@ -92,10 +131,10 @@ inside `ciw.native-interop.v1`.
 | Claim | Current evidence | Remaining demonstration |
 | --- | --- | --- |
 | Incident replay / counterfactual investigation | Retained sources/replay, fresh identities, project status and a local source/bundle/execution/result/claim dependency projection exist. | Concrete incident data and complete workload-specific dependency coverage. Projection uses retained explicit references; it does not infer all scientific dependencies. |
-| Adaptive self-calibration | Calibrated windows, residual monitoring and estimation exist. This increment ran a synthetic encoder-offset proposal/review/corrected execution with transitive staleness and offline reopen. | Continuous correction policy, actual instrument/reference evidence and held-out physical improvement. Local review acceptance is not physical calibration or ESM admission. |
-| Executable claim graph / safety case | Scoped provider checks, proof profiles and project declarations exist. New predicted/estimated claims depend on retained artifact identities and can become stale. | Checker/premise/operational-policy graph, workload-specific safety proof and hybrid-system proof where needed. New claims remain `not_verified`; no regulator acceptance is claimed. |
+| Adaptive self-calibration | Calibrated windows, residual monitoring and estimation exist. The correction-loop validation record reports a synthetic encoder-offset proposal/review/corrected execution with transitive staleness and offline reopen. | Continuous correction policy, actual instrument/reference evidence and held-out physical improvement. Local review acceptance is not physical calibration or ESM admission. |
+| Executable claim graph / safety case | Scoped provider checks, proof profiles and project declarations exist. Predicted/estimated claims depend on retained artifact identities and can become stale. | Checker/premise/operational-policy graph, workload-specific safety proof and hybrid-system proof where needed. These claims remain `not_verified`; no regulator acceptance is claimed. |
 | Language-neutral engineering model | Bounded native contracts and genuine historical cross-language cases exist. | Shared thermal plant/sensor model, observer comparison, covariance transform and constrained measurement choice across Python/Julia. |
-| AI researcher through MCP | Bounded local stdio server with explicit builtin, polymer, leakage, temperature and measured-thermal profiles; retained attempts support explicit process reconnect. [Agent protocol](NET_AGENT_PROTOCOL.md). The historical audit predates this interface; see the [current source addendum](#current-source-addendum--2026-10-04). | Each additional instrument needs its own binding and qualification. Interrupted work remains incomplete; remote authentication, multi-customer isolation and physical/equipment authority are not supplied. |
+| AI researcher through MCP | Bounded local stdio server with explicit builtin, polymer, leakage, temperature and measured-thermal profiles, operator-bound tools, deterministic refusals, retained candidates and source/SDK test gates; retained attempts support explicit process reconnect. [Agent protocol](NET_AGENT_PROTOCOL.md). The historical audit predates this interface; see the [current source addendum](#current-source-addendum--2026-10-04). | Each additional instrument needs its own binding and qualification. Interrupted work remains incomplete; broader client/model interoperability, native-provider qualification, remote authentication and multi-customer isolation require separate evidence. The adapter grants no physical or equipment authority. |
 | Device authorization and operation | Scientific paths refuse equipment authority; [gateway contract](DEVICE_GATEWAY.md) and [acceptance plan](DEVICE_GATEWAY_ACCEPTANCE.md) are specified. | Trusted issuer/policy, durable dispatch/recovery, simulator qualification and separately commissioned hardware. Acceptance cases are not results. |
 | Broad mathematical platform | Local covariance, linear stability, geometry, free-energy, bounded QP and scalar interval profiles exist. | General nonlinear UQ, multi-frame GA, streaming TDA, hybrid CPS proofs and general symbolic/numeric compilation remain provider research. |
 
@@ -114,10 +153,10 @@ support different claims. Successful computation never supplies equipment
 authorization. [Execution responsibilities](EXECUTION_RESPONSIBILITIES.md) and
 [protocol](PROTOCOL.md) retain these boundaries.
 
-The new [correction gate](../scripts/check_correction_loop.py) was executed in
-this increment using the actual provider-free `ciw.encoder-position.v1`
-operation. One withheld synthetic point gives original position `1.001 m`
-against reference `0.998 m`: residual `0.003 m` exceeds the declared `0.0005 m`
+The [correction-loop validation record](CORRECTION_LOOP_VALIDATION.md) reports
+execution of the [correction gate](../scripts/check_correction_loop.py) using
+the provider-free `ciw.encoder-position.v1` operation. One withheld synthetic
+point gives original position `1.001 m` against reference `0.998 m`: residual `0.003 m` exceeds the declared `0.0005 m`
 diagnostic bound. A corrected offset produces `0.998 m` with residual zero.
 The gate checks inert proposals, transitive staleness after local acceptance,
 fresh execution/result identities, unchanged original artifacts, late historical
@@ -127,5 +166,5 @@ an independent physical validation or general self-healing behavior.
 
 Journal actions checkpoint their events and complete retained dependencies
 together before publication. [Validation results](CORRECTION_LOOP_VALIDATION.md)
-record this increment's negative tests, source/installed-wheel gates and optional
-provider skips separately.
+record that correction increment's negative tests, source/installed-wheel gates
+and optional provider skips separately.
