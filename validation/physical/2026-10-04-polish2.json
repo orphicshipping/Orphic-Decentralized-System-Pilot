@@ -1,0 +1,74 @@
+{
+  "schema": "ciw.physical-polish2-validation.v1",
+  "status": "passed_local_qualification",
+  "pull_request": 165,
+  "tested_code": {
+    "commit": "f095274196cc5ce39ef0a59100f88ddf7c29541b",
+    "tree": "fcf68ce6278529659aa602d9f585dba0942bb6fb",
+    "fix_commit": "334eed2fe83683ed626f69039f0bb77d94dde574",
+    "merged_main": "1f086a30d13193f25847f329e98571479b287369"
+  },
+  "previous_pull_request_head": "333176a65e5d9c5dcc12b77f8b4151b68ff85fc4",
+  "problem": "Windows TCP reset erased HTTP refusals when the body arrived during connection teardown.",
+  "before": {
+    "local_refusal_regressions_failed": 5,
+    "github_job_id": 111516700581,
+    "github_run_id": 37229734019,
+    "github_failure": "WinError10053 at unknown POST endpoint"
+  },
+  "refusal_cases": [
+    "unknown endpoint",
+    "wrong media type",
+    "oversized declared body",
+    "invalid capability token",
+    "invalid Host"
+  ],
+  "after": {
+    "ci_selection": {
+      "tests": 246,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "browser_checks": 85,
+    "live_browser_execution": "performed",
+    "package_file_bindings": 411,
+    "public_campaign_replays": 4,
+    "public_json_byte_matches": 14
+  },
+  "wheel": {
+    "file": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+    "sha256": "7cbe5f8f8284a31c57babc0ea38efa0285d87a1067206e3d00ff72f6ad852b81",
+    "binding": "All 411 packaged ciw files matched source bytes and the isolated installation."
+  },
+  "browser": {
+    "product": "Microsoft Edge",
+    "version": "151.0.4129.86",
+    "offline_document_mode": "file",
+    "live_browser_execution": "performed",
+    "errors": 0,
+    "external_requests": 0
+  },
+  "public_campaigns": [
+    "BIPM density comparison",
+    "BIPM ethanol mass-fraction comparison",
+    "BIPM thermometry comparison",
+    "NIST indium DSC measurements"
+  ],
+  "shutdown_limits": {
+    "discard_bytes": 65536,
+    "seconds": 1.0
+  },
+  "evidence_links": {
+    "original_ci_run": "https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37229734019",
+    "original_ci_job": "https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37229734019/job/111516700581",
+    "transport_teardown_basis": "https://www.rfc-editor.org/rfc/rfc9112.html#section-9.6"
+  },
+  "limits": [
+    "Results qualify the tested code commit and tree above; the subsequent receipt-only commit changes no runtime or tests.",
+    "The 246-test selection covers Visual Board and its inherited expansion regressions, not the full repository suite.",
+    "Refreshed GitHub checks are separate from these local results.",
+    "Public campaigns replay retained source PDFs; no fresh network acquisition was performed.",
+    "Physical instrument qualification remains not established; source uncertainty and refusal semantics are unchanged."
+  ]
+}

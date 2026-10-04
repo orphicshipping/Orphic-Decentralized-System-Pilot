@@ -10,6 +10,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
 import secrets
+import socket
+import time
 from threading import RLock
 import uuid
 
@@ -38,6 +40,7 @@ from .visual_representation_gate import (
 )
 
 MAX_REQUEST_BYTES = 64 * 1024
+CLOSE_DRAIN_SECONDS = 1.0
 MAX_ACTIONS = 256
 SAFE_OPERATIONS = {"statistics.v1", "spectrum.periodogram.v1"}
 
@@ -291,6 +294,31 @@ class BoardWorkbench:
                 "baseline_ref": baseline_ref, "retained_directory": path.name}
 
 
+class _BoardHTTPServer(HTTPServer):
+    def shutdown_request(self, request):
+        # RFC 9112 section 9.6: a full close with a body still in flight can
+        # reset TCP and erase the refusal response, notably on Windows.
+        # Half-close writes, then discard only a bounded amount of trailing
+        # transport data. Discarded bytes never become another API request.
+        try:
+            request.shutdown(socket.SHUT_WR)
+            deadline = time.monotonic() + CLOSE_DRAIN_SECONDS
+            remaining = MAX_REQUEST_BYTES
+            while remaining:
+                timeout = deadline - time.monotonic()
+                if timeout <= 0:
+                    break
+                request.settimeout(min(timeout, CLOSE_DRAIN_SECONDS))
+                received = request.recv(min(8192, remaining))
+                if not received:
+                    break
+                remaining -= len(received)
+        except OSError:
+            pass  # Peer closure or expiry must still release the socket.
+        finally:
+            self.close_request(request)
+
+
 def make_server(workbench: BoardWorkbench, *, port=0) -> HTTPServer:
     """IPv4 loopback only, fixed Host/Origin, per-process bearer capability."""
     token = secrets.token_urlsafe(32)
@@ -393,7 +421,7 @@ def make_server(workbench: BoardWorkbench, *, port=0) -> HTTPServer:
             except OSError:
                 self.send(500, {"status": "refused", "reason": "Local retention failed; no success claimed"})
 
-    server = HTTPServer(("127.0.0.1", port), Handler)
+    server = _BoardHTTPServer(("127.0.0.1", port), Handler)
     server.board_token = token
     server.board_url = f"http://127.0.0.1:{server.server_port}/#token={token}"
     return server

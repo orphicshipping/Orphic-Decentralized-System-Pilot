@@ -10,7 +10,7 @@ import math
 import pytest
 
 from ciw.operations.runner import digest, seal
-from ciw.temperature_contract import AUTHORITY, example_request
+from ciw.temperature_contract import AUTHORITY, LEGACY_NUMERICAL_CONTRACT, example_request
 from ciw.temperature_processing import process_request, validate_report
 from ciw.temperature_verification import verify, validate_verification
 
@@ -148,6 +148,7 @@ def test_verifier_uses_no_processing_calculation(monkeypatch, installed):
 
     monkeypatch.setattr("ciw.temperature_processing.process_request", forbidden)
     monkeypatch.setattr("ciw.temperature_processing._sensor_output", forbidden)
+    monkeypatch.setattr("ciw.temperature_processing._covariance_product", forbidden)
     if installed:
         monkeypatch.setattr("ciw.temperature_processing._polymer_output", forbidden)
     _assert_pass(request, report)
@@ -378,26 +379,48 @@ def test_nonzero_uncertainty_acceptance_touching_and_one_ulp_separation(lower, u
 
 
 
-def test_real_intermediate_underflow_can_fail_fixed_comparison_policy():
-    """The comparison policy is not a universal forward-error enclosure.
-
-    In one covariance product the provider first multiplies 1e-12 by 1e-312,
-    losing that intermediate to underflow before its later 1e12 multiplier.
-    A structurally valid unmodified report can consequently fail the independent
-    exact-rational comparison. This is numerical evidence, not physical evidence.
-    """
+def _underflow_case(*, gain_sign=1, cross_sign=1):
     request, _, _ = _case(n=1)
     request["raw_observations"]["samples"][0]["value"] = 1e12
     request["calibration"].update(
-        gain=1e-12, offset_K=290.0, input_range=[0.0, 1e12],
+        gain=gain_sign * 1e-12, offset_K=290.0, input_range=[0.0, 1e12],
         coefficient_covariance=[[math.ulp(0.0), 0.0], [0.0, 0.0]])
     request["joint_covariance"].update(
-        matrix=[[1e-300, 1e-312, 0.0],
-                [1e-312, math.ulp(0.0), 0.0],
+        matrix=[[1e-300, cross_sign * 1e-312, 0.0],
+                [cross_sign * 1e-312, math.ulp(0.0), 0.0],
                 [0.0, 0.0, 0.0]],
         cross_covariance_policy="declared")
     request["acceptance"] = None
+    return request
+
+
+@pytest.mark.parametrize("gain_sign,cross_sign", [(1, 1), (-1, 1), (1, -1), (-1, -1)])
+def test_recovered_intermediate_underflow_passes_unchanged_exact_rational_checker(gain_sign, cross_sign):
+    """Retain the cross term even when gain * covariance alone rounds to zero."""
+    request = _underflow_case(gain_sign=gain_sign, cross_sign=cross_sign)
+    g, x = F(request["calibration"]["gain"]), F(1e12)
+    matrix = request["joint_covariance"]["matrix"]
+    # Direct two-variable quadratic form, independently of the provider loop.
+    reference = g**2 * F(matrix[0][0]) + 2 * g * x * F(matrix[0][1]) + x**2 * F(matrix[1][1])
     report = process_request(request)
+    variance = report["calibrated_sensor_temperature"]["covariance_K2"][0][0]
+    assert variance == pytest.approx(float(reference), rel=2e-15, abs=0)
+    validate_report(request, report)
+    _assert_pass(request, report)
+
+
+def test_historical_underflow_report_remains_readable_and_fails_fresh_audit():
+    """A revised arithmetic contract must not rewrite or pardon old results."""
+    request = _underflow_case()
+    report = process_request(request)
+    # Exact binary64 output captured from the former left-to-right processor.
+    output = report["calibrated_sensor_temperature"]
+    output["covariance_K2"][0][0] = float.fromhex("0x1.a784379d9a398p-995")
+    output["samples"][0]["standard_uncertainty_K"] = float.fromhex("0x1.d1a94a200033dp-498")
+    report["numerical_contract"] = deepcopy(LEGACY_NUMERICAL_CONTRACT)
+    report["identities"]["procedure_ref"] = digest(LEGACY_NUMERICAL_CONTRACT)
+    seal(report)
+    captured = deepcopy(report)
     validate_report(request, report)
     audit = verify(request, report)
     assert audit["status"] == "FAIL"
@@ -408,4 +431,53 @@ def test_real_intermediate_underflow_can_fail_fixed_comparison_policy():
     assert audit["request_ref"] == digest(request)
     assert audit["report_ref"] == digest(report)
     validate_verification(request, report, audit)
+    assert report == captured
 
+
+def test_large_correlated_terms_cancel_without_erasing_independent_small_variance():
+    request, _, _ = _case(n=1, extra=True)
+    scale, residual = 2.0**39, 1e-300
+    request["raw_observations"]["samples"][0]["value"] = 2.0**-39
+    request["calibration"].update(
+        gain=scale, offset_K=290.0,
+        coefficient_covariance=[[0.0, 0.0], [0.0, scale**2]])
+    request["joint_covariance"].update(
+        matrix=[[1.0, 0.0, -scale], [0.0, 0.0, 0.0], [-scale, 0.0, scale**2]],
+        cross_covariance_policy="declared")
+    request["contributions"][0]["covariance_K2"] = [[residual]]
+    # The joint covariance is the outer product (1, 0, -scale). Its
+    # propagated latent coefficient is exactly scale - scale = 0.
+    reference = (F(scale) - F(scale))**2 + F(residual)
+    report = process_request(request)
+    assert report["calibrated_sensor_temperature"]["covariance_K2"] == [[float(reference)]]
+    validate_report(request, report)
+    _assert_pass(request, report)
+
+
+def test_largest_declared_covariance_products_stay_finite():
+    request, _, _ = _case(n=1)
+    request["raw_observations"]["samples"][0]["value"] = 0.0
+    request["calibration"].update(
+        gain=1e12, offset_K=290.0, coefficient_covariance=[[0.0, 0.0], [0.0, 0.0]])
+    request["joint_covariance"].update(
+        matrix=[[1e24, 0.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]],
+        cross_covariance_policy="declared_zero")
+    request["acceptance"] = None
+    reference = F(1e12)**2 * F(1e24)
+    report = process_request(request)
+    variance = report["calibrated_sensor_temperature"]["covariance_K2"][0][0]
+    assert math.isfinite(variance)
+    assert variance == pytest.approx(float(reference), rel=2e-15, abs=0)
+    validate_report(request, report)
+    _assert_pass(request, report)
+
+
+def test_ordinary_historical_v1_report_still_passes_fresh_independent_audit():
+    request, _, _ = _case(extra=True, installed=True)
+    report = process_request(request)
+    report["numerical_contract"] = deepcopy(LEGACY_NUMERICAL_CONTRACT)
+    report["identities"]["procedure_ref"] = digest(LEGACY_NUMERICAL_CONTRACT)
+    seal(report)
+    captured = deepcopy(report)
+    _assert_pass(request, report)
+    assert report == captured
