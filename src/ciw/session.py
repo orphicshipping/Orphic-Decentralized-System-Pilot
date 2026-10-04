@@ -727,6 +727,8 @@ class Session:
         validate_polymer_dependencies(result_map)
         from .leakage_workflow import validate_result_dependencies as validate_leakage_dependencies
         validate_leakage_dependencies(result_map)
+        from .temperature_workflow import validate_result_dependencies as validate_temperature_dependencies
+        validate_temperature_dependencies(result_map)
         executions = workspace.get("executions", [])
         if not isinstance(executions, list) or len(executions) > 1024:
             raise ValueError("Invalid saved executions")
