@@ -221,6 +221,14 @@ Prepare the synthetic processing profile with `python -m ciw.agent_mcp temperatu
 
 The [pilot protocol](docs/TEMPERATURE_QUALIFICATION.md), [setup record](examples/temperature/pilot-setup.json), [product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) support planning for an installed chain. The setup now cites a published polymer heating experiment and a NIST reference method, with proposed targets distinguished from published facts and missing calibration evidence. A [pilot-readiness inventory](docs/TEMPERATURE_PILOT_READINESS.md) checks declarations and records unresolved evidence; it does not establish physical qualification. These records are not executable processing requests. Raw observations, sensing-element temperatures and polymer estimates keep distinct labels.
 
+To inspect the pilot's missing declarations by stage:
+
+```text
+python -m ciw.temperature_readiness --setup examples/temperature/pilot-setup.json --summary
+```
+
+The summary includes report identities and evidence limits. Add `--output` with a new JSON path to retain the same assessment; omit `--summary` for machine-readable stdout.
+
 ### Bounded dynamic fluid models
 
 `net fluid` exposes a time-dependent two-reservoir model with a bidirectionally coupled compliant boundary, and a separate periodic linear surface-wave profile. The [fluid guide](docs/FLUID_DYNAMICS.md) supplies equations, commands, reference comparisons and the supported scalar-state handoff. General CFD/molecular coupling and experimental fluid validation remain separate development work.

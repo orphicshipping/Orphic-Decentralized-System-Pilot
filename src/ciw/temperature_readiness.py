@@ -74,6 +74,7 @@ FIELDS = {
 META = {"schema", "status", "purpose", "evidence_origin", "physical_qualification", "source_selection"}
 UNSPECIFIED = {"", "pending", "tbd", "todo", "unknown", "unassessed", "not_supplied",
                "not_implemented", "no_experimental_data_supplied"}
+SP1_INACTIVE_STATES = {"not_requested", "not_applicable", "disabled"}
 AUTHORITY = {
     "physical_qualification": "not_established",
     "calibration_traceability": "not_established",
@@ -121,16 +122,30 @@ def _get(plan, path):
     return plan.get(section, {}).get(field)
 
 
+def _placeholder_token(value):
+    """Normalize exact marker spellings without changing submitted declarations."""
+    return "_".join(value.strip().lower().replace("-", " ").split())
+
+
 def _specified(value):
     if value is None:
         return False
     if type(value) is str:
-        return value.strip().lower() not in UNSPECIFIED
+        return _placeholder_token(value) not in UNSPECIFIED
     if type(value) is dict:
         return bool(value) and all(_specified(item) for item in value.values())
     if type(value) is list:
         return bool(value) and all(_specified(item) for item in value)
     return True
+
+
+def _declared(value):
+    """Partial records can select optional work before every leaf is complete."""
+    if type(value) is dict:
+        return any(_declared(item) for item in value.values())
+    if type(value) is list:
+        return any(_declared(item) for item in value)
+    return _specified(value)
 
 
 def _format_issue(path, value):
@@ -194,18 +209,26 @@ def assess_plan(value: dict) -> dict:
             raise ValueError("Invalid or unknown fields in pilot section " + section)
     if plan.get("physical_qualification") != "not_established":
         raise ValueError("This planning profile cannot assert physical qualification")
-    if type(plan.get("evidence_origin")) is not str or not plan["evidence_origin"].strip():
-        raise ValueError("Require explicit evidence origin")
+    if type(plan.get("evidence_origin")) is not str or not _specified(plan["evidence_origin"]):
+        raise ValueError("Require explicit, non-placeholder evidence origin")
     measurand = plan.get("measurand", {})
     if measurand.get("reported_unit", "K") != "K":
         raise ValueError("Pilot temperature unit must be K; no unit conversion is performed")
     sp1 = plan.get("optional_sp1", {})
     if sp1.get("physical_qualification_inferred", False) is not False:
         raise ValueError("A computation proof cannot infer physical qualification")
+    proof_status = sp1.get("status")
+    if proof_status is not None and type(proof_status) is not str:
+        raise ValueError("Optional SP1 status must be text or null")
     stages = {name: _stage(plan, paths) for name, paths in STAGES.items()}
-    model_requested = _specified(_get(plan, "measurand.optional_model_output_target"))
-    proof_requested = _specified(sp1.get("status")) or any(
-        _specified(_get(plan, path)) for path in SP1_FIELDS)
+    # Split/OOD/discrepancy records also belong to the conventional plan and
+    # cannot select a model by themselves. Only its target or margin does so.
+    model_requested = any(_declared(_get(plan, path)) for path in (
+        "measurand.optional_model_output_target",
+        "acceptance_criteria.pinn_gpinn_improvement_or_noninferiority_margin"))
+    proof_requested = (
+        _declared(proof_status) and _placeholder_token(proof_status) not in SP1_INACTIVE_STATES
+    ) or any(_declared(_get(plan, path)) for path in SP1_FIELDS)
     optional = {
         "model_comparison": _stage(plan, MODEL_FIELDS, requested=model_requested),
         "temperature_sp1": _stage(plan, SP1_FIELDS, requested=proof_requested),
@@ -229,16 +252,44 @@ def assess_plan(value: dict) -> dict:
     })
 
 
+def _summary(report):
+    """Render the existing sealed report; this view does not reassess the plan."""
+    lines = [
+        "Temperature pilot readiness: " + report["status"],
+        "Plan identity: " + report["plan_ref"],
+        "Report identity: " + report["record_digest"],
+        "Scope: " + report["scope"],
+    ]
+    for group in (report["stages"], report["optional"]):
+        for name, stage in group.items():
+            label = name.replace("_", " ").capitalize()
+            detail = (f" ({len(stage['missing_fields'])} missing, "
+                      f"{len(stage['invalid_fields'])} invalid)" if stage["requested"] else "")
+            lines.append(f"{label}: {stage['status']}{detail}")
+            if stage["requested"]:
+                lines.extend("  Supply declaration: " + path for path in stage["missing_fields"])
+                lines.extend("  Correct declaration: " + row["field"] + " - " + row["reason"]
+                             for row in stage["invalid_fields"])
+    lines.extend((
+        "Evidence origin: " + json.dumps(report["evidence_origin"], ensure_ascii=True),
+        "Authority: " + "; ".join(key + "=" + value for key, value in report["authority"].items()),
+        "Declarations complete for review never means physically qualified; references are not evaluated.",
+    ))
+    return "\n".join(lines)
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--setup", type=Path, required=True, help="Existing pilot-plan JSON")
     parser.add_argument("--output", type=Path, help="Optional new report JSON; existing files are refused")
+    parser.add_argument("--summary", action="store_true",
+                        help="Print a human-readable inventory; --output still retains the same report JSON")
     args = parser.parse_args(argv)
     try:
         report = assess_plan(load(args.setup))
         if args.output is not None:
             save_new(args.output, report)
-        print(json.dumps(report, indent=2, allow_nan=False))
+        print(_summary(report) if args.summary else json.dumps(report, indent=2, allow_nan=False))
         return 0 if report["status"] == "declarations_complete_for_review" else 1
     except (OSError, ValueError, TypeError) as error:
         print("Temperature readiness refused: " + str(error), file=sys.stderr)

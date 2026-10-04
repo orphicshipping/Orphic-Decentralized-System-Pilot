@@ -1,5 +1,6 @@
 """Restart identity, conservative interrupted outcomes and exclusive local ownership."""
 from copy import deepcopy
+import errno
 import json
 import os
 from pathlib import Path
@@ -10,6 +11,7 @@ import time
 import pytest
 
 import ciw.agent_api as agent_api
+import ciw.agent_recovery as agent_recovery
 from ciw.agent_api import AgentHost, encode
 from ciw.control_plane import builtin_registry, experiment, ParameterSpace, Choice
 from ciw.instruments import make_demo_run
@@ -225,3 +227,60 @@ with api.AgentHost(registry=builtin_registry(bind=True),
         assert repeated["status"] == "incomplete" and repeated["execution_outcome"] == "unknown"
         assert repeated["reused_response"] and "execution_ids" not in repeated
         assert host.capabilities()["execution_budget"]["used"] == 1
+
+
+@pytest.mark.parametrize("stage", ["adopt", "stream", "stream_already_closed"])
+def test_lock_open_failure_releases_untransferred_handle(tmp_path, monkeypatch, stage):
+    failure = OSError(errno.EMFILE, "injected descriptor allocation failure")
+    retained = {}
+    if os.name == "nt":
+        import ctypes
+        import msvcrt
+        from ctypes import wintypes
+
+        original_adopt = msvcrt.open_osfhandle
+
+        def adopt(handle, flags):
+            retained["handle"] = handle
+            if stage == "adopt":
+                raise failure
+            return original_adopt(handle, flags)
+
+        monkeypatch.setattr(msvcrt, "open_osfhandle", adopt)
+        operation = lambda: agent_recovery.RecoveryStore(tmp_path, resume=False)
+    else:
+        # Exercise the same ownership transfers with an actual POSIX descriptor;
+        # Linux qualification checks cleanup instead of skipping Windows coverage.
+        handle = os.open(tmp_path / "lock", os.O_CREAT | os.O_RDWR, 0o600)
+        retained["handle"] = handle
+
+        def adopt(handle):
+            if stage == "adopt":
+                raise failure
+            return handle
+
+        operation = lambda: agent_recovery._stream_from_native_handle(handle, adopt, os.close)
+
+    if stage != "adopt":
+        def fail_stream(descriptor, *args, **kwargs):
+            if stage == "stream_already_closed":
+                os.close(descriptor)
+            raise failure
+
+        monkeypatch.setattr(agent_recovery.os, "fdopen", fail_stream)
+
+    with pytest.raises(OSError) as caught:
+        operation()
+    assert caught.value is failure
+    if os.name == "nt":
+        kernel = ctypes.WinDLL("kernel32", use_last_error=True)
+        query = kernel.GetHandleInformation
+        query.argtypes = [wintypes.HANDLE, ctypes.POINTER(wintypes.DWORD)]
+        query.restype = wintypes.BOOL
+        flags = wintypes.DWORD()
+        assert not query(retained["handle"], ctypes.byref(flags))
+        assert ctypes.get_last_error() == 6  # ERROR_INVALID_HANDLE
+    else:
+        with pytest.raises(OSError) as closed:
+            os.fstat(retained["handle"])
+        assert closed.value.errno == errno.EBADF

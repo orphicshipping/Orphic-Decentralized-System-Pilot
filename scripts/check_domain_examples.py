@@ -77,7 +77,8 @@ def cli(directory, *args):
         status = main(list(args))
     with (directory / "commands.log").open("a", encoding="utf-8") as stream:
         stream.write("net " + " ".join(args) + "\n" + out.getvalue() + err.getvalue() + "\n")
-    require(status == 0, f"net {' '.join(args)} failed ({status}): {err.getvalue()}")
+    reason = (err.getvalue() or out.getvalue()).strip()[:1000]
+    require(status == 0, f"net {' '.join(args)} failed ({status}): {reason}; see commands.log")
     return json.loads(out.getvalue())
 
 
@@ -307,8 +308,17 @@ def main(argv=None):
     except (OSError, ValueError) as exc:
         print(str(exc), file=sys.stderr)
         return 1
-    print(json.dumps({"status": result["status"], "elapsed_s": result["elapsed_s"],
-                      "report": str(args.output_dir.resolve() / "report.json")}))
+    summary = {"status": result["status"], "elapsed_s": result["elapsed_s"],
+               "report": str(args.output_dir.resolve() / "report.json"),
+               "failed_examples": [
+                   {"name": row["name"], "message": row.get("message", "Example failed"),
+                    "logs": [str(args.output_dir.resolve() / row["name"] / name)
+                             for name in ("process.log", "commands.log")
+                             if (args.output_dir / row["name"] / name).is_file()]}
+                   for row in result["examples"] if row["status"] == "FAIL"]}
+    if "message" in result:
+        summary["message"] = result["message"]
+    print(json.dumps(summary))
     return 0 if result["status"] == "PASS" else 1
 
 
