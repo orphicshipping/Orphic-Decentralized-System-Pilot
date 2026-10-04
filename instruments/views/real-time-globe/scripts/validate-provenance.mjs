@@ -8,10 +8,10 @@
  * Runs the actual dataset via Node type-stripping (src/data is pure,
  * erasable TypeScript by construction — the seam check guarantees it).
  */
-import { pathToFileURL } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 
-const ROOT = resolve(new URL('..', import.meta.url).pathname);
+const ROOT = fileURLToPath(new URL('..', import.meta.url));
 const mod = await import(
   pathToFileURL(resolve(ROOT, 'src/data/synthetic/world.ts')).href
 );
