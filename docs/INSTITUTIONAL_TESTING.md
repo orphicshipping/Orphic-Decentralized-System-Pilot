@@ -105,3 +105,9 @@ If the command refuses an existing output directory, choose a new output path;
 previous evidence is never overwritten. If a lane fails, inspect the indicated
 `process.log` and `outcome.json`, correct the reported input/runtime problem, and
 start a new campaign. Preserve the failed run alongside its replacement.
+
+Pressing Ctrl+C stops further lanes, retains the interrupted lane's partial log
+and outcome, and writes the final campaign report with `INTERRUPTED` status. The
+command exits 130. Counts include an interrupted executed lane among failures;
+later lanes are counted as not run. An interrupted run never qualifies the
+campaign. Choose a new output path to rerun after reviewing retained evidence.

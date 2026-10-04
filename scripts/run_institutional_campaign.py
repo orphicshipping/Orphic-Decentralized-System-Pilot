@@ -157,6 +157,9 @@ def run_lane(name, script, arguments, report_name, destination, env):
         entry["report"] = report_path.relative_to(destination).as_posix()
         entry["report_sha256"] = digest(report_path)
         entry["status"] = "PASS"
+    except KeyboardInterrupt as exc:
+        entry.update(status="INTERRUPTED", error_type=type(exc).__name__,
+                     message="Lane interrupted by operator; partial evidence retained")
     except subprocess.TimeoutExpired as exc:
         entry.update(status="TIMEOUT", error_type=type(exc).__name__,
                      message=f"Lane exceeded {TIMEOUT_S} seconds")
@@ -236,20 +239,30 @@ def campaign(args, progress=None):
             report["lanes"].append(outcome)
             detail = f" - {outcome['message']}" if outcome.get("message") else ""
             announce(f"[{index}/{len(lanes)}] {name}: {outcome['status']}{detail}")
+            if outcome["status"] == "INTERRUPTED":
+                report["interrupted"] = True
+                break
+    except KeyboardInterrupt as exc:
+        report.update(interrupted=True, error_type=type(exc).__name__,
+                      message="Campaign interrupted by operator; no complete campaign result")
     except Exception as exc:
         report.update(error_type=type(exc).__name__, message=str(exc))
     finally:
-        announce("Checking the installed candidate wheel after the run.")
         try:
+            announce("Checking the installed candidate wheel after the run.")
             report["binding_after"] = {"status": "PASS", **installed_binding(wheel)}
             if report.get("binding_before") != report["binding_after"]:
                 raise ValueError("Installed wheel binding changed during campaign or preflight failed")
+        except KeyboardInterrupt as exc:
+            report["interrupted"] = True
+            report["binding_after"] = {"status": "FAIL", "error_type": type(exc).__name__,
+                "message": "Final installed-wheel check interrupted by operator; no complete campaign result"}
         except Exception as exc:
             report["binding_after"] = {"status": "FAIL", "error_type": type(exc).__name__, "message": str(exc)}
         passed = (len(report["lanes"]) == 3 and all(lane["status"] == "PASS" for lane in report["lanes"])
                   and report.get("binding_before", {}).get("status") == "PASS"
                   and report["binding_after"]["status"] == "PASS" and "error_type" not in report)
-        report["status"] = "PASS" if passed else "FAIL"
+        report["status"] = "INTERRUPTED" if report.get("interrupted") else ("PASS" if passed else "FAIL")
         report["finished_at_utc"] = stamp()
         report["elapsed_s"] = time.perf_counter() - started
         report["counts"] = {"passed": sum(lane["status"] == "PASS" for lane in report["lanes"]),
@@ -288,7 +301,7 @@ def main(argv=None):
     if problems:
         summary["failed_lanes"] = problems
     print(json.dumps(summary))
-    return 0 if report["status"] == "PASS" else 1
+    return 130 if report["status"] == "INTERRUPTED" else (0 if report["status"] == "PASS" else 1)
 
 
 if __name__ == "__main__":

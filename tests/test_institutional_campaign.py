@@ -223,3 +223,97 @@ def test_closed_progress_stream_does_not_interrupt_or_lose_evidence(tmp_path, mo
     assert lanes == ['numerics', 'academic', 'epa']
     assert len(attempts) == 1
     assert json.loads((args.output_dir / 'campaign.json').read_text()) == report
+
+
+def test_interrupted_child_retains_partial_log_and_distinct_outcome(tmp_path, monkeypatch):
+    def child(command, **kwargs):
+        kwargs['stdout'].write(b'partial numerical execution\n')
+        raise KeyboardInterrupt
+    result, destination = run_fake_lane(tmp_path, monkeypatch, child)
+    assert result['status'] == 'INTERRUPTED'
+    assert result['error_type'] == 'KeyboardInterrupt'
+    assert result['log_sha256'] == driver.digest(destination / 'academic/process.log')
+
+
+def test_interruption_stops_remaining_lanes_and_retains_campaign(tmp_path, monkeypatch):
+    monkeypatch.setattr(driver, 'sys', SimpleNamespace(flags=SimpleNamespace(isolated=1, utf8_mode=1),
+        version='test runtime', executable='test-python'))
+    monkeypatch.setattr(driver, 'installed_binding', lambda wheel: {'wheel_sha256': 'a' * 64})
+    called = []
+    def lane(name, *args):
+        called.append(name)
+        return {'name': name, 'status': 'INTERRUPTED' if name == 'academic' else 'PASS'}
+    monkeypatch.setattr(driver, 'run_lane', lane)
+    args = campaign_args(tmp_path)
+    report = driver.campaign(args)
+    assert called == ['numerics', 'academic']
+    assert report['status'] == 'INTERRUPTED'
+    assert report['counts'] == {'passed': 1, 'failed': 1, 'not_run': 1}
+    assert json.loads((args.output_dir / 'campaign.json').read_text()) == report
+
+
+def test_preflight_interruption_retains_unqualified_final_report(tmp_path, monkeypatch):
+    monkeypatch.setattr(driver, 'sys', SimpleNamespace(flags=SimpleNamespace(isolated=1, utf8_mode=1),
+        version='test runtime', executable='test-python'))
+    calls = []
+    def binding(wheel):
+        calls.append(wheel)
+        if len(calls) == 1:
+            raise KeyboardInterrupt
+        return {'wheel_sha256': 'a' * 64}
+    monkeypatch.setattr(driver, 'installed_binding', binding)
+    monkeypatch.setattr(driver, 'run_lane', lambda *args: pytest.fail('Interrupted preflight must not run data'))
+    args = campaign_args(tmp_path)
+    report = driver.campaign(args)
+    assert report['status'] == 'INTERRUPTED'
+    assert report['counts']['not_run'] == 3
+    assert report['binding_after']['status'] == 'FAIL'
+    assert json.loads((args.output_dir / 'campaign.json').read_text()) == report
+
+
+def test_cli_interruption_returns_130_and_reports_partial_log(tmp_path, monkeypatch, capsys):
+    monkeypatch.setattr(driver, 'campaign', lambda *args, **kwargs:
+        {'status': 'INTERRUPTED', 'counts': {'passed': 0, 'failed': 1, 'not_run': 2},
+         'binding_after': {'status': 'PASS'}, 'lanes': [{'name': 'numerics', 'status': 'INTERRUPTED',
+         'message': 'operator stopped lane', 'log': 'numerics/process.log'}]})
+    argv = []
+    for name in ('corpus-root', 'thermal-dir', 'cwru-dir', 'output-dir', 'wheel'):
+        argv.extend(['--' + name, str(tmp_path / name)])
+    assert driver.main(argv) == 130
+    report = json.loads(capsys.readouterr().out)
+    assert report['status'] == 'INTERRUPTED'
+    assert report['failed_lanes'][0]['log'].endswith(str(Path('numerics/process.log')))
+
+
+@pytest.mark.parametrize("interrupted_stage", ["announcement", "binding"])
+def test_final_check_interruption_retains_completed_lane_counts_without_qualification(
+        tmp_path, monkeypatch, interrupted_stage):
+    monkeypatch.setattr(driver, 'sys', SimpleNamespace(flags=SimpleNamespace(isolated=1, utf8_mode=1),
+        version='test runtime', executable='test-python'))
+    binding_calls = []
+    def binding(wheel):
+        binding_calls.append(wheel)
+        if len(binding_calls) == 2 and interrupted_stage == 'binding':
+            raise KeyboardInterrupt
+        return {'wheel_sha256': 'a' * 64}
+    def progress(message):
+        if 'after the run' in message and interrupted_stage == 'announcement':
+            raise KeyboardInterrupt
+    completed = []
+    def lane(name, *args):
+        completed.append(name)
+        return {'name': name, 'status': 'PASS'}
+    monkeypatch.setattr(driver, 'installed_binding', binding)
+    monkeypatch.setattr(driver, 'run_lane', lane)
+    args = campaign_args(tmp_path)
+    report = driver.campaign(args, progress=progress)
+    assert completed == ['numerics', 'academic', 'epa']
+    assert len(binding_calls) == (2 if interrupted_stage == 'binding' else 1)
+    assert report['status'] == 'INTERRUPTED'
+    assert report['counts'] == {'passed': 3, 'failed': 0, 'not_run': 0}
+    assert report['binding_before']['status'] == 'PASS'
+    assert report['binding_after']['status'] == 'FAIL'
+    assert report['binding_after']['error_type'] == 'KeyboardInterrupt'
+    assert 'no complete campaign result' in report['binding_after']['message']
+    assert report['physical_qualification'] == 'not_established'
+    assert json.loads((args.output_dir / 'campaign.json').read_text()) == report

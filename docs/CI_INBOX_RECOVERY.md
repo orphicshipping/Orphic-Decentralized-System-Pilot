@@ -120,3 +120,20 @@ wheel tests and real OpenUSD roundtrip. Count skips separately.
 
 Historical failed notifications are evidence of older runs and are not erased
 or relabelled. Qualification applies to an exact new commit and its runs.
+
+## Spatial viewer checkout diagnosis — 2026-10-04
+
+The retained spatial Godot job in
+[run 37229892955](https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37229892955)
+stopped at the legacy `giasonpooni/Geospatial-Systems-Compiler` checkout with
+"Repository not found", before provisioning or numerical execution. Its
+companion spatial-provider job already used the canonical FrameMapper repository.
+The viewer workflow now uses that same canonical destination, unchanged
+`acc6a4c43dd1d28e3fc6890dadf5cd2b4ae40125` pin, and trusted-event credential
+policy. This repairs checkout configuration; a trusted run with provider access
+must still execute the full numerical, installed-wheel and Godot checks.
+
+Public PR provider refusals remain failed/unqualified gates. The latest observed
+exchange and remaining-module PR failures stopped at the intentional credential
+boundary, not at a numerical test. Do not remove these gates or pass credentials
+to PR code to make their status green.
