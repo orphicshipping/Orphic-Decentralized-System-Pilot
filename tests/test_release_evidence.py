@@ -9,6 +9,7 @@ import importlib.util
 import io
 import json
 from pathlib import Path
+import re
 import tempfile
 import unittest
 from unittest import mock
@@ -736,6 +737,41 @@ class RefurbishmentReleasePolicyTests(unittest.TestCase):
         wheel = next(item for item in self.policy["required_workflows"] if item["path"] == self.NEW_LANES[1])
         self.assertIn("candidate-wheel", wheel["jobs"])
         self.assertIn("refurbishment-candidate-wheel", wheel["artifacts"])
+
+    def test_current_web_matrix_jobs_and_artifacts_match_workflow(self):
+        # Read the live definition, not a fixture copied from the release policy.
+        # This intentionally accepts the current single-axis literal matrix only;
+        # a more complex workflow must update the contract check explicitly.
+        path = ".github/workflows/monorepo.yml"
+        workflow = (ROOT / path).read_text(encoding="utf-8")
+        job_id = "independent-locked-web-packages"
+        match = re.search(r"(?ms)^  " + job_id + r":\n(.*?)(?=^  [A-Za-z0-9_-]+:\n|\Z)", workflow)
+        self.assertIsNotNone(match)
+        body = match.group(1)
+        self.assertNotRegex(body, r"(?m)^    name:")
+        matrix = re.search(r"(?m)^      matrix:\n((?:        .*\n)+)", body)
+        self.assertIsNotNone(matrix)
+        platforms = re.fullmatch(r"        os: \[([^]\n]+)\]\n", matrix.group(1))
+        self.assertIsNotNone(platforms)
+        operating_systems = [value.strip().strip("\"'") for value in platforms.group(1).split(",")]
+        self.assertTrue(operating_systems)
+        self.assertEqual(len(operating_systems), len(set(operating_systems)))
+        self.assertIn("    runs-on: ${{ matrix.os }}\n", body)
+        artifact_templates = re.findall(r"(?m)^          name: (monorepo-web-[^\n]+)$", body)
+        self.assertEqual(len(artifact_templates), 1)
+        artifact_template = artifact_templates[0]
+        self.assertIn("${{ matrix.os }}", artifact_template)
+        requirement = next(item for item in self.policy["required_workflows"] if item["path"] == path)
+        for field, prefix, expected in (
+            ("jobs", job_id, {f"{job_id} ({platform})" for platform in operating_systems}),
+            ("artifacts", "monorepo-web-", {artifact_template.replace("${{ matrix.os }}", platform)
+                                           for platform in operating_systems}),
+        ):
+            with self.subTest(field=field):
+                actual = {name for name in requirement[field] if name.startswith(prefix)}
+                self.assertEqual(actual, expected)
+        self.assertFalse(any(name.startswith(job_id) for name in requirement["allowed_skipped_jobs"]))
+        self.assertFalse(any(name.startswith(job_id) for name in requirement["excluded_jobs"]))
 
     def test_missing_new_workflow_blocks_release(self):
         for path in self.NEW_LANES:

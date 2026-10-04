@@ -20,7 +20,8 @@
         "surface-science-lock-and-replay (3.13)",
         "operations-resources-and-bounded-cpu (3.12)",
         "operations-resources-and-bounded-cpu (3.13)",
-        "independent-locked-web-packages"
+        "independent-locked-web-packages (ubuntu-latest)",
+        "independent-locked-web-packages (windows-latest)"
       ],
       "artifacts": [
         "monorepo-source-audit-ubuntu-latest",
@@ -37,7 +38,8 @@
         "monorepo-surface-python-3.13",
         "monorepo-operations-python-3.12-rust-1.90.0",
         "monorepo-operations-python-3.13-rust-1.90.0",
-        "monorepo-web-node-24"
+        "monorepo-web-node-24-ubuntu-latest",
+        "monorepo-web-node-24-windows-latest"
       ],
       "allowed_skipped_jobs": [
         "flowstate-public-slow-reproduction"
