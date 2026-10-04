@@ -15,7 +15,7 @@ from threading import RLock
 
 from .adapters.protocol import AdapterRefusal
 from .adapters.subprocess import _json
-DECLARED_KINDS = frozenset({"schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"})
+DECLARED_KINDS = frozenset({"schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"})
 REPRODUCED_KINDS = DECLARED_KINDS - {"proved-heat"}
 UPSTREAM_KINDS = {"identified-design": "calibrated-observable", "schematic-companions": "schematic-assessment",
                   "acquired-calibrated-window": "acquired-dataset", "identified-stability": "identified-design"}
@@ -48,6 +48,7 @@ OPERATIONS = {
     "energy-accuracy": "ciw.energy-accuracy.v1",
     "instrument-exchange": "ciw.instrument-exchange.v1",
     "thermal-observer": "ciw.thermal-observer.v1",
+    "measured-thermal": "ciw.measured-thermal.v1",
     "machine-manifest": "ciw.encoder-position.v1",
     "julia-oscillator": "ciw.julia-oscillator.v1",
     "native-interop": "ciw.native-interop.v1",
@@ -78,6 +79,9 @@ def _workflow(kind):
     if kind == "machine-manifest":
         from .machine_workflow import MachineManifestWorkflow
         return MachineManifestWorkflow()
+    if kind == "measured-thermal":
+        from .measured_thermal_workflow import MeasuredThermalWorkflow
+        return MeasuredThermalWorkflow()
     if kind == "thermal-observer":
         from .thermal_workflow import ThermalWorkflow
         return ThermalWorkflow()
@@ -587,7 +591,7 @@ class Workbench:
         self._sources = {}
         self._bundles = {}
         self._failures = {}
-        self._bindings = {"energy-accuracy": {}, "thermal-observer": {}, "machine-manifest": {}, "project-graph": {}}
+        self._bindings = {"energy-accuracy": {}, "thermal-observer": {}, "measured-thermal": {}, "machine-manifest": {}, "project-graph": {}}
         self._candidate_adapters = {}
         self._candidates = {}
         self._identities = {operation: ("operation", _digest(operation)) for operation in WORKFLOW_OPERATION_IDS}
@@ -628,7 +632,7 @@ class Workbench:
 
     def describe_operations(self):
         with self._lock:
-            return [{"operation_id": operation, "role": {"identified-design": "decision", "schematic-assessment": "schematic_assessment", "numerical-heat": "numerical_execution", "proved-heat": "proved_numerical_execution", "schematic-companions": "local_model_analysis", "bim-quantity": "construction_quantity", "acquired-dataset": "evidence_acquisition", "residual-monitor": "residual_diagnostics", "measurement-chain": "measurement_chain_testbed", "geometric-circle": "geometric_reconciliation", "identified-stability": "stability_assessment", "flat-torus-reference": "geometric_reference", "curved-path-transfer": "geometric_sensitivity", "covariance-geometry": "covariance_geometry", "mesh-path": "mesh_path_baseline", "translation-flow": "translation_dynamics", "variational-free-energy": "variational_inference", "energy-accuracy": "offline_energy_accuracy_analysis", "instrument-exchange": "typed_exchange_adapter", "thermal-observer": "thermal_observer_reference", "machine-manifest": "machine_manifest_reference", "julia-oscillator": "julia_tsit5_provider", "native-interop": "native_computation", "project-graph": "project_graph_inspection"}.get(kind, "state_estimator"),
+            return [{"operation_id": operation, "role": {"identified-design": "decision", "schematic-assessment": "schematic_assessment", "numerical-heat": "numerical_execution", "proved-heat": "proved_numerical_execution", "schematic-companions": "local_model_analysis", "bim-quantity": "construction_quantity", "acquired-dataset": "evidence_acquisition", "residual-monitor": "residual_diagnostics", "measurement-chain": "measurement_chain_testbed", "geometric-circle": "geometric_reconciliation", "identified-stability": "stability_assessment", "flat-torus-reference": "geometric_reference", "curved-path-transfer": "geometric_sensitivity", "covariance-geometry": "covariance_geometry", "mesh-path": "mesh_path_baseline", "translation-flow": "translation_dynamics", "variational-free-energy": "variational_inference", "energy-accuracy": "offline_energy_accuracy_analysis", "instrument-exchange": "typed_exchange_adapter", "thermal-observer": "thermal_observer_reference", "measured-thermal": "measured_thermal_estimation", "machine-manifest": "machine_manifest_reference", "julia-oscillator": "julia_tsit5_provider", "native-interop": "native_computation", "project-graph": "project_graph_inspection"}.get(kind, "state_estimator"),
                      "source_kind": kind, "available": kind in self._bindings,
                      "requires_upstream_bundle": kind in UPSTREAM_KINDS,
                      **({"requires_upstream_bundles": "explicit_ordered_source_selection"} if kind == "residual-monitor" else {})}

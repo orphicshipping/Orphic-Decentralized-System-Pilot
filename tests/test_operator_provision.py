@@ -83,6 +83,12 @@ def test_catalog_projects_all_installed_workflows_without_provider_or_network(mo
     assert selected["providers"]["fsrt"]["revision"] == "d7c181fb9967883e085b3728d38096f59e54efbd"
     native = next(row for row in value["workflows"] if row["workflow"] == "numerical-heat")
     assert native["external_bindings"]["engine"]["binding_type"] == "executable_file"
+    measured = next(row for row in value["workflows"] if row["workflow"] == "measured-thermal")
+    assert measured["operation_id"] == "ciw.measured-thermal.v1"
+    assert measured["providers"] == measured["external_bindings"] == {}
+    assert measured["requires_upstream_bundle"] is False
+    assert measured["qualification"] == "not_performed"
+    assert measured["authorizes_execution"] is False
 
 
 def test_plan_is_read_only_and_provision_retains_original_pin_and_dependencies(source, tmp_path, monkeypatch):

@@ -118,6 +118,27 @@ def select_observations(session, *, bundle_id: str, stage: str, entity_id: str,
     from .scientific import selected_bundle
     content_ref(workspace_sha256)
     selected = selected_bundle(session, bundle_id)
+    if selected["kind"] == "measured-thermal":
+        from . import measured_thermal
+        from .measured_thermal_workflow import MeasuredThermalWorkflow
+        bundle = session.workbench.get_bundle(bundle_id)
+        raw = MeasuredThermalWorkflow()._validate(bundle)
+        source = measured_thermal.validate_source(raw)
+        descriptor = session.workbench.get_source(selected["source_id"])
+        if (entity_id != source["asset_id"] or
+                base64.b64decode(descriptor["bytes_b64"], validate=True) != raw or
+                descriptor["evidence_id"] != bytes_ref(raw)):
+            raise ValueError("Measured export must preserve retained source and asset identity")
+        step = bundle["steps"][0]
+        stream = measured_thermal.observation_stream(source, step["result"]["data"],
+                    stage=stage, execution_id=step["execution_id"])
+        # Add navigation links without changing acquisition/estimation occurrences.
+        # Stream seals establish content consistency, not producer authenticity.
+        for row in stream["observations"]:
+            row["provenance"]["sources"] = list(dict.fromkeys(row["provenance"]["sources"] +
+                [descriptor["evidence_id"], step["result_id"], bundle_id, workspace_sha256]))
+            row.update(seal({key: value for key, value in row.items() if key != "record_digest"}))
+        return seal({"schema": "ciw.observation-stream.v1", "observations": stream["observations"]})
     if selected["kind"] != KIND or selected["operation_id"] != OPERATION:
         raise ValueError("This projection accepts the existing thermal-observer bundle only")
     bundle = session.workbench.get_bundle(bundle_id)

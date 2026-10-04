@@ -43,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
     command.add_argument("--workspace", type=Path, required=True)
     command.add_argument("--workspace-sha256", required=True)
     command.add_argument("--bundle", required=True)
-    command.add_argument("--stage", choices=["predicted", "posterior", "measurement"], required=True)
+    command.add_argument("--stage", choices=["predicted", "posterior", "measurement", "reference"], required=True)
     command.add_argument("--entity", required=True)
     command.add_argument("--output", type=Path, required=True)
     command.add_argument("--json", action="store_true")
@@ -92,9 +92,11 @@ def main(argv: list[str] | None = None) -> int:
             value = export_observations(args.workspace, expected_sha256=args.workspace_sha256,
                 bundle_id=args.bundle, stage=args.stage, entity_id=args.entity)
             save_new(args.output, value)
-            _show(value if args.json else {"schema": value["schema"], "stage": value["stage"],
-                "samples": len(value["stream"]["observations"]), "output": str(args.output),
-                "record_digest": value["record_digest"], "authority": value["authority"]}, args.json)
+            _show(value if args.json else {"schema": value["schema"], "stage": args.stage,
+                "samples": len(value.get("stream", value)["observations"]), "output": str(args.output),
+                "record_digest": value["record_digest"],
+                "authority": value.get("authority", {"physical_validation": "not_established",
+                    "state_admission": "not_performed", "new_execution": "not_performed"})}, args.json)
             return 0
         binding_record = None
         bindings = scientific.parse_bindings(args.binding) if args.command in {"run", "replay", "study", "replay-study"} else None

@@ -20,6 +20,12 @@ def test_catalog_is_complete_without_binding_or_processes(monkeypatch):
     thermal = next(row for row in value["workflows"] if row["workflow"] == "thermal-observer")
     assert thermal["available"] is True and thermal["providers"] == {}
     assert thermal["scientific_cli"] is True
+    measured = next(row for row in value["workflows"] if row["workflow"] == "measured-thermal")
+    assert measured["operation_id"] == "ciw.measured-thermal.v1"
+    assert measured["available"] is True and measured["providers"] == measured["external_bindings"] == {}
+    assert measured["scientific_cli"] is True
+    assert measured["authorizes_execution"] is False
+    assert measured["qualification"] == "not_performed_by_catalog"
     calibrated = next(row for row in value["workflows"] if row["workflow"] == "calibrated-observable")
     assert calibrated["available"] is False and len(calibrated["providers"]) == 8
     assert all(len(row["revision"]) == 40 for row in calibrated["providers"].values())

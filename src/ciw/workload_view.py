@@ -11,7 +11,7 @@ def project(record, source, declaration, revision):
     schematic = kind in {"schematic-assessment", "schematic-companions"}
     object_kinds = {"schematic-assessment": "declared_schematic", "schematic-companions": "local_model_analysis",
                     "numerical-heat": "integer_numerical_field", "proved-heat": "proved_integer_numerical_field", "bim-quantity": "construction_quantity",
-                    "acquired-dataset": "acquired_evidence", "thermal-observer": "thermal_observer_reference",
+                    "acquired-dataset": "acquired_evidence", "thermal-observer": "thermal_observer_reference", "measured-thermal": "measured_thermal_estimation",
                     "machine-manifest": "machine_manifest_reference", "project-graph": "project_graph_reference", "julia-oscillator": "julia_tsit5_trajectory", "native-interop": "native_computation"}
     context = {"object_kind": object_kinds[kind],
                "owner": step["runtime_ref"], "configuration": native["configuration"],
@@ -89,6 +89,17 @@ def project(record, source, declaration, revision):
                              observer["final_covariance"],
                              {**provenance, "result_id": step["result_id"], "execution_id": step["execution_id"]},
                              uncertainty_scope=context["uncertainty_scope"]))
+    elif kind == "measured-thermal":
+        observer = data["observer"]
+        context.update(summary="Thermal estimate from retained calibrated observation declarations",
+                       physical_validation="not_established", source_origin=declaration["origin"],
+                       frame=declaration["frame"], clock=deepcopy(declaration["clock"]),
+                       uncertainty_scope="conditional_on_declared_linear_model_and_noise",
+                       calibration_application="retained_declaration_not_recomputed",
+                       evaluation=deepcopy(data["evaluation"]), claim_scope=data["claim_scope"])
+        panels.append(_panel("state", "Thermal posterior state", ["core_temperature", "shell_temperature"],
+                             observer["final_mean"], ["K", "K"], observer["final_covariance"],
+                             provenance, uncertainty_scope=context["uncertainty_scope"]))
     elif kind == "machine-manifest":
         position = data["position"]
         context.update(

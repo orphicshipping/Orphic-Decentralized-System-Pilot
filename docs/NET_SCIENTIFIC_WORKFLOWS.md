@@ -27,7 +27,9 @@ net science catalog geometry --json
 net science catalog estimate --json
 ```
 
-The 23 indexed routes are existing operations, not 23 newly built providers.
+The 24 indexed routes use the shared Workbench lifecycle. The additive
+[measured-thermal recording adapter](MEASURED_THERMAL.md) reuses the existing
+thermal kernel; the other routes retain their prior contracts.
 `instrument_highlights` gives navigation aids, **not** the exact required source
 set. Each original workflow owns its required roles, source schema, pins and
 qualification gates. `available` describes the current process binding, not
@@ -43,6 +45,7 @@ cannot bind or launch a provider; private repositories are never scanned or clon
 | Schematic eligibility, sensitivities and Lyapunov conditions | `schematic-assessment`, `schematic-companions`, `identified-stability`: SRA, JSPT, PLSR |
 | BIM quantity evidence | `bim-quantity`: CSE |
 | Geometry and conditional covariance | `geometric-circle`, `curved-path-transfer`, `flat-torus-reference`, `covariance-geometry`, `mesh-path`, `translation-flow` |
+| Retained calibrated thermal recordings and held-out comparison | [`measured-thermal`](MEASURED_THERMAL.md): existing Python thermal kernel |
 | Existing computation/reference and exchange operations | `numerical-heat`, `native-interop`, `julia-oscillator`, `thermal-observer`, `instrument-exchange` |
 
 `instrument-exchange` uses the existing SET contract validator. **ICRH remains an

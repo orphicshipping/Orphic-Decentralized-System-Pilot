@@ -70,6 +70,7 @@ WORKFLOW_REVIEWS = {
     "energy-accuracy": ("energy_workflow", "energy_workflow"),
     "instrument-exchange": ("exchange_adapter", "exchange_adapter"),
     "thermal-observer": ("thermal_contract", "thermal_contract"),
+    "measured-thermal": ("measured_thermal", "measured_thermal"),
     "machine-manifest": ("machine_workflow", "machine_manifest"),
     "julia-oscillator": ("julia_oscillator", "julia_oscillator"),
     "native-interop": ("native_interop_contract", "native_interop_contract"),
