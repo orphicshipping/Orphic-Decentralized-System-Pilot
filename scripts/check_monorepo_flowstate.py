@@ -24,11 +24,11 @@ import venv
 import xml.etree.ElementTree as ET
 
 if __package__:
-    from .check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _wheel
+    from .check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _utf8_python_command, _wheel
     from .check_monorepo_inference import _validate, _worktree
     from .monorepo import ROOT, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 else:
-    from check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _wheel
+    from check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _utf8_python_command, _wheel
     from check_monorepo_inference import _validate, _worktree
     from monorepo import ROOT, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 
@@ -61,7 +61,7 @@ def _run(arguments, *, cwd: Path, log: Path, stdin: bytes | None = None, timeout
     environment["PYTHONDONTWRITEBYTECODE"] = "1"
     environment["OPENBLAS_NUM_THREADS"] = "1"
     environment["OMP_NUM_THREADS"] = "1"
-    command = [str(item) for item in arguments]
+    command = _utf8_python_command(arguments)
     display = list(command)
     if "-c" in display:
         index = display.index("-c") + 1
@@ -331,12 +331,13 @@ def main(argv=None) -> int:
     log.write_text("")
     report = {"schema": "notations.monorepo-flowstate-gate.v1", "status": "running",
         "verification_id": "verification:" + uuid.uuid4().hex,
-        "created_at": datetime.now(timezone.utc).isoformat(), "terminal_revision": _git(ROOT, "rev-parse", "HEAD"),
+        "created_at": datetime.now(timezone.utc).isoformat(), "terminal_revision": None,
         "python_version": sys.version, "platform": platform.platform(), "minimum_python": "3.12",
         "dependencies": DEPENDENCIES, "claim_scope": SCOPE, "independent_verification": False,
         "canonicalAdmission": False, "admission": "not_performed", "private_daf_qualified": False,
         "log": str(log)}
     try:
+        report["terminal_revision"] = _git(ROOT, "rev-parse", "HEAD")
         report["terminal_source"] = verify_terminal_source(root=ROOT)
         if report["terminal_source"]["revision"] != report["terminal_revision"]:
             raise ValueError("Terminal revision changed before qualification")

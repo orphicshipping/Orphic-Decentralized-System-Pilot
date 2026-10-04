@@ -354,6 +354,52 @@ def test_malformed_or_unrelated_child_evidence_fails_with_a_final_report(coordin
     assert result["error"]["type"] == "ValueError"
 
 
+@pytest.mark.parametrize("depth", [65, 100000])
+def test_nested_child_evidence_retains_a_final_failed_report(coordinator, monkeypatch, tmp_path, depth):
+    module, _ = coordinator
+    # Include valid identity fields so failure is specifically the nested
+    # child error, both below and above the native decoder's recursion limit.
+    raw = json.dumps(_fresh_report())[:-1] + ', "error": ' + "[" * depth + "0" + "]" * depth + "}"
+
+    def run(command, **kwargs):
+        output = Path(command[command.index("--output-dir") + 1])
+        output.mkdir(parents=True)
+        (output / "report.json").write_text(raw)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(module, "subprocess", SimpleNamespace(run=run, SubprocessError=SubprocessError))
+    assert module.check(_arguments(tmp_path)) == 1
+    result = _report(tmp_path)
+    assert result["status"] == result["groups"]["measurement"]["status"] == "failed"
+    assert result["error"]["type"] == "ValueError"
+    assert "supported JSON nesting bound" in result["error"]["message"]
+    lane = result["groups"]["measurement"]
+    assert lane["report_sha256"] == sha256(Path(lane["report"]).read_bytes()).hexdigest()
+
+
+@pytest.mark.parametrize("extra", [
+    ', "status": "failed", "status": "passed"',
+    ', "error": {"type": "first", "type": "second"}',
+    *(', "measurement": ' + value for value in ("NaN", "Infinity", "-Infinity", "1e999", "-1e999")),
+])
+def test_ambiguous_or_nonfinite_child_json_is_refused(coordinator, monkeypatch, tmp_path, extra):
+    module, _ = coordinator
+    raw = json.dumps(_fresh_report())[:-1] + extra + "}"
+
+    def run(command, **kwargs):
+        output = Path(command[command.index("--output-dir") + 1])
+        output.mkdir(parents=True)
+        (output / "report.json").write_text(raw)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(module, "subprocess", SimpleNamespace(run=run, SubprocessError=SubprocessError))
+    assert module.check(_arguments(tmp_path)) == 1
+    result = _report(tmp_path)
+    assert result["status"] == result["groups"]["measurement"]["status"] == "failed"
+    assert result["error"]["type"] == "ValueError"
+    assert "report_sha256" in result["groups"]["measurement"]
+
+
 def test_revision_change_after_a_successful_child_invalidates_the_aggregate(coordinator, monkeypatch, tmp_path):
     module, state = coordinator
     _child(monkeypatch, coordinator, _fresh_report(), after=lambda: state.update(head="2" * 40))

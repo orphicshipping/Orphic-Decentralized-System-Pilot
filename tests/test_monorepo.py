@@ -157,6 +157,37 @@ def test_both_imports_and_original_runtime_commits_remain_verifiable():
     assert all(not path.exists() for path in bindings)
 
 
+@pytest.mark.parametrize("payload", [None, [{"schema": "unexpected"}], ["schema", "modules"], 1, "schema"])
+def test_manifest_root_requires_an_object_with_a_controlled_refusal(tmp_path, payload):
+    (tmp_path / "instruments").mkdir()
+    (tmp_path / "instruments/manifest.json").write_text(json.dumps(payload))
+    with pytest.raises(ValueError, match="must be a JSON object"):
+        monorepo.load_manifest(tmp_path)
+
+
+def test_manifest_preserves_utf8_provenance_on_locale_encoded_hosts(tmp_path, monkeypatch):
+    module = json.loads((ROOT / "instruments/manifest.json").read_bytes())["modules"][0]
+    module["ownership"] = "Notations \u2014 \u5de5\u7a0b"
+    path = tmp_path / module["path"]
+    path.mkdir(parents=True)
+    for name in ("pyproject.toml", "LICENSE", "NOTICE.md"):
+        (path / name).write_bytes((ROOT / module["path"] / name).read_bytes())
+    (tmp_path / "instruments/manifest.json").write_text(
+        json.dumps({"schema": "notations.monorepo-imports.v1", "modules": [module]}, ensure_ascii=False),
+        encoding="utf-8")
+    monkeypatch.setattr(monorepo, "_PATHS", {module["role"]: module["path"]})
+    monkeypatch.setattr(monorepo, "runtime_pin", lambda *args: {
+        "revision": module["runtime_revision"], "source_root": module["source_root"]})
+    assert monorepo.load_manifest(tmp_path)["modules"][0]["ownership"] == module["ownership"]
+
+
+def test_manifest_decoder_nesting_failure_is_a_controlled_refusal(tmp_path):
+    (tmp_path / "instruments").mkdir()
+    (tmp_path / "instruments/manifest.json").write_text("[" * 100000 + "0" + "]" * 100000)
+    with pytest.raises(ValueError, match="supported JSON nesting bound"):
+        monorepo.load_manifest(tmp_path)
+
+
 def test_subtree_directory_does_not_bypass_standalone_repository_check():
     module = monorepo.load_manifest()["modules"][0]
     with pytest.raises(AdapterRefusal, match="not a repository root"):

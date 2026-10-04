@@ -44,7 +44,8 @@ def doctor(monkeypatch, tmp_path):
     monkeypatch.setattr(module, "verify_terminal_source", audit_source)
     monkeypatch.setattr(module, "verify_imports", lambda root: {"provider": TREE})
     monkeypatch.setattr(module, "git", git)
-    monkeypatch.setattr(module, "sys", SimpleNamespace(version_info=(3, 12, 14), executable=sys.executable))
+    # General launcher fixtures model POSIX; native Windows cases select their platform explicitly.
+    monkeypatch.setattr(module, "sys", SimpleNamespace(version_info=(3, 12, 14), executable=sys.executable, platform="linux"))
     return module, root, state
 
 
@@ -84,11 +85,13 @@ def tools(doctor, monkeypatch, tmp_path):
 
     def run(command, **kwargs):
         calls.append((command, kwargs))
-        assert command[1:] in (["--version"], ["--version", "--verbose"])
-        # Native wrapper fixtures can have .cmd/.exe suffixes; the simulated
-        # version result still identifies the requested tool, not its wrapper.
-        value = versions[Path(command[0]).stem]
-        if Path(command[0]).stem == "npm":
+        npm_script = len(command) > 2 and Path(command[1]).name == "npm-cli.js"
+        assert (command[2:] if npm_script else command[1:]) in (["--version"], ["--version", "--verbose"])
+        # Native wrapper fixtures and direct Node/npm invocation retain the
+        # requested tool identity even though Node hosts the npm version probe.
+        name = "npm" if npm_script else Path(command[0]).stem
+        value = versions[name]
+        if name == "npm":
             environment = {key.lower(): item for key, item in kwargs["env"].items()}
             user, global_config = (Path(environment[key]) for key in ("npm_config_userconfig", "npm_config_globalconfig"))
             assert user.resolve() != global_config.resolve()
@@ -675,6 +678,7 @@ def test_windows_implicit_compiler_directory_is_refused_without_probe(doctor, to
 def test_windows_selected_node_directory_ignores_caller_shadowing(doctor, tools, monkeypatch):
     module, root, _ = doctor
     directory, _, calls = tools
+    module.sys.platform = "win32"
     for path in (directory.parent / "node.exe", directory.parent / "npm.cmd",
                  directory / "node.exe", directory / "npm.cmd"):
         path.write_bytes(b"owned lookup fixture")
@@ -686,8 +690,8 @@ def test_windows_selected_node_directory_ignores_caller_shadowing(doctor, tools,
     checks = _checks(report, "web")
     assert Path(checks["node"]["entrypoint"]) == directory / "node.exe"
     assert Path(checks["npm"]["entrypoint"]) == directory / "npm.cmd"
-    assert [Path(command[0]).parent for command, _ in calls] == [directory, directory]
-    # Native npm is still deliberately unqualified by this launcher policy.
+    assert [Path(command[0]).parent for command, _ in calls] == [directory]
+    # A native launcher without its npm JavaScript entry cannot be probed.
     assert checks["node_npm_context"]["status"] == report["status"] == "refused"
 
 
@@ -702,3 +706,60 @@ def test_python311_windows_lookup_keeps_pathext_on_absolute_candidates(doctor, m
     monkeypatch.setattr(module, "shutil", shutil)
     module.sys.version_info = (3, 11, 9)
     assert Path(module._which_at_root("uv", root, str(selected))) == tool
+
+
+def _windows_npm_install(directory):
+    for name in ("node.exe", "npm.cmd"):
+        path = directory / name
+        path.write_text("owned Windows tool fixture")
+        path.chmod(0o755)
+    script = directory / "node_modules/npm/bin/npm-cli.js"
+    script.parent.mkdir(parents=True)
+    script.write_text("// Owned npm entry fixture; never executed by mocked probes.\n")
+    return script
+
+
+def test_windows_npm_preflight_uses_the_gates_selected_node_and_javascript_entry(doctor, tools, monkeypatch):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    module.sys.platform = "win32"
+    script = _windows_npm_install(directory)
+    # Neither the caller nor the gate cwd may override explicit PATH tools.
+    for shadow in (root / "node.exe", directory.parent / "node.exe"):
+        shadow.write_bytes(b"must not execute")
+    monkeypatch.chdir(directory.parent)
+    report = module.inspect_workspace(root=root, groups=["web"], node_bin=directory)
+    checks = _checks(report, "web")
+    assert report["status"] == checks["node_npm_context"]["status"] == "available"
+    assert calls[0][0] == [str(directory / "node.exe"), "--version"]
+    assert calls[1][0] == [str(directory / "node.exe"), str(script), "--version"]
+    assert checks["npm"]["javascript_entrypoint"] == str(script)
+    assert checks["npm"]["node_executable"] == checks["node"]["executable"]
+    assert report["qualification"] == "not_performed"
+    assert all("shell" not in kwargs for _, kwargs in calls)
+
+
+@pytest.mark.parametrize("prefix", ["", "relative-tools"])
+def test_windows_web_preflight_refuses_cwd_dependent_path_before_probe(doctor, tools, monkeypatch, prefix):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    module.sys.platform = "win32"
+    _windows_npm_install(directory)
+    monkeypatch.setenv("PATH", prefix + os.pathsep + str(directory))
+    report = module.inspect_workspace(root=root, groups=["web"])
+    assert report["status"] == "refused"
+    assert calls == []
+
+
+def test_windows_web_preflight_does_not_fall_back_from_incomplete_selected_directory(doctor, tools, tmp_path):
+    module, root, _ = doctor
+    directory, _, calls = tools
+    module.sys.platform = "win32"
+    _windows_npm_install(directory)
+    selected = tmp_path / "selected-node"
+    selected.mkdir()
+    (selected / "node.exe").write_bytes(b"owned Node fixture")
+    (selected / "node.exe").chmod(0o755)
+    report = module.inspect_workspace(root=root, groups=["web"], node_bin=selected)
+    assert _checks(report, "web")["npm"]["status"] == "missing"
+    assert [command for command, _ in calls] == [[str(selected / "node.exe"), "--version"]]

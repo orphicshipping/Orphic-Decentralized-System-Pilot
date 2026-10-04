@@ -14,6 +14,7 @@ from hashlib import sha256
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -31,7 +32,9 @@ else:
 
 SET_REVISION = "bd261a765281a95312f7c91a3857233476294c5b"
 SET_REPOSITORY = "https://github.com/giasonpooni/Notations-Estimator-Bench.git"
-DEPENDENCIES = ["numpy==2.4.3", "pytest==9.0.2", "websockets==16.0"]
+# Windows does not ship the IANA database used by the original DST-fold tests.
+DEPENDENCIES = ["numpy==2.4.3", "pytest==9.0.2", "websockets==16.0",
+                "tzdata==2026.5; sys_platform == 'win32'"]
 SCOPE = (
     "Synthetic computational interoperability of public calibration and clock "
     "providers only; no physical calibration, validation, state admission, "
@@ -46,14 +49,31 @@ def _environment() -> dict[str, str]:
                 "GIT_ALTERNATE_OBJECT_DIRECTORIES"):
         environment.pop(key, None)
     environment["PYTHONNOUSERSITE"] = "1"
+    environment["PYTHONUTF8"] = "1"
+    environment["PYTHONIOENCODING"] = "utf-8"
     environment["PIP_DISABLE_PIP_VERSION_CHECK"] = "1"
     environment["PIP_NO_INPUT"] = "1"
     environment["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
     return environment
 
 
-def _run(arguments, *, cwd: Path, log: Path, timeout: int = 300) -> str:
+def _utf8_python_command(arguments) -> list[str]:
+    """Select UTF-8 for known isolated Python commands without changing inputs.
+
+    Python -I ignores the encoding environment supplied to normal descendants.
+    Our Python commands place -I first; unrelated tools and later arguments must
+    remain untouched. This only selects text encoding, preserving isolation.
+    """
     command = [str(argument) for argument in arguments]
+    if (command[1:2] == ["-I"]
+            and re.fullmatch(r"python(?:[0-9]+(?:\.[0-9]+)*)?(?:\.exe)?",
+                             Path(command[0]).name, flags=re.IGNORECASE)):
+        command[2:2] = ["-X", "utf8"]
+    return command
+
+
+def _run(arguments, *, cwd: Path, log: Path, timeout: int = 300) -> str:
+    command = _utf8_python_command(arguments)
     display = list(command)
     if "-c" in display and display[display.index("-c") + 1].count("\n"):
         code_index = display.index("-c") + 1
@@ -413,9 +433,10 @@ def main(argv=None) -> int:
         "verification_id": "verification:" + uuid.uuid4().hex,
         "created_at": datetime.now(timezone.utc).isoformat(),
         "claim_scope": SCOPE, "private_eight_provider_workflow_qualified": False,
-        "terminal_revision": _git(ROOT, "rev-parse", "HEAD"),
+        "terminal_revision": None,
         "dependencies": DEPENDENCIES, "log": str(log)}
     try:
+        report["terminal_revision"] = _git(ROOT, "rev-parse", "HEAD")
         _qualify(args, report, output, log)
     except Exception as error:
         report["status"] = "failed"

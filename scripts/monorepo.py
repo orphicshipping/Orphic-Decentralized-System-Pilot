@@ -285,7 +285,12 @@ def load_manifest(root=ROOT):
                 raise ValueError("Duplicate manifest key")
             result[key] = value
         return result
-    manifest = json.loads((root / "instruments/manifest.json").read_text(), object_pairs_hook=unique)
+    try:
+        manifest = json.loads((root / "instruments/manifest.json").read_text(encoding="utf-8"), object_pairs_hook=unique)
+    except RecursionError as error:
+        raise ValueError("Import manifest exceeds the supported JSON nesting bound") from error
+    if not isinstance(manifest, dict):
+        raise ValueError("Import manifest must be a JSON object")
     if set(manifest) != {"schema", "modules"} or manifest["schema"] != "notations.monorepo-imports.v1":
         raise ValueError("Unsupported import manifest")
     modules = manifest["modules"]

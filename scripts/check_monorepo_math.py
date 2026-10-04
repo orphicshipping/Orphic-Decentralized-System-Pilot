@@ -26,11 +26,11 @@ import uuid
 import venv
 
 if __package__:
-    from .check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _wheel
+    from .check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _utf8_python_command, _wheel
     from .check_monorepo_inference import _validate, _worktree
     from .monorepo import ROOT, _retained, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 else:
-    from check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _wheel
+    from check_monorepo import _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _run, _utf8_python_command, _wheel
     from check_monorepo_inference import _validate, _worktree
     from monorepo import ROOT, _retained, load_manifest, provider_worktrees, verify_imports, verify_terminal_source
 
@@ -74,7 +74,7 @@ def _run_bound(arguments, *, cwd: Path, log: Path, bindings=None,
     for key in _BINDING_KEYS:
         environment.pop(key, None)
     environment.update({key: str(value) for key, value in (bindings or {}).items()})
-    command = [str(argument) for argument in arguments]
+    command = _utf8_python_command(arguments)
     display = list(command)
     if "-c" in display:
         position = display.index("-c") + 1
@@ -529,12 +529,13 @@ def main(argv=None) -> int:
     report = {"schema": "notations.monorepo-math-gate.v1", "status": "running",
         "verification_id": "verification:" + uuid.uuid4().hex,
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "terminal_revision": _git(ROOT, "rev-parse", "HEAD"), "python_version": sys.version,
+        "terminal_revision": None, "python_version": sys.version,
         "minimum_python": "3.12", "dependencies": DEPENDENCIES,
         "claim_scope": SCOPE, "independent_verification": False, "canonicalAdmission": False,
         "admission": "not_performed", "surface_qualified": False,
         "identified_design_stack_qualified": False, "log": str(log)}
     try:
+        report["terminal_revision"] = _git(ROOT, "rev-parse", "HEAD")
         report["terminal_source"] = verify_terminal_source(root=ROOT)
         if report["terminal_source"]["revision"] != report["terminal_revision"]:
             raise ValueError("Terminal revision changed before qualification")

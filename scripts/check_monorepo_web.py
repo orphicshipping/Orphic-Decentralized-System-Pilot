@@ -14,8 +14,8 @@ import json
 import os
 from pathlib import Path
 import re
-import shutil
 import subprocess
+import sys
 import tempfile
 import uuid
 
@@ -49,11 +49,43 @@ def _node_environment(temporary: Path) -> dict[str, str]:
     return environment
 
 
-def _run(arguments, *, cwd: Path, temporary: Path, log: Path, timeout=600) -> str:
+def _path_tool(name: str, environment: dict[str, str]) -> Path:
+    # Gate subprocesses enter different temporary directories. Only absolute
+    # PATH entries can bind one executable consistently across those changes;
+    # never let Windows' implicit current-directory search choose a tool.
+    for directory in environment.get("PATH", "").split(os.pathsep):
+        if not directory or not Path(directory).is_absolute():
+            raise RuntimeError("Web tool discovery requires absolute, nonempty PATH entries before " + name)
+        candidate = Path(directory) / name
+        if candidate.is_file() and os.access(candidate, os.X_OK):
+            return candidate.resolve()
+    raise FileNotFoundError("The public web gate requires Node.js and npm on PATH; missing " + name)
+
+
+def _command(arguments, *, cwd: Path, environment: dict[str, str]) -> list[str]:
     command = [str(argument) for argument in arguments]
+    if sys.platform != "win32" or command[0] not in {"node", "npm"}:
+        return command
+    # CreateProcess does not resolve npm.cmd from a bare "npm" name. Run the
+    # installed npm entry point directly with the selected Node executable:
+    # arguments stay literal and npm uses the same Node version we qualify.
+    # cwd deliberately does not participate in the executable search.
+    node = _path_tool("node.exe", environment)
+    if command[0] == "node":
+        return [str(node), *command[1:]]
+    npm = _path_tool("npm.cmd", environment)
+    entry = npm.parent / "node_modules/npm/bin/npm-cli.js"
+    if not entry.is_file():
+        raise RuntimeError("Cannot find npm's JavaScript entry point beside its Windows launcher: " + str(entry))
+    return [str(node), str(entry), *command[1:]]
+
+
+def _run(arguments, *, cwd: Path, temporary: Path, log: Path, timeout=600) -> str:
+    environment = _node_environment(temporary)
+    command = _command(arguments, cwd=cwd, environment=environment)
     with log.open("ab") as stream:
         stream.write(("\n$ " + " ".join(command) + "\n").encode())
-        result = subprocess.run(command, cwd=cwd, env=_node_environment(temporary),
+        result = subprocess.run(command, cwd=cwd, env=environment,
                                 stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
                                 timeout=timeout, check=False)
         stream.write(result.stdout)
@@ -150,9 +182,10 @@ def main(argv=None) -> int:
     report = {"schema": "notations.monorepo-web-gate.v1", "status": "running",
               "verification_id": "verification:" + uuid.uuid4().hex,
               "created_at": datetime.now(timezone.utc).isoformat(),
-              "terminal_revision": _git(ROOT, "rev-parse", "HEAD"),
+              "terminal_revision": None,
               "claim_scope": SCOPE, "log": str(log), "minimum_node": "24"}
     try:
+        report["terminal_revision"] = _git(ROOT, "rev-parse", "HEAD")
         report["terminal_source"] = verify_terminal_source(root=ROOT)
         if report["terminal_source"]["revision"] != report["terminal_revision"]:
             raise ValueError("Terminal revision changed before qualification")

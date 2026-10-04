@@ -5,6 +5,7 @@ import argparse
 from datetime import datetime, timezone
 from hashlib import sha256
 import json
+from math import isfinite
 import os
 from pathlib import Path
 import subprocess
@@ -24,6 +25,37 @@ GATES = {
     "surface": "check_monorepo_surface.py",
     "web": "check_monorepo_web.py",
 }
+
+
+def _child_report(data):
+    """Keep malformed child evidence inside the coordinator's failure contract."""
+    def unique(items):
+        result = {}
+        for key, value in items:
+            if key in result:
+                raise ValueError("Duplicate child qualification evidence key: " + key)
+            result[key] = value
+        return result
+
+    def non_json(value):
+        raise ValueError("Non-JSON child qualification evidence number: " + value)
+
+    try:
+        report = json.loads(data, object_pairs_hook=unique, parse_constant=non_json)
+    except RecursionError as error:
+        raise ValueError("Child qualification evidence exceeds the supported JSON nesting bound") from error
+    # Some decoders accept nesting that later exceeds Python's serialization
+    # limit. Reject it before copying a child's error or source into our report.
+    pending = [(report, 0)]
+    while pending:
+        value, depth = pending.pop()
+        if depth > 64:
+            raise ValueError("Child qualification evidence exceeds the supported JSON nesting bound")
+        if isinstance(value, float) and not isfinite(value):
+            raise ValueError("Child qualification evidence contains a nonfinite number")
+        children = value.values() if isinstance(value, dict) else value if isinstance(value, list) else ()
+        pending.extend((child, depth + 1) for child in children)
+    return report
 
 
 def check(args):
@@ -92,7 +124,7 @@ def check(args):
             if evidence.is_file():
                 evidence_bytes = evidence.read_bytes()
                 result["report_sha256"] = sha256(evidence_bytes).hexdigest()
-                qualification = json.loads(evidence_bytes)
+                qualification = _child_report(evidence_bytes)
                 if not isinstance(qualification, dict):
                     raise ValueError("Child qualification evidence must be an object: " + group)
                 schema = ("notations.monorepo-gate-report.v1" if group == "measurement"

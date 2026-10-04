@@ -18,9 +18,11 @@ import uuid
 
 if __package__:
     from .check_monorepo import _environment
+    from .check_monorepo_web import _path_tool
     from .monorepo import ROOT, git, verify_imports, verify_terminal_source
 else:
     from check_monorepo import _environment
+    from check_monorepo_web import _path_tool
     from monorepo import ROOT, git, verify_imports, verify_terminal_source
 
 
@@ -114,7 +116,7 @@ def _which_at_root(requested, root, path):
     return _lookup_at_root(requested, root, path)[0]
 
 
-def _tool(name, root, environment, supplied=None):
+def _tool(name, root, environment, supplied=None, *, node=None):
     selection = "explicit" if supplied is not None else "PATH"
     requested = str(supplied) if supplied is not None else name
     result = {"name": name, "selection": selection, "status": "missing"}
@@ -144,6 +146,15 @@ def _tool(name, root, environment, supplied=None):
     if not entrypoint.is_file() or not os.access(entrypoint, os.X_OK):
         return {**result, "status": "refused", "reason": "Selected path is not an executable file"}
     command = [str(entrypoint), "--version"]
+    if name == "npm" and sys.platform == "win32":
+        if node is None or node["status"] != "available":
+            return {**result, "status": "refused", "reason": "The selected Node executable is unavailable for npm"}
+        script = entrypoint.parent / "node_modules/npm/bin/npm-cli.js"
+        if entrypoint.suffix.lower() != ".cmd" or not script.is_file():
+            return {**result, "status": "refused", "reason": "npm's Windows launcher lacks its JavaScript entry point"}
+        command = [node["entrypoint"], str(script), "--version"]
+        result.update(executable=str(script.resolve()), javascript_entrypoint=str(script),
+                      node_executable=node["executable"])
     if name in {"cargo", "rustc", "rustdoc"}:
         command.append("--verbose")
     try:
@@ -212,6 +223,11 @@ def _node_context(node, npm, node_bin):
         return {**result, "status": "refused", "reason": "The original Globe suite requires Node 24 or newer"}
     if node_bin is not None and any(Path(tool["entrypoint"]).parent.resolve() != node_bin for tool in (node, npm)):
         return {**result, "status": "refused", "reason": "Selected Node directory does not provide both Node and npm"}
+    if "javascript_entrypoint" in npm:
+        if npm.get("node_executable") != node["executable"]:
+            return {**result, "status": "refused", "reason": "npm's JavaScript probe used a different Node executable"}
+        return {**result, "npm_node_binding": "selected Node with explicit npm JavaScript entry point",
+                "reason": "Version and entry point inspection only; package locks and builds are unqualified"}
     try:
         with Path(npm["executable"]).open("rb") as stream:
             launcher = stream.readline(256).decode("ascii", errors="replace").strip()
@@ -224,6 +240,25 @@ def _node_context(node, npm, node_bin):
     else:
         return {**result, "status": "refused", "reason": "npm launcher does not identify the selected Node context"}
     return {**result, "npm_node_binding": binding, "reason": "Version and launcher inspection only; package locks and builds are unqualified"}
+
+
+def _windows_web_tools(root, environment, node_bin):
+    # Use the gate's exact discovery rule: absolute PATH entries, no implicit
+    # current-directory tools, and the selected Node for npm's JavaScript CLI.
+    search = {"PATH": str(node_bin) if node_bin is not None else environment.get("PATH", "")}
+    selected = []
+    for name, filename in (("node", "node.exe"), ("npm", "npm.cmd")):
+        try:
+            path = _path_tool(filename, search)
+        except (FileNotFoundError, RuntimeError) as error:
+            selected.append({"name": name, "selection": "explicit" if node_bin is not None else "PATH",
+                             "status": "missing" if isinstance(error, FileNotFoundError) else "refused",
+                             "reason": str(error)})
+        else:
+            tool = _tool(name, root, environment, path, node=selected[0] if name == "npm" else None)
+            tool["selection"] = "explicit" if node_bin is not None else "PATH"
+            selected.append(tool)
+    return selected
 
 
 def _helper_checks(root, script):
@@ -311,9 +346,12 @@ def inspect_workspace(*, root=ROOT, groups=None, cargo=None, node_bin=None, uv=N
                 checks.append({"name": "node_bin", "status": "refused" if configured_bin.exists() else "missing",
                                "reason": "Selected Node toolchain directory is unavailable"})
             else:
-                paths = {name: (Path(_which_at_root(name, configured_bin, str(configured_bin)) or configured_bin / name)
-                                if configured_bin is not None else None) for name in ("node", "npm")}
-                node, npm = (_tool(name, root, environment, paths[name]) for name in ("node", "npm"))
+                if sys.platform == "win32":
+                    node, npm = _windows_web_tools(root, environment, configured_bin)
+                else:
+                    paths = {name: (Path(_which_at_root(name, configured_bin, str(configured_bin)) or configured_bin / name)
+                                    if configured_bin is not None else None) for name in ("node", "npm")}
+                    node, npm = (_tool(name, root, environment, paths[name]) for name in ("node", "npm"))
                 checks += [node, npm, _node_context(node, npm, configured_bin)]
         elif group == "surface":
             checks.append(_tool("uv", root, environment, uv))

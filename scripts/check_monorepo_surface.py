@@ -28,10 +28,10 @@ import xml.etree.ElementTree as ET
 import zipfile
 
 if __package__:
-    from .check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _wheel
+    from .check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _utf8_python_command, _wheel
     from .monorepo import ROOT, load_manifest, project_version, provider_worktrees, verify_imports, verify_terminal_source
 else:
-    from check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _wheel
+    from check_monorepo import DEPENDENCIES, _copy_source, _environment, _git, _IMPORT_PROBE, _junit, _utf8_python_command, _wheel
     from monorepo import ROOT, load_manifest, project_version, provider_worktrees, verify_imports, verify_terminal_source
 
 SURFACE_REVISION = "1f7bbe380651e8df82db1760d880330aee3dc229"
@@ -59,7 +59,7 @@ def _run(arguments, *, cwd: Path, log: Path, bindings=None, timeout=600) -> str:
                         "OPENBLAS_NUM_THREADS": "1", "OMP_NUM_THREADS": "1",
                         "MKL_NUM_THREADS": "1"})
     environment.update({name: str(value) for name, value in (bindings or {}).items()})
-    command = [str(item) for item in arguments]
+    command = _utf8_python_command(arguments)
     display = list(command)
     if "-c" in display:
         index = display.index("-c") + 1
@@ -88,7 +88,7 @@ def _surface_wheel(python: Path, source: Path, destination: Path, log: Path) -> 
     # The original Hatch package reads its version from contract.py; adding a
     # literal project.version merely to use another gate's helper would change
     # the original package contract.
-    project = tomllib.loads((source / "pyproject.toml").read_text())["project"]
+    project = tomllib.loads((source / "pyproject.toml").read_text(encoding="utf-8"))["project"]
     version = project_version(source, project)
     destination.mkdir()
     _run([python, "-I", "-m", "pip", "wheel", "--no-deps", "--no-build-isolation",
@@ -292,7 +292,7 @@ def qualify_remaining(report: dict, python: Path, temporary: Path, suite: Path, 
     deterministic = output / "surface-determinism.json"
     _run([python,"-I",suite / "tools/e2e.py","--runs","5","--profile","fast",
           "--baseline","self","--report",deterministic],cwd=temporary,log=log,timeout=3600)
-    cycles = json.loads(deterministic.read_text())
+    cycles = json.loads(deterministic.read_text(encoding="utf-8"))
     if (cycles["runs"],cycles["passed"],cycles["failed"],cycles["profile"],cycles["baseline"]) != (5,5,0,"fast","self"):
         raise AssertionError("Original Surface five-cycle same-machine determinism failed")
     if len(cycles["cycles"]) != 5 or not all(item["passed"] and len(item["steps"]) == 6 for item in cycles["cycles"]):
@@ -436,7 +436,7 @@ def qualify(args, report: dict, output: Path, log: Path) -> None:
         for name, options in commands:
             path = entrypoints / "examples" / name
             captured = _run([python,"-I",path,*options],cwd=temporary,log=log,timeout=1800)
-            retained = output / (name.removesuffix(".py")+".txt"); retained.write_text(captured)
+            retained = output / (name.removesuffix(".py")+".txt"); retained.write_text(captured,encoding="utf-8")
             report["original_entrypoints"][name] = {"source_sha256":sha256(path.read_bytes()).hexdigest(),
                 "output":str(retained),"output_sha256":sha256(retained.read_bytes()).hexdigest()}
         report["regeneration"] = json.loads(_run([python,"-I","-c",_ARTEFACTS,artifacts,source],cwd=temporary,log=log))
@@ -607,7 +607,7 @@ def main(argv=None) -> int:
     log = execution_output / "commands.log"
     report = {"schema":"notations.monorepo-surface-gate.v1","status":"running",
         "verification_id":verification_id,
-        "created_at":datetime.now(timezone.utc).isoformat(),"terminal_revision":_git(ROOT,"rev-parse","HEAD"),
+        "created_at":datetime.now(timezone.utc).isoformat(),"terminal_revision":None,
         "python_version":sys.version,"platform":platform.platform(),"minimum_python":"3.11",
         "dependencies":REQUIREMENTS,"claim_scope":SCOPE,"independent_verification":False,
         "admission":"not_performed","log":str(log)}
@@ -636,6 +636,7 @@ def main(argv=None) -> int:
                     "sha256":sha256(Path(previous["log"]).read_bytes()).hexdigest()},
                 "new_execution_output":str(execution_output)}
         log.write_text("")
+        report["terminal_revision"] = _git(ROOT,"rev-parse","HEAD")
         report["terminal_source"] = verify_terminal_source(root=ROOT)
         if report["terminal_source"]["revision"] != report["terminal_revision"]:
             raise ValueError("Terminal revision changed before qualification")
