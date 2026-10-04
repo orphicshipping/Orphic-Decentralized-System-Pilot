@@ -1,4 +1,4 @@
-# Parametric Design Terminal documentation
+# Notations Systems Terminal documentation
 
 The root [README](../README.md) is the macro entrypoint. This index points to
 the page that owns each kind of detail so status and contracts do not drift
@@ -6,7 +6,7 @@ across several copies.
 
 The technical name is **Computational Instrumentation Workbench (CIW)**. The
 Python distribution is `computational-instrumentation-workbench`; Python code
-imports `ciw`, and the command-line entry point is also `ciw`.
+imports `ciw`. The command-line entry points are `net` and `ciw`.
 
 ## Start here
 
@@ -85,6 +85,7 @@ or inspecting a record does not establish provider availability.
 
 - [Qualified research release: candidate, PR scope and evidence gate](QUALIFIED_RELEASE.md)
 - [Engineering superrepo: module map, exact source histories and qualification commands](MONOREPO.md)
+- [Superrepo debugging audit, 2026-10-04](SUPERREPO_AUDIT_2026-10-04.md)
 - [Combined integration candidate and acceptance gates](INTEGRATION_CANDIDATE.md)
 - [Development guide](DEVELOPMENT.md)
 - [Development-window gap audit](DEVELOPMENT_GAPS.md)

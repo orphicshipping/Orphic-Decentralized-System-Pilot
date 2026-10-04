@@ -357,40 +357,38 @@ def verify_imports(root=ROOT):
         raise ValueError("Monorepo root must be a Git repository root")
     if git(root, "rev-parse", "--show-object-format").strip() != b"sha1":
         raise ValueError("This import manifest declares SHA-1 source repositories")
+    revision = git(root, "rev-parse", "HEAD").decode().strip()
+    modules = load_manifest(root)["modules"]
     result = {}
-    for module in load_manifest(root)["modules"]:
-        prefix, revision, tree = module["path"], module["import_revision"], module["import_tree"]
-        git(root, "merge-base", "--is-ancestor", revision, "HEAD")
+    for module in modules:
+        prefix, source_revision, tree = module["path"], module["import_revision"], module["import_tree"]
+        git(root, "merge-base", "--is-ancestor", source_revision, revision)
         for history in module.get("additional_history_roots", []):
-            git(root, "merge-base", "--is-ancestor", history, "HEAD")
+            git(root, "merge-base", "--is-ancestor", history, revision)
         if module["runtime_revision"] is not None:
             _retained(root, module["runtime_revision"], module)
-        if git(root, "rev-parse", revision + "^{tree}").decode().strip() != tree:
+        if git(root, "rev-parse", source_revision + "^{tree}").decode().strip() != tree:
             raise ValueError("Original source tree does not match declared import")
-        if git(root, "rev-parse", "HEAD:" + prefix).decode().strip() != tree:
+        if git(root, "rev-parse", revision + ":" + prefix).decode().strip() != tree:
             raise ValueError("Imported subtree differs from the original source tree")
-        # Hash actual working bytes as well: Git index flags must not hide drift.
-        for entry in git(root, "ls-tree", "-r", "-z", revision).split(b"\0"):
-            if not entry:
-                continue
-            metadata, raw_name = entry.split(b"\t", 1)
-            mode, kind, expected = metadata.decode("ascii").split()
-            path = root / prefix / os.fsdecode(raw_name)
-            if kind != "blob" or mode not in {"100644", "100755"} or path.is_symlink() or not path.is_file():
-                raise ValueError("Imported files must retain their regular-file types")
-            if os.name == "posix" and bool(path.stat().st_mode & 0o111) != (mode == "100755"):
-                raise ValueError("Imported executable mode changed")
-            data = path.read_bytes()
-            if sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest() != expected:
-                raise ValueError("Imported working file differs from the preserved source")
-        git(root, "diff", "--cached", "--quiet", "--no-ext-diff", "--no-textconv", "HEAD", "--", prefix)
-        for raw_name in git(root, "ls-files", "--others", "-z", "--", prefix).split(b"\0"):
-            if raw_name and not _generated_file(root / os.fsdecode(raw_name), root / prefix, environments=True, package_metadata=True):
-                raise ValueError("Unexpected untracked file inside an imported module")
         result[module["role"]] = tree
+    prefixes = tuple(module["path"] for module in modules)
+    # Tree equality binds every imported filename, blob and mode to this exact
+    # HEAD. The complete checkout audit below freshly reads those bytes once;
+    # neither the index nor an earlier invocation can substitute for that read.
+    git(root, "diff", "--cached", "--quiet", "--no-ext-diff", "--no-textconv", revision, "--", *prefixes)
+    for raw_name in git(root, "ls-files", "--others", "-z", "--", *prefixes).split(b"\0"):
+        if not raw_name:
+            continue
+        name = os.fsdecode(raw_name)
+        prefix = next(prefix for prefix in prefixes if name.startswith(prefix + "/"))
+        if not _generated_file(root / name, root / prefix, environments=True, package_metadata=True):
+            raise ValueError("Unexpected untracked file inside an imported module")
     # All qualification lanes copy or execute Terminal tooling as well as the
     # providers. A clean imported subtree cannot authorize dirty root sources.
-    verify_terminal_source(root)
+    terminal = _verify_terminal_source(root, imported_prefixes=prefixes)
+    if terminal["revision"] != revision:
+        raise ValueError("Import source revision changed during qualification")
     return result
 
 
@@ -402,6 +400,10 @@ def verify_terminal_source(root=ROOT):
     output may live outside the executable source directories; generated Python
     caches and package metadata are also permitted within those directories.
     """
+    return _verify_terminal_source(root)
+
+
+def _verify_terminal_source(root, *, imported_prefixes=()):
     root = Path(root).resolve()
     if Path(os.fsdecode(git(root, "rev-parse", "--show-toplevel")).strip()).resolve() != root:
         raise ValueError("Terminal source must be a Git repository root")
@@ -419,22 +421,33 @@ def verify_terminal_source(root=ROOT):
             raise ValueError("Terminal tracked source must retain regular-file types")
         entries.append((raw_name, mode, expected))
     committed_index = sorted((name, mode, expected, "0") for name, mode, expected in entries)
-    observed_index = []
-    for entry in git(root, "ls-files", "--stage", "-z").split(b"\0"):
-        if entry:
-            metadata, raw_name = entry.split(b"\t", 1)
-            mode, expected, stage = metadata.decode("ascii").split()
-            observed_index.append((raw_name, mode, expected, stage))
-    if sorted(observed_index) != committed_index:
-        raise ValueError("Terminal index differs from the reported source revision")
+    def check_index():
+        observed_index = []
+        for entry in git(root, "ls-files", "--stage", "-z").split(b"\0"):
+            if entry:
+                metadata, raw_name = entry.split(b"\t", 1)
+                mode, expected, stage = metadata.decode("ascii").split()
+                observed_index.append((raw_name, mode, expected, stage))
+        if sorted(observed_index) != committed_index:
+            raise ValueError("Terminal index differs from the reported source revision")
+
+    check_index()
     for raw_name, mode, expected in entries:
-        path = root / os.fsdecode(raw_name)
+        name = os.fsdecode(raw_name)
+        imported = any(name.startswith(prefix + "/") for prefix in imported_prefixes)
+        path = root / name
         if path.is_symlink() or not path.is_file() or path.resolve() != path:
+            if imported:
+                raise ValueError("Imported files must retain their regular-file types without traversing symlinks")
             raise ValueError("Terminal tracked source changed type or traverses a symlink")
         if os.name == "posix" and bool(path.stat().st_mode & 0o111) != (mode == "100755"):
+            if imported:
+                raise ValueError("Imported executable mode changed")
             raise ValueError("Terminal tracked executable mode differs from its source revision")
         data = path.read_bytes()
         if sha1(b"blob " + str(len(data)).encode("ascii") + b"\0" + data).hexdigest() != expected:
+            if imported:
+                raise ValueError("Imported working file differs from the preserved source")
             raise ValueError("Terminal tracked working bytes differ from the reported source revision")
     # Do not apply exclude-standard: ignored shadow modules are executable too.
     for raw_name in git(root, "ls-files", "--others", "-z", "--", "src", "scripts", "tests").split(b"\0"):
@@ -445,6 +458,8 @@ def verify_terminal_source(root=ROOT):
         if _generated_file(root / relative, boundary, package_metadata=relative.parts[0] == "src"):
             continue
         raise ValueError("Terminal executable source contains an untracked file: " + os.fsdecode(raw_name))
+    # Refuse a staged mutation that occurred while actual bytes were read.
+    check_index()
     if git(root, "rev-parse", "HEAD").decode().strip() != revision:
         raise ValueError("Terminal source revision changed during qualification")
     return {"revision": revision, "source_tree": tree}

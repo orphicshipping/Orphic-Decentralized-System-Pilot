@@ -294,6 +294,28 @@ class AssessmentTests(unittest.TestCase):
                 self.record["artifacts"] = artifacts
                 self.assert_blocked()
 
+    def test_artifact_identity_cannot_satisfy_two_required_names(self):
+        self.requirement["artifacts"].append("different-evidence")
+        alias = deepcopy(self.record["artifacts"][0])
+        alias["name"] = "different-evidence"
+        self.record["artifacts"].append(alias)
+        report = self.assert_blocked()
+        self.assertIn("invalid or duplicate artifact identities", report["workflows"][0]["reasons"])
+
+    def test_artifact_identity_validation_matches_online_pagination(self):
+        for identity in (None, True, 0, "302", 301, []):
+            with self.subTest(identity=identity):
+                self.evidence = evidence_fixture()
+                extra = deepcopy(self.record["artifacts"][0])
+                extra.update(id=identity, name="unselected-artifact")
+                self.record["artifacts"].append(extra)
+                self.assert_blocked()
+        self.evidence = evidence_fixture()
+        extra = deepcopy(self.record["artifacts"][0])
+        extra.update(id=302, name="unselected-artifact")
+        self.record["artifacts"].append(extra)
+        self.assertEqual(self.report()["status"], "ci_pass")
+
     def test_artifact_expiry_size_identity_and_attempt_time_are_required(self):
         for field, value in (
             ("id", 0), ("id", True), ("expired", True), ("expired", None),
@@ -559,9 +581,14 @@ class OfflineCommandTests(unittest.TestCase):
             '{"candidate_sha":"a","candidate_sha":"b"}',
             '{"nested":{"status":"success","status":"failure"}}',
             '{"value":NaN}', '{"value":Infinity}', '{"value":-Infinity}',
+            '{"value":1e999}', '{"nested":[-1e999]}',
         ):
             with self.subTest(raw=raw), self.assertRaises(ValueError):
                 gate.strict_json(raw)
+
+    def test_strict_json_preserves_finite_exponents(self):
+        self.assertEqual(gate.strict_json('{"values":[1.5e2,-2.5e-3,0.0]}'),
+                         {"values": [150.0, -0.0025, 0.0]})
 
     def test_read_json_enforces_byte_limit(self):
         with tempfile.TemporaryDirectory() as directory:

@@ -501,3 +501,64 @@ def test_surface_retry_preserves_old_evidence_before_rejecting_dirty_current_sou
     assert Path(retained["path"]).read_bytes() == previous_bytes
     assert retained["sha256"] == sha256(previous_bytes).hexdigest()
     assert old_log.read_text() == "original fixture failure"
+
+
+def test_initial_revision_failure_replaces_stale_success_with_failed_occurrence(coordinator, monkeypatch, tmp_path):
+    module, _ = coordinator
+    previous = _fresh_report()
+    (tmp_path / "report.json").write_text(json.dumps(previous))
+
+    def absent_head(*args):
+        raise CalledProcessError(128, ["git", "rev-parse", "HEAD"])
+
+    monkeypatch.setattr(module, "git", absent_head)
+    assert module.check(_arguments(tmp_path)) == 1
+    current = _report(tmp_path)
+    assert current["status"] == "failed"
+    assert current["verification_id"] != previous["verification_id"]
+    assert current["terminal_revision"] is None
+    assert current["error"]["type"] == "CalledProcessError"
+
+
+def test_child_launch_failure_retains_attempted_lane_and_command(coordinator, monkeypatch, tmp_path):
+    module, _ = coordinator
+    observed = []
+
+    def unavailable(command, **kwargs):
+        observed.append(command)
+        raise FileNotFoundError("Selected child interpreter unavailable")
+
+    monkeypatch.setattr(module, "subprocess", SimpleNamespace(run=unavailable, SubprocessError=SubprocessError))
+    assert module.check(_arguments(tmp_path)) == 1
+    lane = _report(tmp_path)["groups"]["measurement"]
+    assert lane["status"] == "failed"
+    assert lane["exit_code"] is None
+    assert lane["command"] == observed[0]
+    assert lane["error"]["type"] == "FileNotFoundError"
+    assert not Path(lane["report"]).exists()
+
+
+@pytest.mark.parametrize("link_parent", [False, True], ids=["report-link", "directory-link"])
+def test_fresh_child_path_cannot_alias_previous_evidence(coordinator, monkeypatch, tmp_path, link_parent):
+    module, _ = coordinator
+    previous = tmp_path / "old"
+    previous.mkdir()
+    old = previous / "report.json"
+    old.write_text(json.dumps(_fresh_report()))
+    before = old.read_bytes()
+
+    def replay_old(command, **kwargs):
+        output = Path(command[command.index("--output-dir") + 1])
+        if link_parent:
+            output.symlink_to(previous, target_is_directory=True)
+        else:
+            output.mkdir()
+            (output / "report.json").symlink_to(old)
+        return SimpleNamespace(returncode=0)
+
+    monkeypatch.setattr(module, "subprocess", SimpleNamespace(run=replay_old, SubprocessError=SubprocessError))
+    assert module.check(_arguments(tmp_path / "new")) == 1
+    report = _report(tmp_path / "new")
+    assert report["status"] == report["groups"]["measurement"]["status"] == "failed"
+    assert "symlink" in report["error"]["message"]
+    assert old.read_bytes() == before

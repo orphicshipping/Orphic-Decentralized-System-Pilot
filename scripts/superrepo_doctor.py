@@ -81,17 +81,64 @@ def _probe_environment(cargo=None, node_bin=None):
     return environment
 
 
+def _lookup_at_root(requested, root, path):
+    """Return the gate-root discovery and whether it depends on that cwd."""
+    if not path:
+        return None, False
+    directories = path.split(os.pathsep)
+    names = [requested]
+    if os.name == "nt":
+        if sys.version_info[:2] >= (3, 12):
+            import _winapi
+            include_current = _winapi.NeedCurrentDirectoryForExePath(requested)
+        else:
+            # Python 3.11's which always includes cwd and applies PATHEXT
+            # only for bare names, before its direct-path early return.
+            include_current = True
+            extensions = (os.environ.get("PATHEXT") or ".COM;.EXE;.BAT;.CMD").split(os.pathsep)
+            if not any(requested.lower().endswith(ext.lower()) for ext in extensions if ext):
+                names = [requested + ext for ext in extensions if ext]
+        if include_current:
+            directories.insert(0, "")
+    for directory in directories:
+        for name in names:
+            # An absolute candidate prevents Windows which from silently
+            # preferring the *caller's* cwd ahead of the gate's PATH.
+            candidate = shutil.which(str(Path(root) / directory / name), path=path)
+            if candidate is not None:
+                return candidate, not Path(directory).is_absolute()
+    return None, False
+
+
+def _which_at_root(requested, root, path):
+    return _lookup_at_root(requested, root, path)[0]
+
+
 def _tool(name, root, environment, supplied=None):
     selection = "explicit" if supplied is not None else "PATH"
     requested = str(supplied) if supplied is not None else name
-    candidate = (str(Path(requested).expanduser().absolute())
-                 if supplied is not None and (isinstance(supplied, Path) or Path(requested).is_absolute() or os.path.dirname(requested))
-                 else shutil.which(requested, path=environment.get("PATH", "")))
     result = {"name": name, "selection": selection, "status": "missing"}
+    cwd_dependent = False
+    if isinstance(supplied, Path) or Path(requested).is_absolute():
+        # Explicit CLI paths are relative to the invoking user.
+        candidate = str(Path(requested).expanduser().absolute())
+    elif supplied is not None and os.path.dirname(requested):
+        # Cargo consumes compiler environment paths inside its isolated build
+        # directory. Resolving them here would silently change their meaning.
+        return {**result, "status": "refused",
+                "reason": "Relative compiler environment paths depend on the isolated working directory; select an absolute path"}
+    else:
+        candidate, cwd_dependent = _lookup_at_root(requested, root, environment.get("PATH", ""))
     if candidate is None:
         return {**result, "reason": "Executable is not available in the selected environment"}
     entrypoint = Path(candidate).absolute()
     result.update(entrypoint=str(entrypoint), executable=str(entrypoint.resolve()))
+    if cwd_dependent and (name in {"rustc", "rustdoc"} or (os.name != "nt" and name in {"cargo", "uv"})):
+        # Cargo resolves compilers after entering its temporary build directory.
+        # POSIX gates also launch PATH-selected cargo/uv there, using the
+        # relative string returned by which. An absolute probe is not parity.
+        return {**result, "status": "refused",
+                "reason": "Selected tool depends on the discovery working directory; select an absolute tool path or PATH entry"}
     if not entrypoint.exists():
         return {**result, "reason": "Selected executable does not exist"}
     if not entrypoint.is_file() or not os.access(entrypoint, os.X_OK):
@@ -115,7 +162,7 @@ def _tool(name, root, environment, supplied=None):
                 probe_environment.update(npm_config_userconfig=str(user_config), npm_config_globalconfig=str(global_config))
             process = subprocess.run(command, cwd=root, env=probe_environment, check=False, timeout=10,
                                      stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-    except (OSError, subprocess.SubprocessError) as error:
+    except (OSError, UnicodeError, subprocess.SubprocessError) as error:
         return {**result, "status": "refused", "reason": "Version probe could not complete",
                 "error_type": type(error).__name__}
     if process.returncode:
@@ -264,7 +311,7 @@ def inspect_workspace(*, root=ROOT, groups=None, cargo=None, node_bin=None, uv=N
                 checks.append({"name": "node_bin", "status": "refused" if configured_bin.exists() else "missing",
                                "reason": "Selected Node toolchain directory is unavailable"})
             else:
-                paths = {name: (Path(shutil.which(name, path=str(configured_bin)) or configured_bin / name)
+                paths = {name: (Path(_which_at_root(name, configured_bin, str(configured_bin)) or configured_bin / name)
                                 if configured_bin is not None else None) for name in ("node", "npm")}
                 node, npm = (_tool(name, root, environment, paths[name]) for name in ("node", "npm"))
                 checks += [node, npm, _node_context(node, npm, configured_bin)]

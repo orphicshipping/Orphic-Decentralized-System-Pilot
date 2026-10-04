@@ -34,13 +34,14 @@ def check(args):
         "schema": "notations.superrepo-qualification.v1",
         "verification_id": "verification:" + uuid.uuid4().hex,
         "created_at": datetime.now(timezone.utc).isoformat(),
-        "terminal_revision": git(ROOT, "rev-parse", "HEAD").decode().strip(),
+        "terminal_revision": None,
         "independent_verification": False,
         "admission": "not_performed",
         "groups": {},
         "status": "running",
     }
     try:
+        report["terminal_revision"] = git(ROOT, "rev-parse", "HEAD").decode().strip()
         report["terminal_source"] = verify_terminal_source(ROOT)
         if report["terminal_source"]["revision"] != report["terminal_revision"]:
             raise ValueError("The repository revision changed before qualification")
@@ -76,11 +77,18 @@ def check(args):
             if group == "flowstate" and args.full_reproduction:
                 command += ["--full-reproduction"]
             print("Qualifying " + group, flush=True)
-            process = subprocess.run(command, cwd=ROOT, env=environment, check=False)
             evidence = group_output / "report.json"
-            result = {"exit_code": process.returncode, "report": str(evidence),
-                      "status": "failed"}
+            result = {"exit_code": None, "report": str(evidence),
+                      "command": command, "status": "failed"}
             report["groups"][group] = result
+            try:
+                process = subprocess.run(command, cwd=ROOT, env=environment, check=False)
+            except (OSError, subprocess.SubprocessError) as error:
+                result["error"] = {"type": type(error).__name__, "message": str(error)}
+                raise
+            result["exit_code"] = process.returncode
+            if evidence.is_symlink() or evidence.resolve() != evidence:
+                raise ValueError("Child qualification evidence traverses a symlink: " + group)
             if evidence.is_file():
                 evidence_bytes = evidence.read_bytes()
                 result["report_sha256"] = sha256(evidence_bytes).hexdigest()
