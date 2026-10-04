@@ -1,0 +1,183 @@
+{
+  "schema": "net.external-thermal-data-candidate-assessment.v1",
+  "reviewed_on": "2026-10-04",
+  "decision": "Best located downloadable real-recording research candidate; NOT an admissible calibrated NET measured-thermal source",
+  "selected": {
+    "title": "Sensorless Battery Internal Temperature Estimation using a Kalman Filter with Impedance Measurement",
+    "authors": [
+      "Robert R. Richardson",
+      "David A. Howey"
+    ],
+    "repository": "https://github.com/robert-richardson/EKF-Battery-Impedance-Temperature",
+    "revision": "194919b94b45f66309475bc88aa8e8826eb603bb",
+    "publication": "https://doi.org/10.1109/TSTE.2015.2420375",
+    "open_preprint": "https://arxiv.org/abs/1501.06160",
+    "source_code": "https://github.com/robert-richardson/EKF-Battery-Impedance-Temperature/blob/194919b94b45f66309475bc88aa8e8826eb603bb/Temperature%20Estimation%20using%20Impedance%20with%20Matlab%20-%20Github/MainScript.m",
+    "origin": "Real experiments on an A123 ANR26650 m1-A 2.3 Ah LiFePO4 cell; retrieved MAT files are author-labelled raw experimental measurements. Repository also contains simulations, which were not selected.",
+    "license": {
+      "file": "https://github.com/robert-richardson/EKF-Battery-Impedance-Temperature/blob/194919b94b45f66309475bc88aa8e8826eb603bb/LICENSE.txt",
+      "identifier": "BSD-3-Clause",
+      "scope": "Repository LICENSE.txt permits source/binary redistribution; README explicitly calls this a code license. No separate explicit dataset license found in reviewed repository; retain author copyright and avoid overstating standalone dataset licensing."
+    },
+    "download_directory": "richardson2015",
+    "inventory": "richardson2015/inventory.json"
+  },
+  "channel_assessment": [
+    {
+      "net_role": "shell",
+      "file": "Temperature_data.mat",
+      "variable": "T_data_2",
+      "matlab_column_1_based": 2,
+      "quantity": "surface temperature",
+      "unit": "degC",
+      "mapping_status": "Measured column exists; Celsius-to-Kelvin needs an explicit retained transformation receipt.",
+      "calibration_status": "No thermocouple calibration certificate, serial number, validity interval, application receipt or per-sample covariance found in downloaded material."
+    },
+    {
+      "net_role": "core_reference",
+      "file": "Temperature_data.mat",
+      "variable": "T_data_2",
+      "matlab_column_1_based": 3,
+      "quantity": "core thermocouple temperature",
+      "unit": "degC",
+      "mapping_status": "Independent physical location documented. Reserve this column only for comparison. Distinct instrument device identity and metrological independence are not established by repository metadata.",
+      "calibration_status": "Not established. Cannot invent device IDs or validity dates."
+    },
+    {
+      "net_role": "ambient",
+      "file": "Temperature_data.mat",
+      "variable": "T_data_2",
+      "matlab_column_1_based": 4,
+      "quantity": "coolant/environment temperature",
+      "unit": "degC",
+      "mapping_status": "Measured T_inf column exists. Preserve actual varying values instead of substituting MainScript P.T_inf=8.0.",
+      "calibration_status": "No retained calibration package located."
+    },
+    {
+      "net_role": "heat_power",
+      "file": "Voltage_current_data.mat",
+      "variable": "VC_data_2",
+      "matlab_columns_1_based": [
+        1,
+        2,
+        3
+      ],
+      "quantities": [
+        "time",
+        "current",
+        "voltage"
+      ],
+      "units": [
+        "s",
+        "A",
+        "V"
+      ],
+      "mapping_status": "No independently measured heat-power channel. Paper's heat estimate derives Q from measured I,V and assumed OCV; this is model-derived heat, not calibrated power measurement.",
+      "unit_evidence": "MainScript's load comment says I(mA), but plotted labels, numerical range -23..30, and paper report amperes. Record this inconsistency if a converter is later authored.",
+      "blocking": true
+    }
+  ],
+  "timing": {
+    "temperature_sample_interval_s": 1.1,
+    "electrical_sampling": "Irregular; exact intervals are in inventory.json.",
+    "absolute_acquisition_epoch": "Not supplied. MATLAB creation metadata is not an acquisition timestamp.",
+    "clock_uncertainty_s": null,
+    "net_mismatch": "NET presently requires 1..128 equally spaced rows first timestamp dt. Candidate full recordings contain thousands of rows and channels use different clocks/sampling. A documented selection/alignment or interval integration policy is needed; none has been applied."
+  },
+  "unused_fields": [
+    {
+      "variable": "T_data_2",
+      "matlab_column_1_based": 5,
+      "status": "Undocumented in MainScript's temperature mapping; do not assign a semantic role."
+    }
+  ],
+  "held_out": {
+    "paper_design": "First current-excitation profile fits thermal parameters; second profile validates them.",
+    "proposed_split": "T_data_1 / VC_data_1 development only; T_data_2 / VC_data_2 held-out assessment only. This is a prospective NET adaptation proposal, not evidence the NET model was already qualified.",
+    "critical_leakage": {
+      "source": "https://github.com/robert-richardson/EKF-Battery-Impedance-Temperature/blob/194919b94b45f66309475bc88aa8e8826eb603bb/Temperature%20Estimation%20using%20Impedance%20with%20Matlab%20-%20Github/MainScript.m",
+      "expressions": [
+        "Q_rev = INTERP.I.*INTERP.T_core*P.dUdT",
+        "RESULTS.Q_tot = Q_ohm + Q_rev"
+      ],
+      "consequence": "Reusing author's Q_tot feeds held-out core data into heat input. Never use this quantity for a claimed independent held-out NET assessment.",
+      "alternative": "Paper states entropic heat neglected. A separately declared ohmic-only heat estimate from I,V and OCV could avoid core leakage, but needs justified sign/unit convention, uncertainty/model discrepancy and a contract capable of identifying derived power. Do not silently label derived power as observed."
+    }
+  },
+  "model": {
+    "published_structure": "Polynomial approximation of radial heat-conduction PDE, with states mean temperature and mean radial gradient; not NET's core/shell two-capacity model.",
+    "reported_parameters": {
+      "radius_m": 0.0129,
+      "volume_m3": 3.4219e-05,
+      "density_kg_m3": 2107,
+      "specific_heat_J_kg_K": 1171.6,
+      "radial_conductivity_W_m_K": 0.404,
+      "convection_W_m2_K": 39.3
+    },
+    "parameter_origin": "Radius, volume, coolant temperature and density labelled measured in MainScript; cp, conductivity and convection labelled identified using cycle 1.",
+    "missing_net_parameters": "No published direct mapping to NET C_core,C_shell,G_core_shell,G_shell_ambient. Require separate model reduction/fit using development data and retained justification."
+  },
+  "qualification": {
+    "physical_validation": "not_established_for_NET",
+    "calibration_authenticity": "not_established",
+    "uncertainty_coverage": "not_established",
+    "predeclared_NET_acceptance": "not_declared",
+    "state_admission": "not_performed",
+    "source_generation": "not_performed"
+  },
+  "blocking_gaps": [
+    "Calibration certificates/application receipts and measurement uncertainty for all relevant sensors are absent from selected downloaded material.",
+    "Heat power is derived from electrical signals and assumptions, not a calibrated independent observed stream.",
+    "No acquisition epoch, clock calibration, valid_from/valid_until or traceable per-device identities are available.",
+    "Author code's total-heat calculation uses core reference and would violate a held-out claim.",
+    "Published model parameters do not specify NET two-capacity model.",
+    "Time alignment, bounded-window selection and processing uncertainty need explicit declarations.",
+    "No NET-specific frozen prior/Q/R/criteria, repeatability/drift study or empirical uncertainty coverage exists for this dataset.",
+    "Public author data are useful for research but cannot be promoted to a physically qualified customer pilot by relabelling metadata."
+  ],
+  "alternatives": [
+    {
+      "title": "NIST mds2-4027 safe intervention thermal-abuse thermocouple data",
+      "url": "https://data.nist.gov/od/id/mds2-4027",
+      "catalog": "https://catalog.data.gov/dataset/determination-of-safe-intervention-windows-for-18650-and-21700-lithium-ion-batteries-from-",
+      "exact_file": "https://data.nist.gov/od/ds/mds2-4027/Li-ion%20Battery%20Safe%20Intervention%20Time%20Temperature%20Data.xlsx",
+      "license": "https://www.nist.gov/open/license",
+      "origin": "Real thermocouple surface temperatures under approximately 41 W external heating.",
+      "rejection": "Catalog describes surface-only temperatures, no independently measured core reference, and thermal-abuse/ignition dynamics unsuitable for the unqualified linear two-capacity model.",
+      "downloaded": false
+    },
+    {
+      "title": "Enclosed NMC pouch-cell luminescence surface temperature",
+      "url": "https://zenodo.org/records/17938718",
+      "description": "https://zenodo.org/records/17938718/files/README.md?download=1",
+      "exact_file": "https://zenodo.org/records/17938718/files/surface_temperature_pouchcell_data_allC.h5?download=1",
+      "origin": "Real surface-temperature imaging with electrical I,V and SoC/DoD.",
+      "rejection": "README enumerates no core-reference or measured heat-power channel; not a complete four-stream thermal pilot. Dataset license not rendered on viewed page.",
+      "downloaded": false
+    },
+    {
+      "title": "TCLab APMonitor datasets",
+      "url": "https://www.apmonitor.com/do/index.php/Main/TCLabA",
+      "exact_file": "https://apmonitor.com/do/uploads/Main/tclab_dyn_data2.txt",
+      "instrument_docs": "https://www.apmonitor.com/pds/notebooks/TCLab_Help.html",
+      "origin": "Teaching files and hardware/simulator routes; selected file provenance not independently verified in this assessment.",
+      "rejection": "T1/T2 are sensors on separate heater assemblies; they must not be renamed shell/core. Q1/Q2 are commanded percentages, not measured watts. No independent core reference or calibration bundle established.",
+      "downloaded": false
+    },
+    {
+      "title": "Anthony et al. thermal test cell, Scientific Reports 2016",
+      "url": "https://www.nature.com/articles/srep35886",
+      "origin": "Real internally heated test cylinder with IR surface data, embedded core thermocouple and monitored electrical heat input; paper reports IR calibration.",
+      "rejection": "Promising apparatus fit, but bounded search found no openly downloadable original numerical recordings or full calibration bundle. Figures were not digitized or treated as raw data.",
+      "downloaded": false
+    }
+  ],
+  "reproduction": {
+    "command": "python scripts/inspect_public_thermal_data.py --output-dir research-data --fetch",
+    "dependencies": [
+      "numpy==2.3.5",
+      "scipy==1.16.3"
+    ],
+    "operations": "Verifies pinned source hashes and inventories MAT arrays; never executes upstream MATLAB or emits a NET measured source."
+  }
+}

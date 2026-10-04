@@ -20,7 +20,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal")
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -179,7 +179,7 @@ def _profile(path: Path) -> tuple[Path, dict]:
     return path, value
 
 
-def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None) -> AgentHost:
+def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False) -> AgentHost:
     """Only the operator's launch command selects this file; not an MCP tool."""
     if type(instrument) is not str or instrument not in INSTRUMENTS:
         raise ValueError("Require a fixed operator-selected instrument")
@@ -198,6 +198,7 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     output = value["output_dir"]
     if output is not None and (type(output) is not str or not output):
         raise ValueError("Invalid operator output directory")
+    host_class = AgentHost
     if instrument == "polymer":
         from .polymer_workflow import capability_registry
         registry = capability_registry(bind=bool(value["allow_operations"]))
@@ -206,6 +207,18 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
         if value["candidate_domains"] != {}:
             raise ValueError("Temperature processing has no agent-editable calibration or acceptance parameters")
         registry = capability_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "measured-thermal":
+        from .measured_thermal_agent import MeasuredThermalHost, capability_registry, source_bytes, validate_graph
+        host_class = MeasuredThermalHost
+        if value["candidate_domains"] != {}:
+            raise ValueError("Measured thermal operations have no candidate parameter domains")
+        registry = capability_registry(bind=bool(value["allow_operations"]))
+        for raw in inputs.values():
+            artifact = parse(raw)
+            if artifact.get("schema") == "ciw.experiment.v1":
+                validate_graph(artifact, registry)
+            elif "run_id" in artifact:
+                source_bytes(artifact)
     elif instrument == "leakage":
         from .leakage_workflow import capability_registry
         if value["candidate_domains"] != {}:
@@ -217,11 +230,11 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
                 _leakage_graph(artifact, registry)
     else:
         registry = builtin_registry(bind=bool(value["allow_operations"]))
-    return AgentHost(registry=registry, inputs=inputs,
+    return host_class(registry=registry, inputs=inputs,
         output_dir=None if output is None else path.parent / output,
         allow_operations=tuple(value["allow_operations"]), candidate_domains=value["candidate_domains"],
         comparisons=value["comparisons"], check_suites=value["check_suites"],
-        max_executions=value["max_executions"], max_nodes=value["max_nodes"])
+        max_executions=value["max_executions"], max_nodes=value["max_nodes"], resume=resume)
 
 
 def demo_config(destination: Path) -> Path:
@@ -328,11 +341,41 @@ def leakage_config(destination: Path, basis: str = "volume") -> Path:
     return destination / "profile.json"
 
 
+def measured_thermal_config(destination: Path, source: Path) -> Path:
+    """Freeze an existing recording of at most 48 KiB without executing it."""
+    from .measured_thermal_agent import ASSESS, SOURCE_LIMIT, make_source
+    from .core.identities import content_identity
+    source = source.expanduser().resolve(strict=True)
+    if not source.is_file():
+        raise ValueError("Measured thermal source must be a regular file")
+    with source.open("rb") as stream:
+        raw = stream.read(SOURCE_LIMIT + 1)
+    run = make_source(raw)
+    measured = parse(raw)
+    graph = experiment("agent-measured-thermal", model_id=content_identity(measured["request"]["model"]),
+        nodes=[{"node_id": "assessment", "operation_id": ASSESS, "parameters": {},
+                "inputs": {}, "depends_on": []}])
+    destination = destination.expanduser().absolute()
+    destination.mkdir(parents=False, exist_ok=False)
+    with (destination / "recording.json").open("xb") as stream:
+        stream.write(raw)
+    save_new(destination / "source.json", run)
+    save_new(destination / "experiment.json", graph)
+    profile = {"schema": "ciw.agent-host-profile.v1", "inputs": {
+        "source": "source.json", "baseline": "experiment.json"}, "output_dir": "agent-output",
+        "allow_operations": [ASSESS], "candidate_domains": {}, "comparisons": {}, "check_suites": {},
+        "max_executions": 8, "max_nodes": 1}
+    save_new(destination / "profile.json", profile)
+    return destination / "profile.json"
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     subs = parser.add_subparsers(dest="command", required=True)
     command = subs.add_parser("serve", help="Serve operator-bound NET tools over local MCP stdio")
     command.add_argument("--profile", type=Path, required=True)
+    command.add_argument("--resume", action="store_true",
+                         help="Resume the exact bound profile and retained attempts after restart")
     command.add_argument("--instrument", choices=INSTRUMENTS, default="builtin",
                          help="Explicit trusted instrument binding; profile data cannot select providers")
     command.add_argument("--provider-checkout", type=Path,
@@ -351,6 +394,10 @@ def main(argv: list[str] | None = None) -> int:
     command = subs.add_parser("temperature-config", help="Create a temperature-processing profile; synthetic unless --request is supplied")
     command.add_argument("--output-dir", type=Path, required=True)
     command.add_argument("--request", type=Path, help="Operator-selected temperature request JSON; data only")
+    command = subs.add_parser("measured-thermal-config", help="Bind an existing calibrated thermal recording to MCP")
+    command.add_argument("--output-dir", type=Path, required=True)
+    command.add_argument("--source", type=Path, required=True,
+                         help="Existing ciw.measured-thermal-source.v1 JSON, at most 48 KiB, with exact retained evidence")
     args = parser.parse_args(argv)
     try:
         if args.command == "demo-config":
@@ -364,6 +411,9 @@ def main(argv: list[str] | None = None) -> int:
             return 0
         if args.command == "temperature-config":
             print(temperature_config(args.output_dir, None if args.request is None else parse(_read(args.request))))
+            return 0
+        if args.command == "measured-thermal-config":
+            print(measured_thermal_config(args.output_dir, args.source))
             return 0
         leakage_backend = None
         if args.instrument == "leakage":
@@ -382,8 +432,12 @@ def main(argv: list[str] | None = None) -> int:
             if args.instrument == "leakage":
                 from .leakage_native import NativeLeakageBackend
                 leakage_backend = NativeLeakageBackend(args.provider_checkout, python=args.python)
-            host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend)
-            return serve(host, sys.stdin.buffer, wire)
+            host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
+                                resume=args.resume)
+            try:
+                return serve(host, sys.stdin.buffer, wire)
+            finally:
+                host.close()
     except (OSError, ValueError, TypeError, KeyError) as exc:
         print(f"NET agent startup refused: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1

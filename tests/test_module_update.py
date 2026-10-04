@@ -23,12 +23,16 @@ PREFIX = "instruments/measurement/calibration"
 def draft(tmp_path):
     # Objects are immutable and shared; refs, index, identity and worktrees are
     # exclusively owned by this test. Never audit the development checkout.
-    with tempfile.TemporaryDirectory(dir=tmp_path, prefix="promotion-") as temporary:
+    # Imported data paths can exceed MAX_PATH below pytest's long test names;
+    # use the shorter OS temp root on Windows so Python cleanup can finish.
+    with tempfile.TemporaryDirectory(
+        dir=None if sys.platform == "win32" else tmp_path, prefix="ciw-promotion-",
+    ) as temporary:
         root = Path(temporary) / "repo"
         subprocess.run(["git", "clone", "--quiet", "--shared", "--config", "core.longpaths=true",
                         "--config", "core.autocrlf=false",
                         "--config", "gc.auto=0", "--config", "maintenance.auto=false",
-                        str(ROOT), str(root)], check=True)
+                        str(ROOT), str(root)], check=True, timeout=300)
         operator._git(root, "checkout", "--quiet", "-B", "draft-module", BASE)
         operator._git(root, "config", "user.name", "Promotion Fixture")
         operator._git(root, "config", "user.email", "promotion@example.invalid")

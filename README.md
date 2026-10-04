@@ -45,6 +45,12 @@ from an installed wheel. [Numerical comparisons](docs/EXTERNAL_NUMERICAL_COMPARI
 compare selected equations with third-party numerical code and a heat-equation
 solution. They are maintained in this repository and are not independent
 external replication or physical validation.
+The [institutional data campaign](docs/INSTITUTIONAL_TESTING.md) runs retained
+NIST, Oxford, CWRU and EPA originals against an installed wheel. It checks native
+numerical kernels, observed/reference records, missing evidence and retained
+results with source hashes and independent arithmetic. Its direct numerical
+helpers preserve external source identity; full measured-series Workbench/MCP
+integration and physical qualification remain separate requirements.
 
 The [instrument catalogue](docs/INSTRUMENTS.md) and
 [coverage matrix](docs/INTEGRATION_COVERAGE.md) distinguish built-in calculations,

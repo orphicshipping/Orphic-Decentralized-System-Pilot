@@ -55,8 +55,22 @@ def installed_binding(wheel):
     direct = json.loads(distribution.read_text("direct_url.json") or "{}")
     wheel_hash = digest(wheel)
     require(direct.get("url") == wheel.as_uri(), "Installed package must come from --wheel")
-    require(direct.get("archive_info", {}).get("hashes", {}).get("sha256") == wheel_hash,
-            "Installed distribution does not bind the selected wheel hash")
+    # pip commonly retains archive hashes; uv may retain only the exact URL.
+    # Neither installer metadata form substitutes for the byte checks below.
+    archive_info = direct.get("archive_info", {})
+    require(isinstance(archive_info, dict), "Malformed installed archive metadata")
+    hashes = archive_info.get("hashes", {})
+    require(isinstance(hashes, dict), "Malformed installed archive hashes")
+    declared_hashes = []
+    if "sha256" in hashes:
+        declared_hashes.append(hashes["sha256"])
+    legacy = archive_info.get("hash")
+    if isinstance(legacy, str) and legacy.startswith("sha256="):
+        declared_hashes.append(legacy.removeprefix("sha256="))
+    for declared in declared_hashes:
+        require(isinstance(declared, str) and declared.lower() == wheel_hash,
+                "Installer-declared SHA256 differs from the selected wheel hash")
+    installer_sha256 = declared_hashes[0] if declared_hashes else None
     with zipfile.ZipFile(wheel) as archive:
         names = [name for name in archive.namelist() if name.startswith("ciw/") and not name.endswith("/")]
         require(names and len(names) == len(set(names)), "Missing or ambiguous wheel package files")
@@ -65,6 +79,8 @@ def installed_binding(wheel):
             require(archive.read(name) == Path(distribution.locate_file(name)).read_bytes(),
                     "Installed package differs from wheel: " + name)
     return {"wheel": wheel.name, "wheel_sha256": wheel_hash,
+            "hash_provenance": "computed_wheel_and_exact_installed_bytes",
+            "installer_sha256": installer_sha256,
             "installed_package": str(installed), "checked_package_files": len(names),
             "versions": {name: importlib.metadata.version(name) for name in (DIST, "numpy", "websockets")}}
 
