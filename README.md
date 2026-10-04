@@ -68,7 +68,7 @@ specific installed measurement chain:
 
 | Need | Available path | Scope |
 | --- | --- | --- |
-| Convert sensor observations and propagate uncertainty | [Temperature MCP profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) | Affine calibration for 1–64 samples, full joint raw/calibration covariance, optional declared installed correction, and conditional acceptance. |
+| Convert sensor observations and propagate uncertainty | [Temperature MCP profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) | Affine calibration for 1–64 samples, full joint raw/calibration covariance, optional declared installed correction, conditional acceptance, and a separate numerical checker. |
 | Estimate core temperature from retained recordings | [Measured thermal workflow](docs/MEASURED_THERMAL.md) | Already-calibrated shell, power and ambient streams feed a conventional estimator; a held-out core reference supports a separate comparison. |
 | Qualify the installed measurement chain | [Pilot protocol](docs/TEMPERATURE_QUALIFICATION.md) and [setup record](examples/temperature/pilot-setup.json) | Reference comparisons, repeatability, environmental effects, uncertainty, held-out validation and maintenance. |
 | Assess the supplied product for a market | [Product-conformity guide](docs/TEMPERATURE_PRODUCT_CONFORMITY.md) and [assessment record](examples/temperature/conformity-assessment.json) | Product/configuration scope, applicable requirements, evidence, laboratory credentials, review and reassessment. |
