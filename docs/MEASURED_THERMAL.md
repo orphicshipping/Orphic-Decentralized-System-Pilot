@@ -132,6 +132,18 @@ execution. Full cross-coordinate covariance and calibration/clock declarations
 remain in the linked workspace. `net inspect` checks standard stream consistency;
 re-export from the exact workspace checks the selected native result.
 
+## MCP delivery and restart
+
+The fixed `measured-thermal` MCP profile binds this same workflow for an external
+local client. See [the agent protocol](NET_AGENT_PROTOCOL.md#measured-thermal-profile)
+for profile creation, retained result inspection and explicit `--resume`.
+The MCP source limit is 48 KiB, separate from the native 1 MiB ingress limit;
+excess input refuses without truncation. The adapter adds no solver or
+calibration inference. Its result exposes the
+existing scientific bundle and explicitly marks correction handoff as unchecked.
+An installed-wheel SDK gate exercises the fixture path and process reconnect;
+physical validation and State Ledger admission remain separate.
+
 ## Remaining pilot gate
 
 Software fixtures do not close the selected physical pilot. That requires a
@@ -139,3 +151,7 @@ suitable identified apparatus and model, actual calibrated shell/power/ambient
 recordings, an independently calibrated withheld core reference, predeclared
 criteria, held-out episodes and human review. The existing independent-provider,
 hardware and admission gates remain separate.
+
+The [public dataset assessment](PUBLIC_THERMAL_DATA.md) retains a real research
+candidate and its exact retrieval procedure. It does not supply missing
+calibration, measured power or model declarations needed to close this gate.

@@ -191,3 +191,51 @@ def test_single_sample_with_missing_temperature_survives_session_reopen(tmp_path
     assert exported["observations"][0]["clock"]["time_s"] == 0.0
     assert exported["observations"][0]["provenance"]["semantics"] == "simulated"
     assert reopened.executions == reopened.results == {}
+
+
+def test_cli_unserializable_selection_endpoint_refuses_before_output_creation(tmp_path, capsys):
+    from ciw.control_contracts import bytes_ref
+
+    raw = b"Time (sec), Temperature 1, Temperature 2, Heater 1, Heater 2\n1e150,20,21,0,0\n"
+    manifest = load(EXAMPLE / "source.json")
+    manifest.update(origin="test_fixture", raw_sha256=bytes_ref(raw))
+    csv_path, manifest_path = tmp_path / "large-time.csv", tmp_path / "large-time-source.json"
+    csv_path.write_bytes(raw)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    # The recording itself is valid; its exclusive Session bound is not representable
+    # within the shared persisted-document contract.
+    assert import_recording(raw, manifest)["rows"][0]["time_s"] == 1e150
+    output = tmp_path / "must-not-contain-partial-recording"
+    assert main(["import-temperature", "--csv", str(csv_path), "--manifest", str(manifest_path),
+                 "--output-dir", str(output), "--json"]) == 1
+    captured = capsys.readouterr()
+    assert captured.out == ""
+    refusal = json.loads(captured.err)
+    assert refusal["status"] == "refused"
+    assert "Final recording time" in refusal["reason"]
+    assert "Session selection endpoint" in refusal["reason"]
+    assert not output.exists()
+    assert csv_path.read_bytes() == raw
+
+
+def test_last_serializable_selection_endpoint_survives_import_and_reopen(tmp_path, capsys):
+    import math
+    from ciw.control_contracts import bytes_ref
+
+    timestamp = math.nextafter(1e150, 0.0)
+    raw = ("Time (sec), Temperature 1, Temperature 2, Heater 1, Heater 2\n"
+           + repr(timestamp) + ",20,21,0,0\n").encode()
+    manifest = load(EXAMPLE / "source.json")
+    manifest.update(origin="test_fixture", raw_sha256=bytes_ref(raw))
+    csv_path, manifest_path = tmp_path / "supported-time.csv", tmp_path / "supported-source.json"
+    csv_path.write_bytes(raw)
+    manifest_path.write_text(json.dumps(manifest), encoding="utf-8")
+    output = tmp_path / "supported-time-import"
+    assert main(["import-temperature", "--csv", str(csv_path), "--manifest", str(manifest_path),
+                 "--output-dir", str(output), "--json"]) == 0
+    capsys.readouterr()
+    reopened = Session.from_workspace(output / "workspace.json", output_dir=tmp_path / "reopened")
+    assert reopened.run["time_s"] == [timestamp]
+    assert reopened.run["metadata"]["duration_s"] == 1e150
+    assert source_recording(reopened.run)["rows"][0]["time_s"] == timestamp
+    assert reopened.executions == reopened.results == {}

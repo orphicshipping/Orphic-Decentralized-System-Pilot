@@ -1,0 +1,140 @@
+name: Review examples
+
+on:
+  push:
+    branches: [main, "release/**", "fix/review-*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installed-examples:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build wheel and install in clean environment outside checkout
+        id: install
+        shell: python
+        run: |
+          import json, os, pathlib, subprocess, sys, venv
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])
+          reports = root / 'review-reports'
+          reports.mkdir()
+          (reports / 'candidate.json').write_text(json.dumps({
+              'candidate_revision': os.environ['GITHUB_SHA'],
+              'runner_os': os.environ['RUNNER_OS'],
+              'scope': 'wheel_install_and_bounded_software_examples'
+          }, indent=2), encoding='utf-8')
+          wheels = root / 'review-wheels'
+          subprocess.run([sys.executable, '-m', 'pip', 'wheel', '.', '--no-deps', '--wheel-dir', str(wheels)], check=True)
+          wheel, = wheels.glob('*.whl')
+          environment = root / 'review-venv'
+          venv.EnvBuilder(with_pip=True).create(environment)
+          python = environment / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+          subprocess.run([str(python), '-m', 'pip', 'install', str(wheel) + '[dev,numerical-checks]'], check=True)
+          with open(os.environ['GITHUB_ENV'], 'a', encoding='utf-8') as output:
+              output.write(f'REVIEW_PYTHON={python}\nREVIEW_WHEEL={wheel}\nREVIEW_REPORTS={reports}\n')
+      - name: Test the example runner and external numerical checks without skips
+        id: tests
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        shell: python
+        run: |
+          import os, pathlib, subprocess, xml.etree.ElementTree as ET
+          checkout = pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          report = pathlib.Path(os.environ['REVIEW_REPORTS']) / 'review-tests.xml'
+          environment = dict(os.environ, PYTEST_DISABLE_PLUGIN_AUTOLOAD='1')
+          environment.pop('PYTHONPATH', None)
+          completed = subprocess.run([os.environ['REVIEW_PYTHON'], '-I', '-m', 'pytest',
+              '-o', 'pythonpath=', '-o', 'addopts=', '-q', '--junitxml=' + str(report),
+              str(checkout / 'tests/test_domain_examples.py'), str(checkout / 'tests/test_external_numerics.py')],
+              cwd=os.environ['RUNNER_TEMP'], env=environment, timeout=600)
+          suites = list(ET.parse(report).getroot().iter('testsuite'))
+          counts = {key: sum(int(suite.get(key, '0')) for suite in suites)
+                    for key in ('tests', 'failures', 'errors', 'skipped')}
+          if completed.returncode or not counts['tests'] or any(counts[key] for key in ('failures', 'errors', 'skipped')):
+              raise SystemExit('Review regression tests must pass without skips: ' + str(counts))
+      - name: Run every timed provider-free example from outside checkout
+        id: examples
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        shell: python
+        run: |
+          import os, pathlib, subprocess
+          checkout = pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          subprocess.run([os.environ['REVIEW_PYTHON'], '-I', str(checkout / 'scripts/check_domain_examples.py'),
+              '--wheel', os.environ['REVIEW_WHEEL'], '--source-revision', os.environ['GITHUB_SHA'],
+              '--output-dir', str(pathlib.Path(os.environ['REVIEW_REPORTS']) / 'domains')],
+              cwd=os.environ['RUNNER_TEMP'], check=True, timeout=600)
+      - name: Compare with external SciPy numerical implementation
+        id: external
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        shell: python
+        run: |
+          import os, pathlib, subprocess
+          checkout = pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          subprocess.run([os.environ['REVIEW_PYTHON'], '-I', str(checkout / 'scripts/check_external_numerics.py'),
+              '--output', str(pathlib.Path(os.environ['REVIEW_REPORTS']) / 'external-numerics.json')],
+              cwd=os.environ['RUNNER_TEMP'], check=True, timeout=300)
+      - name: Exercise installed stdio server with the official MCP SDK
+        id: mcp
+        if: ${{ always() && steps.install.outcome == 'success' }}
+        shell: python
+        run: |
+          import os, pathlib, subprocess
+          checkout = pathlib.Path(os.environ['GITHUB_WORKSPACE'])
+          subprocess.run([os.environ['REVIEW_PYTHON'], '-m', 'pip', 'install', 'mcp==1.26.0'], check=True)
+          subprocess.run([os.environ['REVIEW_PYTHON'], '-I', str(checkout / 'scripts/check_agent_mcp.py'),
+              '--output-dir', str(pathlib.Path(os.environ['REVIEW_REPORTS']) / 'mcp-sdk')],
+              cwd=os.environ['RUNNER_TEMP'], check=True, timeout=120)
+      - name: Record all step outcomes including failures
+        if: always()
+        shell: python
+        env:
+          INSTALL_OUTCOME: ${{ steps.install.outcome }}
+          TESTS_OUTCOME: ${{ steps.tests.outcome }}
+          EXAMPLES_OUTCOME: ${{ steps.examples.outcome }}
+          EXTERNAL_OUTCOME: ${{ steps.external.outcome }}
+          MCP_OUTCOME: ${{ steps.mcp.outcome }}
+        run: |
+          import json, os, pathlib
+          reports = pathlib.Path(os.environ['RUNNER_TEMP']) / 'review-reports'
+          reports.mkdir(exist_ok=True)
+          outcomes = {name: os.environ[name.upper() + '_OUTCOME'] for name in ('install', 'tests', 'examples', 'external', 'mcp')}
+          (reports / 'job-outcomes.json').write_text(json.dumps({
+              'candidate_revision': os.environ['GITHUB_SHA'], 'runner_os': os.environ['RUNNER_OS'],
+              'status': 'PASS' if all(value == 'success' for value in outcomes.values()) else 'FAIL',
+              'steps': outcomes, 'physical_validation': 'not_established'
+          }, indent=2), encoding='utf-8')
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: review-examples-${{ matrix.os }}
+          path: ${{ runner.temp }}/review-reports
+          if-no-files-found: error
+
+  windows-python311-preflight:
+    runs-on: windows-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: python -m pip install -e ".[dev]"
+      - name: Verify tool discovery and lane eligibility on the actual Python 3.11 runtime
+        run: python -m pytest -q tests/test_superrepo_doctor.py --junitxml=preflight-python311.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: review-preflight-windows-python311
+          path: preflight-python311.xml
+          if-no-files-found: error

@@ -4,12 +4,13 @@ from __future__ import annotations
 from copy import deepcopy
 from fractions import Fraction
 import math
+import sys
 
 from .control_contracts import detached, keys, number
 from .core.covariance import _validate_matrix
 from .operations.runner import check_seal, digest, seal
 from .temperature_contract import (
-    AUTHORITY, BUDGET_CATEGORIES, NUMERICAL_CONTRACT, REPORT_SCHEMA,
+    AUTHORITY, BUDGET_CATEGORIES, LEGACY_NUMERICAL_CONTRACT, NUMERICAL_CONTRACT, REPORT_SCHEMA,
     validate_request,
 )
 
@@ -18,7 +19,7 @@ def _inside(value, interval):
     return interval[0] <= value <= interval[1]
 
 
-def _identities(request):
+def _identities(request, numerical_contract=NUMERICAL_CONTRACT):
     return {
         "request_ref": digest(request),
         "raw_observations_ref": digest(request["raw_observations"]),
@@ -29,7 +30,7 @@ def _identities(request):
         "contributions_ref": digest(request["contributions"]),
         "budget_ref": digest(request["budget"]),
         "installed_correction_ref": digest(request["installed_correction"]),
-        "procedure_ref": digest(NUMERICAL_CONTRACT),
+        "procedure_ref": digest(numerical_contract),
         "acceptance_policy_ref": digest(request["acceptance"]),
     }
 
@@ -84,6 +85,25 @@ def _applicability(request):
     return flags, polymer_flags
 
 
+def _covariance_product(left, entry, right):
+    """Preserve ordinary products; avoid premature underflow in a*C*b.
+
+    For nonzero factors whose first product is subnormal (possibly zero),
+    multiply their normalized binary64 mantissas and apply the combined power
+    of two only at the end. The mantissa products stay normal, including when
+    the final product must round to a subnormal or zero. This remains rounded
+    binary64 arithmetic, independent of the checker's exact rational reference.
+    Request bounds keep full products of order 1e48 or smaller, excluding overflow.
+    """
+    first = left * entry
+    if abs(first) < sys.float_info.min and left != 0 and entry != 0 and right != 0:
+        a, ae = math.frexp(left)
+        c, ce = math.frexp(entry)
+        b, be = math.frexp(right)
+        return math.ldexp((a * c) * b, ae + ce + be)
+    return first * right
+
+
 def _sensor_output(request, flags):
     raw = request["raw_observations"]["samples"]
     n, calibration = len(raw), request["calibration"]
@@ -98,7 +118,7 @@ def _sensor_output(request, flags):
             if flags[j]:
                 continue
             jj = ((j, gain), (n, float(raw[j]["value"])), (n + 1, 1.0))
-            value = math.fsum([a * joint[p][q] * b for p, a in ji for q, b in jj] +
+            value = math.fsum([_covariance_product(a, joint[p][q], b) for p, a in ji for q, b in jj] +
                               [source["covariance_K2"][i][j] for source in request["contributions"]])
             if not math.isfinite(value) or i == j and value < 0:
                 raise ValueError("Propagation produced invalid variance; covariance is never repaired")
@@ -249,8 +269,10 @@ def validate_report(value: dict, report: dict) -> None:
     check_seal(report)
     if report["schema"] != REPORT_SCHEMA or report["source_kind"] != request["source_kind"]:
         raise ValueError("Retained temperature report schema/source mismatch")
-    for actual, expected in ((report["identities"], _identities(request)), (report["authority"], AUTHORITY),
-                             (report["numerical_contract"], NUMERICAL_CONTRACT),
+    numerical_contract = report["numerical_contract"]
+    if numerical_contract not in (NUMERICAL_CONTRACT, LEGACY_NUMERICAL_CONTRACT):
+        raise ValueError("Unsupported retained temperature numerical contract")
+    for actual, expected in ((report["identities"], _identities(request, numerical_contract)), (report["authority"], AUTHORITY),
                              (report["measurement_identity"], request["identity"]),
                              (report["raw_observations"], request["raw_observations"]),
                              (report["uncertainty"], _uncertainty(request))):

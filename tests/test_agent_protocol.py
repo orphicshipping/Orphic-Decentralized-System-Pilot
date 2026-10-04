@@ -152,7 +152,8 @@ def test_allowlist_checks_every_node_before_any_dispatch(tmp_path):
     host=AgentHost(registry=registry, inputs={'source':encode(make_demo_run()),'graph':encode(graph)},
         allow_operations=('statistics.v1',),output_dir=tmp_path/'out')
     with pytest.raises(ValueError,match='not enabled'):call(host,'net_execute',source='source',graph='graph',attempt='one')
-    assert host.capabilities()['execution_budget']['used']==0 and not list((tmp_path/'out').iterdir())
+    assert host.capabilities()['execution_budget']['used']==0
+    assert {path.name for path in (tmp_path/'out').iterdir()}=={'.agent-state'}
 
 
 def test_node_and_attempt_budgets(tmp_path):

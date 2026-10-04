@@ -4,6 +4,7 @@ from __future__ import annotations
 import math
 
 from .adapters.protocol import InstrumentManifest
+from .control_contracts import number
 from .core.identities import evidence_id, validate_evidence_identity
 from .core.records import validate_run_structure
 from .temperature_recording import validate_recording
@@ -15,6 +16,12 @@ def make_source(recording: dict) -> dict:
     recording = validate_recording(recording)
     rows = recording["rows"]
     frame = recording["recording_context"]["frame"]
+    # Validate the derived endpoint before CLI import creates any output files.
+    duration = math.nextafter(rows[-1]["time_s"], math.inf)
+    try:
+        number(duration)
+    except ValueError as exc:
+        raise ValueError("Final recording time is too large for the bounded exclusive Session selection endpoint") from exc
     units = {"T1": "degC", "T2": "degC", "Q1": "%", "Q2": "%"}
     manifest = InstrumentManifest(
         instrument_id=INSTRUMENT, role="retained_temperature_archive",
@@ -26,7 +33,7 @@ def make_source(recording: dict) -> dict:
         "instrument": INSTRUMENT,
         "metadata": {
             # run.v1 needs an exclusive selection endpoint, not a new sample.
-            "duration_s": math.nextafter(rows[-1]["time_s"], math.inf),
+            "duration_s": duration,
             "duration_semantics": "exclusive_selection_bound; not measured cycle duration",
             "sample_count": len(rows), "sample_rate_hz": None,
             "coordinate_frame": frame, "manifest": manifest.to_dict(),

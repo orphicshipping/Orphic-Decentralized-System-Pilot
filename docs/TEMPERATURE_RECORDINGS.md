@@ -82,7 +82,14 @@ record 1) and quantity column where possible. Missing temperature cells stay
 null. Nonzero decimals too small for the numeric representation are refused
 instead of becoming zero; original source bytes are never rewritten. Choose a
 fresh output directory when importing, and a new output filename when exporting;
-existing evidence is not replaced.
+existing evidence is not replaced. The final timestamp must also permit the
+Session's exclusive selection endpoint within its persisted numeric bounds;
+this derived value is checked before import creates the output directory.
+
+If a filesystem error interrupts writing after validation, retain that partial
+directory for diagnosis and retry into a new directory after correcting the
+filesystem problem. A refusal does not establish a completed import; check for
+a successful command and a readable `workspace.json` before reopening it.
 
 Device serial, calibration evidence, absolute acquisition time, clock
 uncertainty and measurement covariance are not supplied by this example and
