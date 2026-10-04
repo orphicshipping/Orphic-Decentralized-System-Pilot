@@ -6,6 +6,9 @@ The [stack inventory](STACK.md) records integration status, and each provider's
 versioned contract remains authoritative for fields, numerical assumptions and
 refusals. Repository default branches can evolve beyond CIW's pinned providers.
 
+For the paper/manual entry point and current composition, representation and SP1
+flows, see the [system architecture companion](SYSTEM_ARCHITECTURE.md).
+
 ## Reading the diagrams
 
 Rectangles name inputs, operations or retained records; diamonds mark a choice
@@ -32,8 +35,10 @@ rules before it becomes that subsystem's state. ESM now offers a separate
 [native telemetry candidate-evidence adapter](https://github.com/atomtrapping/Notations-State-Ledger/blob/main/docs/INSTRUMENT_CANDIDATE_EVIDENCE.md): fresh replay and source-policy checks
 permit read-only review or explicitly requested retention as `UNADMITTED`.
 This does not admit canonical state or activate a release. The telemetry command
-itself performs no ESM admission. CIW has no SCR execution adapter or GSV
-publication connection.
+itself performs no ESM admission. The workbench has a separately bound
+[SCR integer-heat execution and SP1 verification path](PROVED_HEAT.md); this
+ownership map does not imply that arbitrary SCR workloads are integrated.
+It does not establish a GSV publication connection.
 
 ```mermaid
 flowchart TD

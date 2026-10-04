@@ -130,7 +130,7 @@ def test_missing_grants_refuse_complete_graph_before_native_calculation(small_tm
     with pytest.raises(ValueError, match="not enabled"):
         host.call("net_execute", {"source": "source", "graph": "baseline", "attempt": "denied"})
     assert host.capabilities()["execution_budget"]["used"] == 0
-    assert list((profile.parent / "agent-output").iterdir()) == []
+    assert {p.name for p in (profile.parent / "agent-output").iterdir()} == {".agent-state"}
 
 
 @pytest.mark.parametrize("challenge", ["missing", "wrong_port", "wrong_producer", "literal", "graph_literal"])

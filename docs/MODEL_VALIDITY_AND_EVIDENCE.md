@@ -2,9 +2,12 @@
 
 NET is a research workbench with explicit mathematical contracts and retained
 checks. A model's equations, a successful numerical test, a replay and a proof
-answer different questions. This guide records the scope of the merged paths
-reviewed at `554bb1540ef1b621af9e08f2d632095ca958150d` on 2026-10-04; it does not
-report new experimental results or qualify a release candidate.
+answer different questions. This guide records the scope of current source,
+extending the domain inventory reviewed at
+`554bb1540ef1b621af9e08f2d632095ca958150d` on 2026-10-04 with the separate
+temperature numerical checker. Qualification evidence must identify the actual
+immutable candidate and runtime. This guide does not report new experimental
+results or qualify a release candidate.
 
 ## Three domains to record
 
@@ -27,9 +30,9 @@ is a review index, not another runtime policy or a replacement for those checks.
 
 | Path | Current model and domain | Evidence boundary and next gate |
 | --- | --- | --- |
-| [Temperature processing](TEMPERATURE_QUALIFICATION.md) | One sensor/readout; 1–64 samples; affine conversion; full joint raw/gain/offset covariance; first-order propagation; optional declared installed correction | Applicability and uncertainty inputs are declarations. Sample acceptance does not bound temperatures between samples. Establish calibration and installed dynamic response, assess higher-order/rounding effects, and complete the uncertainty budget before claiming physical performance. |
+| [Temperature processing](TEMPERATURE_QUALIFICATION.md) | One sensor/readout; 1–64 samples; affine conversion; full joint raw/gain/offset covariance; first-order propagation; optional declared installed correction | A separate rational first-order checker compares computed values/covariance and sample decisions. Applicability and uncertainty inputs are declarations. Sample acceptance does not bound temperatures between samples. Establish calibration and installed dynamic response, assess higher-order/rounding effects, and complete the uncertainty budget before claiming physical performance. |
 | [Measured thermal](MEASURED_THERMAL.md) | Python two-capacity model; 1–128 equally spaced rows; already-calibrated shell, power and ambient streams; separately held-out core reference | The kernel retains input/model/clock uncertainty but does not propagate it. Its conditional covariance and comparison PASS do not establish measurement uncertainty or physical qualification. Validate the installed chain and model discrepancy on independent heating cycles. |
-| [Dynamic fluids](FLUID_DYNAMICS.md) | Linear incompressible reservoir exchange with a lumped compliant boundary; separate periodic, small-amplitude shallow-water wave model | Independent references, refinement and conservation checks assess specified numerical cases. General molecular/CFD coupling, nonlinear polymer constitutive behaviour and experimental fluid validation remain unestablished. Each extension needs a separate model and coupling qualification. |
+| [Dynamic fluids](FLUID_DYNAMICS.md) | Linear incompressible reservoir exchange with a lumped compliant boundary; separate periodic, small-amplitude shallow-water wave model | In-repository references, [SciPy comparisons](EXTERNAL_NUMERICAL_COMPARISONS.md), refinement and conservation checks assess specified numerical cases; this is not independent external replication. General molecular/CFD coupling, nonlinear polymer constitutive behaviour and experimental fluid validation remain unestablished. Each extension needs a separate model and coupling qualification. |
 | [Hypergraph rewriting](HYPERGRAPH_REWRITE.md) | Fixed typed rules; at most 64 nodes, 128 edges and 32 rules; bounded exploration | Preserving declared heat capacity is a structural invariant, not a heat-transfer experiment. A valid truncated history does not establish exhaustive exploration, general confluence, global solution accuracy or a theory of fundamental physics. |
 | [SP1 heat](PROVED_HEAT.md) | Registered integer Jacobi guest; 3–32 cells; 0–64 steps; integer magnitude at most `2^40`; dimensionless values | A fresh proof check binds the expected guest and input/output commitments. It does not prove physical heat, sensor origin, calibration or arbitrary model training. Temperature processing needs its own guest, arithmetic contract and qualification. |
 

@@ -33,6 +33,18 @@ sub-resolution uncertainty cannot disappear at a tolerance boundary. This is
 not a rigorous error enclosure of the preceding calibration, covariance or
 square-root calculations; their numerical adequacy remains a qualification item.
 
+New processing reports identify numerical procedure
+`net.temperature.affine-first-order.v2`. Covariance terms retain the ordinary
+binary64 multiplication order unless the first product is subnormal or has
+underflowed to zero. In that case, normalized mantissas are multiplied and their
+combined power of two is applied at the end, preserving a representable final
+term before ordered `math.fsum` accumulation. Final subnormal values still round
+in binary64, and sufficiently small final terms can round to zero. Scalar and
+covariance bounds keep full terms at or below `1e48`, so intermediate overflow
+is excluded in this profile. The exact former `v1` procedure remains readable
+with its original commitment; historical results are neither recomputed nor
+relabeled during readback.
+
 Uncertainty propagation is first order. Multiplication of uncertain gain and
 raw input can require a higher-order assessment; applicability of the
 approximation must be checked for the physical pilot. Additional covariance
@@ -76,6 +88,50 @@ here has a separate input/output contract; it is not automatically wired into
 that workflow. Any future handoff must preserve units, location/time semantics,
 observation versus estimate labels, covariance and acquisition/calibration
 lineage. Neither workflow supplies the physical pilot data or qualification.
+
+## Independent numerical audit
+
+`metrology.temperature.verify.v1` consumes the actual retained processing result
+through a typed dependency. The default temperature MCP graph now runs processing
+and this checker as separate operations. The audit binds the request, processing
+report, result and execution identities, checker contract and runtime; each fresh
+execution has its own verification occurrence. Existing processing-only profiles
+remain usable. Reopening a workspace validates historical structure and bindings
+without running a new numerical comparison.
+
+The checker uses exact rational arithmetic on the binary64 inputs to derive affine
+values and the full first-order `J C J^T`, adds the declared independent covariance
+and installed correction, and checks squared standard uncertainties against the
+reference variances. Each numerical comparison permits
+`16 * 2^-52 * sum(abs(reference terms)) + 64 * 2^-1074` absolute error. This fixed
+floating-point allowance scales with the terms, including cancellation; it is
+not a guaranteed forward-error bound for every accepted input, a physical error
+budget or an enclosure added to the acceptance interval. A structurally valid
+processing result can therefore fail the numerical audit. The synthetic suite
+retains a historical `v1` case where premature intermediate underflow lost a
+representable covariance contribution: its fresh audit remains FAIL. Newly
+processed `v2` reports recover that contribution and pass the unchanged rational
+checker, including opposite signs of sensitivity and cross-covariance. This is
+a correction to numerical evaluation of the same first-order model, not evidence
+that the model includes higher-order uncertainty or fits a physical chain.
+The checker independently reconstructs the sample-only interval decisions from
+the reported values, uncertainties and multiplier.
+
+Malformed source/report contracts refuse; coherent but numerically inconsistent
+outputs produce a retained audit `FAIL`. `PASS` supports only those finite checks
+under the stated allowance. Counts and maximum errors/allowances stay visible.
+Correctly retaining unavailable samples can pass the audit with no numerical
+values compared; this does not validate missing data. Processing acceptance can
+remain `indeterminate` while the audit passes. The ordinary processing result
+keeps `not_verified`; a fresh numerical audit is neither an SP1 proof nor a
+physical qualification. Saved audit hashes alone do not authenticate a claimed
+PASS; call the checker again for a fresh comparison.
+
+Source qualification includes exact dyadic covariance cases, correlated inputs,
+installed corrections, applicability boundaries and unavailable observations,
+plus deliberately resealed wrong outputs. The dedicated CI lane also installs
+the wheel and exercises processing/check/replay with an independent MCP client.
+These are software fixtures, not physical heating-cycle evidence.
 
 ## Freeze the pilot before confirmatory experiments
 
@@ -297,3 +353,11 @@ installation, verify a calibration chain, or demonstrate model adequacy. Those
 claims retain the separate evidence requirements above. Until a genuine
 temperature guest and verifier pass their gates, report the proof feature as
 unavailable, never verified by replay or by the existing heat guest.
+
+## Literature-based pilot inventory
+
+The [pilot-readiness guide](TEMPERATURE_PILOT_READINESS.md) documents the selected
+published experiment, proposed operating targets, and unresolved installed-chain
+evidence. Its data-only checker binds the setup plan and inventories missing
+declarations. A completed inventory is ready for review; it is not a calibration,
+physical qualification, training-data audit, or conformity decision.

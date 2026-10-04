@@ -158,16 +158,18 @@
         "docs/TEMPERATURE_QUALIFICATION.md",
         "docs/NET_AGENT_PROTOCOL.md",
         "src/ciw/temperature_contract.py",
-        "src/ciw/temperature_processing.py"
+        "src/ciw/temperature_processing.py",
+        "src/ciw/temperature_verification.py",
+        "scripts/check_temperature_mcp.py"
       ],
-      "implemented": "affine_joint_covariance_and_conditional_acceptance_via_MCP",
+      "implemented": "affine_joint_covariance_conditional_acceptance_and_independent_numerical_audit_via_MCP",
       "installable": "requires_candidate_wheel_evidence",
       "available": "operator_environment_not_checked",
       "qualified": "not_assessed",
       "numerical_scope": "One sensor/readout, 1-64 samples; first-order propagation; declared applicability; acceptance at submitted sample instants.",
       "physical_validation": "not_established",
       "required_evidence": [
-        "Candidate-bound source and installed MCP/processing checks, including boundary and refusal cases",
+        "Candidate-bound source and installed MCP processing/check/replay, including independent rational references, boundary/refusal cases and expected numerical failures",
         "Assessment of higher-order and arithmetic effects for the intended measurement model",
         "Installed dynamic reference comparisons, documented calibration chain and complete uncertainty budget",
         "Untouched heating cycles, reviewed operating envelope and maintenance/withdrawal criteria"

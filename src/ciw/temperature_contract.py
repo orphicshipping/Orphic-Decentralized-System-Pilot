@@ -24,7 +24,7 @@ AUTHORITY = {
     "proof": "not_generated",
     "model_inference": "not_run",
 }
-NUMERICAL_CONTRACT = {
+LEGACY_NUMERICAL_CONTRACT = {
     "id": "net.temperature.affine-first-order.v1",
     "arithmetic": "binary64; ordered math.fsum products; math.sqrt standard uncertainties",
     "transformation": "T_i = gain * raw_i + offset_K",
@@ -39,6 +39,13 @@ NUMERICAL_CONTRACT = {
     "acceptance_scope": "Submitted sample instants only; no guarantee of continuous-cycle temperatures, excursions or peaks between samples",
     "maximum_samples": MAX_SAMPLES,
     "byte_commitment": "UTF-8 CIW canonical JSON of raw_observations; not acquisition file bytes",
+}
+# The report schema retains both arithmetic revisions. Historical reports keep
+# their original procedure commitment; new execution always emits this revision.
+NUMERICAL_CONTRACT = {
+    **LEGACY_NUMERICAL_CONTRACT,
+    "id": "net.temperature.affine-first-order.v2",
+    "arithmetic": "binary64; ordered math.fsum products with frexp/ldexp scaling when the first product is subnormal or underflows; math.sqrt standard uncertainties",
 }
 BUDGET_CATEGORIES = (
     "reference", "calibration_fit", "resolution", "repeatability", "drift",

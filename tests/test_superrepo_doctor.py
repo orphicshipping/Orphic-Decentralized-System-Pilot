@@ -44,8 +44,9 @@ def doctor(monkeypatch, tmp_path):
     monkeypatch.setattr(module, "verify_terminal_source", audit_source)
     monkeypatch.setattr(module, "verify_imports", lambda root: {"provider": TREE})
     monkeypatch.setattr(module, "git", git)
-    # General launcher fixtures model POSIX; native Windows cases select their platform explicitly.
-    monkeypatch.setattr(module, "sys", SimpleNamespace(version_info=(3, 12, 14), executable=sys.executable, platform="linux"))
+    # Use the real Python version; general launcher fixtures model POSIX.
+    # Native Windows cases select their platform explicitly.
+    monkeypatch.setattr(module, "sys", SimpleNamespace(version_info=sys.version_info, executable=sys.executable, platform="linux"))
     return module, root, state
 
 
@@ -62,6 +63,12 @@ def _verbose(name, version="1.90.0", host="x86_64-unknown-linux-gnu", commit=Non
 @pytest.fixture
 def tools(doctor, monkeypatch, tmp_path):
     module, root, state = doctor
+    # Tool-discovery tests assume an eligible lane without impersonating a
+    # different interpreter. The untouched minimums are tested separately.
+    monkeypatch.setattr(module, "GATE_PREREQUISITES", {
+        name: {**requirement, "minimum_python": (3, 11)}
+        for name, requirement in module.GATE_PREREQUISITES.items()
+    })
     directory = tmp_path / "bin"
     directory.mkdir()
     for name in ("node", "npm", "uv", "cargo", "rustc", "rustdoc"):
@@ -75,10 +82,16 @@ def tools(doctor, monkeypatch, tmp_path):
     def discover(command, path=None):
         # These owned fixture files are never executed; version subprocesses
         # below are simulated. Discover their literal names on every platform
-        # rather than applying Windows PATHEXT to POSIX-shaped test launchers.
+        # rather than requiring native launchers. Python 3.11's lookup helper
+        # expands PATHEXT before calling which; map those candidates back to
+        # our inert extensionless fixtures. Native Windows lookup tests below
+        # restore real shutil.which and keep actual PATHEXT behavior.
         # File presence and selected PATH/directory ordering remain real.
+        extensions = (module.os.environ.get("PATHEXT") or ".COM;.EXE;.BAT;.CMD").upper().split(module.os.pathsep)
         for directory_name in (path or "").split(module.os.pathsep):
             candidate = Path(directory_name) / command
+            if module.os.name == "nt" and not candidate.is_file() and candidate.suffix.upper() in extensions:
+                candidate = candidate.with_suffix("")
             if candidate.is_file() and module.os.access(candidate, module.os.X_OK):
                 return str(candidate)
         return None
@@ -126,12 +139,16 @@ def test_available_is_only_preflight_with_fresh_occurrence_and_stable_source(doc
     assert state["source_calls"] == 4
 
 
-def test_python_minimum_is_lane_specific_and_distinct_from_configured_ci(doctor):
+@pytest.mark.parametrize("version,inference_status", [((3, 11, 9), "missing"), ((3, 12, 14), "available")])
+def test_python_minimum_is_lane_specific_and_distinct_from_configured_ci(doctor, monkeypatch, version, inference_status):
     module, root, _ = doctor
-    module.sys.version_info = (3, 11, 9)
-    result = module.inspect_workspace(root=root, groups=["measurement", "inference", "surface"])
+    module.sys.version_info = version
+    # This test varies lane eligibility only, never the host OS lookup API.
+    monkeypatch.setattr(module, "_tool", lambda name, *args: {"name": name, "status": "missing"})
+    result = module.inspect_workspace(root=root, groups=["measurement", "inference", "surface", "operations", "web"])
     assert _checks(result, "measurement")["python"]["status"] == "available"
-    assert _checks(result, "inference")["python"]["status"] == "missing"
+    for group in ("inference", "operations", "web"):
+        assert _checks(result, group)["python"]["status"] == inference_status
     assert _checks(result, "surface")["python"]["status"] == "available"
     assert result["groups"]["surface"]["configured_ci_python"] == ["3.12", "3.13"]
     assert result["groups"]["surface"]["qualification"] == "not_performed"
@@ -403,7 +420,7 @@ def test_opaque_native_npm_launcher_is_refused_even_when_its_version_probe_succe
     native.chmod(0o755)
 
     def discover(command, path=None):
-        return str(native) if Path(command).name == "npm" else original(command, path=path)
+        return str(native) if Path(command).stem == "npm" else original(command, path=path)
 
     monkeypatch.setattr(module.shutil, "which", discover)
     report = module.inspect_workspace(root=root, groups=["web"], node_bin=directory)
