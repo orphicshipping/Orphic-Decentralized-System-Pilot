@@ -25,7 +25,7 @@ IDENTITY = {"model_id": "contract-model.v1", "entity_id": "test/body", "executio
 PROVENANCE = {"provider": "contract-fixture", "sources": [REF], "semantics": "simulated"}
 LINEAGE = {"dataset_id": "retained/test", "revision": 1, "parent_source_id": None,
            "recorded_at": "2026-10-05T12:00:00+00:00"}
-BASE_SCHEMAS = tuple(key for key in data.SCHEMA_FAMILIES if key not in {"ciw.field-observation-mapping.v1", "ciw.compute-canonical-state.v1"})
+BASE_SCHEMAS = tuple(key for key in data.SCHEMA_FAMILIES if key not in {"ciw.field-observation-mapping.v1", "ciw.compute-canonical-state.v1", "ciw.gltf-reference.v1"})
 
 
 def encoded(value):

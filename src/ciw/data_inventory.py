@@ -85,6 +85,18 @@ def _routes() -> list[dict]:
          ["explicit pinned TSDE binding for Workbench execution"],
          ["tests/test_geometry_translation_contract.py", "tests/test_data_integration_matrix.py"],
          "Local-package execution is tested separately from Workbench pin qualification. Vertex/budget stops remain partial trajectories."),
+        ("geometry.gltf-reference", ["geometry", "graphs"],
+         "ciw.gltf_reference.validate_record", "ciw.gltf_reference_runtime.retain_mesh_source",
+         ["ciw.geometry_research.GeometryResearchWorkflow.create_session"],
+         "Authoritative glTF and buffer bytes, scene transforms, source-index map and mesh-path source dependency",
+         ["explicit pinned ISGT binding for mesh-path execution"], ["tests/test_gltf_reference.py"],
+         "One indexed primitive; whole indexed component only. Seam vertices remain distinct; cross-component requests refuse. No welding or physical accuracy claim."),
+        ("geometry.gltf-godot-import", ["geometry"],
+         "ciw.gltf_reference.validate_record", "ciw.gltf_reference_runtime.source_parameters",
+         ["ciw.gltf_reference_runtime.GodotRuntime.execute"],
+         "Session operation with full native Godot import geometry, winding comparison, source identity and runtime logs",
+         ["explicit Godot executable plus expected SHA256"], ["tests/test_gltf_reference.py"],
+         "Fixed foundry inspector, original source asset, exact index map and bounded coordinate tolerance; no new asset or promotion."),
         ("geometry.mesh-path", ["geometry", "graphs"],
          "ciw.geometry_mesh_contract.validate_request", None,
          ["ciw.geometry_research.GeometryResearchWorkflow.create_session"], "Workbench exact mesh request and native bundle",
@@ -300,6 +312,13 @@ def inventory(*, repository: Path | str | None = None, session=None) -> dict:
                      "consumer": "ciw.data_compute_bridge.ComputeRuntime.execute",
                      "registration": "explicit_host_factory_not_automatically_bound",
                      "runtime_requirements": ["explicit process-local Compute Runtime source binding"],
+                     "qualification": "not_performed_by_inventory"})
+    from .gltf_reference_runtime import INSPECT
+    explicit.append({"operation_id": INSPECT, "role": "backend",
+                     "factory": "ciw.gltf_reference_runtime.GodotRuntime.operation",
+                     "consumer": "ciw.gltf_reference_runtime.GodotRuntime.execute",
+                     "registration": "explicit_host_factory_not_automatically_bound",
+                     "runtime_requirements": ["explicit Godot executable and expected SHA256"],
                      "qualification": "not_performed_by_inventory"})
     routes = _routes()
     for route in routes:

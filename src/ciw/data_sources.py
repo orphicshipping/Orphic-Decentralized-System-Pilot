@@ -46,6 +46,7 @@ SCHEMA_FAMILIES = {
     "covariance-artifact.v1": "covariance",
     "ciw.field-observation-mapping.v1": "field-observation-mapping",
     "ciw.compute-canonical-state.v1": "compute-canonical-state",
+    "ciw.gltf-reference.v1": "gltf-reference",
     "ciw.polymer-cycle-request.v1": "polymer-cycle-request",
 }
 _JSON_MEDIA = "application/json"
@@ -90,6 +91,9 @@ def _native(value: dict, family: str) -> None:
     elif family == "field-observation-mapping":
         from .data_field_bridge import validate
         validate(value)
+    elif family == "gltf-reference":
+        from .gltf_reference import validate_record
+        validate_record(value)
     elif family == "compute-canonical-state":
         from .data_compute_bridge import validate_record
         validate_record(value)

@@ -63,4 +63,6 @@ def default_registry() -> OperationRegistry:
     registry.register(data_operation())
     from ..data_compute_bridge import polymer_operation
     registry.register(polymer_operation())
+    from ..gltf_reference_runtime import projection_operation
+    registry.register(projection_operation())
     return registry

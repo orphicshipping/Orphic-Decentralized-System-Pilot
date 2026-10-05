@@ -56,6 +56,26 @@ def main(argv=None):
             command.add_argument("--family", required=True)
         else:
             command.add_argument("--mapping", type=Path, required=True)
+    gltf = commands.add_parser("from-gltf", help="Retain bounded local glTF plus exact sibling buffers")
+    gltf.add_argument("input", type=Path)
+    gltf.add_argument("--dataset-id", required=True)
+    gltf.add_argument("--revision", type=int, required=True)
+    gltf.add_argument("--parent-source-id")
+    gltf.add_argument("--recorded-at", required=True)
+    gltf.add_argument("--source", required=True)
+    gltf.add_argument("--publisher-revision", required=True)
+    gltf.add_argument("--license", required=True)
+    gltf.add_argument("--attribution", required=True)
+    gltf.add_argument("--output", type=Path, required=True)
+    gltf_project = commands.add_parser("project-gltf", help="Map one whole seam-indexed component to the existing mesh consumer")
+    gltf_project.add_argument("--source-id", required=True)
+    gltf_project.add_argument("--source-vertex", type=int, required=True)
+    gltf_project.add_argument("--target-vertex", type=int, required=True)
+    gltf_project.add_argument("--label", required=True)
+    gltf_inspect = commands.add_parser("inspect-gltf", help="Import retained glTF with an explicitly bound Godot inspector")
+    gltf_inspect.add_argument("--source-id", required=True)
+    gltf_inspect.add_argument("--godot", type=Path, required=True)
+    gltf_inspect.add_argument("--godot-sha256", required=True)
     add = commands.add_parser("add", help="Add an immutable source to a new copy of an existing workspace")
     add.add_argument("source", type=Path)
     add.add_argument("--label", required=True)
@@ -74,7 +94,7 @@ def main(argv=None):
     project.add_argument("--parent-source-id")
     project.add_argument("--recorded-at", required=True)
     project.add_argument("--label", required=True)
-    for command in (add, compare, project):
+    for command in (add, compare, project, gltf_project, gltf_inspect):
         command.add_argument("--workspace", type=Path, required=True)
         command.add_argument("--output", type=Path, required=True)
     args = parser.parse_args(argv)
@@ -84,6 +104,14 @@ def main(argv=None):
             result = inventory()
         elif args.command == "inspect":
             result = descriptor(_source(_read(args.source)))
+        elif args.command == "from-gltf":
+            from .gltf_reference import read_local
+            record = read_local(args.input, provenance={"source": args.source, "revision": args.publisher_revision,
+                "license": args.license, "attribution": args.attribution})
+            value = retain_record(record, dataset_id=args.dataset_id, revision=args.revision,
+                parent_source_id=args.parent_source_id, recorded_at=args.recorded_at, data_family="gltf-reference")
+            _save_new(args.output, value, MAX_BYTES)
+            result = {"status": "retained", "source": descriptor(value), "output": str(args.output)}
         elif args.command in {"retain", "from-csv"}:
             kwargs = {"dataset_id": args.dataset_id, "revision": args.revision,
                       "parent_source_id": args.parent_source_id, "recorded_at": args.recorded_at}
@@ -108,6 +136,23 @@ def main(argv=None):
                     if args.input_source_id:
                         payload["input_source_ids"] = args.input_source_id
                     result = session.workbench.add_source(payload)
+                elif args.command in {"project-gltf", "inspect-gltf"}:
+                    from . import gltf_reference_runtime as bridge
+                    parameters = bridge.source_parameters(session.workbench, args.source_id,
+                        **({"source_vertex": args.source_vertex, "target_vertex": args.target_vertex}
+                           if args.command == "project-gltf" else {}))
+                    operation = bridge.PROJECT if args.command == "project-gltf" else bridge.INSPECT
+                    if args.command == "inspect-gltf":
+                        session.operations.register(bridge.GodotRuntime(args.godot,
+                            expected_sha256=args.godot_sha256).operation())
+                    answer = session.handle({"protocol_version": 1, "request_id": "data-gltf",
+                        "type": "operation.execute", "payload": {"operation_id": operation, "parameters": parameters}})
+                    if answer["type"] == "error":
+                        raise ValueError(answer["payload"]["message"])
+                    result = answer["payload"]
+                    if args.command == "project-gltf" and result["status"] == "completed":
+                        result = {**result, "mesh_source": bridge.retain_mesh_source(session.workbench,
+                            parameters, label=args.label)}
                 elif args.command == "project-observations":
                     from .data_workflow import project_observations
                     result = project_observations(session.workbench, source_id=args.source_id,

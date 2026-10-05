@@ -61,6 +61,9 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         operation = registry.get(operation_id)
         validate_role(operation_id, operation.role)
         validate_request_dependencies(operation_id, parameters, {} if retained_results is None else retained_results)
+        if operation_id in {"data.project-gltf-mesh.v1", "data.inspect-gltf.v1"}:
+            from ..gltf_reference_runtime import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
         if operation_id == "data.compare-observations.v1":
             from ..data_workflow import validate_live_dependencies
             validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
