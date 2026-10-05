@@ -79,6 +79,7 @@ _BUILTIN_ROLES = {"statistics.v1": "analysis", "spectrum.periodogram.v1": "analy
                 "fluid.wave.simulate.v1": "backend",
                 "fluid.wave.verify.v1": "verification",
                 "polymer.assess-cycle.v1": "backend",
+                "polymer.identify-thermal-response.v1": "state_estimator",
                 "polymer.copilot-context.v1": "backend",
                 "polymer.control-simulate.v1": "backend",
                 "polymer.verify-cycle.v1": "verification",
@@ -158,6 +159,8 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
         from ..irrigation_workflow import validate_payload as validator
     elif operation_id in {"atmosphere.compile.v1", "atmosphere.verify.v1"}:
         from ..atmosphere_workflow import validate_payload as validator
+    elif operation_id == "polymer.identify-thermal-response.v1":
+        from ..thermal_identification_workflow import validate_payload as validator
     elif operation_id in {"polymer.assess-cycle.v1", "polymer.copilot-context.v1",
                           "polymer.control-simulate.v1", "polymer.verify-cycle.v1"}:
         from ..polymer_workflow import validate_payload as validator
