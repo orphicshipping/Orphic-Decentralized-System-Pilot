@@ -1,4 +1,7 @@
-"""Run, inspect and reproduce bounded material benchmarks, without state admission.
+"""Run material benchmarks and a reviewed empirical screen, without state admission.
+
+The empirical actions retain historical published observations separately from
+benchmark simulations; neither path creates native measurement authority.
 
 This module extends PR173's benchmark artifact path. It is not an alternative
 operation registry, evidence ledger, workspace format or equipment controller.
@@ -267,14 +270,20 @@ def _load(raw):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("action",choices=("run","inspect","reproduce"))
+    parser.add_argument("action",choices=("run","inspect","reproduce","empirical-run","empirical-inspect","empirical-verify"))
     parser.add_argument("input",type=Path)
     parser.add_argument("--output",type=Path)
     args=parser.parse_args(argv)
     try:
         with args.input.open("rb") as stream: raw=stream.read(MAX_BYTES+1)
         data=_load(raw)
-        result={"run":run,"inspect":inspect,"reproduce":reproduce}[args.action](data)
+        if args.action.startswith("empirical-"):
+            from . import rheology_empirical
+            result={"empirical-run":rheology_empirical.run,
+                    "empirical-inspect":rheology_empirical.inspect_result,
+                    "empirical-verify":rheology_empirical.verify_result}[args.action](data)
+        else:
+            result={"run":run,"inspect":inspect,"reproduce":reproduce}[args.action](data)
         if args.action=="run": result["request_bytes_sha256"]=hashlib.sha256(raw).hexdigest()
         text=json.dumps(result,indent=2,allow_nan=False)+"\n"
         if args.output: tc._write_new_report(args.output,text)
