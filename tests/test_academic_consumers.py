@@ -83,3 +83,57 @@ def test_no_byte_identity_or_clock_semantics_are_guessed(tmp_path):
     assert not (tmp_path / "not-created").exists()
     assert academic.mapping(1, "reference")["clock"]["unit"] == "s"
     assert all(row["unit"] == "mol" for row in academic.mapping(1, "reference")["quantities"])
+
+
+@pytest.mark.integration
+def test_tclab_uses_native_fir_with_real_predecessors_and_independent_oracle(tmp_path):
+    value, library = os.environ.get("NET_TCLAB_CSV"), os.environ.get("SCR_DSP_LIBRARY")
+    if not value or not library:
+        pytest.skip("Original TCLab bytes and native SCR DSP library are both required")
+    library = Path(library)
+    digest = "sha256:" + sha256(library.read_bytes()).hexdigest()
+    result = academic.run_tclab_fir(Path(value), library, digest, tmp_path / "fir", STAMP)
+    assert result["native_executions"] == 8 and result["native_filter_executions"] == 4
+    assert result["filtered_scalar_values"] == 796
+    assert result["padding"] == "none" and result["source_predecessors_s"] == [0, 1]
+    assert all(row["sample_count"] == 199 and row["status"] == "PASS" for row in result["comparisons"])
+    assert max(row["metrics"]["max_abs_error"] for row in result["comparisons"]) < 2e-14
+    workspace = json.loads(Path(result["workspace"]).read_text())
+    assert workspace["run"]["time_s"] == list(range(2, 201))
+    assert workspace["run"]["metadata"]["provenance"]["uncertainty"] == "absent"
+    assert result["runtime"]["library_sha256"] == digest
+
+
+@pytest.mark.integration
+def test_native_fir_never_substitutes_an_unmatched_library(tmp_path):
+    value, library = os.environ.get("NET_TCLAB_CSV"), os.environ.get("SCR_DSP_LIBRARY")
+    if not value or not library:
+        pytest.skip("Original TCLab bytes and native library are required for the binding test")
+    with pytest.raises(ValueError, match="digest|hash|SHA256|sha256|identity"):
+        academic.run_tclab_fir(Path(value), Path(library), "sha256:" + "0" * 64,
+                               tmp_path / "not-created", STAMP)
+    assert not (tmp_path / "not-created").exists()
+
+
+@pytest.mark.integration
+def test_fao56_worked_example_uses_existing_endpoint_without_farm_invention(tmp_path):
+    value = os.environ.get("NET_FAO56_REFERENCE")
+    if not value:
+        pytest.skip("Original pinned FAO56 worked reference is required")
+    result = academic.run_fao56(Path(value), tmp_path / "fao56", STAMP)
+    assert result["status"] == "BOUNDED_EXISTING_ENDPOINT_PASS"
+    assert result["value"] == pytest.approx(3.88, abs=0.02)
+    assert result["matched_input_discrepancy"] <= 1e-12
+    assert result["reported_deficit_kpa"] == 0.589
+    assert result["actual_reported_es_minus_ea_kpa"] == pytest.approx(0.588)
+    assert result["unit"] == "mm/day" and result["uncertainty"] == "absent"
+    assert result["session_executions"] == 0 and result["native_endpoint_evaluations"] == 3
+    assert "zones" not in result["weather"] and "date" not in result["weather"]
+
+
+def test_changed_fao56_reference_is_refused(tmp_path):
+    path = tmp_path / "fao.json"
+    path.write_text('{}')
+    with pytest.raises(ValueError, match="SHA256 mismatch"):
+        academic.run_fao56(path, tmp_path / "not-created", STAMP)
+    assert not (tmp_path / "not-created").exists()

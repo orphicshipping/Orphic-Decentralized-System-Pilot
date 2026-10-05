@@ -44,6 +44,18 @@ retained as 804 scalar observations with all columns, units, clock identity
 and original bytes. This is typed retention only. It does not establish sensor
 calibration, a complete experiment, independent heat flux or thermal-model fit.
 
+An additional optional route executes the existing specialist-owned C++ FIR
+kernel (`signal.filter.fir.v1`) on all four real TCLab channels. A declared
+three-tap filter [.25, .5, .25] consumes rows 2–200; the actual rows at 0 and 1 s
+are its initial history. No source samples, clock values or padding are invented.
+The complete 804-observation source remains in the same Workbench; derived
+streams carry its dependency. Four native filters and four typed comparisons
+check 796 outputs against independent decimal convolution from original source
+tokens at atol=1e-12 in each channel's declared unit. Native runtime/library
+identities and provider-free restored workspaces are retained. This establishes
+the finite filter computation, not a calibrated physical frequency response.
+Heater commands retain `percent_command`, not an invented heat-input unit.
+
 ## Run with already acquired files
 
 ```
@@ -57,6 +69,26 @@ The output directory is create-only. Set `NET_ACADEMIC_ACQUISITION_ROOT` and
 `NET_TCLAB_CSV` to run `tests/test_academic_consumers.py` against the same bytes.
 Without these files the positive integration tests skip explicitly; generated
 fixtures are never substituted. Negative contract tests still run.
+
+For the FIR route, additionally pass `--dsp-library` and
+`--dsp-library-sha256 sha256:<digest>`. The library must be an explicitly trusted
+SCR build matching NET's ABI contract. The existing `.github/workflows/dsp-instrument.yml`
+records its exact SCR source pin and generation/build command; this runner never
+downloads or compiles a provider. Set `SCR_DSP_LIBRARY` to exercise the native
+FIR academic tests. Absent native bindings are reported rather than replaced.
+
+`--fao56-reference` optionally consumes the pinned FAO56 Example 18 JSON using
+the existing `ciw.irrigation_solver.reference_et0` endpoint. Additional inputs
+are explicitly transcribed from the same [official worked example](https://www.fao.org/4/x0490e/x0490e08.htm).
+The result 3.8782548764547045 mm/day agrees with the printed 3.88 within the
+retained 0.02 mm/day rounding allowance. The source's printed vapour deficit
+0.589 differs from its separate rounded pressures (1.997−1.409=0.588); both
+remain visible. A separate matched-input call agrees with the existing
+independent `fao56_daily_et0` evaluator. This is three direct endpoint calls,
+not Session executions or a complete farm plan. It invents no soil state,
+measurement covariance, calendar year or pump. Source bytes are retained in
+existing artifact metadata and checked against artifact digests. Set
+`NET_FAO56_REFERENCE` for the corresponding real-source test.
 
 ## Qualification boundary
 
