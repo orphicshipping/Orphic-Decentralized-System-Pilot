@@ -1,0 +1,131 @@
+{
+  "schema": "notations.development-validation-record.v1",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "parent_commit": "6faab2d8bfcdc6e5ad5cb00fc9a1dd72bcb0cf24",
+  "target_pr": 175,
+  "scope": "fixed-grid identification, Windows test ID repair, reconstructed-source installed-wheel numerical verification",
+  "changed_file_git_blobs": {
+    "src/ciw/polymer_rheology_identification.py": "61dfa03f4e1110569c9050f0ced913e7637b78dd",
+    "src/ciw/polymer_rheology_identification_reference.py": "e32081b2938fe9d45d3b66e4c8f6a3214c0af367",
+    "src/ciw/polymer_rheology_identification_cli.py": "abec3e1fab0bbbe9aa4ebe9bd9a04f52610839aa",
+    "src/ciw/polymer_rheology_cli.py": "3b7cc85d473edc171183c4923d355b0bb4ee46cf",
+    "tests/test_polymer_rheology_identification.py": "621a9f1308eec81d67778bec4124b996e7ac87cd",
+    "tests/test_thermochemical_benchmark.py": "dae5283cc3675ae0a67030fe5de5b73babd26a5c",
+    ".github/workflows/polymer-science.yml": "cd990606c55c3e602806c329ddbb92d79d44167b",
+    "docs/POLYMER_RHEOLOGY_IDENTIFICATION.md": "99d9cfefefe9e801e5e109cb54eedee6cbbd0166",
+    "examples/polymer/rheology/identification-request.json": "4b60244d56096c1a3f98e2193b156155bd47c215"
+  },
+  "unchanged_temporal_test_git_blob": "47d7e6c492960f8bc85d991aabe5c211a06a41c2",
+  "previous_hosted_run": {
+    "run_id": 37341124101,
+    "head_sha": "6faab2d8bfcdc6e5ad5cb00fc9a1dd72bcb0cf24",
+    "ubuntu_python_3_11": "success",
+    "ubuntu_python_3_13": "success",
+    "windows_python_3_11": "failure",
+    "windows_python_3_13": "failure",
+    "diagnosis": "oversized test node ID in PYTEST_CURRENT_TEST exceeds Windows 32767 character environment-variable limit",
+    "failing_job_id": 111868161625,
+    "payload_bytes_unchanged": 65537,
+    "maximum_collected_id_length_before": 65600,
+    "maximum_collected_id_length_after": 1081
+  },
+  "installed_tests": {
+    "tests": 516,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "by_module": {
+      "tests.test_polymer_cooling_precision": 8,
+      "tests.test_polymer_rheology": 96,
+      "tests.test_polymer_rheology_identification": 110,
+      "tests.test_system_study": 65,
+      "tests.test_thermochemical_benchmark": 159,
+      "tests.test_thermochemical_independent_audit": 78
+    },
+    "junit_sha256": "f3574451045ea00d0e6ffaf3d01b98433e52411300806ee64c89f89adf1c5131",
+    "command": "/mnt/data/rheology-wheel-venv/bin/python -m pytest -q tests --junitxml=installed-tests.xml",
+    "working_directory": "outside source tree; selected test files and original thermochemical example only",
+    "identification_test_count": 110,
+    "independent_correlated_noise_nnls_comparisons": 16
+  },
+  "wheel": {
+    "package_path": "/mnt/data/rheology-wheel-venv/lib/python3.13/site-packages/ciw",
+    "files_verified": 413,
+    "wheel_sha256": "a1882f53e3a1bd24c3e8e5bce0b19a1d26afe96b031e256b5a5fe846555b3122",
+    "source_wheel_installed_bytes_match": true,
+    "no_source_path_override": true
+  },
+  "assembly": {
+    "base_wheel_sha256": "e13689bcfd03995cce7ee2918346d9e24dcbcb2b47a001dceb167382c9841b34",
+    "pyproject_git_blob": "71c6b69cacbdde2e16e27cbccf34d199a86fe4e6",
+    "method": "406 base wheel package files plus exact PR173/175/identification overlays; setuptools builds 413-file package",
+    "full_repository_checkout": false,
+    "parallel_pr174_present": false,
+    "temporal_pr172_patch_present": false,
+    "source_manifest_sha256": "f3a3902217e6b6e09ca096152f80196871b227589cf657f5c062b6605ff221eb"
+  },
+  "installed_command_chain": {
+    "commands": [
+      "identify example",
+      "identify run",
+      "identify inspect",
+      "identify verify",
+      "identify export",
+      "rheology analyze",
+      "rheology verify"
+    ],
+    "status": "PASS",
+    "synthetic_coefficients_pa": [
+      999999.9999999997,
+      2000000.0000000002,
+      3000000.0000000005
+    ],
+    "holdout_metrics": {
+      "count": 4,
+      "rmse_pa": 1.3015628661377063e-10,
+      "max_abs_error_pa": 2.3283064365386963e-10
+    },
+    "independent_audit_metrics": {
+      "kkt_max_violation": 2.1666428027910342e-17,
+      "normalized_complementarity": 2.1666428027910342e-17,
+      "prediction_max_symmetric_relative_error": 1.8624961644362814e-16
+    },
+    "physical_validation": false,
+    "polymer_qualification_status": "PASS",
+    "polymer_qualification_checks": 18,
+    "native_ingress_supplied": false
+  },
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0",
+    "pytest": "9.0.2",
+    "setuptools": "82.0.1",
+    "installation": "isolated venv for CIW, shared existing development dependency directory via .pth; no source path override",
+    "dependency_pins_satisfied": false,
+    "pinned_numpy": "2.4.3",
+    "pinned_scipy": "1.17.1"
+  },
+  "local_setup_refusal": {
+    "first_installed_test_launch": "No module named pytest",
+    "resolution": "Explicit shared-dependency .pth; test rerun passed; original launch log retained"
+  },
+  "remaining_gates": [
+    "new-head hosted Windows/Linux qualification",
+    "pinned local dependency environment",
+    "complete repository suite and complete checkout build",
+    "physical rheometry/calibration",
+    "parameter uncertainty and model discrepancy",
+    "provider/Session admission and hardware authority"
+  ],
+  "unchanged_policies": [
+    "license",
+    "dependency pins",
+    "native provider grants",
+    "state admission",
+    "hardware authority",
+    "main and release tags"
+  ],
+  "note": "516 installed tests comprise original 405 cases, one portable-ID regression, and 110 new identification cases. These counts do not include PR172 or PR174 tests."
+}

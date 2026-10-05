@@ -84,7 +84,10 @@ def test_unknown_fields_and_unit_alias_refused(request_data):
 
 @pytest.mark.parametrize("raw", [b'{"x":1,"x":2}', b'{"x":{"a":1,"a":2}}',
     b'{"x":NaN}', b'{"x":Infinity}', b'\xff', b'{', b'[]', b'x'*65537,
-    b'['*2000 + b']'*2000])
+    b'['*2000 + b']'*2000], ids=[
+        'duplicate-root-key', 'duplicate-nested-key', 'nan', 'infinity',
+        'invalid-utf8', 'malformed-object', 'wrong-root', 'oversized', 'deeply-nested',
+    ])
 def test_bad_json_refused(raw):
     with pytest.raises(tc.Refusal):
         tc.load_request(raw)
@@ -361,3 +364,11 @@ def test_atomic_publication_failure_leaves_no_partial_file(tmp_path, monkeypatch
 def test_parser_giant_integer_refused():
     with pytest.raises(tc.Refusal):
         tc.load_request(b'{"x":' + b'9'*5000 + b'}')
+
+
+def test_bad_json_parameter_ids_are_bounded_for_windows_environment():
+    # Pytest exports the node ID as PYTEST_CURRENT_TEST. The oversized payload
+    # must remain the test input, never become a 65 KiB environment value.
+    mark = next(m for m in test_bad_json_refused.pytestmark if m.name == "parametrize")
+    assert len(mark.kwargs["ids"]) == len(mark.args[1])
+    assert all(type(value) is str and 0 < len(value) <= 64 for value in mark.kwargs["ids"])

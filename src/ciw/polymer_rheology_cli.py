@@ -11,6 +11,10 @@ from . import polymer_rheology as rheology
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "identify":
+        from .polymer_rheology_identification_cli import main as identify_main
+        return identify_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net polymer rheology", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     example = commands.add_parser("example")
