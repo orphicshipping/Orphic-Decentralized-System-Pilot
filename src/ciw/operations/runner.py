@@ -67,6 +67,9 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         if operation_id in {"data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
             from ..data_compute_bridge import validate_live_dependencies
             validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id == "particles.hoomd-md.v1":
+            from ..hoomd_workflow import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
         if operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
                             "system.compare.v1", "system.study.v1"}:
             from ..system_workflow import validate_live_dependencies
@@ -98,6 +101,8 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         if (operation_id == "system.simulate.v1" and parameters.get("engine", "local") == "local"
                 and data["execution_runtime"]["runtime"] != runtime):
             raise ValueError("Local deployment receipt differs from retained execution runtime")
+        if operation_id == "particles.hoomd-md.v1" and data["native_result"]["runtime"] != runtime:
+            raise ValueError("HOOMD native result runtime differs from execution binding")
         if operation_id == "system.study.v1" and data["report"]["runtime"] != runtime:
             raise ValueError("Temporal study runtime differs from retained execution runtime")
         json.dumps(data, allow_nan=False)

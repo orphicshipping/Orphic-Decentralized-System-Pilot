@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('hoomd', 'hoomd_cli', 'Run bounded external particle MD with native GSD evidence and independent static checks'),
     ('data', 'data_cli', 'Retain typed datasets, inspect data routes and compare observations in existing workspaces'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
     ('bench', 'hardware_bench_cli', 'Capture inventory and import bounded bench diagnostics with source provenance'),

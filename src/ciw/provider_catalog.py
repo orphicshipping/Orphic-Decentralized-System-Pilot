@@ -22,7 +22,7 @@ _TARGETS = (
     ("networkx", "science", "provider", "planned", None, None),
     ("pymc", "science", "provider", "planned", None, None),
     ("lammps", "science", "provider", "planned", None, None),
-    ("hoomd-blue", "science", "provider", "planned", None, None),
+    ("hoomd-blue", "science", "provider", "binding_required", "particles.hoomd-md.v1", "ciw.hoomd_workflow.HoomdRuntime"),
     ("veros", "science", "provider", "planned", None, None),
     ("lotusim", "science", "provider", "planned", None, None),
     ("mesa", "science", "provider", "planned", None, None),

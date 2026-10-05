@@ -118,6 +118,12 @@ def _routes() -> list[dict]:
          ["explicit process-local binding to consolidated Compute Runtime source"],
          ["tests/test_data_compute_bridge.py", "tests/test_data_integration_matrix.py"],
          "Executes the native projection, preserves vector/quaternion shape and graph order; does not provide arbitrary tensors or state admission."),
+        ("simulation.hoomd-particles", ["simulation", "time-series", "graphs"],
+         "ciw.hoomd_contract.validate_result", "ciw.hoomd_workflow.observation_stream",
+         ["ciw.hoomd_workflow.HoomdRuntime.execute", "ciw.control_checks.compare"],
+         "Authoritative initial/equilibration/production GSD bytes, topology/frame identities and native observables in retained data",
+         ["explicit HOOMD 7.2.0 CPU interpreter", "gsd==5.0.1"], ["tests/test_hoomd.py"],
+         "Bounded linear bead-spring NVT model only; finite-lag diffusivity is not a qualified transport property or rheology model."),
         ("simulation.polymer-cycle", ["tables", "time-series", "simulation"],
          "ciw.polymer_contract.validate_request", "ciw.polymer_workflow.make_source",
          ["ciw.data_compute_bridge._polymer"],
@@ -300,6 +306,12 @@ def inventory(*, repository: Path | str | None = None, session=None) -> dict:
                      "consumer": "ciw.data_compute_bridge.ComputeRuntime.execute",
                      "registration": "explicit_host_factory_not_automatically_bound",
                      "runtime_requirements": ["explicit process-local Compute Runtime source binding"],
+                     "qualification": "not_performed_by_inventory"})
+    explicit.append({"operation_id": "particles.hoomd-md.v1", "role": "backend",
+                     "factory": "ciw.hoomd_workflow.HoomdRuntime.operation",
+                     "consumer": "ciw.hoomd_workflow.HoomdRuntime.execute",
+                     "registration": "explicit_host_factory_not_automatically_bound",
+                     "runtime_requirements": ["explicit HOOMD 7.2.0 CPU interpreter", "GSD 5.0.1 data reader"],
                      "qualification": "not_performed_by_inventory"})
     routes = _routes()
     for route in routes:

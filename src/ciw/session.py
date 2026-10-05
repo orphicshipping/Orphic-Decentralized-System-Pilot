@@ -272,6 +272,9 @@ def _validate_saved_result(result: Any, run: dict, revision: int, recording_file
         validate_role(result["operation_id"], result["role"])
         validate_payload(result["operation_id"], result["data"], run, result["parameters"],
                          {"channel": channel, "interval_s": [start, end]})
+        if (result["operation_id"] == "particles.hoomd-md.v1"
+                and result["data"]["native_result"]["runtime"] != result["runtime"]):
+            raise ValueError("Saved HOOMD runtime differs from the execution record")
         return
     from .operations.schemas import validate_payload
     validate_payload(result["operation_id"], result["data"], run, {},
@@ -590,7 +593,7 @@ class Session:
                                 for identity in dependency_result_ids(operation_id, parameters)
                                 if identity in self.results}
                 retained_sources = (self.workbench.retained_sources()
-                                    if operation_id.startswith(("system.", "data.")) else None)
+                                    if operation_id.startswith(("system.", "data.", "particles.")) else None)
                 self._pending_operations += 1
             try:
                 execution, result = execute_operation(

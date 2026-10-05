@@ -92,6 +92,8 @@ def validate_live_dependencies(operation_id, parameters, sources):
 def validate_saved_dependencies(results, sources):
     from .data_compute_bridge import validate_saved_dependencies as validate_compute_dependencies
     validate_compute_dependencies(results, sources)
+    from .hoomd_workflow import validate_saved_dependencies as validate_hoomd_dependencies
+    validate_hoomd_dependencies(results, sources)
     for result in results.values():
         if result["operation_id"] in OPERATION_IDS:
             validate_live_dependencies(result["operation_id"], result["parameters"], sources)
@@ -118,9 +120,12 @@ def project_observations(workbench, *, source_id, selector, dataset_id, revision
     if source["kind"] == "data-record":
         keys(selector, set())
         native = native_record(source)
-        if native["schema"] != "ciw.field-observation-mapping.v1":
+        if native["schema"] == "ciw.field-observation-mapping.v1":
+            from .data_field_bridge import observation_stream
+        elif native["schema"] == "ciw.hoomd-result.v1":
+            from .hoomd_workflow import observation_stream
+        else:
             raise ValueError("This data record has no registered observation projection")
-        from .data_field_bridge import observation_stream
         stream = observation_stream(native)
     elif source["kind"] == "measured-thermal":
         keys(selector, {"channel"})

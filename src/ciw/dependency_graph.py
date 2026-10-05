@@ -61,7 +61,7 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
         # contain invalid or missing references. Only completed occurrences
         # have a validated result contract from which to project these edges.
         if execution["status"] == "completed":
-            if execution["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+            if execution["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1", "particles.hoomd-md.v1"}:
                 from .data_workflow import source_ids
                 deps.extend(source_ids(execution["parameters"]))
             if execution["operation_id"] == "system.compile.v1":
@@ -76,7 +76,7 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
             operation_id=execution["operation_id"], outcome=execution["status"])
     for result in results.values():
         deps = [result["evidence_id"]]
-        if result["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+        if result["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1", "particles.hoomd-md.v1"}:
             from .data_workflow import source_ids
             deps.extend(source_ids(result["parameters"]))
         if result["operation_id"] == "system.compile.v1":
