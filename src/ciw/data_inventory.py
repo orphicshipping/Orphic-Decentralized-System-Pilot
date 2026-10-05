@@ -118,6 +118,12 @@ def _routes() -> list[dict]:
          ["explicit process-local binding to consolidated Compute Runtime source"],
          ["tests/test_data_compute_bridge.py", "tests/test_data_integration_matrix.py"],
          "Executes the native projection, preserves vector/quaternion shape and graph order; does not provide arbitrary tensors or state admission."),
+        ("reference.carex-rank", ["tables", "matrices"],
+         "ciw.data_rank_bridge.parse_npz", "ciw.data_rank_bridge.retain_carex",
+         ["ciw.data_rank_bridge.RankRuntime.execute"],
+         "Exact NPZ artifact, checked array manifest and native rank Session result",
+         ["explicit process-local OIT source binding"], ["tests/test_data_rank_bridge.py"],
+         "Raw matrix rank only; no covariance, observability, discretization or Riccati solve."),
         ("simulation.polymer-cycle", ["tables", "time-series", "simulation"],
          "ciw.polymer_contract.validate_request", "ciw.polymer_workflow.make_source",
          ["ciw.data_compute_bridge._polymer"],
@@ -300,6 +306,13 @@ def inventory(*, repository: Path | str | None = None, session=None) -> dict:
                      "consumer": "ciw.data_compute_bridge.ComputeRuntime.execute",
                      "registration": "explicit_host_factory_not_automatically_bound",
                      "runtime_requirements": ["explicit process-local Compute Runtime source binding"],
+                     "qualification": "not_performed_by_inventory"})
+    from .data_rank_bridge import OPERATION as rank_operation
+    explicit.append({"operation_id": rank_operation, "role": "backend",
+                     "factory": "ciw.data_rank_bridge.RankRuntime.operation",
+                     "consumer": "ciw.data_rank_bridge.RankRuntime.execute",
+                     "registration": "explicit_host_factory_not_automatically_bound",
+                     "runtime_requirements": ["explicit process-local OIT source binding"],
                      "qualification": "not_performed_by_inventory"})
     routes = _routes()
     for route in routes:
