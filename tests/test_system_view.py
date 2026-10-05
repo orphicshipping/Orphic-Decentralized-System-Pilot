@@ -280,7 +280,9 @@ elements.secondary.value="";elements.secondary.listeners.change();
 assert(elements["sample-note"].textContent.includes("Primary stored trajectory only"));
 assert.strictEqual(context.injected,undefined);console.log("retained UI controls passed");
 '''
+    # Allow hosted Windows process startup; the VM still bounds script
+    # execution to three seconds and every retained-UI assertion stays active.
     reply = subprocess.run([shutil.which("node"), "-e", harness, str(destination)], check=False,
-                           capture_output=True, text=True, timeout=8)
+                           capture_output=True, text=True, timeout=30)
     assert reply.returncode == 0, reply.stderr
     assert reply.stdout.strip() == "retained UI controls passed"

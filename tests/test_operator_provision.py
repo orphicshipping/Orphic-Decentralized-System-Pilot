@@ -22,6 +22,10 @@ def git(root, *args):
 def repository(path):
     path.mkdir()
     git(path, "init", "--quiet")
+    # Keep fixture mutations from starting background repacks that can race
+    # with the complete before/after read-only directory assertion.
+    git(path, "config", "gc.auto", "0")
+    git(path, "config", "maintenance.auto", "false")
     git(path, "config", "user.name", "Operator fixture")
     git(path, "config", "user.email", "operator@example.invalid")
     git(path, "config", "core.autocrlf", "false")
