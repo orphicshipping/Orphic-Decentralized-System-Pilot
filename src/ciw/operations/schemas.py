@@ -14,9 +14,52 @@ _VALIDATORS: dict[str, Callable] = {}
 _VALIDATOR_ROLES: dict[str, str] = {}
 _ROLES = frozenset({"analysis", "state_estimator", "calibration", "verification", "decision", "backend"})
 
+# Registered only by installed trusted code, never loaded from saved parameters.
+_DEPENDENCY_FIELDS: dict[str, tuple[str, ...]] = {}
+
+
+def register_dependency_fields(operation_id: str, fields: tuple[str, ...]) -> None:
+    """Bind exact retained-result inputs for a trusted extension payload schema."""
+    if operation_id not in _VALIDATORS or operation_id in _DEPENDENCY_FIELDS:
+        raise ValueError("Dependency fields require a uniquely registered extension schema")
+    if (type(fields) is not tuple or not 1 <= len(fields) <= 8
+            or any(type(f) is not str or not f.isidentifier() for f in fields)
+            or len(set(fields)) != len(fields)):
+        raise ValueError("Require 1..8 unique dependency parameter fields")
+    _DEPENDENCY_FIELDS[operation_id] = fields
+
+
+def validate_extension_result_dependency(result: dict, results: dict) -> None:
+    """Validate one completed extension result against its retained prerequisites."""
+    operation_id = result.get("operation_id")
+    if operation_id not in _DEPENDENCY_FIELDS:
+        return
+    _validate_extension_dependencies(operation_id, result["parameters"], results)
+    for field in _DEPENDENCY_FIELDS[operation_id]:
+        if result["parameters"][field]["evidence_id"] != result["evidence_id"]:
+            raise ValueError("Extension dependency belongs to different source evidence")
+
+
+def validate_extension_result_dependencies(results: dict) -> None:
+    """Batch form for callers validating a retained result collection."""
+    for result in results.values():
+        validate_extension_result_dependency(result, results)
+
+
+def _validate_extension_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
+    for field in _DEPENDENCY_FIELDS.get(operation_id, ()):
+        candidate = parameters.get(field)
+        if (type(candidate) is not dict or type(candidate.get("result_id")) is not str
+                or retained.get(candidate["result_id"]) != candidate):
+            raise ValueError("Extension dependency is not the exact retained result occurrence")
+
+
 
 def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
     """Fixed trusted dependency contracts; saved parameters never load code."""
+    if operation_id in _DEPENDENCY_FIELDS:
+        return [parameters[f]["result_id"] for f in _DEPENDENCY_FIELDS[operation_id]
+                if type(parameters.get(f)) is dict and type(parameters[f].get("result_id")) is str]
     system_fields = {
         "system.simulate.v1": ("plan",), "system.study.v1": ("plan",),
         "system.verify.v1": ("candidate",), "system.compare.v1": ("left", "right"),
@@ -41,6 +84,7 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
 
 
 def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
+    _validate_extension_dependencies(operation_id, parameters, retained)
     if operation_id == "metrology.temperature.verify.v1":
         from ..temperature_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)

@@ -1,0 +1,59 @@
+name: Optional domain provider boundary
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/operations/**'
+      - 'src/ciw/domain_cli.py'
+      - 'src/ciw/operator_commands.py'
+      - 'src/ciw/session.py'
+      - 'tests/test_extension_dependencies.py'
+      - 'pyproject.toml'
+      - '.github/workflows/domain-provider-boundary.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  public-boundary:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - name: Preserve Windows source paths and bytes
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.longpaths true
+          git config --global core.autocrlf false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install candidate and pinned public test dependencies
+        run: python -m pip install ".[dev]"
+      - name: Test installed extension boundary, without private provider
+        run: python -m pytest -q -o pythonpath= tests/test_extension_dependencies.py --junitxml=extension-tests.xml
+      - name: Optional help outside source directory
+        working-directory: ${{ runner.temp }}
+        run: net domains --help
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: extension-boundary-${{ matrix.os }}-${{ matrix.python }}
+          path: extension-tests.xml
+          if-no-files-found: error
+          retention-days: 14

@@ -1,0 +1,105 @@
+"""Generic trusted extension seam; no private provider source or binary required."""
+from copy import deepcopy
+import uuid
+import pytest
+from ciw.operations import schemas
+from ciw.operations.registry import Operation, default_registry
+from ciw.operations.runner import seal
+from ciw.polymer_workflow import make_source, _execute
+from ciw.polymer_contract import example_request
+from ciw.session import Session
+
+@pytest.fixture
+def extension(tmp_path):
+    suffix=uuid.uuid4().hex
+    parent=f"test.source{suffix}.v1";child=f"test.child{suffix}.v1"
+    def validate(op,data,source,parameters,selection):
+        assert data=={"declared":True}
+    schemas.register_payload_validator(parent,validate)
+    schemas.register_payload_validator(child,validate,role="verification")
+    schemas.register_dependency_fields(child,("candidate",))
+    calls=[];registry=default_registry()
+    registry.register(Operation(parent,"backend",lambda *args:{"declared":True},lambda:{"provider":"test"}))
+    def invoke(*args):calls.append(True);return {"declared":True}
+    registry.register(Operation(child,"verification",invoke,lambda:{"provider":"test"}))
+    session=Session(make_source(example_request()),tmp_path,operations=registry)
+    return parent,child,session,calls
+
+
+def test_live_exact_dependency_and_saved_reopen(extension,tmp_path):
+    parent,child,session,calls=extension
+    p=_execute(session,parent,{})["result"]
+    assert _execute(session,child,{"candidate":p})["status"]=="completed"
+    assert len(calls)==1
+    session.save_workspace(tmp_path/"workspace.json")
+    reloaded=Session.from_workspace(tmp_path/"workspace.json",tmp_path/"inspection")
+    assert reloaded.results==session.results
+    assert calls==[True]
+
+@pytest.mark.parametrize("fault",["missing","null","wrong_type","unretained_id","changed_occurrence","changed_data"])
+def test_invalid_dependencies_refuse_before_execution(extension,fault):
+    parent,child,session,calls=extension
+    p=_execute(session,parent,{})["result"];params={"candidate":deepcopy(p)}
+    if fault=="missing":params={}
+    elif fault=="null":params["candidate"]=None
+    elif fault=="wrong_type":params["candidate"]=[]
+    elif fault=="unretained_id":params["candidate"]["result_id"]="result-"+"0"*32
+    elif fault=="changed_occurrence":params["candidate"]["execution_id"]="execution-"+"0"*32
+    elif fault=="changed_data":params["candidate"]["data"]={"declared":False};seal(params["candidate"])
+    assert _execute(session,child,params)["status"]=="refused"
+    assert not calls
+
+@pytest.mark.parametrize("fields",[(),("a","a"),("bad field",),["candidate"],("a",)*9,(1,)])
+def test_invalid_registration(extension,fields):
+    parent,_,_,_=extension
+    with pytest.raises(ValueError):schemas.register_dependency_fields(parent,fields)
+
+
+def test_no_builtin_override():
+    with pytest.raises(ValueError):schemas.register_dependency_fields("statistics.v1",("candidate",))
+
+
+def test_no_registration_from_unknown_schema():
+    with pytest.raises(ValueError):schemas.register_dependency_fields("test.unbound.v1",("candidate",))
+
+
+def test_no_duplicate_binding(extension):
+    _,child,_,_=extension
+    with pytest.raises(ValueError):schemas.register_dependency_fields(child,("candidate",))
+
+
+def test_saved_dependency_missing_or_conflicting(extension):
+    parent,child,s,_=extension
+    p=_execute(s,parent,{})["result"];q=_execute(s,child,{"candidate":p})["result"]
+    with pytest.raises(ValueError):schemas.validate_extension_result_dependencies({q["result_id"]:q})
+    bad=deepcopy(p);bad["evidence_id"]="sha256:"+"0"*64
+    with pytest.raises(ValueError):schemas.validate_extension_result_dependencies({p["result_id"]:bad,q["result_id"]:q})
+
+
+def test_saved_cross_source_is_refused(extension):
+    parent,child,s,_=extension
+    p=_execute(s,parent,{})["result"];q=_execute(s,child,{"candidate":p})["result"]
+    q["evidence_id"]="sha256:"+"0"*64
+    with pytest.raises(ValueError,match="different source"):
+        schemas.validate_extension_result_dependencies({p["result_id"]:p,q["result_id"]:q})
+
+
+def test_builtin_dependencies_unchanged():
+    p={"candidate":{"result_id":"r"},"assessment":{"result_id":"a"},"processing":{"result_id":"p"}}
+    assert schemas.dependency_result_ids("system.verify.v1",p)==["r"]
+    assert schemas.dependency_result_ids("polymer.verify-cycle.v1",p)==["a"]
+    assert schemas.dependency_result_ids("metrology.temperature.verify.v1",p)==["p"]
+    assert schemas.dependency_result_ids("statistics.v1",p)==[]
+
+
+def test_optional_domain_help_without_provider(monkeypatch):
+    import builtins
+    from ciw.domain_cli import main
+    original=builtins.__import__
+    def deny(name,*args,**kwargs):
+        if name.startswith("notation_domains"):
+            raise ModuleNotFoundError("not installed",name="notation_domains")
+        return original(name,*args,**kwargs)
+    monkeypatch.setattr(builtins,"__import__",deny)
+    assert main(["--help"])==0
+    assert main(["demo"])==2
