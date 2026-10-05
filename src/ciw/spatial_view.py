@@ -147,7 +147,12 @@ def project(source: dict) -> dict:
     The descriptor is the ordinary workbench source record. No native result,
     execution or verification identity is invented for a view operation.
     """
-    _keys(source, {"schema", "kind", "label", "source_schema", "evidence_id", "byte_count", "source_id", "bytes_b64"})
+    _keys(source, {"schema", "kind", "label", "source_schema", "evidence_id", "byte_count", "source_id", "bytes_b64"}, {"input_source_ids"})
+    if "input_source_ids" in source:
+        from .workbench import _source as retained_source
+        expected = retained_source({key: source[key] for key in ("kind", "label", "bytes_b64", "input_source_ids")})
+        if expected != source:
+            raise ValueError("Geographic retained source/input binding mismatch")
     encoded = source["bytes_b64"]
     if not isinstance(encoded, str) or len(encoded) > 4 * ((MAX_BYTES + 2) // 3):
         raise ValueError("Invalid geographic source byte envelope")

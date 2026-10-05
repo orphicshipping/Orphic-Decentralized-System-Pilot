@@ -56,6 +56,9 @@ def validate_request_dependencies(operation_id: str, parameters: dict, retained:
 
 
 _BUILTIN_ROLES = {"statistics.v1": "analysis", "spectrum.periodogram.v1": "analysis",
+                "data.compare-observations.v1": "backend",
+                "data.project-compute-state.v1": "backend",
+                "data.assess-polymer-cycle.v1": "backend",
                 "hardware.assess.v1": "decision",
                 "fsrt.tank-reconstruct.v1": "state_estimator",
                 "fsrt.tank-reconstruct.v2": "state_estimator",
@@ -125,7 +128,11 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
     if not isinstance(data, dict):
         raise ValueError("Operation data must be an object")
     finite_tree(data, "operation data")
-    if operation_id == "hardware.assess.v1":
+    if operation_id == "data.compare-observations.v1":
+        from ..data_workflow import validate_payload as validator
+    elif operation_id in {"data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+        from ..data_compute_bridge import validate_payload as validator
+    elif operation_id == "hardware.assess.v1":
         from ..hardware_workflow import validate_payload as validator
     elif operation_id in {"statistics.v1", "spectrum.periodogram.v1"}:
         from ..adapters.oscillator_records import validate_payload as validator

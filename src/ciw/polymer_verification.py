@@ -88,7 +88,11 @@ def _measurement_rows(request, metrology):
         _refs(row["source_refs"], [sensor["source_ref"], sensor["calibration_ref"], sensor["clock_ref"]])
         sample = sensor["samples"][-1] if sensor["samples"] else None
         for field in ("value", "standard_uncertainty", "time_s"):
-            _require(row[field] == (None if sample is None else sample[field]), "Measurement must retain the exact selected source sample")
+            # These fields are copied evidence, not numerical estimates. Python
+            # equality aliases False/0 and int/float, hiding a changed source
+            # representation in a resealed assessment.
+            _require(digest(row[field]) == digest(None if sample is None else sample[field]),
+                     "Measurement must retain the exact selected source sample")
         if sample is None:
             _require(row["status"] == "MISSING", "Missing sample cannot become a valid measurement")
         elif request["clock"]["end_s"] - sample["time_s"] > sensor["max_age_s"]:

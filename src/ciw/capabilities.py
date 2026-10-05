@@ -10,6 +10,7 @@ from __future__ import annotations
 from copy import deepcopy
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
+from .data_runtime import comparison_identity, polymer_identity
 
 
 SCHEMA = "ciw.capability-catalog.v1"
@@ -106,6 +107,20 @@ _CAPABILITIES = (
         notes="Metadata consistency is separate from artifact bytes, signatures, issuer trust and physical validation.",
     ),
     *_SYSTEM_CAPABILITIES,
+    _record(
+        capability_id="data.compare-observations.v1", disposition="implemented", kind="registered_operation",
+        summary="Compare explicitly selected observations from immutable native datasets.",
+        command=None, operation_id="data.compare-observations.v1", role="backend",
+        runtime_identity=comparison_identity(), module="ciw.data_workflow",
+        notes="The net data compare command uses retained Workbench sources. No conversion, interpolation or physical qualification.",
+    ),
+    _record(
+        capability_id="data.assess-polymer-cycle.v1", disposition="implemented", kind="registered_operation",
+        summary="Apply the existing bounded polymer assessment to a retained native cycle dataset.",
+        command=None, operation_id="data.assess-polymer-cycle.v1", role="backend",
+        runtime_identity=polymer_identity(), module="ciw.data_compute_bridge",
+        notes="Native sensors, histories and uncertainty declarations remain intact. This is not physical product acceptance.",
+    ),
     _record(
         capability_id="learning.oscillator-rms",
         disposition="implemented",

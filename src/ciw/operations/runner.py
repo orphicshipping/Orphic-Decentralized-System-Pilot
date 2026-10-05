@@ -61,6 +61,12 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         operation = registry.get(operation_id)
         validate_role(operation_id, operation.role)
         validate_request_dependencies(operation_id, parameters, {} if retained_results is None else retained_results)
+        if operation_id == "data.compare-observations.v1":
+            from ..data_workflow import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id in {"data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+            from ..data_compute_bridge import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
         if operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
                             "system.compare.v1", "system.study.v1"}:
             from ..system_workflow import validate_live_dependencies

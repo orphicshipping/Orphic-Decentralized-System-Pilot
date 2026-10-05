@@ -64,6 +64,9 @@ _OVERHEAD = 4096
 
 
 def _workflow(kind):
+    if kind == "data-record":
+        from . import data_sources
+        return data_sources
     if kind == "system-specification":
         from . import system_source
         return system_source
@@ -177,7 +180,7 @@ def _descriptor(source):
 
 
 def _source(payload):
-    _keys(payload, {"kind", "label", "bytes_b64"})
+    _keys(payload, {"kind", "label", "bytes_b64"}, {"input_source_ids"})
     kind, label, encoded = payload["kind"], payload["label"], payload["bytes_b64"]
     _text(kind, "Source kind")
     _text(label, "Source label")
@@ -201,6 +204,17 @@ def _source(payload):
     descriptor = {"schema": SOURCE_SCHEMA, "kind": kind, "label": label,
         "source_schema": declaration["schema"],
         "evidence_id": "sha256:" + sha256(raw).hexdigest(), "byte_count": len(raw)}
+    if kind == "data-record":
+        descriptor["data"] = workflow.descriptor(declaration)
+    if "input_source_ids" in payload:
+        dependencies = payload["input_source_ids"]
+        if (type(dependencies) is not list or not 1 <= len(dependencies) <= MAX_SOURCES
+                or any(type(item) is not str for item in dependencies)
+                or len(set(dependencies)) != len(dependencies)):
+            raise ValueError("Input sources must be an explicit nonempty list of distinct retained identities")
+        for dependency in dependencies:
+            _text(dependency, "Input source identity")
+        descriptor["input_source_ids"] = sorted(dependencies)
     descriptor["source_id"] = "source:" + _digest(descriptor)
     return {**descriptor, "bytes_b64": encoded}
 
@@ -329,6 +343,47 @@ def _catalog_steps(native):
 def _source_claims(source):
     return {source["source_id"]: ("source", _digest(_descriptor(source))),
         source["evidence_id"]: ("evidence", _digest(source["bytes_b64"]))}
+
+
+def _data_declaration(source):
+    return _json(base64.b64decode(source["bytes_b64"], validate=True))
+
+
+def _validate_data_links(source, sources):
+    """Revision links are history, not computational dependencies or approval.
+
+    Corrections still use the existing explicit proposal/review journal. A new
+    revision cannot silently replace evidence or revive a withdrawn result.
+    """
+    if source["kind"] != "data-record":
+        return None
+    declaration = _data_declaration(source)
+    siblings = [_data_declaration(item) for item in sources.values()
+                if item["kind"] == "data-record" and item["source_id"] != source["source_id"]]
+    for sibling in siblings:
+        if (sibling["dataset_id"], sibling["revision"]) == (declaration["dataset_id"], declaration["revision"]):
+            raise ValueError("Dataset revision is already bound to a retained source")
+    parent = declaration["parent_source_id"]
+    if declaration["revision"] == 1:
+        if parent is not None:
+            raise ValueError("First dataset revision cannot have a parent")
+    else:
+        predecessors = [item for item in siblings if item["source_id"] == parent]
+        if (len(predecessors) != 1 or predecessors[0]["dataset_id"] != declaration["dataset_id"]
+                or predecessors[0]["revision"] + 1 != declaration["revision"]):
+            raise ValueError("Dataset revision needs its exact retained preceding revision")
+        # A changed native schema needs a new dataset identity or an explicit
+        # domain migration adapter, never an implicit relabeling of old bytes.
+        if predecessors[0]["native_schema"] != declaration["native_schema"]:
+            raise ValueError("Dataset schema change needs an explicit migration or new dataset identity")
+
+
+def _validate_source_links(sources):
+    """Explicit source-to-source mappings join the existing dependency DAG."""
+    from .correction_journal import _acyclic
+    graph = {identity: {"dependencies": source.get("input_source_ids", [])}
+             for identity, source in sources.items()}
+    _acyclic(graph)
 
 
 def _validate_record(record, sources):
@@ -790,6 +845,19 @@ class Workbench:
             raise ValueError("Source exceeds the JSON nesting or numeric budget") from exc
         size, claims = len(_canonical(source)), _source_claims(source)
         with self._lock:
+            if source["kind"] == "data-record":
+                declaration = _data_declaration(source)
+                for candidate in self._sources.values():
+                    if candidate["kind"] == "data-record":
+                        old = _data_declaration(candidate)
+                        if old["source_id"] == declaration["source_id"]:
+                            if candidate.get("input_source_ids", []) != source.get("input_source_ids", []):
+                                raise ValueError("Dataset retry cannot change computational input bindings")
+                            # Retry identity is the dataset occurrence, not its
+                            # human-facing label or JSON whitespace.
+                            return deepcopy(_descriptor(candidate))
+                _validate_data_links(source, self._sources)
+            _validate_source_links({**self._sources, source["source_id"]: source})
             existing = self._sources.get(source["source_id"])
             if existing is not None:
                 if _canonical(existing) != _canonical(source):
@@ -1168,8 +1236,8 @@ class Workbench:
                 raise ValueError("Malformed retained workbench catalog")
             restored = cls()
             for retained in value["sources"]:
-                _keys(retained, {"schema", "kind", "label", "source_schema", "evidence_id", "byte_count", "source_id", "bytes_b64"})
-                source = _source({k: retained[k] for k in ("kind", "label", "bytes_b64")})
+                _keys(retained, {"schema", "kind", "label", "source_schema", "evidence_id", "byte_count", "source_id", "bytes_b64"}, {"data", "input_source_ids"})
+                source = _source({k: retained[k] for k in ("kind", "label", "bytes_b64", "input_source_ids") if k in retained})
                 if _canonical(source) != _canonical(retained) or source["source_id"] in restored._sources:
                     raise ValueError("Retained source identity/content mismatch")
                 claims = _source_claims(source)
@@ -1177,6 +1245,9 @@ class Workbench:
                 restored._sources[source["source_id"]] = source
                 restored._identities.update(claims)
                 restored._used_bytes += len(_canonical(source))
+            for source in restored._sources.values():
+                _validate_data_links(source, restored._sources)
+            _validate_source_links(restored._sources)
             for record in value["bundles"]:
                 claims = _validate_record(record, restored._sources)
                 if record["bundle_id"] in restored._bundles:

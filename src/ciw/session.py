@@ -408,6 +408,27 @@ class Session:
             return self._journal_action(kind, payload)
         if kind == "source.add":
             return self.workbench.add_source(payload)
+        if kind == "data.inventory":
+            _keys(payload, set())
+            from .data_inventory import inventory
+            return inventory(session=self)
+        if kind == "data.list":
+            _keys(payload, set())
+            return {"sources": [source for source in self.workbench.list_sources()
+                                if source["kind"] == "data-record"]}
+        if kind == "data.get":
+            _keys(payload, {"source_id"}, {"source_id"})
+            source = self.workbench.get_source(payload["source_id"])
+            if source["kind"] != "data-record":
+                raise ValueError("Requested source is not a retained data record")
+            from .data_sources import _source as data_source
+            import base64
+            return data_source(base64.b64decode(source["bytes_b64"], validate=True))
+        if kind == "data.project-observations":
+            fields = {"source_id", "selector", "dataset_id", "revision", "parent_source_id", "recorded_at", "label"}
+            _keys(payload, fields, fields)
+            from .data_workflow import project_observations
+            return project_observations(self.workbench, **payload)
         if kind == "source.list":
             _keys(payload, set())
             return {"sources": self.workbench.list_sources()}
@@ -569,7 +590,7 @@ class Session:
                                 for identity in dependency_result_ids(operation_id, parameters)
                                 if identity in self.results}
                 retained_sources = (self.workbench.retained_sources()
-                                    if operation_id.startswith("system.") else None)
+                                    if operation_id.startswith(("system.", "data.")) else None)
                 self._pending_operations += 1
             try:
                 execution, result = execute_operation(
@@ -614,7 +635,10 @@ class Session:
                     self._pending_operations -= 1
             if result is None:
                 return {"status": "refused", "execution": copy.deepcopy(execution), "result": None}
-            return {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            response = {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            if operation_id.startswith("data."):
+                response["dependency_status"] = self.dependency_status()["artifact_status"][result["result_id"]]
+            return response
         if kind == "result.list":
             _keys(payload, {"evaluated_at"})
             result = {"results": self._result_summaries() + self.workbench.native_result_summaries()}
@@ -720,6 +744,8 @@ class Session:
         validate_impact_dependencies(result_map)
         from .system_workflow import validate_saved_dependencies as validate_system_dependencies
         validate_system_dependencies(result_map, retained_workbench.retained_sources())
+        from .data_workflow import validate_saved_dependencies as validate_data_dependencies
+        validate_data_dependencies(result_map, retained_workbench.retained_sources())
         from .atmosphere_workflow import validate_result_dependencies as validate_atmosphere_dependencies
         validate_atmosphere_dependencies(result_map)
         from .fluid_workflow import validate_result_dependencies as validate_fluid_dependencies
