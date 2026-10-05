@@ -1,0 +1,58 @@
+name: Reconfigurable microfab end-to-end
+
+on:
+  push:
+    branches: [feat/reconfigurable-microfab-e2e-20261005]
+  pull_request:
+    paths:
+      - 'src/ciw/microfab*'
+      - 'src/ciw/manufacturing*'
+      - 'src/ciw/polymer*'
+      - 'tests/test_microfab*'
+      - 'tests/test_polymer*'
+      - '.github/workflows/reconfigurable-microfab.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: microfab-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  reproducible-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Archive exact tracked source for offline reproduction
+        run: |
+          mkdir -p validation-export
+          git archive --format=tar.gz HEAD -o validation-export/net-source.tar.gz
+          git rev-parse HEAD > validation-export/commit.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: microfab-reproducible-source
+          path: validation-export/
+          retention-days: 7
+      - name: Install package and test dependencies
+        run: python -m pip install -e '.[dev]'
+      - name: Run polymer and microfab regression suite
+        shell: bash
+        run: |
+          mapfile -t tests < <(find tests -maxdepth 1 -type f \( -name 'test_polymer*.py' -o -name 'test_microfab*.py' \) | sort)
+          test ${#tests[@]} -gt 0
+          python -m pytest -q "${tests[@]}" --junitxml=validation-export/regression.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: microfab-test-evidence
+          path: validation-export/*.xml
+          if-no-files-found: ignore
+          retention-days: 7
