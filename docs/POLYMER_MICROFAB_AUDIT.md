@@ -1,5 +1,33 @@
 # Polymer microfab + discrete manufacturing: source audit and first slice
 
+## Namespace integration and retained-record compatibility
+
+This dossier increment is stacked on the manufacturing runtime in PR #177,
+which includes the plan-envelope declarations from PR #176. Three distinct
+entry points coexist: `net polymer microfab` compiles declaration envelopes,
+`net polymer manufacture` records manufacturing state and genealogy, and
+`net polymer dossier` binds retained Session cycle results into production
+review evidence. The Python owners are `ciw.microfab`, `ciw.polymer_microfab`,
+and `ciw.polymer_production_dossier`, respectively. None shadows another.
+
+The dossier's earlier, unmerged implementation used the `polymer_microfab`
+module and command name. Its record schemas and scientific calculations remain
+unchanged, but its runtime commitment changes: `runtime_identity()` includes
+the normalized source bytes and filenames of both implementation modules.
+The exact earlier runtime hash from commit `418e06bc` is
+`22fa6f4a7b1a9556b5290777e67be4ca1576ebb2e653237aee42d1a881eaa5f5`.
+Inspection, verification and replay explicitly refuse that prior runtime under
+the renamed implementation. They do not rewrite the saved dossier or silently
+migrate its identity. Keep older evidence and its original runtime together;
+to use the new implementation, explicitly run the original request into a new
+output directory, creating fresh occurrences and a new runtime commitment.
+
+The original qualification receipt below remains historical evidence of its
+original source increment. The namespace integration adds real three-way
+native-command/API coexistence tests and three unchanged-artifact/legacy-runtime
+refusal tests. Current qualification is retained separately; an earlier passing
+hosted run does not qualify this changed head.
+
 Audit date: 5 October 2026. Repository resolved by the connector to
 `atomtrapping/Notations-Engineering-Terminal` (the Systems-Terminal URL redirects).
 Audited base: `0091492b9dc237b05c33cac77d2307115bd803b2`, tree
@@ -122,17 +150,17 @@ not automatically fetched or independently certified.
 After installing this candidate:
 
 ```sh
-net polymer microfab example --output order.json
-net polymer microfab run order.json --output-dir production-evidence
-net polymer microfab inspect production-evidence
-net polymer microfab verify production-evidence --output fresh-audit.json
-net polymer microfab replay production-evidence --output-dir production-replay
+net polymer dossier example --output order.json
+net polymer dossier run order.json --output-dir production-evidence
+net polymer dossier inspect production-evidence
+net polymer dossier verify production-evidence --output fresh-audit.json
+net polymer dossier replay production-evidence --output-dir production-replay
 ```
 
 For the synthetic demonstration:
 
 ```sh
-net polymer microfab demo --output-dir microfab-demo
+net polymer dossier demo --output-dir microfab-demo
 ```
 
 All destinations must be new. A fresh audit receipt belongs outside the immutable
@@ -145,7 +173,7 @@ preserves scientific evidence identity and allocates new Session occurrences.
 
 ## Validation and integration boundary
 
-`tests/test_polymer_microfab.py`: 75 local tests passed, no skips. Existing
+`tests/test_polymer_production_dossier.py`: 75 local tests passed, no skips. Existing
 `net polymer qualify`: 18/18 checks passed for injection and extrusion-blow
 molding. The new CLI demo, inspect, fresh audit and replay passed. The JSON
 receipt records commands, JUnit and changed-source hashes, versions and limits.

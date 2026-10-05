@@ -5,8 +5,8 @@ import json
 
 import pytest
 
-from ciw import polymer_microfab as microfab
-from ciw import polymer_microfab_contract as contract
+from ciw import polymer_production_dossier as microfab
+from ciw import polymer_production_dossier_contract as contract
 from ciw import polymer_workflow as workflow
 from ciw.control_contracts import save_new
 from ciw.operations.runner import digest, seal
@@ -360,6 +360,29 @@ def test_replaced_child_request_refused(retained):
         microfab.inspect(directory)
 
 
+@pytest.mark.parametrize("operation", ["inspect", "verify", "replay"])
+def test_prior_runtime_identity_is_refused_without_implicit_migration(retained, tmp_path, operation):
+    # Exact runtime hash from PR178 commit418e06bc, before namespace reconciliation.
+    # The V1 record schema is unchanged; the committed implementation identity is not.
+    directory, dossier = retained
+    legacy_hash = "22fa6f4a7b1a9556b5290777e67be4ca1576ebb2e653237aee42d1a881eaa5f5"
+    assert microfab.runtime_identity()["code_sha256"] != legacy_hash
+    dossier["projection_runtime"]["code_sha256"] = legacy_hash
+    path = directory / "dossier.json"
+    path.write_text(json.dumps(seal(dossier)), encoding="utf-8")
+    before = {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+    output = tmp_path / "not-an-implicit-migration"
+    with pytest.raises(ValueError, match="projection runtime differs"):
+        if operation == "inspect":
+            microfab.inspect(directory)
+        elif operation == "verify":
+            microfab.verify_retained(directory)
+        else:
+            microfab.replay(directory, output)
+    assert not output.exists()
+    assert before == {p.relative_to(directory): p.read_bytes() for p in directory.rglob("*") if p.is_file()}
+
+
 def test_extra_inventory_refused(retained):
     directory, _ = retained
     (directory / "unbound.json").write_text("{}")
@@ -390,11 +413,11 @@ def test_cli_all_commands_and_no_machine_command(tmp_path):
     from ciw.polymer_cli import main
     example = tmp_path / "example.json"
     directory, replay = tmp_path / "cli-run", tmp_path / "cli-replay"
-    assert main(["microfab", "example", "--output", str(example)]) == 0
-    assert main(["microfab", "run", str(example), "--output-dir", str(directory)]) == 0
-    assert main(["microfab", "inspect", str(directory)]) == 0
-    assert main(["microfab", "verify", str(directory), "--output", str(tmp_path / "audit.json")]) == 0
-    assert main(["microfab", "replay", str(directory), "--output-dir", str(replay)]) == 0
-    assert main(["microfab", "verify", str(directory), "--output", str(directory / "audit.json")]) == 2
+    assert main(["dossier", "example", "--output", str(example)]) == 0
+    assert main(["dossier", "run", str(example), "--output-dir", str(directory)]) == 0
+    assert main(["dossier", "inspect", str(directory)]) == 0
+    assert main(["dossier", "verify", str(directory), "--output", str(tmp_path / "audit.json")]) == 0
+    assert main(["dossier", "replay", str(directory), "--output-dir", str(replay)]) == 0
+    assert main(["dossier", "verify", str(directory), "--output", str(directory / "audit.json")]) == 2
     with pytest.raises(SystemExit):
-        main(["microfab", "execute-plc"])
+        main(["dossier", "execute-plc"])

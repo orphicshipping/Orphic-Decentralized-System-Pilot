@@ -1,195 +1,188 @@
-"""Retain a polymer production dossier using NET's existing Session occurrences.
+"""Declaration-only polymer configuration compiler; never a safety controller.
 
-No network transport, machine grant, PLC write, new admission path, or safety loop.
-A hash binds content; it does not authenticate an operator or certify a part.
+The resulting envelope covers only the named scalar constraints. It is neither
+a complete process-window qualification nor evidence that a machine is safe.
 """
 from __future__ import annotations
 
-from copy import deepcopy
-from pathlib import Path
-from hashlib import sha256
-import math
+from decimal import Decimal, localcontext
 
-from .control_contracts import load, save_new
-from .core.identities import new_identity
-from .operations.runner import check_seal, digest, seal
-from . import polymer_workflow as workflow
-from .polymer_microfab_contract import AUTHORITY, MAX_BYTES, validate_request
+from .manufacturing_contracts import (bounded, content_identity, interval, items,
+                                      keys, number, ref, refs, scalar, text)
 
-DOSSIER_SCHEMA = "ciw.polymer-microfab-dossier.v1"
+CHECKS = frozenset({"material_identity", "drying", "machine_setup", "tool_setup",
+                    "coolant", "sensors", "independent_safety_review"})
+AUTHORITY = {"hardware_actuation": "not_performed", "physical_qualification": "not_established",
+             "state_admission": "not_performed", "operator_authentication": "not_established",
+             "shipment_release": "not_authorized"}
 
 
-def runtime_identity() -> dict:
-    from . import polymer_microfab_contract
-    modules = [Path(__file__), Path(polymer_microfab_contract.__file__)]
-    raw = b"\0".join(p.name.encode() + b"\0" + p.read_text(encoding="utf-8").replace("\r\n", "\n").encode()
-                     for p in modules)
-    return {"provider": "ciw.polymer-microfab-projection.v1", "code_sha256": sha256(raw).hexdigest(),
-            "source_normalization": "utf8_lf", "scope": "data_only_production_binding_and_residual_projection"}
+def validate_configuration(config: dict) -> None:
+    bounded(config)
+    keys(config, {"schema", "configuration_id", "source_kind", "part_ref", "material",
+                  "machine", "tool", "recipe", "development_refs"})
+    if config["schema"] != "ciw.polymer-microfab-configuration.v1":
+        raise ValueError("Wrong microfab configuration schema")
+    if config["source_kind"] not in {"synthetic", "retained_observation"}:
+        raise ValueError("Declare synthetic or retained observation semantics")
+    text(config["configuration_id"])
+    ref(config["part_ref"])
+    refs(config["development_refs"])
+    material, machine, tool, recipe = (config[k] for k in ("material", "machine", "tool", "recipe"))
+    keys(material, {"grade_id", "lot_id", "specification_ref", "characterization_refs",
+                    "drying_record_ref", "moisture", "moisture_max", "melt_temperature",
+                    "mold_temperature", "max_residence_time"})
+    text(material["grade_id"])
+    text(material["lot_id"])
+    ref(material["specification_ref"])
+    refs(material["characterization_refs"])
+    if material["drying_record_ref"] is not None:
+        ref(material["drying_record_ref"])
+    if material["moisture"] is not None:
+        keys(material["moisture"], {"value", "unit", "expanded_uncertainty"})
+        moisture = material["moisture"]
+        if moisture["unit"] != "kg/kg" or number(moisture["value"]) > 1:
+            raise ValueError("Invalid moisture mass fraction")
+        if moisture["expanded_uncertainty"] is not None and number(moisture["expanded_uncertainty"]) > 1:
+            raise ValueError("Invalid moisture uncertainty")
+    if material["moisture_max"] is not None and scalar(material["moisture_max"], "kg/kg") > 1:
+        raise ValueError("Invalid maximum moisture fraction")
+    if material["max_residence_time"] is not None:
+        scalar(material["max_residence_time"], "s", minimum=1e-12)
+    keys(machine, {"machine_id", "screw_id", "capability_ref", "compatible_tool_refs",
+                   "compatible_grade_ids", "melt_temperature", "mold_temperature",
+                   "shot_volume", "max_injection_pressure", "max_clamp_force"})
+    for field in ("machine_id", "screw_id"):
+        text(machine[field])
+    if machine["capability_ref"] is not None:
+        ref(machine["capability_ref"])
+    refs(machine["compatible_tool_refs"])
+    grades = items(machine["compatible_grade_ids"], maximum=64)
+    for grade in grades:
+        text(grade)
+    if len(grades) != len(set(grades)):
+        raise ValueError("Duplicate compatible grade")
+    keys(tool, {"tool_id", "revision", "cad_ref", "cavity_ids", "melt_temperature",
+                "mold_temperature", "max_injection_pressure", "projected_area"})
+    text(tool["tool_id"])
+    text(tool["revision"])
+    ref(tool["cad_ref"])
+    cavities = items(tool["cavity_ids"], minimum=1, maximum=128)
+    for cavity in cavities:
+        text(cavity)
+    if len(set(cavities)) != len(cavities):
+        raise ValueError("Duplicate cavity identity")
+    for owner in (material, machine, tool):
+        for field in ("melt_temperature", "mold_temperature"):
+            if owner[field] is not None:
+                interval(owner[field], "K", minimum=1e-12)
+    for owner, field, unit in ((machine, "max_injection_pressure", "Pa"),
+                               (machine, "max_clamp_force", "N"),
+                               (tool, "max_injection_pressure", "Pa"),
+                               (tool, "projected_area", "m2")):
+        if owner[field] is not None:
+            scalar(owner[field], unit, minimum=1e-12)
+    if machine["shot_volume"] is not None:
+        interval(machine["shot_volume"], "m3", minimum=1e-12)
+    keys(recipe, {"process", "melt_temperature", "mold_temperature", "injection_pressure",
+                  "cavity_pressure_bound", "shot_volume", "residence_time", "clamp_factor"})
+    if recipe["process"] != "injection_molding":
+        raise ValueError("Only the injection-molding declaration profile is implemented")
+    for field, unit in (("melt_temperature", "K"), ("mold_temperature", "K"),
+                        ("injection_pressure", "Pa"), ("cavity_pressure_bound", "Pa"),
+                        ("shot_volume", "m3"), ("residence_time", "s")):
+        scalar(recipe[field], unit, minimum=1e-12)
+    scalar(recipe["clamp_factor"], "1", minimum=1)
 
 
-def _residual(entry: dict, assessment: dict, policy: dict) -> dict:
-    """Project validated inputs; public callers use run/inspect, not this helper.
+def compile_configuration(config: dict, preflight: dict, *, at_s: float) -> dict:
+    """Intersect declared limits and evaluate time-bound records, without grants."""
+    validate_configuration(config)
+    now = number(at_s)
+    bounded(preflight)
+    keys(preflight, {"configuration_ref", "checks"})
+    if ref(preflight["configuration_ref"]) != content_identity(config):
+        raise ValueError("Preflight is stale or bound to a different configuration")
+    diagnostics, envelope = [], {}
 
-    Compare held-out temperature with the retained forecast at the SAME time.
+    def note(check: str, status: str, reason: str) -> None:
+        diagnostics.append({"check": check, "status": status, "reason": reason})
 
-    Unknown correlation is not zero correlation. u_pred + u_obs is an upper bound
-    on standard uncertainty for any admissible covariance, not validated coverage.
-    Model discrepancy is not supplied and therefore cannot be statistically removed.
-    """
-    cooling = assessment["engineering"]["cooling"]
-    followup = entry["followup"]
-    common = {"schema": "ciw.polymer-prediction-residual.v1", "quantity": "part_temperature", "unit": "K",
-              "model_ref": digest(entry["cycle"]["model"]), "prediction_ref": digest(cooling),
-              "followup_ref": None if followup is None else digest(followup), "policy_ref": digest(policy),
-              "frame": entry["cycle"]["frame"], "clock_id": entry["cycle"]["clock"]["id"],
-              "target_time_s": entry["cycle"]["clock"]["end_s"] + entry["cycle"]["model"]["cooling"]["forecast_horizon_s"],
-              "uncertainty_semantics": "sum_of_standard_uncertainties_unknown_correlation_upper_bound",
-              "model_discrepancy": "not_quantified", "coverage_probability": "not_validated",
-              "time_semantics": "exact_nominal_forecast_time_not_certified_clock_alignment"}
-    if cooling["status"] != "ESTIMATED" or followup is None:
-        return {**common, "status": "INDETERMINATE", "reason": "MODEL_ABSTAINED" if cooling["status"] != "ESTIMATED" else "MISSING_FOLLOWUP"}
-    delta = followup["value"] - cooling["temperature_k"]
-    uncertainty_bound = followup["standard_uncertainty"] + cooling["standard_uncertainty_k"]
-    radius = policy["coverage_factor"] * uncertainty_bound + cooling["timing_temperature_bound_k"]
-    low, high = delta - radius, delta + radius
-    if not all(math.isfinite(x) for x in (delta, uncertainty_bound, radius, low, high)):
-        raise ValueError("Residual arithmetic exceeds the finite numerical profile")
-    limit = policy["absolute_tolerance_k"]
-    status = ("CONFORMING" if -limit <= low and high <= limit else
-              "NONCONFORMING" if high < -limit or low > limit else "INDETERMINATE")
-    return {**common, "status": status, "residual_k": delta, "interval_k": [low, high],
-            "standard_uncertainty_upper_bound_k": uncertainty_bound,
-            "timing_temperature_bound_k": cooling["timing_temperature_bound_k"],
-            "absolute_tolerance_k": limit,
-            "reason": "DECLARED_RESIDUAL_INTERVAL_SCREEN_NOT_PHYSICAL_MODEL_QUALIFICATION"}
-
-
-def _dossier(request, inspections):
-    rows = []
-    for index, (entry, inspection) in enumerate(zip(request["entries"], inspections, strict=True)):
-        assessment = inspection["assessment"]
-        comparison = (_residual(entry, assessment, request["residual_policy"]) if assessment is not None else
-                      {"status": "INDETERMINATE", "reason": "ASSESSMENT_UNAVAILABLE"})
-        rows.append({"serial_id": entry["serial_id"], "part_number": request["part"]["part_number"],
-                     "part_revision": request["part"]["revision"], "work_order_id": request["order"]["work_order_id"],
-                     "cell_id": request["cell"]["cell_id"], "cavity_id": entry["cavity_id"],
-                     "identity": deepcopy(entry["cycle"]["identity"]), "source_kind": inspection["source_kind"],
-                     "directory": f"part-{index:04d}", "cycle_request_ref": digest(entry["cycle"]),
-                     "source_evidence_id": inspection["evidence_id"], "ingress_ref": inspection["ingress_ref"],
-                     "inspection_ref": digest(inspection), "workflow_status": inspection["status"],
-                     "occurrences": deepcopy(inspection["occurrences"]),
-                     "part_conformity": "INDETERMINATE" if assessment is None else assessment["metrology"]["status"],
-                     "metrology": None if assessment is None else deepcopy(assessment["metrology"]),
-                     "residual": comparison,
-                     "supervisory_proposal": None if assessment is None else deepcopy(assessment["control"]),
-                     "proposal_execution": "NOT_AUTHORIZED"})
-    count = len(rows)
-    software = "PASS" if all(r["workflow_status"] == "PASS" for r in rows) else "REFUSE"
-    decisions = [s for row in rows for s in (row["part_conformity"], row["residual"]["status"])]
-    if software != "PASS":
-        decision = "HOLD_WORKFLOW_REFUSAL"
-    elif "NONCONFORMING" in decisions:
-        decision = "HOLD_NONCONFORMING"
-    elif count != request["order"]["quantity"]:
-        decision = "HOLD_INCOMPLETE_ORDER"
-    elif "INDETERMINATE" in decisions:
-        decision = "HOLD_INDETERMINATE_EVIDENCE"
+    m, machine, tool, recipe = (config[k] for k in ("material", "machine", "tool", "recipe"))
+    for name, present in (("characterization", bool(m["characterization_refs"])),
+                          ("drying_record", m["drying_record_ref"] is not None),
+                          ("machine_capability", machine["capability_ref"] is not None)):
+        note(name, "PASS" if present else "UNKNOWN", "Declared evidence present" if present else "Evidence missing")
+    for name, approved, actual in (("tool_compatibility", machine["compatible_tool_refs"], content_identity(tool)),
+                                    ("grade_compatibility", machine["compatible_grade_ids"], m["grade_id"])):
+        note(name, "UNKNOWN" if not approved else "PASS" if actual in approved else "FAIL",
+             "Membership in the declared compatibility set")
+    for field in ("melt_temperature", "mold_temperature"):
+        windows = [owner[field] for owner in (m, machine, tool)]
+        if any(window is None for window in windows):
+            note(field, "UNKNOWN", "At least one declared window is missing")
+            envelope[field] = None
+        else:
+            low = max(window["lower"] for window in windows)
+            high = min(window["upper"] for window in windows)
+            value = recipe[field]["value"]
+            valid = low <= high and low <= value <= high
+            envelope[field] = {"lower": low, "upper": high, "unit": "K"} if low <= high else None
+            note(field, "PASS" if valid else "FAIL", "Recipe checked against all three declared windows")
+    shot = machine["shot_volume"]
+    note("shot_volume", "UNKNOWN" if shot is None else
+         "PASS" if shot["lower"] <= recipe["shot_volume"]["value"] <= shot["upper"] else "FAIL",
+         "Declared shot-volume range, not nominal resin shot weight")
+    for label, demand, limit in (("machine_pressure", recipe["injection_pressure"], machine["max_injection_pressure"]),
+                                 ("tool_pressure", recipe["injection_pressure"], tool["max_injection_pressure"]),
+                                 ("residence_time", recipe["residence_time"], m["max_residence_time"])):
+        note(label, "UNKNOWN" if limit is None else "PASS" if demand["value"] <= limit["value"] else "FAIL",
+             "Recipe checked against a declared upper bound")
+    moisture, limit = m["moisture"], m["moisture_max"]
+    if moisture is None or limit is None or moisture["expanded_uncertainty"] is None:
+        note("moisture", "UNKNOWN", "Moisture value, uncertainty or limit missing")
     else:
-        decision = "READY_FOR_ENGINEERING_REVIEW"
-    return seal({"schema": DOSSIER_SCHEMA, "request_ref": digest(request),
-                 "projection_runtime": runtime_identity(),
-                 "part_ref": digest(request["part"]), "order_ref": digest(request["order"]),
-                 "cell_ref": digest(request["cell"]), "material_ref": digest(request["material"]),
-                 "workflow_status": software, "engineering_review": decision,
-                 "ordered_quantity": request["order"]["quantity"], "retained_quantity": count,
-                 "source_kind": rows[0]["source_kind"], "parts": rows,
-                 "physical_identity_semantics": "operator_declared_content_bound_not_authenticated",
-                 "bom_route_scope": "versioned_references_only_not_expanded_or_executed",
-                 "authority": deepcopy(AUTHORITY)})
-
-
-def _regular(path: Path, budget: int):
-    if path.is_symlink() or not path.is_file() or path.stat().st_size > budget:
-        raise ValueError("Require a bounded regular retained file, not a symlink")
-
-
-def load_request(path: Path) -> dict:
-    path = Path(path)
-    _regular(path, MAX_BYTES)
-    return validate_request(load(path))
-
-
-def run(request: dict, destination: Path) -> dict:
-    request = validate_request(request)  # Validate everything before any output or provider execution.
-    destination = Path(destination)
-    destination.mkdir(parents=True, exist_ok=False)
-    save_new(destination / "request.json", request)
-    try:
-        inspections = [workflow.run(entry["cycle"], destination / f"part-{i:04d}", ingress=entry["ingress"])
-                       for i, entry in enumerate(request["entries"])]
-        dossier = _dossier(request, inspections)
-        save_new(destination / "dossier.json", dossier)
-        return dossier
-    except Exception as exc:
-        # Preserve partial child attempts. Never present an interrupted batch as complete.
-        save_new(destination / "failure.json", seal({"schema": "ciw.polymer-microfab-failure.v1",
-                 "request_ref": digest(request), "status": "REFUSE", "error_type": type(exc).__name__,
-                 "reason": "INCOMPLETE_RUN_PARTIAL_EVIDENCE_RETAINED", "authority": deepcopy(AUTHORITY)}))
-        raise
-
-
-def _read(destination: Path):
-    destination = Path(destination)
-    if destination.is_symlink() or not destination.is_dir():
-        raise ValueError("Require a regular production dossier directory")
-    request = load_request(destination / "request.json")
-    expected = {"request.json", "dossier.json"} | {f"part-{i:04d}" for i in range(len(request["entries"]))}
-    if {p.name for p in destination.iterdir()} != expected:
-        raise ValueError("Incomplete or unexpected production dossier inventory")
-    inspections = []
-    for i, entry in enumerate(request["entries"]):
-        child = destination / f"part-{i:04d}"
-        if child.is_symlink() or not child.is_dir():
-            raise ValueError("Require a regular retained child workspace directory")
-        retained = load_request_cycle(child / "request.json")
-        if digest(retained) != digest(entry["cycle"]):
-            raise ValueError("Retained child request differs from production genealogy")
-        inspection = workflow.inspect(child)
-        ingress_ref = None if entry["ingress"] is None else digest(entry["ingress"])
-        if inspection["ingress_ref"] != ingress_ref:
-            raise ValueError("Retained native ingress differs from production genealogy")
-        inspections.append(inspection)
-    _regular(destination / "dossier.json", 8 * 1024 * 1024)
-    dossier = load(destination / "dossier.json")
-    check_seal(dossier)
-    if dossier != _dossier(request, inspections):
-        raise ValueError("Dossier differs from its retained evidence, decisions or fixed authority")
-    return request, dossier
-
-
-def load_request_cycle(path):
-    from .polymer_contract import MAX_BYTES as cycle_budget, validate_request as validate_cycle
-    _regular(path, cycle_budget)
-    return validate_cycle(load(path))
-
-
-def inspect(destination: Path) -> dict:
-    """Validate retained structure/bindings and projections; no numerical-provider replay."""
-    return deepcopy(_read(destination)[1])
-
-
-def verify_retained(destination: Path) -> dict:
-    request, dossier = _read(destination)
-    audits = [workflow.verify_retained(Path(destination) / f"part-{i:04d}") for i in range(len(request["entries"]))]
-    passed = all(a.get("status") == "PASS" and a.get("fresh_numerical_verification") is True for a in audits)
-    return seal({"schema": "ciw.polymer-microfab-verification.v1", "verification_id": new_identity("verification"),
-                 "dossier_ref": digest(dossier), "request_ref": digest(request), "status": "PASS" if passed else "REFUSE",
-                 "cycle_audits": audits, "residual_check": "deterministic_projection_recomputed_not_independent_oracle",
-                 "fresh_numerical_verification": True, "physical_validation": "not_established",
-                 "authority": deepcopy(AUTHORITY)})
-
-
-def replay(destination: Path, output: Path) -> dict:
-    request, _ = _read(destination)
-    return run(request, output)
+        with localcontext() as context:
+            context.prec = 512
+            value = Decimal(str(moisture["value"]))
+            uncertainty = Decimal(str(moisture["expanded_uncertainty"]))
+            bound = Decimal(str(limit["value"]))
+            state = "PASS" if value + uncertainty <= bound else "FAIL" if value - uncertainty > bound else "UNKNOWN"
+        note("moisture", state, "Entire declared expanded-uncertainty interval must meet the moisture bound")
+    area, force = tool["projected_area"], machine["max_clamp_force"]
+    demand = None
+    if area is not None:
+        with localcontext() as context:
+            context.prec = 512
+            demand = (Decimal(str(area["value"])) * Decimal(str(recipe["cavity_pressure_bound"]["value"]))
+                      * Decimal(str(recipe["clamp_factor"]["value"])))
+        number(float(demand))
+    envelope["required_clamp_force"] = None if demand is None else {"value": float(demand), "decimal_value": str(demand), "unit": "N"}
+    note("clamp_force", "UNKNOWN" if demand is None or force is None else
+         "PASS" if demand <= Decimal(str(force["value"])) else "FAIL",
+         "Total projected area times declared cavity-pressure bound times declared factor; not injection pressure")
+    note("pressure_basis", "PASS" if recipe["cavity_pressure_bound"]["value"] <= recipe["injection_pressure"]["value"] else "FAIL",
+         "This profile requires a cavity-pressure bound no greater than injection pressure")
+    seen = set()
+    for check in items(preflight["checks"], maximum=len(CHECKS)):
+        keys(check, {"check", "status", "evidence_ref", "observed_at_s", "valid_until_s", "source_kind"})
+        name = text(check["check"])
+        if name not in CHECKS or name in seen or check["status"] not in {"PASS", "FAIL", "UNKNOWN"}:
+            raise ValueError("Unsupported, repeated or invalid preflight check")
+        seen.add(name)
+        start, end = number(check["observed_at_s"]), number(check["valid_until_s"])
+        if start > end or check["source_kind"] != config["source_kind"]:
+            raise ValueError("Invalid preflight validity or mixed evidence semantics")
+        if check["evidence_ref"] is not None:
+            ref(check["evidence_ref"])
+        state = check["status"]
+        if state != "FAIL" and (not start <= now <= end or check["evidence_ref"] is None):
+            state = "UNKNOWN"
+        note("preflight." + name, state, "Time-bound declared record; not authenticated safety feedback")
+    for name in sorted(CHECKS - seen):
+        note("preflight." + name, "UNKNOWN", "Required preflight record is absent")
+    states = {row["status"] for row in diagnostics}
+    status = "INFEASIBLE" if "FAIL" in states else "INSUFFICIENT_EVIDENCE" if "UNKNOWN" in states else "CANDIDATE"
+    return {"schema": "ciw.polymer-microfab-evaluation.v1", "status": status,
+            "configuration_ref": content_identity(config), "evaluated_at_s": now,
+            "declared_envelope": envelope, "diagnostics": diagnostics, "authority": dict(AUTHORITY)}

@@ -1,10 +1,14 @@
-name: Polymer microfab evidence
+name: Polymer production dossiers and namespace coexistence
 
 on:
   pull_request:
     paths:
       - 'src/ciw/**'
-      - 'tests/test_polymer_microfab.py'
+      - 'tests/test_polymer_production_dossier.py'
+      - 'tests/test_polymer_namespace_coexistence.py'
+      - 'tests/test_microfab.py'
+      - 'tests/test_polymer_manufacturing.py'
+      - 'tests/test_polymer_toolpoint_qc.py'
       - 'pyproject.toml'
       - '.github/workflows/polymer-microfab.yml'
   push:
@@ -43,14 +47,19 @@ jobs:
       - name: Build and install candidate with repository-pinned dependencies
         run: python -m pip install ".[dev]"
       - name: Test installed candidate, not the source pythonpath
-        run: python -m pytest -q -o pythonpath= tests/test_polymer_microfab.py --junitxml=microfab-tests.xml
+        run: python -m pytest -q -o pythonpath= tests/test_polymer_production_dossier.py tests/test_polymer_namespace_coexistence.py tests/test_microfab.py tests/test_polymer_manufacturing.py tests/test_polymer_toolpoint_qc.py --junitxml=microfab-tests.xml
       - name: Installed CLI outside the source directory
         working-directory: ${{ runner.temp }}
         run: |
-          net polymer microfab demo --output-dir microfab-demo
-          net polymer microfab inspect microfab-demo
-          net polymer microfab verify microfab-demo --output microfab-audit.json
-          net polymer microfab replay microfab-demo --output-dir microfab-replay
+          net polymer microfab example --output declaration-plan.json
+          net polymer microfab compile declaration-plan.json --output declaration-envelope.json
+          net polymer microfab verify declaration-plan.json declaration-envelope.json
+          net polymer manufacture demo --quality-control --output manufacturing-report.json
+          net polymer manufacture verify manufacturing-report.json --output manufacturing-audit.json
+          net polymer dossier demo --output-dir microfab-demo
+          net polymer dossier inspect microfab-demo
+          net polymer dossier verify microfab-demo --output microfab-audit.json
+          net polymer dossier replay microfab-demo --output-dir microfab-replay
           net polymer qualify --output-dir microfab-polymer-baseline
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()

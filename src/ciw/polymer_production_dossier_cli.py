@@ -6,12 +6,12 @@ import json
 from pathlib import Path
 
 from .control_contracts import save_new
-from .polymer_microfab_contract import example_request
-from . import polymer_microfab as microfab
+from .polymer_production_dossier_contract import example_request
+from . import polymer_production_dossier as microfab
 
 
 def main(argv=None) -> int:
-    parser = argparse.ArgumentParser(prog="net polymer microfab", description=__doc__)
+    parser = argparse.ArgumentParser(prog="net polymer dossier", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     example = commands.add_parser("example", help="Create an explicitly synthetic production fixture")
     example.add_argument("--output", type=Path, required=True)

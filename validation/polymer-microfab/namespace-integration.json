@@ -1,0 +1,14 @@
+{
+  "scope": "candidate source and installed software qualification; no physical qualification",
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "package_files_verified": 420,
+  "wheel_sha256": "7e78c7d6e2c6d403890b4f5d2949f900c7e09033f80af0700df0b776ecbff6b1",
+  "installed": {
+    "tests": 528,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "native_commands": 10,
+  "legacy_runtime_refusal": "inspect, verify, replay; bytes retained; no output created"
+}
