@@ -1,0 +1,111 @@
+{
+  "schema": "ciw.toolpoint-qc-local-qualification.v1",
+  "date": "2026-10-05",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "foundation_commit": "eb270843625d508ffd9fcd29b571f153c64eb560",
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux",
+    "pytest": "9.0.2",
+    "coverage": "7.13.3"
+  },
+  "test_command": "PYTHONPATH=src python -m pytest -q tests/test_polymer_toolpoint_qc.py tests/test_polymer_manufacturing.py",
+  "tests": {
+    "passed": 364,
+    "failed": 0,
+    "skipped": 2,
+    "foundation_passed": 179,
+    "qc_passed": 185,
+    "skips": "Real full-repository polymer manufacture and QC dispatcher tests: unrelated NET dependencies absent from focused source snapshot"
+  },
+  "coverage": {
+    "combined_percent": 93,
+    "scope": "four new implementation modules only; branch coverage enabled",
+    "statements": 559,
+    "branches": 282
+  },
+  "source_git_blob_ids": {
+    "src/ciw/polymer_toolpoint_qc.py": "d44a637ea217c377c12d8f80fd12838ad891f739",
+    "src/ciw/manufacturing_quality.py": "369c6fb9c814013d8026d438a7692a8ce9b65fc8",
+    "src/ciw/polymer_quality_example.py": "8659552a1dee36963604d31ea2932101acb18427",
+    "src/ciw/polymer_quality_cli.py": "a779f6177757e0f2506966ec1c3f5f4ccd2f8bfc",
+    "src/ciw/manufacturing_runtime.py": "bceca6eb5aa60035879e08358133f942b0379a3d",
+    "src/ciw/polymer_manufacturing_cli.py": "336efa2672291d4d41b5549ef00b2bb15a0390bd",
+    "src/ciw/polymer_cli.py": "09014ff7e54f9a23fe9607bb800ec8339c718540",
+    "tests/test_polymer_toolpoint_qc.py": "842c419f294dcc8c42168765fe0392a7533b4414",
+    "docs/POLYMER_TOOLPOINT_QC.md": "a84d66b7f5e9e1f6a310e2ffb842764f80cb8b35"
+  },
+  "unchanged_identity_module_blob": "e8f3f3ea30cf4a11a071b95f5ee6eb5a2b3f5344",
+  "v1_synthetic_replay": "exactly_equal_to_retained_pre_qc_result",
+  "independent_numeric_oracles": "25 Fraction-based trapezoid cases plus closed-form peak/arrival/integral/residual expectations",
+  "synthetic_scenarios": {
+    "flow-deviation": {
+      "status": "DEVIATION",
+      "held_serials": [
+        "p001",
+        "p002"
+      ],
+      "request_ref": "sha256:116ad203578c3d6e28594775a7fb58aca71a0218bb24b33c15f6f8abb2deb574",
+      "result_ref": "sha256:fc9ae1a61dcdbfd4b1ac031abf73cb9d444fca5e78b5c963205418947afce86c"
+    },
+    "missing-sensor": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "held_serials": [
+        "p002"
+      ],
+      "request_ref": "sha256:b06a29c4c649d61609ca9523edfc5491c5f9e8f411d13846c6093eb459e746e8",
+      "result_ref": "sha256:1646f7f73053a043fa02da6f169c7b2594531b2786564284b1f7edb5a452cb16"
+    },
+    "normal": {
+      "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+      "held_serials": [],
+      "request_ref": "sha256:3db51a98f0e220f17563100ac230de5fc110281160b7d314c8d1afa58aa3afdb",
+      "result_ref": "sha256:1fc0aaa0bffd35ddea2bbb2fe4b498b2874d16c1ff0d3babf63f2d8984e7a444"
+    },
+    "short-shot-suspected": {
+      "status": "DEVIATION",
+      "held_serials": [
+        "p002"
+      ],
+      "request_ref": "sha256:14ac2c8690d47ee13b73b7c9a5f45c17bdfc39f7262089c9b9653c1f4fed039e",
+      "result_ref": "sha256:f86037975cdd3a3289fd472129ee8c1bacff6bb00f75ed2f317c5c072951afd9"
+    },
+    "uncertain-mapping": {
+      "status": "INSUFFICIENT_EVIDENCE",
+      "held_serials": [
+        "p001",
+        "p002"
+      ],
+      "request_ref": "sha256:d31f4e085dfb83254e41c1878ff8d8da754001fab94159ffe172cbe58531169f",
+      "result_ref": "sha256:302d266d59f5d799d07f9fb8c64255220a2931d58b0e681b43dcfa7015f511b5"
+    }
+  },
+  "manufacturing_demo": {
+    "request_ref": "sha256:066a8f5e0ee60519d42213a04edfedf1738e316351d9b1a66921d1229cf04db0",
+    "result_ref": "sha256:f8ae57bf66f34233111cac7bbbd09cfd3a872cd3e311bc7bf719ba21b1a96670",
+    "formed_parts": 4,
+    "cavity_local_process_hold": "p004",
+    "packed_assembly": "a001",
+    "shipment_status": "HELD"
+  },
+  "scope": "Offline retained-data and record-reducer validation, not physical detector qualification",
+  "unverified": [
+    "full_repository_regression",
+    "installed_wheel",
+    "Windows",
+    "hosted_CI",
+    "live_sensor_acquisition",
+    "calibration_authenticity",
+    "physical_detection_accuracy",
+    "physical_containment",
+    "same_shot_control"
+  ],
+  "clone_limitation": "Container DNS could not resolve github.com; existing source inspected through GitHub connector",
+  "authority": {
+    "physical_qualification": "not_established",
+    "hardware_actuation": "not_performed",
+    "physical_containment": "not_performed",
+    "state_admission": "not_performed",
+    "shipment_release": "not_authorized"
+  }
+}
