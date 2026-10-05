@@ -1,0 +1,150 @@
+"""Qualify the Link wheel outside its source directory with exact byte receipts.
+
+Requires pinned host distributions unless --allow-host-dependencies explicitly
+records a non-pinned local qualification. No package downloads or source import
+fallback are performed here. CI provisions the declared pins before this gate.
+"""
+from __future__ import annotations
+
+import argparse
+from datetime import datetime, timezone
+import hashlib
+import importlib.metadata
+import json
+import os
+from pathlib import Path
+import shutil
+import subprocess
+import sys
+import venv
+import xml.etree.ElementTree as ET
+import zipfile
+
+PINS = {"numpy": "2.4.3", "websockets": "16.0", "pytest": "9.0.2", "cryptography": "46.0.0"}
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--wheel", type=Path, required=True)
+    parser.add_argument("--output-dir", type=Path, required=True)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--require-pins", action="store_true")
+    mode.add_argument("--allow-host-dependencies", action="store_true")
+    args = parser.parse_args()
+    source = Path(__file__).resolve().parents[1]
+    wheel = args.wheel.resolve()
+    root = args.output_dir.resolve()
+    root.mkdir(parents=True, exist_ok=False)
+    started = datetime.now(timezone.utc).isoformat()
+    versions = {name: importlib.metadata.version(name) for name in PINS}
+    pin_match = versions == PINS
+    steps = []
+    summary = {"schema": "ciw.link-install-check.v1", "started_at": started,
+               "status": "RUNNING", "versions": versions, "required_versions": PINS,
+               "pinned_dependencies_match": pin_match, "python": sys.version,
+               "steps": steps, "full_repository_regression": False, "physical_qualification": False}
+
+    def retain():
+        (root / "summary.json").write_text(json.dumps(summary, indent=2) + "\n", encoding="utf-8")
+
+    try:
+        retain()
+        if not pin_match and not args.allow_host_dependencies:
+            raise ValueError("Host dependencies differ from unchanged repository pins; no pinned pass")
+        with zipfile.ZipFile(wheel) as archive:
+            expected = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in archive.namelist()
+                        if name.startswith("ciw/") and not name.endswith("/")}
+        actual_paths = {"ciw/" + str(p.relative_to(source / "src/ciw")).replace(os.sep, "/")
+                        for p in (source / "src/ciw").rglob("*") if p.is_file() and "__pycache__" not in p.parts}
+        if not expected or set(expected) != actual_paths:
+            raise ValueError("Wheel/source package file inventory differs")
+        for name, digest in expected.items():
+            if hashlib.sha256((source / "src" / name).read_bytes()).hexdigest() != digest:
+                raise ValueError("Wheel differs from package source: " + name)
+        (root / "expected-package.json").write_text(json.dumps(expected, indent=2), encoding="utf-8")
+        venv.EnvBuilder(with_pip=True, system_site_packages=False).create(root / "env")
+        python = root / "env" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+        env = dict(os.environ)
+        for key in ("PYTHONPATH", "PYTHONHOME", "PYTEST_ADDOPTS", "PYTEST_PLUGINS", "NET_LINK_NATIVE_CODEC"):
+            env.pop(key, None)
+        env.update(PYTHONNOUSERSITE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1")
+
+        def execute(name, arguments, expected_exit=0):
+            before = datetime.now(timezone.utc).isoformat()
+            process = subprocess.run([str(python), *map(str, arguments)], cwd=root, env=env,
+                                     capture_output=True, text=True, timeout=240)
+            (root / (name + ".log")).write_text(process.stdout + process.stderr, encoding="utf-8")
+            steps.append({"name": name, "started_at": before, "finished_at": datetime.now(timezone.utc).isoformat(),
+                          "exit_code": process.returncode, "expected_exit": expected_exit})
+            retain()
+            if process.returncode != expected_exit:
+                raise RuntimeError(f"{name} failed; inspect retained log")
+            return process.stdout
+
+        site = Path(execute("site", ["-I", "-c", "import sysconfig;print(sysconfig.get_path('purelib'))"]).strip())
+        dependencies = ["numpy", "websockets", "pytest", "packaging", "pluggy", "iniconfig", "pygments", "cryptography", "cffi", "pycparser"]
+        if os.name == "nt":
+            dependencies.append("colorama")
+        records = []
+        for name in dependencies:
+            distribution = importlib.metadata.distribution(name)
+            hashes = {}
+            for relative in distribution.files or []:
+                if ".." in relative.parts or relative.suffix == ".pyc":
+                    continue
+                original = distribution.locate_file(relative)
+                if not original.is_file():
+                    raise ValueError("Missing dependency file: " + str(original))
+                target = site / relative
+                target.parent.mkdir(parents=True, exist_ok=True)
+                shutil.copyfile(original, target)
+                hashes[str(relative)] = hashlib.sha256(target.read_bytes()).hexdigest()
+            if not hashes:
+                raise ValueError("No dependency files copied")
+            records.append({"name": name, "version": distribution.version,
+                            "host_distribution": str(distribution.locate_file("")), "files": hashes})
+        (root / "dependency-files.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
+        execute("install", ["-I", "-m", "pip", "install", "--no-deps", "--no-index", wheel])
+        probe = '''import hashlib, json, pathlib, sys
+import ciw, ciw.link_workflow, ciw.link_security, ciw.connectivity_workflow
+root = pathlib.Path(ciw.__file__).resolve().parent
+assert root.is_relative_to(pathlib.Path(sys.prefix).resolve()), str(root)
+expected = json.loads(pathlib.Path("expected-package.json").read_text())
+for name,digest in expected.items():
+    assert hashlib.sha256((root.parent/name).read_bytes()).hexdigest()==digest,name
+for name,module in list(sys.modules.items()):
+    if name=="ciw" or name.startswith("ciw."):
+        location=getattr(module,"__file__",None)
+        if location: assert pathlib.Path(location).resolve().is_relative_to(root),name
+print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_bytes_match":True}))
+'''
+        summary["package"] = json.loads(execute("package-provenance", ["-I", "-c", probe]))
+        (root / "tests").mkdir()
+        for name in ("test_link.py", "test_connectivity.py"):
+            shutil.copyfile(source / "tests" / name, root / "tests" / name)
+        shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
+        (root / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
+        execute("installed-tests", ["-I", "-m", "pytest", "-q", "-c", "pytest.ini", "-o", "pythonpath=",
+                                    "tests/test_link.py", "tests/test_connectivity.py", "--junitxml=installed-tests.xml"])
+        cases = ET.parse(root / "installed-tests.xml").findall(".//testcase")
+        skipped = sum(x.find("skipped") is not None for x in cases)
+        if not cases or skipped:
+            raise ValueError(f"Installed native/security suite has {skipped} skips; no complete gate")
+        summary["tests"] = {"passed": len(cases), "skipped": skipped}
+        for persona in ("GaugeLink", "MachineLink", "ConditionLink", "FieldLink", "ThermalLink", "DAQLink", "CalLink"):
+            execute("demo-" + persona, ["-I", "-m", "ciw.net", "link", "demo", "--profile", persona, "--output-dir", persona])
+        execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
+        execute("package-provenance-after", ["-I", "-c", probe])
+        summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
+                       wheel_sha256=hashlib.sha256(wheel.read_bytes()).hexdigest(),
+                       scope="installed_device_link_native_codec_and_connectivity_not_full_repository")
+        retain()
+    except BaseException as exc:
+        summary.update(status="BLOCKED", finished_at=datetime.now(timezone.utc).isoformat(), reason=str(exc))
+        retain()
+        raise
+    print(json.dumps(summary, indent=2))
+
+
+if __name__ == "__main__":
+    main()
