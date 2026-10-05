@@ -63,4 +63,6 @@ def default_registry() -> OperationRegistry:
     registry.register(data_operation())
     from ..data_compute_bridge import polymer_operation
     registry.register(polymer_operation())
+    from ..product_study_workflow import operation as product_study_operation
+    registry.register(product_study_operation())
     return registry

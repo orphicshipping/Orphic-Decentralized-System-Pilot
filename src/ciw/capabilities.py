@@ -10,7 +10,7 @@ from __future__ import annotations
 from copy import deepcopy
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
-from .data_runtime import comparison_identity, polymer_identity
+from .data_runtime import comparison_identity, polymer_identity, product_study_identity
 
 
 SCHEMA = "ciw.capability-catalog.v1"
@@ -113,6 +113,13 @@ _CAPABILITIES = (
         command=None, operation_id="data.compare-observations.v1", role="backend",
         runtime_identity=comparison_identity(), module="ciw.data_workflow",
         notes="The net data compare command uses retained Workbench sources. No conversion, interpolation or physical qualification.",
+    ),
+    _record(
+        capability_id="data.review-product-study.v1", disposition="implemented", kind="registered_operation",
+        summary="Review scalar product requirements against exact retained calculation artifacts.",
+        command=["product-study", "review"], operation_id="data.review-product-study.v1", role="backend",
+        runtime_identity=product_study_identity(), module="ciw.product_study_workflow",
+        notes="Separate variants retain source/CAD identities, missing material data and release holds. No physics rerun or physical qualification.",
     ),
     _record(
         capability_id="data.assess-polymer-cycle.v1", disposition="implemented", kind="registered_operation",

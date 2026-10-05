@@ -45,6 +45,11 @@ def _source_kinds() -> list[str]:
 def _routes() -> list[dict]:
     # These are bounded, installed routes, not universal family converters.
     specs = [
+        ("product.preliminary-study", ["product-study"],
+         "ciw.product_study.validate", "ciw.data_sources.retain_record",
+         ["ciw.product_study.review"], "Existing versioned data-record, Workbench and Session occurrences",
+         [], ["tests/test_product_study.py"],
+         "Explicit selected-artifact mapping and scalar comparisons only. Private deliveries stay local. Physical release remains blocked."),
         ("tables.csv-observations", ["tables", "time-series"],
          "ciw.data_sources.csv_observation_stream", "ciw.data_sources.csv_observation_stream",
          ["ciw.control_checks.compare"], "Exact CSV bytes plus explicit column/unit/clock mapping; Workbench data-record source",

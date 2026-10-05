@@ -92,6 +92,8 @@ def validate_live_dependencies(operation_id, parameters, sources):
 def validate_saved_dependencies(results, sources):
     from .data_compute_bridge import validate_saved_dependencies as validate_compute_dependencies
     validate_compute_dependencies(results, sources)
+    from .product_study_workflow import validate_saved_dependencies as validate_product_dependencies
+    validate_product_dependencies(results, sources)
     for result in results.values():
         if result["operation_id"] in OPERATION_IDS:
             validate_live_dependencies(result["operation_id"], result["parameters"], sources)

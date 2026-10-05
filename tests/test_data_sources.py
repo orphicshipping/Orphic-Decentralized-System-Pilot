@@ -96,6 +96,8 @@ def native_records(tmp_path_factory):
         specification, evaluate(specification, {"samples": encoded(stream)}), view,
         analyze(raw_view, expected_sha256=bytes_ref(raw_view)),
         analyze_information(raw_view, expected_sha256=bytes_ref(raw_view)), cov(), example_request("injection_molding")]
+    from test_product_study import fixture as product_study_fixture
+    values.append(product_study_fixture())
     result = {value["schema"]: value for value in values}
     assert set(result) == set(BASE_SCHEMAS)
     return result

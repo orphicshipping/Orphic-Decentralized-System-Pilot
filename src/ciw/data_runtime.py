@@ -21,3 +21,11 @@ def polymer_identity():
             "environment": {"python": platform.python_version(), "floating_point": "binary64"},
             "bridge_code_sha256": sha256((root / "data_compute_bridge.py").read_bytes()).hexdigest(),
             "input_seam": "retained_native_data_source"}
+
+
+def product_study_identity():
+    root = Path(__file__).parent
+    names = ("product_study.py", "product_study_workflow.py", "data_runtime.py")
+    raw = b"\0".join(name.encode() + b"\0" + (root / name).read_text(encoding="utf-8").replace("\r\n", "\n").encode() for name in names)
+    return {"provider": "ciw.product-study-review", "version": "1", "code_sha256": sha256(raw).hexdigest(),
+            "scope": "selected_artifact_binding_and_scalar_screens_only", "source_normalization": "utf8_lf"}

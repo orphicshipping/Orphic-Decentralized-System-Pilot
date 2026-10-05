@@ -21,6 +21,7 @@ INDEXED = (
     "system.compare.v1",
     "system.study.v1",
     "data.compare-observations.v1",
+    "data.review-product-study.v1",
     "data.assess-polymer-cycle.v1",
     "learning.oscillator-rms",
     "doctor.preflight",

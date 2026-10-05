@@ -47,6 +47,7 @@ SCHEMA_FAMILIES = {
     "ciw.field-observation-mapping.v1": "field-observation-mapping",
     "ciw.compute-canonical-state.v1": "compute-canonical-state",
     "ciw.polymer-cycle-request.v1": "polymer-cycle-request",
+    "ciw.product-study.v1": "product-study",
 }
 _JSON_MEDIA = "application/json"
 _CSV_MEDIA = "text/csv; charset=utf-8"
@@ -93,6 +94,9 @@ def _native(value: dict, family: str) -> None:
     elif family == "compute-canonical-state":
         from .data_compute_bridge import validate_record
         validate_record(value)
+    elif family == "product-study":
+        from .product_study import validate
+        validate(value)
     elif family == "polymer-cycle-request":
         from .polymer_contract import validate_request
         validate_request(value)
