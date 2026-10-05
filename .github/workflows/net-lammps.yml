@@ -1,0 +1,97 @@
+name: NET LAMMPS bounded external tooling
+
+on:
+  pull_request:
+    paths:
+      - 'instruments/execution/compute-runtime/execution/**'
+      - 'instruments/execution/compute-runtime/tests/test_lammps*.py'
+      - 'scripts/check_lammps.py'
+      - 'docs/LAMMPS.md'
+      - '.github/workflows/net-lammps.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  contracts:
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install '.[dev]'
+      - name: Real package import, provider-free contracts and dispatcher seam
+        working-directory: instruments/execution/compute-runtime
+        env:
+          PYTHONPATH: .
+        run: python -m pytest -q tests/test_lammps_boundary.py tests/test_lammps_dispatcher.py --junitxml="$RUNNER_TEMP/lammps-contracts.xml"
+      - name: Missing native binding must remain NOT_RUN
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, subprocess, sys
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'lammps-not-run'
+          p = subprocess.run([sys.executable, 'scripts/check_lammps.py', 'qualify', '--output', str(out)])
+          assert p.returncode == 2
+          r = json.loads((out / 'gate.json').read_text())
+          assert r['status'] == 'NOT_RUN' and not r['cases'] and r['runtime'] is None
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lammps-contracts-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/lammps-contracts.xml
+            ${{ runner.temp }}/lammps-not-run/gate.json
+          retention-days: 14
+  native-cpu:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install '.[dev]'
+      - name: Fetch one explicit upstream source revision outside NET
+        shell: bash
+        run: |
+          git init "$RUNNER_TEMP/lammps-source"
+          git -C "$RUNNER_TEMP/lammps-source" remote add origin https://github.com/lammps/lammps.git
+          git -C "$RUNNER_TEMP/lammps-source" fetch --depth=1 origin 8de817dd79bfe4525d5d39246a212d833e6dee07
+          git -C "$RUNNER_TEMP/lammps-source" checkout --detach FETCH_HEAD
+          test "$(git -C "$RUNNER_TEMP/lammps-source" rev-parse HEAD)" = 8de817dd79bfe4525d5d39246a212d833e6dee07
+      - name: Build native serial CPU engine, retaining build evidence
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir "$RUNNER_TEMP/lammps-build-record"
+          cmake --version > "$RUNNER_TEMP/lammps-build-record/cmake-version.txt"
+          c++ --version > "$RUNNER_TEMP/lammps-build-record/compiler-version.txt"
+          cmake -S "$RUNNER_TEMP/lammps-source/cmake" -B "$RUNNER_TEMP/lammps-build" -D CMAKE_BUILD_TYPE=Release -D BUILD_MPI=OFF -D BUILD_OMP=OFF -D BUILD_SHARED_LIBS=OFF 2>&1 | tee "$RUNNER_TEMP/lammps-build-record/configure.txt"
+          cmake --build "$RUNNER_TEMP/lammps-build" --parallel 2 2>&1 | tee "$RUNNER_TEMP/lammps-build-record/build.txt"
+          cp "$RUNNER_TEMP/lammps-build/CMakeCache.txt" "$RUNNER_TEMP/lammps-build-record/"
+          sha256sum "$RUNNER_TEMP/lammps-build/lmp" > "$RUNNER_TEMP/lammps-build-record/executable.sha256"
+          ldd "$RUNNER_TEMP/lammps-build/lmp" > "$RUNNER_TEMP/lammps-build-record/shared-libraries.txt" || true
+      - name: Native energy and force qualification, no simulation double or fallback
+        shell: bash
+        run: |
+          HASH=$(cut -d' ' -f1 "$RUNNER_TEMP/lammps-build-record/executable.sha256")
+          python scripts/check_lammps.py qualify --lmp "$RUNNER_TEMP/lammps-build/lmp" --expected-sha256 "$HASH" --output "$RUNNER_TEMP/lammps-native"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lammps-native-cpu-evidence
+          path: |
+            ${{ runner.temp }}/lammps-build-record
+            ${{ runner.temp }}/lammps-native
+          retention-days: 14

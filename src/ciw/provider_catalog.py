@@ -21,7 +21,7 @@ _TARGETS = (
     ("sciml", "science", "SCR/provider", "planned", None, None),
     ("networkx", "science", "provider", "planned", None, None),
     ("pymc", "science", "provider", "planned", None, None),
-    ("lammps", "science", "provider", "planned", None, None),
+    ("lammps", "science", "LAMMPS/SCR", "binding_required", None, "execution.lammps.run_lammps_specification"),
     ("hoomd-blue", "science", "provider", "planned", None, None),
     ("veros", "science", "provider", "planned", None, None),
     ("lotusim", "science", "provider", "planned", None, None),
