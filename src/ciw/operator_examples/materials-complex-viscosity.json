@@ -1,0 +1,81 @@
+{
+  "schema": "ciw.materials-uncertainty-request.v1",
+  "analysis": "complex-viscosity",
+  "observation": {
+    "source_kind": "synthetic-fixture",
+    "subject": "declared-fixture-not-NIST-or-an-owned-device",
+    "conditions": "declared-fixture-at-293.15K",
+    "quantity_ids": [
+      "shear-storage",
+      "shear-loss",
+      "angular-frequency"
+    ],
+    "units": [
+      "Pa",
+      "Pa",
+      "rad/s"
+    ],
+    "values": [
+      3.0,
+      4.0,
+      2.0
+    ],
+    "source_refs": [
+      "sha256:84dc823f36d7b77ca9ff360c0e1a2cf71e3935eb1c287bb1ce141d69bb4c5eaf"
+    ]
+  },
+  "covariance": {
+    "schema": "covariance-artifact.v1",
+    "quantity_ids": [
+      "shear-storage",
+      "shear-loss",
+      "angular-frequency"
+    ],
+    "units": [
+      "Pa",
+      "Pa",
+      "rad/s"
+    ],
+    "frame": "declared-fixture-at-293.15K",
+    "reference_values": [
+      3.0,
+      4.0,
+      2.0
+    ],
+    "matrix": [
+      [
+        0.04,
+        0.018,
+        0
+      ],
+      [
+        0.018,
+        0.09,
+        0
+      ],
+      [
+        0,
+        0,
+        0.0004
+      ]
+    ],
+    "method": "synthetic-test-covariance",
+    "basis": {
+      "kind": "observation",
+      "id": "sha256:99c24893fa5b83f1e9e8d923cf15e79bba19e6ceda8ed8b19f087c6fb24b941d"
+    },
+    "provenance": {
+      "provider": "synthetic-test-fixture",
+      "source_evidence_ids": [
+        "sha256:84dc823f36d7b77ca9ff360c0e1a2cf71e3935eb1c287bb1ce141d69bb4c5eaf"
+      ],
+      "source_covariance_ids": []
+    },
+    "assumptions": [
+      "Synthetic input only; not estimated from the NIST table or an owned instrument"
+    ],
+    "covariance_id": "sha256:f371fc9bc697cc2eb9f63c5cc70116d21b3d3ca3ffedaf45fafbf7083ee57a36"
+  },
+  "reference": null,
+  "criterion": null
+}

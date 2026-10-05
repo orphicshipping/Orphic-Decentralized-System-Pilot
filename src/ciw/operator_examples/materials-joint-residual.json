@@ -1,0 +1,74 @@
+{
+  "schema": "ciw.materials-uncertainty-request.v1",
+  "analysis": "joint-residual",
+  "observation": {
+    "source_kind": "synthetic-fixture",
+    "subject": "declared-fixture-not-NIST-or-an-owned-device",
+    "conditions": "declared-fixture-at-293.15K",
+    "quantity_ids": [
+      "response-a",
+      "response-b"
+    ],
+    "units": [
+      "Pa",
+      "Pa"
+    ],
+    "values": [
+      2.0,
+      1.0
+    ],
+    "source_refs": [
+      "sha256:08e5ae3db419953e5fa1712af85ffc71cdb7b6b9a21c92b0031b94444eb6b37c"
+    ]
+  },
+  "covariance": {
+    "schema": "covariance-artifact.v1",
+    "quantity_ids": [
+      "response-a",
+      "response-b"
+    ],
+    "units": [
+      "Pa",
+      "Pa"
+    ],
+    "frame": "declared-fixture-at-293.15K",
+    "reference_values": [
+      2.0,
+      1.0
+    ],
+    "matrix": [
+      [
+        4,
+        1
+      ],
+      [
+        1,
+        1
+      ]
+    ],
+    "method": "synthetic-test-covariance",
+    "basis": {
+      "kind": "observation",
+      "id": "sha256:5dd160373c437758e698c762f96e023e0caeab67b9539114e271c1eff53f1f03"
+    },
+    "provenance": {
+      "provider": "synthetic-test-fixture",
+      "source_evidence_ids": [
+        "sha256:08e5ae3db419953e5fa1712af85ffc71cdb7b6b9a21c92b0031b94444eb6b37c"
+      ],
+      "source_covariance_ids": []
+    },
+    "assumptions": [
+      "Synthetic input only; not estimated from the NIST table or an owned instrument"
+    ],
+    "covariance_id": "sha256:d48949e8376b7ddfd049ac2cd0872bcd9e4219ec2d10967f85a9d0f94e410b39"
+  },
+  "reference": {
+    "basis": "exact-declared-reference",
+    "values": [
+      0.0,
+      0.0
+    ]
+  },
+  "criterion": 3.0
+}

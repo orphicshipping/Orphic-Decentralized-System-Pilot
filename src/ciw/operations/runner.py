@@ -191,6 +191,8 @@ def validate_execution(execution: dict, run: dict, revision: int, results: dict)
         for key in ("execution_id", "operation_id", "runtime", "parameters", "created_at", "selection_revision", "channel", "interval_s"):
             if result.get(key) != execution.get(key):
                 raise ValueError(f"Execution/result {key} binding mismatch")
+        from .schemas import validate_extension_result_dependency
+        validate_extension_result_dependency(result, results)
         if "refusal" in execution:
             raise ValueError("Completed execution cannot carry refusal")
     elif execution.get("status") == "refused":

@@ -1,0 +1,42 @@
+{
+  "schema": "ciw.rheology-empirical-request.v1",
+  "investigation": "nist2491-table5c-newtonian-storage.v1",
+  "purpose": "historical-secondary-model-screen",
+  "selection": "exploratory-not-preregistered",
+  "primary_omega_rad_s": 10.0,
+  "report_unit": "Pa",
+  "capture": {
+    "source": {
+      "publisher": "National Institute of Standards and Technology",
+      "document": "SRM 2491 Certificate of Analysis",
+      "url": "https://tsapps.nist.gov/srmext/certificates/archives/2491.pdf",
+      "issue_date": "2002-12-31",
+      "certification_expiration": "2012-12-31",
+      "table": "5c",
+      "page_1_indexed": 10,
+      "uncertainty_statement_page": 1,
+      "method_page": 2,
+      "material": "NIST SRM 2491 polydimethylsiloxane",
+      "data_kind": "published-certified-summary-not-raw-acquisition",
+      "source_measurement_time": null,
+      "bottle_id": null,
+      "rheometer_serial": null,
+      "instrument_as_reported": "Rheometric Scientific ARES controlled-strain rheometer",
+      "geometry_as_reported": "50 mm parallel plates; nominal 1 mm gap",
+      "strain_amplitude_as_reported": 0.02,
+      "calibration_provenance": "certificate-described; original calibration records not retained",
+      "coverage_factor": 2.0,
+      "publisher_stated_coverage": 0.95,
+      "uncertainty_kind": "expanded-combined",
+      "joint_covariance": "not-reported",
+      "original_pdf_sha256": null,
+      "original_pdf_retained": false,
+      "capture_kind": "assistant-transcription-checked-against-publisher-page-image",
+      "capture_review_authenticated": false,
+      "current_calibration_use_authorized": false
+    },
+    "created_at": "2026-10-05T18:50:59.340946+00:00",
+    "csv_utf8": "temperature_c,omega_rad_s,storage_pa,expanded_storage_pa,loss_pa,expanded_loss_pa\n20.0,0.1000,1.12,0.66,96.4,2.6\n20.0,0.1585,2.88,1.01,152.3,4.0\n20.0,0.2512,7.11,1.58,240.8,6.3\n20.0,0.3981,17.2,2.5,379.3,10.0\n20.0,0.6310,40.1,4.0,594.4,15.7\n20.0,1.000,89.7,6.5,925.8,24.4\n20.0,1.585,193.5,10.7,1426,38\n20.0,2.512,398.0,18.1,2164,57\n20.0,3.981,784.0,30.3,3215,84\n20.0,6.310,1474,51,4665,121\n20.0,10.00,2636,84,6560,169\n20.0,15.85,4477,135,8901,227\n20.0,25.12,7208,207,11592,294\n20.0,39.81,10986,304,14463,365\n20.0,63.10,15898,427,17258,436\n20.0,100.0,21873,571,19603,499\n",
+    "csv_sha256": "98909434425e89d838bd6688f54c6ba6ad81a05a34b4cb13de2d91becbfb86b2"
+  }
+}

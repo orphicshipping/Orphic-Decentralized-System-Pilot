@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('materials', 'materials_cli', 'Execute, retain, inspect and replay material investigations with explicit uncertainty'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
     ('bench', 'hardware_bench_cli', 'Capture inventory and import bounded bench diagnostics with source provenance'),
     ('hardware', 'hardware_cli', 'Import hardware observations, assess refurbishment criteria and export retained evidence'),

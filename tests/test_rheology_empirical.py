@@ -295,15 +295,29 @@ def test_source_drift_is_not_silent_attestation(request_data):
 def test_cli_end_to_end_and_create_only(request_data,tmp_path,site_disabled):
     p=tmp_path/'request.json';p.write_text(json.dumps(request_data),encoding='utf-8')
     prefix=[sys.executable]+(['-S'] if site_disabled else [])+['-m','ciw.materials_bench']
+    environment = None
+    if site_disabled:
+        # -S hides site-packages, including an installed CIW wheel. Copy only
+        # its stdlib-only benchmark modules; do not add all dependencies to
+        # PYTHONPATH or substitute files from a source checkout.
+        import os
+        import shutil
+        import ciw
+        package = tmp_path / 'stdlib-only' / 'ciw'
+        package.mkdir(parents=True)
+        for name in ('__init__.py', 'materials_bench.py', 'thermochemical_benchmark.py',
+                     'polymer_viscoelastic.py', 'polymer_population.py', 'rheology_empirical.py'):
+            shutil.copyfile(Path(ciw.__file__).parent / name, package / name)
+        environment = dict(os.environ, PYTHONPATH=str(package.parent))
     result_path=tmp_path/'result.json'
     for action in ('empirical-run','empirical-inspect','empirical-verify'):
         source=p if action=='empirical-run' else result_path
         target=result_path if action=='empirical-run' else tmp_path/f'{action}.json'
         cmd=prefix+[action,str(source),'--output',str(target)]
-        run=subprocess.run(cmd,capture_output=True,text=True,timeout=20)
+        run=subprocess.run(cmd,capture_output=True,text=True,timeout=20,env=environment)
         assert run.returncode==0,run.stderr
         raw=target.read_bytes()
-        again=subprocess.run(cmd,capture_output=True,text=True,timeout=20)
+        again=subprocess.run(cmd,capture_output=True,text=True,timeout=20,env=environment)
         assert again.returncode==2 and target.read_bytes()==raw
     verification=json.loads((tmp_path/'empirical-verify.json').read_text())
     assert verification['status']=='PASS'
