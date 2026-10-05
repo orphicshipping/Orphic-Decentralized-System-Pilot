@@ -18,6 +18,7 @@ def main(argv=None) -> int:
     for name in ("example", "demo"):
         command = commands.add_parser(name)
         command.add_argument("--output", type=Path, required=True)
+        command.add_argument("--quality-control", action="store_true", help="Use the v2 tool-point QC fixture")
     for name in ("plan", "run", "verify", "trace"):
         command = commands.add_parser(name)
         command.add_argument("input", type=Path)
@@ -28,10 +29,13 @@ def main(argv=None) -> int:
             command.add_argument("--at-s", type=float, default=0)
     args = parser.parse_args(argv)
     try:
-        if args.command == "example":
-            result = example_request()
-        elif args.command == "demo":
-            result = evaluate(example_request())
+        if args.command in {"example", "demo"}:
+            if args.quality_control:
+                from .polymer_quality_example import manufacturing_request
+                fixture = manufacturing_request()
+            else:
+                fixture = example_request()
+            result = fixture if args.command == "example" else evaluate(fixture)
         else:
             value = load(args.input)
             if args.command == "run":

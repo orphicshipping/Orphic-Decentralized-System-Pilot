@@ -16,6 +16,7 @@ from .manufacturing_contracts import (bounded, content_identity, count, items, k
 from .polymer_microfab import AUTHORITY, compile_configuration, validate_configuration
 
 SCHEMA = "ciw.polymer-manufacturing-request.v1"
+QC_SCHEMA = "ciw.polymer-manufacturing-request.v2"
 UNITS = {"m", "m2", "m3", "kg", "1", "Pa", "K", "N", "s"}
 CONDITIONS = {"ejection", "conditioned", "assembled"}
 MAX_EVENTS = 512
@@ -141,9 +142,11 @@ def _inspection(part: dict, data: dict) -> dict:
 def replay(request: dict) -> dict:
     """Pure replay: a refused event cannot partially mutate any external state."""
     bounded(request)
+    qc_enabled = type(request) is dict and request.get("schema") == QC_SCHEMA
     keys(request, {"schema", "source_kind", "clock_id", "parts", "routes", "orders",
-                   "configuration", "preflight", "inventory", "development_runs", "events"})
-    if request["schema"] != SCHEMA:
+                   "configuration", "preflight", "inventory", "development_runs", "events"}
+         | ({"quality_control"} if qc_enabled else set()))
+    if request["schema"] not in {SCHEMA, QC_SCHEMA}:
         raise ValueError("Wrong manufacturing request schema")
     text(request["clock_id"])
     config = request["configuration"]
@@ -151,6 +154,10 @@ def replay(request: dict) -> dict:
     if request["source_kind"] != config["source_kind"]:
         raise ValueError("Mixed request and configuration evidence semantics")
     parts, routes, orders = _catalog(request)
+    if qc_enabled:
+        from . import manufacturing_quality as qc
+        policy = qc.validate_policy(request, parts, orders)
+        quality_assessments, nonconformances, quality_cycles = {}, {}, {}
     if config["part_ref"] not in parts or parts[config["part_ref"]]["bom"]:
         raise ValueError("The polymer configuration must bind a catalogued nonassembly part")
     inventory = request["inventory"]
@@ -243,17 +250,39 @@ def replay(request: dict) -> dict:
                             "drying_record_ref": config["material"]["drying_record_ref"],
                             "cycle_evidence_ref": data["cycle_evidence_ref"], "model_prediction_ref": data["model_prediction_ref"],
                             "declared_actor_id": event["actor_id"], "declared_authorization_ref": event["authorization_ref"]}}
+                    if qc_enabled:
+                        qc.initialize(instances[output["serial"]], policy["bindings"][oid])
+                if qc_enabled:
+                    quality_cycles[cid] = {"work_order_id": oid, "recorded_at_s": stamp,
+                        "cycle_evidence_ref": data["cycle_evidence_ref"],
+                        "outputs": [{"serial": row["serial"], "cavity_id": row["cavity_id"]} for row in outputs]}
+            elif kind == "quality_assessment" and qc_enabled:
+                qc.apply_assessment(policy=policy, cycles=quality_cycles, instances=instances,
+                    assessments=quality_assessments, nonconformances=nonconformances,
+                    data=data, event_ref=event_ref, at_s=stamp)
+            elif kind == "quality_hold" and qc_enabled:
+                keys(data, {"serial", "reason", "evidence_ref"})
+                qc.add_hold(instances, nonconformances, targets=[text(data["serial"])],
+                    event_ref=event_ref, reason=text(data["reason"]),
+                    evidence_ref=ref(data["evidence_ref"]), category="DECLARED_NONCONFORMANCE")
             elif kind == "inspection":
                 if type(data) is not dict or data.get("serial") not in instances:
                     raise ValueError("Inspection requires an existing serial")
                 instance = instances[data["serial"]]
-                if instance["disposition"] != "WIP" or instance["inspection"] is not None:
+                inspectable = {"WIP", "QUARANTINED"} if qc_enabled else {"WIP"}
+                if instance["disposition"] not in inspectable or instance["inspection"] is not None:
                     raise ValueError("Inspection cannot replace an existing disposition; rework is not implemented")
                 result = _inspection(parts[instance["part_ref"]], data)
                 result["event_ref"] = event_ref
                 instance["inspection"] = result
                 instance["quality"] = result["status"]
                 instance["disposition"] = "AVAILABLE" if result["status"] == "PASS" else "QUARANTINED"
+                if qc_enabled:
+                    qc.refresh(instance)
+                    if result["status"] != "PASS":
+                        qc.add_hold(instances, nonconformances, targets=[data["serial"]], event_ref=event_ref,
+                            reason="FINAL_INSPECTION_" + result["status"], evidence_ref=result["measurement_ref"],
+                            category="FINAL_INSPECTION")
             elif kind == "scrap":
                 keys(data, {"serial", "reason", "evidence_ref"})
                 serial = text(data["serial"])
@@ -280,6 +309,8 @@ def replay(request: dict) -> dict:
                 for component in components:
                     if component not in instances or instances[component]["disposition"] != "AVAILABLE" or instances[component]["quality"] != "PASS":
                         raise ValueError("Assembly requires available components passing every declared characteristic")
+                    if qc_enabled and not qc.process_clear(instances[component]):
+                        raise ValueError("Assembly is blocked by process evidence or an open quality hold")
                     actual[instances[component]["part_ref"]] += 1
                 expected = Counter({line["part_ref"]: line["quantity"] for line in parts[order["part_ref"]]["bom"]})
                 if actual != expected:
@@ -293,6 +324,8 @@ def replay(request: dict) -> dict:
                     "birth_event_ref": event_ref, "inspection": None,
                     "genealogy": {"assembly_evidence_ref": data["assembly_evidence_ref"],
                         "declared_actor_id": event["actor_id"], "declared_authorization_ref": event["authorization_ref"]}}
+                if qc_enabled:
+                    qc.initialize(instances[serial], None)
             elif kind == "pack":
                 keys(data, {"package_id", "serials", "packaging_ref"})
                 pid = text(data["package_id"])
@@ -304,6 +337,8 @@ def replay(request: dict) -> dict:
                     raise ValueError("Duplicate package or package contents")
                 if any(serial not in instances or instances[serial]["disposition"] != "AVAILABLE" or instances[serial]["quality"] != "PASS" for serial in serials):
                     raise ValueError("Packaging requires available conforming records")
+                if qc_enabled and any(not qc.process_clear(instances[serial]) for serial in serials):
+                    raise ValueError("Packaging is blocked by process evidence or an open quality hold")
                 for serial in serials:
                     instances[serial]["disposition"] = "PACKED"
                 packages[pid] = {"serials": list(serials), "event_ref": event_ref, "shipment_status": "HELD"}
@@ -315,7 +350,8 @@ def replay(request: dict) -> dict:
         summaries = {}
         for oid, order in orders.items():
             outputs = [value for value in instances.values() if value["work_order_id"] == oid]
-            accepted = sum(value["quality"] == "PASS" and value["disposition"] != "SCRAPPED" for value in outputs)
+            accepted = sum(value["quality"] == "PASS" and value["disposition"] != "SCRAPPED"
+                           and (not qc_enabled or qc.process_clear(value)) for value in outputs)
             summaries[oid] = {"requested_good_quantity": order["quantity"], "started_quantity": starts[oid],
                 "accepted_quantity": accepted, "scrapped_quantity": sum(value["disposition"] == "SCRAPPED" for value in outputs),
                 "target_met_in_records": accepted >= order["quantity"]}
@@ -328,13 +364,19 @@ def replay(request: dict) -> dict:
             "shipment": {"status": "HELD", "reasons": ["Physical qualification is not established",
                 "Operator and release authority are not authenticated", "No certificate or shipment adapter is implemented"]},
             "authority": dict(AUTHORITY)}
+    if qc_enabled:
+        result["schema"] = "ciw.manufacturing-replay.v2"
+        result["quality_control"] = {"policy_ref": content_identity(request["quality_control"]),
+            "cycle_assessments": quality_assessments, "nonconformances": nonconformances,
+            "release_gates": {serial: qc.release_view(instance) for serial, instance in instances.items()},
+            "physical_containment": "not_performed", "automatic_hold_release": "not_implemented"}
     bounded(result)
     return result
 
 
 def evaluate(request: dict) -> dict:
     result = replay(request)
-    report = {"schema": "ciw.polymer-manufacturing-report.v1", "evaluation_id": new_identity("execution"),
+    report = {"schema": "ciw.polymer-manufacturing-report.v2" if request["schema"] == QC_SCHEMA else "ciw.polymer-manufacturing-report.v1", "evaluation_id": new_identity("execution"),
               "request": deepcopy(request), "request_ref": content_identity(request),
               "result": result, "result_ref": content_identity(result)}
     bounded(report)
@@ -345,7 +387,8 @@ def verify(report: dict) -> dict:
     """Fresh replay checks retained content and derived states, not authenticity."""
     bounded(report)
     keys(report, {"schema", "evaluation_id", "request", "request_ref", "result", "result_ref"})
-    if report["schema"] != "ciw.polymer-manufacturing-report.v1":
+    expected = "ciw.polymer-manufacturing-report.v2" if type(report["request"]) is dict and report["request"].get("schema") == QC_SCHEMA else "ciw.polymer-manufacturing-report.v1"
+    if report["schema"] != expected:
         raise ValueError("Wrong retained manufacturing report schema")
     validate_identity(report["evaluation_id"], "execution")
     if report["request_ref"] != content_identity(report["request"]) or report["result_ref"] != content_identity(report["result"]):
@@ -383,6 +426,8 @@ def trace(report: dict, serial: str) -> dict:
         mentioned.update(output["serial"] for output in data.get("outputs", []))
         if "serial" in data:
             mentioned.add(data["serial"])
+        if event["kind"] == "quality_assessment":
+            mentioned.update(key for key in relevant if instances[key]["genealogy"].get("cycle_id") == data["cycle_id"])
         if mentioned.intersection(relevant):
             selected_events.append(deepcopy(event))
     result = {"schema": "ciw.manufacturing-genealogy.v1", "serial": serial,
@@ -390,5 +435,14 @@ def trace(report: dict, serial: str) -> dict:
             "records": {key: deepcopy(instances[key]) for key in relevant},
             "events": selected_events, "configuration": deepcopy(report["request"]["configuration"]),
             "authority": dict(AUTHORITY)}
+    if report["request"]["schema"] == QC_SCHEMA:
+        quality = report["result"]["quality_control"]
+        hold_refs = {ref for key in relevant for ref in instances[key]["quality_holds"]}
+        cycle_ids = {instances[key]["genealogy"].get("cycle_id") for key in relevant}
+        result["schema"] = "ciw.manufacturing-genealogy.v2"
+        result["quality_control"] = {"release_gates": {key: deepcopy(quality["release_gates"][key]) for key in relevant},
+            "cycle_assessments": {key: deepcopy(value) for key, value in quality["cycle_assessments"].items() if key in cycle_ids},
+            "nonconformances": {key: deepcopy(quality["nonconformances"][key]) for key in sorted(hold_refs)},
+            "policy": deepcopy(report["request"]["quality_control"])}
     bounded(result)
     return result

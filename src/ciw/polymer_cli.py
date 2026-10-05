@@ -14,6 +14,9 @@ from . import polymer_operator as operator
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["qc"]:
+        from .polymer_quality_cli import main as quality_main
+        return quality_main(argv[1:])
     if argv[:1] == ["manufacture"]:
         from .polymer_manufacturing_cli import main as manufacturing_main
         return manufacturing_main(argv[1:])
@@ -23,6 +26,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(prog="net polymer", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("leakage", help="Retained fluid and material-loss balances on the pinned native engine")
+    commands.add_parser("qc", help="Retained tool-point quality monitoring; no hardware control")
     commands.add_parser("manufacture", help="Offline polymer microfab and discrete manufacturing records")
     example = commands.add_parser("example")
     example.add_argument("--process", choices=sorted(PROCESSES), default="injection_molding")
