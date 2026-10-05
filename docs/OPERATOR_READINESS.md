@@ -89,7 +89,7 @@ impact checks. The [fluid guide](FLUID_DYNAMICS.md) and
 [polymer guide](POLYMER_PROCESSING.md) cover their retained operator paths.
 
 Bounded [atmosphere](ATMOSPHERIC_ENGINE.md) and
-[impact](IMPACT_TESTBED.md) examples can run without those external engines.
+[impact](../examples/impact-contact/README.md) examples can run without those external engines.
 Their numerical verification applies to their declared idealized equations and
 operating envelopes. Their read-only `verify` commands recompute diagnostics
 while retaining the original scientific verification occurrence identity.
