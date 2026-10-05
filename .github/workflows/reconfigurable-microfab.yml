@@ -22,7 +22,11 @@ concurrency:
 
 jobs:
   reproducible-source:
-    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
@@ -32,13 +36,14 @@ jobs:
         with:
           python-version: '3.12'
       - name: Archive exact tracked source for offline reproduction
+        shell: bash
         run: |
           mkdir -p validation-export
           git archive --format=tar.gz HEAD -o validation-export/net-source.tar.gz
           git rev-parse HEAD > validation-export/commit.txt
       - uses: actions/upload-artifact@v4
         with:
-          name: microfab-reproducible-source
+          name: microfab-reproducible-source-${{ matrix.os }}
           path: validation-export/
           retention-days: 7
       - name: Install package and test dependencies
@@ -52,7 +57,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: microfab-test-evidence
+          name: microfab-test-evidence-${{ matrix.os }}
           path: validation-export/*.xml
           if-no-files-found: ignore
           retention-days: 7
