@@ -16,6 +16,8 @@ COMMANDS = (
     ('provision', 'operator_provision', 'Create exact local provider checkouts from retained public Git history'),
     ('legibility', 'cli', 'Compile, verify, review and compare synchronized specimen representations'),
     ('system', 'system_cli', 'Compile, run and independently verify typed thermomechanical reference systems'),
+    ('reference-compare', 'reference_comparison', 'Compare aligned observations under an explicit joint uncertainty budget'),
+    ('timing', 'transport_timing', 'Retain bounded local transport timing observations and failed samples'),
     ('polymer', 'polymer_cli', 'Assess retained molding cycles, inspect metrology and run numerical audits'),
     ('rewrite', 'rewrite_cli', 'Retain bounded typed hypergraph transformations and replay checks'),
     ('compose', 'workflow_cli', 'Compile typed wiring and checked stages into existing NET graphs'),
