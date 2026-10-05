@@ -7,6 +7,10 @@ on:
       - 'instruments/execution/compute-runtime/tests/test_lammps*.py'
       - 'scripts/check_lammps.py'
       - 'docs/LAMMPS.md'
+      - 'examples/molecular-data/**'
+      - 'scripts/molecular_reference_data.py'
+      - 'tests/test_molecular_reference_data.py'
+      - 'docs/MOLECULAR_REFERENCE_DATA.md'
       - '.github/workflows/net-lammps.yml'
   workflow_dispatch:
 
@@ -35,6 +39,10 @@ jobs:
         env:
           PYTHONPATH: .
         run: python -m pytest -q tests/test_lammps_boundary.py tests/test_lammps_dispatcher.py --junitxml="$RUNNER_TEMP/lammps-contracts.xml"
+      - name: Curated molecular data and source contract checks
+        env:
+          PYTHONPATH: instruments/execution/compute-runtime
+        run: python -m pytest -q tests/test_molecular_reference_data.py --junitxml="$RUNNER_TEMP/molecular-data.xml"
       - name: Missing native binding must remain NOT_RUN
         run: |
           python - <<'PY'
@@ -51,6 +59,7 @@ jobs:
           name: lammps-contracts-${{ matrix.os }}
           path: |
             ${{ runner.temp }}/lammps-contracts.xml
+            ${{ runner.temp }}/molecular-data.xml
             ${{ runner.temp }}/lammps-not-run/gate.json
           retention-days: 14
   native-cpu:
@@ -87,6 +96,16 @@ jobs:
         run: |
           HASH=$(cut -d' ' -f1 "$RUNNER_TEMP/lammps-build-record/executable.sha256")
           python scripts/check_lammps.py qualify --lmp "$RUNNER_TEMP/lammps-build/lmp" --expected-sha256 "$HASH" --output "$RUNNER_TEMP/lammps-native"
+      - name: Run procured-data derivative through the same native engine
+        shell: bash
+        run: |
+          HASH=$(cut -d' ' -f1 "$RUNNER_TEMP/lammps-build-record/executable.sha256")
+          CATALOG=$(cat examples/molecular-data/catalog.sha256)
+          python scripts/molecular_reference_data.py check --catalog-sha256 "$CATALOG" > "$RUNNER_TEMP/lammps-build-record/molecular-data-check.json"
+          python scripts/molecular_reference_data.py prepare --catalog-sha256 "$CATALOG" --profile cluster-projection --allow-projection --output "$RUNNER_TEMP/molecular-data-export"
+          ANCHOR=$(sha256sum "$RUNNER_TEMP/molecular-data-export/manifest.json" | cut -d' ' -f1)
+          python scripts/molecular_reference_data.py verify --export "$RUNNER_TEMP/molecular-data-export" --manifest-sha256 "$ANCHOR"
+          python scripts/molecular_reference_data.py run --export "$RUNNER_TEMP/molecular-data-export" --manifest-sha256 "$ANCHOR" --provider lammps --executable "$RUNNER_TEMP/lammps-build/lmp" --expected-sha256 "$HASH" --output "$RUNNER_TEMP/molecular-data-native"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -94,4 +113,6 @@ jobs:
           path: |
             ${{ runner.temp }}/lammps-build-record
             ${{ runner.temp }}/lammps-native
+            ${{ runner.temp }}/molecular-data-export
+            ${{ runner.temp }}/molecular-data-native
           retention-days: 14
