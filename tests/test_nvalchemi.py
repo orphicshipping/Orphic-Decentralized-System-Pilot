@@ -5,6 +5,7 @@ import json
 import math
 import os
 from pathlib import Path
+import py_compile
 import subprocess
 import sys
 
@@ -154,6 +155,87 @@ def test_refused_gate_retains_attempts_and_never_claims_provider_success():
         assert row["refusal"]["code"] == "RUNTIME_UNAVAILABLE"
     assert report["finite_difference_force_error"] is None
     assert report["replay_max_error"] is None
+
+
+def isolated_probe(tmp_path):
+    """Exercise the actual launch/fingerprint code with a tiny dependency root."""
+    from ciw.adapters.nvalchemi import NvalchemiLJBinding
+    binding = object.__new__(NvalchemiLJBinding)
+    binding._site_packages = tmp_path / "site-packages"
+    binding._site_packages.mkdir()
+    binding.python_executable = Path(sys.executable)
+    binding.timeout_seconds = 20.0
+    binding.max_output_bytes = 128 * 1024
+    return binding
+
+
+def unchecked_cache(source, cache, marker, value):
+    payload = source.parent / "payload.py"
+    payload.write_text(f"from pathlib import Path\nPath({str(marker)!r}).write_text('executed')\nVALUE={value}\n")
+    cache.parent.mkdir(exist_ok=True)
+    py_compile.compile(str(payload), cfile=str(cache), doraise=True,
+                       invalidation_mode=py_compile.PycInvalidationMode.UNCHECKED_HASH)
+    payload.unlink()
+
+
+def test_unchecked_hash_cache_cannot_override_source(tmp_path):
+    binding = isolated_probe(tmp_path)
+    source = binding._site_packages / "cache_probe.py"
+    source.write_text("VALUE=41\n")
+    marker = tmp_path / "payload-executed"
+    cache = Path(importlib.util.cache_from_source(str(source)))
+    unchecked_cache(source, cache, marker, 999)
+    # Prove this is executable unchecked bytecode under -B alone.
+    control = subprocess.run([sys.executable, "-I", "-S", "-B", "-c",
+                              f"import sys; sys.path.append({str(binding._site_packages)!r}); "
+                              "import cache_probe; print(cache_probe.VALUE)"],
+                             text=True, capture_output=True, check=True)
+    assert control.stdout.strip() == "999" and marker.exists()
+    marker.unlink()
+    binding._provider_files = binding._installed_files()
+    code, raw = binding._run("import cache_probe; print(cache_probe.VALUE)", [])
+    assert code == 0 and raw.strip() == b"41"
+    assert not marker.exists()
+
+
+@pytest.mark.parametrize("change", ["unchecked_cache", "sourceless_cache", "unlisted_module",
+                                    "other_dependency", "startup_pth", "native_extension"])
+def test_all_dependency_drift_refuses_before_launch(tmp_path, change):
+    binding = isolated_probe(tmp_path)
+    source = binding._site_packages / "cache_probe.py"
+    source.write_text("VALUE=41\n")
+    dependency = binding._site_packages / "other_dependency.py"
+    dependency.write_text("VALUE=1\n")
+    marker = tmp_path / "payload-executed"
+    binding._provider_files = binding._installed_files()
+    if change == "unchecked_cache":
+        unchecked_cache(source, Path(importlib.util.cache_from_source(str(source))), marker, 999)
+    elif change == "sourceless_cache":
+        unchecked_cache(source, binding._site_packages / "injected.pyc", marker, 999)
+    elif change == "other_dependency":
+        dependency.write_text("VALUE=2\n")
+    else:
+        target = {"unlisted_module": "injected.py", "startup_pth": "injected.pth",
+                  "native_extension": "injected.so"}[change]
+        (binding._site_packages / target).write_bytes(b"changed executable dependency bytes")
+    with pytest.raises(AdapterRefusal) as raised:
+        binding._run(f"from pathlib import Path; Path({str(marker)!r}).touch()", [])
+    assert raised.value.code == "RUNTIME_PIN_MISMATCH"
+    assert not marker.exists()
+
+
+def test_site_startup_and_stdlib_shadow_are_not_executed(tmp_path):
+    binding = isolated_probe(tmp_path)
+    marker = tmp_path / "payload-executed"
+    payload = f"from pathlib import Path; Path({str(marker)!r}).touch()\n"
+    (binding._site_packages / "injected.pth").write_text("import pathlib; " +
+        f"pathlib.Path({str(marker)!r}).touch()\n")
+    (binding._site_packages / "sitecustomize.py").write_text(payload)
+    (binding._site_packages / "json.py").write_text(payload + "raise RuntimeError('shadowed stdlib')\n")
+    binding._provider_files = binding._installed_files()
+    code, raw = binding._run("import json; print(json.dumps({'trusted_stdlib': True}))", [])
+    assert code == 0 and json.loads(raw) == {"trusted_stdlib": True}
+    assert not marker.exists()
 
 
 @pytest.mark.integration

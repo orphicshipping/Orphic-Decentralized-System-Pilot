@@ -79,8 +79,14 @@ boundary. It requires an explicit clean NET source commit and a separately
 provisioned interpreter. The lock in `runtimes/nvalchemi-lj/environment.json`
 records Python/platform, all installed distribution versions and the downloaded
 NVIDIA/PyTorch/Warp wheel hashes. At binding and invocation the adapter checks
-source bytes, interpreter, versions and installed files of the toolkit, toolkit-ops,
-PyTorch, Warp and NumPy. These checks detect drift; they do not authenticate an
+source bytes, interpreter, versions and every file in the isolated third-party
+installation, including cached/sourceless bytecode, native libraries, metadata
+and files absent from distribution inventories. It fingerprints these bytes in
+the host before launching any provider process. Isolated `-I -S` startup disables
+`.pth`/`sitecustomize` execution; the explicit dependency directory is appended
+after standard-library paths. A fresh bytecode prefix bypasses source-associated
+caches, while any post-binding cache/file drift refuses before launch. These
+checks detect drift; they do not authenticate an
 operator's initial environment or constitute an OS sandbox.
 
 The profile uses `nvalchemi-toolkit==0.2.0`, `nvalchemi-toolkit-ops==0.4.1`,
