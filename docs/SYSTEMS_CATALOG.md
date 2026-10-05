@@ -94,6 +94,32 @@ RxInfer, OpenFOAM, FreeCAD, TensorFlow Lattice, an FPGA toolchain and the broade
 persistent Julia scientific runtime remain candidate providers. Every existing
 profile still requires its exact environment and separate validation evidence.
 
+## External tool boundary inventory
+
+ALCHEMI inventory addition: **2026-10-05**. Existing rows retain their selected
+source-audit boundaries; adding this table does not rerun or requalify them.
+Consult [integration coverage](INTEGRATION_COVERAGE.md) and each operating guide
+for source, retained validation records and open gates.
+
+| External tool | Inspected boundary / inventory status |
+| --- | --- |
+| Godot | Inspection-client source present; general simulation integration remains a separate qualification target. |
+| Bevy | Retained-render projector source present; general ECS simulation integration remains separate. |
+| Blender | Optional authoring target; qualified authoring-job integration remains pending in the cited integration audit. |
+| SP1 | Selected registered computation-proof path, not blanket verification of every instrument. |
+| Catalyst / Cantera | Bounded reaction-provider families. |
+| ControlSystemsBase | Bounded control-oscillator profile. |
+| OrdinaryDiffEqTsit5 | Bounded oscillator integration. |
+| JuMP / HiGHS | Bounded quadratic-design optimization. |
+| JuliaIntervals family | Bounded interval-enclosure profile. |
+| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Added external atomistic-simulation and ML interatomic-potential provider target. Upstream documents batched molecular dynamics, relaxation and model training/fine-tuning. **Planning guide / contract only: NET adapter, environment binding, independent numerical validation and polymer/physical qualification remain pending.** See [NVALCHEMI.md](NVALCHEMI.md). |
+
+ALCHEMI extends the molecular/materials layer; it does not replace existing
+Julia/native providers, continuum solvers, NET evidence ownership or machine
+controller authority. Its Python-facing API remains inside an optional provider
+boundary. This catalog entry does not install the toolkit, register an operation
+or authorize training, model downloads, remote data transfer or execution.
+
 ## The collapse rule for loose tooling
 
 The project is collapsing *interfaces and evidence paths*, not erasing

@@ -20,6 +20,9 @@ def main(argv=None) -> int:
     if argv[:1] == ["manufacture"]:
         from .polymer_manufacturing_cli import main as manufacturing_main
         return manufacturing_main(argv[1:])
+    if argv[:1] == ["microfab"]:
+        from .microfab_cli import main as microfab_main
+        return microfab_main(argv[1:])
     if argv[:1] == ["leakage"]:
         from .leakage_cli import main as leakage_main
         return leakage_main(argv[1:])
@@ -28,6 +31,7 @@ def main(argv=None) -> int:
     commands.add_parser("leakage", help="Retained fluid and material-loss balances on the pinned native engine")
     commands.add_parser("qc", help="Retained tool-point quality monitoring; no hardware control")
     commands.add_parser("manufacture", help="Offline polymer microfab and discrete manufacturing records")
+    commands.add_parser("microfab", help="Bounded manufacturing identities and declared process envelopes")
     example = commands.add_parser("example")
     example.add_argument("--process", choices=sorted(PROCESSES), default="injection_molding")
     example.add_argument("--output", type=Path, required=True)
