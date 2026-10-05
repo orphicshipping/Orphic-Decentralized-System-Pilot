@@ -113,6 +113,7 @@ for source, retained validation records and open gates.
 | JuMP / HiGHS | Bounded quadratic-design optimization. |
 | JuliaIntervals family | Bounded interval-enclosure profile. |
 | NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Added external atomistic-simulation and ML interatomic-potential provider target. Upstream documents batched molecular dynamics, relaxation and model training/fine-tuning. **Planning guide / contract only: NET adapter, environment binding, independent numerical validation and polymer/physical qualification remain pending.** See [NVALCHEMI.md](NVALCHEMI.md). |
+| GROMACS | Existing native single-point energy, trajectory-energy and minimization runners in the consolidated Compute Runtime; this increment adds runtime/finite-output boundary checks and an explicit native gate. **Native execution and full NET lifecycle qualification remain pending for this increment.** See [GROMACS.md](GROMACS.md). |
 
 ALCHEMI extends the molecular/materials layer; it does not replace existing
 Julia/native providers, continuum solvers, NET evidence ownership or machine

@@ -36,8 +36,10 @@ of our identities, so every identity here is computed BY THIS MODULE
 from bytes it holds. The coupling between the descriptor and gmx's
 actual behavior is DECLARED (the descriptor's version line is trusted to
 name the binary that ran -- verified against `gmx --version` output at
-descriptor-build time, but nothing binds the binary at run time). This
-is the native bytes-vs-behavior gap plus an external process. What the
+descriptor-build time AND at run time). Optional operator-supplied
+executable SHA-256 pins and between-stage drift checks bind executable
+bytes, not shared libraries, drivers, source-to-binary correspondence or
+scientific correctness. This remains a bytes-vs-behavior gap. What the
 workload still gains from the substrate: content-addressed request and
 computation identities, refusal semantics, the operation ledger at the
 dispatch seam, and an empirical repeat-determinism check in its tests.
@@ -57,7 +59,11 @@ anything, and the dispatch declaration downstream says `simulation:`.
 
 from __future__ import annotations
 
+import hashlib
+import math
 import pathlib
+import re
+from decimal import Decimal
 import subprocess
 import tempfile
 from typing import Optional
@@ -80,15 +86,112 @@ FAULT_ENERGY = 12
 FAULT_PARSE = 13
 
 
+MAX_ARTIFACT_BYTES = 4 * 1024 * 1024
+_VERSION = re.compile(r"GROMACS version(?::[ \t]*|[ \t]+)[A-Za-z0-9][^\r\n]*\Z")
+_NUMBER = re.compile(r"[+-]?(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)(?:[eE][+-]?[0-9]+)?\Z")
+
+
+def _finite_number(text: str) -> float:
+    if not _NUMBER.fullmatch(text):
+        raise ValueError("expected a finite decimal number")
+    value = float(text)
+    if not math.isfinite(value) or (value == 0.0 and Decimal(text) != 0):
+        raise ValueError("decimal value overflows or underflows binary64")
+    return value
+
+
+def _read_artifact(path: pathlib.Path) -> str:
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("expected a regular GROMACS output artifact")
+    with path.open("rb") as stream:
+        raw = stream.read(MAX_ARTIFACT_BYTES + 1)
+    if len(raw) > MAX_ARTIFACT_BYTES:
+        raise ValueError("GROMACS output artifact exceeds 4 MiB")
+    return raw.decode("ascii")
+
+
+def _energy_lines(path: pathlib.Path, *, single: bool = False) -> list[str]:
+    # Validate without reformatting: accepted energy bytes keep their identity.
+    lines = [line for line in _read_artifact(path).splitlines()
+             if line.strip() and not line.lstrip().startswith(("#", "@"))]
+    if not lines or (single and len(lines) != 1):
+        raise ValueError("unexpected number of GROMACS energy rows")
+    previous = -math.inf
+    for line in lines:
+        fields = line.split()
+        if len(fields) != 2:
+            raise ValueError("GROMACS energy rows need time and Potential only")
+        time, _ = map(_finite_number, fields)
+        if time < 0 or time <= previous:
+            raise ValueError("GROMACS energy times must be nonnegative and increasing")
+        previous = time
+    return lines
+
+
+def gmx_binary_sha256(gmx_path: pathlib.Path) -> str:
+    """Fingerprint executable bytes; this is not dependency or build attestation."""
+    path = pathlib.Path(gmx_path)
+    if not path.is_absolute() or not path.is_file():
+        raise EngineProtocolError("bind an absolute, existing GROMACS executable path")
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        while chunk := stream.read(1024 * 1024):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
 def gmx_version_line(gmx_path: pathlib.Path) -> str:
-    """The one line of `gmx --version` output naming the version."""
-    proc = subprocess.run(
-        [str(gmx_path), "-quiet", "--version"], capture_output=True, timeout=60
-    )
-    for line in proc.stdout.decode(errors="replace").splitlines():
-        if line.startswith("GROMACS version"):
-            return line.strip()
-    raise EngineProtocolError(f"{gmx_path} did not report a GROMACS version")
+    """Require a successful probe with exactly one unambiguous version line."""
+    try:
+        proc = subprocess.run(
+            [str(gmx_path), "-quiet", "--version"], capture_output=True, timeout=60
+        )
+        if proc.returncode != 0:
+            raise EngineProtocolError("GROMACS version probe exited unsuccessfully")
+        lines = [line.strip() for line in proc.stdout.decode("utf-8").splitlines()
+                 if line.startswith("GROMACS version")]
+        if len(lines) != 1 or not _VERSION.fullmatch(lines[0]):
+            raise EngineProtocolError("GROMACS must report exactly one version")
+        return lines[0]
+    except (OSError, UnicodeError, subprocess.TimeoutExpired) as exc:
+        raise EngineProtocolError("GROMACS version probe unavailable or malformed") from exc
+
+
+def _bind_runtime(spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only):
+    if type(max_warnings) is not int or not 0 <= max_warnings <= 2:
+        raise EngineProtocolError("max_warnings must be an explicit integer in 0..2")
+    if type(cpu_only) is not bool:
+        raise EngineProtocolError("cpu_only must be a boolean")
+    if expected_binary_sha256 is not None and (
+            type(expected_binary_sha256) is not str
+            or not re.fullmatch(r"[0-9a-f]{64}", expected_binary_sha256)):
+        raise EngineProtocolError("expected executable digest must be lowercase SHA-256")
+    # Preserve an absolute symlink spelling so retargeting is detected as drift.
+    path = pathlib.Path(gmx_path).absolute()
+    digest = gmx_binary_sha256(path)
+    if expected_binary_sha256 is not None and digest != expected_binary_sha256:
+        raise EngineProtocolError("GROMACS executable differs from the operator pin")
+    declared = spec.program.partition(_TOPOLOGY_MARKER)[0].split(b"\n")[1].decode("utf-8")
+    if gmx_version_line(path) != declared:
+        raise EngineProtocolError("GROMACS runtime version differs from the descriptor")
+    if gmx_binary_sha256(path) != digest:
+        raise EngineProtocolError("GROMACS executable changed during the version probe")
+    return path, digest
+
+
+def _checked_process(path, digest, args, *, base, stdin, timeout):
+    # The process is trusted, not sandboxed. A before/after digest is drift
+    # detection, not race-free executable attestation or a resource sandbox.
+    try:
+        if gmx_binary_sha256(path) != digest:
+            raise EngineProtocolError("GROMACS executable changed before a stage")
+        proc = subprocess.run([str(path), "-quiet", *args], cwd=base, input=stdin,
+                              capture_output=True, timeout=timeout)
+        if gmx_binary_sha256(path) != digest:
+            raise EngineProtocolError("GROMACS executable changed during a stage")
+        return proc
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise EngineProtocolError("GROMACS stage could not start or timed out") from exc
 
 
 def gromacs_program_descriptor(
@@ -102,13 +205,31 @@ def gromacs_program_descriptor(
     GROMACS workload this is -- single-point, trajectory, minimization
     -- because they have different output semantics and are therefore
     different programs even over the same topology."""
-    return header + b"\n" + version_line.encode("utf-8") + _TOPOLOGY_MARKER + topology
+    if (type(version_line) is not str or type(topology) is not bytes
+            or type(header) is not bytes):
+        raise EngineProtocolError("GROMACS descriptor requires version text and topology bytes")
+    program = header + b"\n" + version_line.encode("utf-8") + _TOPOLOGY_MARKER + topology
+    _split_descriptor(program, header)
+    return program
 
 
 def _split_descriptor(program: bytes, header: bytes) -> bytes:
+    allowed = {GROMACS_DESCRIPTOR_HEADER, GROMACS_TRAJECTORY_HEADER,
+               GROMACS_MINIMIZATION_HEADER}
+    if type(program) is not bytes or type(header) is not bytes or header not in allowed:
+        raise EngineProtocolError("unknown GROMACS workload descriptor")
     head, marker, topology = program.partition(_TOPOLOGY_MARKER)
-    if not head.startswith(header) or not marker:
+    fields = head.split(b"\n")
+    if (not marker or not topology.strip() or len(fields) != 2 or fields[0] != header
+            or not fields[1].startswith(b"GROMACS version")
+            or not fields[1][len(b"GROMACS version"):].strip(b" :\t")
+            or any(byte < 32 and byte != 9 for byte in fields[1])):
         raise EngineProtocolError(f"not a {header.decode()} program descriptor")
+    try:
+        if not _VERSION.fullmatch(fields[1].decode("utf-8")):
+            raise EngineProtocolError("invalid GROMACS version line")
+    except UnicodeError as exc:
+        raise EngineProtocolError("invalid GROMACS version encoding") from exc
     return topology
 
 
@@ -116,6 +237,10 @@ def run_gromacs_specification(
     spec: ExecutionSpecification,
     gmx_path: pathlib.Path,
     workdir: Optional[pathlib.Path] = None,
+    *,
+    expected_binary_sha256: Optional[str] = None,
+    max_warnings: int = 2,
+    cpu_only: bool = False,
 ) -> ExecutionResult:
     """Run one GROMACS single-point energy evaluation of `spec`.
 
@@ -123,6 +248,8 @@ def run_gromacs_specification(
     processes; nothing persists between runs. The occurrence field is 0
     with the same per-invocation meaning as the Rust CLI's."""
     topology = _split_descriptor(spec.program, GROMACS_DESCRIPTOR_HEADER)
+    gmx_path, binary_digest = _bind_runtime(
+        spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only)
 
     def _result(status, exit_code, output=None, detail=None):
         output_identity = None
@@ -153,17 +280,17 @@ def run_gromacs_specification(
         (base / "run.mdp").write_bytes(spec.configuration)
 
         def _gmx(args, stdin=None):
-            return subprocess.run(
-                [str(gmx_path), "-quiet", *args], cwd=base, input=stdin,
-                capture_output=True, timeout=300,
-            )
+            return _checked_process(gmx_path, binary_digest, args, base=base,
+                                    stdin=stdin, timeout=300)
 
         grompp = _gmx(["grompp", "-f", "run.mdp", "-c", "conf.gro",
-                       "-p", "system.top", "-o", "run.tpr", "-maxwarn", "2"])
+                       "-p", "system.top", "-o", "run.tpr", "-maxwarn", str(max_warnings)])
         if grompp.returncode != 0:
             return _result("halted", FAULT_GROMPP,
                            detail=grompp.stderr.decode(errors="replace")[-400:])
-        mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"])
+        mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"]
+                      + (["-nb", "cpu", "-pme", "cpu", "-bonded", "cpu", "-update", "cpu"]
+                         if cpu_only else []))
         if mdrun.returncode != 0:
             return _result("halted", FAULT_MDRUN,
                            detail=mdrun.stderr.decode(errors="replace")[-400:])
@@ -173,13 +300,10 @@ def run_gromacs_specification(
             return _result("halted", FAULT_ENERGY,
                            detail=energy.stderr.decode(errors="replace")[-400:])
 
-        data_lines = [
-            line for line in (base / "energy.xvg").read_text().splitlines()
-            if line and not line.startswith(("#", "@"))
-        ]
-        if len(data_lines) != 1 or len(data_lines[0].split()) != 2:
-            return _result("halted", FAULT_PARSE,
-                           detail=f"unexpected xvg shape: {data_lines[:2]!r}")
+        try:
+            data_lines = _energy_lines(base / "energy.xvg", single=True)
+        except (OSError, ValueError, UnicodeError) as exc:
+            return _result("halted", FAULT_PARSE, detail=str(exc)[-400:])
         # gmx's own text for the value, verbatim -- our one canonical
         # output encoding for this workload, with no re-formatting.
         potential_text = data_lines[0].split()[1]
@@ -193,6 +317,10 @@ def _run_series_workload(
     header: bytes,
     output_builder,
     workdir: Optional[pathlib.Path] = None,
+    *,
+    expected_binary_sha256: Optional[str] = None,
+    max_warnings: int = 2,
+    cpu_only: bool = False,
 ) -> ExecutionResult:
     """Shared grompp -> mdrun -> energy pipeline for the stage-4
     workloads. `output_builder(data_lines, base)` turns the xvg data
@@ -200,6 +328,8 @@ def _run_series_workload(
     canonical output bytes -- each descriptor commits to its own output
     encoding, so the builder is per-workload by design."""
     topology = _split_descriptor(spec.program, header)
+    gmx_path, binary_digest = _bind_runtime(
+        spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only)
 
     def _result(status, exit_code, output=None, detail=None):
         output_identity = None
@@ -230,17 +360,17 @@ def _run_series_workload(
         (base / "run.mdp").write_bytes(spec.configuration)
 
         def _gmx(args, stdin=None):
-            return subprocess.run(
-                [str(gmx_path), "-quiet", *args], cwd=base, input=stdin,
-                capture_output=True, timeout=600,
-            )
+            return _checked_process(gmx_path, binary_digest, args, base=base,
+                                    stdin=stdin, timeout=600)
 
         grompp = _gmx(["grompp", "-f", "run.mdp", "-c", "conf.gro",
-                       "-p", "system.top", "-o", "run.tpr", "-maxwarn", "2"])
+                       "-p", "system.top", "-o", "run.tpr", "-maxwarn", str(max_warnings)])
         if grompp.returncode != 0:
             return _result("halted", FAULT_GROMPP,
                            detail=grompp.stderr.decode(errors="replace")[-400:])
-        mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"])
+        mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"]
+                      + (["-nb", "cpu", "-pme", "cpu", "-bonded", "cpu", "-update", "cpu"]
+                         if cpu_only else []))
         if mdrun.returncode != 0:
             return _result("halted", FAULT_MDRUN,
                            detail=mdrun.stderr.decode(errors="replace")[-400:])
@@ -250,16 +380,11 @@ def _run_series_workload(
             return _result("halted", FAULT_ENERGY,
                            detail=energy.stderr.decode(errors="replace")[-400:])
 
-        data_lines = [
-            line for line in (base / "energy.xvg").read_text().splitlines()
-            if line and not line.startswith(("#", "@"))
-        ]
-        if not data_lines:
-            return _result("halted", FAULT_PARSE, detail="energy.xvg carried no data lines")
         try:
+            data_lines = _energy_lines(base / "energy.xvg")
             output = output_builder(data_lines, base)
-        except FileNotFoundError as missing:
-            return _result("halted", FAULT_PARSE, detail=f"expected artifact missing: {missing}")
+        except (OSError, ValueError, UnicodeError) as exc:
+            return _result("halted", FAULT_PARSE, detail=str(exc)[-400:])
         return _result("completed", 0, output=output)
 
 
@@ -267,6 +392,10 @@ def run_gromacs_trajectory_specification(
     spec: ExecutionSpecification,
     gmx_path: pathlib.Path,
     workdir: Optional[pathlib.Path] = None,
+    *,
+    expected_binary_sha256: Optional[str] = None,
+    max_warnings: int = 2,
+    cpu_only: bool = False,
 ) -> ExecutionResult:
     """A short deterministic MD trajectory (A1 / Target E).
 
@@ -280,13 +409,20 @@ def run_gromacs_trajectory_specification(
     def build(data_lines, _base):
         return b"gmx-energy-series kJ/mol\n" + "\n".join(data_lines).encode("ascii")
 
-    return _run_series_workload(spec, gmx_path, GROMACS_TRAJECTORY_HEADER, build, workdir)
+    return _run_series_workload(
+        spec, gmx_path, GROMACS_TRAJECTORY_HEADER, build, workdir,
+        expected_binary_sha256=expected_binary_sha256,
+        max_warnings=max_warnings, cpu_only=cpu_only)
 
 
 def run_gromacs_minimization_specification(
     spec: ExecutionSpecification,
     gmx_path: pathlib.Path,
     workdir: Optional[pathlib.Path] = None,
+    *,
+    expected_binary_sha256: Optional[str] = None,
+    max_warnings: int = 2,
+    cpu_only: bool = False,
 ) -> ExecutionResult:
     """Steepest-descent energy minimization (A3): a structured scientific
     input (a perturbed lattice) relaxed to a structured numerical output.
@@ -303,7 +439,24 @@ def run_gromacs_minimization_specification(
     """
 
     def build(data_lines, base):
-        structure_lines = (base / "run.gro").read_text().splitlines()[1:]
+        structure_lines = _read_artifact(base / "run.gro").splitlines()[1:]
+        # This is shape validation, not evidence that minimization converged.
+        if not structure_lines or not structure_lines[0].strip().isdigit():
+            raise ValueError("minimized GRO atom count is missing")
+        count = int(structure_lines[0])
+        if count < 1 or len(structure_lines) != count + 2:
+            raise ValueError("minimized GRO atom count differs from its records")
+        for atom in structure_lines[1:-1]:
+            if len(atom) < 44:
+                raise ValueError("truncated minimized GRO atom record")
+            # Standard GRO coordinates are three fixed-width fields of 8 chars.
+            for start in (20, 28, 36):
+                _finite_number(atom[start:start + 8].strip())
+        box = structure_lines[-1].split()
+        if len(box) not in (3, 9):
+            raise ValueError("minimized GRO needs 3 or 9 box components")
+        for value in box:
+            _finite_number(value)
         return (
             b"gmx-minimization v1\n[energy-series]\n"
             + "\n".join(data_lines).encode("ascii")
@@ -311,4 +464,7 @@ def run_gromacs_minimization_specification(
             + "\n".join(structure_lines).encode("ascii")
         )
 
-    return _run_series_workload(spec, gmx_path, GROMACS_MINIMIZATION_HEADER, build, workdir)
+    return _run_series_workload(
+        spec, gmx_path, GROMACS_MINIMIZATION_HEADER, build, workdir,
+        expected_binary_sha256=expected_binary_sha256,
+        max_warnings=max_warnings, cpu_only=cpu_only)

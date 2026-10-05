@@ -1,0 +1,59 @@
+name: NET GROMACS boundary contracts
+
+on:
+  pull_request:
+    paths:
+      - 'instruments/execution/compute-runtime/execution/**'
+      - 'instruments/execution/compute-runtime/tests/test_gromacs_boundary.py'
+      - 'scripts/check_gromacs.py'
+      - 'docs/GROMACS.md'
+      - '.github/workflows/net-gromacs-boundary.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  provider-free:
+    name: Provider-free contracts (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Install host test dependencies only
+        run: python -m pip install '.[dev]'
+      - name: Real package imports and provider-free boundary tests
+        working-directory: instruments/execution/compute-runtime
+        env:
+          PYTHONPATH: .
+        run: python -m pytest -q tests/test_gromacs_boundary.py --junitxml="$RUNNER_TEMP/gromacs-boundary.xml"
+      - name: Missing binding remains NOT_RUN, not native qualification
+        run: |
+          python - <<'PY'
+          import json, os, pathlib, subprocess, sys
+          out = pathlib.Path(os.environ['RUNNER_TEMP']) / 'gromacs-native-not-run'
+          proc = subprocess.run([sys.executable, 'scripts/check_gromacs.py', '--output', str(out)])
+          assert proc.returncode == 2
+          report = json.loads((out / 'gate.json').read_text())
+          assert report['status'] == 'NOT_RUN' and report['runtime'] is None
+          assert report['cases'] == []
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: gromacs-provider-free-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/gromacs-boundary.xml
+            ${{ runner.temp }}/gromacs-native-not-run/gate.json
+          if-no-files-found: warn
+          retention-days: 14
