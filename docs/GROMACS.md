@@ -4,6 +4,14 @@ Inspected and extended **2026-10-05**, from NET main
 `0374076695475669188d61698e4656ced2263e01`.
 **Native GROMACS execution for this increment: NOT RUN.**
 
+## Retained single-point extension
+
+The follow-on [runtime/artifact binding guide](GROMACS_RETENTION.md) documents
+the opt-in `--runtime-binding` gate, exact native TPR/EDR/log retention,
+per-stage/runtime bindings and provider-free offline receipt checks. It extends
+the original PR #192 increment below. Native GROMACS remains **NOT RUN**;
+source-slice tests do not close native or installed-package qualification.
+
 ## Source and existing implementation
 
 The selected repository is
@@ -114,8 +122,9 @@ are references for the explicit conventions, not evidence of a successful run.
 The gate retains input/descriptor bytes, successful canonical result bytes,
 existing specification/program/input/output/computation identities, separate
 attempt/case/comparison IDs, the binary fingerprint/version and numerical
-residuals. Native intermediate TPR/EDR files and full process logs are **not**
-retained by the existing runner; complete native artifact replay remains a gate.
+residuals. The binary-only invocation above does **not** retain native TPR/EDR
+files or full process logs. Use the explicit [retained mode](GROMACS_RETENTION.md)
+for that evidence; a genuine native run remains an open qualification gate.
 A failed comparison retains the computed result and failure rather than replacing
 it with the scalar reference. A repeated computation may have the same content
 identity while its case and comparison IDs remain distinct.
@@ -130,7 +139,10 @@ Even a native pass does not qualify the full NET Session/Workbench path, GPU
 execution, MD ensembles, force calculations, energy minimization, polymers,
 MLIP checkpoints, training datasets, physical calibration or equipment control.
 
-## New execution evidence and remaining gates
+## Initial PR #192 execution evidence and remaining gates
+
+The retained extension
+[records its additional tests separately](GROMACS_RETENTION.md#executed-evidence-and-remaining-gates).
 
 The provider-free boundary suite executed **107 tests, all passing**, using
 Python 3.13.5 / pytest 9.0.2 on Linux. These exercised a reconstructed source

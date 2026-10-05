@@ -15,6 +15,7 @@ import math
 from pathlib import Path
 import sys
 from datetime import datetime, timezone
+from decimal import Decimal
 from uuid import uuid4
 
 SOURCE_REFERENCE = {
@@ -85,6 +86,26 @@ def scalar_reference(distance_nm: float) -> float:
     return 4 * EPSILON_KJ_MOL * (q*q - q)
 
 
+def reference_for_specification(specification) -> float:
+    """Reference tied to actual retained coordinates and exact model/MDP bytes.
+
+    This is the declared two-particle, zero-charge, unshifted truncated LJ
+    fixture. The 3 nm periodic box has no interacting images at this cutoff.
+    Changing the topology, effective request or GRO convention refuses instead
+    of comparing against an unrelated nominal distance.
+    """
+    if (specification.program.partition(b"\n[topology]\n")[2] != TOPOLOGY
+            or specification.configuration != MDP):
+        raise ValueError("reference model/settings do not match the executed specification")
+    rows = specification.input_payload.decode("ascii").splitlines()
+    if len(rows) != 5:
+        raise ValueError("reference requires the exact two-atom GRO profile")
+    distance = float(Decimal(rows[3][20:28].strip()) - Decimal(rows[2][20:28].strip()))
+    if specification.input_payload != pair_gro(distance):
+        raise ValueError("reference geometry/atom order/box differs from committed bytes")
+    return scalar_reference(distance)
+
+
 def report_path(output: Path) -> Path:
     output.mkdir(parents=True, exist_ok=False)
     return output / "gate.json"
@@ -94,6 +115,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--gmx", type=Path, help="absolute path to an operator-approved executable")
     parser.add_argument("--expected-sha256", help="independently reviewed executable SHA-256")
+    parser.add_argument("--runtime-binding", type=Path,
+                        help="reviewed manifest for native artifact retention; executable/build/dependency hashes")
     parser.add_argument("--output", required=True, type=Path, help="new, outside-checkout evidence directory")
     args = parser.parse_args(argv)
     repo = Path(__file__).resolve().parents[1]
@@ -111,11 +134,27 @@ def main(argv: list[str] | None = None) -> int:
         "physical_validation": "not_performed", "computation_proof": "not_performed",
         "equipment_authority": False, "uncertainty": "unavailable",
         "numerical_policy": POLICY, "runtime": None, "cases": [],
+        "runtime_artifact_binding": "requested" if args.runtime_binding else "not_requested",
         "scope": "existing_single_point_runner_not_full_NET_Session_qualification",
     }
     exit_code = 2
     try:
-        if args.gmx is None or args.expected_sha256 is None:
+        manifest = None
+        binding_missing = args.runtime_binding is not None and not args.runtime_binding.is_file()
+        if args.runtime_binding is not None and not binding_missing:
+            runtime_root = repo / "instruments/execution/compute-runtime"
+            sys.path.insert(0, str(runtime_root))
+            from execution.gromacs_artifacts import read_bytes, strict_json, validate_manifest
+            manifest = validate_manifest(strict_json(read_bytes(args.runtime_binding)))
+            if args.gmx is not None and str(args.gmx.absolute()) != manifest["executable"]["path"]:
+                raise ValueError("--gmx contradicts the reviewed runtime manifest")
+            if args.expected_sha256 is not None and args.expected_sha256 != manifest["executable"]["sha256"]:
+                raise ValueError("--expected-sha256 contradicts the reviewed runtime manifest")
+            args.gmx = Path(manifest["executable"]["path"])
+            args.expected_sha256 = manifest["executable"]["sha256"]
+        if binding_missing:
+            report["blocker"] = "explicit runtime-binding manifest is unavailable; no provider was invoked"
+        elif args.gmx is None or args.expected_sha256 is None:
             report["blocker"] = "supply both --gmx and --expected-sha256; no provider was invoked"
         elif not args.gmx.is_absolute() or not args.gmx.is_file():
             report["blocker"] = "the explicitly bound absolute GROMACS executable is unavailable"
@@ -130,10 +169,16 @@ def main(argv: list[str] | None = None) -> int:
             actual = gmx_binary_sha256(args.gmx)
             if actual != args.expected_sha256:
                 raise ValueError("GROMACS executable differs from the reviewed SHA-256")
-            version = gmx_version_line(args.gmx)
+            # Bound mode's version probe is performed inside the retained runner,
+            # after every declared runtime file is checked. Do not make an
+            # unretained probe before the bound environment has been validated.
+            version = gmx_version_line(args.gmx) if manifest is None else manifest["version_line"]
             report["runtime"] = {"executable_sha256": actual, "version_line": version,
                                  "cpu_only": True, "threads": 1, "max_warnings": 0}
-            program = gromacs_program_descriptor(version, TOPOLOGY)
+            program = gromacs_program_descriptor(version, TOPOLOGY, runtime_manifest=manifest)
+            if manifest is not None:
+                from execution.gromacs_artifacts import manifest_digest, validate_receipt
+                report["runtime"]["manifest_sha256"] = manifest_digest(manifest)
             previous = None
             for index, distance in enumerate((0.3, 0.4, 0.8, 0.4)):
                 case_dir = output / f"case-{index}"
@@ -149,7 +194,14 @@ def main(argv: list[str] | None = None) -> int:
                 report["cases"].append(row)
                 result = run_gromacs_specification(
                     specification, args.gmx, expected_binary_sha256=args.expected_sha256,
-                    max_warnings=0, cpu_only=True)
+                    max_warnings=0, cpu_only=True, runtime_manifest=manifest,
+                    artifact_directory=None if manifest is None else case_dir / "native")
+                if manifest is not None:
+                    receipt = validate_receipt(case_dir / "native")
+                    if receipt["result"]["computation_identity"] != result.computation_identity:
+                        raise ValueError("retained receipt differs from live computation")
+                    row["native_receipt_sha256"] = receipt["receipt_sha256"]
+                    row["native_execution_id"] = receipt["execution_id"]
                 row.update(status=result.status, exit_code=result.exit_code,
                            program_identity=result.program_identity, input_identity=result.input_identity,
                            output_identity=result.output_identity, computation_identity=result.computation_identity,
@@ -158,12 +210,16 @@ def main(argv: list[str] | None = None) -> int:
                     raise RuntimeError(f"GROMACS case {index} halted: {result.detail}")
                 (case_dir/"result.bin").write_bytes(result.output)
                 actual_energy = float(result.output.split()[1])
-                expected = scalar_reference(distance)
+                expected = reference_for_specification(specification)
                 passed = math.isfinite(actual_energy) and math.isclose(actual_energy, expected,
                            rel_tol=POLICY["energy_rtol"], abs_tol=POLICY["energy_atol_kj_mol"])
                 row["comparison"] = {"comparison_id":"comparison-" + uuid4().hex,
                     "status":"PASS" if passed else "FAIL", "observed_kj_mol":actual_energy,
-                    "reference_kj_mol":expected, "residual_kj_mol":actual_energy-expected}
+                    "reference_kj_mol":expected, "residual_kj_mol":actual_energy-expected,
+                    "specification_identity":specification.identity(),
+                    "input_sha256":hashlib.sha256(specification.input_payload).hexdigest(),
+                    "output_identity":result.output_identity,
+                    "computation_identity":result.computation_identity}
                 if not passed:
                     raise RuntimeError(f"GROMACS case {index} failed independent scalar comparison")
                 if index == 1:
@@ -173,6 +229,8 @@ def main(argv: list[str] | None = None) -> int:
             report["status"] = "PASS"
             exit_code = 0
     except Exception as exc:
+        if report["cases"] and report["cases"][-1]["status"] == "started":
+            report["cases"][-1]["status"] = "failed"
         report.update(status="FAIL", error={"type":type(exc).__name__,"message":str(exc)})
         exit_code = 1
     finally:

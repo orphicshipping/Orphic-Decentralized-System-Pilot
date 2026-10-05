@@ -4,9 +4,10 @@ on:
   pull_request:
     paths:
       - 'instruments/execution/compute-runtime/execution/**'
-      - 'instruments/execution/compute-runtime/tests/test_gromacs_boundary.py'
+      - 'instruments/execution/compute-runtime/tests/test_gromacs_*.py'
       - 'scripts/check_gromacs.py'
       - 'docs/GROMACS.md'
+      - 'docs/GROMACS_RETENTION.md'
       - '.github/workflows/net-gromacs-boundary.yml'
   workflow_dispatch:
 
@@ -36,7 +37,7 @@ jobs:
         working-directory: instruments/execution/compute-runtime
         env:
           PYTHONPATH: .
-        run: python -m pytest -q tests/test_gromacs_boundary.py --junitxml="$RUNNER_TEMP/gromacs-boundary.xml"
+        run: python -m pytest -q tests/test_gromacs_boundary.py tests/test_gromacs_artifacts.py --junitxml="$RUNNER_TEMP/gromacs-boundary.xml"
       - name: Missing binding remains NOT_RUN, not native qualification
         run: |
           python - <<'PY'

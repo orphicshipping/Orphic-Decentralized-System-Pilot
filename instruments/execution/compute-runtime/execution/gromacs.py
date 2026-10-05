@@ -59,6 +59,7 @@ anything, and the dispatch declaration downstream says `simulation:`.
 
 from __future__ import annotations
 
+from contextlib import nullcontext
 import hashlib
 import math
 import pathlib
@@ -140,12 +141,18 @@ def gmx_binary_sha256(gmx_path: pathlib.Path) -> str:
     return digest.hexdigest()
 
 
-def gmx_version_line(gmx_path: pathlib.Path) -> str:
+def gmx_version_line(gmx_path: pathlib.Path, *, _retained=None) -> str:
     """Require a successful probe with exactly one unambiguous version line."""
     try:
+        command = [str(gmx_path), "-quiet", "--version"]
+        if _retained is not None:
+            _retained.before("version", command, None)
         proc = subprocess.run(
-            [str(gmx_path), "-quiet", "--version"], capture_output=True, timeout=60
+            command, capture_output=True, timeout=60,
+            **({} if _retained is None else _retained.process_options())
         )
+        if _retained is not None:
+            _retained.after("version", proc)
         if proc.returncode != 0:
             raise EngineProtocolError("GROMACS version probe exited unsuccessfully")
         lines = [line.strip() for line in proc.stdout.decode("utf-8").splitlines()
@@ -154,10 +161,12 @@ def gmx_version_line(gmx_path: pathlib.Path) -> str:
             raise EngineProtocolError("GROMACS must report exactly one version")
         return lines[0]
     except (OSError, UnicodeError, subprocess.TimeoutExpired) as exc:
+        if _retained is not None:
+            _retained.process_error("version", exc)
         raise EngineProtocolError("GROMACS version probe unavailable or malformed") from exc
 
 
-def _bind_runtime(spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only):
+def _bind_runtime(spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only, *, retained=None):
     if type(max_warnings) is not int or not 0 <= max_warnings <= 2:
         raise EngineProtocolError("max_warnings must be an explicit integer in 0..2")
     if type(cpu_only) is not bool:
@@ -172,30 +181,41 @@ def _bind_runtime(spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only
     if expected_binary_sha256 is not None and digest != expected_binary_sha256:
         raise EngineProtocolError("GROMACS executable differs from the operator pin")
     declared = spec.program.partition(_TOPOLOGY_MARKER)[0].split(b"\n")[1].decode("utf-8")
-    if gmx_version_line(path) != declared:
+    observed_version = (gmx_version_line(path) if retained is None
+                        else gmx_version_line(path, _retained=retained))
+    if observed_version != declared:
         raise EngineProtocolError("GROMACS runtime version differs from the descriptor")
     if gmx_binary_sha256(path) != digest:
         raise EngineProtocolError("GROMACS executable changed during the version probe")
     return path, digest
 
 
-def _checked_process(path, digest, args, *, base, stdin, timeout):
+def _checked_process(path, digest, args, *, base, stdin, timeout, retained=None):
     # The process is trusted, not sandboxed. A before/after digest is drift
     # detection, not race-free executable attestation or a resource sandbox.
     try:
         if gmx_binary_sha256(path) != digest:
             raise EngineProtocolError("GROMACS executable changed before a stage")
-        proc = subprocess.run([str(path), "-quiet", *args], cwd=base, input=stdin,
-                              capture_output=True, timeout=timeout)
+        command = [str(path), "-quiet", *args]
+        if retained is not None:
+            retained.before(args[0], command, stdin, base)
+        proc = subprocess.run(command, cwd=base, input=stdin,
+                              capture_output=True, timeout=timeout,
+                              **({} if retained is None else retained.process_options()))
+        if retained is not None:
+            retained.after(args[0], proc, base)
         if gmx_binary_sha256(path) != digest:
             raise EngineProtocolError("GROMACS executable changed during a stage")
         return proc
     except (OSError, subprocess.TimeoutExpired) as exc:
+        if retained is not None:
+            retained.process_error(args[0], exc)
         raise EngineProtocolError("GROMACS stage could not start or timed out") from exc
 
 
 def gromacs_program_descriptor(
-    version_line: str, topology: bytes, header: bytes = GROMACS_DESCRIPTOR_HEADER
+    version_line: str, topology: bytes, header: bytes = GROMACS_DESCRIPTOR_HEADER,
+    *, runtime_manifest: Optional[dict] = None,
 ) -> bytes:
     """Build the program bytes for a GROMACS workload.
 
@@ -208,7 +228,13 @@ def gromacs_program_descriptor(
     if (type(version_line) is not str or type(topology) is not bytes
             or type(header) is not bytes):
         raise EngineProtocolError("GROMACS descriptor requires version text and topology bytes")
-    program = header + b"\n" + version_line.encode("utf-8") + _TOPOLOGY_MARKER + topology
+    binding_line = b""
+    if runtime_manifest is not None:
+        from execution.gromacs_artifacts import BINDING_PREFIX, manifest_digest
+        if header != GROMACS_DESCRIPTOR_HEADER or runtime_manifest.get("version_line") != version_line:
+            raise EngineProtocolError("runtime manifest is bound to single-point/version only")
+        binding_line = b"\n" + BINDING_PREFIX + manifest_digest(runtime_manifest).encode("ascii")
+    program = header + b"\n" + version_line.encode("utf-8") + binding_line + _TOPOLOGY_MARKER + topology
     _split_descriptor(program, header)
     return program
 
@@ -220,7 +246,9 @@ def _split_descriptor(program: bytes, header: bytes) -> bytes:
         raise EngineProtocolError("unknown GROMACS workload descriptor")
     head, marker, topology = program.partition(_TOPOLOGY_MARKER)
     fields = head.split(b"\n")
-    if (not marker or not topology.strip() or len(fields) != 2 or fields[0] != header
+    bound = (len(fields) == 3 and header == GROMACS_DESCRIPTOR_HEADER
+             and re.fullmatch(rb"runtime-sha256:[0-9a-f]{64}", fields[2]) is not None)
+    if (not marker or not topology.strip() or (len(fields) != 2 and not bound) or fields[0] != header
             or not fields[1].startswith(b"GROMACS version")
             or not fields[1][len(b"GROMACS version"):].strip(b" :\t")
             or any(byte < 32 and byte != 9 for byte in fields[1])):
@@ -241,74 +269,94 @@ def run_gromacs_specification(
     expected_binary_sha256: Optional[str] = None,
     max_warnings: int = 2,
     cpu_only: bool = False,
+    runtime_manifest: Optional[dict] = None,
+    artifact_directory: Optional[pathlib.Path] = None,
 ) -> ExecutionResult:
     """Run one GROMACS single-point energy evaluation of `spec`.
 
     Every invocation is a fresh working directory and a fresh set of
-    processes; nothing persists between runs. The occurrence field is 0
-    with the same per-invocation meaning as the Rust CLI's."""
+    processes. Opt-in runtime_manifest/artifact_directory retain native bytes
+    and stage bindings without changing ExecutionResult. Legacy calls retain
+    their documented defaults and narrower evidence boundary. The occurrence
+    field remains 0; the receipt has a separate per-invocation execution ID."""
     topology = _split_descriptor(spec.program, GROMACS_DESCRIPTOR_HEADER)
-    gmx_path, binary_digest = _bind_runtime(
-        spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only)
+    bound_descriptor = len(spec.program.partition(_TOPOLOGY_MARKER)[0].split(b"\n")) == 3
+    if runtime_manifest is None and artifact_directory is None and not bound_descriptor:
+        context = nullcontext(None)
+    else:
+        if runtime_manifest is None or artifact_directory is None or not bound_descriptor:
+            raise EngineProtocolError("retained execution requires manifest, bound descriptor and new artifact directory")
+        from execution.gromacs_artifacts import RetainedRun
+        context = RetainedRun(spec, gmx_path, runtime_manifest, artifact_directory,
+                              expected_binary_sha256, max_warnings, cpu_only)
+    with context as retained:
+        gmx_path, binary_digest = _bind_runtime(
+            spec, gmx_path, expected_binary_sha256, max_warnings, cpu_only, retained=retained)
 
-    def _result(status, exit_code, output=None, detail=None):
-        output_identity = None
-        computation_identity = None
-        if output is not None:
-            output_identity = commit_hex(OUTPUT_TAG, [output])
-            computation_identity = commit_hex(
-                COMPUTATION_TAG,
-                [
-                    bytes.fromhex(spec.program_identity()),
-                    bytes.fromhex(spec.input_identity()),
-                    bytes.fromhex(output_identity),
-                    canonical_u32(exit_code),
-                ],
+        def _result(status, exit_code, output=None, detail=None):
+            output_identity = None
+            computation_identity = None
+            if output is not None:
+                output_identity = commit_hex(OUTPUT_TAG, [output])
+                computation_identity = commit_hex(
+                    COMPUTATION_TAG,
+                    [
+                        bytes.fromhex(spec.program_identity()),
+                        bytes.fromhex(spec.input_identity()),
+                        bytes.fromhex(output_identity),
+                        canonical_u32(exit_code),
+                    ],
+                )
+            result = ExecutionResult(
+                specification=spec, specification_identity=spec.identity(),
+                program_identity=spec.program_identity(), input_identity=spec.input_identity(),
+                engine_occurrence=0, status=status, exit_code=exit_code,
+                output=output, output_identity=output_identity,
+                computation_identity=computation_identity, detail=detail,
             )
-        return ExecutionResult(
-            specification=spec, specification_identity=spec.identity(),
-            program_identity=spec.program_identity(), input_identity=spec.input_identity(),
-            engine_occurrence=0, status=status, exit_code=exit_code,
-            output=output, output_identity=output_identity,
-            computation_identity=computation_identity, detail=detail,
-        )
+            if retained is not None:
+                retained.record_result(result)
+            return result
 
-    with tempfile.TemporaryDirectory(dir=workdir) as tmp:
-        base = pathlib.Path(tmp)
-        (base / "system.top").write_bytes(topology)
-        (base / "conf.gro").write_bytes(spec.input_payload)
-        (base / "run.mdp").write_bytes(spec.configuration)
+        with tempfile.TemporaryDirectory(dir=workdir) as tmp:
+            base = pathlib.Path(tmp)
+            (base / "system.top").write_bytes(topology)
+            (base / "conf.gro").write_bytes(spec.input_payload)
+            (base / "run.mdp").write_bytes(spec.configuration)
 
-        def _gmx(args, stdin=None):
-            return _checked_process(gmx_path, binary_digest, args, base=base,
-                                    stdin=stdin, timeout=300)
+            def _gmx(args, stdin=None):
+                return _checked_process(gmx_path, binary_digest, args, base=base,
+                                        stdin=stdin, timeout=300, retained=retained)
 
-        grompp = _gmx(["grompp", "-f", "run.mdp", "-c", "conf.gro",
-                       "-p", "system.top", "-o", "run.tpr", "-maxwarn", str(max_warnings)])
-        if grompp.returncode != 0:
-            return _result("halted", FAULT_GROMPP,
-                           detail=grompp.stderr.decode(errors="replace")[-400:])
-        mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"]
-                      + (["-nb", "cpu", "-pme", "cpu", "-bonded", "cpu", "-update", "cpu"]
-                         if cpu_only else []))
-        if mdrun.returncode != 0:
-            return _result("halted", FAULT_MDRUN,
-                           detail=mdrun.stderr.decode(errors="replace")[-400:])
-        energy = _gmx(["energy", "-f", "run.edr", "-o", "energy.xvg"],
-                      stdin=b"Potential\n")
-        if energy.returncode != 0:
-            return _result("halted", FAULT_ENERGY,
-                           detail=energy.stderr.decode(errors="replace")[-400:])
+            grompp = _gmx(["grompp", "-f", "run.mdp", "-c", "conf.gro",
+                           "-p", "system.top", "-o", "run.tpr", "-maxwarn", str(max_warnings)]
+                           + (["-po", "effective.mdp", "-pp", "processed.top"] if retained is not None else []))
+            if grompp.returncode != 0:
+                return _result("halted", FAULT_GROMPP,
+                               detail=grompp.stderr.decode(errors="replace")[-400:])
+            mdrun = _gmx(["mdrun", "-s", "run.tpr", "-deffnm", "run", "-nt", "1"]
+                          + (["-nb", "cpu", "-pme", "cpu", "-bonded", "cpu", "-update", "cpu"]
+                             if cpu_only else []))
+            if mdrun.returncode != 0:
+                return _result("halted", FAULT_MDRUN,
+                               detail=mdrun.stderr.decode(errors="replace")[-400:])
+            energy = _gmx(["energy", "-f", "run.edr", "-o", "energy.xvg"],
+                          stdin=b"Potential\n")
+            if energy.returncode != 0:
+                return _result("halted", FAULT_ENERGY,
+                               detail=energy.stderr.decode(errors="replace")[-400:])
 
-        try:
-            data_lines = _energy_lines(base / "energy.xvg", single=True)
-        except (OSError, ValueError, UnicodeError) as exc:
-            return _result("halted", FAULT_PARSE, detail=str(exc)[-400:])
-        # gmx's own text for the value, verbatim -- our one canonical
-        # output encoding for this workload, with no re-formatting.
-        potential_text = data_lines[0].split()[1]
-        output = b"potential_kj_per_mol " + potential_text.encode("ascii")
-        return _result("completed", 0, output=output)
+            try:
+                data_lines = _energy_lines(base / "energy.xvg", single=True)
+                if retained is not None and _finite_number(data_lines[0].split()[0]) != 0.0:
+                    raise ValueError("bound nsteps=0 result must report time zero")
+            except (OSError, ValueError, UnicodeError) as exc:
+                return _result("halted", FAULT_PARSE, detail=str(exc)[-400:])
+            # gmx's own text for the value, verbatim -- our one canonical
+            # output encoding for this workload, with no re-formatting.
+            potential_text = data_lines[0].split()[1]
+            output = b"potential_kj_per_mol " + potential_text.encode("ascii")
+            return _result("completed", 0, output=output)
 
 
 def _run_series_workload(
