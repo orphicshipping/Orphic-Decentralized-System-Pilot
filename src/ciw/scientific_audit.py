@@ -13,6 +13,8 @@ from pathlib import Path
 # Keys refer to the existing operator catalog. Values name review evidence;
 # they cannot introduce commands, workflows, providers, or executable bindings.
 COMMAND_REVIEWS = {
+    "data": "data_integration_matrix", "domains": "extension_dependencies",
+    "hoomd": "hoomd", "product-study": "product_study",
     "refurb": "refurbishment_cli", "bench": "hardware_bench_cli",
     "hardware": "hardware_workflow",
     "catalog": "operator_catalog", "doctor": "operator_doctor",
@@ -180,6 +182,14 @@ def audit(*, repository: Path | None = None, inventory: dict | None = None) -> d
                  "detail": "Portable model and verification metadata are not a general mathematical proof or independent qualification."},
                 {"id": "inventory_boundary", "status": "explicit_scope_limit",
                  "detail": "This gate covers indexed CLI commands and Workbench workflows; nested subcommands, library functions and provider-internal operations need their existing domain suites."},
+                {"id": "retained_data_scope", "status": "explicit_scope_limit",
+                 "detail": "Data references cover bounded typed retention and declared consumer mappings; source retention does not establish physical validity or complete corpus integration."},
+                {"id": "optional_domains_scope", "status": "explicit_scope_limit",
+                 "detail": "The public domains reference covers extension dependency boundaries, not private provider numerical or platform qualification. Providers require explicit installation and separate native evidence."},
+                {"id": "particle_runtime_scope", "status": "explicit_scope_limit",
+                 "detail": "HOOMD references cover the bounded explicit runtime contract; native CPU execution, GPU support and physical material validation remain separate qualifications."},
+                {"id": "product_study_scope", "status": "explicit_scope_limit",
+                 "detail": "Product-study review preserves preliminary requirements and calculation evidence; it does not authorize manufacturing, shipment or physical acceptance."},
                 {"id": "test_evidence", "status": "not_executed",
                  "detail": "References identify checks to run; file existence supplies no pass/fail, source revision or installation qualification evidence."}],
             "issues": issues}
