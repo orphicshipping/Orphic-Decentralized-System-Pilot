@@ -113,12 +113,24 @@ for source, retained validation records and open gates.
 | JuMP / HiGHS | Bounded quadratic-design optimization. |
 | JuliaIntervals family | Bounded interval-enclosure profile. |
 | NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Added external atomistic-simulation and ML interatomic-potential provider target. Upstream documents batched molecular dynamics, relaxation and model training/fine-tuning. **Planning guide / contract only: NET adapter, environment binding, independent numerical validation and polymer/physical qualification remain pending.** See [NVALCHEMI.md](NVALCHEMI.md). |
+| OpenTelemetry / OTLP | Selected standard operational telemetry contract, separate from scientific evidence, computation, verification and control identities. **Planning guide / contract only:** optional instrumentation and failure-isolation gates are not yet implemented by this addition. See [OPERATIONAL_OBSERVABILITY.md](OPERATIONAL_OBSERVABILITY.md). |
+| OpenTelemetry Collector | Selected backend-independent receiver/processor/exporter boundary for operational signals. **Planning guide / contract only:** deployment, privacy, queue/loss and backend-substitution qualification remain pending. See [OPERATIONAL_OBSERVABILITY.md](OPERATIONAL_OBSERVABILITY.md). |
+| OpenObserve | First self-hostable operational-observability backend target, not the NET State Ledger or a scientific authority. **Planning guide / contract only:** exact-version end-to-end ingestion and deployment qualification remain pending; profiles stay opt-in/development-status. See [OPERATIONAL_OBSERVABILITY.md](OPERATIONAL_OBSERVABILITY.md). |
 
 ALCHEMI extends the molecular/materials layer; it does not replace existing
 Julia/native providers, continuum solvers, NET evidence ownership or machine
 controller authority. Its Python-facing API remains inside an optional provider
 boundary. This catalog entry does not install the toolkit, register an operation
 or authorize training, model downloads, remote data transfer or execution.
+
+Operational-observability inventory addition: **2026-10-05**. OTel/OTLP and the
+Collector describe the operational interface; OpenObserve is a replaceable
+backend target. The existing scientific `ciw.telemetry.v1` workflow and OIT
+observability/identifiability are unchanged. This selection does not install an
+SDK, enable network export, create an operation or evidence schema, modify
+scientific retention, or grant control authority. See the
+[operational-observability contract](OPERATIONAL_OBSERVABILITY.md) for correlation,
+offline/failure isolation, security, signal maturity and acceptance gates.
 
 ## The collapse rule for loose tooling
 
