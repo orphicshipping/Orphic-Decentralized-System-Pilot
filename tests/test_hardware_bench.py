@@ -210,6 +210,7 @@ def test_verification_never_uses_executable_fields_in_recorded_smart_input(monke
     bench.validate_assessment_binding(bundle['request'],[bundle['evidence']])
 
 
+@pytest.mark.skipif(sys.platform not in {'win32', 'linux'}, reason='Local inventory collector supports Windows and Linux only')
 def test_fixed_system_collector_reads_the_current_supported_platform(monkeypatch):
     # Read-only host inventory; never print or retain its sensitive identifiers.
     system = bench.platform.system()
