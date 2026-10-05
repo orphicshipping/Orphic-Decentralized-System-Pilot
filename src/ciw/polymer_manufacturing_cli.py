@@ -13,8 +13,13 @@ from .polymer_microfab import compile_configuration
 
 
 def main(argv=None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["study"]:
+        from .manufacturing_study import main as study_main
+        return study_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net polymer manufacture", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("study", help="Bind an engineering study to lot/part/inspection evidence")
     for name in ("example", "demo"):
         command = commands.add_parser(name)
         command.add_argument("--output", type=Path, required=True)
