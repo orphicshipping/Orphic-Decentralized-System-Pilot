@@ -425,7 +425,8 @@ def _cooling_oracle(request):
     prediction = ambient+delta*decay
     relative_tau_variance = sum((u[name]/p[name])**2 for name in (
         "density_kg_m3", "heat_capacity_j_kg_k", "volume_m3", "area_m2", "heat_transfer_w_m2_k"))
-    prediction_variance = (decay*u_initial)**2+((1-decay)*u_ambient)**2+(delta*decay*elapsed*rate)**2*relative_tau_variance
+    # Evaluate the small boundary derivative without subtracting from one.
+    prediction_variance = (decay*u_initial)**2+(-math.expm1(-rate*elapsed)*u_ambient)**2+(delta*decay*elapsed*rate)**2*relative_tau_variance
     timing = request["clock"]["max_skew_s"]
     temperature_bound = delta*decay*math.expm1(min(timing/tau, 700.0))
     if not math.isfinite(temperature_bound) or temperature_bound > thi-tlo:

@@ -1,0 +1,40 @@
+{
+  "schema": "ciw.polymer-rheology-request.v1",
+  "model": "uniaxial-generalized-maxwell-isothermal.v1",
+  "material_id": "synthetic.polymer.spectrum",
+  "source_kind": "synthetic",
+  "parameter_source_ref": "sha256:3f315c7dae43a1a8720619d7469800a1d27d9575d928422c3ca6c646b4699d1b",
+  "temperature_k": 300.0,
+  "equilibrium_modulus_pa": 1000000.0,
+  "modes": [
+    {
+      "mode_id": "fast",
+      "modulus_pa": 2000000.0,
+      "relaxation_time_s": 0.1
+    },
+    {
+      "mode_id": "slow",
+      "modulus_pa": 3000000.0,
+      "relaxation_time_s": 10.0
+    }
+  ],
+  "step_strain": 0.01,
+  "time_s": [
+    0.0,
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "angular_frequency_rad_s": [
+    0.0,
+    0.001,
+    0.01,
+    0.1,
+    1.0,
+    10.0,
+    1000.0
+  ]
+}

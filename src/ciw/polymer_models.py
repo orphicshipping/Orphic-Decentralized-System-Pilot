@@ -213,7 +213,8 @@ def _cooling(request, model):
     decay = math.exp(-elapsed / tau)
     delta = t0 - ta
     predicted = ta + delta * decay
-    uncertainty = math.hypot(decay * u0, (1.0 - decay) * ua,
+    # Keep the boundary sensitivity when exp(-elapsed/tau) rounds to one.
+    uncertainty = math.hypot(decay * u0, -math.expm1(-elapsed / tau) * ua,
                              delta * decay * (elapsed / tau) * relative_tau_uncertainty)
     # Clock skew is a declared bound, not an invented statistical uncertainty.
     timing_bound = request["clock"]["max_skew_s"]

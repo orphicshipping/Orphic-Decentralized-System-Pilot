@@ -14,11 +14,15 @@ from . import polymer_operator as operator
 
 def main(argv=None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["rheology"]:
+        from .polymer_rheology_cli import main as rheology_main
+        return rheology_main(argv[1:])
     if argv[:1] == ["leakage"]:
         from .leakage_cli import main as leakage_main
         return leakage_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net polymer", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("rheology", help="Bounded relaxation and harmonic response with independent audit")
     commands.add_parser("leakage", help="Retained fluid and material-loss balances on the pinned native engine")
     example = commands.add_parser("example")
     example.add_argument("--process", choices=sorted(PROCESSES), default="injection_molding")
