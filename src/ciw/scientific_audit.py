@@ -22,6 +22,7 @@ COMMAND_REVIEWS = {
     "compose": "workflow_algebra", "fluid": "fluid_independent_audit",
     "irrigation": "irrigation_workflow", "polymer leakage": "leakage_workflow",
     "system": "system_workflow",
+    "reference-compare": "reference_comparison", "timing": "transport_timing",
     "dsp": "dsp", "impact": "impact_workflow", "lab": "preservation_experiments",
     "foundry": "foundry", "atmosphere": "atmosphere_integration_audit",
     "object": "computational_objects", "semantic": "semantic_capabilities",
