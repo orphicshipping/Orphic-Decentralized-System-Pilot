@@ -80,6 +80,7 @@ jobs:
           "$HARDWARE_PYTHON" -m pip install dist/*.whl
           "$HARDWARE_PYTHON" -I scripts/check_hardware_installed.py --python "$HARDWARE_PYTHON" --net "$HARDWARE_NET" --wheel dist/*.whl --output-dir "$RUNNER_TEMP/installed-hardware-smoke"
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
         with:
           name: hardware-${{ matrix.os }}-${{ matrix.python }}
           path: |

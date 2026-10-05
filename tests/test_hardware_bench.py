@@ -210,14 +210,34 @@ def test_verification_never_uses_executable_fields_in_recorded_smart_input(monke
     bench.validate_assessment_binding(bundle['request'],[bundle['evidence']])
 
 
-@pytest.mark.skipif(sys.platform != 'win32', reason='Windows system collector integration')
-def test_windows_fixed_system_collector_has_its_required_modules(monkeypatch):
+@pytest.mark.skipif(sys.platform not in {'win32', 'linux'}, reason='Local inventory collector supports Windows and Linux only')
+def test_fixed_system_collector_reads_the_current_supported_platform(monkeypatch):
     # Read-only host inventory; never print or retain its sensitive identifiers.
-    monkeypatch.setenv('PSModulePath', 'nonexistent-untrusted-module-path')
+    system = bench.platform.system()
+    assert system in {'Windows', 'Linux'}, 'Inventory integration requires a supported host'
+    if system == 'Windows':
+        monkeypatch.setenv('PSModulePath', 'nonexistent-untrusted-module-path')
     record = bench.capture_inventory('INVENTORY-TEST', 'automated local collector test')
     assert record['status'] == 'available', record['reason']
-    assert set(record['groups']) == {'system','os','processors','memory','storage'}
-    assert any(group['status'] == 'available' for group in record['groups'].values())
+    assert record['platform'] == system
+    assert record['sensitive_identifiers'] == 'local_only'
+    assert record['authority']['physical_validation'] == 'not_established'
+    raw_digest = bench.bytes_ref(base64.b64decode(record['raw_base64']))
+    assert record['raw_sha256'] == raw_digest
+    if system == 'Windows':
+        assert set(record['groups']) == {'system','os','processors','memory','storage'}
+        assert any(group['status'] == 'available' for group in record['groups'].values())
+    else:
+        assert set(record['groups']) == {'system','processors','memory','storage'}
+        assert record['groups']['storage']['status'] == 'available'
+        assert type(record['groups']['storage']['rows']) is list
+        assert record['groups']['memory']['proc_meminfo']['status'] == 'available'
+        cpu = record['groups']['processors']['logical_cpu_count']
+        assert cpu['status'] == 'available' and type(cpu['value']) is int and cpu['value'] > 0
+        # DMI identifiers may be unavailable to an unprivileged or virtual host.
+        assert set(record['groups']['system']) == {'manufacturer','model','serial_number'}
+        assert all(field['status'] in {'available','unavailable','error'}
+                   for field in record['groups']['system'].values())
 
 
 def test_all_failed_inventory_categories_do_not_report_success(monkeypatch,tmp_path):
