@@ -76,22 +76,65 @@ def _ref(ref, artifacts):
     return ref
 
 
-def _covariance_lineage(covariance, artifacts, covariance_index, forbidden, visiting=()):
+def _evidence_lineage(ref, artifacts, covariance_index, forbidden, visiting=(), checked=None):
+    """Follow explicit retained typed lineage, not the meaning of opaque bytes.
+
+    A covariance or observation-stream wrapper is not independent evidence when
+    its declared ancestry contains the withheld recording. Byte identities and
+    covariance identities remain distinct; both participate in cycle bounds.
+    """
+    _ref(ref, artifacts)
+    if ref in forbidden:
+        raise ValueError("Inference evidence references held-out data")
+    marker = "evidence:" + ref
+    if marker in visiting or len(visiting) > 32:
+        raise ValueError("Cyclic or excessive evidence lineage")
+    if checked is None:
+        checked = set()
+    if marker in checked:
+        return
+    try:
+        candidate = _json(artifacts[ref])
+    except (ValueError, UnicodeError):
+        return
+    if type(candidate) is not dict:
+        return
+    path = (*visiting, marker)
+    if candidate.get("schema") == "covariance-artifact.v1":
+        _covariance_lineage(candidate, artifacts, covariance_index, forbidden, path, checked)
+    elif candidate.get("schema") in {"ciw.observation-stream.v1", "ciw.observation.v1", "ciw.state.v1"}:
+        inspect_record(candidate)
+        rows = candidate["observations"] if candidate["schema"] == "ciw.observation-stream.v1" else [candidate]
+        for row in rows:
+            for source_ref in row["provenance"]["sources"]:
+                _evidence_lineage(source_ref, artifacts, covariance_index, forbidden, path, checked)
+            _covariance_lineage(row["uncertainty"], artifacts, covariance_index, forbidden, path, checked)
+    checked.add(marker)
+
+
+def _covariance_lineage(covariance, artifacts, covariance_index, forbidden, visiting=(), checked=None):
     if covariance is None:
         return
     validate_covariance_artifact(covariance)
     identity = covariance["covariance_id"]
     if identity in visiting or len(visiting) > 32:
         raise ValueError("Cyclic or excessive covariance lineage")
+    if checked is None:
+        checked = set()
+    if identity in checked:
+        return
     for ref in covariance["provenance"]["source_evidence_ids"]:
         _ref(ref, artifacts)
         if ref in forbidden:
             raise ValueError("Inference uncertainty references held-out data")
+        _evidence_lineage(ref, artifacts, covariance_index, forbidden,
+                          (*visiting, covariance["covariance_id"]), checked)
     for identity in covariance["provenance"]["source_covariance_ids"]:
         if identity not in covariance_index:
             raise ValueError("Unresolved source covariance identity")
         _covariance_lineage(covariance_index[identity], artifacts, covariance_index,
-                            forbidden, (*visiting, covariance["covariance_id"]))
+                            forbidden, (*visiting, covariance["covariance_id"]), checked)
+    checked.add(covariance["covariance_id"])
 
 
 def streams(source):
@@ -159,6 +202,8 @@ def _validate(source):
     reference_data = {source["series"]["core_reference"], reference_channel["raw_ref"], reference_channel["application_ref"]}
     if reference_data.intersection(refs):
         raise ValueError("Held-out recording cannot justify fitted inference parameters")
+    for ref in refs:
+        _evidence_lineage(ref, artifacts, covariance_index, reference_data)
     request = execution_request(source)
     count = len(request["inputs"])
     model_id = content_identity(request["model"])
@@ -203,6 +248,8 @@ def _validate(source):
                 _ref(ref, artifacts)
                 if name != "core_reference" and ref in reference_data:
                     raise ValueError("Inference recording references held-out data")
+                _evidence_lineage(ref, artifacts, covariance_index,
+                                  reference_data if name != "core_reference" else set())
             _covariance_lineage(row["uncertainty"], artifacts, covariance_index,
                                 reference_data if name != "core_reference" else set())
             x = row["value"]
@@ -239,6 +286,9 @@ def _validate(source):
         if not 0 <= number(acceptance["atol_k"]) <= 1000 or not 0 <= number(acceptance["rtol"]) <= 1:
             raise ValueError("Declare bounded nonnegative held-out error criteria")
         _ref(acceptance["criteria_ref"], artifacts)
+        if acceptance["criteria_ref"] in reference_data:
+            raise ValueError("Held-out recording cannot justify acceptance criteria")
+        _evidence_lineage(acceptance["criteria_ref"], artifacts, covariance_index, reference_data)
     return source
 
 
