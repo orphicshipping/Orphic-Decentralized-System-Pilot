@@ -1,0 +1,79 @@
+{
+  "schema": "net.published-experiment-software-qualification.v1",
+  "generated_at_utc": "2026-10-05T00:00:00Z",
+  "status": "not_run_on_current_main",
+  "scope": "Version-specific software reproduction of published calibrated-experiment data reductions.",
+  "tested_artifact": {
+    "distribution": "computational-instrumentation-workbench",
+    "version": "0.1.0",
+    "reference_kernel_git_revision": "0091492b9dc237b05c33cac77d2307115bd803b2",
+    "wheel_sha256": null,
+    "module_sha256": {
+      "temperature_processing": "f4dea340ebf3250ee8fca7c4a7d5f9b148f216c8f9dda58302ab8709bec73dea",
+      "calibrated_window": "49ff8049eda6ae470df7d0fb374e6e96e51dd3709439a11fbc6cdc8eaa502350"
+    },
+    "installed_package_files_matched_to_wheel": null,
+    "python": "3.12.13",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "summary": {
+    "cases": 147,
+    "passed": null,
+    "failed": null,
+    "thermocouple_nominal_range_C": [
+      200,
+      1000
+    ],
+    "GHP_budget_range_C": [
+      200,
+      700
+    ]
+  },
+  "runner_sha256": null,
+  "inputs_manifest_sha256": "fdcaab8ab0254c92c08352e6b977b93860e27ba3d27be4ace27d8fef496add8c",
+  "reference_kind": "Author-published workbook caches and printed table values; no outputs fitted to NET results.",
+  "harness_disclosures": [
+    "Affine checks are static linearized reference temperature plus published thermocouple deviation, converted to kelvin.",
+    "time_s=0 and zero covariance are harness-only placeholders required by private _sensor_output; their output is discarded. They do not declare actual time or zero measurement uncertainty.",
+    "Only nominal temperature is checked by affine cases; temperature uncertainty is not qualified.",
+    "The reference kernel revision identifies pinned module bytes; the runner does not independently attest the full wheel build provenance.",
+    "RSS uses the published diagonal-covariance reduction, not a physical independence claim.",
+    "Tolerances describe numerical reproduction/printed precision, not instrument accuracy or measurement uncertainty.",
+    "This current-main carry-forward contains no current benchmark result; the historical 147-case result remains metadata only."
+  ],
+  "not_qualified": [
+    "Full MCP admission, acquisition, retained execution and result-to-ledger delivery with these sources",
+    "NET thermal inverse model, core-temperature prediction, or leakage inventory assessment",
+    "Correlated uncertainty propagation against experimental covariance data",
+    "Independent held-out physical accuracy, repeatability or drift claims",
+    "Thermocouple reference serial/certificate chain missing from KRISS workbook",
+    "Use outside the exact tested source rows and numerical conditions",
+    "Current-main numerical reproduction until the external corpus and a current wheel are run and independently reviewed."
+  ],
+  "correction_status": "Source snapshots pinned; external corrections not continuously monitored. Source, fixture or module changes require rerun and review.",
+  "build_source_commit": "0091492b9dc237b05c33cac77d2307115bd803b2",
+  "build_method": "Current-main benchmark not run in this repository because the external corpus is operator-provisioned; build and run the wheel explicitly before treating results as current evidence.",
+  "source_data_distributed": false,
+  "full_results_retained_locally": false,
+  "integrity_regressions": {
+    "tests": 0,
+    "passed": 0,
+    "failed": 0,
+    "status": "not_run_on_current_main"
+  },
+  "historical_run": {
+    "source": "NET-metrology-corpus-0.2 qualification/report.json",
+    "reference_git_revision": "f59bd7569c26107f677956e58f2abbaefbf300c4",
+    "wheel_sha256": "93321a2814c4d9c65dcbf34b645f44e4248d9e9148a150a433cf298f30ed7b33",
+    "summary": "147 bounded cases passed in the historical run; this metadata is not the current run result."
+  },
+  "package_files_matched_to_build_source": 392,
+  "tested_harness_local_commit": null,
+  "tested_harness_tree": null,
+  "runtime_note": "Fresh wheel built after integrating main. All 392 packaged ciw files match the named source and installed runtime.",
+  "interruption_check": {
+    "exit_code": 130,
+    "retained_report_status": "interrupted",
+    "passing_counts_claimed": false
+  }
+}
