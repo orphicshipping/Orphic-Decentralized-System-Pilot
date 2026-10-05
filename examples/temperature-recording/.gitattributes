@@ -1,0 +1,4 @@
+# Preserve original acquisition-program bytes, including upstream whitespace.
+data.csv -text
+upstream-generate-data.py.txt -text -whitespace
+UPSTREAM-LICENSE.txt -text
