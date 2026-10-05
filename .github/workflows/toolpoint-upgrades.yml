@@ -1,0 +1,52 @@
+name: Installed native QC stream, store and studies
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/toolpoint_*.py'
+      - 'src/ciw/manufacturing*.py'
+      - 'src/ciw/polymer_*.py'
+      - 'src/ciw/net.py'
+      - 'src/ciw/core/identities.py'
+      - 'tests/test_toolpoint_*.py'
+      - 'tests/test_polymer_manufacturing.py'
+      - 'tests/test_polymer_toolpoint_qc.py'
+      - 'scripts/check_toolpoint_upgrades_installed.py'
+      - 'pyproject.toml'
+      - '.github/workflows/toolpoint-upgrades.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  qualify:
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
+    # SIGKILL and local SQLite interruption qualification is Linux-specific.
+    # The unchanged manufacturing/QC foundation has its separate Windows gate.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build exact candidate wheel
+        run: python -m pip wheel --no-deps . --wheel-dir dist
+      - name: Install candidate and pinned numerical test dependencies
+        run: python -c "import pathlib, subprocess, sys; wheels=list(pathlib.Path('dist').glob('*.whl')); assert len(wheels)==1; subprocess.check_call([sys.executable,'-m','pip','install',str(wheels[0])+'[dev,numerical-checks]'])"
+      - name: Qualify source, isolated installation and native commands
+        run: python scripts/check_toolpoint_upgrades_installed.py --wheel-dir dist --output-dir qualification-toolpoint-upgrades
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-qc-upgrades-py${{ matrix.python }}
+          path: |
+            qualification-toolpoint-upgrades/
+            dist/*.whl
+          if-no-files-found: error

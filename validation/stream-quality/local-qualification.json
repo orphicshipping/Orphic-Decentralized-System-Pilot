@@ -1,0 +1,183 @@
+{
+  "schema": "ciw.toolpoint-stream-local-qualification.v1",
+  "task_date": "2026-10-05",
+  "runtime_timestamp_utc": "2026-10-05T17:53:04.677787+00:00",
+  "base_attachment": "NET_Toolpoint_Quality_Control.zip",
+  "base_attachment_sha256": "dc3ecba1cf2e24deef344e668b0cdb2676b9a7025676ef0481beca2ec13509e3",
+  "native_evaluator_reference": {
+    "repository": "atomtrapping/Notations-Engineering-Terminal",
+    "pr": 177,
+    "commit": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+    "git_blob_sha1": "d44a637ea217c377c12d8f80fd12838ad891f739",
+    "path": "src/ciw/polymer_toolpoint_qc.py",
+    "bytes_verified": true,
+    "modified": false
+  },
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "pytest": "9.0.2"
+  },
+  "tests": {
+    "passed": 638,
+    "failed": 0,
+    "skipped": 1,
+    "new_passed": 304,
+    "baseline_passed": 334,
+    "skipped_scope": "Original full polymer dispatcher requires NET dependencies not in the focused snapshot",
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_toolpoint_stream.py tests/test_manufacturing_quality.py tests/test_polymer_manufacturing.py"
+  },
+  "new_module_coverage": {
+    "covered_lines": 526,
+    "num_statements": 545,
+    "percent_covered": 95.04447268106735,
+    "percent_covered_display": "95",
+    "missing_lines": 19,
+    "excluded_lines": 0,
+    "percent_statements_covered": 96.5137614678899,
+    "percent_statements_covered_display": "97",
+    "num_branches": 242,
+    "num_partial_branches": 20,
+    "covered_branches": 222,
+    "missing_branches": 20,
+    "percent_branches_covered": 91.73553719008264,
+    "percent_branches_covered_display": "92"
+  },
+  "source_sha256": {
+    "src/ciw/toolpoint_stream.py": "bf3e2e430fa5c3444e35a63a82468a92cfa6c519ed34a16b47087771526a871e",
+    "src/ciw/toolpoint_stream_cli.py": "e0b0a93bfacda906bce460a9e86a6a92a393aaa45bac219498baea1d721325dc",
+    "src/ciw/toolpoint_stream_containment.py": "c768b3950f541a47ab615d8f6195ebf1cf67392b7a940ccab65dd5e17fd55214",
+    "src/ciw/toolpoint_stream_example.py": "ecd95e94fd7e633ac678be9c6daf81213230b50474b5647eea2ef4aa7c261e55",
+    "tests/test_toolpoint_stream.py": "993d072403ea3b752d52f3dc8f8bc472bd7711a008d7582b475fdf05f20a1276"
+  },
+  "demonstrations": [
+    {
+      "case": "native-nominal",
+      "status": "NO_PROCESS_HOLD_IDENTIFIED",
+      "result_ref": "sha256:324ab414ad8239e1a680f3b84176514a3ab67c0de5b5fddd6c0881d9f5aa0f98",
+      "head_ref": "sha256:f74f6272fb2c601faed71a1c64f843ea76b8218cd7f6f97425b3b1a74ab8f6d0",
+      "findings": 0
+    },
+    {
+      "case": "native-late-unknown",
+      "status": "HELD",
+      "result_ref": "sha256:ffc5cdaf35916ceeb850f0f99405da5dcab457347b20237804f5e5c6de1c4fde",
+      "head_ref": "sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05",
+      "findings": 3
+    },
+    {
+      "case": "native-health-recovery",
+      "status": "HELD",
+      "result_ref": "sha256:7cfc3f5ededc757033dd409ef9b19f5a9d5424ea97f5ace841b99592e6d088c0",
+      "head_ref": "sha256:8d560438e8dacb4f5484dc9456d769ca8ca217a442caeee8e81f83d6a3b9c1d1",
+      "findings": 1
+    },
+    {
+      "case": "native-single-packet-fault",
+      "status": "HELD",
+      "result_ref": "sha256:b203f7d8ba44bebc885320c2707700b73297a63fd1dde4c3e63ff58401b4ce07",
+      "head_ref": "sha256:9d655cd75261567ce2136693591d41fa2e5b1a35cf3f1b2641d36443aa934add",
+      "findings": 2
+    },
+    {
+      "case": "native-high-nozzle",
+      "status": "HELD",
+      "result_ref": "sha256:0b18f1a81804f1bdae9f0d47e77b5acf65f6664d8f3cf5eead938d788814f143",
+      "head_ref": "sha256:35b96ddb1b29ba3c892fa8e003e558b096dfe1b2a8e4abab37f79e7c2ccd8e43",
+      "findings": 2
+    },
+    {
+      "case": "native-sampling-gap",
+      "status": "HELD",
+      "result_ref": "sha256:0ca2aee7f9625da61c19a73fd45bf9a27847915fbf195c8dcdcee993477ed94c",
+      "head_ref": "sha256:462e40f6d7622c04c15b0f889faf5fde389a6ff1c1147f82b16f9f9db434fc38",
+      "findings": 2
+    },
+    {
+      "case": "legacy-nominal",
+      "status": "NO_PROCESS_HOLD_IDENTIFIED",
+      "result_ref": "sha256:6c644bb63e0d1e853ef3e67e2bd06a58a338dae1ba85ee81de9e2f9a1f147714",
+      "head_ref": "sha256:1d292af1508be4c65fe6748cde5fac8e559cc70a3af80c033c862217b4343aa7",
+      "findings": 0
+    },
+    {
+      "case": "legacy-late-unknown",
+      "status": "HELD",
+      "result_ref": "sha256:0b4bbe32407ea81b55de7fa0b327c21e125026297bde2df2ccc15ee3c74e1f9d",
+      "head_ref": "sha256:4892f736760e2a333f36ab872562416a276be25763122d199f1fc45cdbcbf8e5",
+      "findings": 3
+    },
+    {
+      "case": "legacy-health-recovery",
+      "status": "HELD",
+      "result_ref": "sha256:d1be63c0d912d8ad8db84985488851f2f6f21c37d3c4630e0abde8611e10ce99",
+      "head_ref": "sha256:f6bf99b46852e482ae7e198ab3c2036b9dd568269c04badb0bf216b74348a628",
+      "findings": 1
+    },
+    {
+      "case": "legacy-single-packet-fault",
+      "status": "HELD",
+      "result_ref": "sha256:baf3fbc741d5c60ac803d2860371927f8218b67cf4190e57f47c6761a8e5c2d8",
+      "head_ref": "sha256:3a23cc2d21fb243a35a8411db126b969e4cd088e07eb63ae3f84c5281d200c94",
+      "findings": 2
+    },
+    {
+      "case": "legacy-high-nozzle",
+      "status": "HELD",
+      "result_ref": "sha256:d67064c5daa4beb7715da06af8bf760063ebe7311bea04a5af0e2a9be3a3a389",
+      "head_ref": "sha256:de616ec53e2660f5ab011dfbaf116b6464e243c6b0845e17822f3eab865fe555",
+      "findings": 2
+    },
+    {
+      "case": "legacy-sampling-gap",
+      "status": "HELD",
+      "result_ref": "sha256:542553878cf9ef8faffde5ef500e3cb0d3e48166ab038f96331787858855f727",
+      "head_ref": "sha256:93128f1819877031edd6d6280fc222857529cd331f55cd05cd57a796c4e13c85",
+      "findings": 2
+    }
+  ],
+  "genealogy_demo": {
+    "part_p002": {
+      "state": "HELD",
+      "finding_refs": [
+        "sha256:141a71c971f3e57c9cf62ca93b7a8a1aa7316866d5ea1f19c485e7fd17632499"
+      ],
+      "recorded_inspection": "PASS",
+      "recorded_disposition": "CONSUMED"
+    },
+    "assembly_a001": {
+      "state": "HELD",
+      "finding_refs": [
+        "sha256:141a71c971f3e57c9cf62ca93b7a8a1aa7316866d5ea1f19c485e7fd17632499"
+      ],
+      "recorded_inspection": "PASS",
+      "recorded_disposition": "PACKED"
+    },
+    "unrelated_p003": {
+      "state": "ELIGIBLE_FOR_REVIEW",
+      "finding_refs": [],
+      "recorded_inspection": "PASS",
+      "recorded_disposition": "PACKED"
+    },
+    "package": {
+      "state": "HELD",
+      "serials": [
+        "a001",
+        "p003"
+      ],
+      "shipment_release": "not_authorized"
+    }
+  },
+  "not_verified": [
+    "Full repository regressions",
+    "Current manufacturing-v2 integration journey",
+    "Installed wheel and top-level net command",
+    "Windows",
+    "Hosted CI",
+    "Live sensors or industrial fieldbuses",
+    "Physical detector performance or physical containment",
+    "Hard real-time timing"
+  ],
+  "repository_write": "not_performed",
+  "same_implementation_replay_is_independent_physical_validation": false
+}

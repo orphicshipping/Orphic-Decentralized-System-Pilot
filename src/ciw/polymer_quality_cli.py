@@ -12,8 +12,29 @@ from .polymer_toolpoint_qc import GOOD, evaluate, verify
 
 
 def main(argv=None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    # Fixed, local retained-data instruments; no dynamic plugin loading.
+    if argv[:1] == ["stream"]:
+        from .toolpoint_stream_cli import main as stream_main
+        return stream_main(argv[1:])
+    if argv[:1] == ["store"]:
+        from .toolpoint_store_cli import main as store_main
+        return store_main(argv[1:])
+    if argv[:1] == ["detector"]:
+        from .toolpoint_validation_cli import main as detector_main
+        return detector_main(argv[1:])
+    if argv[:1] == ["outcome"]:
+        from .toolpoint_outcome_cli import main as outcome_main
+        return outcome_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net polymer qc", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    for name, help_text in (
+        ("stream", "Append and replay bounded capture journals"),
+        ("store", "Persist anchored journals in a local SQLite cache"),
+        ("detector", "Evaluate frozen detector studies against declared inspections"),
+        ("outcome", "Compare deadline-bounded process evidence with declared outcomes"),
+    ):
+        commands.add_parser(name, help=help_text)
     for name in ("example", "demo", "assess", "verify"):
         command = commands.add_parser(name)
         command.add_argument("--output", type=Path, required=name == "example")

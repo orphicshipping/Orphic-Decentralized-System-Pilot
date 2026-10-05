@@ -1,0 +1,33 @@
+{
+  "schema": "ciw.toolpoint-upgrades-source-integration.v1",
+  "foundation_commit": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+  "bundles": [
+    {
+      "filename": "NET_QC_Durable_Store_Upgrade.zip",
+      "sha256": "1949c986f6e02d79ab0614461e3831e7dc992c1f90e4164aea0f4375d484ac7d",
+      "bytes": 387034
+    },
+    {
+      "filename": "NET_QC_Detector_Validation_Upgrade.zip",
+      "sha256": "5483e2858f6aeb8619ae26c1b49552afb5023e30b4bfa639015936ff8494d6b6",
+      "bytes": 610356
+    },
+    {
+      "filename": "NET_QC_Outcome_Bench_Upgrade.zip",
+      "sha256": "89d003959f3dad15b316ff55902fad5b3f4fd977c448a91b47bf8b3d20a033d9",
+      "bytes": 619112
+    }
+  ],
+  "application": "stream/store combined prerequisites once, then detector increment and outcome increment; no snapshot replacement",
+  "preserved_core_files": [
+    "src/ciw/manufacturing_quality.py",
+    "src/ciw/manufacturing_runtime.py",
+    "src/ciw/manufacturing_contracts.py",
+    "src/ciw/polymer_toolpoint_qc.py"
+  ],
+  "source_kind": "authored synthetic records",
+  "physical_qualification": "not_established",
+  "legacy_snapshot_adapter": "not copied or qualified",
+  "private_provider_source": "not included",
+  "initial_integration_foundation_commit": "16cb25b51b9fd7e02817b9b567464fd8c8c3dbf9"
+}

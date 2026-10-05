@@ -1,0 +1,581 @@
+{
+  "schema": "ciw.toolpoint-validation-request.v1",
+  "protocol": {
+    "schema": "ciw.toolpoint-validation-protocol.v1",
+    "study_id": "synthetic.qc-study",
+    "revision": "A",
+    "source_kind": "synthetic",
+    "monitoring_plan": {
+      "plan_id": "synthetic.stream.plan",
+      "revision": "A",
+      "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+      "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+      "clock_id": "synthetic.clock",
+      "rules": [
+        {
+          "rule_id": "sensor.cavity.1.pressure",
+          "sensor_id": "sensor.cavity.1",
+          "phase_id": "fill",
+          "feature": "peak",
+          "limits": {
+            "lower": 0,
+            "upper": 15000000,
+            "unit": "Pa"
+          },
+          "threshold": null,
+          "reference_curve": null
+        },
+        {
+          "rule_id": "sensor.cavity.2.pressure",
+          "sensor_id": "sensor.cavity.2",
+          "phase_id": "fill",
+          "feature": "peak",
+          "limits": {
+            "lower": 0,
+            "upper": 15000000,
+            "unit": "Pa"
+          },
+          "threshold": null,
+          "reference_curve": null
+        },
+        {
+          "rule_id": "sensor.nozzle.pressure",
+          "sensor_id": "sensor.nozzle",
+          "phase_id": "fill",
+          "feature": "peak",
+          "limits": {
+            "lower": 0,
+            "upper": 15000000,
+            "unit": "Pa"
+          },
+          "threshold": null,
+          "reference_curve": null
+        }
+      ],
+      "schema": "ciw.toolpoint-monitoring-plan.v1",
+      "source_kind": "synthetic",
+      "process": "injection_molding",
+      "frame": "synthetic.tool-frame",
+      "valid_from_s": 0,
+      "valid_until_s": 100,
+      "max_clock_skew_s": 0.001,
+      "max_sample_gap_s": 0.21,
+      "cavity_ids": [
+        "cavity.1",
+        "cavity.2"
+      ],
+      "reference_evidence_refs": [
+        "sha256:b566c02a643ecd5afdeee3c91cafa977fe8e6c0c46dcc48b005f5f3ac6caaf6e"
+      ],
+      "phases": [
+        {
+          "phase_id": "fill",
+          "start_s": 0,
+          "end_s": 0.8
+        }
+      ],
+      "sensors": [
+        {
+          "sensor_id": "sensor.cavity.1",
+          "quantity": "cavity_pressure",
+          "unit": "Pa",
+          "location": {
+            "kind": "end_of_fill",
+            "cavity_id": "cavity.1",
+            "gate_id": null
+          }
+        },
+        {
+          "sensor_id": "sensor.cavity.2",
+          "quantity": "cavity_pressure",
+          "unit": "Pa",
+          "location": {
+            "kind": "end_of_fill",
+            "cavity_id": "cavity.2",
+            "gate_id": null
+          }
+        },
+        {
+          "sensor_id": "sensor.nozzle",
+          "quantity": "melt_pressure",
+          "unit": "Pa",
+          "location": {
+            "kind": "nozzle",
+            "cavity_id": null,
+            "gate_id": null
+          }
+        }
+      ]
+    },
+    "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+    "inspection_method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+    "inspection_condition": "conditioned",
+    "frozen_at_s": 0,
+    "development_group_ids": [
+      "synthetic.development-run"
+    ],
+    "development_cycle_refs": [
+      "sha256:cdffa200c2cefe6920f040460eaf5e857ccfcbde1c38da8e811d7af4794b49ec"
+    ],
+    "target_rule_ids": [
+      "sensor.cavity.1.pressure",
+      "sensor.cavity.2.pressure",
+      "sensor.nozzle.pressure"
+    ],
+    "sampling_design": {
+      "mode": "independent_exchangeable_groups",
+      "evidence_ref": "sha256:78db4db5361bc2d3b11d60d2a2f7c69ed38ca41957a2ef67de38146f0ff63ef9"
+    },
+    "confidence": 0.95,
+    "minimum_defect_groups": 3,
+    "minimum_nondefect_groups": 3,
+    "minimum_timely_detection": 0.9,
+    "maximum_false_hold": 0.1,
+    "decision_deadline_s": 0.7,
+    "maximum_receipt_uncertainty_s": 0.02
+  },
+  "manifest": {
+    "schema": "ciw.toolpoint-validation-manifest.v1",
+    "manifest_id": "synthetic.enrollment.A",
+    "protocol_ref": "sha256:76df05ae6e47a601503ab475c51b61283df389b632d4886f67293dbade2d541a",
+    "sampling_frame_ref": "sha256:e22a5852efffc123448ca1d43e85bb378a5b87bc249a3e21d51dea38412c92b6",
+    "samples": [
+      {
+        "sample_id": "case.0.1",
+        "group_id": "synthetic.run.0",
+        "cycle_id": "synthetic.validation.cycle.0",
+        "cycle_ref": "sha256:dd5b340d3b0670e24f6b83168202488011deb496555d0410a487b43fdbaea458",
+        "cavity_id": "cavity.1",
+        "serial": "s0.1",
+        "started_at_s": 10,
+        "stream_spec_ref": "sha256:5d589658f0aedaf92452947a700a4a1a0ae8c8954caf2ba4ac592158e393bc5d",
+        "stream_head_ref": "sha256:55460e8bbf5f652b1f2a02f83aeea7e5ad294821c8fafab2690dc47c8591c8cf",
+        "mapping_evidence_ref": "sha256:c1ebcee0abf1dfe3d7e7e9adfc0b11c7b887dcdbee87bf97124f8dbb67e54c1c"
+      },
+      {
+        "sample_id": "case.0.2",
+        "group_id": "synthetic.run.0",
+        "cycle_id": "synthetic.validation.cycle.0",
+        "cycle_ref": "sha256:dd5b340d3b0670e24f6b83168202488011deb496555d0410a487b43fdbaea458",
+        "cavity_id": "cavity.2",
+        "serial": "s0.2",
+        "started_at_s": 10,
+        "stream_spec_ref": "sha256:5d589658f0aedaf92452947a700a4a1a0ae8c8954caf2ba4ac592158e393bc5d",
+        "stream_head_ref": "sha256:55460e8bbf5f652b1f2a02f83aeea7e5ad294821c8fafab2690dc47c8591c8cf",
+        "mapping_evidence_ref": "sha256:c1ebcee0abf1dfe3d7e7e9adfc0b11c7b887dcdbee87bf97124f8dbb67e54c1c"
+      },
+      {
+        "sample_id": "case.1.1",
+        "group_id": "synthetic.run.1",
+        "cycle_id": "synthetic.validation.cycle.1",
+        "cycle_ref": "sha256:fbbb873b51a39cf930932cebbbb7f7e277e8d25490f2cd2cb50305c944fe08b6",
+        "cavity_id": "cavity.1",
+        "serial": "s1.1",
+        "started_at_s": 12,
+        "stream_spec_ref": "sha256:d5c0d942951f05ad5b0db9a556b063788ddf4066843c1fb3acc5479d9f6d2dd6",
+        "stream_head_ref": "sha256:d6b3544b9c0c30d77f606fa3f05d9aa1e4df79564634000f3b09671cc8150cd2",
+        "mapping_evidence_ref": "sha256:bcfbcedba8360fb83e02eba4f1b3fc78f7cc4f538372ff7aa00887d9b52336ed"
+      },
+      {
+        "sample_id": "case.1.2",
+        "group_id": "synthetic.run.1",
+        "cycle_id": "synthetic.validation.cycle.1",
+        "cycle_ref": "sha256:fbbb873b51a39cf930932cebbbb7f7e277e8d25490f2cd2cb50305c944fe08b6",
+        "cavity_id": "cavity.2",
+        "serial": "s1.2",
+        "started_at_s": 12,
+        "stream_spec_ref": "sha256:d5c0d942951f05ad5b0db9a556b063788ddf4066843c1fb3acc5479d9f6d2dd6",
+        "stream_head_ref": "sha256:d6b3544b9c0c30d77f606fa3f05d9aa1e4df79564634000f3b09671cc8150cd2",
+        "mapping_evidence_ref": "sha256:bcfbcedba8360fb83e02eba4f1b3fc78f7cc4f538372ff7aa00887d9b52336ed"
+      },
+      {
+        "sample_id": "case.2.1",
+        "group_id": "synthetic.run.2",
+        "cycle_id": "synthetic.validation.cycle.2",
+        "cycle_ref": "sha256:2ee39145d2aff4cde6806c5551f6b846ebed58add19be64f9461c1e531450bfe",
+        "cavity_id": "cavity.1",
+        "serial": "s2.1",
+        "started_at_s": 14,
+        "stream_spec_ref": "sha256:fde766181d74fb166476cd14e5c8e3d95922ff174ca0e52f48cdc5477935c2f7",
+        "stream_head_ref": "sha256:a11d47cbf74d819506505a5c2af807cb9a50692746a90ef84f3494748a1e9acb",
+        "mapping_evidence_ref": "sha256:b8cdcef0f8629c5100a328bda05247e5a90d205e006d97800c7670a32e9bb055"
+      },
+      {
+        "sample_id": "case.2.2",
+        "group_id": "synthetic.run.2",
+        "cycle_id": "synthetic.validation.cycle.2",
+        "cycle_ref": "sha256:2ee39145d2aff4cde6806c5551f6b846ebed58add19be64f9461c1e531450bfe",
+        "cavity_id": "cavity.2",
+        "serial": "s2.2",
+        "started_at_s": 14,
+        "stream_spec_ref": "sha256:fde766181d74fb166476cd14e5c8e3d95922ff174ca0e52f48cdc5477935c2f7",
+        "stream_head_ref": "sha256:a11d47cbf74d819506505a5c2af807cb9a50692746a90ef84f3494748a1e9acb",
+        "mapping_evidence_ref": "sha256:b8cdcef0f8629c5100a328bda05247e5a90d205e006d97800c7670a32e9bb055"
+      },
+      {
+        "sample_id": "case.3.1",
+        "group_id": "synthetic.run.3",
+        "cycle_id": "synthetic.validation.cycle.3",
+        "cycle_ref": "sha256:c760207e8fef49ff58f11d630552b031a25fa50f88fbd2cb375a98c44ebd9d2e",
+        "cavity_id": "cavity.1",
+        "serial": "s3.1",
+        "started_at_s": 16,
+        "stream_spec_ref": "sha256:5e86eae55ff8b56955817e062f9e2124fcc235482605d7f2a390e4cc75df6e0f",
+        "stream_head_ref": "sha256:f74820f97fbed255866f963bda21244ee5e3e2a502090e7e0e87615ef0ba25a2",
+        "mapping_evidence_ref": "sha256:a97769a1037126b6eb649134e978e91def30793517cc185750213d79b3bf458d"
+      },
+      {
+        "sample_id": "case.3.2",
+        "group_id": "synthetic.run.3",
+        "cycle_id": "synthetic.validation.cycle.3",
+        "cycle_ref": "sha256:c760207e8fef49ff58f11d630552b031a25fa50f88fbd2cb375a98c44ebd9d2e",
+        "cavity_id": "cavity.2",
+        "serial": "s3.2",
+        "started_at_s": 16,
+        "stream_spec_ref": "sha256:5e86eae55ff8b56955817e062f9e2124fcc235482605d7f2a390e4cc75df6e0f",
+        "stream_head_ref": "sha256:f74820f97fbed255866f963bda21244ee5e3e2a502090e7e0e87615ef0ba25a2",
+        "mapping_evidence_ref": "sha256:a97769a1037126b6eb649134e978e91def30793517cc185750213d79b3bf458d"
+      },
+      {
+        "sample_id": "case.4.1",
+        "group_id": "synthetic.run.4",
+        "cycle_id": "synthetic.validation.cycle.4",
+        "cycle_ref": "sha256:8b094d8e7918ddccb680b27815b678e82ff8621c3b8e3c4f5d09fe6e9147bd90",
+        "cavity_id": "cavity.1",
+        "serial": "s4.1",
+        "started_at_s": 18,
+        "stream_spec_ref": "sha256:58875fdec550660c03c6f8f55a637983c377ac3aeda9392c28945dd11b17b86d",
+        "stream_head_ref": "sha256:de6ecc4d9357f19b9c687feaa4c2f64526631a2d6473e0d7c459dec5d3746324",
+        "mapping_evidence_ref": "sha256:ea40ea51d428b109742145029a2b6b070e876d45d85d09b6b04f0754a3301a16"
+      },
+      {
+        "sample_id": "case.4.2",
+        "group_id": "synthetic.run.4",
+        "cycle_id": "synthetic.validation.cycle.4",
+        "cycle_ref": "sha256:8b094d8e7918ddccb680b27815b678e82ff8621c3b8e3c4f5d09fe6e9147bd90",
+        "cavity_id": "cavity.2",
+        "serial": "s4.2",
+        "started_at_s": 18,
+        "stream_spec_ref": "sha256:58875fdec550660c03c6f8f55a637983c377ac3aeda9392c28945dd11b17b86d",
+        "stream_head_ref": "sha256:de6ecc4d9357f19b9c687feaa4c2f64526631a2d6473e0d7c459dec5d3746324",
+        "mapping_evidence_ref": "sha256:ea40ea51d428b109742145029a2b6b070e876d45d85d09b6b04f0754a3301a16"
+      },
+      {
+        "sample_id": "case.5.1",
+        "group_id": "synthetic.run.5",
+        "cycle_id": "synthetic.validation.cycle.5",
+        "cycle_ref": "sha256:aadc9b72d1431e011a723f376897557eda033433ec604d9613870f4e684b2558",
+        "cavity_id": "cavity.1",
+        "serial": "s5.1",
+        "started_at_s": 20,
+        "stream_spec_ref": "sha256:d77ffe2c8ec9b5d79390982526e322d4f21eeb2f59ba0b43bac9643d5af25bad",
+        "stream_head_ref": "sha256:5afb810b7b68844182ed719362e60da8d3223b7eb3852f652be60987b1c5f6ec",
+        "mapping_evidence_ref": "sha256:c4402a1e7d5ae9a343454b67ff5af3da456eb966f1ddcde34fad8f287e6578bf"
+      },
+      {
+        "sample_id": "case.5.2",
+        "group_id": "synthetic.run.5",
+        "cycle_id": "synthetic.validation.cycle.5",
+        "cycle_ref": "sha256:aadc9b72d1431e011a723f376897557eda033433ec604d9613870f4e684b2558",
+        "cavity_id": "cavity.2",
+        "serial": "s5.2",
+        "started_at_s": 20,
+        "stream_spec_ref": "sha256:d77ffe2c8ec9b5d79390982526e322d4f21eeb2f59ba0b43bac9643d5af25bad",
+        "stream_head_ref": "sha256:5afb810b7b68844182ed719362e60da8d3223b7eb3852f652be60987b1c5f6ec",
+        "mapping_evidence_ref": "sha256:c4402a1e7d5ae9a343454b67ff5af3da456eb966f1ddcde34fad8f287e6578bf"
+      },
+      {
+        "sample_id": "case.6.1",
+        "group_id": "synthetic.run.6",
+        "cycle_id": "synthetic.validation.cycle.6",
+        "cycle_ref": "sha256:1ac89c04f49f07c326a106173e8b52b556dc4afbd869f41f18062fcff696bde6",
+        "cavity_id": "cavity.1",
+        "serial": "s6.1",
+        "started_at_s": 22,
+        "stream_spec_ref": "sha256:380c5886fde16a60a095b4a4a05f66b24f074ad98b5f3f9f084ae707963c7315",
+        "stream_head_ref": "sha256:4c68d5e7ca03a02addbdc5c2437b71cda4c598dc50e706a4ac03691b60959b22",
+        "mapping_evidence_ref": "sha256:6ec1c6b93987d5d381d67fc3830976e523635ce7932f31406cb68209a467070e"
+      },
+      {
+        "sample_id": "case.6.2",
+        "group_id": "synthetic.run.6",
+        "cycle_id": "synthetic.validation.cycle.6",
+        "cycle_ref": "sha256:1ac89c04f49f07c326a106173e8b52b556dc4afbd869f41f18062fcff696bde6",
+        "cavity_id": "cavity.2",
+        "serial": "s6.2",
+        "started_at_s": 22,
+        "stream_spec_ref": "sha256:380c5886fde16a60a095b4a4a05f66b24f074ad98b5f3f9f084ae707963c7315",
+        "stream_head_ref": "sha256:4c68d5e7ca03a02addbdc5c2437b71cda4c598dc50e706a4ac03691b60959b22",
+        "mapping_evidence_ref": "sha256:6ec1c6b93987d5d381d67fc3830976e523635ce7932f31406cb68209a467070e"
+      },
+      {
+        "sample_id": "case.7.1",
+        "group_id": "synthetic.run.7",
+        "cycle_id": "synthetic.validation.cycle.7",
+        "cycle_ref": "sha256:35d0b13eac04b9f78e16bc84748077b14e9838dee3d6867f7bc7b1c2914c73ac",
+        "cavity_id": "cavity.1",
+        "serial": "s7.1",
+        "started_at_s": 24,
+        "stream_spec_ref": "sha256:23d5b5efe43e0ff52fdd140c1aa0aac06470f888e57f19a10d736c7797f4f8f2",
+        "stream_head_ref": "sha256:0a1acc0220445eef6391d905672d905947dc68b0b2f8786ea9cd803901528b96",
+        "mapping_evidence_ref": "sha256:17c3c67111e287c05480d33965163c6e904bdbedcdfe2c0e135b94f718e5f380"
+      },
+      {
+        "sample_id": "case.7.2",
+        "group_id": "synthetic.run.7",
+        "cycle_id": "synthetic.validation.cycle.7",
+        "cycle_ref": "sha256:35d0b13eac04b9f78e16bc84748077b14e9838dee3d6867f7bc7b1c2914c73ac",
+        "cavity_id": "cavity.2",
+        "serial": "s7.2",
+        "started_at_s": 24,
+        "stream_spec_ref": "sha256:23d5b5efe43e0ff52fdd140c1aa0aac06470f888e57f19a10d736c7797f4f8f2",
+        "stream_head_ref": "sha256:0a1acc0220445eef6391d905672d905947dc68b0b2f8786ea9cd803901528b96",
+        "mapping_evidence_ref": "sha256:17c3c67111e287c05480d33965163c6e904bdbedcdfe2c0e135b94f718e5f380"
+      }
+    ]
+  },
+  "streams": [],
+  "outcomes": [
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.0.1",
+      "sample_ref": "sha256:88d073e830f7d71a814ace23d22dcdd6a599bb9a5973cab22538e17d5597b37c",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:ad99cfb743261a0a7d12ec74411dd69ebbb689d535b3ba7b9a898ca405e0b7cd",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 11
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.0.2",
+      "sample_ref": "sha256:d12c0a060e5346664c6942e718d2458a00d1e9f67d70a6113c48256fc86aa8ca",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_PRESENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:cdcfac728f78d53a27082a8a53a589830a8f0b72f8330f700bd2d2eeaa556276",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 11
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.1.1",
+      "sample_ref": "sha256:339614cf8563225b57d036d3e3e6b3f99c22a8b6ad1e7bf041221dbe12bbafea",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:94d4a6712b1d5b8b7a2e7091fddd30db5ba1bb41542223a6b710253669642806",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 13
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.1.2",
+      "sample_ref": "sha256:633aa0bf06573c8c0be8e8367b820c273921192a18a71add7397384ceffe31ed",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:e2199f15146f62f7dad3b7c9d777e742948c4ed4bd6efc0fb68011aa4d26b69a",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 13
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.2.1",
+      "sample_ref": "sha256:61cc62ec6e3b26a31771603fd8f3bb1eba74abca725d658c6bae4722d7479d2f",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:a778d9e2f6313c4ee06aea705f18552716eeb200d3c5e74f983e671b1f9335a2",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 15
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.2.2",
+      "sample_ref": "sha256:476e07d917d8bbec7aaf402cc32328fd584cfedecdf1020ca660e466a5c7a5ff",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_PRESENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:66d670a2b6d6d1617cb962ed4adad08b0c35048519c1d647585e9a971483cf94",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 15
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.3.1",
+      "sample_ref": "sha256:bf6a3032d2b0a926d641e9288868e0ffc725281a1ab4b9d50ae4f4463bf1e183",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:5bb7edfb099ca2a36bd7103e42f7ec4b9513badcbfdcc5ad000a4fa796276b57",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 17
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.3.2",
+      "sample_ref": "sha256:84169b0ccf98b27f22f3942e99d48325a419071569028988fd5d9f88acbe7897",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:2f5eae63d99d55176a57a5257ace03b60851f0ebd3d8c93c649b2ee41e1aefe2",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 17
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.4.1",
+      "sample_ref": "sha256:ee9a9d8dc1adf2d13e3444e760f7080c1c17f15542b3df9c1fa7669442b41a7f",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_PRESENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:0654ce46dae2a8ff500cd32975d979f49443668f6561e3b7e60a6b954cda8a80",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 19
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.4.2",
+      "sample_ref": "sha256:1a67f0ae623fd7a49e4fd72a238cd5aa46a8d483b7e25cd02679bf340c17b322",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:391adcad1570a7030bec3950d7d09075c8f76421dfb7d4b562cbdf929c2ec3d0",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 19
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.5.1",
+      "sample_ref": "sha256:39cf22adf3333deaf269dbd72a37cc7a4ce4b089de3396c683ae33f835f07323",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:2eb3ce0c37129c6dc4ea69dfe0d303e80f0b94891a2a6e2244343fa42ae4a7ba",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 21
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.5.2",
+      "sample_ref": "sha256:3a982f561fb3fbb490217ba9effc2e6e6bf39fbdb74209cda58d049e684c6cd4",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_PRESENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:1b5f1f3b6094e6e343cd04914135d8b2e02c3067f8364c314df5d71efa0c8e19",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 21
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.6.1",
+      "sample_ref": "sha256:8282001a039ab8fd2ec736f18d6389121c322c0a1e4ab811c38e6ecf7c96b9be",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:1df01d8153b9c467b251f6039125866e050be0c32e2fdb97866352fba778ffe9",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 23
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.6.2",
+      "sample_ref": "sha256:de1fe79b7cbbaeaab27473668c025e75238fd9d1881b07c011909a09b6263869",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:1cd4be140ebd06203a36c3b7f112368ac25510f4f2e10b9b215739dcfe5a102b",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 23
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.7.1",
+      "sample_ref": "sha256:13b3ec0745832d0b82592b719cb46fe7c39288b1094a5a9c672f9cfccc79d97c",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "DEFECT_ABSENT",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:c54247b6094bf2e6a7c1f940e0c3ce122a505ea0aefe1eff4478c12189205fa0",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 25
+    },
+    {
+      "schema": "ciw.toolpoint-independent-outcome.v1",
+      "sample_id": "case.7.2",
+      "sample_ref": "sha256:27ed46580d3dc5e6c4f9076ca57d9a124ae0984c6304b09544a475ab430262d1",
+      "characteristic_id": "synthetic.critical-feature-incomplete-fill",
+      "source_kind": "synthetic",
+      "method_ref": "sha256:33c68df1476bf85bace63f238acf84ed67151af7c991b137949e6013a515b5a7",
+      "condition": "conditioned",
+      "label": "INDETERMINATE",
+      "independence": "independent_measurement",
+      "evidence_ref": "sha256:c0d898a5c01decc57bfc9c7cc3ac258640457975a459b604b88b81d28b36039d",
+      "calibration_ref": "sha256:f30cb0e9af2adde4397cc8db596e9b22fe978ed38dbfb4a75cc7f21eef1ade0b",
+      "assessor_id": "synthetic.independent-inspector",
+      "measured_at_s": 25
+    }
+  ],
+  "assessed_at_s": 30
+}

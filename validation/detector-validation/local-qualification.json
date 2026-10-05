@@ -1,0 +1,203 @@
+{
+  "schema": "ciw.local-software-validation-record.v1",
+  "scope": "Focused, local detector-validation extension; no physical qualification or repository-wide claim",
+  "source_date": "2026-10-05",
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "sqlite": "3.46.1",
+    "pytest": "9.0.2",
+    "optional_scipy_oracle": "1.17.0"
+  },
+  "tests": {
+    "baseline_passed": 798,
+    "new_passed": 218,
+    "combined_passed": 1016,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Pre-existing full polymer dispatcher requires unrelated repository dependencies absent from the focused snapshot",
+    "command": "PYTHONPATH=src python -m pytest -q tests",
+    "combined_elapsed_seconds": 43.39
+  },
+  "coverage": {
+    "scope": "Five new runtime modules only",
+    "command": "PYTHONPATH=src python -m coverage run --branch --source=ciw.toolpoint_binomial,ciw.toolpoint_validation,ciw.toolpoint_validation_example,ciw.toolpoint_validation_store,ciw.toolpoint_validation_cli -m pytest -q tests/test_toolpoint_validation.py",
+    "totals": {
+      "covered_lines": 502,
+      "num_statements": 503,
+      "percent_covered": 99.72862957937585,
+      "percent_covered_display": "99",
+      "missing_lines": 1,
+      "excluded_lines": 0,
+      "percent_statements_covered": 99.80119284294234,
+      "percent_statements_covered_display": "99",
+      "num_branches": 234,
+      "num_partial_branches": 1,
+      "covered_branches": 233,
+      "missing_branches": 1,
+      "percent_branches_covered": 99.57264957264957,
+      "percent_branches_covered_display": "99"
+    },
+    "uncovered": "CLI __main__ wrapper in instrumented pytest process; direct subprocess CLI execution tested separately"
+  },
+  "baseline_invariants": {
+    "status": "PASS",
+    "preexisting_files_checked": 46,
+    "modified_preexisting_files": [],
+    "hashes": {
+      "docs/POLYMER_MICROFAB_MANUFACTURING.md": "2e6091de8d3aa31820ca001ad7154510faffd54b2a972d20e412ce74294e1667",
+      "docs/QUALITY_CONTROL_TOOLPOINT.md": "26a66b35bbd3dba93fde77c53fc79ba3baa7f6372435f02ca930a142b0711b39",
+      "docs/TOOLPOINT_DURABLE_STORE.md": "83e0f364fffdb6966c5d11ddd490a49c6fa3481ab21031916e636ed1570859eb",
+      "docs/TOOLPOINT_STREAM_QUALITY.md": "1c2dacafa3979b14f58c9688f76ec0369e4c1cee4ddbbc3a534d06f4bcbf4031",
+      "examples/durable-quality/anchors.json": "5bf37cf7a90c1270a70e9a74113bd9ee5793d3060c102c1765e7be606915fa4a",
+      "examples/durable-quality/capture-0.json": "82a6e6a2a79434657fec128e552a68f663f6a964e5f41ec0306f8ae267bdec64",
+      "examples/durable-quality/capture-1.json": "34fbe3958f15e43abc02a33b379d44f90a635948e3f0479c82b132ca3d7ee98e",
+      "examples/durable-quality/capture-2.json": "4a585a529c466b61510ddb577a2d9edc9779061c88305f6e9c06898eb4edf794",
+      "examples/durable-quality/checkpoint.json": "6edc5c41212e750e8740f3c907971b409af36dc587c64e88c0d7c1dbc21e4417",
+      "examples/durable-quality/spec.json": "102bbf3fcb4b1ef69812e02cfc64f603b94004bb0ff94304b1b8c396bb1597c8",
+      "examples/durable-quality/update-0.json": "2456e9866a17ccf482344e60599ca9d55dc58c0537f4106b8d610da767c89ab3",
+      "examples/durable-quality/update-1.json": "78239adabb3cd377600ec66da0c20d1ce77b99c052b9e5f061efb40775997005",
+      "examples/durable-quality/update-2.json": "a30531aef313c745d5ca344ced67ca03036081d5a5b13a3ce38c3df114637d7e",
+      "examples/polymer-manufacturing/request.json": "f114f9f579760794444f92314bc38813991514ea2918be1dce1d2f81b03129ed",
+      "examples/quality/control-plan.json": "951c94a457ca8bc6b282a60f583540550c916bda8d3ca836ad5a508a00c57d38",
+      "examples/quality/early-prefix.json": "7b04df23548cbc6a048f2c34adbe9a7d2213690557821d6aaafa7cad94a74540",
+      "examples/quality/request.json": "078c61b62f2c331d3d7f06d0da777163a32cc5b209c0f98254a373dd9a4f22cd",
+      "examples/stream-quality/capture-02.json": "bf52666b9fcbfe1808bd1648b770968bfaa0f641360a4a852d8f1f8039f3b2e7",
+      "examples/stream-quality/capture-06.json": "cd3cc35505a44344fe27328ad4986bba56444bd63f012f5bc15c9c75c8cc62ee",
+      "examples/stream-quality/capture-08.json": "2e79065ebfe049d4cb4c475e951df3ea43e9faff999a532f3dd3607ccef0b5d9",
+      "examples/stream-quality/containment-request.json": "0da57c0a538771d23fd6d7d88a5def423bacb3e10302994381590bb9f4b6db24",
+      "examples/stream-quality/spec.json": "102bbf3fcb4b1ef69812e02cfc64f603b94004bb0ff94304b1b8c396bb1597c8",
+      "src/ciw/core/identities.py": "c746d6ecf24723ea9b3481895bb12094e98fff6bd821acd229eb0f5f13e9ead9",
+      "src/ciw/manufacturing_contracts.py": "4cd383447fd4794d2e1548b28ee25c6900bd475d001809c5307483236fe9ffa8",
+      "src/ciw/manufacturing_example.py": "97c7a3d82ca900240f14e39137e1a789e44d7ca252549f95af47668e692e1d8b",
+      "src/ciw/manufacturing_quality.py": "67ce898f6f14279057fe0a1994f9163c1ffa043046c9893d29842c03a6f92a22",
+      "src/ciw/manufacturing_quality_cli.py": "737f3984c48db64b88261602fa279bcea202130e8c7b77e523b003a8b6fa946e",
+      "src/ciw/manufacturing_quality_example.py": "27175c18584bed2aa1be836f13653ef7e64ac0ece3272a4d601380e0594bf935",
+      "src/ciw/manufacturing_runtime.py": "241a3d4c6f81d50751dcb08629ce9a55b2ed1bbee76b8b786e75fc2966f77ffc",
+      "src/ciw/polymer_cli.py": "294f0fc50e23e5ccabbe50b2b1f98221e85e56a04b47d47a469e17450d567c4c",
+      "src/ciw/polymer_manufacturing_cli.py": "da83a8798d84ebd551ba5dd2fd52101bae3767c0ebfbcc5b34168e8d5d045858",
+      "src/ciw/polymer_microfab.py": "5f4cd7c103db3ef8dc6797c7343597796c89a31b398968bac54af811c83d342f",
+      "src/ciw/polymer_toolpoint_qc.py": "cb0639810a902b96e22ad5f017c01e6b16ada34062b35758a7cacac5fa4ce4bb",
+      "src/ciw/toolpoint_quality.py": "91215b7ea5664c45b843465eb69aadd0bf17eabfa51c468cdf7c87395f90b682",
+      "src/ciw/toolpoint_store_cli.py": "9c961f8ceac7f5ec61be4a89d5e2f22b21bf68edc5b16d1d564205a8a5601d4c",
+      "src/ciw/toolpoint_stream.py": "bf3e2e430fa5c3444e35a63a82468a92cfa6c519ed34a16b47087771526a871e",
+      "src/ciw/toolpoint_stream_cli.py": "e0b0a93bfacda906bce460a9e86a6a92a393aaa45bac219498baea1d721325dc",
+      "src/ciw/toolpoint_stream_codec.py": "b95b44cb0463419528319e22eacee2d77a3009ed3b120df60bd40f00c34cdd95",
+      "src/ciw/toolpoint_stream_containment.py": "c768b3950f541a47ab615d8f6195ebf1cf67392b7a940ccab65dd5e17fd55214",
+      "src/ciw/toolpoint_stream_example.py": "ecd95e94fd7e633ac678be9c6daf81213230b50474b5647eea2ef4aa7c261e55",
+      "src/ciw/toolpoint_stream_store.py": "8d790337aad4682f522b9298a2954a7a54d33910ded1c01524b618933cd2df7b",
+      "tests/test_manufacturing_quality.py": "d617973df34ca99741929c4640b0ad09c04444d71b8976e92d53b835cf377537",
+      "tests/test_polymer_manufacturing.py": "117faef75ded518de138ab4dc87d6f841c86a70220ac7ca313aaad5fc3c17e12",
+      "tests/test_toolpoint_stream.py": "993d072403ea3b752d52f3dc8f8bc472bd7711a008d7582b475fdf05f20a1276",
+      "tests/test_toolpoint_stream_store.py": "791584ccb6c190a427c266dfb695d245ec3183bb91475f19e6d86fa2d146b0cc",
+      "validation/durable-quality/local-qualification.json": "30fb3acfdbef11f0f1cacaee0a5ff6c19e5ee165fcdc56ab202f9fa041a0e221"
+    }
+  },
+  "files": {
+    "src/ciw/toolpoint_binomial.py": {
+      "sha256": "a496a7264570a573dbfa3e48f6a0711251cc2be049eda11416e6ff2a2d1965d5",
+      "git_blob_sha1": "818981644ec89c477c136987bce01fce488e8c06",
+      "bytes": 3427
+    },
+    "src/ciw/toolpoint_validation.py": {
+      "sha256": "4edef756d32f92a290736b3076acc98e7aaabc4b07fd85c89441c13ad4a1e7bc",
+      "git_blob_sha1": "d0f69d70ee472fffa045134f857506fd33d1867d",
+      "bytes": 26452
+    },
+    "src/ciw/toolpoint_validation_store.py": {
+      "sha256": "74f38502356ac98baa07a3bcf7651df11d66575e4abca96f1975328b207d0654",
+      "git_blob_sha1": "cf160bd377173d2d57b0f1ac0f15a7492a1764f0",
+      "bytes": 1932
+    },
+    "src/ciw/toolpoint_validation_example.py": {
+      "sha256": "21227969125f2065090d8b59a5945d37be33b6c24568694bdc9e789dbc8dbd1a",
+      "git_blob_sha1": "0eca08cf65caf94eb8ba120f2ffde5d73c613d4c",
+      "bytes": 5114
+    },
+    "src/ciw/toolpoint_validation_cli.py": {
+      "sha256": "01f448202fbed8baa2385794e87626227e250375e261dc95ec3326efedb6a456",
+      "git_blob_sha1": "7b734243e394e5c28d6132526bb350307c38c975",
+      "bytes": 3449
+    },
+    "tests/test_toolpoint_validation.py": {
+      "sha256": "9d4199f6b9470a8e303a7daef278aef650cc66ec45d5e9e9480e3cb51cbf5248",
+      "git_blob_sha1": "7bc172edbc03631794034837ce26d30cb7e61dd2",
+      "bytes": 35473
+    },
+    "docs/TOOLPOINT_DETECTOR_VALIDATION.md": {
+      "sha256": "a5898943e7f4189705e448b960948f2bdcaa47ae25f915e02c2f89470d2dfac9",
+      "git_blob_sha1": "1f9f869dc7c457966645fb60b6818fdd130a503e",
+      "bytes": 20818
+    },
+    "examples/detector-validation/request.json": {
+      "sha256": "db80f6ffced2c7395ca00bddceec189376cefa4e6f5cc20f0c682990414f74a1",
+      "git_blob_sha1": "d2345cc56981c4a2387b83fe054b7e006ab4c1e7",
+      "bytes": 255004
+    },
+    "examples/detector-validation/anchors.json": {
+      "sha256": "40160eb582a946dd0fc90b4549795a128d550c17d89711964cab0cf9204fec1c",
+      "git_blob_sha1": "fc0f2cfe717efc096334d09d97c8b4fa5ce3f5f6",
+      "bytes": 189
+    },
+    "examples/detector-validation/store-template.json": {
+      "sha256": "b969a56cfac5f38fd138ee5d680991cf402ab09cf1f7ec1c585d0d7ff1a18b90",
+      "git_blob_sha1": "cd1f0d72feb516e906fc623223f4143a0f489854",
+      "bytes": 27195
+    },
+    "examples/detector-validation/store-bindings.json": {
+      "sha256": "a563a5e21dfce78c0e69cff98f27632b2bfe95758dc6312466ca9d51142a5658",
+      "git_blob_sha1": "e43f89fa6bd5709d45e6a85f4ac9db2aed713482",
+      "bytes": 906
+    }
+  },
+  "store_integration": {
+    "schema": "ciw.detector-study-store-check.v1",
+    "status": "PASS",
+    "original_result_ref": "sha256:d3e8c62dc93dd543f70542e27bb612b8117bb66d0fbde5af07a7d64a5b472d81",
+    "reopened_result_ref": "sha256:d3e8c62dc93dd543f70542e27bb612b8117bb66d0fbde5af07a7d64a5b472d81",
+    "database_sha256_before": "d7749f4c32ba2f43c957e112e4b5152efe22af2e7502ca4fbbc02efef42c7f9d",
+    "database_sha256_after": "d7749f4c32ba2f43c957e112e4b5152efe22af2e7502ca4fbbc02efef42c7f9d",
+    "supplied_streams": 7,
+    "enrolled_parts": 16,
+    "scope": "authored synthetic labels and captures; actual store round trip; no physical validation"
+  },
+  "repository": {
+    "inspected_pull_request": 177,
+    "head": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+    "draft": true,
+    "merged": false,
+    "reported_mergeable": false,
+    "write_performed": false,
+    "push_performed": false
+  },
+  "independent_numerical_checks": [
+    "45 SciPy Clopper-Pearson comparisons",
+    "Exact Bernoulli enumeration",
+    "NIST 4/20, 90% example",
+    "Zero-failure and complement-symmetry checks"
+  ],
+  "limits": {
+    "enrolled_parts": 256,
+    "retained_streams": 128,
+    "old_byte_and_tree_budgets_unchanged": true
+  },
+  "unverified": [
+    "Full current manufacturing-v2 integration",
+    "Full repository regression",
+    "Installed wheel and top-level net routing",
+    "Windows",
+    "Hosted CI",
+    "Live acquisition",
+    "Independent inspection authenticity",
+    "Physical false-hold and missed-defect rates",
+    "Deployment timing and physical intervention"
+  ],
+  "authority": {
+    "hardware_actuation": "not_performed",
+    "physical_containment": "not_performed",
+    "physical_qualification": "not_established",
+    "state_admission": "not_performed",
+    "shipment_release": "not_authorized",
+    "action_authorized": false
+  }
+}

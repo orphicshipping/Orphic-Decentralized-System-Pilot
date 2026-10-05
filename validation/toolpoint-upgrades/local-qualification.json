@@ -1,0 +1,64 @@
+{
+  "platform": "linux",
+  "wheel_sha256": "259bc528a31c4e60f2618fe9867e4b45efcbf45ad2ae30746c01dfe6a4410756",
+  "source": {
+    "tests": 1024,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed": {
+    "tests": 1024,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verified_package_files": 433,
+  "native_command_journeys": 18,
+  "legacy_snapshot_adapter": "excluded; not distributed or qualified",
+  "physical_qualification": "not_established",
+  "live_acquisition": "not_performed",
+  "source_authentication": "not_established",
+  "shipment_release": "not_authorized",
+  "schema": "ciw.toolpoint-upgrades-native-qualification.v1",
+  "python_version": "3.12.14",
+  "dependencies": {
+    "numpy": "2.4.3",
+    "websockets": "16.0",
+    "pytest": "9.0.2",
+    "scipy": "1.17.1"
+  },
+  "foundation_commit": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+  "inherited_microfab_tests": {
+    "passed": 82,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "combined_pr183": {
+    "pr183_head": "9a3e6c619dedc532fb774a8907eaf1b3784f7799",
+    "installed": {
+      "tests": 1156,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "package_files": 433,
+    "wheel_sha256": "a3181bef8f81c29e3047021efc5f62e72f7fe3ef3b3a60abf4e0f8868fa6cc91",
+    "native_study_commands": 5,
+    "native_qc_study_store_containment": "PASS",
+    "physical_qualification": "not_established",
+    "shipment_release": "not_authorized"
+  },
+  "full_repository_regression": {
+    "status": "NOT_QUALIFIED",
+    "reason": "Initial monolithic run was killed. Per-file recovery encountered temporary-filesystem exhaustion and environment failures; results are not a full regression pass.",
+    "files_attempted": 316,
+    "nonzero_files": 27,
+    "failures": 150,
+    "errors": 310,
+    "recovery": "A separately coordinated clean regression campaign is required."
+  },
+  "windows_upgrades": "not qualified",
+  "claims": "Authored synthetic evidence only; replay is not physical qualification."
+}

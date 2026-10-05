@@ -1,0 +1,74 @@
+{
+  "schema": "ciw.toolpoint-outcome-local-qualification.v1",
+  "created_at_utc": "2026-10-05T19:22:03.425004+00:00",
+  "source_semantics": "authored synthetic fixtures only; no physical observations",
+  "repository_inspected": {
+    "repository": "atomtrapping/Notations-Engineering-Terminal",
+    "pr": 177,
+    "head": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+    "draft": true,
+    "merged": false
+  },
+  "delivered_baseline_sha256": "1949c986f6e02d79ab0614461e3831e7dc992c1f90e4164aea0f4375d484ac7d",
+  "source_sha256": {
+    "docs/TOOLPOINT_OUTCOME_BENCH.md": "cee165896d0666cf36f8c1496447b1d6260d831b1e94e05b859b0aa326968e43",
+    "examples/outcome-quality/all-clear-request.json": "da63adf634be43c5f8506e98c832a3e611ca50757aa4de1d5e1da91b9e35292e",
+    "examples/outcome-quality/late-alarm-request.json": "14db06109d46678b14cd22a4164d2f50aa3b59acf5de33af56f2513f9eba1af1",
+    "examples/outcome-quality/missing-inspection-request.json": "e3116abf52658651f7fc7d122eb514f3b1ca0aba70b3e34dd236e42d72de6660",
+    "examples/outcome-quality/mixed-request.json": "ee5bacaa993a16ae54b8dda252573521751df243022788fd031aea34ccf646ce",
+    "src/ciw/toolpoint_outcome_bench.py": "33e4ad9fc57d75a05b390452b593566a6d16209415a5a2ab376e3f9d8e6c26d6",
+    "src/ciw/toolpoint_outcome_cli.py": "a3bb230ab0ba4225be8d0a2cbe6f12f90a88b2acdeb72b505ffc3dcad1aad0af",
+    "src/ciw/toolpoint_outcome_example.py": "cca4b9833f043859ad7c67f61659fa945b19535d7b141b3f9242fc118c3d200e",
+    "src/ciw/toolpoint_outcome_stats.py": "cf1ab2441735da7ccc2befeca8dce07818f1f896e0343f83de5d8b384c705f19",
+    "tests/test_toolpoint_outcome_bench.py": "a38d55877b9b86d798041f5be2c9cccd5ade3656c2a847c711cb77c6809a67c5"
+  },
+  "unchanged_baseline_files": 46,
+  "modified_baseline_files": [],
+  "tests": {
+    "new_passed": 142,
+    "baseline_passed": 798,
+    "combined_passed": 940,
+    "combined_failed": 0,
+    "combined_skipped": 1,
+    "command": "PYTHONPATH=src python -m pytest -q -o faulthandler_timeout=25 --junitxml=.../junit.xml",
+    "runtime_s": 42.25,
+    "full_run_exit_code": 0,
+    "interrupted_foreground_invocations": 2,
+    "skipped_scope": "existing full polymer dispatcher unavailable in focused snapshot"
+  },
+  "coverage_scope": "four new runtime modules only",
+  "coverage_percent_rounded": 97,
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "pytest": "9.0.2",
+    "scipy_test_oracle": "1.17.0",
+    "sqlite": "3.46.1"
+  },
+  "unverified": [
+    "current manufacturing-v2 complete integration",
+    "full repository regression",
+    "installed wheel/top-level net",
+    "Windows",
+    "hosted CI",
+    "live acquisition",
+    "physical defect discrimination",
+    "IID lot sampling",
+    "authenticated external inspections",
+    "hardware latency/actuation",
+    "physical containment",
+    "shipment release"
+  ],
+  "repository_write_performed": false,
+  "push_performed": false,
+  "merge_performed": false,
+  "clean_patch_rerun": {
+    "passed": 940,
+    "failed": 0,
+    "skipped": 1,
+    "runtime_s": 44.54,
+    "exit_code": 0,
+    "same_runtime_and_test_bytes": true,
+    "subsequent_changes": "documentation wording and qualification metadata only"
+  }
+}
