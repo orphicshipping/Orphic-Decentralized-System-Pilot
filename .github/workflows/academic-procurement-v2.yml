@@ -1,0 +1,199 @@
+name: Academic source procurement V2
+on:
+  push:
+    branches: [research/academic-corpus-v2-20261005]
+    paths: [.github/workflows/academic-procurement-v2.yml]
+permissions:
+  contents: read
+jobs:
+  procure:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Download bounded public reference data without executing it
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          """Bounded public-source procurement. Never execute acquired code or contact hardware."""
+          import fnmatch
+          import hashlib
+          import json
+          import os
+          from pathlib import Path, PurePosixPath
+          import re
+          import time
+          from datetime import datetime, timezone
+          import urllib.request
+          import urllib.parse
+          import uuid
+          
+          ROOT = Path(os.environ.get('RUNNER_TEMP', '/mnt/data')) / 'net-academic-remote-v2'
+          ROOT.mkdir(parents=True, exist_ok=False)
+          LIMIT = 128 * 1024 * 1024
+          TOTAL_LIMIT = 512 * 1024 * 1024
+          HOSTS = {'api.github.com', 'raw.githubusercontent.com', 'archive.ics.uci.edu',
+                   'www.itl.nist.gov', 'www.rfc-editor.org'}
+          records, failures, pins = [], [], []
+          used = 0
+          started = datetime.now(timezone.utc).isoformat()
+          acquisition_id = 'acquisition-' + uuid.uuid4().hex
+          
+          def validate_url(url):
+              p = urllib.parse.urlsplit(url)
+              if p.scheme != 'https' or p.hostname not in HOSTS or p.username or p.password or p.port not in (None, 443):
+                  raise ValueError('HTTPS source host not allowed')
+              return url
+          
+          class CheckedRedirect(urllib.request.HTTPRedirectHandler):
+              def redirect_request(self, req, fp, code, msg, headers, newurl):
+                  validate_url(newurl)
+                  return super().redirect_request(req, fp, code, msg, headers, newurl)
+          
+          opener = urllib.request.build_opener(CheckedRedirect())
+          
+          def download(url, cap=LIMIT):
+              global used
+              validate_url(url)
+              req = urllib.request.Request(url, headers={'User-Agent': 'NET-academic-procurement/2.0', 'Accept-Encoding': 'identity'})
+              with opener.open(req, timeout=40) as response:
+                  if response.status != 200:
+                      raise ValueError('Only complete HTTP 200 payloads are accepted')
+                  validate_url(response.url)
+                  length = response.headers.get('Content-Length')
+                  if length is not None and int(length) > cap:
+                      raise ValueError('Declared source size exceeds per-file cap')
+                  parts, count = [], 0
+                  deadline = time.monotonic() + 150
+                  while True:
+                      block = response.read(1024 * 1024)
+                      if not block:
+                          break
+                      count += len(block)
+                      if count > cap or used + count > TOTAL_LIMIT or time.monotonic() > deadline:
+                          raise ValueError('Acquisition byte/time budget exceeded')
+                      parts.append(block)
+                  raw = b''.join(parts)
+                  if not raw or (length is not None and len(raw) != int(length)):
+                      raise ValueError('Empty or incomplete payload')
+                  used += count
+                  return raw, {'resolved_url': response.url, 'content_type': response.headers.get('Content-Type'),
+                               'etag': response.headers.get('ETag'), 'last_modified': response.headers.get('Last-Modified')}
+          
+          def retain(path, raw, url, kind, extra=None):
+              p = PurePosixPath(path)
+              if p.is_absolute() or '..' in p.parts or any(x in path for x in ('\\', '\x00')):
+                  raise ValueError('Unsafe destination')
+              target = ROOT / path
+              target.parent.mkdir(parents=True, exist_ok=True)
+              with target.open('xb') as stream:
+                  stream.write(raw)
+              row = {'path': path, 'url': url, 'bytes': len(raw), 'sha256': hashlib.sha256(raw).hexdigest(),
+                     'kind': kind, 'acquisition_channel': 'github_actions_https_download',
+                     'acquisition_id': acquisition_id, 'acquired_at': datetime.now(timezone.utc).isoformat()}
+              row.update(extra or {})
+              records.append(row)
+              print(json.dumps({'status': 'ACQUIRED', 'path': path, 'bytes': len(raw)}), flush=True)
+              return raw
+          
+          def fetch(path, url, kind, extra=None, expected_git_blob=None, cap=LIMIT):
+              try:
+                  raw, headers = download(url, cap)
+                  if expected_git_blob:
+                      actual = hashlib.sha1(b'blob ' + str(len(raw)).encode() + b'\0' + raw).hexdigest()
+                      if actual != expected_git_blob:
+                          raise ValueError('Source Git blob identity mismatch')
+                      headers.update(git_blob_sha1=actual, publisher_git_blob_match=True)
+                  return retain(path, raw, url, kind, {**headers, **(extra or {})})
+              except Exception as exc:
+                  failures.append({'path': path, 'url': url, 'status': 'NOT_ACQUIRED',
+                                   'reason': type(exc).__name__ + ': ' + str(exc)[:400]})
+                  print(json.dumps(failures[-1]), flush=True)
+                  return None
+          
+          # Dynamic refs are resolved once and frozen before any dataset reads.
+          SOURCES = [
+           ('pinns', 'maziarraissi/PINNs', '932f50a2d8ef4e80d1456bbae6887a73ff5166ef',
+            ['main/Data/*.mat', 'appendix/Data/burgers_shock.mat'], 'numerical_PDE_reference', 12),
+           ('freesolv', 'MobleyLab/FreeSolv', '6c7d19b4b565537365ffd22006aa2cd4643200c6',
+            ['database.txt', 'README*'], 'experimental_and_calculated_chemical_properties', 10),
+           ('sbml', 'sbmlteam/sbml-test-suite', 'develop',
+            ['cases/semantic/README.md'] + [f'cases/semantic/{i:05d}/{i:05d}' + suffix
+            for i in range(1, 11) for suffix in ['-sbml-l3v2.xml', '-results.csv', '-settings.txt', '-model.m']],
+            'deterministic_reaction_semantic_reference', 45),
+           ('optimization', 'ERGO-Code/HiGHS', 'master',
+            ['check/instances/' + x + '.mps' for x in ['afiro', 'adlittle', 'sc50a', 'sc50b', 'flugpl']],
+            'LP_MIP_problem_instance', 8),
+           ('jsonschema', 'json-schema-org/JSON-Schema-Test-Suite', 'main',
+            ['tests/draft2020-12/*.json'], 'standards_conformance_fixture', 80),
+           ('rdfcanon', 'w3c/rdf-canon', 'main',
+            ['tests/*.nq', 'tests/*.json', 'tests/*.ttl', 'tests/rdfc10/*.nq', 'tests/rdfc10/*.json', 'tests/rdfc10/*.ttl'],
+            'standards_canonicalization_fixture', 400),
+           ('gltf_box', 'KhronosGroup/glTF-Sample-Assets', 'main',
+            ['Models/Box/glTF/*', 'Models/Box/README.md', 'Models/Box/LICENSE*'], 'graphics_interchange_fixture', 12),
+           ('net_inventory', 'atomtrapping/Notations-Engineering-Terminal', '0091492b9dc237b05c33cac77d2307115bd803b2',
+            ['instruments/manifest.json', 'src/ciw/operator_commands.py', 'src/ciw/native-interop-runtimes.json',
+             'docs/SYSTEMS_CATALOG.md', 'docs/INSTRUMENTS.md', 'docs/MODEL_VALIDITY_AND_EVIDENCE.md'],
+            'tool_inventory_source_not_validation_data', 8),
+          ]
+          for sid, repo, ref, patterns, kind, max_files in SOURCES:
+              try:
+                  if re.fullmatch('[0-9a-f]{40}', ref):
+                      commit = ref
+                  else:
+                      url = f'https://api.github.com/repos/{repo}/commits/{ref}'
+                      raw = fetch(f'metadata/{sid}_commit.json', url, 'source_revision_metadata', cap=4*1024*1024)
+                      if raw is None:
+                          continue
+                      commit = json.loads(raw)['sha']
+                  url = f'https://api.github.com/repos/{repo}/git/trees/{commit}?recursive=1'
+                  raw = fetch(f'metadata/{sid}_tree.json', url, 'source_tree_metadata', cap=24*1024*1024)
+                  if raw is None:
+                      continue
+                  tree = json.loads(raw)
+                  if tree.get('truncated'):
+                      raise ValueError('Truncated source tree; no claim of complete selection')
+                  files = [x for x in tree['tree'] if x['type'] == 'blob']
+                  selected = [x for x in files if any(len(x['path'].split('/')) == len(p.split('/')) and fnmatch.fnmatchcase(x['path'], p) for p in patterns)]
+                  selected.sort(key=lambda x: x['path'])
+                  if len(selected) > max_files:
+                      raise ValueError(f'Selection has {len(selected)} files, exceeds explicit bound {max_files}')
+                  licenses = [x for x in files if '/' not in x['path'] and x['path'].lower().startswith(('license', 'copying', 'notice', 'third_party_notice'))]
+                  if not selected:
+                      raise ValueError('No selected dataset paths exist')
+                  unique = {x['path']: x for x in licenses + selected}
+                  pins.append({'id': sid, 'repository': repo, 'commit': commit, 'patterns': patterns,
+                               'selected_paths': [x['path'] for x in selected], 'scope': 'explicit_pattern_selection_not_entire_repository'})
+                  for path, item in unique.items():
+                      source_kind = 'license_or_notice' if item in licenses else kind
+                      url = f'https://raw.githubusercontent.com/{repo}/{commit}/{urllib.parse.quote(path)}'
+                      fetch(f'sources/{sid}/{path}', url, source_kind,
+                            {'source_id': sid, 'repository': repo, 'commit': commit}, item['sha'])
+              except Exception as exc:
+                  failures.append({'source_id': sid, 'status': 'NOT_ACQUIRED_OR_INCOMPLETE', 'reason': str(exc)[:400]})
+                  print(json.dumps(failures[-1]), flush=True)
+          
+          fetch('sources/uci_hydraulic/dataset.zip',
+                'https://archive.ics.uci.edu/static/public/447/condition+monitoring+of+hydraulic+systems.zip',
+                'experimental_multirate_hydraulic_fault_records', {'source_id': 'uci_hydraulic',
+                'doi': '10.24432/C5CW21', 'license': 'CC-BY-4.0',
+                'attribution': 'Helwig, Pignanelli and Schuetze; ZeMA/Saarland University; UCI deposit'})
+          for number in [8032, 8785]:
+              fetch(f'sources/rfc/rfc{number}.txt', f'https://www.rfc-editor.org/rfc/rfc{number}.txt',
+                    'standards_reference_and_test_vectors', {'source_id': f'rfc{number}', 'license': 'IETF terms retained in source'})
+          report = {'schema': 'net.public-source-acquisition.v2', 'acquisition_id': acquisition_id,
+                    'started_at': started, 'finished_at': datetime.now(timezone.utc).isoformat(),
+                    'pins': pins, 'files': records, 'failures': failures, 'retained_bytes': sum(x['bytes'] for x in records),
+                    'scope': 'Procurement and content checks only; no NET numerical validation or physical qualification',
+                    'hardware_actuation': 'not_performed', 'state_admission': 'not_performed'}
+          (ROOT / 'acquisition.json').write_text(json.dumps(report, indent=2, allow_nan=False) + '\n')
+          print(json.dumps({'retained_files': len(records), 'failures': len(failures), 'retained_bytes': report['retained_bytes']}))
+          PY
+      - name: Retain source bytes and acquisition receipts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: net-academic-remote-v2
+          path: ${{ runner.temp }}/net-academic-remote-v2
+          if-no-files-found: error
+          retention-days: 7
+          compression-level: 0
