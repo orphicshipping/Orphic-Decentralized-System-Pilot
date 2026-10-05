@@ -89,6 +89,9 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         if not isinstance(data, dict):
             raise AdapterRefusal("invalid_adapter_output", "Operation data must be an object")
         validate_payload(operation_id, data, run, parameters, selection)
+        if operation_id == "atomic.lj-energy-forces.v1":
+            from ..nvalchemi_contract import validate_runtime_binding
+            validate_runtime_binding(data, runtime)
         if (operation_id == "system.simulate.v1" and parameters.get("engine", "local") == "local"
                 and data["execution_runtime"]["runtime"] != runtime):
             raise ValueError("Local deployment receipt differs from retained execution runtime")
@@ -193,6 +196,9 @@ def validate_execution(execution: dict, run: dict, revision: int, results: dict)
                 raise ValueError(f"Execution/result {key} binding mismatch")
         if "refusal" in execution:
             raise ValueError("Completed execution cannot carry refusal")
+        if operation_id == "atomic.lj-energy-forces.v1":
+            from ..nvalchemi_contract import validate_runtime_binding
+            validate_runtime_binding(result["data"], runtime)
     elif execution.get("status") == "refused":
         refusal = execution.get("refusal")
         if (execution.get("result_id") is not None or not isinstance(refusal, dict)

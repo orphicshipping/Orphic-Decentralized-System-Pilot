@@ -112,13 +112,14 @@ for source, retained validation records and open gates.
 | OrdinaryDiffEqTsit5 | Bounded oscillator integration. |
 | JuMP / HiGHS | Bounded quadratic-design optimization. |
 | JuliaIntervals family | Bounded interval-enclosure profile. |
-| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Added external atomistic-simulation and ML interatomic-potential provider target. Upstream documents batched molecular dynamics, relaxation and model training/fine-tuning. **Planning guide / contract only: NET adapter, environment binding, independent numerical validation and polymer/physical qualification remain pending.** See [NVALCHEMI.md](NVALCHEMI.md). |
+| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding and native CPU/CUDA qualification remain required; MLIP, dynamics, training and polymer/physical qualification are not delivered.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md). |
 
 ALCHEMI extends the molecular/materials layer; it does not replace existing
 Julia/native providers, continuum solvers, NET evidence ownership or machine
 controller authority. Its Python-facing API remains inside an optional provider
-boundary. This catalog entry does not install the toolkit, register an operation
-or authorize training, model downloads, remote data transfer or execution.
+boundary. Nothing is installed or bound by default; trusted setup must register
+the optional pilot. No training, model download, remote data transfer or equipment
+execution is authorized by this catalog entry.
 
 ## The collapse rule for loose tooling
 
