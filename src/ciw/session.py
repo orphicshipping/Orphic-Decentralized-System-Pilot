@@ -714,6 +714,8 @@ class Session:
                 raise ValueError("Saved result identity mismatch or duplication")
             result_map[result_id] = result
             execution_ids.add(result["execution_id"])
+        from .operations.schemas import validate_extension_result_dependencies
+        validate_extension_result_dependencies(result_map)
         from .adapters.covariance_records import validate_result_dependencies
         validate_result_dependencies(result_map)
         from .impact_workflow import validate_result_dependencies as validate_impact_dependencies

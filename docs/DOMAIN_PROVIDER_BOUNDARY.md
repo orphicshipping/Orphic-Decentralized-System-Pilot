@@ -25,6 +25,18 @@ This does not establish that an exact retained result is scientifically correct.
 Domain-specific validators must still enforce the expected operation, payload,
 verification outcome, model/field binding and scientific preconditions.
 
+An extension may also register one trusted offline whole-result check with
+`register_result_dependency_validator(operation_id, validator)`. The callable
+receives detached copies of the result and the complete retained result map.
+It can check relationships such as an outer runtime matching the payload runtime
+or a verification occurrence being unique, including operations with no result
+prerequisites. Registration requires an existing extension payload schema and
+rejects unknown operations, built-ins, duplicate registrations and non-callables.
+These checks run before workspace restoration writes output. They must not bind
+or execute a provider. They supplement, rather than replace, payload validation
+and exact retained-result matching. Matching uses canonical JSON, so booleans
+cannot stand in for numbers through Python equality.
+
 Session, workspace schemas, canonical evidence identities, ordinary result
 verification fields and existing provider grants are unchanged. There is no new
 state owner, scheduler, admission mechanism, execution authority or proof profile.
@@ -41,7 +53,7 @@ The public dispatcher does not itself implement domains, heat, mapping, LBM,
 learning, device access or an SCR native-host profile. The operator remains
 responsible for selecting trusted provider code and commissioning its environment.
 
-## Observed local qualification
+## Original local qualification
 
 Based on public source revision `052124f2904ee6ceab1c256961d11b6865486424`.
 The package sources are unchanged from the retained CI wheel at `0091492b...`;
@@ -63,3 +75,21 @@ The added workflow runs the public tests against an installed candidate on
 Linux/Windows and Python 3.11/3.13. A workflow definition is not a successful
 hosted run. Windows, broader affected repository tests, native SCR execution,
 physical validation, state admission and equipment authority remain unestablished.
+
+## Subsequent pinned-environment qualification
+
+The additive whole-result hook and strict dependency identity checks were tested
+on Linux with CPython 3.12.14, pytest 9.0.2, NumPy 2.4.3 and websockets 16.0.
+The 25 public boundary tests passed as part of 234 installed-wheel checks of the
+public host and two separately installed private providers (49 additional
+subtests, no skips). All installed host and provider implementation files were
+byte-compared with their newly built noneditable wheels. Test imports were bound
+to that installation, outside the source tree; dependencies were provisioned
+offline from explicit installed distributions without editable bindings.
+
+Both private provider workflows used freshly compiled Linux native engines and
+independent checkers through the existing Session lifecycle. Installed command
+journeys exercised retained inspection, fresh verification and replay while
+confirming that original files stayed unchanged. Separate Julia-to-C++ checks
+also ran. This evidence does not establish Windows native qualification, SCR
+native-host integration, physical validation, admission or equipment authority.

@@ -103,3 +103,59 @@ def test_optional_domain_help_without_provider(monkeypatch):
     monkeypatch.setattr(builtins,"__import__",deny)
     assert main(["--help"])==0
     assert main(["demo"])==2
+
+
+def test_boolean_alias_is_not_an_exact_retained_dependency(extension):
+    parent, child, session, calls = extension
+    candidate = deepcopy(_execute(session, parent, {})['result'])
+    candidate['data']['declared'] = 1
+    assert _execute(session, child, {'candidate': candidate})['status'] == 'refused'
+    assert not calls
+
+
+def test_whole_result_validator_runs_without_prerequisites_before_restore_writes(extension, tmp_path):
+    parent, _, session, _ = extension
+    def validate(result, retained):
+        if result['runtime'] != {'provider': 'test'}:
+            raise ValueError('changed retained runtime')
+        assert result['result_id'] in retained
+    schemas.register_result_dependency_validator(parent, validate)
+    _execute(session, parent, {})
+    path = session.save_workspace(tmp_path/'valid.json')
+    assert Session.from_workspace(path, tmp_path/'valid').results == session.results
+    value = session._workspace()
+    value['results'][0]['runtime'] = {'provider':'changed'}
+    seal(value['results'][0])
+    # Also update the outer occurrence coherently. The domain relationship
+    # check still has to reject before constructing a Session or writing files.
+    value['executions'][0]['runtime'] = {'provider':'changed'}
+    seal(value['executions'][0])
+    import json
+    path = tmp_path/'bad.json'; path.write_text(json.dumps(value))
+    output = tmp_path/'must-not-exist'
+    with pytest.raises(ValueError, match='changed retained runtime'):
+        Session.from_workspace(path, output)
+    assert not output.exists()
+
+
+@pytest.mark.parametrize('operation,validator', [('statistics.v1', lambda r,s:None),
+                                               ('unknown.validator.v1', lambda r,s:None)])
+def test_result_validator_cannot_bind_unknown_or_builtin(operation, validator):
+    with pytest.raises(ValueError):
+        schemas.register_result_dependency_validator(operation, validator)
+
+
+def test_result_validator_is_unique_and_receives_detached_records(extension):
+    parent, _, session, _ = extension
+    with pytest.raises(ValueError):
+        schemas.register_result_dependency_validator(parent, None)
+    def mutate(result, retained):
+        result['data']['declared'] = False
+        retained.clear()
+    schemas.register_result_dependency_validator(parent, mutate)
+    with pytest.raises(ValueError):
+        schemas.register_result_dependency_validator(parent, mutate)
+    candidate = _execute(session, parent, {})['result']
+    before = deepcopy(session.results)
+    schemas.validate_extension_result_dependencies(session.results)
+    assert session.results == before and candidate['data']['declared'] is True

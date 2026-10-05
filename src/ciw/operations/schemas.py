@@ -6,8 +6,10 @@ schema in trusted process setup, alongside their executable operation binding.
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 
 from ..core.records import finite_tree
+from ..core.identities import canonical_json
 from .registry import valid_operation_id
 
 _VALIDATORS: dict[str, Callable] = {}
@@ -16,6 +18,20 @@ _ROLES = frozenset({"analysis", "state_estimator", "calibration", "verification"
 
 # Registered only by installed trusted code, never loaded from saved parameters.
 _DEPENDENCY_FIELDS: dict[str, tuple[str, ...]] = {}
+_RESULT_DEPENDENCY_VALIDATORS: dict[str, Callable] = {}
+
+
+def register_result_dependency_validator(operation_id: str, validator: Callable) -> None:
+    """Register one trusted offline whole-result relationship check.
+
+    This supplements exact retained prerequisites, including for operations with
+    no prerequisite fields. Saved data cannot register code. A validator raises
+    on disagreement and must not bind or execute a scientific provider.
+    """
+    if (operation_id not in _VALIDATORS or operation_id in _RESULT_DEPENDENCY_VALIDATORS
+            or not callable(validator)):
+        raise ValueError("Result dependency validators require a unique trusted extension schema")
+    _RESULT_DEPENDENCY_VALIDATORS[operation_id] = validator
 
 
 def register_dependency_fields(operation_id: str, fields: tuple[str, ...]) -> None:
@@ -32,12 +48,15 @@ def register_dependency_fields(operation_id: str, fields: tuple[str, ...]) -> No
 def validate_extension_result_dependency(result: dict, results: dict) -> None:
     """Validate one completed extension result against its retained prerequisites."""
     operation_id = result.get("operation_id")
-    if operation_id not in _DEPENDENCY_FIELDS:
+    if operation_id not in _DEPENDENCY_FIELDS and operation_id not in _RESULT_DEPENDENCY_VALIDATORS:
         return
     _validate_extension_dependencies(operation_id, result["parameters"], results)
-    for field in _DEPENDENCY_FIELDS[operation_id]:
+    for field in _DEPENDENCY_FIELDS.get(operation_id, ()):
         if result["parameters"][field]["evidence_id"] != result["evidence_id"]:
             raise ValueError("Extension dependency belongs to different source evidence")
+    validator = _RESULT_DEPENDENCY_VALIDATORS.get(operation_id)
+    if validator is not None:
+        validator(deepcopy(result), deepcopy(results))
 
 
 def validate_extension_result_dependencies(results: dict) -> None:
@@ -50,7 +69,7 @@ def _validate_extension_dependencies(operation_id: str, parameters: dict, retain
     for field in _DEPENDENCY_FIELDS.get(operation_id, ()):
         candidate = parameters.get(field)
         if (type(candidate) is not dict or type(candidate.get("result_id")) is not str
-                or retained.get(candidate["result_id"]) != candidate):
+                or canonical_json(retained.get(candidate["result_id"])) != canonical_json(candidate)):
             raise ValueError("Extension dependency is not the exact retained result occurrence")
 
 
