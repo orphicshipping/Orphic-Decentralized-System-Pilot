@@ -5,6 +5,7 @@ from copy import deepcopy
 from hashlib import sha256
 from pathlib import Path
 import platform
+import math
 import tempfile
 import uuid
 
@@ -140,6 +141,9 @@ def _read(destination: Path):
             raise ValueError("A refused execution cannot retain a result")
         result = None
     state_path = destination / "parameter-state.json"
+    requires_state = result is not None and result["data"]["status"] == "candidate"
+    if requires_state and not state_path.is_file():
+        raise ValueError("Candidate bundle is missing its required parameter state")
     if state_path.exists() or state_path.is_symlink():
         if state_path.is_symlink() or not state_path.is_file() or state_path.stat().st_size > thermal.MAX_BYTES:
             raise ValueError("Require a bounded regular parameter state")
@@ -157,8 +161,11 @@ def _read(destination: Path):
                 or estimated["origin"] != ("synthetic" if request["source_kind"] == "synthetic" else "estimation")
                 or any(value is not None for key, value in state["states"].items() if key != "estimated")):
             raise ValueError("Parameter-state source binding differs")
-        thermal._numeric_equal(estimated["value"], float(data["model"]["tau_s"]))
-        thermal._numeric_equal(estimated["standard_uncertainty"], float(data["parameter_covariance"]["matrix"][1][1] ** 0.5))
+        if estimated["value"] != data["model"]["tau_s"]:
+            raise ValueError("Parameter state must preserve the retained parameter value exactly")
+        expected_uncertainty = float(data["parameter_covariance"]["matrix"][1][1] ** 0.5)
+        if not math.isclose(estimated["standard_uncertainty"], expected_uncertainty, rel_tol=5e-11, abs_tol=0.0):
+            raise ValueError("Parameter-state uncertainty differs at its own physical scale")
     return request, execution, result
 
 
@@ -184,12 +191,10 @@ def replay(original: Path, destination: Path) -> dict:
     # Hashes retain their exact bytes; floats are compared numerically separately.
     for key in ("status", "reasons", "model", "diagnostics", "residuals", "work", "authority"):
         thermal._numeric_equal(second["data"][key], first["data"][key], "replay." + key)
-    for key in ("matrix", "reference_values"):
-        a, b = first["data"]["parameter_covariance"], second["data"]["parameter_covariance"]
-        if (a is None) != (b is None):
-            raise ValueError("Replay covariance availability differs")
-        if a is not None:
-            thermal._numeric_equal(b[key], a[key], "replay.covariance." + key)
+    a, b = first["data"]["parameter_covariance"], second["data"]["parameter_covariance"]
+    thermal.covariance_consistent(b, a)
+    if a is not None:
+        thermal._numeric_equal(b["reference_values"], a["reference_values"], "replay.covariance.reference_values")
     summary["numerical_replay"] = "consistent_within_declared_float_tolerance"
     summary["replay_runtime_code_matches"] = first["runtime"]["code_sha256"] == second["runtime"]["code_sha256"]
     return summary

@@ -239,6 +239,36 @@ def _numeric_equal(actual, expected, path="report") -> None:
         raise ValueError("Thermal exact semantics differ at " + path)
 
 
+def covariance_consistent(actual: dict | None, expected: dict | None) -> None:
+    """Compare covariance in dimensionless coordinates, never absolute SI floors.
+
+    A variance of 1e-20 must not be replaceable by zero merely because it is
+    smaller than a generic 1e-11 numerical tolerance. Hashes remain byte-exact;
+    this comparison is separate from each artifact's integrity validation.
+    """
+    if actual is None or expected is None:
+        if actual is not expected:
+            raise ValueError("Covariance availability differs")
+        return
+    for artifact in (actual, expected):
+        validate_covariance_artifact(artifact)
+    if (actual["quantity_ids"] != expected["quantity_ids"]
+            or actual["units"] != expected["units"] or actual["frame"] != expected["frame"]):
+        raise ValueError("Covariance axes, units or frame differ")
+    a, b = (np.asarray(item["matrix"], dtype=float) for item in (actual, expected))
+    diagonal = np.diag(b)
+    for index in np.flatnonzero(diagonal == 0):
+        if np.any(a[index] != 0) or np.any(a[:, index] != 0):
+            raise ValueError("An exact zero-variance coordinate differs")
+    active = np.flatnonzero(diagonal > 0)
+    if len(active):
+        scale = np.sqrt(diagonal[active])
+        an = a[np.ix_(active, active)] / scale[:, None] / scale[None, :]
+        bn = b[np.ix_(active, active)] / scale[:, None] / scale[None, :]
+        if not np.allclose(an, bn, rtol=5e-11, atol=1e-12):
+            raise ValueError("Covariance differs in dimensionless coordinates")
+
+
 def validate_result(request: dict, result: dict) -> dict:
     """Check retained bindings and algebra, WITHOUT running the fit/search again.
 
@@ -255,6 +285,7 @@ not establish search optimality or reproducibility; explicit replay does a fit.
         raise ValueError("Model parameters violate hard bounds")
     expected = _summarize(request, amplitude, tau)
     actual = deepcopy(result)
+    covariance_consistent(actual["parameter_covariance"], expected["parameter_covariance"])
     for item in (actual, expected):
         item.pop("record_digest", None)
         cov = item["parameter_covariance"]
@@ -262,6 +293,7 @@ not establish search optimality or reproducibility; explicit replay does a fit.
             validate_covariance_artifact(cov, expected_quantity_ids=["initial_excess_temperature", "thermal_time_constant"],
                                         expected_units=["K", "s"], expected_frame="thermal.parameter.v1")
             cov.pop("covariance_id")
+            cov.pop("matrix")  # Already checked at its own physical scale above.
     _numeric_equal(actual, expected)
     return deepcopy(result)
 

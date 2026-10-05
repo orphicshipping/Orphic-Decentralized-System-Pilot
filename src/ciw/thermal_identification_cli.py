@@ -12,8 +12,13 @@ from . import thermal_identification_workflow as workflow
 
 
 def main(argv=None) -> int:
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["experiment"]:
+        from .thermal_experiment_workflow import main as experiment_main
+        return experiment_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net polymer identify", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
+    commands.add_parser("experiment", help="Assess a frozen model against a separate declared experiment")
     example = commands.add_parser("example")
     example.add_argument("--output", required=True, type=Path)
     run = commands.add_parser("run")
