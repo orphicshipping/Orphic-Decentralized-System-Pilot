@@ -80,8 +80,15 @@ comparison thresholds leaves the model, observer and prospective selection
 unchanged. Distinct reference device/raw/application identities are checked;
 independence and exclusion from past fitting remain evidence-backed declarations,
 not facts proved by the adapter. Explicit held-out data references in inference
-provenance are refused. Uncertainty ancestry must resolve to retained covariance
-artifacts by covariance identity; dangling evidence and cycles are refused.
+provenance are refused. The acceptance-criteria reference also cannot be the
+held-out stream, raw recording or calibration-application receipt. Recognized
+covariance, observation, state and observation-stream wrappers are traversed for explicit held-out
+ancestry in model evidence, criteria, observation provenance and uncertainty.
+Uncertainty ancestry must resolve to retained covariance artifacts by covariance
+identity; dangling evidence and cycles are refused. Opaque evidence bytes are
+retained without inferring their meaning. These checks establish structural
+separation of declared lineage, not independence of an experiment or proof that
+criteria were chosen before viewing the reference.
 
 Calibration validity uses the declared acquisition interval, with `[valid_from,
 valid_until)` semantics. Known clock uncertainty expands that interval. Unknown

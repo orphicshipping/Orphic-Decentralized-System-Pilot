@@ -1,0 +1,110 @@
+{
+  "schema": "ciw.study-manufacturing-local-qualification.v1",
+  "date": "2026-10-05",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "parent_pr": 177,
+  "parent_commit": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+  "parent_tree": "0b08db6a4b62a58d42ab4ef7648897ddb44fd2cd",
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "pytest": "9.0.2"
+  },
+  "execution_mode": "Focused source snapshot with Git-blob-checked upstream files, not full repository checkout or installed candidate wheel",
+  "command": "PYTHONPATH=src python -m pytest -q tests/test_manufacturing_study.py tests/test_polymer_manufacturing.py --junitxml=validation/study-manufacturing/combined.xml",
+  "counts": {
+    "tests": 312,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1,
+    "passed": 311,
+    "new_adapter_passed": 132,
+    "inherited_manufacturing_passed": 179
+  },
+  "skip": "Original full NET polymer dispatcher test: unrelated ciw.control_contracts module is absent from focused snapshot",
+  "junit_sha256": "fac676ba6c7451c7c168a3d86e51823c2fd71bf0b2433eb1f1ac242c8bea3091",
+  "changed_file_git_blobs": {
+    "src/ciw/manufacturing_study.py": "f89f87d68c5a965880b762f9702784aa74c60141",
+    "src/ciw/manufacturing_study_example.py": "d9c9ff150ba2c64eca6a2bee24071c075eca20cc",
+    "src/ciw/polymer_manufacturing_cli.py": "839a9ee5ada2810e6da766b198d3a817c11e7a42",
+    "tests/test_manufacturing_study.py": "92f64e56d73262b3d387e615f88a302dea7fa37e",
+    "examples/study-manufacturing/study.json": "18e24da4341cec8f278b57d8471ffb06f10e1b47",
+    "examples/study-manufacturing/assessment.json": "9625f1da65e9f01d30819f3009aeaa17f5426283",
+    "docs/STUDY_MANUFACTURING_GENEALOGY.md": "fb48c3ee724b57d16f75f85c7c6d3ed761c52c20",
+    ".github/workflows/study-manufacturing.yml": "5bf13ac5df0a58e246f0589dbf576e407fdbca85"
+  },
+  "unchanged_upstream_git_blobs": {
+    "src/ciw/manufacturing_contracts.py": "1c5ec5ae216c6ac9775049bf8c5d65e3d457d20d",
+    "src/ciw/polymer_microfab.py": "cf415907184055afa329772ece6c7f4f8d87fe07",
+    "src/ciw/manufacturing_example.py": "1d3aa919d9b69097e8a47ccce5035fe45cf5ad39",
+    "src/ciw/core/identities.py": "e8f3f3ea30cf4a11a071b95f5ee6eb5a2b3f5344",
+    "src/ciw/polymer_toolpoint_qc.py": "d44a637ea217c377c12d8f80fd12838ad891f739",
+    "src/ciw/manufacturing_runtime.py": "bceca6eb5aa60035879e08358133f942b0379a3d",
+    "src/ciw/manufacturing_quality.py": "369c6fb9c814013d8026d438a7692a8ce9b65fc8",
+    "tests/test_polymer_manufacturing.py": "e9b8a093cafdf647bcb7f40a55a93d105926b14a"
+  },
+  "original_manufacturing_cli_git_blob": "336efa2672291d4d41b5549ef00b2bb15a0390bd",
+  "fixture_origin": {
+    "archive": "NET-Polymer-Engineering-Design-v1.zip",
+    "archive_sha256": "045ca79c08241a91072272b4a2840b22d9da16c7c67d5e460e5685bbbec68797",
+    "study_ref": "sha256:3ee036d429410a6821b1cd9e294ac2d710d0c5a098608f874ae7d0fefc46e021",
+    "assessment_ref": "sha256:2e200fbd9efa7e9e4dedbac5a8f41694227f187ff686e7426591d82addb4f9fa",
+    "study_bytes_sha256": "df496cf6dd27f94cfcc022ffe5436582c95b3ebea2d54152120ed21dbfc9d4c2",
+    "assessment_bytes_sha256": "620d05de77d06806968b881df1b654960ba01e84257fd18a6ca7b11b01f68f2f",
+    "content": "Retained synthetic study and assessment; source JSON bytes preserved; science not reexecuted"
+  },
+  "demonstration": {
+    "source_kind": "synthetic",
+    "request_ref": "sha256:b01e467c3852d971225bafcadb5a57733e9a3872e176bf98b8ea907290cb3768",
+    "result_ref": "sha256:0b8ea773edb837e0653ec0ea1812b887e15181a1b9e9c2ad21de152f0a3b0d1e",
+    "part_number": "CONCEPT-TAB",
+    "part_revision": "A",
+    "candidate": "tab-reference",
+    "outcomes": {
+      "tab001": {
+        "inspection": "PASS",
+        "disposition": "AVAILABLE"
+      },
+      "tab002": {
+        "inspection": "FAIL",
+        "disposition": "SCRAPPED"
+      },
+      "tab003": {
+        "inspection": "INDETERMINATE",
+        "disposition": "QUARANTINED"
+      },
+      "tab004": {
+        "inspection": "INDETERMINATE",
+        "disposition": "QUARANTINED"
+      }
+    },
+    "shipment_status": "HELD"
+  },
+  "executed_checks": [
+    "132 new adapter cases",
+    "179 inherited manufacturing cases",
+    "27 independent Fraction interval decisions",
+    "real v2 process-QC assessments and independent final inspection gates",
+    "source manufacturing CLI example/run/verify/trace",
+    "atomic create-only output refusal",
+    "fresh replay and lot/serial traces",
+    "Python compile check",
+    "workflow YAML parsing and embedded-Python compilation"
+  ],
+  "not_established": [
+    "full_repository_regression",
+    "full_native_NET_dispatch",
+    "clean_full_repository_wheel_installation",
+    "Windows",
+    "hosted_CI",
+    "independent_reverification_of_retained_engineering_calculations",
+    "authentic_acquisition",
+    "calibration_traceability",
+    "physical_part_or_process_validation",
+    "global_serial_reservation",
+    "new_Session_operation_registration",
+    "state_admission",
+    "hardware_actuation",
+    "shipment_authorization"
+  ]
+}

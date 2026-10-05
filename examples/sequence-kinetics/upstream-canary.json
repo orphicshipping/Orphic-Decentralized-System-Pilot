@@ -1,0 +1,34 @@
+{
+  "schema": "ciw.sequence-reference-fixture.v1",
+  "reference_commit": "8063d68d4f4c0c4ad751deeb27afd3bfb104c156",
+  "source_path": "framework/markov_tapes.py",
+  "source_git_blob": "3288cc58ba22e214e46ba269748127a059b25c32",
+  "function": "_run_validation",
+  "evidence_kind": "published_software_canary_not_experiment",
+  "alphabet": [
+    "A",
+    "B"
+  ],
+  "block_length": 3,
+  "probabilities": [
+    0.125,
+    0.125,
+    0.125,
+    0.125,
+    0.125,
+    0.125,
+    0.125,
+    0.125
+  ],
+  "rate_B_to_A_per_s": 1.0,
+  "expected_derivative_per_s": [
+    0.375,
+    0.125,
+    0.125,
+    -0.125,
+    0.125,
+    -0.125,
+    -0.125,
+    -0.375
+  ]
+}

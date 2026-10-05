@@ -8,7 +8,8 @@ import pytest
 from ciw import measured_thermal as measured
 from ciw import thermal_contract as thermal
 from ciw.control_checks import inspect_record
-from ciw.control_contracts import bytes_ref
+from ciw.control_contracts import bytes_ref, state
+from ciw.operations.runner import seal
 from ciw.core.covariance import covariance_identity
 from ciw.telemetry import canonical
 from test_measured_thermal import _source, _rewrite_stream
@@ -129,6 +130,114 @@ def test_dangling_ancestor_evidence_is_refused():
         rows[0], ancestors=[ancestor["covariance_id"]]))
     with pytest.raises(ValueError, match="dangling evidence"):
         measured.validate_source(canonical(source))
+
+
+@pytest.mark.parametrize("kind", ["stream", "raw_ref", "application_ref"])
+def test_held_out_recording_cannot_be_the_acceptance_criteria(kind):
+    source = _source()
+    source["acceptance"]["criteria_ref"] = _held_out_ref(source, kind)
+    with pytest.raises(ValueError, match="cannot justify acceptance"):
+        measured.validate_source(canonical(source))
+
+
+@pytest.mark.parametrize("target", ["model", "criteria", "observation", "covariance"])
+@pytest.mark.parametrize("kind", ["stream", "raw_ref", "application_ref"])
+def test_typed_covariance_wrapper_cannot_hide_held_out_evidence(target, kind):
+    source = _source()
+    _ancestor(source, evidence=_held_out_ref(source, kind))
+    wrapper_ref = source["artifacts"][-1]["sha256"]
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    elif target == "criteria":
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    elif target == "observation":
+        _rewrite_stream(source, "shell", lambda rows: rows[0]["provenance"]["sources"].append(wrapper_ref))
+    else:
+        _rewrite_stream(source, "shell", lambda rows: _covariance_edit(rows[0], evidence=wrapper_ref))
+    with pytest.raises(ValueError, match="references held-out data"):
+        measured.validate_source(canonical(source))
+
+
+@pytest.mark.parametrize("target", ["model", "criteria"])
+def test_typed_stream_wrapper_cannot_hide_held_out_evidence(target):
+    source = _source()
+    stream = deepcopy(measured.streams(source)["core_reference"])
+    # A different byte representation gives this wrapper a new exact-byte ref;
+    # the sealed observations retain their actual declared source ancestry.
+    wrapper_ref = _retain(source, stream)
+    assert wrapper_ref != source["series"]["core_reference"]
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    else:
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    with pytest.raises(ValueError, match="references held-out data"):
+        measured.validate_source(canonical(source))
+
+
+@pytest.mark.parametrize("target", ["model", "criteria"])
+def test_independent_typed_evidence_remains_valid_with_its_uncertainty(target):
+    source = _source()
+    _ancestor(source)
+    wrapper_ref = source["artifacts"][-1]["sha256"]
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    else:
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    assert measured.validate_source(canonical(source)) == source
+    result = measured.calculate(source)
+    assert result["authority"]["physical_validation"] == "not_established"
+
+
+@pytest.mark.parametrize("target", ["model", "criteria"])
+def test_dangling_covariance_ancestry_in_model_and_criteria_is_refused(target):
+    source = _source()
+    _ancestor(source, parents=[bytes_ref(b"missing covariance")])
+    wrapper_ref = source["artifacts"][-1]["sha256"]
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    else:
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    with pytest.raises(ValueError, match="Unresolved source covariance"):
+        measured.validate_source(canonical(source))
+
+
+def _standalone_evidence(source, wrapper, *, held_out, lineage="provenance"):
+    channel = "core_reference" if held_out else "shell"
+    row = deepcopy(measured.streams(source)[channel]["observations"][0])
+    if held_out and lineage == "uncertainty":
+        row["provenance"] = deepcopy(measured.streams(source)["shell"]["observations"][0]["provenance"])
+        row = seal(row)
+    if wrapper == "state":
+        row = state(identity=row["identity"], clock=row["clock"], frame=row["frame"],
+            variables={row["quantity"]: {"value": row["value"], "unit": row["unit"]}},
+            provenance=row["provenance"], uncertainty=row["uncertainty"])
+    return _retain(source, row)
+
+
+@pytest.mark.parametrize("target", ["model", "criteria"])
+@pytest.mark.parametrize("wrapper", ["observation", "state"])
+@pytest.mark.parametrize("lineage", ["provenance", "uncertainty"])
+def test_standalone_typed_record_cannot_hide_held_out_lineage(target, wrapper, lineage):
+    source = _source()
+    wrapper_ref = _standalone_evidence(source, wrapper, held_out=True, lineage=lineage)
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    else:
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    with pytest.raises(ValueError, match="references held-out data"):
+        measured.validate_source(canonical(source))
+
+
+@pytest.mark.parametrize("target", ["model", "criteria"])
+@pytest.mark.parametrize("wrapper", ["observation", "state"])
+def test_independent_standalone_typed_record_stays_valid(target, wrapper):
+    source = _source()
+    wrapper_ref = _standalone_evidence(source, wrapper, held_out=False)
+    if target == "model":
+        source["model_evidence_refs"].append(wrapper_ref)
+    else:
+        source["acceptance"]["criteria_ref"] = wrapper_ref
+    assert measured.validate_source(canonical(source)) == source
 
 
 @pytest.mark.parametrize("within_tolerance", [True, False])

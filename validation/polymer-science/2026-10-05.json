@@ -1,0 +1,102 @@
+{
+  "schema": "notations.development-validation-record.v1",
+  "scope": "local source-overlay numerical verification; not hosted, installed-wheel or physical qualification",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "base_commit": "367d72f5a2794b0a6ee97224e72e957b3e6862ae",
+  "base_pr": 173,
+  "base_package_revision": "0091492b9dc237b05c33cac77d2307115bd803b2",
+  "base_wheel_sha256": "e13689bcfd03995cce7ee2918346d9e24dcbcb2b47a001dceb167382c9841b34",
+  "thermochemical_kernel_git_blob": "3f35dad0698909a061bbbfcbfb3c4954e58256b1",
+  "changed_file_git_blobs": {
+    "src/ciw/polymer_models.py": "e32d9943f4c6f8895dc137325b37e61f294c1d5f",
+    "src/ciw/polymer_verification.py": "e4639934dad7f3976ee6dc6579902f6a2f235709",
+    "src/ciw/polymer_cli.py": "38de30a7759396d5f61a7e3cedaebd765ec0a981",
+    "src/ciw/polymer_rheology.py": "eb8186b18a355092e3d7ce9911881d035da6537d",
+    "src/ciw/polymer_rheology_reference.py": "53b4520e0bdda0ddb4fc0038ef44006ae83c2a03",
+    "src/ciw/polymer_rheology_cli.py": "a4dca5a08b81465f40183a48a03e2029846fceb3",
+    "tests/test_polymer_rheology.py": "f9637cdc6abc966f17afdc1b53ab7776863d2f1b",
+    "tests/test_polymer_cooling_precision.py": "168f6af33293bb83f92e0bc332def0c43b678832",
+    "tests/test_thermochemical_independent_audit.py": "0810c0a11762f67142c28c70008d313edf43bc4a",
+    "examples/polymer/rheology/request.json": "af4c828b19be2744f81054d47f668e4ed4e45843",
+    "docs/POLYMER_RHEOLOGY.md": "1d90e743aafe424031dce44eeb6d5833b015babd",
+    ".github/workflows/polymer-science.yml": "52ef04997fb871703646c35c01b3cf5ab04f0571"
+  },
+  "environment": {
+    "implementation": "CPython",
+    "python": "3.13.5",
+    "os": "linux",
+    "pytest": "9.0.2",
+    "numpy": "2.3.5",
+    "scipy": "1.17.0"
+  },
+  "candidate_tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_polymer_rheology.py tests/test_polymer_cooling_precision.py tests/test_thermochemical_independent_audit.py --junitxml=validation/new-candidate.xml",
+    "tests": 182,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases_by_module": {
+      "tests.test_polymer_rheology": 96,
+      "tests.test_polymer_cooling_precision": 8,
+      "tests.test_thermochemical_independent_audit": 78
+    },
+    "junit_sha256": "654085dda45f0a5d90629e6707c2328b29776ac0c44b7ec2b5d563a257bd2e90",
+    "includes_pr172_overlay": false,
+    "independent_nonlinear_scipy_cases": 32
+  },
+  "separate_temporal_tests": {
+    "commit": "5ebccdeb0f890d73aa6e86a142b51a54146c9481",
+    "pr": 172,
+    "scope": "22 added portability tests only; not part of the new candidate",
+    "tests": 22,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "cases_by_module": {
+      "tests.test_system_study_portability": 22
+    },
+    "junit_sha256": "d5f015b6385a040d7989655836c9bca0a5c2bfc8b582d77bf2df18a5bae2f525"
+  },
+  "cooling_before_repair": {
+    "scope": "corrected valid regression request against unchanged baseline cooling sources",
+    "tests": 8,
+    "failures": 7,
+    "errors": 0,
+    "skipped": 0,
+    "cases_by_module": {
+      "tests.test_polymer_cooling_precision": 8
+    },
+    "junit_sha256": "2671cacd28417cf166174a80a7131f5f4c38b6800d141fac0ee0ad83ff854783"
+  },
+  "polymer_campaign": {
+    "before": {
+      "passed": 18,
+      "total": 18,
+      "summary_sha256": "e93330a363c76365c03366f13c95cd1926efba4902a5b6aad18d0a929b2837cd"
+    },
+    "after": {
+      "passed": 18,
+      "total": 18,
+      "summary_sha256": "28c67783a9c531f7952fc4ca18019836428172abdada97bccb55b4c992a5db1f"
+    },
+    "native_ingress_provided": false,
+    "scope": "retained_cycle_reference_models_and_simulated_control_only"
+  },
+  "rheology_example": {
+    "status": "PASS",
+    "maximum_symmetric_relative_discrepancy": 2.2847132626611653e-16,
+    "result_sha256": "2659d5767a6e7ebe306622f63f20c4f2a460673487ec7a03787c4c31f7f18e56",
+    "verification_sha256": "73f7e4b3374528509930f5c9dfac17205a1c3644ef79d993d0bfb19372fec482"
+  },
+  "limitations": [
+    "Full repository test collection was not available or rerun.",
+    "PR173 original 158 tests and original 65 temporal tests were not rerun in this increment.",
+    "GitHub clone was unavailable; the real retained wheel supplied existing package source and GitHub supplied PR173 kernel bytes.",
+    "The tested source package is not a newly built or installed candidate wheel.",
+    "Local NumPy 2.3.5 and SciPy 1.17.0 differ from repository pins NumPy 2.4.3 and SciPy 1.17.1.",
+    "New Windows/Linux Python 3.11/3.13 workflow is a definition, not a passing hosted run.",
+    "No native-provider, hardware, calibration, uncertainty-coverage or physical material qualification is claimed.",
+    "Sealed and hashed observations are not signatures or independent environment attestation."
+  ],
+  "artifact_locations": "JUnit, before/after summaries and example JSON are supplied in the accompanying conversation artifact bundle, not embedded here."
+}

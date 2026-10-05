@@ -1,0 +1,121 @@
+{
+  "schema": "ciw.toolpoint-observation.v1",
+  "source_kind": "synthetic",
+  "cycle_id": "synthetic.cycle.0",
+  "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+  "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+  "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+  "clock_id": "synthetic.clock",
+  "frame": "synthetic.tool-frame",
+  "started_at_s": 0.0,
+  "completed_at_s": 0.2,
+  "signals": [
+    {
+      "sensor_id": "sensor.cavity.1",
+      "quantity": "cavity_pressure",
+      "unit": "Pa",
+      "location": {
+        "kind": "end_of_fill",
+        "cavity_id": "cavity.1",
+        "gate_id": null
+      },
+      "frame": "synthetic.tool-frame",
+      "clock_id": "synthetic.clock",
+      "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+      "calibration_valid_from_s": 0,
+      "calibration_valid_until_s": 100,
+      "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+      "clock_skew_s": 0,
+      "health": "good",
+      "samples": [
+        {
+          "time_s": 0,
+          "value": 100000,
+          "expanded_uncertainty": 10000
+        },
+        {
+          "time_s": 0.2,
+          "value": 1000000,
+          "expanded_uncertainty": 10000
+        }
+      ],
+      "source_ref": "sha256:6d914454f1ef8b52575a2b4e5d3a2adcaa527201bebabfcf065923710146a713"
+    },
+    {
+      "sensor_id": "sensor.cavity.2",
+      "quantity": "cavity_pressure",
+      "unit": "Pa",
+      "location": {
+        "kind": "end_of_fill",
+        "cavity_id": "cavity.2",
+        "gate_id": null
+      },
+      "frame": "synthetic.tool-frame",
+      "clock_id": "synthetic.clock",
+      "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+      "calibration_valid_from_s": 0,
+      "calibration_valid_until_s": 100,
+      "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+      "clock_skew_s": 0,
+      "health": "fault",
+      "samples": [
+        {
+          "time_s": 0,
+          "value": 100000,
+          "expanded_uncertainty": 10000
+        },
+        {
+          "time_s": 0.2,
+          "value": 1000000,
+          "expanded_uncertainty": 10000
+        }
+      ],
+      "source_ref": "sha256:69693ed27cb0aa708b33fc7fc386d9e62ee757f8c30ef85cab2f061f8b80ff62"
+    },
+    {
+      "sensor_id": "sensor.nozzle",
+      "quantity": "melt_pressure",
+      "unit": "Pa",
+      "location": {
+        "kind": "nozzle",
+        "cavity_id": null,
+        "gate_id": null
+      },
+      "frame": "synthetic.tool-frame",
+      "clock_id": "synthetic.clock",
+      "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+      "calibration_valid_from_s": 0,
+      "calibration_valid_until_s": 100,
+      "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+      "clock_skew_s": 0,
+      "health": "good",
+      "samples": [
+        {
+          "time_s": 0,
+          "value": 100000,
+          "expanded_uncertainty": 10000
+        },
+        {
+          "time_s": 0.2,
+          "value": 1000000,
+          "expanded_uncertainty": 10000
+        }
+      ],
+      "source_ref": "sha256:f0260ba81b08e4de354d898c7cc7846b3e81dea825ccceb8a128a143f9e6c5f4"
+    }
+  ],
+  "part_mapping": {
+    "status": "cavity_resolved",
+    "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+    "items": [
+      {
+        "serial": "p001",
+        "cavity_id": "cavity.1"
+      },
+      {
+        "serial": "p002",
+        "cavity_id": "cavity.2"
+      }
+    ]
+  }
+}

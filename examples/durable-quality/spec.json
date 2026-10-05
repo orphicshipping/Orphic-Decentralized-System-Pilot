@@ -1,0 +1,116 @@
+{
+  "schema": "ciw.toolpoint-stream-spec.v1",
+  "plan": {
+    "plan_id": "synthetic.stream.plan",
+    "revision": "A",
+    "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+    "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+    "clock_id": "synthetic.clock",
+    "rules": [
+      {
+        "rule_id": "sensor.cavity.1.pressure",
+        "sensor_id": "sensor.cavity.1",
+        "phase_id": "fill",
+        "feature": "peak",
+        "limits": {
+          "lower": 0,
+          "upper": 15000000,
+          "unit": "Pa"
+        },
+        "threshold": null,
+        "reference_curve": null
+      },
+      {
+        "rule_id": "sensor.cavity.2.pressure",
+        "sensor_id": "sensor.cavity.2",
+        "phase_id": "fill",
+        "feature": "peak",
+        "limits": {
+          "lower": 0,
+          "upper": 15000000,
+          "unit": "Pa"
+        },
+        "threshold": null,
+        "reference_curve": null
+      },
+      {
+        "rule_id": "sensor.nozzle.pressure",
+        "sensor_id": "sensor.nozzle",
+        "phase_id": "fill",
+        "feature": "peak",
+        "limits": {
+          "lower": 0,
+          "upper": 15000000,
+          "unit": "Pa"
+        },
+        "threshold": null,
+        "reference_curve": null
+      }
+    ],
+    "schema": "ciw.toolpoint-monitoring-plan.v1",
+    "source_kind": "synthetic",
+    "process": "injection_molding",
+    "frame": "synthetic.tool-frame",
+    "valid_from_s": 0,
+    "valid_until_s": 100,
+    "max_clock_skew_s": 0.001,
+    "max_sample_gap_s": 0.21,
+    "cavity_ids": [
+      "cavity.1",
+      "cavity.2"
+    ],
+    "reference_evidence_refs": [
+      "sha256:b566c02a643ecd5afdeee3c91cafa977fe8e6c0c46dcc48b005f5f3ac6caaf6e"
+    ],
+    "phases": [
+      {
+        "phase_id": "fill",
+        "start_s": 0,
+        "end_s": 0.8
+      }
+    ],
+    "sensors": [
+      {
+        "sensor_id": "sensor.cavity.1",
+        "quantity": "cavity_pressure",
+        "unit": "Pa",
+        "location": {
+          "kind": "end_of_fill",
+          "cavity_id": "cavity.1",
+          "gate_id": null
+        }
+      },
+      {
+        "sensor_id": "sensor.cavity.2",
+        "quantity": "cavity_pressure",
+        "unit": "Pa",
+        "location": {
+          "kind": "end_of_fill",
+          "cavity_id": "cavity.2",
+          "gate_id": null
+        }
+      },
+      {
+        "sensor_id": "sensor.nozzle",
+        "quantity": "melt_pressure",
+        "unit": "Pa",
+        "location": {
+          "kind": "nozzle",
+          "cavity_id": null,
+          "gate_id": null
+        }
+      }
+    ]
+  },
+  "binding": {
+    "cycle_id": "synthetic.cycle.0",
+    "cycle_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+    "source_kind": "synthetic",
+    "started_at_s": 0.0
+  },
+  "limits": {
+    "max_updates": 32,
+    "max_samples_per_sensor": 2048,
+    "max_total_samples": 32768
+  }
+}

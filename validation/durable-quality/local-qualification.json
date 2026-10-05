@@ -1,0 +1,118 @@
+{
+  "schema": "ciw.local-software-qualification.v1",
+  "date": "2026-10-05",
+  "scope": "Additive durable QC store on the attached focused snapshot; no physical or whole-repository qualification",
+  "tests": {
+    "new_passed": 160,
+    "baseline_passed": 638,
+    "combined_passed": 798,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Existing full polymer dispatcher dependencies absent from focused snapshot"
+  },
+  "environment": {
+    "python": "3.13.5 (main, Jul 15 2026, 20:25:40) [GCC 14.2.0]",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "sqlite": "3.46.1",
+    "pytest": "9.0.2"
+  },
+  "coverage": {
+    "covered_lines": 458,
+    "num_statements": 485,
+    "percent_covered": 92.33082706766918,
+    "percent_covered_display": "92",
+    "missing_lines": 27,
+    "excluded_lines": 0,
+    "percent_statements_covered": 94.43298969072166,
+    "percent_statements_covered_display": "94",
+    "num_branches": 180,
+    "num_partial_branches": 24,
+    "covered_branches": 156,
+    "missing_branches": 24,
+    "percent_branches_covered": 86.66666666666667,
+    "percent_branches_covered_display": "87"
+  },
+  "repo_baseline": {
+    "repository": "atomtrapping/Notations-Engineering-Terminal",
+    "pull_request": 177,
+    "inspected_head": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+    "draft": true,
+    "merged": false
+  },
+  "files": {
+    "docs/TOOLPOINT_DURABLE_STORE.md": {
+      "sha256": "83e0f364fffdb6966c5d11ddd490a49c6fa3481ab21031916e636ed1570859eb",
+      "git_blob": "ff3b84202b1e3cd586aedfb7795460bc1d99e9ab"
+    },
+    "examples/durable-quality/anchors.json": {
+      "sha256": "5bf37cf7a90c1270a70e9a74113bd9ee5793d3060c102c1765e7be606915fa4a",
+      "git_blob": "d5f15623f82f327e2cac4e79f9fea33a68d7a029"
+    },
+    "examples/durable-quality/capture-0.json": {
+      "sha256": "82a6e6a2a79434657fec128e552a68f663f6a964e5f41ec0306f8ae267bdec64",
+      "git_blob": "ece0e901de8bd236dd3eeb6f66ab6932a95bc914"
+    },
+    "examples/durable-quality/capture-1.json": {
+      "sha256": "34fbe3958f15e43abc02a33b379d44f90a635948e3f0479c82b132ca3d7ee98e",
+      "git_blob": "a1d35405d9955f827851f12c2f0eeff6863f92c3"
+    },
+    "examples/durable-quality/capture-2.json": {
+      "sha256": "4a585a529c466b61510ddb577a2d9edc9779061c88305f6e9c06898eb4edf794",
+      "git_blob": "7db37bd6eab5d757768146f047e42ce1e455f2df"
+    },
+    "examples/durable-quality/checkpoint.json": {
+      "sha256": "6edc5c41212e750e8740f3c907971b409af36dc587c64e88c0d7c1dbc21e4417",
+      "git_blob": "7bebc6f734d5dfc3002a5c1400326df1dc513d02"
+    },
+    "examples/durable-quality/spec.json": {
+      "sha256": "102bbf3fcb4b1ef69812e02cfc64f603b94004bb0ff94304b1b8c396bb1597c8",
+      "git_blob": "163b32316d7b0c927784be002f59788d1c0ba401"
+    },
+    "examples/durable-quality/update-0.json": {
+      "sha256": "2456e9866a17ccf482344e60599ca9d55dc58c0537f4106b8d610da767c89ab3",
+      "git_blob": "cff80fc9d46ccc90cc3ff96e6f450b7d8c7589c3"
+    },
+    "examples/durable-quality/update-1.json": {
+      "sha256": "78239adabb3cd377600ec66da0c20d1ce77b99c052b9e5f061efb40775997005",
+      "git_blob": "2e6e4014f3e36f56402458cc931dea67a80b4128"
+    },
+    "examples/durable-quality/update-2.json": {
+      "sha256": "a30531aef313c745d5ca344ced67ca03036081d5a5b13a3ce38c3df114637d7e",
+      "git_blob": "8302adc00aad5f601a992338b1ef83f8aba11233"
+    },
+    "src/ciw/toolpoint_store_cli.py": {
+      "sha256": "9c961f8ceac7f5ec61be4a89d5e2f22b21bf68edc5b16d1d564205a8a5601d4c",
+      "git_blob": "9b9610134f0e8adf412b5ab55d8ef1521dd622ed"
+    },
+    "src/ciw/toolpoint_stream_codec.py": {
+      "sha256": "b95b44cb0463419528319e22eacee2d77a3009ed3b120df60bd40f00c34cdd95",
+      "git_blob": "b99ac2ce739394928feeaadaf90ec72020de5699"
+    },
+    "src/ciw/toolpoint_stream_store.py": {
+      "sha256": "8d790337aad4682f522b9298a2954a7a54d33910ded1c01524b618933cd2df7b",
+      "git_blob": "a031c48f25b00b742278092847c51a6a027e6e5f"
+    },
+    "tests/test_toolpoint_stream_store.py": {
+      "sha256": "791584ccb6c190a427c266dfb695d245ec3183bb91475f19e6d86fa2d146b0cc",
+      "git_blob": "864fa1f1ed1d62b767a05c348aef970bab435a40"
+    }
+  },
+  "existing_invariants": {
+    "unchanged_existing_files": 31,
+    "modified_existing_files": [],
+    "native_evaluator_git_blob": "d44a637ea217c377c12d8f80fd12838ad891f739"
+  },
+  "boundaries": {
+    "repository_push": "not_performed",
+    "merge": "not_performed",
+    "live_acquisition": "not_performed",
+    "physical_qualification": "not_established",
+    "hardware_actuation": "not_performed",
+    "shipment_release": "not_authorized",
+    "full_repository_regression": "not_performed",
+    "windows": "not_run",
+    "electrical_power_loss": "not_tested"
+  },
+  "retained_test_command": "PYTHONPATH=src python -m pytest -q tests",
+  "source_manifest_excludes_its_own_bytes": true
+}

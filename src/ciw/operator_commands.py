@@ -6,6 +6,10 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('domains', 'domain_cli', 'Run installed private discrete-domain providers through NET Session'),
+    ('hoomd', 'hoomd_cli', 'Run bounded external particle MD with native GSD evidence and independent static checks'),
+    ('product-study', 'product_study_cli', 'Review versioned preliminary product requirements against retained calculation artifacts'),
+    ('data', 'data_cli', 'Retain typed datasets, inspect data routes and compare observations in existing workspaces'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
     ('bench', 'hardware_bench_cli', 'Capture inventory and import bounded bench diagnostics with source provenance'),
     ('hardware', 'hardware_cli', 'Import hardware observations, assess refurbishment criteria and export retained evidence'),

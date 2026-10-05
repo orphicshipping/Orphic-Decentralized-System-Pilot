@@ -11,7 +11,7 @@ import uuid
 from datetime import datetime, timezone
 
 from ..adapters.protocol import AdapterRefusal
-from ..core.identities import validate_evidence_identity
+from ..core.identities import canonical_json, validate_evidence_identity
 from ..core.records import finite_tree
 from ..instruments import validate_run
 from .registry import OperationRegistry, valid_operation_id
@@ -60,7 +60,24 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         validate_evidence_identity(run)
         operation = registry.get(operation_id)
         validate_role(operation_id, operation.role)
-        validate_request_dependencies(operation_id, parameters, {} if retained_results is None else retained_results)
+        validate_request_dependencies(operation_id, parameters,
+                                      {} if retained_results is None else retained_results,
+                                      evidence_id=run["evidence_id"])
+        if operation_id == "data.review-toolpoint-containment.v1":
+            from ..data_manufacturing_bridge import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id == "data.review-product-study.v1":
+            from ..product_study_workflow import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id == "data.compare-observations.v1":
+            from ..data_workflow import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id in {"data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+            from ..data_compute_bridge import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
+        if operation_id == "particles.hoomd-md.v1":
+            from ..hoomd_workflow import validate_live_dependencies
+            validate_live_dependencies(operation_id, parameters, {} if retained_sources is None else retained_sources)
         if operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
                             "system.compare.v1", "system.study.v1"}:
             from ..system_workflow import validate_live_dependencies
@@ -92,6 +109,8 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
         if (operation_id == "system.simulate.v1" and parameters.get("engine", "local") == "local"
                 and data["execution_runtime"]["runtime"] != runtime):
             raise ValueError("Local deployment receipt differs from retained execution runtime")
+        if operation_id == "particles.hoomd-md.v1" and data["native_result"]["runtime"] != runtime:
+            raise ValueError("HOOMD native result runtime differs from execution binding")
         if operation_id == "system.study.v1" and data["report"]["runtime"] != runtime:
             raise ValueError("Temporal study runtime differs from retained execution runtime")
         json.dumps(data, allow_nan=False)
@@ -189,8 +208,10 @@ def validate_execution(execution: dict, run: dict, revision: int, results: dict)
         if result is None or result.get("schema") != "ciw.operation-result.v1":
             raise ValueError("Completed execution has no matching operation result")
         for key in ("execution_id", "operation_id", "runtime", "parameters", "created_at", "selection_revision", "channel", "interval_s"):
-            if result.get(key) != execution.get(key):
+            if canonical_json(result.get(key)) != canonical_json(execution.get(key)):
                 raise ValueError(f"Execution/result {key} binding mismatch")
+        from .schemas import validate_extension_result_dependency
+        validate_extension_result_dependency(result, results)
         if "refusal" in execution:
             raise ValueError("Completed execution cannot carry refusal")
     elif execution.get("status") == "refused":

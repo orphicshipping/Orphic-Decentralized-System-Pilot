@@ -1,0 +1,357 @@
+{
+  "academic_endpoints": {
+    "F2_reference": {
+      "empty_expected_refusals": 1,
+      "nonempty_graphs": 1252,
+      "reference_executions": 2504,
+      "scope": "ordinary graph-complex arithmetic and binary interchange; not cryptographic proof"
+    },
+    "FAO56_ET0": {
+      "Session_executions": 0,
+      "native_endpoint_evaluations": 3,
+      "scope": "daily reference ET0 endpoint; no invented soil state, calendar, pump or calibration"
+    },
+    "Graph_Atlas": {
+      "Session_recording": "not_used",
+      "direct_Compute_API_calls_with_replay": 80,
+      "empty_graph_and_isolates": "preserved",
+      "graphs": 1253,
+      "source_nodes": 8475,
+      "undirected_edges": 12342
+    },
+    "NIST_Norris": {
+      "native_affine_evaluations_with_replay": 72,
+      "native_derivatives_with_replay": 72,
+      "scope": "certified coefficient evaluation and decimal residual checks; no fitting, invented physical unit, acquisition clock, or calibration",
+      "source_rows": 36
+    },
+    "SBML_reference": {
+      "Session_executions": 20,
+      "compared_amount_values": 510,
+      "published_cases": 5,
+      "scope": "bounded declared binary-site kinetics; no general mechanism or physical material claim"
+    },
+    "TCLab_FIR": {
+      "filtered_values": 796,
+      "native_executions_with_replay": 8,
+      "native_filter_executions": 4,
+      "padding": "none",
+      "real_channels": 4,
+      "uncertainty": "absent_not_propagated"
+    }
+  },
+  "authority": {
+    "hardware_actuation": "not_performed",
+    "physical_qualification": "not_granted_by_this_manifest",
+    "shipment_release": "not_authorized",
+    "state_admission": "not_performed"
+  },
+  "cross_domain_journey": {
+    "accepted_revision_stales_only_downstream_QC_reviews": "PASS",
+    "initial_retained_results": 5,
+    "initial_retained_sources": 3,
+    "native_containment_preserved": true,
+    "offline_reopen_and_fresh_replay": "PASS",
+    "original_workspace_and_SQLite_unchanged": true,
+    "path": "real C++ engineering and heat execution/checks -> retained study/assessment -> manufacturing dossier -> SQLite capture/export -> shared Session containment review",
+    "receipt_sha256": "3b75d06c205307cfc76603d866238fd2bb7eb0e701cf629904301abe57cff01a",
+    "shipment_release": "not_authorized",
+    "status": "PASS"
+  },
+  "environment": {
+    "gsd": "5.0.1",
+    "installation": "fresh noneditable wheels; exact host and private-package implementation bytes checked; dependencies explicitly provisioned offline",
+    "numpy": "2.4.3",
+    "platform": "Linux x86_64",
+    "pyarrow": "25.0.1",
+    "pytest": "9.0.2",
+    "python": "3.12.14",
+    "scipy": "1.17.1",
+    "websockets": "16.0"
+  },
+  "historical_corpus_inventory": {
+    "bounded_endpoint_families": [
+      "metrology",
+      "topology",
+      "graphml",
+      "composition",
+      "proofs",
+      "signals",
+      "chemistry",
+      "irrigation"
+    ],
+    "counting_rule": "family classifications below are exclusive; endpoint labels are bounded, not full-domain or physical qualification",
+    "families": 41,
+    "gap_classification_counts": {
+      "contract_model_or_evidence": 20,
+      "no_domain_source": 1,
+      "no_matching_endpoint_identified": 7
+    },
+    "gaps": [
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "timing",
+        "missing_contract": "TCLab relative seconds are explicit; CO2 calendar indices are not sensor ticks. ClockSync/acquired-window needs acquisition identities, tick/host matching, clock model and joint time covariance. No independent multi-clock offset/skew truth is held."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "estimation",
+        "missing_contract": "CAREX A,B,Q,R are Riccati control matrices, not automatically observation H, process Q and measurement R for an estimator. Nile/CO2/TCLab supply observations but no agreed prior, observation model, dynamics, noise covariance or independent state truth."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "reconciliation",
+        "missing_contract": "NIST groups and empirical graph edges do not define affine conservation constraints or joint covariance. SBML case3 provides weighted conservation but needs explicit species-amount state mapping and discrepancy/covariance policy for reconciliation, distinct from parent trajectory verification."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "identification",
+        "missing_contract": "SIDT fits fully observed discrete LTI state/input sequences with sample alignment and held-out metadata. CAREX matrices are continuous or generalized algebraic benchmarks; TCLab temperatures/heater-percent columns are not a declaration that measured outputs are the complete state. Misra1a is static nonlinear regression."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "faults",
+        "missing_contract": "Full UCI profile labels are held, so labelled fault data is available. Native fdir.evaluate_residual/assess_isolability still requires a declared residual map, covariance, fault-signature dictionary and thresholds. The existing API cannot consume raw labelled UCI channels as a trained classifier; the mapping/model decision remains open."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "stability",
+        "missing_contract": "Native identified-stability requires retained discrete identified point model, explicit sample period, selected state and caller-supplied sealed quadratic P. CAREX continuous matrices and cost weights do not supply that contract; a Riccati solution is not automatically the required certificate. Generalized DARE also includes nonidentity E."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "covariance",
+        "missing_contract": "CGGT requires two SPD matrices of 1..8 named coordinates, frame/units, affine-invariant metric and geodesic parameters. CAREX Q/R are cost weights, not two identified covariances; geographic distances and pairwise spatial metrics are not SPD-manifold references. Backstep turbulent moments could form a covariance only after scaling/sign conventions and omitted cross-moments are resolved; unavailable moments cannot be zero-filled."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "numerics",
+        "missing_contract": "IAPWS IF97 Region1/4 coefficients and reference states are complete enough for their equations, but no existing IF97 consumer appears in src/ciw or consolidated instruments. The dry ideal-gas atmosphere and ET0 vapour relation are different equations. Calling SciPy/reference corpus kernels would not execute a NET consumer."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "polymer",
+        "missing_contract": "DMTA temperature/frequency/Eprime/Edoubleprime sweeps are not molding-cycle channels. Existing cycle assessment expects process/material identity, sensors in specified units, sample times and process model. Sultanova n(lambda) and dispersion formulas are optical properties; no Sellmeier evaluator was identified in native NET code."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "quality",
+        "missing_contract": "SKZ summary gives repeat-run/material/tool identities and aggregate energy, but not native time-indexed cavity pressure/temperature channels, traceable sensor policies, complete acceptance envelopes or part-quality labels."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "scheduling",
+        "missing_contract": "OR-Library provides integer operation duration, machine ordering, complete ft06/ft10/ft20/la01 jobs. NET production APIs orchestrate authorised worker/capability/check graphs and do not optimize disjunctive machine schedules or accept OR-Library duration matrices. Job-shop integer time has no supplied seconds conversion."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "thermal",
+        "missing_contract": "TCLab seconds/degC and percent heater command are supplied; percent is not power. Thermal model requires heat capacity/conductance/input watts, sensor/clock/covariance and boundary declarations. DMTA modulus and IAPWS water state equations are not those thermal dynamics."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "fluid",
+        "missing_contract": "Existing reservoir and shallow-water profiles require their own dimensions, forcing and BCs. Annual Nile volume is not local velocity/pressure. Driver-Seegmiller turbulent backstep data has flow geometry/reference conventions but NET has no matching RANS/turbulence solver; neither reservoir nor 1D wave model reproduces it. IF97 is not implemented."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "atmosphere",
+        "missing_contract": "Compiler expects prescribed dry temperature/wind vs height, surface pressure/gravity and fixed coefficients. CO2/ElNino/sunspots are temporal series, not complete hydrostatic columns. IF97 liquid/saturated water does not match fixed dry-gas physics."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "impact",
+        "missing_contract": "CAREX and special-function arrays have no mass, effective spring stiffness, initial contact state, plate geometry/material parameters or impact-force histories matching native profiles."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "geodesy",
+        "missing_contract": "GeographicLib table gives latitude/longitude/azimuth/distance on WGS84 ellipsoid, including unrolled longitude. Existing GSC endpoint projects timed lon/lat/ellipsoidal-height samples into local ENU and needs origin, height and recording time. Flat-torus/constant-curvature geodesic providers do not solve WGS84 inverse geodesics."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "vision",
+        "missing_contract": "Middlebury/image/digit arrays are usable data but not scene/asset capture requests. Optical n,k tables do not specify scene geometry, light spectrum, camera response or rendering conventions. No matching stereo/classifier numerical consumer identified in NET."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "bim",
+        "missing_contract": "JSON Schema meta-schemas and spatial arrays contain no IFC entity/relationship graph, units, chosen quantities, edits or native CSE mapping witness."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "security",
+        "missing_contract": "Ed25519 vectors sign arbitrary source bytes, while NET legibility verifies a domain-separated complete bundle message. Raw vectors cannot be directly passed as bundle signatures. JCS numbers follow RFC8785; native NET deliberately uses its different sort-keys/ASCII/Python-binary64 profile. RDF canonicalization fixtures are now held but native legibility is neither RDF canonicalization nor JCS; select the exact external profile separately without replacing NET identities."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "resources",
+        "missing_contract": "Job-shop integer times are not token budgets, observed yields or GPU power/runtime records. CAREX/special-function arrays can serve as workload inputs only after exact kernel and independent expected accuracy are defined."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "hardware",
+        "missing_contract": "UCI now supplies actual hydraulic condition labels and channel observations. hardware.assess still requires explicit device/configuration identity, a compatible declared test plan and supported acceptance policies; its contracts do not automatically derive those from the UCI labels. Binary files/digits remain only auxiliary fixtures."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "retrieval",
+        "missing_contract": "Empirical graphs/schemas/molecules are documents/objects, but do not supply native schematic coordinates/declarations or query-to-relevance/claim judgments. Native schematics dispatches declared eligible tools; it is not a BEIR ranking endpoint."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "agents",
+        "missing_contract": "Generic JSON schemas and signature vectors do not encode actual NET command requests, capabilities, authorization boundaries, expected refusals or cancellation/replay outcomes."
+      },
+      {
+        "classification": "NO_DOMAIN_SOURCE",
+        "family": "content",
+        "missing_contract": "No source in this family is acquired. Native perspective module is an explicitly authored qualitative contract and does not infer historical truth."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "particles",
+        "missing_contract": "Resonance/special-function values are not the native linear bead-spring HOOMD model parameters/GSD trajectories. They also do not provide neutrino event-generator/cross-section validation for GENIE, whose matching NET endpoint was not identified."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "em",
+        "missing_contract": "Johnson-Christy n,k and Sultanova dispersion fits supply wavelength-dependent optical parameters and bounded formula definitions. They do not supply a NET optical/Maxwell consumer; no Fresnel/Sellmeier/IF97-like generic evaluator was located. Special-function kernel fixtures alone are not wave-field inputs."
+      },
+      {
+        "classification": "NO_MATCHING_DOMAIN_ENDPOINT_IDENTIFIED",
+        "family": "constrainedml",
+        "missing_contract": "Digits/Norris supply labels/numerical response but not monotonicity domains, shape constraints, lattice structure or an installed native constrained learner contract."
+      },
+      {
+        "classification": "EXISTING_CONTRACT_MODEL_OR_EVIDENCE_GAP",
+        "family": "economics",
+        "missing_contract": "Copper historical econometric table has year/variable definitions, not a native current-price/forecast model. CSV observation route demands physical clock seconds, so year indexing must not be silently converted to a fabricated acquisition timeline."
+      }
+    ],
+    "mapping_rows": 173,
+    "private_inventory_and_acquired_source_bytes_published": false,
+    "separate_code_mapping_followups": [
+      "observability",
+      "surface",
+      "assets",
+      "interop",
+      "operations"
+    ],
+    "unresolved_contract_or_endpoint_count": 28,
+    "views_overlap": true
+  },
+  "native_module_provenance": {
+    "audit_command": "python scripts/superrepo.py audit",
+    "chemistry_native_commit": "114060739239cc245a732ac74d16d5c876eaa08e",
+    "imported_roles": 21,
+    "published_ancestor_readback": "required_before_merge",
+    "status": "PASS"
+  },
+  "private_provider_boundary": {
+    "Julia_discrete_domain_assertions": 496,
+    "Julia_engineering_assertions": 19,
+    "Julia_engineering_independently_checked_candidates": 5,
+    "Julia_version": "1.10.12",
+    "Linux_native_engines_and_checkers": "rebuilt_and_executed",
+    "SCR_host_attestation": "not_established",
+    "Windows_private_native_qualification": "not_performed",
+    "native_cpp_assertions": 160941,
+    "private_source_or_inputs_published": false
+  },
+  "published_source_parents": {
+    "175": "505bd406e0ab26447c6ac4ac3d13d506a94fa28d",
+    "177": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+    "178": "fad73e28aab9882fd6878eb7a4ed1e192753fb9d",
+    "179": "4f47714d094966705c7ef94d847a06fe6a1a7d7b",
+    "180": "894e4d780fa62811422d5d91428270c1f3c8c2eb",
+    "183": "9a3e6c619dedc532fb774a8907eaf1b3784f7799",
+    "184": "4265eb2382d694f07fd22e1701c107f992297b42",
+    "185": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+    "187": "992fc57f6e8288c26c0cfc075c8ace02707d46cf",
+    "188": "2e986b1d6e3037b2bd4947b75e9b20ab75dba57a",
+    "189": "b2f712ed583f3042195531228c65948ee893a197",
+    "190": "0be25f7843ea086aa18e6079ab24074b9c8b22e5",
+    "191": "49e3d38ee43ede6db9b0ccf46328739e1c80a047",
+    "194": "3465f76468b106e6e12366d6c99f2cc920ffe431",
+    "196": "1293b8cefbab7111c962cd48a3e388106e787c4c",
+    "main": "0374076695475669188d61698e4656ced2263e01"
+  },
+  "recorded_date": "2026-10-05",
+  "regression_count_policy": "Selections overlap. They must not be summed as distinct cases or represented as a full final repository regression.",
+  "regressions": [
+    {
+      "failed": 0,
+      "mode": "installed",
+      "passed": 848,
+      "receipt_sha256": "27650beabbcf855c3c960fe4ca3e39a239b37ba1be57cbbb3b9db778620548f4",
+      "scope": "reconciled host, extension, data, QC, product, thermal, sequence and two private providers",
+      "skipped": 0,
+      "subtests_passed": 49
+    },
+    {
+      "failed": 0,
+      "mode": "installed",
+      "passed": 202,
+      "receipt_sha256": "9a7c3d49824e285c7d573d89062757ee976cf39e8bc86cdfe070cd73726b2974",
+      "scope": "final frozen academic, graph, affine, sequence, DSP and data-workflow selection",
+      "skipped": 0
+    },
+    {
+      "failed": 0,
+      "mode": "source; hosted matrix enforces same exact case count",
+      "passed": 94,
+      "scope": "public extension, runner and covariance boundary",
+      "skipped": 0
+    },
+    {
+      "failed": 0,
+      "mode": "installed",
+      "passed": 635,
+      "revision_scope": "8f6b3a6c7b6af133d08bbda47848c4639de56c4b",
+      "scope": "rheology, thermal identification, manufacturing namespace and data/operation composition before later academic/extension additions",
+      "skipped": 0
+    }
+  ],
+  "remaining_gates": [
+    {
+      "available_RAM_GiB_approx": 3.5,
+      "cgroup_memory_limit": "not_visible_to_executor",
+      "gate": "live Nexus proof/reuse/tamper",
+      "historical_memory_report": "roughly 7 GB under prior suite pressure; mixed Nexus heat statements reported 2.6-10.1 GB",
+      "note": "Exact host and guest artifacts are ready. No proof was invented and no proof requirement relaxed.",
+      "status": "NOT_RUN_RESOURCE_GUARD",
+      "swap": "absent",
+      "water_workload_peak": "not_measured"
+    },
+    {
+      "gate": "current consolidated hosted Linux/Windows workflows",
+      "note": "Use exact published-head CI. Prior component green runs and queued jobs are not consolidated qualification.",
+      "status": "PENDING"
+    },
+    {
+      "gate": "all external corpus contracts",
+      "note": "Completed endpoints do not qualify every source dataset or full family workflow.",
+      "status": "PARTIAL_BY_DECLARED_PROFILE"
+    }
+  ],
+  "restored_optional_runtime_checks": {
+    "Nexus_heat_ELF_sha256": "6b11f85eae24ae04525ac21cb1abe591f2131f0bd6993cf60082c5777eadde33",
+    "Nexus_host": "built; existing unregistered-kernel refusal passed",
+    "Nexus_pairwise_ELF_sha256": "46d92372bde142d3e2d09ff9c032f793ea733464ca9581006747ffe7216decf2",
+    "Nexus_recipe_inputs": "28 exact historical source files verified in separate reconstruction; live source unchanged",
+    "Rust_version": "1.99.0",
+    "Rust_workspace_passed": 67,
+    "live_Nexus_case_deselected": 1,
+    "structural_and_GROMACS_passed": 16
+  },
+  "schema": "ciw.program-integration-qualification.v1",
+  "scope": "Reviewed source integration, exact typed data connections and bounded native consumer qualification. This is not qualification of every corpus mapping, physical system, or optional external runtime.",
+  "status": "LOCAL_QUALIFICATION_PASSED_HOSTED_AND_EXTERNAL_GATES_REMAIN",
+  "tested_inputs": {
+    "native_manifest_blob": "32d1c6a06570f321dbe819d2de9c5e3f7e942d09",
+    "scripts_git_tree": "bc55b73e77881bc1f036a694a203a2afebdd8afb",
+    "src_git_tree": "8f6ec714aab75b2f1750b0187d205fdbd321534e",
+    "tests_git_tree": "d9395025020c0f612b2723522d14df85a08b89a2"
+  }
+}

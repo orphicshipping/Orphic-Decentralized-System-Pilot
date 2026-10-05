@@ -53,7 +53,7 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
     bundles = {bundle["bundle_id"]: bundle for bundle in retained["bundles"]}
     for source in sources.values():
         nodes.setdefault(source["evidence_id"], {"kind": "evidence", "dependencies": []})
-        add(source["source_id"], "source", [source["evidence_id"]],
+        add(source["source_id"], "source", [source["evidence_id"], *source.get("input_source_ids", [])],
             source_kind=source["kind"], evidence_id=source["evidence_id"], label=source["label"])
     for execution in executions.values():
         deps = [execution["evidence_id"]]
@@ -61,6 +61,9 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
         # contain invalid or missing references. Only completed occurrences
         # have a validated result contract from which to project these edges.
         if execution["status"] == "completed":
+            if execution["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1", "particles.hoomd-md.v1", "data.review-product-study.v1", "data.review-toolpoint-containment.v1"}:
+                from .data_workflow import source_ids
+                deps.extend(source_ids(execution["parameters"]))
             if execution["operation_id"] == "system.compile.v1":
                 source_id = execution.get("parameters", {}).get("source_id")
                 if type(source_id) is str and source_id in sources:
@@ -73,6 +76,9 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
             operation_id=execution["operation_id"], outcome=execution["status"])
     for result in results.values():
         deps = [result["evidence_id"]]
+        if result["operation_id"] in {"data.compare-observations.v1", "data.project-compute-state.v1", "data.assess-polymer-cycle.v1", "particles.hoomd-md.v1", "data.review-product-study.v1", "data.review-toolpoint-containment.v1"}:
+            from .data_workflow import source_ids
+            deps.extend(source_ids(result["parameters"]))
         if result["operation_id"] == "system.compile.v1":
             source_id = result.get("parameters", {}).get("source_id")
             if type(source_id) is str and source_id in sources:

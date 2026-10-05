@@ -1,0 +1,46 @@
+name: Retained data integration
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-and-installed:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.12']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install ".[dev,columnar]"
+      - name: Verify source integration and native local-package paths
+        run: >-
+          python -m pytest -q
+          tests/test_data_sources.py tests/test_data_workflow.py
+          tests/test_data_compute_bridge.py tests/test_data_integration_matrix.py
+          tests/test_temperature_recording_bridge.py tests/test_product_study.py
+      - name: Verify installed-package provenance and CLI
+        run: >-
+          python -c "import pathlib, ciw, subprocess, sys;
+          assert not pathlib.Path(ciw.__file__).resolve().is_relative_to(pathlib.Path('src').resolve());
+          subprocess.run([sys.executable, '-m', 'ciw.net', 'data', 'inventory'], check=True)"
+      - name: Run the same gates without source-path injection
+        run: >-
+          python -c "import pathlib, subprocess, sys, tempfile;
+          f=tempfile.NamedTemporaryFile(mode='w',suffix='.ini',delete=False);
+          f.write('[pytest]\n'); f.close();
+          subprocess.run([sys.executable,'-m','pytest','-q','-c',f.name,
+          'tests/test_data_sources.py','tests/test_data_workflow.py',
+          'tests/test_data_compute_bridge.py','tests/test_data_integration_matrix.py',
+          'tests/test_temperature_recording_bridge.py','tests/test_product_study.py'],check=True)"

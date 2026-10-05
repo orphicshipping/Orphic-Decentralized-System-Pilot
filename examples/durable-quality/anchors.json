@@ -1,0 +1,5 @@
+{
+  "spec_ref": "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+  "head_ref": "sha256:8d560438e8dacb4f5484dc9456d769ca8ca217a442caeee8e81f83d6a3b9c1d1",
+  "note": "Synthetic fixture anchors. Production anchors must come from independently retained trusted state."
+}

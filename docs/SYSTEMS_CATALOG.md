@@ -112,7 +112,7 @@ for source, retained validation records and open gates.
 | OrdinaryDiffEqTsit5 | Bounded oscillator integration. |
 | JuMP / HiGHS | Bounded quadratic-design optimization. |
 | JuliaIntervals family | Bounded interval-enclosure profile. |
-| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Added external atomistic-simulation and ML interatomic-potential provider target. Upstream documents batched molecular dynamics, relaxation and model training/fine-tuning. **Planning guide / contract only: NET adapter, environment binding, independent numerical validation and polymer/physical qualification remain pending.** See [NVALCHEMI.md](NVALCHEMI.md). |
+| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Optional atomistic-simulation provider target. **Explicit isolated CPU Lennard-Jones single-point binding and independent numerical qualification gate implemented.** No default Workbench operation, learned-model, GPU, dynamics or polymer/physical qualification is implied. See [NVALCHEMI.md](NVALCHEMI.md). |
 
 ALCHEMI extends the molecular/materials layer; it does not replace existing
 Julia/native providers, continuum solvers, NET evidence ownership or machine

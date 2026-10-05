@@ -272,6 +272,9 @@ def _validate_saved_result(result: Any, run: dict, revision: int, recording_file
         validate_role(result["operation_id"], result["role"])
         validate_payload(result["operation_id"], result["data"], run, result["parameters"],
                          {"channel": channel, "interval_s": [start, end]})
+        if (result["operation_id"] == "particles.hoomd-md.v1"
+                and result["data"]["native_result"]["runtime"] != result["runtime"]):
+            raise ValueError("Saved HOOMD runtime differs from the execution record")
         return
     from .operations.schemas import validate_payload
     validate_payload(result["operation_id"], result["data"], run, {},
@@ -408,6 +411,27 @@ class Session:
             return self._journal_action(kind, payload)
         if kind == "source.add":
             return self.workbench.add_source(payload)
+        if kind == "data.inventory":
+            _keys(payload, set())
+            from .data_inventory import inventory
+            return inventory(session=self)
+        if kind == "data.list":
+            _keys(payload, set())
+            return {"sources": [source for source in self.workbench.list_sources()
+                                if source["kind"] == "data-record"]}
+        if kind == "data.get":
+            _keys(payload, {"source_id"}, {"source_id"})
+            source = self.workbench.get_source(payload["source_id"])
+            if source["kind"] != "data-record":
+                raise ValueError("Requested source is not a retained data record")
+            from .data_sources import _source as data_source
+            import base64
+            return data_source(base64.b64decode(source["bytes_b64"], validate=True))
+        if kind == "data.project-observations":
+            fields = {"source_id", "selector", "dataset_id", "revision", "parent_source_id", "recorded_at", "label"}
+            _keys(payload, fields, fields)
+            from .data_workflow import project_observations
+            return project_observations(self.workbench, **payload)
         if kind == "source.list":
             _keys(payload, set())
             return {"sources": self.workbench.list_sources()}
@@ -569,7 +593,7 @@ class Session:
                                 for identity in dependency_result_ids(operation_id, parameters)
                                 if identity in self.results}
                 retained_sources = (self.workbench.retained_sources()
-                                    if operation_id.startswith("system.") else None)
+                                    if operation_id.startswith(("system.", "data.", "particles.")) else None)
                 self._pending_operations += 1
             try:
                 execution, result = execute_operation(
@@ -614,7 +638,10 @@ class Session:
                     self._pending_operations -= 1
             if result is None:
                 return {"status": "refused", "execution": copy.deepcopy(execution), "result": None}
-            return {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            response = {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            if operation_id.startswith("data."):
+                response["dependency_status"] = self.dependency_status()["artifact_status"][result["result_id"]]
+            return response
         if kind == "result.list":
             _keys(payload, {"evaluated_at"})
             result = {"results": self._result_summaries() + self.workbench.native_result_summaries()}
@@ -714,12 +741,16 @@ class Session:
                 raise ValueError("Saved result identity mismatch or duplication")
             result_map[result_id] = result
             execution_ids.add(result["execution_id"])
+        from .operations.schemas import validate_extension_result_dependencies
+        validate_extension_result_dependencies(result_map)
         from .adapters.covariance_records import validate_result_dependencies
         validate_result_dependencies(result_map)
         from .impact_workflow import validate_result_dependencies as validate_impact_dependencies
         validate_impact_dependencies(result_map)
         from .system_workflow import validate_saved_dependencies as validate_system_dependencies
         validate_system_dependencies(result_map, retained_workbench.retained_sources())
+        from .data_workflow import validate_saved_dependencies as validate_data_dependencies
+        validate_data_dependencies(result_map, retained_workbench.retained_sources())
         from .atmosphere_workflow import validate_result_dependencies as validate_atmosphere_dependencies
         validate_atmosphere_dependencies(result_map)
         from .fluid_workflow import validate_result_dependencies as validate_fluid_dependencies
