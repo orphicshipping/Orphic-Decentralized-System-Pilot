@@ -90,12 +90,40 @@ measurement covariance, calendar year or pump. Source bytes are retained in
 existing artifact metadata and checked against artifact digests. Set
 `NET_FAO56_REFERENCE` for the corresponding real-source test.
 
+## Existing graph and affine consumers
+
+`scripts/qualify_graph_atlas_consumer.py --atlas ... --compute-root ... --output-dir ...`
+maps the complete pinned Graph Atlas into the existing Compute Runtime projection.
+All 1,253 graphs, 8,475 nodes (including isolates), and 12,342 undirected edges
+survive a reversible paired-arc mapping. Forty bounded batches plus fresh replay
+make 80 direct native Compute API calls. These are not Session executions and
+do not invent acquisition clocks or coordinates.
+
+The same graph records define 1-dimensional complexes with original vertices
+and edges, without filling cliques. The existing `ciw.proof_f2` encoder, decoder
+and reference calculator agree with an independent connected-components/cycle
+oracle for all 1,252 nonempty graphs. Incorrect candidates remain mismatches;
+the empty graph exercises the existing explicit refusal. This qualifies finite
+statement arithmetic and binary interchange, not cryptographic proof execution
+or a learned graph model.
+
+`scripts/qualify_norris_affine_consumer.py --norris ... --sensitivity-source-root ... --output-dir ...`
+passes all 36 original [NIST Norris](https://www.itl.nist.gov/div898/strd/lls/data/LINKS/DATA/Norris.dat)
+rows and its certified coefficients into the existing native sensitivity
+`affine_map`/`DifferentiableModel` evaluator. Eighty-digit decimal prediction and
+derivative checks, certified residual statistics, and fresh-process replay must
+agree. This verifies affine application, not coefficient fitting or calibration
+qualification. Unspecified physical units and missing joint covariance remain
+unspecified. The explicitly bound package executes from rechecked source-only
+bytes; stale bytecode and sibling module shadowing cannot replace that source.
+Set `NET_NORRIS_DAT` for the acquired-source regression test.
+
 ## Qualification boundary
 
 The historical V3 inventory has 41 overlapping families and 173 mappings; it
 is a research inventory rather than proof of compatible native consumers.
-This bounded reaction check does not qualify the remaining families, general
-reaction mechanisms, the upstream Gambit/JAX interaction engine, physical
+These bounded checks do not establish general reaction mechanisms,
+the upstream Gambit/JAX interaction engine, physical
 materials, field dynamics, manufacturing release or hardware control.
 The earlier procurement's two empty RDF fixtures were rejected by a nonempty
 payload check; empty graphs require separate exact publisher-blob verification.
