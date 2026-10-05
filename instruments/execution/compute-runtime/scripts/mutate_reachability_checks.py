@@ -7,6 +7,7 @@ must catch it.
 
 import os
 import pathlib
+import re
 import subprocess
 import sys
 
@@ -59,8 +60,8 @@ MUTATIONS = [
          '        "terminated": admitted > 0,  # MUTANT'),
      "test_a_plant_that_lands_nothing_is_not_counted_as_terminated"),
     ("the remaining silences folded into the reachable count", ARTIFACT,
-     lambda s: s.replace('"reachable_from_any_entry": 15',
-                         '"reachable_from_any_entry": 20'),
+     lambda s: re.sub(r'("reachable_from_any_entry": )([0-9]+)',
+                       lambda m: m[1] + str(int(m[2]) + 5), s),
      "test_the_artifact_reports_silences_as_silences_not_as_clean"),
     ("the silences dropped from the summary entirely", ARTIFACT,
      lambda s: s.replace('"not_expressible_as_a_document": 5',
@@ -74,7 +75,7 @@ MUTATIONS = [
      lambda s: s.replace('"acquisition_trace_superseded"', '"acquisition"'),
      "test_the_artifact_carries_the_ingest_measurement_not_the_import_trace"),
     ("a per-invariant count that no gate id declares", ARTIFACT,
-     lambda s: s.replace('"quantity_is_typed": 5', '"quantity_typed": 5'),
+     lambda s: s.replace('"quantity_is_typed":', '"quantity_typed":'),
      "test_the_artifact_carries_the_ingest_measurement_not_the_import_trace"),
     ("the alias correction reduced to a note without its cost", ARTIFACT,
      lambda s: s.replace('"measured_cost": "the derived register holds 58',

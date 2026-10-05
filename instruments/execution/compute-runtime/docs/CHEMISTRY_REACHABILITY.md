@@ -1,7 +1,25 @@
 # Chemistry gate reachability — per code, and what the number means
 
-**20 refusal codes. 20 LIVE. 0 REACHABLE. No rejection rate is
-reportable.**
+**Current software probe: 25 refusal codes, 25 LIVE, 20 REACHABLE through
+ingest, five not expressible as a single document.** These are deliberately
+constructed contract violations, not an empirical source-quality measurement.
+
+## Quantity-validity extension, 5 October 2026
+
+Fresh probes reproduced invalid scientific values being admitted: NaN/infinity,
+negative or nonfinite uncertainty, boolean values, and a null unit coerced to
+the text `None`. Nonnumeric values escaped the quantity exception and interrupted
+ingestion instead of being quarantined. Empty property/method declarations also
+passed the context gate.
+
+The quantity contract now refuses these cases, preserving the original payload
+and existing invariant identity in quarantine. Finite numeric strings retain
+their existing conversion behavior; explicit absent uncertainty stays `None`,
+never zero. Five new refusal codes cover value validity, uncertainty validity,
+negative uncertainty and empty property/method identities. The regenerated
+register measures 20/20 planted document refusals; the earlier 20-code results
+below remain historical evidence, not the current total. No physical accuracy,
+calibration traceability or general chemistry validation is established.
 
 ## Why per-code
 
