@@ -4,10 +4,13 @@ on:
   pull_request:
     paths:
       - 'src/ciw/operations/**'
+      - 'src/ciw/core/**'
       - 'src/ciw/domain_cli.py'
       - 'src/ciw/operator_commands.py'
       - 'src/ciw/session.py'
       - 'tests/test_extension_dependencies.py'
+      - 'tests/test_operation_runner.py'
+      - 'tests/test_covariance_artifacts.py'
       - 'pyproject.toml'
       - '.github/workflows/domain-provider-boundary.yml'
   push:
@@ -45,8 +48,26 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install candidate and pinned public test dependencies
         run: python -m pip install ".[dev]"
-      - name: Test installed extension boundary, without private provider
-        run: python -m pytest -q -o pythonpath= tests/test_extension_dependencies.py --junitxml=extension-tests.xml
+      - name: Test installed extension boundary and unchanged core invariants
+        run: >-
+          python -m pytest -q -o pythonpath=
+          tests/test_extension_dependencies.py
+          tests/test_operation_runner.py
+          tests/test_covariance_artifacts.py
+          --junitxml=extension-tests.xml
+      - name: Require complete public coverage without skips
+        run: >-
+          python -c "import xml.etree.ElementTree as E;
+          c=list(E.parse('extension-tests.xml').getroot().iter('testcase'));
+          assert len(c)>=89, 'Expected extension/runner/covariance coverage missing';
+          assert not any(x.find(t) is not None for x in c for t in ('skipped','failure','error'))"
+      - name: Confirm installed import outside checkout
+        working-directory: ${{ runner.temp }}
+        run: >-
+          python -c "import ciw, os, pathlib;
+          p=pathlib.Path(ciw.__file__).resolve();
+          assert not p.is_relative_to(pathlib.Path(os.environ['GITHUB_WORKSPACE']).resolve());
+          print(p)"
       - name: Optional help outside source directory
         working-directory: ${{ runner.temp }}
         run: net domains --help

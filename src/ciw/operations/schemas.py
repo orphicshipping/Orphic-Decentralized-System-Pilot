@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from ..core.identities import canonical_json
 from ..core.records import finite_tree
 from .registry import valid_operation_id
 
@@ -34,10 +35,8 @@ def validate_extension_result_dependency(result: dict, results: dict) -> None:
     operation_id = result.get("operation_id")
     if operation_id not in _DEPENDENCY_FIELDS:
         return
-    _validate_extension_dependencies(operation_id, result["parameters"], results)
-    for field in _DEPENDENCY_FIELDS[operation_id]:
-        if result["parameters"][field]["evidence_id"] != result["evidence_id"]:
-            raise ValueError("Extension dependency belongs to different source evidence")
+    _validate_extension_dependencies(operation_id, result["parameters"], results,
+                                     evidence_id=result.get("evidence_id"))
 
 
 def validate_extension_result_dependencies(results: dict) -> None:
@@ -46,12 +45,19 @@ def validate_extension_result_dependencies(results: dict) -> None:
         validate_extension_result_dependency(result, results)
 
 
-def _validate_extension_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
-    for field in _DEPENDENCY_FIELDS.get(operation_id, ()):
+def _validate_extension_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                     *, evidence_id: str | None = None) -> None:
+    fields = _DEPENDENCY_FIELDS.get(operation_id, ())
+    if fields and (type(evidence_id) is not str or not evidence_id):
+        raise ValueError("Extension dependencies require source evidence context")
+    for field in fields:
         candidate = parameters.get(field)
         if (type(candidate) is not dict or type(candidate.get("result_id")) is not str
-                or retained.get(candidate["result_id"]) != candidate):
+                or type(retained.get(candidate["result_id"])) is not dict
+                or canonical_json(retained[candidate["result_id"]]) != canonical_json(candidate)):
             raise ValueError("Extension dependency is not the exact retained result occurrence")
+        if candidate.get("evidence_id") != evidence_id:
+            raise ValueError("Extension dependency belongs to different source evidence")
 
 
 
@@ -83,8 +89,9 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
     return []
 
 
-def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
-    _validate_extension_dependencies(operation_id, parameters, retained)
+def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                  *, evidence_id: str | None = None) -> None:
+    _validate_extension_dependencies(operation_id, parameters, retained, evidence_id=evidence_id)
     if operation_id == "metrology.temperature.verify.v1":
         from ..temperature_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)

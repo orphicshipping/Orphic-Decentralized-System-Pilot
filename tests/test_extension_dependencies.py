@@ -103,3 +103,89 @@ def test_optional_domain_help_without_provider(monkeypatch):
     monkeypatch.setattr(builtins,"__import__",deny)
     assert main(["--help"])==0
     assert main(["demo"])==2
+
+
+def test_live_cross_source_refuses_before_runtime_lookup(extension, tmp_path):
+    from ciw.operations.runner import execute
+    parent, child, original, calls = extension
+    prerequisite = _execute(original, parent, {})["result"]
+    other_request = example_request()
+    other_request["identity"]["cycle_id"] = "synthetic.other-source"
+    other = Session(make_source(other_request), tmp_path / "other")
+    runtime_calls = []
+    registry = default_registry()
+    registry.register(Operation(child, "verification", lambda *args: calls.append(True) or {"declared": True},
+                                lambda: runtime_calls.append(True) or {"provider": "test"}))
+    assert prerequisite["evidence_id"] != other.run["evidence_id"]
+    attempt, result = execute(registry, other.run, other.selection, "source.json", child,
+                              {"candidate": prerequisite},
+                              retained_results={prerequisite["result_id"]: prerequisite})
+    assert attempt["status"] == "refused"
+    assert "different source" in attempt["refusal"]["message"]
+    assert result is None and not calls and not runtime_calls
+    assert attempt["runtime"] is None
+
+
+@pytest.mark.parametrize("fault", ["boolean_revision", "integer_for_boolean"])
+def test_python_equal_is_not_exact_retained_json(extension, fault):
+    parent, child, session, calls = extension
+    prerequisite = _execute(session, parent, {})["result"]
+    altered = deepcopy(prerequisite)
+    if fault == "boolean_revision":
+        assert altered["selection_revision"] == 0
+        altered["selection_revision"] = False
+    else:
+        altered["data"]["declared"] = 1
+    assert altered == prerequisite  # Python equality collapses distinct JSON types.
+    reply = _execute(session, child, {"candidate": altered})
+    assert reply["status"] == "refused"
+    assert not calls
+
+
+@pytest.mark.parametrize("fault", ["boolean_revision", "integer_for_boolean"])
+def test_saved_python_equal_alias_is_refused(extension, fault):
+    parent, child, session, _ = extension
+    prerequisite = _execute(session, parent, {})["result"]
+    dependent = _execute(session, child, {"candidate": prerequisite})["result"]
+    altered = deepcopy(dependent)
+    candidate = altered["parameters"]["candidate"]
+    if fault == "boolean_revision":
+        candidate["selection_revision"] = False
+    else:
+        candidate["data"]["declared"] = 1
+    seal(altered)
+    with pytest.raises(ValueError, match="exact retained"):
+        schemas.validate_extension_result_dependencies({prerequisite["result_id"]: prerequisite,
+                                                         altered["result_id"]: altered})
+
+
+def test_extension_live_check_requires_source_context(extension):
+    parent, child, session, _ = extension
+    prerequisite = _execute(session, parent, {})["result"]
+    with pytest.raises(ValueError, match="source evidence context"):
+        schemas.validate_request_dependencies(child, {"candidate": prerequisite}, session.results)
+
+
+def test_builtin_dependency_call_remains_backward_compatible():
+    schemas.validate_request_dependencies("statistics.v1", {}, {})
+
+
+@pytest.mark.parametrize("fault", ["boolean_revision", "integer_for_boolean"])
+def test_saved_execution_copy_cannot_alias_the_result(extension, tmp_path, fault):
+    parent, child, session, calls = extension
+    prerequisite = _execute(session, parent, {})["result"]
+    dependent = _execute(session, child, {"candidate": prerequisite})["result"]
+    path = session.save_workspace(tmp_path / "workspace.json")
+    import json
+    saved = json.loads(path.read_text())
+    execution = next(x for x in saved["executions"] if x["execution_id"] == dependent["execution_id"])
+    if fault == "boolean_revision":
+        execution["parameters"]["candidate"]["selection_revision"] = False
+    else:
+        execution["parameters"]["candidate"]["data"]["declared"] = 1
+    assert execution["parameters"] == dependent["parameters"]
+    seal(execution)
+    path.write_text(json.dumps(saved))
+    with pytest.raises(ValueError, match="Execution/result parameters binding mismatch"):
+        Session.from_workspace(path, tmp_path / "reopened")
+    assert calls == [True]

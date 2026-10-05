@@ -63,3 +63,48 @@ The added workflow runs the public tests against an installed candidate on
 Linux/Windows and Python 3.11/3.13. A workflow definition is not a successful
 hosted run. Windows, broader affected repository tests, native SCR execution,
 physical validation, state admission and equipment authority remain unestablished.
+
+
+## Source and exact-content hardening — 5 October 2026
+
+The execution boundary now checks a dependency's source evidence **before**
+reading the provider runtime or invoking it, not only when reopening results.
+`validate_request_dependencies` accepts keyword-only `evidence_id`; the existing
+runner supplies its validated source ID. A direct caller checking an extension
+with registered result dependencies must also supply this context. Existing
+built-in three-argument calls remain compatible.
+
+Exact retained content is compared using NET's existing canonical JSON encoder,
+not Python dictionary equality: `False` and `0`, or `True` and `1`, must not
+substitute for each other in an otherwise equal prerequisite. The same check
+applies to live execution, saved dependency validation and execution/result binding. No canonical encoder,
+source schema, covariance tolerance, independent checker or provider pin changes.
+
+Nine new public regressions establish the defect and repair: eight fail against
+the original PR head and all nine pass after the fix. The public selection now
+contains 29 extension cases, plus the existing 20 operation-runner and 40 covariance
+artifact cases: 89 distinct public tests. The hosted matrix requires all 89 to
+complete without skips, and checks installed import provenance outside checkout.
+The local combined public/private integration subset contains 90 cases (29+61),
+and the complete selected set contains 150 distinct cases (89+61). Historical
+results above remain attached to their original source; repeating a suite does
+not create additional distinct cases.
+
+Parent data integration remains separately owned by PR #185. Its untouched native
+state/covariance envelopes and Workbench source module were byte-checked and used
+in a local compatibility campaign. Keep its retained-source checks and this PR's
+retained-result checks when composing the three shared files. The new source
+context keyword belongs on the existing runner call; it must not be dropped when
+adding the parent's adjacent data-operation checks. No new field bridge or parent
+schema is introduced here. The selected two-module compatibility campaign is not
+a qualification of the entire parent branch.
+
+A separate current-main compatibility wheel was assembled after its complete
+`src/ciw` tree matched `0b462bbb9ab1f6beddc3e187a1999e499688cd11` for main
+`0374076695475669188d61698e4656ced2263e01`. With the four public integration
+modules overlaid, the installed package passed 232 selected tests: the 150 cases
+above plus all 82 current-main microfab cases. This is complete package-source
+reconciliation and selected regression, not recovery of every monorepo test,
+fixture, provider checkout or Git history. It does not change the declared
+NumPy 2.4.3 requirement or convert the local NumPy 2.3.5 environment into a
+pinned qualification.
