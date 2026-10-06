@@ -10,7 +10,7 @@ import sys
 from . import link_contract as c, link_gateway as gateway, link_workflow as workflow
 from .control_contracts import save_new
 from .hardware_workflow import read_bytes
-from .link_profiles import catalog, example_manifest, example_observations
+from .link_profiles import unified_catalog, profile_examples, selectors, manifest_view
 from .link_protocol import MAX_FRAME, encode
 from .link_store import Journal, safe_path
 
@@ -31,8 +31,7 @@ def _key(path):
 def example(persona, output):
     output = safe_path(output)
     output.mkdir(parents=True, exist_ok=False)
-    device = example_manifest(persona)
-    records = example_observations(device)
+    device, records = profile_examples(persona)
     save_new(output / "manifest.json", device)
     wire = b"".join(encode(kind, c.bounded(value)) for kind, value in
                      [("manifest", device)] + [("observation", v) for v in records])
@@ -82,7 +81,12 @@ def main(argv=None):
         return study_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net link", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
-    commands.add_parser("catalog")
+    p = commands.add_parser("catalog", help="One Link application; profiles are declarations, not drivers")
+    p.add_argument("--manifest", type=Path, help="Inspect declared channel/profile matches without discovery")
+    p.add_argument("--manifest-ref", help="External exact-byte identity required with --manifest")
+    p = commands.add_parser("semantics", help="Read existing scalar lineage through NET morphism/preservation contracts")
+    p.add_argument("directory", type=Path); p.add_argument("--request-ref", required=True)
+    p.add_argument("--output", type=Path, help="Optional create-only mathematical review; no new scientific execution")
     commands.add_parser("inspection", help="Digital Inspection: one recorded preview, clear trust checks, Advanced details")
     commands.add_parser("delivery", help="Node-signed local custody receipts; no network or equipment grant")
     commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
@@ -94,7 +98,7 @@ def main(argv=None):
     p.add_argument("--allow-pty", action="store_true"); p.add_argument("--output", type=Path, required=True)
     for name in ("example", "demo"):
         p = commands.add_parser(name)
-        p.add_argument("--profile", choices=c.PERSONAS, default="GaugeLink")
+        p.add_argument("--profile", choices=selectors(), default="gauge")
         p.add_argument("--output-dir", type=Path, required=True)
     p = commands.add_parser("record", help="Import a finite byte stream; '-' explicitly selects stdin")
     p.add_argument("wire"); p.add_argument("--manifest", type=Path, required=True)
@@ -124,7 +128,15 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         if args.command == "catalog":
-            result = catalog()
+            if (args.manifest is None) != (args.manifest_ref is None):
+                raise ValueError("Supply manifest and externally retained manifest-ref together")
+            result = unified_catalog() if args.manifest is None else manifest_view(
+                read_bytes(safe_path(args.manifest), limit=65536), expected_ref=args.manifest_ref)
+        elif args.command == "semantics":
+            from .link_semantics import review
+            result = review(args.directory, expected_request_ref=args.request_ref)
+            if args.output is not None:
+                save_new(safe_path(args.output), result)
         elif args.command == "capture-serial":
             from .link_serial import capture_serial
             from .link_runtime import Authority

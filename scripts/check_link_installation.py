@@ -128,7 +128,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         (root / "tests").mkdir()
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
         if args.with_delivery:
-            test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py", "test_link_snapshot_integrity.py"])
+            test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py", "test_link_snapshot_integrity.py", "test_link_unification.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -165,6 +165,18 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             assert operator["qualification"] == "HELD" and operator["calculation"] == "COMPLETE"
             assert operator["processing"]["first_qualified_measurement_ns"] is None
             summary["operator_preview"] = {k: operator[k] for k in ("status", "qualification", "checks", "processing", "report")}
+        if args.with_delivery:
+            execute("unified-link-catalog", ["-I", "-m", "ciw.net", "link", "catalog"])
+            for profile in ("pressure", "vibration", "electrical"):
+                execute("unified-" + profile, ["-I", "-m", "ciw.net", "link", "demo",
+                    "--profile", profile, "--output-dir", "unified-" + profile])
+            mathematical = json.loads(execute("link-mathematical-binding", ["-I", "-m", "ciw.net", "link", "semantics",
+                "digital-inspection", "--request-ref", operator["reference"], "--output", "link-semantics.json"]))
+            assert mathematical["arithmetic_audit"] == "PASS"
+            assert mathematical["scope"]["physical_qualification"] == "HELD"
+            assert all(row["status"] == "COMPOSABLE" for row in mathematical["compositions"])
+            summary["link_semantics"] = {"review_ref": mathematical["record_digest"],
+                "stage_count": len(mathematical["original_stages"]), "new_scientific_execution": False}
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),

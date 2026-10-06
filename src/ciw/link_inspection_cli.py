@@ -99,13 +99,13 @@ def panel(directory, output, *, request_ref=None):
     body = f'''<!doctype html><html lang="en"><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
-<title>GaugeLink / Digital Inspection</title><style>
+<title>Link / Digital Inspection</title><style>
 :root{{color-scheme:dark}}*{{box-sizing:border-box}}body{{margin:0;background:#0f1611;color:#d8e3bb;font:17px/1.5 system-ui,sans-serif}}
 main{{max-width:820px;margin:auto;padding:24px}}section,details{{border:1px solid #57705c;border-radius:8px;padding:20px;margin:20px 0}}
 h1{{font-size:clamp(28px,6vw,42px);margin:12px 0}}h2{{font-size:20px}}.reading{{font:clamp(32px,8vw,54px)/1.2 ui-monospace,monospace;overflow-wrap:anywhere}}
 .badge{{font-size:14px;letter-spacing:.06em}}.checks{{display:grid;grid-template-columns:1fr 1fr;gap:12px}}
 p,code,pre{{overflow-wrap:anywhere}}pre{{white-space:pre-wrap;font-size:13px}}summary{{cursor:pointer;min-height:44px;padding:8px}}@media(max-width:460px){{main{{padding:14px}}.checks{{grid-template-columns:1fr}}}}
-</style><main><header><p>GAUGELINK / NET</p><h1>Digital Inspection</h1>
+</style><main><header><p>LINK / NET</p><h1>Digital Inspection</h1>
 <p class="badge">RETAINED PREVIEW · {esc(str(value['origin']).upper())} · NOT LIVE</p></header>
 <section aria-label="Result"><p class="badge">{esc(value['status'].replace('_',' '))}</p>
 <h2>Recorded result</h2><p class="reading">{esc(_number(value['reading']['value']))} {esc(value['reading']['unit'] or '')}</p>
