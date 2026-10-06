@@ -166,6 +166,26 @@ def _execute(source, parameters):
     return {**_fields(info, coverage), "comparison": comparison}
 
 
+def _validate_outcome_types(comparison):
+    """Keep native result types exact without changing comparison arithmetic.
+
+    Python equality admits False == 0 and 3.0 == 3. Those are not the same
+    retained JSON types. The existing checker still owns values and decisions.
+    """
+    outcome = comparison["outcome"]
+    keys(outcome, {"status", "sample_count", "component_count", "metrics", "unit", "reason"})
+    for key in ("sample_count", "component_count"):
+        if type(outcome[key]) is not int or outcome[key] < 0:
+            raise ValueError("Retained comparison counts must be nonnegative integers")
+    metrics = outcome["metrics"]
+    if metrics is not None:
+        keys(metrics, {"rmse", "max_abs_error", "max_tolerance_excess"})
+        for value in metrics.values():
+            if type(value) is not float:
+                raise ValueError("Retained comparison metrics must retain their native float type")
+            number(value)
+
+
 def validate_payload(operation, data, source, parameters, selection):
     """Offline semantic consistency only; never invokes the executable operation."""
     keys(parameters, {"channel", "interval_s"})
@@ -180,6 +200,7 @@ def validate_payload(operation, data, source, parameters, selection):
         raise ValueError("Retained review metadata, authority or source binding differs")
     comparison = data["comparison"]
     checks.validate_comparison(comparison)
+    _validate_outcome_types(comparison)
     if (not _same(comparison["left"], left)
             or not _same(comparison["right"], info["reference"]["observations"])
             or not _same(comparison["policy"], {k: info["request"][k] for k in ("atol", "rtol")})):
@@ -279,14 +300,18 @@ def run(link_directory, reference, request, output_dir, *, reference_raw=None, r
     return inspect(output)
 
 
-def _read(directory):
+def _read(directory, *, expected_snapshot_ref=None):
     from .session import Session
     register_schema()
     directory = safe_path(directory)
+    if expected_snapshot_ref is not None:
+        link.content_ref(expected_snapshot_ref)
+    workspace_raw = read_bytes(directory / "workspace.json", limit=MAX_WORKSPACE)
+    if expected_snapshot_ref is not None and bytes_ref(workspace_raw) != expected_snapshot_ref:
+        raise ValueError("Retained review snapshot does not match the operator's content anchor")
     parent, capture_raw, link_raw = _link_snapshot(directory / "link")
     ref_raw = read_bytes(directory / "reference.json", limit=MAX_INPUT)
     req_raw = read_bytes(directory / "request.json", limit=MAX_INPUT)
-    workspace_raw = read_bytes(directory / "workspace.json", limit=MAX_WORKSPACE)
     ref, req = link.loads(ref_raw, MAX_INPUT), link.loads(req_raw, MAX_INPUT)
     bindings = dict(capture=bytes_ref(capture_raw), link_workspace=bytes_ref(link_raw),
                     reference=bytes_ref(ref_raw), request=bytes_ref(req_raw))
@@ -311,18 +336,33 @@ def _read(directory):
     return session, execution, result, bindings, workspace_raw
 
 
-def inspect(directory):
-    session, execution, result, bindings, workspace_raw = _read(directory)
+def _inspection(session, execution, result, bindings, workspace_raw, *, expected_snapshot_ref=None):
     return {"schema": "ciw.device-review-inspection.v1", "status": "REFUSED" if result is None else "RETAINED",
         "snapshot_ref": bytes_ref(workspace_raw), "review_evidence_id": session.run["evidence_id"],
         "operation_id": OPERATION, "execution_id": execution["execution_id"],
         "result_id": None if result is None else result["result_id"], "input_bytes": bindings,
         "data": None if result is None else deepcopy(result["data"]), "refusal": deepcopy(execution.get("refusal")),
-        "authority": deepcopy(AUTHORITY), "network_access": False}
+        "authority": deepcopy(AUTHORITY), "network_access": False,
+        "content_anchor_check": {"status": "NOT_REQUESTED" if expected_snapshot_ref is None else "MATCHED",
+                                 "expected": expected_snapshot_ref, "authenticates_origin": False}}
 
 
-def replay(directory, output_dir):
-    _, _, _, bindings, _ = _read(directory)
+def inspect(directory, *, expected_snapshot_ref=None):
+    """Inspect retained records, optionally pinned to an externally supplied hash."""
+    loaded = _read(directory, expected_snapshot_ref=expected_snapshot_ref)
+    return _inspection(*loaded, expected_snapshot_ref=expected_snapshot_ref)
+
+
+def _review_snapshot(directory, *, expected_snapshot_ref=None):
+    """Read one validated snapshot; source visibility never depends on success."""
+    loaded = _read(directory, expected_snapshot_ref=expected_snapshot_ref)
+    info, observations, _ = _context(loaded[0].run)
+    return (_inspection(*loaded, expected_snapshot_ref=expected_snapshot_ref),
+            observations, deepcopy(info["reference"]["observations"]))
+
+
+def replay(directory, output_dir, *, expected_snapshot_ref=None):
+    _, _, _, bindings, _ = _read(directory, expected_snapshot_ref=expected_snapshot_ref)
     directory = safe_path(directory)
     reference_raw = read_bytes(directory / "reference.json", limit=MAX_INPUT)
     request_raw = read_bytes(directory / "request.json", limit=MAX_INPUT)

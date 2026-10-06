@@ -136,9 +136,61 @@ inputs. PR #172, #174, the firmware/device-lifecycle owner and private GaugeLink
 product files are unchanged. No merge, deployment, radio/serial probing, flashing,
 physical actuation, model training, canonical-state admission or release occurs.
 
+## Integrity and failed-computation hardening
+
+This increment keeps the same operation and comparison algorithm. Native outcome
+sample/component counts must remain nonnegative JSON integers; generated numeric
+metrics must remain finite floats. A resealed result cannot substitute `false`
+for `0.0` or `3.0` for the count `3` using Python's numeric equality. Existing
+comparison values, decisions and tolerances are unchanged. This extra shape
+check is scoped to retained device reviews, not a claim that all unrelated
+comparison consumers have been hardened.
+
+A refused comparison does not remove source visibility. Both read-only source
+tools return the actual selected native observations or retained reference even
+when the comparison has no result. Every page reports
+`comparison_execution_status` and `comparison_result_id`, preserving the refusal
+and never fabricating a successful computation. A real empty reference remains
+empty, distinct from an unavailable comparison. All returned data are detached.
+The host loads one validated snapshot, not an independent source re-read on each
+MCP call. Evidence paging succeeds as a read even when computation was refused.
+
+### Optional operator-held snapshot anchor
+
+The existing `snapshot_ref` is the SHA-256 content reference of the exact retained
+review workspace bytes. Keep that reference through a separately trusted channel
+when handing off a review, then require it at inspection, replay or MCP startup:
+
+```sh
+python -m ciw.device_review_cli inspect review-new \
+  --expected-snapshot-ref sha256:<64-lowercase-hex-digits>
+python -m ciw.device_review_cli replay review-new --output-dir replay-new \
+  --expected-snapshot-ref sha256:<64-lowercase-hex-digits>
+python -m ciw.device_review_cli mcp review-new \
+  --expected-snapshot-ref sha256:<64-lowercase-hex-digits>
+```
+
+The value is supplied by the operator, never selected by a saved file or an MCP
+tool argument. A mismatch refuses before parent restoration, computation or
+creation of the replay destination. Even JSON-formatting changes produce a
+mismatch; evidence and computation identities are not rewritten to make it match.
+
+`content_anchor_check` is inspection metadata only: `MATCHED` or `NOT_REQUESTED`,
+with `authenticates_origin: false`. A matching hash is not a signature, source
+authentication, clock/calibration check, computation proof or release permission.
+Without a separately trusted expected reference, inspection still checks internal
+consistency but does not authenticate the bundle against an external source.
+The anchor checks the input of replay; the new output has its own snapshot hash.
+No new evidence schema, registry, store or decision authority is introduced.
+
+The source and installed CI stages retain failing JUnit output before propagating
+the test failure. The focused gate now requires all 106 review cases without
+skips. A configured hosted gate is not itself a passing execution receipt.
+
 ## Qualification boundary
 
-Run the focused tests with `python -m pytest -q tests/test_device_review.py`.
+Run the focused tests with
+`python -m pytest -q tests/test_device_review.py tests/test_device_review_hardening.py`.
 The companion CI definition tests source and a noneditable installed wheel on
 Linux/Windows and Python 3.11/3.13. A workflow file is not a passing hosted receipt.
 
