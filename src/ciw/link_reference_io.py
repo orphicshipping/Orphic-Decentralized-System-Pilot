@@ -185,7 +185,7 @@ def report(directory,output):
     body=f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
 <title>Notation / institutional references</title><style>*{{box-sizing:border-box}}body{{margin:0;background:#101712;color:#d9e8b9;font:16px/1.5 ui-monospace,monospace}}
-main{{max-width:1140px;margin:auto;padding:20px}}h1{{font-size:clamp(25px,5vw,42px)}}section{{border:2px solid #68836a;padding:18px;margin:18px 0;box-shadow:5px 5px #040705}}
+main{{max-width:1140px;margin:auto;padding:20px}}h1{{font-size:clamp(25px,5vw,42px)}}section{{min-width:0;overflow-wrap:anywhere;border:2px solid #68836a;padding:18px;margin:18px 0;box-shadow:5px 5px #040705}}
 .grid{{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}}.readout{{font-size:28px}}.scroll{{overflow:auto}}
 table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{text-align:left;padding:9px;border-bottom:1px solid #68836a}}pre{{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}}summary{{min-height:44px;cursor:pointer}}code,p{{overflow-wrap:anywhere}}</style>
 <main><h1>NOTATION / REFERENCE LIBRARY</h1><p>{esc(source['title'])}</p><div class="grid"><section>SOURCE RECORDS<div class="readout">{len(rows)}</div>{esc(source['source_scope'])}</section>
