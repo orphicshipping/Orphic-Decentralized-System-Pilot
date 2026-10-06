@@ -33,7 +33,10 @@ def main():
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
     parser.add_argument("--with-delivery", action="store_true", help="Require signed local custody, occurrence hardening and operator preview")
     parser.add_argument("--with-installation", action="store_true", help="Also qualify the retained paired installation workflow")
+    parser.add_argument("--with-engineering", action="store_true", help="Also require the existing-controller engineering-intent recipes")
     args = parser.parse_args()
+    if args.with_engineering and not args.with_installation:
+        parser.error("Engineering recipes require --with-installation and its inherited gates")
     if args.with_installation and not args.with_delivery:
         parser.error("Installation qualification requires --with-delivery and its inherited gates")
     if args.with_delivery and not args.with_scalar_study:
@@ -134,6 +137,8 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py", "test_link_snapshot_integrity.py", "test_link_unification.py"])
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
+        if args.with_engineering:
+            test_names.append("test_engineering_thread.py")
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -192,6 +197,21 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             assert paired["scope"]["physical_qualification"] == "HELD"
             assert paired["passing_sampled_frequencies_hz"] == [32., 64.]
             summary["installation"] = paired
+        if args.with_engineering:
+            summary["engineering"] = {}
+            for profile in ("installation", "scalar"):
+                folder = "engineering-" + profile
+                result = json.loads(execute(folder, ["-I", "-m", "ciw.net", "production", "engineering", "demo",
+                    "--profile", profile, "--output-dir", folder], expected_exit=2))
+                expected = "REQUIREMENTS_NOT_MET" if profile == "installation" else "EVIDENCE_REQUIRED"
+                if result["review"]["status"] != expected or result["review"]["scope"]["physical_qualification"] != "HELD":
+                    raise ValueError("Engineering demonstration made an unsupported success claim")
+                execute(folder + "-inspect", ["-I", "-m", "ciw.net", "production", "engineering", "inspect",
+                    folder + "/execution", "--profile", profile, "--thread-ref", result["review"]["thread_ref"]], expected_exit=2)
+                summary["engineering"][profile] = {"status": result["review"]["status"],
+                    "thread_ref": result["review"]["thread_ref"], "execution_count": len(result["review"]["execution_ids"]),
+                    "source_fixture_execution_is_separate": result["source_fixture_execution_is_separate"],
+                    "scope": result["review"]["scope"]}
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),

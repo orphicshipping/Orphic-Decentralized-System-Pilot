@@ -87,6 +87,9 @@ def _gates(profile: str):
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "engineering":
+        from .engineering_thread_io import main as engineering_main
+        return engineering_main(argv[1:])
     if argv and argv[0] == "project":
         from .game_project_workflow import main as project_main
         return project_main(argv[1:])
@@ -97,6 +100,7 @@ def main(argv: list[str] | None = None) -> int:
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("project", help="Pinned game-owned batch work orders and agent feedback")
     commands.add_parser("reconstruction", help="bounded real-game candidate work and agent handoff")
+    commands.add_parser("engineering", help="Compile engineering intent to existing retained production plans")
     example = commands.add_parser("example", help="write a synthetic plan and source; no execution")
     example.add_argument("--profile", choices=("builtin", "godot-courier"), default="builtin")
     example.add_argument("--output-dir", type=Path, required=True)
