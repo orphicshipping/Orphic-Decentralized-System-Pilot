@@ -138,7 +138,9 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py"])
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py"])
+            (root / "scripts").mkdir()
+            shutil.copyfile(source / "scripts/provision_link_environment.py", root / "scripts/provision_link_environment.py")
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
