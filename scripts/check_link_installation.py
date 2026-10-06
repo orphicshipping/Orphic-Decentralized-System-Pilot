@@ -128,7 +128,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         (root / "tests").mkdir()
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
         if args.with_delivery:
-            test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py"])
+            test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")

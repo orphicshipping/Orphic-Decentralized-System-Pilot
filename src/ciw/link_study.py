@@ -90,6 +90,11 @@ def decode(request):
         raise ValueError("Require an uninterrupted chunk sequence beginning at zero")
     if any(x["stage"] != "raw" for x in items):
         raise ValueError("Decoder consumes only original raw chunks")
+    if any(x["quality_flags"] for x in items):
+        # The bounded scalar profile has no vendor flag interpretation policy.
+        # Do not erase a flag or silently exclude a chunk from a complete mean.
+        # Original records remain retained for explicit review/reprocessing.
+        raise ValueError("Source quality flags require review before scalar interpretation")
     if any(x["context"] != items[0]["context"] for x in items):
         raise ValueError("Context changed within the finite scalar stream")
     if any(x["procedure_ref"] != items[0]["procedure_ref"] for x in items):
@@ -362,8 +367,11 @@ def native(request, decoded, corrected, *, execution_id, source_evidence):
         tick=row["receipt_tick"]
         if hz is None or tick is None or (last is not None and tick<=last):
             withheld.append({"id":row["id"],"reason":"unknown_or_indistinguishable_receipt_time"});continue
-        time=(tick-origin)/hz
-        if round(time*hz)!=(tick-origin):
+        time=float(Fraction(tick-origin, hz))
+        # Check the exact rational value of the stored binary64 timestamp. A
+        # second float multiplication can round away a >half-tick error and
+        # falsely approve the projection. Match the existing Link tick rule.
+        if round(Fraction.from_float(time)*hz)!=(tick-origin):
             withheld.append({"id":row["id"],"reason":"native_time_precision_insufficient"});continue
         last=tick
         marginal = None

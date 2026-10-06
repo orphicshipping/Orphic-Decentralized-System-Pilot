@@ -353,7 +353,11 @@ def project(device, observations, *, joint_covariance=None):
     for item in values:
         channel = channel_for(device, item["channel_id"])
         why = None
-        if item["device_tick"] is None or hz is None:
+        if item["quality_flags"]:
+            # Native observations cannot express these unclassified flags.
+            # Preserve the original record, not an unflagged scalar surrogate.
+            why = "quality_flags_require_review"
+        elif item["device_tick"] is None or hz is None:
             why = "clock_mapping_unavailable"
         elif item["stage"] not in {"raw", "reported"}:
             why = "processed_stage_requires_qualified_transform"

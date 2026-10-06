@@ -83,6 +83,9 @@ def inspect(directory):
         "evidence_id":session.run["evidence_id"],"request_ref":c.bytes_ref(raw),
         "results":deepcopy(results),"executions":deepcopy(session.executions),
         "origin":origin,
+        "source_quality_flags":[{"measurement_id":item["measurement_id"],
+                                  "flags":deepcopy(item["quality_flags"])}
+                                 for item in captured["observations"] if item["quality_flags"]],
         "limits":dict(c.LIMITS)}
 
 
@@ -95,6 +98,10 @@ def export(directory, output):
     request,_,session,_=read(directory)
     results={r["operation_id"]:r for r in session.results.values()}
     if not all(op in results for op in study.OPS): raise ValueError("Incomplete study cannot export a completed model")
+    # A completed verification operation may legitimately report FAIL.
+    # Completion alone never authorizes projection of a known failed result.
+    if results[study.OPS[-1]]["data"]["status"] != "PASS":
+        raise ValueError("Failed arithmetic audit blocks native scalar export; original evidence retained")
     native=study.native(request,results[study.OPS[0]]["data"],results[study.OPS[1]]["data"],
         execution_id=results[study.OPS[1]]["execution_id"],source_evidence=session.run["evidence_id"])
     output=safe_path(output);output.mkdir(parents=True,exist_ok=False)

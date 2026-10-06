@@ -49,7 +49,10 @@ def view(directory, *, request_ref=None, advanced=False):
     readings = decoded.get("rows", [])
     calibration = next((s for s in _STATE if s in statuses), "MISSING_DECLARATION")
     timing_unknown = not readings or any(r["acquired_at"] is None for r in readings)
-    if not complete:
+    flagged = bool(retained["source_quality_flags"])
+    if flagged:
+        next_action = "Review the recorded source quality flags in Advanced. Original bytes are retained; flagged readings are not interpreted by this profile."
+    elif not complete:
         next_action = "Review the retained input or refused calculation in Advanced; do not discard the original recording."
     elif outside:
         next_action = "Review the result outside the declared nominal limit. This is not a qualified reject/release decision."
@@ -67,6 +70,7 @@ def view(directory, *, request_ref=None, advanced=False):
         "checks": {
             "recording": "RETAINED_AND_DECODED" if decoded else "RETAINED_NOT_DECODED",
             "arithmetic": audit.get("status", "NOT_RUN"),
+            "source_quality": "FLAGGED_REVIEW_REQUIRED" if flagged else "NO_FLAGS_DECLARED",
             "nominal_comparison": model.get("nominal_comparison", "NOT_RUN"),
             "calibration": calibration,
             "acquisition_time": "UNKNOWN" if timing_unknown else "DECLARED_ONLY",
@@ -111,6 +115,7 @@ p,code,pre{{overflow-wrap:anywhere}}pre{{white-space:pre-wrap;font-size:13px}}su
 <p>{esc(value['next_action'])}</p></section>
 <section aria-label="Trust checks"><h2>What is ready?</h2><div class="checks">
 <div><strong>Recording</strong><p>{esc(check['recording'].replace('_',' ').capitalize())}</p></div>
+<div><strong>Source quality</strong><p>{esc(check['source_quality'].replace('_',' ').capitalize())}</p></div>
 <div><strong>Calculation check</strong><p>{esc(check['arithmetic'])} · not physical validation</p></div>
 <div><strong>Calibration</strong><p>{esc(_STATE[check['calibration']])}</p></div>
 <div><strong>Uncertainty</strong><p>{esc(check['uncertainty'].replace('_',' ').capitalize())}</p></div>
