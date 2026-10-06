@@ -32,12 +32,9 @@ _STATE = {
 def view(directory, *, request_ref=None, advanced=False):
     """Reopen and validate existing Session results, never trust a UI status file."""
     root = safe_path(directory)
-    if request_ref is not None:
-        c.content_ref(request_ref)
-        raw = read_bytes(root / "request.json", limit=study.MAX_BYTES)
-        if c.bytes_ref(raw) != request_ref:
-            raise ValueError("Investigation differs from the externally selected request")
-    retained = io.inspect(root)
+    # Anchor and source validation must consume the same read, not a second
+    # path open after a separate hash check.
+    retained = io.inspect(root, expected_request_ref=request_ref)
     results = retained["results"]
     decoded = results.get(study.OPS[0], {}).get("data", {})
     corrected = results.get(study.OPS[1], {}).get("data", {})
@@ -52,6 +49,8 @@ def view(directory, *, request_ref=None, advanced=False):
     flagged = bool(retained["source_quality_flags"])
     if flagged:
         next_action = "Review the recorded source quality flags in Advanced. Original bytes are retained; flagged readings are not interpreted by this profile."
+    elif audit.get("status") == "FAIL":
+        next_action = "The arithmetic audit failed. The displayed value is withheld; review the retained candidate and audit in Advanced. Original bytes are retained."
     elif not complete:
         next_action = "Review the retained input or refused calculation in Advanced; do not discard the original recording."
     elif outside:
@@ -65,16 +64,16 @@ def view(directory, *, request_ref=None, advanced=False):
         "mode": "retained_offline_preview", "origin": retained["origin"],
         "status": "INCOMPLETE" if not complete else "REVIEW_REQUIRED" if outside else "NEEDS_QUALIFICATION",
         "qualification": "HELD", "calculation": "COMPLETE" if complete else "INCOMPLETE",
-        "reading": {"kind": "declared_corrected_mean", "value": model.get("mean"),
+        "reading": {"kind": "declared_corrected_mean", "value": model.get("mean") if complete else None,
                     "unit": model.get("unit"), "count": model.get("count", 0)},
         "checks": {
             "recording": "RETAINED_AND_DECODED" if decoded else "RETAINED_NOT_DECODED",
             "arithmetic": audit.get("status", "NOT_RUN"),
             "source_quality": "FLAGGED_REVIEW_REQUIRED" if flagged else "NO_FLAGS_DECLARED",
-            "nominal_comparison": model.get("nominal_comparison", "NOT_RUN"),
+            "nominal_comparison": "WITHHELD_FAILED_AUDIT" if audit.get("status") == "FAIL" else model.get("nominal_comparison", "NOT_RUN"),
             "calibration": calibration,
             "acquisition_time": "UNKNOWN" if timing_unknown else "DECLARED_ONLY",
-            "uncertainty": corrected.get("uncertainty_status", "NOT_SUPPLIED"),
+            "uncertainty": "WITHHELD_FAILED_AUDIT" if audit.get("status") == "FAIL" else corrected.get("uncertainty_status", "NOT_SUPPLIED"),
         },
         "next_action": next_action,
         "time_to_value": {"first_qualified_measurement_ns": None,
@@ -92,9 +91,9 @@ def _number(value):
     return "Not available" if value is None else format(value, ".9g")
 
 
-def panel(directory, output):
+def panel(directory, output, *, request_ref=None):
     """Private, offline HTML with explicit limits and native details disclosure."""
-    value = view(directory, advanced=True)
+    value = view(directory, request_ref=request_ref, advanced=True)
     esc = lambda x: html.escape(str(x), quote=True)
     check = value["checks"]
     body = f'''<!doctype html><html lang="en"><meta charset="utf-8">
@@ -133,8 +132,8 @@ def run(request, output, *, raw=None):
     """One action wraps the unchanged scalar graph and creates its operator page."""
     start = time.monotonic_ns()
     started = datetime.now(timezone.utc).isoformat()
-    io.run(request, output, raw=raw)
-    value = view(output)
+    completed = io.run(request, output, raw=raw)
+    value = view(output, request_ref=completed["request_ref"])
     elapsed = time.monotonic_ns() - start
     if elapsed < 0:
         raise RuntimeError("Host monotonic clock regressed; no elapsed-time claim")
@@ -144,7 +143,7 @@ def run(request, output, *, raw=None):
                "first_qualified_measurement_ns": None,
                "scope": "local processing of an existing recording, not install time or qualification"}
     save_new(safe_path(output) / "operator-processing.json", metrics)
-    value["report"] = panel(output, safe_path(output) / "inspection.html")
+    value["report"] = panel(output, safe_path(output) / "inspection.html", request_ref=value["reference"])
     value["processing"] = metrics
     return value
 
@@ -176,7 +175,7 @@ def main(argv=None):
             result = view(args.directory, request_ref=args.request_ref, advanced=args.advanced)
         if args.advanced:
             if "advanced" not in result:
-                result["advanced"] = view(args.output_dir, advanced=True)["advanced"]
+                result["advanced"] = view(args.output_dir, request_ref=result["reference"], advanced=True)["advanced"]
             print(json.dumps(result, indent=2, allow_nan=False))
         else:
             print("Digital Inspection / " + str(result["origin"]).upper() + " / RECORDED PREVIEW")

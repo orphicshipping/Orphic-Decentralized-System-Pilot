@@ -53,6 +53,7 @@ def main(argv=None):
     p=sub.add_parser("run");p.add_argument("request",type=Path);p.add_argument("--output-dir",type=Path,required=True)
     for name in ("inspect","replay","export","report","mcp"):
         p=sub.add_parser(name);p.add_argument("directory",type=Path)
+        p.add_argument("--request-ref", help="Optional externally retained exact request-byte reference; no authority grant")
         if name in {"replay","export"}:p.add_argument("--output-dir",type=Path,required=True)
         if name=="report":p.add_argument("--output",type=Path,required=True)
     args=parser.parse_args(argv)
@@ -61,13 +62,13 @@ def main(argv=None):
             request=example();save_new(args.output,request);value={"status":"CREATED_SYNTHETIC","path":str(args.output)}
         elif args.command=="run":
             raw=read_bytes(args.request,limit=study.MAX_BYTES);value=io.run(c.loads(raw,study.MAX_BYTES),args.output_dir,raw=raw)
-        elif args.command=="inspect":value=io.inspect(args.directory)
-        elif args.command=="replay":value=io.replay(args.directory,args.output_dir)
-        elif args.command=="export":value=io.export(args.directory,args.output_dir)
-        elif args.command=="report":value=io.report(args.directory,args.output)
+        elif args.command=="inspect":value=io.inspect(args.directory,expected_request_ref=args.request_ref)
+        elif args.command=="replay":value=io.replay(args.directory,args.output_dir,expected_request_ref=args.request_ref)
+        elif args.command=="export":value=io.export(args.directory,args.output_dir,expected_request_ref=args.request_ref)
+        elif args.command=="report":value=io.report(args.directory,args.output,expected_request_ref=args.request_ref)
         else:
             from .agent_mcp import serve
-            with io.agent(args.directory) as host:return serve(host,sys.stdin.buffer,sys.stdout.buffer)
+            with io.agent(args.directory,expected_request_ref=args.request_ref) as host:return serve(host,sys.stdin.buffer,sys.stdout.buffer)
         print(json.dumps(value,indent=2,allow_nan=False))
         return 2 if value.get("status")=="incomplete" else 0
     except (ValueError,KeyError,TypeError,OSError,RuntimeError,OverflowError,RecursionError) as exc:
