@@ -1,0 +1,48 @@
+name: Link consolidation source and dependency qualification
+on:
+  push:
+    branches: [codex/net-link-consolidation-20261006]
+    paths: [.github/workflows/link-consolidation.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  retained-inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: cf5342a4e0996bcbe04671572f0c7e6da21c4b7e
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Retain exact complete data-owner source, not a release
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p retained/wheelhouse
+          git rev-parse HEAD > retained/source-commit.txt
+          git rev-parse HEAD^{tree} > retained/source-tree.txt
+          git ls-tree -r HEAD > retained/source-tree.tsv
+          git archive --format=tar.gz HEAD > retained/net-data-owner-source.tar.gz
+          python -VV > retained/python.txt
+          python -m pip --version > retained/pip.txt
+          sha256sum retained/net-data-owner-source.tar.gz > retained/source-sha256.txt
+      - name: Acquire unchanged core, development and network pins
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip download --only-binary=:all: --dest retained/wheelhouse \
+            numpy==2.4.3 websockets==16.0 cryptography==46.0.0 \
+            pytest==9.0.2 PyYAML==6.0.3 PyJWT==2.13.0 \
+            2>&1 | tee retained/dependency-download.log
+      - name: Retain private qualification inputs even on an explicit dependency refusal
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: link-consolidation-inputs-${{ github.sha }}
+          path: retained/
+          if-no-files-found: error
+          retention-days: 14
