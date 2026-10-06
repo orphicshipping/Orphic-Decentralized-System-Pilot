@@ -66,6 +66,29 @@ Lower bound: {selection['lower_bound_s']} s · Remaining gap: {selection['absolu
 <div class="timing-cards">{timing_cards}</div>
 <p>{escape(projected)}</p><p>Residual statistics are descriptive, not confidence intervals. Parameter uncertainty is not established. No automatic model promotion.</p>{actions}</section>"""
         detail = timing_detail + detail
+    uncertainty = data.get("timing_uncertainty")
+    if uncertainty:
+        cards = ""
+        for row in uncertainty["series"]:
+            target = row.get("target_mean")
+            metrics = [(r["label"] + " standard uncertainty / s", r["standard_uncertainty_s"]) for r in row.get("parameters", [])]
+            metrics.append(("Target mean standard uncertainty / s", target["standard_uncertainty_s"] if target else None))
+            values = "".join("<div><dt>"+val(label)+"</dt><dd>"+val(None if value is None else f"{value:.6g}")+"</dd></div>" for label,value in metrics)
+            screens = "; ".join(r["screen"].replace("_", " ").lower() for r in row.get("heldout_residuals", []))
+            cards += ("<article class=timing-card><h3>"+val(row["operation_id"])+"</h3><p>"+
+                      val(row.get("review_status", row["status"]).replace("_", " ").lower())+
+                      "</p><dl>"+values+"</dl><p>Held-out diagnostics: "+val(screens)+"</p></article>")
+        route = uncertainty.get("route_component")
+        route_text = ("Candidate route estimate: " + val(route.get("candidate_duration_s")) + " s. Local route measurement contribution: " + val(route.get("standard_uncertainty_s")) +
+                      " s standard uncertainty. " + val(route["status"].replace("_", " ").lower())
+                      if route else "No route uncertainty is available.")
+        detail = ("<section class=timing-review><h2>Correlated timing uncertainty</h2><p>"+
+                  val(uncertainty["status"].replace("_", " ").lower())+"</p>"+cards+
+                  "<p>"+route_text+"</p><p>Shared errors may cancel in held-out residuals without cancelling in a prediction. "
+                  "The full supplied covariance is retained; independence is not assumed. Bands use the explicit multiplier, "
+                  "not an asserted confidence probability. Model discrepancy, future process variation and total route uncertainty remain unknown.</p></section>"+detail)
+        if uncertainty["propagated_covariance"] is not None:
+            detail = detail.replace("Parameter uncertainty is not established.", "The propagated measurement component is shown above; total prediction uncertainty is not established.")
     rows = "".join("<tr>"+"".join("<td>"+val(row[k])+"</td>" for k in
         ("operation_id", "resource_id", "batches", "start_s", "finish_s", "status"))+"</tr>" for row in schedule["instructions"])
     inspect_rows = "".join("<tr>"+"".join("<td>"+val(row[k])+"</td>" for k in
@@ -77,7 +100,7 @@ section{{margin:28px 0}}.timing-review{{overflow-wrap:anywhere}}.timing-card{{bo
 code,pre{{overflow-wrap:anywhere;white-space:pre-wrap}}details{{border:1px solid #aaa;padding:12px}}.tag{{border:1px solid;padding:6px 10px;display:inline-block}}@media(max-width:600px){{body{{margin:16px auto;padding:0 12px}}h1{{font-size:28px}}}}
 </style><main><p>NOTATION SYSTEMS / NET / MANUFACTURING</p><h1>{val(data['product']['product_id'])} · {val(data['product']['revision'])}</h1>
 <p class="tag">Planning computation — not manufacturing release</p>
-<p>{val(data['order']['quantity'])} planned units · {val(data['bom']['total_components'])} BOM components · modeled duration {val(schedule['makespan_s'])} s</p>
+<p>{val(data['order']['quantity'])} planned units · {val(data['bom']['total_components'])} BOM components · {"baseline modeled duration" if uncertainty else "modeled duration"} {val(schedule['makespan_s'])} s</p>
 <p>{val(schedule['status'])}. Resource capabilities, batching and times are explicit declarations. No physical unit or machine program is created.</p>
 {detail}<section><h2>Capability-bound route</h2><div class="scroll"><table><tr><th>Operation</th><th>Resource</th><th>Batches</th><th>Start / s</th><th>Finish / s</th><th>State</th></tr>{rows}</table></div></section>
 <section><h2>Inspection coverage</h2><p>Nominal comparisons remain distinct from calibration, uncertainty, physical acceptance and unit genealogy.</p><div class="scroll"><table><tr><th>Planned unit</th><th>Requirement</th><th>Comparison</th><th>Qualification</th></tr>{inspect_rows}</table></div></section>
@@ -130,6 +153,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     c = sub.add_parser("run"); c.add_argument("root", type=Path); c.add_argument("request", type=Path); c.add_argument("--output-dir", required=True, type=Path); modes = c.add_mutually_exclusive_group(); modes.add_argument("--analyze", action="store_true", help="Bounded schedule search, bottlenecks and declared timing ranges"); modes.add_argument("--characterize-timing", action="store_true", help="Original native duration observations, setup/batch identification and held-out prediction checks")
+    modes.add_argument("--timing-uncertainty", action="store_true", help="Preserve the fit and propagate full joint trial covariance")
     c=sub.add_parser("timing-protocol", help="Prepare hash-bound trial instructions; no device access")
     c.add_argument("root", type=Path); c.add_argument("request", type=Path); c.add_argument("--output", type=Path, required=True)
     for flag in ("operation-id", "resource-id", "stream-path", "model-id", "clock-id", "frame"):
@@ -148,7 +172,7 @@ def main(argv=None) -> int:
         if args.command == "run":
             request=p._destination(args.request)
             if not request.is_file() or request.stat().st_size > 128*1024: raise ValueError("Invalid project request")
-            raw=request.read_bytes(); result=m.execute(p.source(args.root,p.loads_json(raw.decode("utf-8")),raw),args.output_dir,analyze=args.analyze,characterize_timing=args.characterize_timing)
+            raw=request.read_bytes(); result=m.execute(p.source(args.root,p.loads_json(raw.decode("utf-8")),raw),args.output_dir,analyze=args.analyze,characterize_timing=args.characterize_timing,timing_uncertainty=args.timing_uncertainty)
         elif args.command == "timing-protocol":
             from .sensor_manufacturing_timing import prepare_protocol
             from .control_contracts import bytes_ref

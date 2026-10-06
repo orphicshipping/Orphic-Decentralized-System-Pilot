@@ -32,17 +32,17 @@ jobs:
         run: |
           import pathlib, subprocess, sys, venv
           venv.EnvBuilder(with_pip=True).create('.planning-venv')
-          python = str(pathlib.Path('.planning-venv/bin/python').resolve())
+          python = str(pathlib.Path('.planning-venv/bin/python').absolute())
           subprocess.run([python,'-m','pip','install','.[dev]','setuptools>=77','wheel'],check=True)
       - name: Source tests and noneditable installed qualification
         shell: python
         run: |
           import os, pathlib, subprocess
-          python = str(pathlib.Path('.planning-venv/bin/python').resolve())
+          python = str(pathlib.Path('.planning-venv/bin/python').absolute())
           env = dict(os.environ, PYTHONPATH=str(pathlib.Path('src').resolve()), PYTEST_DISABLE_PLUGIN_AUTOLOAD='1')
           subprocess.run([python,'-m','pytest','-q','tests/test_sensor_project.py',
             'tests/test_sensor_manufacturing.py','tests/test_sensor_manufacturing_analysis.py',
-            'tests/test_sensor_manufacturing_timing.py',
+            'tests/test_sensor_manufacturing_timing.py','tests/test_sensor_manufacturing_uncertainty.py',
             '--junitxml=planning-source.xml'],env=env,check=True)
           subprocess.run([python,'-m','pip','wheel','--no-deps','--no-build-isolation','.',
             '--wheel-dir','planning-dist'],check=True)

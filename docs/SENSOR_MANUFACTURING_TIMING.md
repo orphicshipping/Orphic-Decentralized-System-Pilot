@@ -160,3 +160,10 @@ The existing installed qualifier and workflow are extended to include the new te
 no parallel test pipeline or dependency-pin change is introduced. Actual executed
 test counts, wheel hashes, package comparison and platform limits are recorded in
 the build report. Native source retention is not fresh native EDA qualification.
+
+## Optional correlated measurement uncertainty
+
+The opt-in `--timing-uncertainty` operation preserves this characterization and adds
+full-joint covariance propagation, held-out error bands and a local route contribution.
+See [MANUFACTURING_TIMING_UNCERTAINTY.md](MANUFACTURING_TIMING_UNCERTAINTY.md). This
+original unweighted characterization, its outputs and its invocation remain unchanged.
