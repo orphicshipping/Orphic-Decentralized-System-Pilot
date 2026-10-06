@@ -284,7 +284,7 @@ def validate_observation(value, device):
 
 
 def make_observation(device, *, boot_id, sequence, channel_id, raw, tick=None,
-                     origin="recorded", context=None, calibration_ref=None, acquired_at=None):
+                     origin="recorded", context=None, calibration_ref=None, acquired_at=None, procedure_ref=None):
     device = manifest(device)
     channel = channel_for(device, channel_id)
     reported = channel["encoding"] == "notation-ascii-scalar.v1"
@@ -296,7 +296,7 @@ def make_observation(device, *, boot_id, sequence, channel_id, raw, tick=None,
              "value": scalar(raw, channel["unit"]) if reported else None,
              "missing_reason": None if reported else "opaque_record_requires_a_separate_qualified_decoder",
              "calibration_ref": calibration_ref, "uncertainty": None, "uncertainty_reason": "not_supplied",
-             "procedure_ref": None, "context": dict.fromkeys(CONTEXT_FIELDS) if context is None else context,
+             "procedure_ref": procedure_ref, "context": dict.fromkeys(CONTEXT_FIELDS) if context is None else context,
              "quality_flags": [], "parents": [], "transform_ref": None, "origin": origin}
     return validate_observation(value, device)
 

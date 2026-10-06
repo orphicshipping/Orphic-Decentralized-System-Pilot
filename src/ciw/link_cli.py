@@ -70,9 +70,20 @@ def demo(persona, output):
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["study"]:
+        from .link_study_cli import main as study_main
+        return study_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net link", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("catalog")
+    commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
+    p = commands.add_parser("capture-serial", help="Explicit finite Linux TTY receive into the existing outbox; no polling")
+    p.add_argument("port"); p.add_argument("--manifest", type=Path, required=True)
+    p.add_argument("--journal", type=Path, required=True); p.add_argument("--create", action="store_true")
+    p.add_argument("--channel", required=True); p.add_argument("--baud", type=int, default=9600)
+    p.add_argument("--duration", type=float, default=10); p.add_argument("--allow-read", action="store_true")
+    p.add_argument("--allow-pty", action="store_true"); p.add_argument("--output", type=Path, required=True)
     for name in ("example", "demo"):
         p = commands.add_parser(name)
         p.add_argument("--profile", choices=c.PERSONAS, default="GaugeLink")
@@ -106,6 +117,23 @@ def main(argv=None):
     try:
         if args.command == "catalog":
             result = catalog()
+        elif args.command == "capture-serial":
+            from .link_serial import capture_serial
+            from .link_runtime import Authority
+            import time
+            if not args.allow_read:
+                raise ValueError("Explicit --allow-read is required; a saved manifest grants no device access")
+            safe_path(args.output)
+            if not args.output.parent.is_dir():
+                raise ValueError("Create the receipt output parent before acquisition")
+            if args.output.exists():
+                raise ValueError("Receipt output must be new before acquiring any bytes")
+            device = c.manifest(_load(args.manifest))
+            authority = Authority("operator-local", device["device_id"], frozenset({"READ"}), time.time_ns() + int((args.duration + 2)*1e9))
+            with Journal(args.journal, create=args.create) as journal:
+                result = capture_serial(args.port, device=device, journal=journal, authority=authority,
+                    channel_id=args.channel, baud=args.baud, duration_s=args.duration, allow_pty=args.allow_pty)
+            save_new(safe_path(args.output), result)
         elif args.command in {"example", "demo"}:
             result = (example if args.command == "example" else demo)(args.profile, args.output_dir)
         elif args.command == "record":

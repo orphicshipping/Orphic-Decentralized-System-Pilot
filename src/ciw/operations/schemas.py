@@ -7,6 +7,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from ..core.identities import canonical_json
 from ..core.records import finite_tree
 from .registry import valid_operation_id
 
@@ -14,9 +15,57 @@ _VALIDATORS: dict[str, Callable] = {}
 _VALIDATOR_ROLES: dict[str, str] = {}
 _ROLES = frozenset({"analysis", "state_estimator", "calibration", "verification", "decision", "backend"})
 
+# Registered only by installed trusted code, never loaded from saved parameters.
+_DEPENDENCY_FIELDS: dict[str, tuple[str, ...]] = {}
+
+
+def register_dependency_fields(operation_id: str, fields: tuple[str, ...]) -> None:
+    """Bind exact retained-result inputs for a trusted extension payload schema."""
+    if operation_id not in _VALIDATORS or operation_id in _DEPENDENCY_FIELDS:
+        raise ValueError("Dependency fields require a uniquely registered extension schema")
+    if (type(fields) is not tuple or not 1 <= len(fields) <= 8
+            or any(type(f) is not str or not f.isidentifier() for f in fields)
+            or len(set(fields)) != len(fields)):
+        raise ValueError("Require 1..8 unique dependency parameter fields")
+    _DEPENDENCY_FIELDS[operation_id] = fields
+
+
+def validate_extension_result_dependency(result: dict, results: dict) -> None:
+    """Validate one completed extension result against its retained prerequisites."""
+    operation_id = result.get("operation_id")
+    if operation_id not in _DEPENDENCY_FIELDS:
+        return
+    _validate_extension_dependencies(operation_id, result["parameters"], results,
+                                     evidence_id=result.get("evidence_id"))
+
+
+def validate_extension_result_dependencies(results: dict) -> None:
+    """Batch form for callers validating a retained result collection."""
+    for result in results.values():
+        validate_extension_result_dependency(result, results)
+
+
+def _validate_extension_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                     *, evidence_id: str | None = None) -> None:
+    fields = _DEPENDENCY_FIELDS.get(operation_id, ())
+    if fields and (type(evidence_id) is not str or not evidence_id):
+        raise ValueError("Extension dependencies require source evidence context")
+    for field in fields:
+        candidate = parameters.get(field)
+        if (type(candidate) is not dict or type(candidate.get("result_id")) is not str
+                or type(retained.get(candidate["result_id"])) is not dict
+                or canonical_json(retained[candidate["result_id"]]) != canonical_json(candidate)):
+            raise ValueError("Extension dependency is not the exact retained result occurrence")
+        if candidate.get("evidence_id") != evidence_id:
+            raise ValueError("Extension dependency belongs to different source evidence")
+
+
 
 def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
     """Fixed trusted dependency contracts; saved parameters never load code."""
+    if operation_id in _DEPENDENCY_FIELDS:
+        return [parameters[f]["result_id"] for f in _DEPENDENCY_FIELDS[operation_id]
+                if type(parameters.get(f)) is dict and type(parameters[f].get("result_id")) is str]
     system_fields = {
         "system.simulate.v1": ("plan",), "system.study.v1": ("plan",),
         "system.verify.v1": ("candidate",), "system.compare.v1": ("left", "right"),
@@ -40,7 +89,9 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
     return []
 
 
-def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
+def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                  *, evidence_id: str | None = None) -> None:
+    _validate_extension_dependencies(operation_id, parameters, retained, evidence_id=evidence_id)
     if operation_id == "metrology.temperature.verify.v1":
         from ..temperature_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)

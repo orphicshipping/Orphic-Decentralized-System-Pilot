@@ -76,10 +76,10 @@ class DeviceRuntime:
         if current is not None and current["value"]["manifest_ref"] != c.content_identity(self.device):
             raise ValueError("Runtime configuration is stale; refusing new acquisition")
 
-    def emit(self, channel_id, raw, *, tick=None, context=None, acquired_at=None, calibration_ref=None):
+    def emit(self, channel_id, raw, *, tick=None, context=None, acquired_at=None, calibration_ref=None, procedure_ref=None):
         self._ensure_current()
         value = c.make_observation(self.device, boot_id=self.boot_id, sequence=self.sequence, channel_id=channel_id,
-            raw=raw, tick=tick, origin=self.origin, context=context, acquired_at=acquired_at, calibration_ref=calibration_ref)
+            raw=raw, tick=tick, origin=self.origin, context=context, acquired_at=acquired_at, calibration_ref=calibration_ref, procedure_ref=procedure_ref)
         receipt = self.journal.append(encode("observation", c.bounded(value), key=self.key), expected_manifest=self.device, key=self.key, runtime_device_id=self.device["device_id"])
         self.sequence += 1  # Only committed bytes consume a sample occurrence.
         return {"record": value, "receipt": receipt}

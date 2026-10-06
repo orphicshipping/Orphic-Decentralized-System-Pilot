@@ -30,7 +30,10 @@ def main():
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--require-pins", action="store_true")
     mode.add_argument("--allow-host-dependencies", action="store_true")
+    parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
     args = parser.parse_args()
+    if args.with_scalar_study and sys.platform != "linux":
+        parser.error("The scalar serial qualification is a Linux-only gate")
     source = Path(__file__).resolve().parents[1]
     wheel = args.wheel.resolve()
     root = args.output_dir.resolve()
@@ -120,12 +123,13 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
 '''
         summary["package"] = json.loads(execute("package-provenance", ["-I", "-c", probe]))
         (root / "tests").mkdir()
-        for name in ("test_link.py", "test_connectivity.py"):
+        test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
+        for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
         (root / "pytest.ini").write_text("[pytest]\n", encoding="utf-8")
         execute("installed-tests", ["-I", "-m", "pytest", "-q", "-c", "pytest.ini", "-o", "pythonpath=",
-                                    "tests/test_link.py", "tests/test_connectivity.py", "--junitxml=installed-tests.xml"])
+                                    *["tests/" + name for name in test_names], "--junitxml=installed-tests.xml"])
         cases = ET.parse(root / "installed-tests.xml").findall(".//testcase")
         skipped = sum(x.find("skipped") is not None for x in cases)
         if not cases or skipped:
@@ -133,11 +137,17 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         summary["tests"] = {"passed": len(cases), "skipped": skipped}
         for persona in ("GaugeLink", "MachineLink", "ConditionLink", "FieldLink", "ThermalLink", "DAQLink", "CalLink"):
             execute("demo-" + persona, ["-I", "-m", "ciw.net", "link", "demo", "--profile", persona, "--output-dir", persona])
+        if args.with_scalar_study:
+            execute("scalar-example", ["-I", "-m", "ciw.net", "link", "study", "example", "--output", "scalar-request.json"])
+            execute("scalar-run", ["-I", "-m", "ciw.net", "link", "study", "run", "scalar-request.json", "--output-dir", "scalar-study"])
+            for action in ("inspect", "replay", "export", "report"):
+                suffix = [] if action == "inspect" else ["--output", "scalar-panel.html"] if action == "report" else ["--output-dir", "scalar-" + action]
+                execute("scalar-" + action, ["-I", "-m", "ciw.net", "link", "study", action, "scalar-study", *suffix])
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
                        wheel_sha256=hashlib.sha256(wheel.read_bytes()).hexdigest(),
-                       scope="installed_device_link_native_codec_and_connectivity_not_full_repository")
+                       scope="installed_link_scalar_serial_mcp_subset_not_full_repository" if args.with_scalar_study else "installed_device_link_native_codec_and_connectivity_not_full_repository")
         retain()
     except BaseException as exc:
         summary.update(status="BLOCKED", finished_at=datetime.now(timezone.utc).isoformat(), reason=str(exc))
