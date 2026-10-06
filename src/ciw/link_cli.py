@@ -71,12 +71,20 @@ def demo(persona, output):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["inspection"]:
+        from .link_inspection_cli import main as inspection_main
+        return inspection_main(argv[1:])
+    if argv[:1] == ["delivery"]:
+        from .link_delivery_cli import main as delivery_main
+        return delivery_main(argv[1:])
     if argv[:1] == ["study"]:
         from .link_study_cli import main as study_main
         return study_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net link", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("catalog")
+    commands.add_parser("inspection", help="Digital Inspection: one recorded preview, clear trust checks, Advanced details")
+    commands.add_parser("delivery", help="Node-signed local custody receipts; no network or equipment grant")
     commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
     p = commands.add_parser("capture-serial", help="Explicit finite Linux TTY receive into the existing outbox; no polling")
     p.add_argument("port"); p.add_argument("--manifest", type=Path, required=True)

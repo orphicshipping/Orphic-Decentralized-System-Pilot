@@ -153,6 +153,11 @@ class Journal:
             count, size = self._bounded_rows()
             previous = self.db.execute("SELECT wire,wire_ref FROM messages WHERE message_key=?", (message_key,)).fetchone()
             if previous:
+                # emit/event means a NEW producer occurrence, not a transport
+                # retry. A competing runtime must reopen after a committed ID;
+                # identical values are not evidence of the same physical read.
+                if runtime_device_id is not None and frame.kind != "manifest":
+                    raise ValueError("Producer occurrence already committed; reopen the stale runtime")
                 if previous != (wire, wire_ref):
                     raise ValueError("Same device/boot/sequence changed bytes; retry conflict")
             else:
@@ -178,20 +183,44 @@ class Journal:
                  "state_admission": "not_performed", "physical_verification": "not_performed"}
         return {**value, "receipt_ref": c.content_identity(value)}
 
+    @staticmethod
+    def _row(record):
+        ordinal, message_key, manifest_ref, wire, wire_ref, stamp, clock, auth = record
+        if type(wire) is not bytes or len(wire) > MAX_FRAME or c.bytes_ref(wire) != wire_ref:
+            raise ValueError("Stored wire bytes differ from their identity")
+        c.integer(ordinal, minimum=1); c.text(message_key, maximum=512)
+        c.content_ref(manifest_ref); c.text(clock); c.integer(int(stamp))
+        if stamp != str(int(stamp)) or auth not in {"not_authenticated", "shared_key_possession_verified"}:
+            raise ValueError("Invalid retained gateway receipt metadata")
+        return {"ordinal": ordinal, "message_key": message_key, "manifest_ref": manifest_ref,
+                "wire": wire, "wire_ref": wire_ref, "received_ns": int(stamp),
+                "host_clock": clock, "authentication_at_capture": auth}
+
     def rows(self):
         self._bounded_rows()
-        result = []
-        for row in self.db.execute("SELECT ordinal,message_key,manifest_ref,wire,wire_ref,received_ns,host_clock,authentication FROM messages ORDER BY ordinal"):
-            ordinal, message_key, manifest_ref, wire, wire_ref, stamp, clock, auth = row
-            if type(wire) is not bytes or len(wire) > MAX_FRAME or c.bytes_ref(wire) != wire_ref:
-                raise ValueError("Stored wire bytes differ from their identity")
-            c.content_ref(manifest_ref); c.text(clock); c.integer(int(stamp))
-            if stamp != str(int(stamp)) or auth not in {"not_authenticated", "shared_key_possession_verified"}:
-                raise ValueError("Invalid retained gateway receipt metadata")
-            result.append({"ordinal": ordinal, "message_key": message_key, "manifest_ref": manifest_ref,
-                           "wire": wire, "wire_ref": wire_ref, "received_ns": int(stamp),
-                           "host_clock": clock, "authentication_at_capture": auth})
-        return result
+        return [self._row(row) for row in self.db.execute(
+            "SELECT ordinal,message_key,manifest_ref,wire,wire_ref,received_ns,host_clock,authentication "
+            "FROM messages ORDER BY ordinal")]
+
+    def bound_row(self, message_key, *, expected_manifest, key=None, require_auth=False, offline=False):
+        """Read and revalidate wire/index/manifest binding under THIS call's policy.
+
+        Historical authentication metadata and acknowledgements do not renew key
+        possession. This reads evidence only and does not authenticate hardware.
+        """
+        c.text(message_key, maximum=512)
+        self._bounded_rows()
+        record = self.db.execute(
+            "SELECT ordinal,message_key,manifest_ref,wire,wire_ref,received_ns,host_clock,authentication "
+            "FROM messages WHERE message_key=?", (message_key,)).fetchone()
+        if record is None:
+            raise ValueError("Requested Link message is absent")
+        row = self._row(record)
+        _, _, expected_key, expected_ref = decode_bound(
+            row["wire"], expected_manifest, key=key, require_auth=require_auth, offline=offline)
+        if row["message_key"] != expected_key or row["manifest_ref"] != expected_ref:
+            raise ValueError("Stored Link index/manifest differs from committed wire semantics")
+        return row
 
     def acknowledge_local(self, message_key, receiver):
         """Trusted local sync only; never accept a caller-authored ACK file."""
@@ -220,8 +249,16 @@ class Journal:
         for row in self.rows():
             if row["manifest_ref"] not in allowed:
                 raise ValueError("A saved manifest cannot authorize its own receiver registration")
+            # Reauthenticate even a retry that was acknowledged previously.
+            # Otherwise an earlier unauthenticated transfer bypasses require_auth.
+            self.bound_row(row["message_key"], expected_manifest=allowed[row["manifest_ref"]],
+                           key=key, require_auth=require_auth)
             previous = self.db.execute("SELECT receiver_id,receipt FROM acks WHERE message_key=?", (row["message_key"],)).fetchone()
             if previous is not None:
+                if previous[0] != receiver.store_id:
+                    raise ValueError("Acknowledged destination changed")
+                receiver.bound_row(row["message_key"], expected_manifest=allowed[row["manifest_ref"]],
+                                   key=key, require_auth=require_auth)
                 if previous[0] != receiver.store_id or c.canonical_json(c.loads(previous[1])) != c.canonical_json(receiver.receipt(row["message_key"])):
                     raise ValueError("Acknowledged destination changed or lost its original evidence")
                 retried += 1

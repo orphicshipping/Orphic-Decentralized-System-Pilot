@@ -57,6 +57,7 @@ def capture_serial(path, *, device, journal, authority, channel_id,
     is_pty=str(path).startswith("/dev/pts/")
     if not stat.S_ISCHR(before.st_mode) or (is_pty and not allow_pty):
         raise ValueError("Require a character device; PTY tests require explicit permission")
+    authority.check("READ",device,time.time_ns())
     fd=os.open(path,os.O_RDONLY|os.O_NONBLOCK|os.O_NOCTTY|os.O_NOFOLLOW)
     old=None; runtime=None; count=total=0; status="DURATION_BOUND_REACHED"; result=None; exclusive=False
     try:
@@ -71,6 +72,7 @@ def capture_serial(path, *, device, journal, authority, channel_id,
         attrs[4]=attrs[5]=getattr(termios,f"B{baud}")
         attrs[6][termios.VMIN]=0;attrs[6][termios.VTIME]=0
         # TCSANOW deliberately avoids flushing unread bytes.
+        authority.check("READ",device,time.time_ns())
         termios.tcsetattr(fd,termios.TCSANOW,attrs)
         runtime=DeviceRuntime(device,journal,origin="synthetic" if is_pty else "recorded")
         runtime.event("recording_started",f"linux receive-only 8N1 baud={baud}; no gauge commands",tick=time.monotonic_ns())
@@ -81,6 +83,9 @@ def capture_serial(path, *, device, journal, authority, channel_id,
             if remaining<=0: break
             ready,_,_=select.select([fd],[],[],min(remaining,0.1))
             if not ready: continue
+            # Readiness waiting can outlive a short grant. Recheck immediately
+            # before touching the instrument stream, not only before select().
+            authority.check("READ",device,time.time_ns())
             try: raw=os.read(fd,min(256,max_bytes-total))
             except BlockingIOError: continue
             except OSError as exc:

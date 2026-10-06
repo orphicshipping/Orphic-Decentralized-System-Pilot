@@ -31,7 +31,10 @@ def main():
     mode.add_argument("--require-pins", action="store_true")
     mode.add_argument("--allow-host-dependencies", action="store_true")
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
+    parser.add_argument("--with-delivery", action="store_true", help="Require signed local custody, occurrence hardening and operator preview")
     args = parser.parse_args()
+    if args.with_delivery and not args.with_scalar_study:
+        parser.error("Delivery qualification includes the scalar investigation; select --with-scalar-study")
     if args.with_scalar_study and sys.platform != "linux":
         parser.error("The scalar serial qualification is a Linux-only gate")
     source = Path(__file__).resolve().parents[1]
@@ -124,6 +127,8 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         summary["package"] = json.loads(execute("package-provenance", ["-I", "-c", probe]))
         (root / "tests").mkdir()
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
+        if args.with_delivery:
+            test_names.extend(["test_link_delivery.py", "test_link_inspection.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -143,6 +148,23 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             for action in ("inspect", "replay", "export", "report"):
                 suffix = [] if action == "inspect" else ["--output", "scalar-panel.html"] if action == "report" else ["--output-dir", "scalar-" + action]
                 execute("scalar-" + action, ["-I", "-m", "ciw.net", "link", "study", action, "scalar-study", *suffix])
+        if args.with_delivery:
+            execute("signed-delivery-demo", ["-I", "-m", "ciw.net", "link", "delivery", "demo", "--output-dir", "delivery-demo"])
+            delivery = json.loads((root / "delivery-demo/summary.json").read_text())
+            execute("signed-delivery-inspect", ["-I", "-m", "ciw.net", "link", "delivery", "inspect",
+                "delivery-demo/signed-receipt.json", "--receipt-ref", delivery["receipt_ref"],
+                "--node-public-key", "delivery-demo/node-public-key.raw"])
+            summary["delivery"] = {"new_acknowledgements": delivery["delivery"]["new_acknowledgements"],
+                "historical_acknowledgements": delivery["retry"]["existing_acknowledgements"],
+                "scope": delivery["scope"], "inspection_qualification": delivery["study"]["results"]["link.mean-model.v1"]["data"]["inspection_qualification"]}
+        if args.with_delivery:
+            operator = json.loads(execute("digital-inspection-demo", ["-I", "-m", "ciw.net", "link", "inspection", "demo",
+                "--output-dir", "digital-inspection", "--advanced"]))
+            execute("digital-inspection-status", ["-I", "-m", "ciw.net", "link", "inspection", "status",
+                "digital-inspection", "--request-ref", operator["reference"]])
+            assert operator["qualification"] == "HELD" and operator["calculation"] == "COMPLETE"
+            assert operator["processing"]["first_qualified_measurement_ns"] is None
+            summary["operator_preview"] = {k: operator[k] for k in ("status", "qualification", "checks", "processing", "report")}
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
