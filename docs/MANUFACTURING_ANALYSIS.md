@@ -161,3 +161,10 @@ complete PR215 Python package plus these changes, not a full monorepo checkout.
 The strict installed qualifier and the dedicated Linux Python3.11/3.13 workflow
 require unchanged repository pins. Development-host dependency sharing must be
 explicitly opted into and never establishes pinned-release qualification.
+
+## Evidence-backed timing characterization
+
+The explicit `--characterize-timing` mode extends this analysis with original native
+duration observations, setup/batch identification and held-out prediction checks.
+It preserves this v2 baseline and does not promote fitted parameters automatically.
+See [SENSOR_MANUFACTURING_TIMING.md](SENSOR_MANUFACTURING_TIMING.md).

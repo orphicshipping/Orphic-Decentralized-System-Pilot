@@ -39,6 +39,33 @@ Lower bound: {selection['lower_bound_s']} s · Remaining gap: {selection['absolu
 <p>One operation at a time, preserving selected resource assignment and order. This does not claim that the reduction is physically achievable.</p>
 <div class="scroll"><table><tr><th>Operation</th><th>Duration / s</th><th>Total slack / s</th><th>Route saving / s</th></tr>{sensitivities}</table></div></section>"""
     def val(value): return escape("Unknown" if value is None else str(value))
+    timing = data.get("timing_characterization")
+    if timing:
+        def fmt(value):
+            return escape("Not identified" if value is None else (f"{value:g}" if type(value) in (int, float) else str(value)))
+        timing_cards = ""
+        for item in timing["series"]:
+            fit = item["fit"]; old = item["baseline_holdout_errors"]; new = item["fitted_holdout_errors"]
+            metrics = (("Setup time / s", fit["setup_s"]["value"] if fit["setup_s"] else None),
+                       ("Time per batch / s", fit["per_batch_s"]["value"] if fit["per_batch_s"] else None),
+                       ("Original holdout RMSE / s", old["rmse_s"]),
+                       ("Fitted holdout RMSE / s", new["rmse_s"] if new else None))
+            values = "".join("<div><dt>"+fmt(label)+"</dt><dd>"+fmt(value)+"</dd></div>" for label,value in metrics)
+            state = "Candidate for review" if item["status"] == "CANDIDATE_FOR_REVIEW" else "Needs investigation"
+            timing_cards += ("<article class=timing-card><h3>"+fmt(item["operation_id"])+"</h3><p><strong>"+
+                             fmt(item["semantics"].capitalize())+" duration observations</strong> · "+state+
+                             "</p><dl>"+values+"</dl></article>")
+        projection = timing["fixed_dispatch_projection"]
+        projected = (f"Original route prediction: {projection['baseline_duration_s']['value']:g} s. "
+                     f"Candidate prediction: {projection['candidate_duration_s']['value']:g} s. "
+                     "This is a model correction, not a process speedup. Unchanged operation times remain declarations."
+                     if projection else "No timing update is eligible for the selected dispatch.")
+        actions = "".join("<p><strong>"+fmt(r["operation_id"])+"</strong>: "+fmt("; ".join(reason.replace("_", " ").lower() for reason in r["reasons"]))+"</p>" for r in timing["next_experiments"])
+        timing_detail = f"""<section class="timing-review"><h2>Evidence-bound timing characterization</h2>
+<p>Separate setup and per-batch durations using original native duration observations. Train and holdout assignments bind to the retained protocol.</p>
+<div class="timing-cards">{timing_cards}</div>
+<p>{escape(projected)}</p><p>Residual statistics are descriptive, not confidence intervals. Parameter uncertainty is not established. No automatic model promotion.</p>{actions}</section>"""
+        detail = timing_detail + detail
     rows = "".join("<tr>"+"".join("<td>"+val(row[k])+"</td>" for k in
         ("operation_id", "resource_id", "batches", "start_s", "finish_s", "status"))+"</tr>" for row in schedule["instructions"])
     inspect_rows = "".join("<tr>"+"".join("<td>"+val(row[k])+"</td>" for k in
@@ -46,7 +73,7 @@ Lower bound: {selection['lower_bound_s']} s · Remaining gap: {selection['absolu
     page = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Notation — manufacturing work package</title><style>
 body{{font:16px system-ui,sans-serif;max-width:1100px;margin:32px auto;padding:0 20px;line-height:1.5}}h1{{line-height:1.15}}
-section{{margin:28px 0}}.scroll{{overflow-x:auto}}table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{padding:10px;text-align:left;border-bottom:1px solid #ccc}}
+section{{margin:28px 0}}.timing-review{{overflow-wrap:anywhere}}.timing-card{{border:1px solid #bbb;padding:16px;margin:16px 0}}.timing-card h3{{margin:0}}.timing-card dl{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-bottom:0}}.timing-card dt{{font-size:14px}}.timing-card dd{{font-size:24px;font-weight:600;margin:4px 0}}.scroll{{overflow-x:auto}}table{{border-collapse:collapse;width:100%;font-size:14px}}td,th{{padding:10px;text-align:left;border-bottom:1px solid #ccc}}
 code,pre{{overflow-wrap:anywhere;white-space:pre-wrap}}details{{border:1px solid #aaa;padding:12px}}.tag{{border:1px solid;padding:6px 10px;display:inline-block}}@media(max-width:600px){{body{{margin:16px auto;padding:0 12px}}h1{{font-size:28px}}}}
 </style><main><p>NOTATION SYSTEMS / NET / MANUFACTURING</p><h1>{val(data['product']['product_id'])} · {val(data['product']['revision'])}</h1>
 <p class="tag">Planning computation — not manufacturing release</p>
@@ -102,7 +129,15 @@ pre{{white-space:pre-wrap;overflow-wrap:anywhere}}details{{margin-top:24px;paddi
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
-    c = sub.add_parser("run"); c.add_argument("root", type=Path); c.add_argument("request", type=Path); c.add_argument("--output-dir", required=True, type=Path); c.add_argument("--analyze", action="store_true", help="Bounded schedule search, bottlenecks and declared timing ranges")
+    c = sub.add_parser("run"); c.add_argument("root", type=Path); c.add_argument("request", type=Path); c.add_argument("--output-dir", required=True, type=Path); modes = c.add_mutually_exclusive_group(); modes.add_argument("--analyze", action="store_true", help="Bounded schedule search, bottlenecks and declared timing ranges"); modes.add_argument("--characterize-timing", action="store_true", help="Original native duration observations, setup/batch identification and held-out prediction checks")
+    c=sub.add_parser("timing-protocol", help="Prepare hash-bound trial instructions; no device access")
+    c.add_argument("root", type=Path); c.add_argument("request", type=Path); c.add_argument("--output", type=Path, required=True)
+    for flag in ("operation-id", "resource-id", "stream-path", "model-id", "clock-id", "frame"):
+        c.add_argument("--"+flag, required=True)
+    c.add_argument("--semantics", choices=("observed", "simulated"), required=True)
+    c.add_argument("--train-batches", nargs="+", type=int, required=True)
+    c.add_argument("--holdout-batches", nargs="+", type=int, required=True)
+    c.add_argument("--max-holdout-error-s", type=float, required=True)
     c=sub.add_parser("compare"); c.add_argument("directories", nargs="+", type=Path); c.add_argument("--output", type=Path)
     for name in ("inspect", "replay", "export-inputs", "report"):
         c=sub.add_parser(name); c.add_argument("directory", type=Path); c.add_argument("--expected-snapshot-ref")
@@ -113,7 +148,26 @@ def main(argv=None) -> int:
         if args.command == "run":
             request=p._destination(args.request)
             if not request.is_file() or request.stat().st_size > 128*1024: raise ValueError("Invalid project request")
-            raw=request.read_bytes(); result=m.execute(p.source(args.root,p.loads_json(raw.decode("utf-8")),raw),args.output_dir,analyze=args.analyze)
+            raw=request.read_bytes(); result=m.execute(p.source(args.root,p.loads_json(raw.decode("utf-8")),raw),args.output_dir,analyze=args.analyze,characterize_timing=args.characterize_timing)
+        elif args.command == "timing-protocol":
+            from .sensor_manufacturing_timing import prepare_protocol
+            from .control_contracts import bytes_ref
+            request=p._destination(args.request)
+            if not request.is_file() or request.stat().st_size > 128*1024:
+                raise ValueError("Invalid project request")
+            raw=request.read_bytes()
+            protocol=prepare_protocol(p.source(args.root,p.loads_json(raw.decode("utf-8")),raw),
+                operation_id=args.operation_id, resource_id=args.resource_id, stream_path=args.stream_path,
+                model_id=args.model_id, clock_id=args.clock_id, frame=args.frame, semantics=args.semantics,
+                train_batches=args.train_batches, holdout_batches=args.holdout_batches,
+                max_holdout_error_s=args.max_holdout_error_s)
+            destination=p._destination(args.output)
+            if destination.is_relative_to(p.packets.root_dir(args.root)):
+                raise ValueError("Place the proposed protocol outside the original input inventory")
+            encoded=(json.dumps(protocol,indent=2,allow_nan=False)+"\n").encode("utf-8")
+            with destination.open("xb") as stream: stream.write(encoded)
+            result={"status":"TIMING_PROTOCOL_PREPARED", "protocol_ref":bytes_ref(encoded),
+                    "output":str(destination), "device_contact":False, "new_measurements":0}
         elif args.command == "compare":
             from .sensor_manufacturing_analysis import compare
             result = compare(args.directories)

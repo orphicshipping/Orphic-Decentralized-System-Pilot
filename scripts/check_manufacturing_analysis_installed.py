@@ -13,7 +13,7 @@ import sys
 import xml.etree.ElementTree as ET
 import zipfile
 
-TESTS = ('test_sensor_project.py', 'test_sensor_manufacturing.py', 'test_sensor_manufacturing_analysis.py')
+TESTS = ('test_sensor_project.py', 'test_sensor_manufacturing.py', 'test_sensor_manufacturing_analysis.py', 'test_sensor_manufacturing_timing.py')
 PINS = {'numpy': '2.4.3', 'websockets': '16.0', 'pytest': '9.0.2'}
 
 

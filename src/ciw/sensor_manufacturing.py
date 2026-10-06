@@ -375,6 +375,14 @@ def _validate_analysis(operation, data, run, parameters, selection):
         raise ValueError("Manufacturing analysis differs from retained source computation")
 
 
+def _validate_timing(operation, data, run, parameters, selection):
+    from . import sensor_manufacturing_timing as timing
+    if operation != timing.OPERATION or not project.same({k: selection[k] for k in ("channel", "interval_s")}, PARAMETERS):
+        raise ValueError("Wrong timing characterization operation or selection")
+    if not project.same(data, timing.characterize(run, parameters)):
+        raise ValueError("Timing characterization differs from retained source computation")
+
+
 def register_schema() -> None:
     global _REGISTERED
     project.register_schema()
@@ -382,6 +390,8 @@ def register_schema() -> None:
         if not _REGISTERED:
             register_payload_validator(OPERATION, _validate_payload, role="analysis")
             register_payload_validator(ANALYSIS_OPERATION, _validate_analysis, role="analysis")
+            from .sensor_manufacturing_timing import OPERATION as TIMING
+            register_payload_validator(TIMING, _validate_timing, role="analysis")
             _REGISTERED = True
 
 
@@ -397,12 +407,19 @@ def analysis_runtime_identity() -> dict:
         Path(__file__).with_name("sensor_manufacturing_analysis.py").read_bytes().replace(b"\r\n", b"\n"))}
 
 
+def timing_runtime_identity() -> dict:
+    return {**analysis_runtime_identity(), "timing_source": bytes_ref(
+        Path(__file__).with_name("sensor_manufacturing_timing.py").read_bytes().replace(b"\r\n", b"\n"))}
+
+
 def registry() -> CapabilityRegistry:
     from .sensor_manufacturing_analysis import analyze
+    from . import sensor_manufacturing_timing as timing
     register_schema(); result = CapabilityRegistry()
     for operation, version, compute, runtime, capability in (
         (OPERATION, "1", compile_definition, runtime_identity, "engineering.manufacturing-plan"),
         (ANALYSIS_OPERATION, "2", analyze, analysis_runtime_identity, "engineering.manufacturing-analysis"),
+        (timing.OPERATION, "timing-1", timing.characterize, timing_runtime_identity, "engineering.manufacturing-timing"),
     ):
         manifest = InstrumentManifest(instrument_id="sensor-manufacturing-planning.v" + version,
             role="engineering_projection", units={project.CHANNEL: "1"},
@@ -413,14 +430,19 @@ def registry() -> CapabilityRegistry:
     return result
 
 
-def execute(run: dict, output: str | Path, *, analyze: bool = False) -> dict:
+def execute(run: dict, output: str | Path, *, analyze: bool = False, characterize_timing: bool = False) -> dict:
     if type(analyze) is not bool:
         raise ValueError("Analysis selection must be an explicit boolean")
+    if type(characterize_timing) is not bool:
+        raise ValueError("Timing selection must be an explicit boolean")
+    if analyze and characterize_timing:
+        raise ValueError("Select one explicit analysis mode")
+    from .sensor_manufacturing_timing import OPERATION as TIMING
     project.context(run)
     output = project._destination(output); output.mkdir(parents=True, exist_ok=False)
     session = Session(deepcopy(run), output, operations=registry().operations)
     response = session.handle({"protocol_version": 1, "request_id": "manufacturing-plan", "type": "operation.execute",
-                               "payload": {"operation_id": ANALYSIS_OPERATION if analyze else OPERATION, "parameters": {}}})
+                               "payload": {"operation_id": TIMING if characterize_timing else (ANALYSIS_OPERATION if analyze else OPERATION), "parameters": {}}})
     session.save_workspace(output / "workspace.json")
     if response["type"] == "error": raise ValueError(str(response["payload"]))
     return inspect(output)
@@ -438,7 +460,7 @@ def load(directory: str | Path, expected: str | None = None) -> tuple[Session, s
         p = Path(tmp); (p / "workspace.json").write_bytes(raw)
         session = Session.from_workspace(p / "workspace.json", p / "restored")
     project.context(session.run)
-    if len(session.executions) != 1 or len(session.results) > 1 or next(iter(session.executions.values()))["operation_id"] not in {OPERATION, ANALYSIS_OPERATION}:
+    if len(session.executions) != 1 or len(session.results) > 1 or next(iter(session.executions.values()))["operation_id"] not in {OPERATION, ANALYSIS_OPERATION, "engineering.characterize-manufacturing-time.v1"}:
         raise ValueError("Expected one native manufacturing-plan execution")
     return session, bytes_ref(raw)
 
@@ -454,7 +476,9 @@ def inspect(directory: str | Path, expected: str | None = None) -> dict:
 
 def replay(directory: str | Path, output: str | Path, expected: str | None = None) -> dict:
     session, _ = load(directory, expected)
-    return execute(session.run, output, analyze=next(iter(session.executions.values()))["operation_id"] == ANALYSIS_OPERATION)
+    operation = next(iter(session.executions.values()))["operation_id"]
+    return execute(session.run, output, analyze=operation == ANALYSIS_OPERATION,
+                   characterize_timing=operation == "engineering.characterize-manufacturing-time.v1")
 
 
 def export_inputs(directory: str | Path, output: str | Path, expected: str | None = None) -> dict:
