@@ -32,7 +32,10 @@ def main():
     mode.add_argument("--allow-host-dependencies", action="store_true")
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
     parser.add_argument("--with-measurements", action="store_true", help="Also exercise retained device/measurement/exchange interfaces")
+    parser.add_argument("--with-pinwheel", action="store_true", help="Also require local covariance-improvement review and replay")
     args = parser.parse_args()
+    if args.with_pinwheel:
+        args.with_measurements = True
     if args.with_measurements:
         args.with_scalar_study = True
     if args.with_scalar_study and sys.platform != "linux":
@@ -129,6 +132,8 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
         if args.with_measurements:
             test_names += ["test_link_measurements.py"]
+        if args.with_pinwheel:
+            test_names += ["test_link_pinwheel.py"]
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -158,6 +163,15 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             execute("device-register", ["-I", "-m", "ciw.net", "device", "register", "manifest.json", "--journal", "devices.sqlite", "--create-journal", "--approve-declaration"])
             execute("device-list", ["-I", "-m", "ciw.net", "device", "list", "--journal", "devices.sqlite"])
             summary["measurement_scope"] = "retained_views_local_objects_and_postgresql_staging_not_database_parquet_or_physical_qualification"
+        if args.with_pinwheel:
+            execute("pinwheel-plan", ["-I", "-m", "ciw.net", "link", "pinwheel", "plan", "measurements.json",
+                    "--instance-id", "synthetic.local", "--target-uncertainty", "0.03", "--output", "improvement-plan.json"])
+            execute("pinwheel-run", ["-I", "-m", "ciw.net", "link", "pinwheel", "run", "measurements.json",
+                    "improvement-plan.json", "--output-dir", "pinwheel-review"])
+            for action, suffix in (("inspect", []), ("replay", ["--output-dir", "pinwheel-replay"]),
+                    ("restore-source", ["--output-dir", "pinwheel-original"]), ("report", ["--output", "pinwheel.html"])):
+                execute("pinwheel-" + action, ["-I", "-m", "ciw.net", "link", "pinwheel", action, "pinwheel-review", *suffix])
+            summary["pinwheel_scope"] = "one_local_covariance_counterfactual_review_no_physical_improvement_or_deployment"
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),

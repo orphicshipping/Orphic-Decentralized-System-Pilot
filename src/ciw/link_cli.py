@@ -71,12 +71,16 @@ def demo(persona, output):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["pinwheel"]:
+        from .link_pinwheel_cli import main as pinwheel_main
+        return pinwheel_main(argv[1:])
     if argv[:1] == ["study"]:
         from .link_study_cli import main as study_main
         return study_main(argv[1:])
     parser = argparse.ArgumentParser(prog="net link", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("catalog")
+    commands.add_parser("pinwheel", help="Evidence-bound five-blade review and local uncertainty-improvement proposals")
     commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
     p = commands.add_parser("capture-serial", help="Explicit finite Linux TTY receive into the existing outbox; no polling")
     p.add_argument("port"); p.add_argument("--manifest", type=Path, required=True)
