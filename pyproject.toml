@@ -22,6 +22,7 @@ numerical-checks = ["scipy==1.17.1"]
 columnar = ["pyarrow==25.0.1"]
 bench-models = ["jsonschema==4.26.0"]
 legibility = ["cryptography==46.0.0"]
+network = ["PyJWT==2.13.0", "cryptography==46.0.0"]
 openusd = ["usd-core==25.11"]
 plsr = ["parameterized-lyapunov-stability-runtime @ git+https://github.com/atomtrapping/Parameterized-Lyapunov-Stability-Runtime.git@19ea6967060166ba09db6cd4563bd87bd6b3d196"]
 
