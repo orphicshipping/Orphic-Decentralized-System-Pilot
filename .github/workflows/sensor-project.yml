@@ -1,0 +1,59 @@
+name: Retained sensor project contracts
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/sensor_project*.py'
+      - 'tests/test_sensor_project.py'
+      - 'examples/sensor-project/**'
+      - '.github/workflows/sensor-project.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install pinned base dependencies
+        run: python -m pip install ".[dev]" "setuptools>=77" wheel
+      - name: Source contract tests (native processes explicitly doubled)
+        run: python -m pytest -q tests/test_sensor_project.py --junitxml=sensor-source.xml
+      - name: Build noneditable wheel
+        run: python -m pip wheel --no-deps --no-build-isolation . --wheel-dir sensor-dist
+      - name: Installed contracts outside the source tree
+        shell: python
+        run: |
+          import pathlib, shutil, subprocess, sys, tempfile
+          wheel = next(pathlib.Path('sensor-dist').glob('*.whl'))
+          subprocess.run([sys.executable,'-m','pip','install','--no-deps','--force-reinstall',str(wheel)],check=True)
+          target = pathlib.Path(tempfile.mkdtemp(prefix='sensor-contracts-'))
+          shutil.copy('tests/test_sensor_project.py', target / 'test_sensor_project.py')
+          (target / 'pytest.ini').write_text('[pytest]\n')
+          subprocess.run([sys.executable,'-I','-c','import ciw,pathlib,sys;assert pathlib.Path(ciw.__file__).resolve().is_relative_to(pathlib.Path(sys.prefix).resolve())'],cwd=target,check=True)
+          result = subprocess.run([sys.executable,'-I','-m','pytest','-q','-c','pytest.ini','test_sensor_project.py','--junitxml=installed.xml'],cwd=target)
+          if (target / 'installed.xml').exists(): shutil.copy(target / 'installed.xml','sensor-installed.xml')
+          result.check_returncode()
+      - name: Check exact scope, without skips
+        shell: python
+        run: |
+          import xml.etree.ElementTree as E
+          for path in ('sensor-source.xml','sensor-installed.xml'):
+              suites = list(E.parse(path).getroot().iter('testsuite'))
+              assert sum(int(s.get('tests',0)) for s in suites) == 113
+              assert not any(int(s.get(k,0)) for s in suites for k in ('failures','errors','skipped'))
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sensor-project-contracts-${{ matrix.os }}-${{ matrix.python }}
+          path: sensor-*.xml
+          if-no-files-found: error
