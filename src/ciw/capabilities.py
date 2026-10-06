@@ -8,6 +8,9 @@ registry, and it does not register a composition schema.
 from __future__ import annotations
 
 from copy import deepcopy
+from hashlib import sha256
+from pathlib import Path
+import platform
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
 from .data_runtime import comparison_identity, polymer_identity, product_study_identity
@@ -49,6 +52,22 @@ def _record(**fields):
     if not isinstance(record["capability_id"], str) or not record["capability_id"]:
         raise RuntimeError("capability index entries need an id")
     return record
+
+
+def _toolpoint_containment_identity():
+    """Mirror the owner metadata without importing its execution module.
+
+    The registry-completeness test binds this projection to the owner's actual
+    runtime identity. Do not change owner source bytes just to index them.
+    """
+    root = Path(__file__).parent
+    names = ("data_manufacturing_bridge.py", "manufacturing_contracts.py", "manufacturing_runtime.py",
+             "manufacturing_quality.py", "polymer_microfab.py", "polymer_toolpoint_qc.py",
+             "toolpoint_stream.py", "toolpoint_stream_containment.py", "core/identities.py")
+    return {"provider": "ciw.native-toolpoint-containment", "version": "1",
+            "source_files_sha256": {name: sha256((root / name).read_bytes()).hexdigest() for name in names},
+            "environment": {"python": platform.python_version()},
+            "scope": "bounded_same_implementation_retained_record_replay_no_physical_authority"}
 
 
 _SYSTEM_CAPABILITIES = tuple(_record(
@@ -127,6 +146,13 @@ _CAPABILITIES = (
         command=None, operation_id="data.assess-polymer-cycle.v1", role="backend",
         runtime_identity=polymer_identity(), module="ciw.data_compute_bridge",
         notes="Native sensors, histories and uncertainty declarations remain intact. This is not physical product acceptance.",
+    ),
+    _record(
+        capability_id="data.review-toolpoint-containment.v1", disposition="implemented", kind="registered_operation",
+        summary="Review exact retained manufacturing and toolpoint stream reports through the existing containment reducer.",
+        command=["data", "review-toolpoint"], operation_id="data.review-toolpoint-containment.v1", role="backend",
+        runtime_identity=_toolpoint_containment_identity(), module="ciw.data_manufacturing_bridge",
+        notes="Retained-record replay only; no store writes, hold release, shipment authorization or physical qualification.",
     ),
     _record(
         capability_id="learning.oscillator-rms",
