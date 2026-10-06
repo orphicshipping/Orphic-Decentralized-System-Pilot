@@ -179,3 +179,58 @@ Primary implementation references: SQLite transaction control
 The existing local `BEGIN IMMEDIATE` transaction and Legibility implementation
 are reused. Hash/signature checks are not storage-hardware attestation, malicious
 race resistance, authenticated physical truth or a production security audit.
+
+## Continuity and recovery hardening (follow-on to PR #209)
+
+The following defects were reproduced against exact head
+`2053c6390907c41a58761e6231795f66fd034920` before modification. These are software
+fault-injection findings, not observed customer incidents or hardware failures.
+
+**Preserve the admitted prefix across chunk boundaries.** Previously, a verified
+manifest and observation followed by a corrupt frame in the same transport chunk
+could be lost because `Decoder.feed` raised before returning its accumulated
+list. The same byte stream split at frame boundaries retained both valid frames.
+`feed` now accepts an optional, host-supplied `on_frame` sink. The existing ingress
+uses it to commit each verified frame before decoding the next. CRC, HMAC,
+semantic, capacity and truncation failures stop processing without erasing earlier
+commits. Callback failure or cancellation poisons the decoder. The existing list
+API and wire format are unchanged; no damaged tail is skipped or repaired.
+
+This property applies within the existing declared chunk and total-byte limits.
+It does not establish physical acquisition completeness, retain rejected bytes as
+measurements, recover kernel-read-to-commit loss, or automatically reconnect.
+The caller must keep any original input needed to investigate rejected bytes.
+An explicitly requested retry starts a new decoder and uses the original source;
+it does not create another physical observation.
+
+**Validate journal semantics before selection.** Historical `rows()` now freezes
+one bounded SQLite read snapshot, verifies that every observation/event has its
+original preceding manifest, and checks each index against the original wire.
+This occurs before capture or runtime recovery filters by manifest or boot.
+A relabelled last-row index previously hid that reading from export without a
+visible sequence gap. Such corruption now refuses; the original bytes are not
+rewritten. Valid multi-manifest journals remain supported. Historical MAC claims
+are still not freshly authenticated; an unsigned frame cannot claim a past MAC.
+The reader leaves any caller-owned transaction intact.
+
+**Check acknowledgement referential integrity separately.** SQLite's
+`integrity_check` does not cover foreign keys. Opening or listing a journal now
+also refuses an orphan acknowledgement through `foreign_key_check`. This is a
+consistency check, not cryptographic authentication or storage-hardware proof.
+There is no schema migration, deletion, automatic repair or new evidence store.
+See <https://www.sqlite.org/pragma.html#pragma_integrity_check> and
+<https://www.sqlite.org/isolation.html> for the database semantics.
+
+**Retain origin labels on failed decoding.** The existing scalar inspection now
+reads origin from the validated original observations, not from the presence of
+a successful decoder result. A malformed synthetic capture remains visibly
+SYNTHETIC and INCOMPLETE; recorded input retains its declared RECORDED label.
+Neither label authenticates a physical acquisition. Values and uncertainty are
+not fabricated, and qualification remains HELD.
+
+The existing installation gate includes `tests/test_link_ingress_recovery.py`
+under `--with-delivery`; no additional customer setup step is introduced. The
+new suite covers chunk partitions, corrupt/unauthenticated tails, callback
+cancellation, capacity, altered indexes, orphan receipts, multiple manifests,
+concurrent snapshot reads, failed-preview origin and explicit recovery through
+the same signed-custody, scalar Session, replay and native export paths.

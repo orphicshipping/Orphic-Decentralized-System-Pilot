@@ -103,6 +103,7 @@ class Journal:
                 raise ValueError("Link journal schema changed; no triggers/views or migrations allowed")
             if self.db.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
                 raise ValueError("Link journal integrity failure")
+            self._foreign_keys_intact()
             self.db.execute("PRAGMA journal_mode=WAL")
             self.db.execute("PRAGMA synchronous=FULL")
             self.store_id = self.db.execute("SELECT value FROM meta WHERE key='store_id'").fetchone()[0]
@@ -196,11 +197,59 @@ class Journal:
                 "wire": wire, "wire_ref": wire_ref, "received_ns": int(stamp),
                 "host_clock": clock, "authentication_at_capture": auth}
 
+    def _foreign_keys_intact(self):
+        # integrity_check explicitly does not check foreign-key consistency.
+        # An orphan ACK must not survive as an apparently healthy local cache.
+        if self.db.execute("PRAGMA foreign_key_check").fetchone() is not None:
+            raise ValueError("Link journal foreign-key integrity failure; no automatic repair")
+
     def rows(self):
-        self._bounded_rows()
-        return [self._row(row) for row in self.db.execute(
-            "SELECT ordinal,message_key,manifest_ref,wire,wire_ref,received_ns,host_clock,authentication "
-            "FROM messages ORDER BY ordinal")]
+        """Return one bounded, structurally checked historical snapshot.
+
+        Verify indexes against original wire BEFORE any caller filters by device,
+        manifest or boot. Otherwise a changed index can hide the final reading
+        without creating a visible sequence gap. This is not fresh MAC or device
+        authentication; signed frames remain offline/not-reverified here.
+        """
+        owned = not self.db.in_transaction
+        if owned:
+            self.db.execute("BEGIN")
+        try:
+            self._foreign_keys_intact()
+            self._bounded_rows()
+            records = self.db.execute(
+                "SELECT ordinal,message_key,manifest_ref,wire,wire_ref,received_ns,host_clock,authentication "
+                "FROM messages ORDER BY ordinal").fetchall()
+        finally:
+            if owned and self.db.in_transaction:
+                self.db.execute("ROLLBACK")  # Read-only snapshot; never caller's transaction.
+        rows, manifests = [], {}
+        for record in records:
+            row = self._row(record)
+            frame = decode_one(row["wire"], allow_unverified=True)
+            value = c.loads(frame.payload, 65536)
+            if frame.kind == "manifest":
+                device = c.manifest(value)
+                manifest_ref = c.content_identity(device)
+                message_key = "manifest:" + manifest_ref
+                if manifest_ref in manifests:
+                    raise ValueError("Duplicate retained manifest occurrence")
+                manifests[manifest_ref] = device
+            else:
+                if type(value) is not dict:
+                    raise ValueError("Expected a retained Link record")
+                manifest_ref = value.get("manifest_ref")
+                c.content_ref(manifest_ref)
+                if manifest_ref not in manifests:
+                    raise ValueError("Observation/event is missing its original prior manifest")
+                frame, _, message_key, manifest_ref = decode_bound(
+                    row["wire"], manifests[manifest_ref], offline=True)
+            if row["message_key"] != message_key or row["manifest_ref"] != manifest_ref:
+                raise ValueError("Stored Link index/manifest differs from committed wire semantics")
+            if frame.authentication == "not_authenticated" and row["authentication_at_capture"] != "not_authenticated":
+                raise ValueError("Unsigned frame cannot claim historical MAC verification")
+            rows.append(row)
+        return rows
 
     def bound_row(self, message_key, *, expected_manifest, key=None, require_auth=False, offline=False):
         """Read and revalidate wire/index/manifest binding under THIS call's policy.

@@ -21,12 +21,18 @@ def receive(chunks, journal, *, expected_manifest, key=None, require_auth=False)
     decoder = Decoder(key=key, require_auth=require_auth)
     receipts = []
     byte_count = 0
+
+    def retain(frame):
+        # Run for each verified frame BEFORE parsing a later frame in the same
+        # chunk. Journal.append returns only after commit and exact readback.
+        receipts.append(journal.append(frame.wire, expected_manifest=expected_manifest,
+                                       key=key, require_auth=require_auth))
+
     for chunk in chunks:
         byte_count += len(chunk)
         if byte_count > c.MAX_CAPTURE_BYTES:
             raise ValueError("Finite Link receive budget exceeded; committed prefix retained")
-        for frame in decoder.feed(chunk):
-            receipts.append(journal.append(frame.wire, expected_manifest=expected_manifest, key=key, require_auth=require_auth))
+        decoder.feed(chunk, on_frame=retain)
     decoder.finish()
     return {"status": "RECEIVED_FINITE_INPUT", "receipts": receipts, "bytes": byte_count,
             "scope": "durable_local_buffer_only", "device_completeness": "not_established"}

@@ -8,6 +8,7 @@ keys are host bindings; wire data cannot select a key or enable permission.
 from __future__ import annotations
 
 from dataclasses import dataclass
+from collections.abc import Callable
 import hashlib
 import hmac
 import struct
@@ -61,10 +62,21 @@ class Decoder:
         self.buffer = bytearray()
         self.failed = False
 
-    def feed(self, chunk: bytes) -> list[Frame]:
+    def feed(self, chunk: bytes, *, on_frame: Callable[[Frame], object] | None = None) -> list[Frame]:
+        """Decode a bounded chunk, optionally committing each verified frame.
+
+        on_frame is a trusted local sink, never selected by wire data. It runs
+        before the next frame is decoded, so a damaged tail cannot discard an
+        already accepted prefix. A sink failure poisons this decoder and does
+        not process later frames. Without a sink, the existing list API remains
+        batch-oriented: callers see the list only after the whole feed succeeds.
+        No damaged bytes are repaired, skipped or acknowledged.
+        """
         if self.failed:
             raise ValueError("Link decoder is poisoned; create a new transport session")
         try:
+            if on_frame is not None and not callable(on_frame):
+                raise ValueError("Frame sink must be an explicitly supplied callable")
             if type(chunk) is not bytes or len(chunk) > MAX_FRAME:
                 raise ValueError("Feed bounded byte chunks")
             self.buffer.extend(chunk)
@@ -96,12 +108,17 @@ class Decoder:
                         if not hmac.compare_digest(wire[-32:], expected):
                             raise ValueError("Link HMAC mismatch")
                         authentication = "shared_key_possession_verified"
-                output.append(Frame(KINDS[code], wire[HEADER.size:body_end], wire, authentication))
+                frame = Frame(KINDS[code], wire[HEADER.size:body_end], wire, authentication)
+                if on_frame is not None:
+                    on_frame(frame)
+                output.append(frame)
                 del self.buffer[:total]
             if len(self.buffer) > MAX_FRAME:
                 raise ValueError("Link framing buffer exceeded")
             return output
-        except Exception:
+        except BaseException:
+            # Cancellation during a commit is not permission to reuse this
+            # transport decoder. Recovery must reopen the retained prefix.
             self.failed = True
             self.buffer.clear()
             raise

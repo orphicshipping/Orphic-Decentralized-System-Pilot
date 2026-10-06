@@ -74,10 +74,15 @@ def read(directory):
 def inspect(directory):
     request,raw,session,graph=read(directory)
     results={r["operation_id"]:r for r in session.results.values()}
+    # Origin belongs to the retained observation, not successful decoding. A
+    # malformed synthetic reading must not lose its synthetic label on failure.
+    captured = study.gateway.validate_capture(request["capture"])
+    origins = {item["origin"] for item in captured["observations"]}
+    origin = next(iter(origins)) if len(origins) == 1 else None
     return {"schema":"ciw.link-scalar-inspection.v1","status":graph["status"],
         "evidence_id":session.run["evidence_id"],"request_ref":c.bytes_ref(raw),
         "results":deepcopy(results),"executions":deepcopy(session.executions),
-        "origin":None if study.OPS[0] not in results else results[study.OPS[0]]["data"]["origin"],
+        "origin":origin,
         "limits":dict(c.LIMITS)}
 
 
