@@ -193,3 +193,10 @@ admission into the existing manufacturing reducer, authenticated genealogy and
 empirical acceptance remain subsequent integration work. This increment delivers
 a tested product-to-plan compilation and observation-association boundary without
 pretending that the complete automated factory has already been commissioned.
+
+## Optional scheduling analysis
+
+The original operation and commands remain available. `run --analyze` selects the
+versioned analysis described in [MANUFACTURING_ANALYSIS.md](MANUFACTURING_ANALYSIS.md):
+bounded schedule search, separate constraint checks, bottleneck sensitivity,
+declared timing boxes and read-only comparison of retained process variants.

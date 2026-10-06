@@ -28,6 +28,7 @@ from .operations.schemas import register_payload_validator
 from .session import Session, loads_json
 
 OPERATION = "engineering.manufacturing-plan.v1"
+ANALYSIS_OPERATION = "engineering.manufacturing-plan.v2"
 DEFINITION = "ciw.sensor-manufacturing-definition.v1"
 RESULT = "ciw.sensor-manufacturing-plan.v1"
 PLAN_PATH = "manufacturing.json"
@@ -366,12 +367,21 @@ def _validate_payload(operation, data, run, parameters, selection):
         raise ValueError("Manufacturing plan differs from retained source computation")
 
 
+def _validate_analysis(operation, data, run, parameters, selection):
+    from .sensor_manufacturing_analysis import analyze
+    if operation != ANALYSIS_OPERATION or not project.same({k: selection[k] for k in ("channel", "interval_s")}, PARAMETERS):
+        raise ValueError("Wrong manufacturing analysis operation or selection")
+    if not project.same(data, analyze(run, parameters)):
+        raise ValueError("Manufacturing analysis differs from retained source computation")
+
+
 def register_schema() -> None:
     global _REGISTERED
     project.register_schema()
     with _LOCK:
         if not _REGISTERED:
             register_payload_validator(OPERATION, _validate_payload, role="analysis")
+            register_payload_validator(ANALYSIS_OPERATION, _validate_analysis, role="analysis")
             _REGISTERED = True
 
 
@@ -382,23 +392,35 @@ def runtime_identity() -> dict:
             "scope": "declared_manufacturing_plan_and_nominal_inspection_review"}
 
 
+def analysis_runtime_identity() -> dict:
+    return {**runtime_identity(), "version": "2", "analysis_source": bytes_ref(
+        Path(__file__).with_name("sensor_manufacturing_analysis.py").read_bytes().replace(b"\r\n", b"\n"))}
+
+
 def registry() -> CapabilityRegistry:
+    from .sensor_manufacturing_analysis import analyze
     register_schema(); result = CapabilityRegistry()
-    manifest = InstrumentManifest(instrument_id="sensor-manufacturing-planning.v1", role="engineering_projection",
-        units={project.CHANNEL: "1"}, frames=("project-declaration-not-physical-clock",),
-        sampling={"kind": "one_declaration"}, supported_operations=(OPERATION,),
-        calibration_requirements={"physical_qualification": "not_established"})
-    result.advertise(manifest, runtime=runtime_identity(), capabilities={OPERATION: ["engineering.manufacturing-plan"]})
-    result.bind(Operation(OPERATION, "analysis", compile_definition, runtime_identity))
+    for operation, version, compute, runtime, capability in (
+        (OPERATION, "1", compile_definition, runtime_identity, "engineering.manufacturing-plan"),
+        (ANALYSIS_OPERATION, "2", analyze, analysis_runtime_identity, "engineering.manufacturing-analysis"),
+    ):
+        manifest = InstrumentManifest(instrument_id="sensor-manufacturing-planning.v" + version,
+            role="engineering_projection", units={project.CHANNEL: "1"},
+            frames=("project-declaration-not-physical-clock",), sampling={"kind": "one_declaration"},
+            supported_operations=(operation,), calibration_requirements={"physical_qualification": "not_established"})
+        result.advertise(manifest, runtime=runtime(), capabilities={operation: [capability]})
+        result.bind(Operation(operation, "analysis", compute, runtime))
     return result
 
 
-def execute(run: dict, output: str | Path) -> dict:
+def execute(run: dict, output: str | Path, *, analyze: bool = False) -> dict:
+    if type(analyze) is not bool:
+        raise ValueError("Analysis selection must be an explicit boolean")
     project.context(run)
     output = project._destination(output); output.mkdir(parents=True, exist_ok=False)
     session = Session(deepcopy(run), output, operations=registry().operations)
     response = session.handle({"protocol_version": 1, "request_id": "manufacturing-plan", "type": "operation.execute",
-                               "payload": {"operation_id": OPERATION, "parameters": {}}})
+                               "payload": {"operation_id": ANALYSIS_OPERATION if analyze else OPERATION, "parameters": {}}})
     session.save_workspace(output / "workspace.json")
     if response["type"] == "error": raise ValueError(str(response["payload"]))
     return inspect(output)
@@ -416,7 +438,7 @@ def load(directory: str | Path, expected: str | None = None) -> tuple[Session, s
         p = Path(tmp); (p / "workspace.json").write_bytes(raw)
         session = Session.from_workspace(p / "workspace.json", p / "restored")
     project.context(session.run)
-    if len(session.executions) != 1 or len(session.results) > 1 or next(iter(session.executions.values()))["operation_id"] != OPERATION:
+    if len(session.executions) != 1 or len(session.results) > 1 or next(iter(session.executions.values()))["operation_id"] not in {OPERATION, ANALYSIS_OPERATION}:
         raise ValueError("Expected one native manufacturing-plan execution")
     return session, bytes_ref(raw)
 
@@ -432,7 +454,7 @@ def inspect(directory: str | Path, expected: str | None = None) -> dict:
 
 def replay(directory: str | Path, output: str | Path, expected: str | None = None) -> dict:
     session, _ = load(directory, expected)
-    return execute(session.run, output)
+    return execute(session.run, output, analyze=next(iter(session.executions.values()))["operation_id"] == ANALYSIS_OPERATION)
 
 
 def export_inputs(directory: str | Path, output: str | Path, expected: str | None = None) -> dict:
