@@ -71,6 +71,9 @@ def demo(persona, output):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["reference"]:
+        from .link_reference_io import main as reference_main
+        return reference_main(argv[1:])
     if argv[:1] == ["pinwheel"]:
         from .link_pinwheel_cli import main as pinwheel_main
         return pinwheel_main(argv[1:])
@@ -80,6 +83,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="net link", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     commands.add_parser("catalog")
+    commands.add_parser("reference", help="Pinned institutional/academic data review; no calibration transfer")
     commands.add_parser("pinwheel", help="Evidence-bound five-blade review and local uncertainty-improvement proposals")
     commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
     p = commands.add_parser("capture-serial", help="Explicit finite Linux TTY receive into the existing outbox; no polling")

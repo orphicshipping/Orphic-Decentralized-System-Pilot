@@ -33,7 +33,10 @@ def main():
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
     parser.add_argument("--with-measurements", action="store_true", help="Also exercise retained device/measurement/exchange interfaces")
     parser.add_argument("--with-pinwheel", action="store_true", help="Also require local covariance-improvement review and replay")
+    parser.add_argument("--with-references", action="store_true", help="Also require pinned institutional reference review")
     args = parser.parse_args()
+    if args.with_references:
+        args.with_pinwheel = True
     if args.with_pinwheel:
         args.with_measurements = True
     if args.with_measurements:
@@ -134,6 +137,9 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             test_names += ["test_link_measurements.py"]
         if args.with_pinwheel:
             test_names += ["test_link_pinwheel.py"]
+        if args.with_references:
+            test_names += ["test_link_references.py"]
+            shutil.copytree(source / "tests/reference_data", root / "tests/reference_data")
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -172,6 +178,16 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
                     ("restore-source", ["--output-dir", "pinwheel-original"]), ("report", ["--output", "pinwheel.html"])):
                 execute("pinwheel-" + action, ["-I", "-m", "ciw.net", "link", "pinwheel", action, "pinwheel-review", *suffix])
             summary["pinwheel_scope"] = "one_local_covariance_counterfactual_review_no_physical_improvement_or_deployment"
+        if args.with_references:
+            for profile, filename in (("nist-pontius", "PONTIUS.DAT"), ("ptb-mh44-first17", "MW_MH44ReIm.lines-1-18.csv")):
+                execute(profile+"-prepare", ["-I", "-m", "ciw.net", "link", "reference", "prepare", profile,
+                        "tests/reference_data/"+filename, "--output", profile+".json"])
+                execute(profile+"-run", ["-I", "-m", "ciw.net", "link", "reference", "run", profile+".json", "--output-dir", profile])
+                for action, suffix in (("inspect", []), ("replay", ["--output-dir", profile+"-replay"]),
+                        ("export", ["--output-dir", profile+"-export"]), ("report", ["--output", profile+".html"])):
+                    execute(profile+"-"+action, ["-I", "-m", "ciw.net", "link", "reference", action, profile, *suffix])
+                execute(profile+"-export-review", ["-I", "-m", "ciw.net", "link", "reference", "review-export", profile+"-export"])
+            summary["reference_scope"] = "published_data_mapping_and_conditional_arithmetic_not_physical_calibration"
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
