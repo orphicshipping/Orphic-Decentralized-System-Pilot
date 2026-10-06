@@ -285,7 +285,7 @@ def test_new_revision_retains_prior_occurrences_and_needs_new_grant(scalar_run,t
     assert not (tmp_path/'next/run').exists() and proposal['execution_authorized'] is False
     ref=proposal['compilation']['compiled_ref']
     with pytest.raises(PermissionError):io.run_packet(tmp_path/'next',tmp_path/'not-permitted',expected_compiled_ref=ref,host_profile='scalar')
-    revised=io.run_packet(tmp_path/'next',tmp_path/'second-run',expected_compiled_ref=ref,host_profile='scalar',allow_compute=True)
+    revised=io.run_packet(tmp_path/'next',tmp_path/'second-run',expected_compiled_ref=ref,host_profile='scalar',allow_compute=True,predecessor=root)
     assert revised['evidence_id']==old['evidence_id']
     assert set(revised['execution_ids']).isdisjoint(old['execution_ids'])
     assert revised['continuation']==proposal['continuation'] and revised['revision']==2

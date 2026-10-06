@@ -6,6 +6,8 @@ on:
       - 'src/ciw/engineering_thread*.py'
       - 'src/ciw/production*.py'
       - 'tests/test_engineering_thread.py'
+      - 'tests/test_engineering_continuity.py'
+      - 'docs/ENGINEERING_CONTINUITY.md'
       - 'docs/ENGINEERING_INTENT.md'
       - 'src/ciw/mount_characterization.py'
       - 'tests/test_mount_characterization.py'
@@ -40,7 +42,7 @@ jobs:
       - run: python -m pip install 'setuptools>=77' wheel '.[dev,legibility]'
       - env:
           PYTHONPATH: src
-        run: python -m pytest -q tests/test_link_study.py tests/test_link.py tests/test_connectivity.py tests/test_link_delivery.py tests/test_link_inspection.py tests/test_link_ingress_recovery.py tests/test_link_scientific_guards.py tests/test_link_snapshot_integrity.py tests/test_link_unification.py tests/test_mount_characterization.py tests/test_link_installation.py tests/test_engineering_thread.py --junitxml=source-tests.xml
+        run: python -m pytest -q tests/test_link_study.py tests/test_link.py tests/test_connectivity.py tests/test_link_delivery.py tests/test_link_inspection.py tests/test_link_ingress_recovery.py tests/test_link_scientific_guards.py tests/test_link_snapshot_integrity.py tests/test_link_unification.py tests/test_mount_characterization.py tests/test_link_installation.py tests/test_engineering_thread.py tests/test_engineering_continuity.py --junitxml=source-tests.xml
       - run: python -m pip wheel --no-deps --no-build-isolation . --wheel-dir dist
       - name: Installed bytes, native codec, real PTY and MCP stdio
         shell: bash

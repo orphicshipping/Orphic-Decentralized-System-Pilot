@@ -138,7 +138,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.append("test_engineering_thread.py")
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -212,6 +212,34 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
                     "thread_ref": result["review"]["thread_ref"], "execution_count": len(result["review"]["execution_ids"]),
                     "source_fixture_execution_is_separate": result["source_fixture_execution_is_separate"],
                     "scope": result["review"]["scope"]}
+        if args.with_engineering:
+            original = summary["engineering"]["scalar"]
+            recovered = json.loads(execute("engineering-recovery", ["-I", "-m", "ciw.net", "production", "engineering", "restore",
+                "engineering-scalar/execution", "--profile", "scalar", "--thread-ref", original["thread_ref"],
+                "--output-dir", "engineering-recovered"]))
+            if recovered["new_scientific_executions"] != 0 or recovered["active_authority_restored"] is not False:
+                raise ValueError("Recovery restored execution authority or created scientific occurrences")
+            intent = json.loads((root / "engineering-recovered/intent.json").read_bytes())
+            intent["revision"] += 1
+            (root / "next-intent.json").write_text(json.dumps(intent, indent=2) + "\n", encoding="utf-8")
+            revised = json.loads(execute("engineering-revision", ["-I", "-m", "ciw.net", "production", "engineering", "revise",
+                "engineering-recovered", "--profile", "scalar", "--thread-ref", original["thread_ref"],
+                "--intent", "next-intent.json", "--request", "engineering-recovered/request.json",
+                "--reason", "Synthetic recovery and continuation qualification", "--output-dir", "engineering-next"]))
+            command = ["-I", "-m", "ciw.net", "production", "engineering", "run", "engineering-next",
+                       "--profile", "scalar", "--compiled-ref", revised["compilation"]["compiled_ref"],
+                       "--allow-compute", "--output-dir", "engineering-next-run"]
+            execute("engineering-missing-predecessor", command, expected_exit=1)
+            if (root / "engineering-next-run").exists():
+                raise ValueError("Missing predecessor created an execution directory")
+            continued = json.loads(execute("engineering-continued", command + ["--predecessor", "engineering-recovered"], expected_exit=2))
+            if (continued["status"] != "EVIDENCE_REQUIRED" or continued["scope"]["physical_qualification"] != "HELD"
+                    or set(continued["execution_ids"]) & set(recovered["execution_ids"])):
+                raise ValueError("Continuation reused occurrences or cleared physical evidence holds")
+            summary["engineering_continuity"] = {"restored_files": recovered["files_restored"],
+                "prior_thread_ref": original["thread_ref"], "new_thread_ref": continued["thread_ref"],
+                "prior_execution_ids": recovered["execution_ids"], "new_execution_ids": continued["execution_ids"],
+                "status": continued["status"], "scope": continued["scope"]}
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),

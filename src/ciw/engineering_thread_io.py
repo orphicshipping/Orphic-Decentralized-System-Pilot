@@ -61,7 +61,43 @@ def _packet(directory, *, expected_compiled_ref, host_profile, current_runtime=F
     return files, compiled, intent, source
 
 
-def run_packet(directory, output, *, expected_compiled_ref, host_profile, allow_compute=False):
+def _check_transition(prior, new, old_basis, new_basis):
+    """The evidence may change; a continuation cannot silently redefine success."""
+    if new['intent_id'] != prior['intent_id'] or new['revision'] != prior['revision']+1:
+        raise ValueError('Revision must retain intent identity and increment exactly once')
+    if not e._same(new['requirements'], prior['requirements']) or not e._same(new['constraints'], prior['constraints']):
+        raise ValueError('A continuation cannot weaken/change objectives or constraints; separate design review required')
+    if not e._same(old_basis, new_basis):
+        raise ValueError('Source plan changed the acceptance basis; separate design review required')
+
+
+def _check_predecessor(directory, compiled, intent, *, host_profile):
+    """Check the immediate predecessor from a host-selected path, never a saved URI.
+
+    Typed continuation references alone are not evidence that it was reviewed.
+    This is bounded content/occurrence validation, not authentication, execution
+    permission, transitive-chain verification or a physical qualification.
+    """
+    continuation = compiled['continuation']
+    if continuation is None:
+        if directory is not None:
+            raise ValueError('An initial revision has no predecessor to authorize or reuse')
+        return
+    if directory is None:
+        raise PermissionError('A continued run requires its explicit --predecessor for fresh evidence review')
+    with _frozen_thread(directory, expected_thread_ref=continuation['previous_thread_ref'],
+                        host_profile=host_profile) as state:
+        _, old, prior, _, session = state
+        _check_transition(prior, intent, old['decision_basis'], compiled['decision_basis'])
+        expected = {'previous_intent_ref': old['intent_ref'],
+                    'previous_execution_ids': list(session.executions),
+                    'previous_result_ids': list(session.results)}
+        if any(not e._same(continuation[name], value) for name, value in expected.items()):
+            raise ValueError('Continuation lineage differs from the original predecessor occurrences')
+
+
+def run_packet(directory, output, *, expected_compiled_ref, host_profile, allow_compute=False,
+               predecessor=None):
     if allow_compute is not True:
         raise PermissionError('Explicit host --allow-compute is required; a plan grants no authority')
     files, compiled, intent, source = _packet(directory, expected_compiled_ref=expected_compiled_ref,
@@ -69,6 +105,7 @@ def run_packet(directory, output, *, expected_compiled_ref, host_profile, allow_
     module = e.profile(host_profile)[0]
     registry = module.registry()
     workers = (production.Worker('retained-analysis', tuple(n['operation_id'] for n in module.graph()['nodes'])),)
+    _check_predecessor(predecessor, compiled, intent, host_profile=host_profile)
     # Recheck separately supplied bindings immediately before any execution.
     bindings = production.preflight(compiled['plan'], registry, workers, e.gate_bindings(),
                                     max_operations=intent['constraints']['max_operations'])
@@ -106,7 +143,7 @@ def _relative(name):
 
 
 @contextmanager
-def _frozen_thread(directory, *, expected_thread_ref, host_profile):
+def _frozen_thread(directory, *, expected_thread_ref, host_profile, include_manifest=False):
     c.content_ref(expected_thread_ref); root = safe_path(directory)
     raw = read_bytes(safe_path(root/'thread.json'), limit=65536)
     if c.bytes_ref(raw) != expected_thread_ref:
@@ -157,6 +194,10 @@ def _frozen_thread(directory, *, expected_thread_ref, host_profile):
             session = Session.from_workspace(temp/'run/session/workspace.json', Path(s))
         if not e._same(session.run, source):
             raise ValueError('Controller source differs from original engineering request')
+        # Restore receives the same externally anchored manifest bytes, not a
+        # second path read or a reconstruction with different formatting.
+        if include_manifest:
+            captured = {**captured, 'thread.json': raw}
         yield captured, compiled, intent, reviewed, session
 
 
@@ -202,20 +243,50 @@ def revise(directory, intent_raw, request_raw, output, *, expected_thread_ref, h
     with _frozen_thread(directory, expected_thread_ref=expected_thread_ref, host_profile=host_profile) as state:
         files, old, prior, reviewed, session = state
         new = e.validate_intent(c.loads(intent_raw, e.MAX_INTENT), host_profile)
-        if new['intent_id'] != prior['intent_id'] or new['revision'] != prior['revision']+1:
-            raise ValueError('Revision must retain intent identity and increment exactly once')
-        if not e._same(new['requirements'], prior['requirements']) or not e._same(new['constraints'], prior['constraints']):
-            raise ValueError('A continuation cannot weaken/change objectives or constraints; separate design review required')
         continuation = {'previous_thread_ref': expected_thread_ref, 'previous_intent_ref': old['intent_ref'],
             'previous_execution_ids': list(session.executions), 'previous_result_ids': list(session.results),
             'reason': reason, 'basis': 'locally_reviewed_predecessor_not_signed_authority'}
         replacement = e.compile_intent(intent_raw, request_raw, host_profile=host_profile, continuation=continuation)
-        if not e._same(old['decision_basis'], replacement['decision_basis']):
-            raise ValueError('Source plan changed the acceptance basis; separate design review required')
+        _check_transition(prior, new, old['decision_basis'], replacement['decision_basis'])
     result = compile_packet(intent_raw, request_raw, output, host_profile=host_profile, continuation=continuation)
     return {'status': 'REVISION_PROPOSED_NOT_EXECUTED', 'compilation': result,
             'continuation': continuation, 'computations_reused': False, 'execution_authorized': False}
 
+
+
+def restore_thread(directory, output, *, expected_thread_ref, host_profile):
+    """Recover exact history into a NEW directory without rerunning the graph.
+
+    Validate/freeze first, write original thread manifest last, then inspect the
+    destination. A failed copy remains partial; neither source nor existing
+    destination is overwritten. This is not a power-loss-atomic filesystem
+    transaction or an authenticated backup service. Credentials are not restored.
+    """
+    source_root, root = safe_path(directory), safe_path(output)
+    if root.resolve().is_relative_to(source_root.resolve()):
+        raise ValueError('Recovery destination must be outside the original retained thread')
+    with _frozen_thread(source_root, expected_thread_ref=expected_thread_ref,
+                        host_profile=host_profile, include_manifest=True) as state:
+        files, _, _, _, session = state
+        expected_executions, expected_results = list(session.executions), list(session.results)
+        # Keep byte references in memory after the temporary verification closes.
+        frozen = dict(files)
+    root.mkdir(parents=True, exist_ok=False)
+    for name, data in sorted(frozen.items()):
+        if name == 'thread.json':
+            continue
+        target = root / _relative(name)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        _write_raw(target, data)
+    _write_raw(root/'thread.json', frozen['thread.json'])
+    checked = inspect_thread(root, expected_thread_ref=expected_thread_ref, host_profile=host_profile)
+    if checked['execution_ids'] != expected_executions or checked['result_ids'] != expected_results:
+        raise ValueError('Restored computation occurrences differ; no recovery success')
+    return {'status': 'RESTORED_HISTORICAL_EVIDENCE', 'thread_ref': expected_thread_ref,
+            'files_restored': len(frozen), 'bytes_restored': sum(map(len, frozen.values())),
+            'execution_ids': expected_executions, 'result_ids': expected_results,
+            'new_scientific_executions': 0, 'active_authority_restored': False,
+            'predecessor_chain_revalidated': False, 'scope': deepcopy(e.SCOPE)}
 
 
 def report(directory, output, *, expected_thread_ref, host_profile):
@@ -262,18 +333,19 @@ def demo(output, *, host_profile):
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='net production engineering', description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
-    for cmd in ('demo', 'example', 'compile', 'run', 'inspect', 'report', 'revise'):
+    for cmd in ('demo', 'example', 'compile', 'run', 'inspect', 'report', 'revise', 'restore'):
         p = sub.add_parser(cmd); p.add_argument('--profile', choices=e.PROFILES, required=True)
-        if cmd in {'demo', 'compile', 'run', 'revise'}: p.add_argument('--output-dir', type=Path, required=True)
+        if cmd in {'demo', 'compile', 'run', 'revise', 'restore'}: p.add_argument('--output-dir', type=Path, required=True)
         if cmd in {'example', 'report'}: p.add_argument('--output', type=Path, required=True)
         if cmd == 'example': p.add_argument('--request-ref', required=True)
         if cmd in {'compile', 'revise'}:
             p.add_argument('--intent', type=Path, required=True); p.add_argument('--request', type=Path, required=True)
-        if cmd in {'run', 'inspect', 'report', 'revise'}:
+        if cmd in {'run', 'inspect', 'report', 'revise', 'restore'}:
             p.add_argument('directory', type=Path)
         if cmd == 'run': p.add_argument('--compiled-ref', required=True); p.add_argument('--allow-compute', action='store_true')
-        if cmd in {'inspect', 'report', 'revise'}: p.add_argument('--thread-ref', required=True)
+        if cmd in {'inspect', 'report', 'revise', 'restore'}: p.add_argument('--thread-ref', required=True)
         if cmd == 'revise': p.add_argument('--reason', required=True)
+        if cmd == 'run': p.add_argument('--predecessor', type=Path, help='Host-selected immediate predecessor; required for continued revisions')
     a = parser.parse_args(argv)
     try:
         if a.command == 'demo': result = demo(a.output_dir, host_profile=a.profile)
@@ -287,7 +359,8 @@ def main(argv=None):
             else: result = revise(a.directory, intent, raw, a.output_dir, expected_thread_ref=a.thread_ref,
                                    host_profile=a.profile, reason=a.reason)
         elif a.command == 'run': result = run_packet(a.directory, a.output_dir, expected_compiled_ref=a.compiled_ref,
-                                                     host_profile=a.profile, allow_compute=a.allow_compute)
+                                                     host_profile=a.profile, allow_compute=a.allow_compute, predecessor=a.predecessor)
+        elif a.command == 'restore': result = restore_thread(a.directory, a.output_dir, expected_thread_ref=a.thread_ref, host_profile=a.profile)
         elif a.command == 'inspect': result = inspect_thread(a.directory, expected_thread_ref=a.thread_ref, host_profile=a.profile)
         else: result = report(a.directory, a.output, expected_thread_ref=a.thread_ref, host_profile=a.profile)
         print(json.dumps(result, indent=2, allow_nan=False))
