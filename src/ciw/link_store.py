@@ -68,7 +68,10 @@ def decode_bound(wire, expected_manifest, *, key=None, require_auth=False, offli
 
 
 class Journal:
-    def __init__(self, path, *, create=False, capacity_bytes=MAX_STORE_BYTES, capacity_messages=MAX_MESSAGES):
+    def __init__(self, path, *, create=False, capacity_bytes=MAX_STORE_BYTES, capacity_messages=MAX_MESSAGES, read_only=False):
+        if type(read_only) is not bool or (read_only and create):
+            raise ValueError("Read-only inspection requires an existing journal")
+        self.read_only = read_only
         self.path = safe_path(path)
         c.integer(capacity_bytes, minimum=MAX_FRAME, maximum=MAX_STORE_BYTES)
         c.integer(capacity_messages, minimum=1, maximum=MAX_MESSAGES)
@@ -83,7 +86,9 @@ class Journal:
             os.close(fd)
         elif not self.path.is_file() or self.path.stat().st_size > MAX_STORE_BYTES * 2:
             raise ValueError("Require an existing bounded Link journal")
-        self.db = sqlite3.connect(self.path, timeout=5, isolation_level=None)
+        self.db = sqlite3.connect(
+            self.path.as_uri() + "?mode=ro" if read_only else self.path,
+            timeout=5, isolation_level=None, uri=read_only)
         try:
             self.db.execute("PRAGMA trusted_schema=OFF")
             self.db.execute("PRAGMA foreign_keys=ON")
@@ -103,8 +108,11 @@ class Journal:
                 raise ValueError("Link journal schema changed; no triggers/views or migrations allowed")
             if self.db.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
                 raise ValueError("Link journal integrity failure")
-            self.db.execute("PRAGMA journal_mode=WAL")
-            self.db.execute("PRAGMA synchronous=FULL")
+            if not read_only:
+                self.db.execute("PRAGMA journal_mode=WAL")
+                self.db.execute("PRAGMA synchronous=FULL")
+            else:
+                self.db.execute("PRAGMA query_only=ON")
             self.store_id = self.db.execute("SELECT value FROM meta WHERE key='store_id'").fetchone()[0]
             c.text(self.store_id)
         except Exception:
@@ -122,6 +130,8 @@ class Journal:
 
     @contextmanager
     def transaction(self):
+        if self.read_only:
+            raise PermissionError("Read-only Link journal cannot accept writes")
         self.db.execute("BEGIN IMMEDIATE")
         try:
             yield

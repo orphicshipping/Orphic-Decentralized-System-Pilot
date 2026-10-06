@@ -6,6 +6,8 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ("device", "link_device_cli", "Retain and inspect explicit device declarations in the existing Link journal"),
+    ("observation", "link_observation_cli", "Inspect, recover and export retained Link measurement views"),
     ('link', 'link_cli', 'Retain device records, local outbox delivery and native observation projections'),
     ('connectivity', 'connectivity_cli', 'Retain Open5GS/free5GC aggregate metrics and declared handheld transport context'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),

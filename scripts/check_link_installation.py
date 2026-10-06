@@ -31,7 +31,10 @@ def main():
     mode.add_argument("--require-pins", action="store_true")
     mode.add_argument("--allow-host-dependencies", action="store_true")
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
+    parser.add_argument("--with-measurements", action="store_true", help="Also exercise retained device/measurement/exchange interfaces")
     args = parser.parse_args()
+    if args.with_measurements:
+        args.with_scalar_study = True
     if args.with_scalar_study and sys.platform != "linux":
         parser.error("The scalar serial qualification is a Linux-only gate")
     source = Path(__file__).resolve().parents[1]
@@ -124,6 +127,8 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         summary["package"] = json.loads(execute("package-provenance", ["-I", "-c", probe]))
         (root / "tests").mkdir()
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
+        if args.with_measurements:
+            test_names += ["test_link_measurements.py"]
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -143,6 +148,16 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             for action in ("inspect", "replay", "export", "report"):
                 suffix = [] if action == "inspect" else ["--output", "scalar-panel.html"] if action == "report" else ["--output-dir", "scalar-" + action]
                 execute("scalar-" + action, ["-I", "-m", "ciw.net", "link", "study", action, "scalar-study", *suffix])
+        if args.with_measurements:
+            execute("observation-ingest", ["-I", "-m", "ciw.net", "observation", "ingest", "scalar-study", "--output", "measurements.json"])
+            execute("observation-list", ["-I", "-m", "ciw.net", "observation", "list", "measurements.json", "--stage", "corrected"])
+            for action, output in (("restore", "measurement-restored"), ("export", "measurement-objects"), ("report", "measurement-panel.html")):
+                execute("observation-" + action, ["-I", "-m", "ciw.net", "observation", action, "measurements.json", "--output", output])
+            execute("observation-object-review", ["-I", "-m", "ciw.net", "observation", "review-export", "measurement-objects"])
+            execute("device-fixture", ["-I", "-c", "import json,pathlib; p=json.loads(pathlib.Path('scalar-request.json').read_text())['capture']['manifest'];pathlib.Path('manifest.json').write_text(json.dumps(p))"])
+            execute("device-register", ["-I", "-m", "ciw.net", "device", "register", "manifest.json", "--journal", "devices.sqlite", "--create-journal", "--approve-declaration"])
+            execute("device-list", ["-I", "-m", "ciw.net", "device", "list", "--journal", "devices.sqlite"])
+            summary["measurement_scope"] = "retained_views_local_objects_and_postgresql_staging_not_database_parquet_or_physical_qualification"
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
