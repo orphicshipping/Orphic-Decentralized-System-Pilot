@@ -32,7 +32,10 @@ def main():
     mode.add_argument("--allow-host-dependencies", action="store_true")
     parser.add_argument("--with-scalar-study", action="store_true", help="Also require the Linux serial/scalar/MCP increment")
     parser.add_argument("--with-delivery", action="store_true", help="Require signed local custody, occurrence hardening and operator preview")
+    parser.add_argument("--with-installation", action="store_true", help="Also qualify the retained paired installation workflow")
     args = parser.parse_args()
+    if args.with_installation and not args.with_delivery:
+        parser.error("Installation qualification requires --with-delivery and its inherited gates")
     if args.with_delivery and not args.with_scalar_study:
         parser.error("Delivery qualification includes the scalar investigation; select --with-scalar-study")
     if args.with_scalar_study and sys.platform != "linux":
@@ -129,6 +132,8 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
         if args.with_delivery:
             test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py", "test_link_snapshot_integrity.py", "test_link_unification.py"])
+        if args.with_installation:
+            test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -177,6 +182,16 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             assert all(row["status"] == "COMPOSABLE" for row in mathematical["compositions"])
             summary["link_semantics"] = {"review_ref": mathematical["record_digest"],
                 "stage_count": len(mathematical["original_stages"]), "new_scientific_execution": False}
+        if args.with_installation:
+            paired = json.loads(execute("installation-demo", ["-I", "-m", "ciw.net", "link", "installation", "demo",
+                "--output-dir", "installation-demo", "--compliant"]))
+            for action in ("inspect", "replay", "restore"):
+                suffix = [] if action == "inspect" else ["--output-dir", "installation-" + action]
+                execute("installation-" + action, ["-I", "-m", "ciw.net", "link", "installation", action,
+                    "installation-demo/investigation", "--request-ref", paired["request_ref"], *suffix])
+            assert paired["scope"]["physical_qualification"] == "HELD"
+            assert paired["passing_sampled_frequencies_hz"] == [32., 64.]
+            summary["installation"] = paired
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),

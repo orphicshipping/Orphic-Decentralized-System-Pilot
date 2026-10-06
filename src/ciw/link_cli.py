@@ -70,6 +70,9 @@ def demo(persona, output):
 
 def main(argv=None):
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:1] == ["installation"]:
+        from .link_installation_io import main as installation_main
+        return installation_main(argv[1:])
     if argv[:1] == ["inspection"]:
         from .link_inspection_cli import main as inspection_main
         return inspection_main(argv[1:])
@@ -87,6 +90,7 @@ def main(argv=None):
     p = commands.add_parser("semantics", help="Read existing scalar lineage through NET morphism/preservation contracts")
     p.add_argument("directory", type=Path); p.add_argument("--request-ref", required=True)
     p.add_argument("--output", type=Path, help="Optional create-only mathematical review; no new scientific execution")
+    commands.add_parser("installation", help="Retained reference-paired installation response; no hardware access")
     commands.add_parser("inspection", help="Digital Inspection: one recorded preview, clear trust checks, Advanced details")
     commands.add_parser("delivery", help="Node-signed local custody receipts; no network or equipment grant")
     commands.add_parser("study", help="Retained scalar decoding, affine correction, model and independent arithmetic audit")
