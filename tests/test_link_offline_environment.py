@@ -248,7 +248,9 @@ def test_empty_typed_marker_is_preserved_during_real_install(project,tmp_path):
     result=prepare(project,tmp_path/'bundle')
     done=offline.provision(tmp_path/'bundle',tmp_path/'deployment',expected_manifest_ref=result['manifest_ref'],allow_install=True)
     assert done['status']=='PROVISIONED_NOT_QUALIFIED'
-    assert next((tmp_path/'deployment/env').rglob('py.typed')).read_bytes()==b''
+    markers = list((tmp_path/'deployment/env').rglob('net_offline_dependency/py.typed'))
+    assert len(markers) == 1
+    assert markers[0].read_bytes() == b''
 
 
 def test_source_replacement_after_freeze_cannot_change_installed_bytes(project,tmp_path,monkeypatch):
@@ -330,3 +332,175 @@ def test_malformed_dependency_cannot_echo_embedded_credential(project,tmp_path,c
     assert offline.main(['prepare','--project',str(path),'--project-ref',ref(path.read_bytes()),
       '--root-ref',ref(root.read_bytes()),'--wheelhouse',str(wheels),'--profile','runtime','--output',str(tmp_path/'blocked')])==2
     assert 'synthetic-secret' not in capsys.readouterr().err
+
+
+# Deployment guards: synthetic packages and real bounded subprocesses only.
+@pytest.mark.parametrize('member', [
+    'sitecustomize/__init__.py', 'usercustomize/__init__.py',
+    'sitecustomize/support.py', 'sitecustomize.so',
+    'sitecustomize.abi3.so', 'usercustomize.abi3.so',
+    'sitecustomize.cpython-313-x86_64-linux-gnu.so', 'pip.abi3.so',
+])
+def test_reserved_startup_import_roots_refuse_before_bundle_creation(project, tmp_path, member):
+    put_wheel(project[1], 'net-offline-dependency', files={member: b'# synthetic inert member\n'})
+    with pytest.raises(ValueError, match='Startup|bootstrap|reserved'):
+        prepare(project, tmp_path/'blocked-startup')
+    assert not (tmp_path/'blocked-startup').exists()
+
+
+@pytest.mark.parametrize('member', [
+    'net_offline_dependency/sitecustomize_helpers.py',
+    'sitecustomize_notes/__init__.py', 'sitecustomize_notes.py',
+])
+def test_nonreserved_similar_names_remain_supported(project, tmp_path, member):
+    put_wheel(project[1], 'net-offline-dependency', files={member: b'VALUE=42\n'})
+    result = prepare(project, tmp_path/'accepted-library')
+    assert result['status'] == 'PREPARED_NOT_AUTHORIZED'
+    assert result['executes_application'] is False
+
+
+def test_previously_prepared_startup_bundle_is_rejected_before_provision(project, tmp_path, monkeypatch):
+    # Reproduce the prior member-check omission only while constructing old input.
+    # The real new reader/provisioner then rechecks the original wheel and refuses.
+    from pathlib import PurePosixPath
+    put_wheel(project[1], 'net-offline-dependency', files={
+        'sitecustomize/__init__.py': b'raise RuntimeError("must not import")\n'})
+    with monkeypatch.context() as old_validator:
+        old_validator.setattr(offline, '_member', lambda name: PurePosixPath(name))
+        result = prepare(project, tmp_path/'old-bundle')
+    before = snapshot(tmp_path/'old-bundle')
+    with pytest.raises(ValueError, match='Startup|bootstrap|reserved'):
+        offline.provision(tmp_path/'old-bundle', tmp_path/'not-installed',
+            expected_manifest_ref=result['manifest_ref'], allow_install=True)
+    assert not (tmp_path/'not-installed').exists()
+    assert snapshot(tmp_path/'old-bundle') == before
+
+
+@pytest.mark.parametrize('fd', [1, 2])
+def test_command_output_limit_is_enforced_while_reading(tmp_path, monkeypatch, fd):
+    cap = 65536
+    monkeypatch.setattr(offline, 'MAX_COMMAND_OUTPUT', cap, raising=False)
+    command = [sys.executable, '-I', '-c', f'import os;os.write({fd},b"X"*{cap+1})']
+    with pytest.raises(RuntimeError, match='output.*limit'):
+        offline._run(command, tmp_path, 'excess-output', timeout=5)
+    assert (tmp_path/'excess-output.log').read_bytes() == b'X'*cap
+
+
+@pytest.mark.parametrize('size', [0, 1, 65535, 65536])
+def test_bounded_command_output_is_exact_including_empty(tmp_path, monkeypatch, size):
+    monkeypatch.setattr(offline, 'MAX_COMMAND_OUTPUT', 65536, raising=False)
+    command = [sys.executable, '-I', '-c', f'import os;os.write(1,b"Y"*{size})']
+    result = offline._run(command, tmp_path, 'bounded-output', timeout=5)
+    assert result == b'Y'*size
+    assert (tmp_path/'bounded-output.log').read_bytes() == result
+
+
+def test_runtime_default_output_ceiling_is_enforced(tmp_path):
+    cap = 8 * 1024 * 1024
+    with pytest.raises(RuntimeError, match='output.*limit'):
+        offline._run([sys.executable, '-I', '-c',
+                      f'import os;os.write(1,b"Z"*{cap+1})'], tmp_path, 'default-limit', timeout=5)
+    assert (tmp_path/'default-limit.log').stat().st_size == cap
+
+
+def test_installer_output_failure_keeps_original_bundle_and_no_success_receipt(project, tmp_path, monkeypatch):
+    prepared = prepare(project, tmp_path/'bundle')
+    before = snapshot(tmp_path/'bundle')
+    actual = offline._run
+    monkeypatch.setattr(offline, 'MAX_COMMAND_OUTPUT', 65536, raising=False)
+    def noisy_install(command, root, name, **kw):
+        if name == 'offline-install':
+            # A real, failing child replaces pip only for this failure-path probe.
+            command = [sys.executable, '-I', '-c', 'import os;os.write(1,b"X"*65537)']
+        return actual(command, root, name, **kw)
+    monkeypatch.setattr(offline, '_run', noisy_install)
+    with pytest.raises(RuntimeError, match='output.*limit'):
+        offline.provision(tmp_path/'bundle', tmp_path/'partial',
+            expected_manifest_ref=prepared['manifest_ref'], allow_install=True)
+    assert not (tmp_path/'partial/provisioning.json').exists()
+    assert (tmp_path/'partial/offline-install.log').stat().st_size == 65536
+    assert snapshot(tmp_path/'bundle') == before
+
+
+def test_timeout_covers_inherited_pipe_after_parent_exits(tmp_path):
+    import signal
+    import time
+    child = None
+    code = ('import os,subprocess,sys\n'
+            'p=subprocess.Popen([sys.executable, "-I", "-c", "import time;time.sleep(30)"])\n'
+            'print("owned-child-pid="+str(p.pid),flush=True)\nos._exit(0)\n')
+    try:
+        with pytest.raises(RuntimeError, match='deadline'):
+            offline._run([sys.executable, '-I', '-c', code], tmp_path, 'descendant', timeout=0.5)
+        pid_lines = [line for line in (tmp_path/'descendant.log').read_text().splitlines()
+                     if line.startswith('owned-child-pid=')]
+        assert len(pid_lines) == 1
+        child = int(pid_lines[0].split('=', 1)[1])
+        # A killed orphan may be waiting for PID 1 to reap it; a zombie is not live.
+        for _ in range(100):
+            status = Path(f'/proc/{child}/stat')
+            if not status.exists() or status.read_text().split()[2] == 'Z':
+                break
+            time.sleep(0.01)
+        else:
+            pytest.fail('Owned descendant still running after command deadline')
+    finally:
+        # Test-only cleanup also prevents the old-implementation reproduction
+        # from leaving its harmless sleeping fixture process behind.
+        log = tmp_path/'descendant.log'
+        if child is None and log.exists():
+            pid_lines = [line for line in log.read_text().splitlines()
+                         if line.startswith('owned-child-pid=')]
+            if len(pid_lines) == 1:
+                child = int(pid_lines[0].split('=', 1)[1])
+        if child is not None:
+            try: os.kill(child, signal.SIGKILL)
+            except ProcessLookupError: pass
+
+
+def test_deadline_waits_for_child_even_when_child_closes_output(tmp_path):
+    code = 'import os,time;os.close(1);os.close(2);time.sleep(30)'
+    with pytest.raises(RuntimeError, match='deadline'):
+        offline._run([sys.executable, '-I', '-c', code], tmp_path, 'closed-pipe', timeout=0.2)
+    assert (tmp_path/'closed-pipe.log').read_bytes() == b''
+
+
+def test_command_failure_keeps_original_output_and_exit(tmp_path):
+    with pytest.raises(RuntimeError, match='exit=7'):
+        offline._run([sys.executable, '-I', '-c',
+            'import os;os.write(1,b"diagnostic\\x00\\xff");os._exit(7)'], tmp_path, 'failed-child', timeout=5)
+    assert (tmp_path/'failed-child.log').read_bytes() == b'diagnostic\x00\xff'
+
+
+@pytest.mark.parametrize('timeout', [True, 0, -1, float('nan'), float('inf'), '1'])
+def test_invalid_command_deadline_refuses_before_start(tmp_path, monkeypatch, timeout):
+    monkeypatch.setattr(offline.subprocess, 'Popen', lambda *a, **k: pytest.fail('spawned invalid deadline'))
+    with pytest.raises(ValueError, match='deadline'):
+        offline._run([sys.executable, '-c', 'pass'], tmp_path, 'invalid-deadline', timeout=timeout)
+    assert not (tmp_path/'invalid-deadline.log').exists()
+
+
+def test_monitor_cancellation_reaps_the_real_child(tmp_path, monkeypatch):
+    actual = subprocess.Popen
+    children = []
+    def start(*a, **kw):
+        proc = actual(*a, **kw); children.append(proc); return proc
+    def cancelled(*a, **kw):
+        raise KeyboardInterrupt('synthetic monitor cancellation')
+    monkeypatch.setattr(offline.subprocess, 'Popen', start)
+    monkeypatch.setattr(offline.select, 'select', cancelled)
+    with pytest.raises(KeyboardInterrupt):
+        offline._run([sys.executable, '-I', '-c', 'import time;time.sleep(30)'],
+                     tmp_path, 'cancelled', timeout=5)
+    assert len(children) == 1 and children[0].poll() is not None
+
+
+def test_log_creation_is_private_and_never_overwrites(tmp_path):
+    import stat
+    command = [sys.executable, '-I', '-c', 'print("local diagnostic")']
+    offline._run(command, tmp_path, 'private', timeout=5)
+    path = tmp_path/'private.log'
+    assert stat.S_IMODE(path.stat().st_mode) == 0o600
+    before = path.read_bytes()
+    with pytest.raises(FileExistsError): offline._run(command, tmp_path, 'private', timeout=5)
+    assert path.read_bytes() == before

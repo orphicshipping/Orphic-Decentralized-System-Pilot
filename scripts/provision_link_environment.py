@@ -17,14 +17,17 @@ from email.policy import compat32
 import hashlib
 import io
 import json
+import math
 import os
 from pathlib import Path, PurePosixPath
 import re
 import signal
+import select
 import stat
 import subprocess
 import sys
 import sysconfig
+import time
 import tomllib
 import zipfile
 
@@ -43,6 +46,7 @@ MAX_TOTAL = 512 * 1024 * 1024
 MAX_EXPANDED = 512 * 1024 * 1024
 MAX_MEMBERS = 20000
 MAX_METADATA = 4 * 1024 * 1024
+MAX_COMMAND_OUTPUT = 8 * 1024 * 1024
 REF = re.compile(r'sha256:[0-9a-f]{64}')
 BOOTSTRAP_NAMES = {'pip', 'setuptools'}
 
@@ -114,9 +118,13 @@ def _member(name):
     if p.is_absolute() or p.as_posix() != name or any(x in {'', '.', '..'} for x in p.parts):
         raise ValueError('Unsafe wheel member path')
     lower = name.casefold()
+    # Python imports sitecustomize by module name: a package or native module
+    # is also a startup hook. Filename-only .py checks do not cover that boundary.
+    # Reserve these top-level import roots, including native ABI-tagged files.
+    import_root = p.parts[0].casefold().partition('.')[0]
     if (lower.endswith(('.pth', '.pyc', '.pyo')) or p.name.casefold() in {'sitecustomize.py', 'usercustomize.py'}
             or any(x.casefold().endswith('.data') for x in p.parts)
-            or p.parts[0].casefold() in {'pip', 'pip.py'}):
+            or import_root in {'pip', 'sitecustomize', 'usercustomize'}):
         raise ValueError('Startup hooks, pip replacement and .data spreading are outside this library-wheel profile')
     return p
 
@@ -421,19 +429,71 @@ def _environment(root):
 
 
 def _run(command, root, name, timeout=120):
-    """Bound trusted bootstrap/pip commands; no shell or network fallback."""
-    log = root/(name+'.log')
-    with log.open('xb') as stream:
+    """Drain a bounded pipe while supervising the trusted install process group.
+
+    Retain at most MAX_COMMAND_OUTPUT bytes, then fail and stop the owned group.
+    The deadline covers process completion AND EOF, including an inherited pipe
+    held by a child after the leader exits. This is not a hostile-code sandbox:
+    it does not contain children that deliberately escape the process group or
+    prevent writes through other descriptors opened by a trusted command.
+    """
+    if type(timeout) not in (int, float) or not math.isfinite(timeout) or timeout <= 0:
+        raise ValueError('Require a finite positive command deadline')
+    log = _path(root/(name+'.log'))
+    fd = os.open(log, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
+    with os.fdopen(fd, 'wb') as stream:
         process = subprocess.Popen(list(map(str, command)), cwd=root, env=_environment(root),
-                                   stdout=stream, stderr=subprocess.STDOUT, start_new_session=True)
+                                   stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                   stderr=subprocess.STDOUT, start_new_session=True, bufsize=0)
         try:
-            code = process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired as exc:
-            os.killpg(process.pid, signal.SIGKILL); process.wait()
-            raise RuntimeError('Provisioning command exceeded its deadline: ' + name) from exc
-    if code != 0:
-        raise RuntimeError('Provisioning command failed: ' + name + '; retained exit=' + str(code))
-    return _read(log, 8*1024*1024) if log.stat().st_size else b''
+            output_fd = process.stdout.fileno()
+            os.set_blocking(output_fd, False)
+            deadline = time.monotonic() + timeout
+            retained = 0
+            eof = False
+            while True:
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    raise RuntimeError('Provisioning command exceeded its deadline: ' + name)
+                if not eof:
+                    readable, _, _ = select.select([output_fd], [], [], min(remaining, 0.1))
+                    if readable:
+                        # One byte beyond the budget detects overflow without
+                        # ever writing beyond the retained-log bound.
+                        try:
+                            chunk = os.read(output_fd, min(65536, MAX_COMMAND_OUTPUT-retained+1))
+                        except BlockingIOError:
+                            continue
+                        if not chunk:
+                            eof = True
+                        else:
+                            room = MAX_COMMAND_OUTPUT-retained
+                            stream.write(chunk[:room])
+                            retained += min(len(chunk), room)
+                            if len(chunk) > room:
+                                raise RuntimeError('Provisioning command output exceeded its limit: ' + name)
+                else:
+                    try:
+                        process.wait(timeout=remaining)
+                    except subprocess.TimeoutExpired as exc:
+                        raise RuntimeError('Provisioning command exceeded its deadline: ' + name) from exc
+                if eof and process.poll() is not None:
+                    break
+            code = process.returncode
+            if code != 0:
+                raise RuntimeError('Provisioning command failed: ' + name + '; retained exit=' + str(code))
+        except BaseException:
+            # Also clean up on read/write failure or caller cancellation. The
+            # PID is from our own start_new_session child, never from input data.
+            try:
+                os.killpg(process.pid, signal.SIGKILL)
+            except ProcessLookupError:
+                pass
+            process.wait()
+            raise
+        finally:
+            process.stdout.close()
+    return _read(log, MAX_COMMAND_OUTPUT, allow_empty=True)
 
 
 def provision(directory, output, *, expected_manifest_ref, allow_install=False):
