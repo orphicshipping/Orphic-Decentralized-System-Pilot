@@ -63,7 +63,11 @@ ncp knowledge review-queue --bundle results/proto-corpus-001 --expected-ref sha2
 ~~~
 
 PIN and RECORD stand for complete 64-character digests returned by build/search.
-Ranking is lexical relevance, not confidence. Pagination is bounded and returns
+Search uses a derived inverted token index with AND semantics. Underscores and
+CamelCase document names remain discoverable without substring false matches;
+punctuation-only queries are refused. Ranking is lexical relevance, not confidence.
+Use ncp knowledge resolve --source-id with an exact retained identity or declared
+alias to retrieve its catalog record. Indexes do not change catalog or record pins. Pagination is bounded and returns
 next_offset. Source kinds, categories and review gaps support targeted discovery.
 
 ## Source identity and representation
@@ -94,13 +98,21 @@ settings, open a public listener or activate a remote connector.
 
 The profile exposes ncp_knowledge_overview, ncp_knowledge_search,
 ncp_knowledge_source, ncp_knowledge_relations, ncp_knowledge_review_queue,
-and ncp_system_status. The same metadata is addressable through a pinned overview
+ncp_knowledge_resolve, and ncp_system_status. The same metadata is addressable through a pinned overview
 resource and a source resource template. Resource IDs never select arbitrary
 files or URLs. Metadata is untrusted data, never instructions.
 
 The new profile uses the official SDK for tools and
 [URI-addressable resources](https://modelcontextprotocol.io/specification/2026-07-28/server/resources).
 Existing legacy stdio profiles retain their own protocol behavior.
+
+## Selected source passages
+
+The optional [evidence profile](NCP_EVIDENCE.md) freezes explicitly selected UTF-8
+files and named ZIP members after verifying their original source hashes. It adds
+passage search, exact byte locators and cited task contexts to the same MCP profile.
+The evidence bundle must reference the selected catalog pin, and all source
+statements remain unreviewed.
 
 ## Shared work
 
@@ -172,11 +184,12 @@ it does not grant authority or replace task state and review.
 ## Validation
 
 ~~~sh
-python -m pytest -q tests/test_proto_corpus.py tests/test_knowledge_mcp.py \
+python -m pytest -q tests/test_evidence_corpus.py tests/test_evidence_cli.py \
+  tests/test_evidence_mcp.py tests/test_proto_corpus.py tests/test_knowledge_mcp.py \
   tests/test_knowledge_cli.py tests/test_external_work.py \
   tests/test_external_work_http.py tests/test_corpus_retrieval.py \
   tests/test_operator_catalog.py
 ~~~
 
-Tests use synthetic metadata. Live bundles, inventories, databases and client
+Tests use synthetic metadata, text and archives. Live bundles, inventories, databases and client
 configurations belong in ignored local results directories, not in this repository.

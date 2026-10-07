@@ -68,12 +68,19 @@ def _host(corpus, args):
     values = (args.database, args.principal, args.parent_ref)
     if any(v is not None for v in values) and not all(v is not None for v in values):
         raise ValueError("Database, principal and parent-ref must be supplied together")
+    evidence = None
+    evidence_values = (args.evidence_bundle, args.evidence_ref)
+    if any(v is not None for v in evidence_values):
+        if not all(v is not None for v in evidence_values):
+            raise ValueError("Evidence bundle and evidence-ref must be supplied together")
+        from .evidence_corpus import EvidenceCorpus
+        evidence = EvidenceCorpus.open(args.evidence_bundle, expected_ref=args.evidence_ref, catalog=corpus)
     if args.database is None:
-        return KnowledgeHost(corpus)
+        return KnowledgeHost(corpus, evidence=evidence)
     from .external_work_mcp import ExternalWorkHost
     store = ExternalWorkStore(_path(args.database, existing=True))
     return KnowledgeHost(corpus, work_host=ExternalWorkHost(store, principal=args.principal),
-                         work_parent_ref=args.parent_ref)
+                         work_parent_ref=args.parent_ref, evidence=evidence)
 
 
 def main(argv=None):
@@ -84,11 +91,13 @@ def main(argv=None):
     build.add_argument("--intake", type=Path, required=True)
     build.add_argument("--selected", type=Path)
     build.add_argument("--output", type=Path, required=True)
-    for command in ("status", "search", "source", "relations", "review-queue",
+    for command in ("status", "search", "source", "resolve", "relations", "review-queue",
                     "bind-context", "serve", "config"):
         sub = commands.add_parser(command)
         sub.add_argument("--bundle", type=Path, required=True)
         sub.add_argument("--expected-ref", required=True, help="Trusted pin from the build receipt")
+        if command == "resolve":
+            sub.add_argument("--source-id", required=True)
         if command in ("source", "relations", "bind-context"):
             sub.add_argument("--record-id", required=True)
         if command in ("search", "relations", "review-queue"):
@@ -107,6 +116,8 @@ def main(argv=None):
         if command in ("status", "serve", "config"):
             sub.add_argument("--database", type=Path)
             sub.add_argument("--principal")
+            sub.add_argument("--evidence-bundle", type=Path)
+            sub.add_argument("--evidence-ref")
             sub.add_argument("--parent-ref")
         if command == "config":
             sub.add_argument("--output", type=Path, required=True)
@@ -122,6 +133,8 @@ def main(argv=None):
             if args.command == "search":
                 value = corpus.search(args.query, limit=args.limit, category=args.category,
                                       kind=args.kind, offset=args.offset)
+            elif args.command == "resolve":
+                value = corpus.resolve(args.source_id)
             elif args.command == "source":
                 value = corpus.source(args.record_id)
             elif args.command == "relations":
@@ -143,6 +156,9 @@ def main(argv=None):
                 if args.command == "config":
                     arguments = ["-m", "ciw.knowledge_cli", "serve", "--bundle",
                                  str(args.bundle.absolute()), "--expected-ref", corpus.ref]
+                    if args.evidence_bundle is not None:
+                        arguments += ["--evidence-bundle", str(args.evidence_bundle.absolute()),
+                                      "--evidence-ref", args.evidence_ref]
                     if args.database is not None:
                         arguments += ["--database", str(args.database.absolute()),
                                       "--principal", args.principal, "--parent-ref", args.parent_ref]

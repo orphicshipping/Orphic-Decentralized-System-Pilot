@@ -3,6 +3,9 @@ name: NCP knowledge and shared work system
 on:
   pull_request:
     paths:
+      - 'src/ciw/evidence_*.py'
+      - 'tests/test_evidence_*.py'
+      - 'docs/NCP_EVIDENCE.md'
       - 'src/ciw/proto_corpus.py'
       - 'src/ciw/knowledge_*.py'
       - 'src/ciw/external_work*.py'
@@ -55,6 +58,7 @@ jobs:
       - name: Synthetic catalog, task, MCP and command boundaries
         run: >-
           python -m pytest -q
+          tests/test_evidence_corpus.py tests/test_evidence_mcp.py tests/test_evidence_cli.py
           tests/test_proto_corpus.py tests/test_knowledge_mcp.py
           tests/test_knowledge_cli.py tests/test_external_work.py
           tests/test_external_work_http.py tests/test_corpus_retrieval.py
@@ -72,6 +76,7 @@ jobs:
           suites = list(root.iter('testsuite'))
           cases = list(root.iter('testcase'))
           expected = {
+              'test_evidence_corpus', 'test_evidence_mcp', 'test_evidence_cli',
               'test_proto_corpus', 'test_knowledge_mcp', 'test_knowledge_cli',
               'test_external_work', 'test_external_work_http', 'test_corpus_retrieval',
               'test_operator_catalog', 'test_agent_protocol', 'test_cli_json_boundary',
@@ -118,7 +123,7 @@ jobs:
                              cwd=work, env=env, check=True, timeout=300)
               probe = '''
           import importlib, importlib.metadata, json
-          names = ('ciw.proto_corpus', 'ciw.knowledge_mcp', 'ciw.knowledge_cli',
+          names = ('ciw.evidence_corpus', 'ciw.evidence_cli', 'ciw.proto_corpus', 'ciw.knowledge_mcp', 'ciw.knowledge_cli',
                    'ciw.external_work', 'ciw.external_work_mcp', 'ciw.external_work_http',
                    'ciw.external_work_cli', 'ciw.corpus_retrieval')
           paths = {name: importlib.import_module(name).__file__ for name in names}
@@ -137,7 +142,7 @@ jobs:
                   assert path.is_relative_to(environment), 'Import escaped installed wheel environment'
                   assert not path.is_relative_to(checkout), 'Import came from source checkout'
               help_commands = []
-              for command in ('knowledge', 'work'):
+              for command in ('knowledge', 'evidence', 'work'):
                   completed = subprocess.run([str(ncp), command, '--help'], cwd=work, env=env,
                                              check=True, text=True, capture_output=True, timeout=60)
                   assert 'usage:' in completed.stdout.lower()

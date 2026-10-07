@@ -4,7 +4,7 @@ Scientific computing, measurement context, and reproducible engineering investig
 
 Developed by **Notation Systems Inc.**
 
-[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Documentation](#documentation-and-development)
+[System design](#system-design) Â· [Local evaluation](#local-evaluation) Â· [Technical assessment](#technical-assessment) Â· [Integration](#integration) Â· [Documentation](#documentation-and-development)
 
 <a id="from-a-calculation-to-an-engineering-record"></a>
 
@@ -97,7 +97,9 @@ task exchange. Separate requester and worker clients share explicit source conte
 Exact-task authorization and result review remain trusted host actions.
 
 Use `ncp knowledge` to compile/search a catalog or generate a local MCP launcher,
-and `ncp work` for explicit host administration. Existing NET engineering contracts
+and `ncp work` for explicit host administration. The optional
+[`ncp evidence` profile](docs/NCP_EVIDENCE.md) adds hash-checked source passages
+from selected text files and ZIP members, with exact citation locators. Existing NET engineering contracts
 remain compatible. Source documents, code archives, catalog metadata, candidate
 results and accepted evidence retain distinct roles.
 
@@ -209,6 +211,6 @@ An implementation contribution should identify its engineering question, inputs,
 
 NCP is developed by **[Notation Systems Inc.](https://notation.systems)** as shared infrastructure for scientific computing, systems engineering, manufacturing and interactive environments.
 
-**© 2026 Giason Pooni, for original contributions.** The root code follows the existing [LICENSE](LICENSE) and [platform licensing policy](docs/LICENSING.md). Imported modules retain their own licences and upstream notices. Project-owned original assets follow the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md).
+**Â© 2026 Giason Pooni, for original contributions.** The root code follows the existing [LICENSE](LICENSE) and [platform licensing policy](docs/LICENSING.md). Imported modules retain their own licences and upstream notices. Project-owned original assets follow the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md).
 
 Repository access or publication does not change those terms or confer evidence, signing or execution authority. An imported-component inventory does not establish clearance for a combined distribution; see the [distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source).

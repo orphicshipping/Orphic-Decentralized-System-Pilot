@@ -70,6 +70,22 @@ def _ref(raw):
     return "sha256:" + sha256(raw).hexdigest()
 
 
+def _search_tokens(text, *, document=False):
+    """Unicode words, split at underscores; no substring or stemming matches.
+
+    Documents retain whole words and add Latin CamelCase components so both
+    ``OpenFOAM`` and ``open foam`` find the same named artifact. Query tokens
+    are case-insensitive whole words and all must occur in the metadata.
+    """
+    words = re.findall(r"[^\W_]+", text)
+    result = {word.casefold() for word in words}
+    if document:
+        for word in words:
+            result.update(part.casefold() for part in re.split(
+                r"(?<=[a-z0-9])(?=[A-Z])|(?<=[A-Z])(?=[A-Z][a-z])", word))
+    return result
+
+
 def _object(pairs):
     value = {}
     for key, item in pairs:
@@ -503,7 +519,47 @@ class ProtoCorpus:
         for group in catalog["duplicate_groups"]:
             for source_id in group:
                 self._by_duplicate[source_id] = group
+        self._index_metadata()
         return self
+
+    def _index_metadata(self):
+        """Derived runtime indexes never alter the pinned catalog or records."""
+        postings, titles = defaultdict(set), {}
+        facets = {"category": defaultdict(set), "kind": defaultdict(set)}
+        identities = defaultdict(set)
+        for record_id, record in self._records.items():
+            titles[record_id] = frozenset(_search_tokens(record["title"], document=True))
+            fields = [record["title"], record["source_path"], record["category"], record["kind"],
+                      *[x["title"] for x in record["selected_annotations"]],
+                      *[text for x in record["selected_annotations"] for text in x["limitations"]],
+                      record.get("repository", {}).get("description_and_review_notes") or ""]
+            for term in set().union(*(_search_tokens(text, document=True) for text in fields)):
+                postings[term].add(record_id)
+            for field in facets:
+                facets[field][record[field]].add(record_id)
+            for source_id in (record["source_id"], *record["source_aliases"]):
+                identities[source_id].add(record_id)
+        self._postings = {term: frozenset(ids) for term, ids in postings.items()}
+        self._title_terms = titles
+        self._facets = {field: {value: frozenset(ids) for value, ids in index.items()}
+                        for field, index in facets.items()}
+        self._identities = {source_id: frozenset(ids) for source_id, ids in identities.items()}
+        self._overview = {"schema": SCHEMA, "counts": self._catalog["counts"],
+                          "categories": dict(sorted(Counter(x["category"] for x in self._records.values()).items())),
+                          "kinds": dict(sorted(Counter(x["kind"] for x in self._records.values()).items())),
+                          "inputs": self._inputs, "limitations": LIMITATIONS}
+        adjacency = defaultdict(list)
+        for relation in self._catalog["relations"]:
+            for source_id in {relation["source_id"], relation["target_source_id"]}:
+                adjacency[source_id].append(relation)
+        self._relation_adjacency = dict(adjacency)
+        self._lots = {lot["lot_id"]: lot for lot in self._catalog["lots"]}
+        self._reviews = [{**item, "record_id": self._sources[item["source_id"]]["record_id"]}
+                         for item in self._catalog["review_queue"]]
+        by_kind = defaultdict(list)
+        for item in self._reviews:
+            by_kind[item["kind"]].append(item)
+        self._reviews_by_kind = dict(by_kind)
 
     def _result(self, **values):
         return deepcopy({"catalog_ref": self.ref, **values, **BOUNDARIES})
@@ -521,31 +577,35 @@ class ProtoCorpus:
         return {"items": page, "total": len(items), "next_offset": offset + limit if offset + limit < len(items) else None}
 
     def overview(self):
-        return self._result(schema=SCHEMA, counts=self._catalog["counts"],
-                            categories=dict(sorted(Counter(x["category"] for x in self._records.values()).items())),
-                            kinds=dict(sorted(Counter(x["kind"] for x in self._records.values()).items())),
-                            inputs=self._inputs, limitations=LIMITATIONS)
+        return self._result(**self._overview)
 
     def search(self, query, limit=10, category=None, kind=None, offset=0):
-        _require(type(query) is str and len(query) <= 512, "query outside bounds")
+        _require(type(query) is str and 0 < len(query) <= 512, "query outside bounds")
         for value in (category, kind):
             _require(value is None or type(value) is str and 0 < len(value) <= 120, "invalid search filter")
-        terms = list(dict.fromkeys(re.findall(r"\w+", query.casefold())))
-        _require(len(terms) <= 32, "too many query terms")
+        terms = sorted(_search_tokens(query))
+        _require(1 <= len(terms) <= 32, "query term count outside bounds")
+        candidates = [self._postings.get(term, frozenset()) for term in terms]
+        for field, value in (("category", category), ("kind", kind)):
+            if value is not None:
+                candidates.append(self._facets[field].get(value, frozenset()))
+        candidates.sort(key=len)
+        matches = set(candidates[0]).intersection(*candidates[1:])
         items = []
-        for record in self._records.values():
-            if category is not None and record["category"] != category or kind is not None and record["kind"] != kind:
-                continue
-            haystack = " ".join([record["title"], record["source_path"], record["category"], record["kind"],
-                                 *[x["title"] for x in record["selected_annotations"]],
-                                 *[text for x in record["selected_annotations"] for text in x["limitations"]],
-                                 record.get("repository", {}).get("description_and_review_notes") or ""]).casefold()
-            if terms and not all(term in haystack for term in terms):
-                continue
-            score = sum(3 if term in record["title"].casefold() else 1 for term in terms)
+        for record_id in matches:
+            record = self._records[record_id]
+            score = sum(3 if term in self._title_terms[record_id] else 1 for term in terms)
             items.append({k: record[k] for k in ("record_id", "source_id", "title", "kind", "category", "source_url")} | {"score": score})
         items.sort(key=lambda x: (-x["score"], x["source_id"]))
-        return self._result(**self._page(items, limit, offset), search_basis="lexical_metadata_only")
+        return self._result(**self._page(items, limit, offset), search_basis="indexed_metadata_tokens",
+                            query_terms=terms, query_match="all_terms")
+
+    def resolve(self, source_id):
+        """Resolve only an exact retained source identity or explicit alias."""
+        _require(type(source_id) is str and 0 < len(source_id) <= 512, "source identity required")
+        records = self._identities.get(source_id, frozenset())
+        _require(len(records) == 1, "source identity unavailable or ambiguous")
+        return self._result(record=self._records[next(iter(records))])
 
     def source(self, record_id):
         return self._result(record=self._record(record_id))
@@ -556,15 +616,12 @@ class ProtoCorpus:
     def relations(self, record_id, limit=50, offset=0):
         record = self._record(record_id)
         source_id = record["source_id"]
-        edges = []
-        for relation in self._catalog["relations"]:
-            if relation["source_id"] == source_id or relation["target_source_id"] == source_id:
-                edges.append(dict(relation))
+        edges = [dict(relation) for relation in self._relation_adjacency.get(source_id, ())]
         for peer in self._by_duplicate.get(source_id, []):
             if peer != source_id:
                 edges.append({"source_id": source_id, "target_source_id": peer, "kind": "equal_representation_bytes"})
         for membership in record["lot_memberships"]:
-            lot = next(x for x in self._catalog["lots"] if x["lot_id"] == membership["lot_id"])
+            lot = self._lots[membership["lot_id"]]
             edges.append({"source_id": source_id, "kind": "packaged_in", **membership,
                           "lot_sha256": lot["sha256"], "lot_url": lot["drive_url"],
                           "assertion_scope": "packaging_not_scientific_acceptance"})
@@ -576,6 +633,5 @@ class ProtoCorpus:
 
     def review_queue(self, limit=20, offset=0, kind=None):
         _require(kind is None or type(kind) is str and 0 < len(kind) <= 120, "invalid review filter")
-        items = [{**x, "record_id": self._sources[x["source_id"]]["record_id"]} for x in self._catalog["review_queue"]
-                 if kind is None or x["kind"] == kind]
+        items = self._reviews if kind is None else self._reviews_by_kind.get(kind, [])
         return self._result(**self._page(items, limit, offset))

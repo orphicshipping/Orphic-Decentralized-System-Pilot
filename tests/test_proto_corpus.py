@@ -108,7 +108,7 @@ def open_inputs(inputs):
 
 
 def source(corpus, source_id):
-    return next(x for x in corpus.search("", limit=100)["items"] if x["source_id"] == source_id)
+    return corpus.resolve(source_id)["record"]
 
 
 def edit(path, transform):
@@ -129,7 +129,7 @@ def test_all_registries_preserve_identities_hash_scopes_and_boundaries(inputs):
     assert native["representation_size_bytes"] == 80
     huge = corpus.source(source(corpus, "gdrive:Oversize")["record_id"])["record"]
     assert huge["source_sha256"] is None and huge["representation"] == "reference_only"
-    for item in corpus.search("", limit=100)["items"]:
+    for item in json.loads((inputs["output"] / "catalog.json").read_bytes())["records"]:
         record = corpus.source(item["record_id"])["record"]
         assert record["metadata_only"] and record["review_status"] == "unreviewed"
         assert not record["authorizes_execution"] and not record["authorizes_acceptance"]
@@ -177,7 +177,7 @@ def test_deterministic_frozen_inputs_and_results_are_defensive(inputs, tmp_path)
     result["record"]["title"] = "mutated"
     assert first.source(result["record"]["record_id"])["record"]["title"] != "mutated"
     inputs["registry"].joinpath("source_membership.jsonl").write_text("changed")
-    assert first.search("sensor")["total"] == 4
+    assert first.search("sensor")["total"] == 2
     assert ProtoCorpus.open(inputs["output"], first.ref).ref == first.ref
 
 
@@ -188,11 +188,11 @@ def test_search_and_review_pagination_deterministic_and_bounded(inputs):
     assert one["next_offset"] == 1
     assert one["items"] + corpus.search("polymer", offset=1, limit=100)["items"] == whole["items"]
     assert corpus.search("polymer", kind="repository_archive")["total"] == 1
-    assert corpus.search("", category="does-not-exist")["items"] == []
+    assert corpus.search("polymer", category="does-not-exist")["items"] == []
     assert corpus.search("selected calibration")["total"] == 2
     for kwargs in ({"limit": True}, {"limit": 101}, {"offset": -1}, {"offset": True}):
         with pytest.raises(ProtoCorpusError):
-            corpus.search("", **kwargs)
+            corpus.search("polymer", **kwargs)
     with pytest.raises(ProtoCorpusError):
         corpus.search("x" * 513)
     with pytest.raises(ProtoCorpusError):
@@ -326,3 +326,110 @@ def test_large_license_lists_have_explicit_bounded_preview_and_pinned_original(i
     assert row["complete_observations_locator"] == {"input": "repository_manifest.json", "intake_id": "REPO-001"}
     retained = json.loads((inputs["output"] / "inputs" / "repository_manifest.json").read_bytes())
     assert retained["records"][0]["license_members_observed"] == members
+
+
+@pytest.mark.parametrize("query", ["", " ", "...", "___", "---/?!", "\U0001f642"])
+def test_queries_without_words_are_refused(inputs, query):
+    corpus = open_inputs(inputs)
+    with pytest.raises(ProtoCorpusError):
+        corpus.search(query)
+
+
+def test_exact_token_recall_unicode_underscores_and_camelcase(inputs):
+    def rename(manifest):
+        manifest["records"][0]["bibliographic_title"] = "GraphRAG_\u00e9chelle OpenFOAM polymer_temperature"
+        manifest["records"][1]["bibliographic_title"] = "plane_coverage.py"
+    edit(inputs["intake"] / "intake_manifest.json", rename)
+    corpus = open_inputs(inputs)
+    for query in ("RAG", "graphrag", "GRAPHRAG", "graph rag", "\u00c9CHELLE", "OpenFOAM",
+                  "openfoam", "open foam", "polymer_temperature", "polymer temperature"):
+        result = corpus.search(query)
+        assert [x["source_id"] for x in result["items"]] == ["gdrive:PaperOne"], query
+        assert result["search_basis"] == "indexed_metadata_tokens"
+        assert result["query_match"] == "all_terms"
+    assert corpus.search("\u00e9chell")["items"] == []
+    assert corpus.search("rag coverage")["items"] == []
+    assert corpus.search("polymer missingword")["items"] == []
+    assert corpus.search("coverage")["items"][0]["source_id"] == "gdrive:PaperCopy"
+
+
+def test_title_boost_ties_filters_pagination_and_casefold_are_deterministic(inputs):
+    corpus = open_inputs(inputs)
+    result = corpus.search("calibration", limit=100)
+    assert [(x["source_id"], x["score"]) for x in result["items"]] == [
+        ("gdrive:PaperCopy", 3), ("gdrive:PaperOne", 3),
+        ("gdrive:Original", 1), ("gdrive:Staged", 1)]
+    assert corpus.search("CALIBRATION calibration")["items"] == result["items"]
+    assert corpus.search("calibration", category="POLYMER")["total"] == 2
+    assert corpus.search("calibration", kind="repository_archive")["total"] == 0
+    assert corpus.search("calibration", category="polymer")["total"] == 0
+    first = corpus.search("calibration", limit=1)
+    second = corpus.search("calibration", limit=1, offset=first["next_offset"])
+    assert first["items"] + second["items"] == result["items"][:2]
+    assert corpus.search("calibration", offset=100)["items"] == []
+    assert corpus.search("calibration", offset=100)["next_offset"] is None
+
+
+def test_exact_identity_resolver_preserves_native_ids_aliases_and_bytes(inputs):
+    corpus = open_inputs(inputs)
+    direct = corpus.resolve("gdrive:Original")
+    alias = corpus.resolve("urn:notation:source:gdrive:Original")
+    assert alias == direct and alias["record"]["source_id"] == "gdrive:Original"
+    record_id = direct["record"]["record_id"]
+    before = corpus.record_bytes(record_id)
+    assert "sha256:" + sha256(before).hexdigest() == record_id
+    for unsupported in ("Original", "gdrive:original", " gdrive:Original", "gdrive:Missing", record_id,
+                        "https://drive.google.com/file/d/Original/view", "../../Original"):
+        with pytest.raises(ProtoCorpusError):
+            corpus.resolve(unsupported)
+    alias["record"]["source_id"] = "injected"
+    alias["record"]["source_aliases"].append("invented")
+    assert corpus.resolve("gdrive:Original") == direct
+    assert corpus.record_bytes(record_id) == before
+    with pytest.raises(ProtoCorpusError):
+        corpus.resolve("urn:notation:source:gdrive:Staged")
+
+
+def test_missing_library_original_remains_unresolved(inputs):
+    path = inputs["selected"] / "source_manifest.jsonl"
+    selection = json.loads(path.read_text())
+    selection["source_id"] = "urn:notation:source:library:file_original"
+    selection["original"] = {"platform": "ChatGPT Library", "file_id": "file_original"}
+    rows(path, [selection])
+    corpus = open_inputs(inputs)
+    for missing in ("library:file_original", selection["source_id"]):
+        with pytest.raises(ProtoCorpusError):
+            corpus.resolve(missing)
+    assert corpus.resolve("gdrive:Staged")["record"]["source_id"] == "gdrive:Staged"
+
+
+def test_runtime_indexes_and_cached_views_do_not_mutate_pins_or_return_aliases(inputs):
+    corpus = open_inputs(inputs)
+    manifest = (inputs["output"] / "manifest.json").read_bytes()
+    catalog_bytes = (inputs["output"] / "catalog.json").read_bytes()
+    catalog = json.loads(catalog_bytes)
+    before = {r["record_id"]: corpus.record_bytes(r["record_id"]) for r in catalog["records"]}
+    overview = corpus.overview()
+    overview["counts"]["source_records"] = -1
+    overview["categories"].clear()
+    assert corpus.overview()["counts"]["source_records"] == 8
+    original_id = corpus.resolve("gdrive:Original")["record"]["record_id"]
+    relations = corpus.relations(original_id)
+    relations["items"][0]["kind"] = "invented"
+    assert all(x["kind"] != "invented" for x in corpus.relations(original_id)["items"])
+    reviewed = corpus.review_queue(kind="rights_review")
+    reviewed["items"][0]["detail"] = "invented"
+    assert corpus.review_queue(kind="rights_review")["items"][0]["detail"] != "invented"
+    assert corpus.review_queue(kind="missing-kind")["items"] == []
+    assert corpus.review_queue(limit=1)["items"] + corpus.review_queue(offset=1, limit=100)["items"] == corpus.review_queue(limit=100)["items"]
+    found = corpus.search("polymer")
+    found["items"][0]["title"] = "invented"
+    found["query_terms"].append("invented")
+    assert "invented" not in corpus.search("polymer")["query_terms"]
+    assert corpus.search("polymer")["items"][0]["title"] != "invented"
+    assert before == {rid: corpus.record_bytes(rid) for rid in before}
+    assert (inputs["output"] / "manifest.json").read_bytes() == manifest
+    assert (inputs["output"] / "catalog.json").read_bytes() == catalog_bytes
+    assert "sha256:" + sha256(manifest).hexdigest() == corpus.ref
+    reopened = ProtoCorpus.open(inputs["output"], corpus.ref)
+    assert reopened.search("polymer") == corpus.search("polymer")
