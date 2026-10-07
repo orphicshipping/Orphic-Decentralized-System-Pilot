@@ -22,9 +22,9 @@ The application focus includes polymer processing, component development, instru
 
 | Reference | Scope |
 | --- | --- |
-| [`main` baseline `0374076`](https://github.com/atomtrapping/Notations-Control-Protocol/commit/0374076695475669188d61698e4656ced2263e01) | Local workbench, registered computational workflows, retained investigations, explicit replay, and selected MCP profiles. The installed commands are `net` and `ciw`. |
+| [`main` baseline `0374076`](https://github.com/atomtrapping/Notations-Control-Protocol/commit/0374076695475669188d61698e4656ced2263e01) | Local workbench, registered computational workflows, retained investigations, explicit replay, and selected MCP profiles. The baseline installed commands were `net` and `ciw`. |
 | [Draft PR #219](https://github.com/atomtrapping/Notations-Control-Protocol/pull/219), reviewed head `26ffb9c` | Engineering-intent compilation, retained findings, evidence-driven follow-up, and supporting-evidence work on its declared dependency chain. These increments are not included in the default-branch quickstart below. |
-| [NCP continuity note at the reviewed development revision](https://github.com/atomtrapping/Notations-Control-Protocol/blob/26ffb9c06dec36c2357300b581fff7f415a1d1a0/docs/NCP_CONTINUITY_AND_FOLLOW_UP.md) | Adds `ncp` as an alias of the existing `net` implementation while retaining package paths, schemas, and historical records. The alias is not present in the reviewed `main` package metadata. |
+| [NCP continuity note at the reviewed development revision](https://github.com/atomtrapping/Notations-Control-Protocol/blob/26ffb9c06dec36c2357300b581fff7f415a1d1a0/docs/NCP_CONTINUITY_AND_FOLLOW_UP.md) | Adds `ncp` as an alias of the existing `net` implementation while retaining package paths, schemas, and historical records. This system increment now also installs the `ncp` compatibility entrypoint. |
 
 The distribution remains `computational-instrumentation-workbench`; the Python package remains `ciw`. Existing guides and commands may therefore use NET terminology. A project-name change does not migrate stored records, change a wire protocol, or grant additional authority.
 
@@ -88,6 +88,18 @@ The mathematical structure includes typed serial/parallel composition, covarianc
 Optional providers require the exact runtimes and dependencies specified by their guides. The core installation does not qualify every provider or supply every device interface. For example, the recorded-thermal estimator retains input uncertainty but does not propagate it through that kernel; uncertainty handling must be checked at the operation level.
 
 An optional [registered heat profile](docs/PROVED_HEAT.md) connects to the Scientific Computation Runtime and SP1 for a bounded integer calculation. Its proof concerns the registered computation and commitments, not physical calibration or the validity of an arbitrary heat model. Reading a saved proof report is not a fresh verifier execution. The retained profile makes no privacy claim.
+
+## Proto-Corpus and shared agent work
+
+The [NCP knowledge and work system](docs/NCP_SYSTEM.md) adds a frozen source
+catalog, metadata search and provenance resources over MCP, plus durable scoped
+task exchange. Separate requester and worker clients share explicit source context.
+Exact-task authorization and result review remain trusted host actions.
+
+Use `ncp knowledge` to compile/search a catalog or generate a local MCP launcher,
+and `ncp work` for explicit host administration. Existing NET engineering contracts
+remain compatible. Source documents, code archives, catalog metadata, candidate
+results and accepted evidence retain distinct roles.
 
 ## Local evaluation
 

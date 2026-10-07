@@ -6,6 +6,8 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('knowledge', 'knowledge_cli', 'Build and query the frozen Proto-Corpus, bind catalog context and serve MCP'),
+    ('work', 'external_work_cli', 'Provision scoped task clients and retain trusted-host authorization and review'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
     ('bench', 'hardware_bench_cli', 'Capture inventory and import bounded bench diagnostics with source provenance'),
     ('hardware', 'hardware_cli', 'Import hardware observations, assess refurbishment criteria and export retained evidence'),
