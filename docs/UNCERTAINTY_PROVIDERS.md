@@ -7,7 +7,7 @@ measurement store. The original Link study remains the primary scalar model.
 
 | Adapter | Implemented scope | Required declarations |
 | --- | --- | --- |
-| `pydynamic_fir(request)` | PyDynamic 2.5.1 convolution/FIR, 2–64 samples, 2–16 dimensionless taps, `valid` or `full` boundary | Exact uniform **acquisition** ticks and timebase; zero initial/padded conditions; coefficient provenance; explicit exactness or full native joint covariance; statistical independence between the input vector and coefficient vector |
+| `pydynamic_fir(request)` | PyDynamic 2.5.1 convolution/FIR, 2â€“64 samples, 2â€“16 dimensionless taps, `valid` or `full` boundary | Exact uniform **acquisition** ticks and timebase; zero initial/padded conditions; coefficient provenance; explicit exactness or full native joint covariance; statistical independence between the input vector and coefficient vector |
 | `compare_link_affine(request)` | MetroloPy 1.1.1 comparison of the existing Link affine correction and arithmetic mean | Existing retained Link study request, explicit full joint covariance including shared input/gain/offset terms, declared unconstrained coordinate basis |
 
 Both use native `covariance-artifact.v1` for input and output. Provider objects
@@ -115,8 +115,17 @@ use `--no-index --find-links <retained-directory>/wheelhouse --require-hashes`.
 
 ## Qualification findings and limits
 
-The initial Windows Python 3.12.14 source gate passed 44 tests with zero skips,
-plus six retained CLI calls. Cases include known analytical FIR outputs,
+The Windows Python 3.12.14 source and installed gates each passed 44 tests with
+zero skips, plus six retained CLI calls per environment. The suites cover the
+same cases and are not added together. The installed gate used the clean
+candidate NCP wheel from source revision `458eed730602a4a087c0e059ed12c72badf3ccc8`
+(SHA-256 `a796e00b603e101b26f850cf55776ed3190757f48d794cb0a2db6682295e9bdf`).
+It also passed with a deliberately poisoned inherited `PYTHONPATH`: an
+unisolated import detected that poison, while the isolated installed import,
+all tests and the CLI journeys used the installed candidate. The adapter bytes
+matched the wheel. See [the compact qualification receipt](qualification/uncertainty-providers-20261007.json).
+
+Cases include known analytical FIR outputs,
 uncertain coefficients, full off-diagonal covariance, explicit exactness,
 shared calibration error, covariance around `1e-280`, cancellation, altered
 provider results and contract refusals. This is synthetic software/numerical

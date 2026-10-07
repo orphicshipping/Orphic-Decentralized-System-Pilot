@@ -2,10 +2,24 @@
   "adapter_identity": "b98ec3509c19f055900981eb2ca2f3fd62f584f80ae9af012b75d4cf4a2d9cdd",
   "ci_workflow": ".github/workflows/uncertainty-providers.yml",
   "cli_calls": 6,
+  "counting": "Source and installed suites cover the same44 cases and are not added together;6 real CLI calls were run per environment.",
   "date": "2026-10-07",
   "dependency_wheels_retained": 42,
-  "installed_ncp_qualification": "pending exact candidate wheel",
+  "installed_adapter_matches_wheel": true,
+  "installed_cli_calls": 6,
+  "installed_ncp_qualification": "PASS",
+  "installed_qualification_relative_path": "installed-qualified/qualification.json",
+  "installed_qualification_sha256": "e2ecc36fde4c4abf8958c91d09ca7a4f9896315661787304f01944e5abe7fbbd",
+  "installed_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 44
+  },
   "installed_wheel_code_files_verified": 6639,
+  "isolated_children": true,
+  "isolation_probe_relative_path": "isolation-probe.json",
+  "isolation_probe_sha256": "73f60af1769b1565bf50031782c3d7967467da566b9048326c33fa520d6e6d04",
   "known_limits": [
     "PyDynamic 2.5.1 is archived upstream since May 2024",
     "MetroloPy may lose tiny mixed-scale cross-covariance or fail on degenerate correlation; independent arithmetic checks refuse these results",
@@ -15,6 +29,7 @@
   "local_evidence_root": "e2e14/uncertainty-providers",
   "lock_identity_basis": "Committed LF bytes",
   "lock_sha256": "55504e9e03a76c5784a70a5b908ee96e48bb5449ad5312268374a6363f80e42b",
+  "ncp_candidate_wheel_sha256": "a796e00b603e101b26f850cf55776ed3190757f48d794cb0a2db6682295e9bdf",
   "physical_qualification": "HELD",
   "platform": "Windows-11-10.0.26200-SP0",
   "provider_environment_sha256": "1fa8e45cbabb0802eaf8fed05336c03fccf5238404147b0eb4b61fe498e2f374",
@@ -139,16 +154,22 @@
   ],
   "publication": "Receipts and provider archive metadata; this does not redistribute provider wheels or grant execution",
   "python": "3.12.14",
+  "pythonpath_probe": {
+    "isolated_candidate_import_passed": true,
+    "nonisolated_poison_detected": true
+  },
   "schema": "ciw.uncertainty-provider-slice-qualification.v1",
   "scope": "Opt-in bounded synthetic FIR and first-order Link affine/mean comparison only",
   "source_qualification_relative_path": "source-lf/qualification.json",
   "source_qualification_sha256": "2bdcead30151ff0b03a2f52a144d48c4aa16bf6a962d8e8021f49d6bb05d4f82",
+  "source_revision": "458eed730602a4a087c0e059ed12c72badf3ccc8",
   "source_tests": {
     "errors": 0,
     "failures": 0,
     "skipped": 0,
     "tests": 44
   },
+  "source_tree": "e5ad313ac5e1e5fad033cda11a7ecf267bbe2e0d",
   "status": "PASS",
   "test_file_sha256": "ef7c4219cca895abbd268dc34e405130dffb2b7c53fe1ce7fc60f0b9407e4ccc"
 }
