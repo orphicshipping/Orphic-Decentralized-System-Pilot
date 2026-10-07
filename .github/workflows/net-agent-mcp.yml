@@ -120,9 +120,9 @@ jobs:
               suites=list(ET.parse('windows-bootstrap.xml').getroot().iter('testsuite'))
               assert sum(int(s.attrib['tests']) for s in suites)==17
               assert all(int(s.attrib[k])==0 for s in suites for k in ('failures','errors','skipped'))
-          for path,count in [('agent-contracts.xml',244),('agent-installed.xml',76),
+          for path,count in [('agent-contracts.xml',254),('agent-installed.xml',86),
                              ('catalog-contracts.xml',55),('catalog-installed.xml',55),
-                             ('corpus-contracts.xml',184),('corpus-installed.xml',184)]:
+                             ('corpus-contracts.xml',186),('corpus-installed.xml',186)]:
               suites=list(ET.parse(path).getroot().iter('testsuite'))
               assert sum(int(s.attrib['tests']) for s in suites)==count
               assert all(int(s.attrib[k])==0 for s in suites for k in ('failures','errors','skipped'))

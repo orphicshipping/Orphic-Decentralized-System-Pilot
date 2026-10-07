@@ -62,7 +62,12 @@ class Server:
         method = message.get("method")
         if (set(message) - {"jsonrpc", "id", "method", "params"} or message.get("jsonrpc") != "2.0"
                 or type(method) is not str or not method):
-            return None if notification else self.error(None, -32600, "Invalid JSON-RPC request")
+            # Only a valid Request object without an ID is a notification.
+            return self.error(None, -32600, "Invalid JSON-RPC request")
+        if not notification and (type(request_id) not in (str, int)
+                or (type(request_id) is str and not 1 <= len(request_id) <= 128)
+                or (type(request_id) is int and abs(request_id) > 2**53 - 1)):
+            return self.error(None, -32600, "Require a bounded request identifier")
         params = message.get("params", {})
         if type(params) is not dict:
             return None if notification else self.error(request_id, -32602, "Parameters must be an object")
@@ -71,9 +76,6 @@ class Server:
                 self.initialized = True
             # Never dispatch a tool from a notification. No responses to notifications.
             return None
-        if (type(request_id) not in (str, int) or (type(request_id) is str and not 1 <= len(request_id) <= 128)
-                or (type(request_id) is int and abs(request_id) > 2**53 - 1)):
-            return self.error(None, -32600, "Require a bounded request identifier")
         key = (type(request_id), request_id)
         if key in self.seen:
             return self.error(request_id, -32600, "Duplicate request ID; use new RPC ID and same attempt to retry")

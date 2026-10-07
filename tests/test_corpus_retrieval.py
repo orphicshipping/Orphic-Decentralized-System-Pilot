@@ -460,3 +460,43 @@ def test_malformed_sidecar_cli_returns_structured_refusal(setup, capfd):
     assert refusal['authorizes_execution'] is False
     assert not out.exists()
     assert (hashes(inputs), hashes(snapshots)) == before
+
+
+
+def test_build_stops_reading_sidecars_when_aggregate_budget_exceeded(setup, monkeypatch):
+    import ciw.corpus_retrieval as retrieval
+    inputs, snapshots, output, _ = setup
+    names = retrieval.INPUTS
+    limit = sum((inputs/name).stat().st_size for name in names[:2]) - 1
+    monkeypatch.setattr(retrieval, 'MAX_TOTAL', limit)
+    original_read = retrieval.read_file
+    reads = []
+    def read(path):
+        reads.append(path.name)
+        return original_read(path)
+    monkeypatch.setattr(retrieval, 'read_file', read)
+    # Reaching this later file would yield the wrong failure and exceed the budget.
+    (inputs/names[2]).unlink()
+    with pytest.raises(ValueError, match='aggregate byte budget'):
+        compile_bundle(inputs, snapshots, output, expose=())
+    assert reads == list(names[:2])
+    assert not output.exists()
+
+
+def test_build_stops_reading_snapshots_when_aggregate_budget_exceeded(setup, monkeypatch):
+    import ciw.corpus_retrieval as retrieval
+    inputs, snapshots, output, _ = setup
+    limit = sum((inputs/name).stat().st_size for name in retrieval.INPUTS)
+    limit += (snapshots/'contract.md').stat().st_size - 1
+    monkeypatch.setattr(retrieval, 'MAX_TOTAL', limit)
+    original_read = retrieval.read_file
+    reads = []
+    def read(path):
+        reads.append(path.name)
+        return original_read(path)
+    monkeypatch.setattr(retrieval, 'read_file', read)
+    (snapshots/'report.json').unlink()
+    with pytest.raises(ValueError, match='aggregate byte budget'):
+        compile_bundle(inputs, snapshots, output, expose=('NCP-CS-001', 'NCP-CS-002'))
+    assert reads == [*retrieval.INPUTS, 'contract.md']
+    assert not output.exists()

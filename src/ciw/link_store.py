@@ -10,6 +10,7 @@ from contextlib import contextmanager
 from pathlib import Path
 import os
 import sqlite3
+import tempfile
 import time
 import uuid
 
@@ -32,6 +33,45 @@ def safe_path(path):
         if item.is_symlink():
             raise ValueError("Link storage paths must not traverse symlinks")
     return path
+
+
+def _inspection_snapshot(path):
+    """Freeze a closed journal without letting SQLite touch its retained files.
+
+    Live WAL/journal recovery belongs to the writer. Refuse those inputs rather
+    than silently omit committed frames under SQLite's immutable-file mode.
+    The immutable connection opens only our own completed temporary copy.
+    """
+    def require_closed():
+        if any(safe_path(str(path) + suffix).exists() for suffix in ('-wal', '-shm', '-journal')):
+            raise ValueError('Read-only inspection requires a closed, checkpointed Link journal')
+
+    def read():
+        with path.open('rb') as stream:
+            raw = stream.read(MAX_STORE_BYTES * 2 + 1)
+        if not raw or len(raw) > MAX_STORE_BYTES * 2:
+            raise ValueError('Require an existing bounded Link journal')
+        return raw
+
+    require_closed()
+    before = path.stat()
+    identity = (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)
+    raw = read()
+    require_closed()
+    if read() != raw:
+        raise ValueError('Link journal changed during read-only snapshot')
+    require_closed()
+    after = path.stat()
+    if identity != (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns):
+        raise ValueError('Link journal changed during read-only snapshot')
+    temporary = tempfile.TemporaryDirectory(prefix='net-link-inspection-')
+    try:
+        frozen = Path(temporary.name) / 'journal.sqlite'
+        frozen.write_bytes(raw)
+        return temporary, frozen
+    except BaseException:
+        temporary.cleanup()
+        raise
 
 
 def validate_event(value, device):
@@ -68,7 +108,10 @@ def decode_bound(wire, expected_manifest, *, key=None, require_auth=False, offli
 
 
 class Journal:
-    def __init__(self, path, *, create=False, capacity_bytes=MAX_STORE_BYTES, capacity_messages=MAX_MESSAGES):
+    def __init__(self, path, *, create=False, capacity_bytes=MAX_STORE_BYTES, capacity_messages=MAX_MESSAGES, read_only=False):
+        if type(read_only) is not bool or (read_only and create):
+            raise ValueError("Read-only inspection requires an existing journal")
+        self.read_only = read_only
         self.path = safe_path(path)
         c.integer(capacity_bytes, minimum=MAX_FRAME, maximum=MAX_STORE_BYTES)
         c.integer(capacity_messages, minimum=1, maximum=MAX_MESSAGES)
@@ -83,7 +126,18 @@ class Journal:
             os.close(fd)
         elif not self.path.is_file() or self.path.stat().st_size > MAX_STORE_BYTES * 2:
             raise ValueError("Require an existing bounded Link journal")
-        self.db = sqlite3.connect(self.path, timeout=5, isolation_level=None)
+        self._inspection = None
+        database = self.path
+        if read_only:
+            self._inspection, database = _inspection_snapshot(self.path)
+        try:
+            self.db = sqlite3.connect(
+                database.as_uri() + "?mode=ro&immutable=1" if read_only else database,
+                timeout=5, isolation_level=None, uri=read_only)
+        except BaseException:
+            if self._inspection is not None:
+                self._inspection.cleanup()
+            raise
         try:
             self.db.execute("PRAGMA trusted_schema=OFF")
             self.db.execute("PRAGMA foreign_keys=ON")
@@ -104,16 +158,24 @@ class Journal:
             if self.db.execute("PRAGMA integrity_check").fetchall() != [("ok",)]:
                 raise ValueError("Link journal integrity failure")
             self._foreign_keys_intact()
-            self.db.execute("PRAGMA journal_mode=WAL")
-            self.db.execute("PRAGMA synchronous=FULL")
+            if not read_only:
+                self.db.execute("PRAGMA journal_mode=WAL")
+                self.db.execute("PRAGMA synchronous=FULL")
+            else:
+                self.db.execute("PRAGMA query_only=ON")
             self.store_id = self.db.execute("SELECT value FROM meta WHERE key='store_id'").fetchone()[0]
             c.text(self.store_id)
         except Exception:
-            self.db.close()
+            self.close()
             raise
 
     def close(self):
-        self.db.close()
+        try:
+            self.db.close()
+        finally:
+            if self._inspection is not None:
+                self._inspection.cleanup()
+                self._inspection = None
 
     def __enter__(self):
         return self
@@ -123,6 +185,8 @@ class Journal:
 
     @contextmanager
     def transaction(self):
+        if self.read_only:
+            raise PermissionError("Read-only Link journal cannot accept writes")
         self.db.execute("BEGIN IMMEDIATE")
         try:
             yield

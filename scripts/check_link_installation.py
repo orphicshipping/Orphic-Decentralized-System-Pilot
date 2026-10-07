@@ -206,7 +206,16 @@ def main():
     parser.add_argument("--with-delivery", action="store_true", help="Require signed local custody, occurrence hardening and operator preview")
     parser.add_argument("--with-installation", action="store_true", help="Also qualify the retained paired installation workflow")
     parser.add_argument("--with-engineering", action="store_true", help="Also require the existing-controller engineering-intent recipes")
+    parser.add_argument("--with-measurements", action="store_true", help="Also exercise retained device/measurement/exchange interfaces")
+    parser.add_argument("--with-pinwheel", action="store_true", help="Also require local covariance-improvement review and replay")
+    parser.add_argument("--with-references", action="store_true", help="Also require pinned institutional reference review")
     args = parser.parse_args()
+    if args.with_references:
+        args.with_pinwheel = True
+    if args.with_pinwheel:
+        args.with_measurements = True
+    if args.with_measurements:
+        args.with_scalar_study = True
     if args.with_engineering and not args.with_installation:
         parser.error("Engineering recipes require --with-installation and its inherited gates")
     if args.with_installation and not args.with_delivery:
@@ -355,7 +364,14 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
 '''
         summary["package"] = json.loads(execute("package-provenance", ["-I", "-c", probe]))
         (root / "tests").mkdir()
-        test_names = ["test_link.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
+        test_names = ["test_link.py", "test_link_serial_bounds.py", "test_connectivity.py"] + (["test_link_study.py"] if args.with_scalar_study else [])
+        if args.with_measurements:
+            test_names.append("test_link_measurements.py")
+        if args.with_pinwheel:
+            test_names.append("test_link_pinwheel.py")
+        if args.with_references:
+            test_names.append("test_link_references.py")
+            shutil.copytree(source / "tests/reference_data", root / "tests/reference_data")
         if args.with_delivery:
             test_names.extend(["test_link_delivery.py", "test_link_inspection.py", "test_link_ingress_recovery.py", "test_link_scientific_guards.py", "test_link_snapshot_integrity.py", "test_link_unification.py"])
         if args.with_installation:
@@ -384,6 +400,35 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
             for action in ("inspect", "replay", "export", "report"):
                 suffix = [] if action == "inspect" else ["--output", "scalar-panel.html"] if action == "report" else ["--output-dir", "scalar-" + action]
                 execute("scalar-" + action, ["-I", "-m", "ciw.net", "link", "study", action, "scalar-study", *suffix])
+        if args.with_measurements:
+            execute("observation-ingest", ["-I", "-m", "ciw.net", "observation", "ingest", "scalar-study", "--output", "measurements.json"])
+            execute("observation-list", ["-I", "-m", "ciw.net", "observation", "list", "measurements.json", "--stage", "corrected"])
+            for action, output in (("restore", "measurement-restored"), ("export", "measurement-objects"), ("report", "measurement-panel.html")):
+                execute("observation-" + action, ["-I", "-m", "ciw.net", "observation", action, "measurements.json", "--output", output])
+            execute("observation-object-review", ["-I", "-m", "ciw.net", "observation", "review-export", "measurement-objects"])
+            execute("device-fixture", ["-I", "-c", "import json,pathlib; p=json.loads(pathlib.Path('scalar-request.json').read_text())['capture']['manifest'];pathlib.Path('manifest.json').write_text(json.dumps(p))"])
+            execute("device-register", ["-I", "-m", "ciw.net", "device", "register", "manifest.json", "--journal", "devices.sqlite", "--create-journal", "--approve-declaration"])
+            execute("device-list", ["-I", "-m", "ciw.net", "device", "list", "--journal", "devices.sqlite"])
+            summary["measurement_scope"] = "retained_views_local_objects_and_postgresql_staging_not_database_parquet_or_physical_qualification"
+        if args.with_pinwheel:
+            execute("pinwheel-plan", ["-I", "-m", "ciw.net", "link", "pinwheel", "plan", "measurements.json",
+                    "--instance-id", "synthetic.local", "--target-uncertainty", "0.03", "--output", "improvement-plan.json"])
+            execute("pinwheel-run", ["-I", "-m", "ciw.net", "link", "pinwheel", "run", "measurements.json",
+                    "improvement-plan.json", "--output-dir", "pinwheel-review"])
+            for action, suffix in (("inspect", []), ("replay", ["--output-dir", "pinwheel-replay"]),
+                    ("restore-source", ["--output-dir", "pinwheel-original"]), ("report", ["--output", "pinwheel.html"])):
+                execute("pinwheel-" + action, ["-I", "-m", "ciw.net", "link", "pinwheel", action, "pinwheel-review", *suffix])
+            summary["pinwheel_scope"] = "one_local_covariance_counterfactual_review_no_physical_improvement_or_deployment"
+        if args.with_references:
+            for profile, filename in (("nist-pontius", "PONTIUS.DAT"), ("ptb-mh44-first17", "MW_MH44ReIm.lines-1-18.csv")):
+                execute(profile+"-prepare", ["-I", "-m", "ciw.net", "link", "reference", "prepare", profile,
+                        "tests/reference_data/"+filename, "--output", profile+".json"])
+                execute(profile+"-run", ["-I", "-m", "ciw.net", "link", "reference", "run", profile+".json", "--output-dir", profile])
+                for action, suffix in (("inspect", []), ("replay", ["--output-dir", profile+"-replay"]),
+                        ("export", ["--output-dir", profile+"-export"]), ("report", ["--output", profile+".html"])):
+                    execute(profile+"-"+action, ["-I", "-m", "ciw.net", "link", "reference", action, profile, *suffix])
+                execute(profile+"-export-review", ["-I", "-m", "ciw.net", "link", "reference", "review-export", profile+"-export"])
+            summary["reference_scope"] = "published_data_mapping_and_conditional_arithmetic_not_physical_calibration"
         if args.with_delivery:
             execute("signed-delivery-demo", ["-I", "-m", "ciw.net", "link", "delivery", "demo", "--output-dir", "delivery-demo"])
             delivery = json.loads((root / "delivery-demo/summary.json").read_text())

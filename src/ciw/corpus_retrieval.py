@@ -282,7 +282,15 @@ def compile_bundle(inputs: Path, snapshots: Path, output: Path, *, expose: tuple
     """
     if type(expose) is not tuple or len(set(expose)) != len(expose):
         raise ValueError('Require distinct explicit text-source IDs')
-    raw = {name: read_file(Path(inputs) / name) for name in INPUTS}
+    total = 0
+    def bounded_read(path):
+        nonlocal total
+        data = read_file(path)
+        total += len(data)
+        if total > MAX_TOTAL:
+            raise ValueError('Bundle exceeds aggregate byte budget')
+        return data
+    raw = {name: bounded_read(Path(inputs) / name) for name in INPUTS}
     _, by_id, _, _, _ = validate_sidecars(raw)
     exposure = {}
     for sid in expose:
@@ -291,7 +299,7 @@ def compile_bundle(inputs: Path, snapshots: Path, output: Path, *, expose: tuple
         if (r['curation']['collection_code'] != 'NCP' or r['rights']['status'] != 'Internal retained artifact'
                 or Path(filename).suffix not in {'.md', '.json'}):
             raise ValueError('External full-text ingestion is not enabled by this profile')
-        b = read_file(Path(snapshots) / filename)
+        b = bounded_read(Path(snapshots) / filename)
         if sha256(b).hexdigest() != r['snapshot']['sha256'] or len(b) != r['snapshot']['size_bytes']:
             raise ValueError('Source snapshot byte mismatch')
         b.decode('utf-8')
@@ -299,8 +307,6 @@ def compile_bundle(inputs: Path, snapshots: Path, output: Path, *, expose: tuple
             parse(b)
         member = 'sources/' + sid + Path(filename).suffix
         raw[member] = b; exposure[sid] = member
-    if sum(map(len, raw.values())) > MAX_TOTAL:
-        raise ValueError('Bundle exceeds aggregate byte budget')
     catalog = {'schema': 'notation.corpus-retrieval.bundle.v1',
                'authorizes_execution': False, 'files': {n: bytes_ref(b) for n, b in sorted(raw.items())},
                'exposed_internal_text': exposure,

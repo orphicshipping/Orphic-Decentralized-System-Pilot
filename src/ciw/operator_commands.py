@@ -6,6 +6,8 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ("device", "link_device_cli", "Retain and inspect explicit device declarations in the existing Link journal"),
+    ("observation", "link_observation_cli", "Inspect, recover and export retained Link measurement views"),
     ('agent', 'agent_mcp', 'Serve explicitly bound NCP tools through local MCP stdio'),
     ('corpus', 'corpus_agent', 'Inspect hash-pinned Proto-Corpus metadata, internal source spans and reported fields'),
     ('link', 'link_cli', 'Retain device records, local outbox delivery and native observation projections'),

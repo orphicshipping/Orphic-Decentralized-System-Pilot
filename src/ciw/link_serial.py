@@ -18,21 +18,43 @@ from .link_runtime import DeviceRuntime
 from .link_store import safe_path
 
 
+def acquisition_limits(*, duration_s=10.0, max_chunks=64, max_bytes=8192,
+                       max_records=None, idle_timeout_s=None, cancelled=None):
+    """Validate host-selected bounds, never instructions obtained from bytes.
+
+    Records count CRLF delimiters, not accepted readings. None preserves the
+    original byte/chunk-only transport for callers of the shared receiver.
+    """
+    c.integer(max_chunks, minimum=1, maximum=128)
+    c.integer(max_bytes, minimum=1, maximum=8192)
+    if not 0 < c.finite(duration_s) <= 3600:
+        raise ValueError("Require a finite duration in (0, 3600]")
+    if max_records is not None:
+        c.integer(max_records, minimum=1, maximum=32)
+    if idle_timeout_s is not None and not 0 < c.finite(idle_timeout_s) <= 3600:
+        raise ValueError("Require a finite idle timeout in (0, 3600]")
+    if cancelled is not None and not callable(cancelled):
+        raise ValueError("Cancellation must be a host callback, not device data")
+    return dict(duration_s=duration_s, max_chunks=max_chunks, max_bytes=max_bytes,
+                max_records=max_records, idle_timeout_s=idle_timeout_s)
+
+
 def capture_serial(path, *, device, journal, authority, channel_id,
                    baud=9600, duration_s=10.0, max_chunks=64, max_bytes=8192,
-                   allow_pty=False, context=None, procedure_ref=None):
+                   allow_pty=False, context=None, procedure_ref=None,
+                   max_records=None, idle_timeout_s=None, cancelled=None):
     """Capture one finite session; committed prefix survives disconnect/errors.
 
     Bounds are not a promise that every instrument sample was acquired. A process
     crash between kernel read and SQLite commit can lose in-flight bytes. No ACK
     is sent to the instrument and no physical exactly-once claim is made.
     """
+    device=c.manifest(device)
+    authority.check("READ",device,time.time_ns())
     if sys.platform != "linux":
         raise ValueError("This receive-only driver is qualified in software on Linux only")
     import fcntl
     import termios
-    device=c.manifest(device)
-    authority.check("READ",device,time.time_ns())
     channel=c.channel_for(device,channel_id)
     if (channel["encoding"]!="opaque.v1" or device["clock"]["id"]!="link.host.monotonic_ns"
             or device["clock"]["tick_hz"]!=1000000000
@@ -42,8 +64,9 @@ def capture_serial(path, *, device, journal, authority, channel_id,
         raise ValueError("Require opaque raw capture and unqualified host-monotonic receipt clock")
     if type(baud) is not int or baud not in (1200,2400,4800,9600,19200,38400,57600,115200):
         raise ValueError("Unsupported explicitly selected baud")
-    c.integer(max_chunks,minimum=1,maximum=128); c.integer(max_bytes,minimum=1,maximum=8192)
-    if not 0 < c.finite(duration_s) <= 3600 or type(allow_pty) is not bool:
+    bounds = acquisition_limits(duration_s=duration_s, max_chunks=max_chunks, max_bytes=max_bytes,
+        max_records=max_records, idle_timeout_s=idle_timeout_s, cancelled=cancelled)
+    if type(allow_pty) is not bool:
         raise ValueError("Invalid finite capture bounds")
     if context is not None:
         c.keys(context, c.CONTEXT_FIELDS)
@@ -76,17 +99,47 @@ def capture_serial(path, *, device, journal, authority, channel_id,
         termios.tcsetattr(fd,termios.TCSANOW,attrs)
         runtime=DeviceRuntime(device,journal,origin="synthetic" if is_pty else "recorded")
         runtime.event("recording_started",f"linux receive-only 8N1 baud={baud}; no gauge commands",tick=time.monotonic_ns())
-        deadline=time.monotonic()+duration_s
+        last_received=time.monotonic()
+        deadline=last_received+duration_s
+        records=0; previous=b""
         while count<max_chunks and total<max_bytes:
             authority.check("READ",device,time.time_ns())
-            remaining=deadline-time.monotonic()
-            if remaining<=0: break
-            ready,_,_=select.select([fd],[],[],min(remaining,0.1))
-            if not ready: continue
-            # Readiness waiting can outlive a short grant. Recheck immediately
-            # before touching the instrument stream, not only before select().
+            try:
+                if cancelled is not None:
+                    stop=cancelled()
+                    if type(stop) is not bool:
+                        raise ValueError("Cancellation callback must return a boolean")
+                    if stop:
+                        status="CANCELLED"; break
+                now=time.monotonic()
+                remaining=deadline-now
+                if remaining<=0: break
+                if idle_timeout_s is not None:
+                    idle_remaining=last_received+idle_timeout_s-now
+                    if idle_remaining<=0:
+                        status="IDLE_TIMEOUT"; break
+                    remaining=min(remaining,idle_remaining)
+                ready,_,_=select.select([fd],[],[],min(remaining,0.1))
+                if not ready: continue
+                size=min(256,max_bytes-total)
+                if max_records is not None:
+                    # Even a stream of CRLF pairs cannot cross the record bound.
+                    # Never read a suffix only to discard it after interpretation.
+                    size=min(size,2*(max_records-records)-(previous==b"\r"))
+            except KeyboardInterrupt:
+                status="CANCELLED"; break
+            except BlockingIOError: continue
+            except OSError as exc:
+                status="DISCONNECTED_OR_READ_ERROR"
+                runtime.event("disconnect",f"TTY read errno={exc.errno}; instrument completeness unknown",tick=time.monotonic_ns())
+                break
+            # Readiness waiting can outlive a short grant. This check stays
+            # outside the transport OSError handler: denial is not a read fault.
             authority.check("READ",device,time.time_ns())
-            try: raw=os.read(fd,min(256,max_bytes-total))
+            try:
+                raw=os.read(fd,size)
+            except KeyboardInterrupt:
+                status="CANCELLED"; break
             except BlockingIOError: continue
             except OSError as exc:
                 status="DISCONNECTED_OR_READ_ERROR"
@@ -99,6 +152,11 @@ def capture_serial(path, *, device, journal, authority, channel_id,
             # host receipt wall time to acquired_at or a sensor sample clock.
             runtime.emit(channel_id,raw,tick=time.monotonic_ns(),context=context,procedure_ref=procedure_ref)
             count+=1;total+=len(raw)
+            last_received=time.monotonic()
+            records+=(previous+raw).count(b"\r\n")
+            previous=raw[-1:]
+            if max_records is not None and records>=max_records:
+                status="RECORD_BOUND_REACHED"; break
         else: status="SIZE_BOUND_REACHED"
         runtime.event("recording_stopped",status+"; complete instrument stream not established",tick=time.monotonic_ns())
         result = {"schema":"ciw.link-serial-receipt.v1","status":status,"boot_id":runtime.boot_id,
@@ -106,7 +164,8 @@ def capture_serial(path, *, device, journal, authority, channel_id,
             "origin":"synthetic" if is_pty else "recorded","transport":"linux_tty_8n1_rx_only",
             "device_node":{"device":actual.st_dev,"inode":actual.st_ino,"rdev":actual.st_rdev},
             "clock":"host_monotonic_chunk_receipt_not_sensor_sample",
-            "completeness":"not_established","bytes_transmitted":0,"limits":dict(c.LIMITS)}
+            "completeness":"not_established","bytes_transmitted":0,"limits":dict(c.LIMITS),
+            "acquisition":{**bounds,"records":records}}
         return result
     except termios.error as exc:
         raise OSError("TTY configuration failed: " + str(exc)) from exc
