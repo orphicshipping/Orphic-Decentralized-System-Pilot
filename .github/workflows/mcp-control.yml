@@ -1,0 +1,89 @@
+name: MCP control journey
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/control_*.py'
+      - 'src/ciw/mcp_server.py'
+      - 'src/ciw/agent_*.py'
+      - 'src/ciw/semantic_*.py'
+      - 'src/ciw/operator_commands.py'
+      - 'src/ciw/scientific_audit.py'
+      - 'tests/test_control_gateway.py'
+      - 'tests/test_mcp_sdk.py'
+      - 'scripts/check_control_mcp.py'
+      - 'docs/MCP_CONTROL.md'
+      - 'pyproject.toml'
+      - '.github/workflows/mcp-control.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  journey:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[dev,mcp-control,bench-models,numerical-checks]' build
+      - name: Source contracts and live protocol clients
+        run: python -m pytest -q tests/test_control_gateway.py tests/test_mcp_sdk.py tests/test_semantic_capabilities.py tests/test_agent_protocol.py tests/test_agent_recovery.py tests/test_operator_catalog.py tests/test_scientific_audit.py --junitxml=control-tests.xml
+      - name: Require complete unskipped qualification
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as E
+          suites=list(E.parse('control-tests.xml').getroot().iter('testsuite'))
+          assert sum(int(s.attrib['tests']) for s in suites) >= 172
+          assert all(int(s.attrib[k]) == 0 for s in suites for k in ('failures','errors','skipped'))
+          PY
+          git diff --check
+      - run: python -m build --wheel
+      - name: Install candidate and materialize original native pin
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os,subprocess,sys
+          wheel=next(Path('dist').glob('*.whl')).resolve()
+          subprocess.run([sys.executable,'-m','pip','install','--force-reinstall','--no-deps',str(wheel)],check=True)
+          native=Path(os.environ['RUNNER_TEMP'])/'control-fsrt'
+          subprocess.run(['git','clone','--shared','--no-checkout','--config','core.autocrlf=false','--config','core.hooksPath=/dev/null','.',str(native)],check=True)
+          subprocess.run(['git','-C',str(native),'checkout','--no-recurse-submodules','--detach','09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2'],check=True)
+          assert subprocess.check_output(['git','-C',str(native),'rev-parse','HEAD^{tree}'],text=True).strip()=='c79c44f90d5ff3920e58a53e9c277104e7e07bd3'
+          assert not subprocess.check_output(['git','-C',str(native),'status','--porcelain'],text=True).strip()
+          PY
+      - name: Installed journeys through modern and legacy MCP
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import os,subprocess,sys
+          script=Path('scripts/check_control_mcp.py').resolve()
+          root=Path('control-receipts').resolve()
+          for instrument in ('builtin','polymer','temperature','leakage'):
+              command=[sys.executable,'-I',str(script),'--output-dir',str(root/instrument),'--instrument',instrument]
+              if instrument=='leakage': command+=['--provider-checkout',str(Path(os.environ['RUNNER_TEMP'])/'control-fsrt')]
+              subprocess.run(command,cwd=os.environ['RUNNER_TEMP'],check=True)
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: mcp-control-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            control-tests.xml
+            control-receipts/
+            dist/*.whl
