@@ -185,5 +185,3 @@ async def serve_stdio(host):
     server = create_server(host)
     async with stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())
-
-
