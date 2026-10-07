@@ -128,7 +128,7 @@ extension and MCP Apps UI are not advertised by this server.
 
 ```sh
 python -m pip install '.[dev,mcp-control,bench-models,numerical-checks]'
-python -m pytest -q tests/test_control_gateway.py tests/test_mcp_sdk.py tests/test_semantic_capabilities.py tests/test_agent_protocol.py tests/test_agent_recovery.py tests/test_operator_catalog.py tests/test_scientific_audit.py
+python -m pytest -q tests/test_control_gateway.py tests/test_link_study_agent.py tests/test_link_semantic_names.py tests/test_mcp_sdk.py tests/test_semantic_capabilities.py tests/test_agent_protocol.py tests/test_agent_recovery.py tests/test_operator_catalog.py tests/test_scientific_audit.py
 python -m pip wheel . --no-deps --wheel-dir dist
 ```
 
@@ -187,3 +187,9 @@ Reported decimal spelling remains available in the original line bytes and in
 the scalar HTML report. It is separate from derived numeric precision and from
 measurement uncertainty. The existing CRLF decimal grammar still refuses
 exponent notation; those rejected bytes remain available for explicit review.
+
+The related optional [uncertainty adapters](UNCERTAINTY_PROVIDERS.md),
+[certificate/history inspectors](CALIBRATION_AND_HISTORY_INSPECTION.md), and
+[reviewed corpus refresh](CORPUS_REFRESH.md) use existing NCP evidence contracts.
+They have separate explicit entry points; selecting the Link control profile does
+not load third-party numerical providers or change the active knowledge snapshot.
