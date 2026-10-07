@@ -46,6 +46,14 @@ distinct identities and authority. Discovery alone does not approve a task conte
 The [system coherence guide](docs/NCP_SYSTEM_COHERENCE.md) records the integrated
 profiles, source provenance and authority boundaries.
 
+## Board refitting through MCP
+
+The [Board refit profile](docs/BOARD_MCP_REFIT.md) exposes a complete bounded
+parameter-change journey: preview dependencies, validate, recompute under a
+host-selected grant, compare and retain an unreviewed candidate. It reuses the
+System Board, semantic compiler, Session and Needle. The first supported profile
+uses retained synthetic oscillator evidence; it does not grant physical control.
+
 ## Quickstart
 
 Use **Python 3.11 or newer** from the repository root. On Linux or macOS:

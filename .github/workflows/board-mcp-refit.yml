@@ -1,0 +1,70 @@
+name: Board MCP refit journey
+on:
+  push:
+    branches: [main]
+    tags: ['**']
+  pull_request:
+    paths:
+      - 'src/ciw/**'
+      - 'tests/test_board_refit*.py'
+      - 'tests/test_visual_board.py'
+      - 'tests/test_needle.py'
+      - 'pyproject.toml'
+      - '.github/workflows/board-mcp-refit.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: board-refit-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  qualification:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - run: python -m pip install '.[dev,board-mcp]' build
+      - name: Board refit and inherited control regressions
+        run: python -m pytest -q -o junit_family=xunit1 tests/test_board_refit.py tests/test_board_refit_cli.py tests/test_board_refit_mcp.py tests/test_board_refit_review.py tests/test_visual_board.py tests/test_needle.py tests/test_system_board.py tests/test_parameter_program.py tests/test_semantic_capabilities.py tests/test_operator_catalog.py --junitxml=board-refit-source.xml
+      - run: python -m build --wheel
+      - name: Install wheel and repeat actual MCP client journey
+        shell: bash
+        run: |
+          python -m pip install --force-reinstall --no-deps dist/*.whl
+          python -m pytest -q -o junit_family=xunit1 -o pythonpath= tests/test_board_refit.py tests/test_board_refit_cli.py tests/test_board_refit_mcp.py tests/test_board_refit_review.py --junitxml=board-refit-installed.xml
+      - name: Require complete qualification
+        shell: bash
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as E
+          for path in ('board-refit-source.xml', 'board-refit-installed.xml'):
+              suites = list(E.parse(path).getroot().iter('testsuite'))
+              assert sum(int(s.attrib['tests']) for s in suites) >= 12
+              assert all(int(s.attrib[k]) == 0 for s in suites for k in ('failures', 'errors', 'skipped'))
+          PY
+          python scripts/check_ci_policy.py
+          git diff --check
+      - name: Retain exact source revision
+        if: always()
+        shell: bash
+        run: |
+          git rev-parse HEAD > source-commit.txt
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        if: always()
+        with:
+          name: board-mcp-refit-${{ matrix.os }}
+          path: |
+            source-commit.txt
+            board-refit-source.xml
+            board-refit-installed.xml
+            dist/*.whl
