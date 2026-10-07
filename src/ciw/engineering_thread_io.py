@@ -187,7 +187,7 @@ def _frozen_thread(directory, *, expected_thread_ref, host_profile, include_mani
         if not e._same(actual_plan, compiled['plan']) or not e._same(actual_bindings, compiled['bindings']):
             raise ValueError('Executed plan or bindings differ from the selected compilation')
         module = e.profile(host_profile)[0]; module.register()
-        reviewed = production.inspect_production(temp/'run', e.gate_bindings())
+        reviewed = production.inspect_production(temp/'run', e.inspection_gate_bindings(compiled['compiler']))
         # Bind original source bytes as well as their content identity.
         from .session import Session
         with tempfile.TemporaryDirectory(prefix='net-engineering-source-review-') as s:

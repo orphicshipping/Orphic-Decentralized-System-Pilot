@@ -140,6 +140,37 @@ no claim is made that equal declarations prove an unchanged physical mounting.
 
 From the candidate checkout/installation:
 
+Inspect a selected retained scalar request **before** compilation or computation:
+
+```sh
+ncp production engineering source request.json --profile scalar \
+  --request-ref sha256:EXACT_REQUEST_DIGEST
+```
+
+This command returns `SOURCE_INSPECTED_NOT_EXECUTED`, the original native
+`ciw.link-scalar-study.v1` request and the existing Link capture review. Raw
+observation bytes, their context, procedure/configuration/instrument references,
+quality flags, device ticks and separate receipt/acquisition timestamps stay
+inspectable. The exact request hash is selected externally. No Session operation,
+scalar decoding, affine correction or arithmetic audit runs during this view.
+
+Native origin labels remain `synthetic` or `recorded`; the latter is a producer
+declaration, not authenticated physical acquisition. The native contract rejects
+mixed origins. Replaying a computation does not relabel the original capture.
+Malformed opaque readings and flagged sources can be inspected before a later
+authorized operation refuses them. Invalid envelopes, bindings, selected hashes
+or unsupported profiles refuse. Inspection writes no workspace or source files.
+
+The native context supports part/revision, lot, tool and other existing named
+references. This view preserves supplied fields and nulls; it does not invent a
+material identity, fixture identity or physical installation, and does not add
+fields to a retained observation. The request's calibration and full covariance
+remain declarations here: `computation_readiness=NOT_EVALUATED`. Existing
+scientific operations own their applicability and numerical validation.
+Use the existing `example`, `compile` and separately authorized `run` commands
+below with the **same** selected request bytes. Source inspection is neither
+preflight nor permission. `net` and `ncp` route to the same implementation.
+
 ```sh
 net production engineering demo --profile scalar --output-dir ../engineering-scalar
 net production engineering demo --profile installation --output-dir ../engineering-installation

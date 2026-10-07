@@ -135,6 +135,32 @@ def compiler_identity():
             'planning': 'finite_installed_recipe_not_optimal_search'}
 
 
+def _inspection_compiler(value):
+    """Accept current or exactly reviewed historical v1 gate implementations."""
+    current = compiler_identity()
+    c.keys(value, set(current))
+    c.keys(value['files'], set(current['files']))
+    for reference in value['files'].values():
+        c.content_ref(reference)
+    if any(not _same(value[key], current[key]) for key in current if key != 'files'):
+        raise ValueError('Unsupported historical compiler contract')
+    if _same(value, current):
+        return deepcopy(value)
+    reviewed_files = {
+        'engineering_thread.py': 'sha256:b4cfac86e1bd63dcb3317153c3b6588412cb43db897180c5d03c35494e0eab7d',
+        'production.py': 'sha256:90c6c45483e2bc058a57d2a5b303380740ddf04965946234fbf4fc24674c8d2b',
+        'control_contracts.py': 'sha256:696738d7779fc24644ea92b2b68f3f780c6e087d93b9143e29673772d065881c',
+        'production_gates.py': 'sha256:043bd8d63825e0fa2410cc238aba226b17c2eda15f50398c21b5268bb13fcca8',
+    }
+    for control_reference in (
+        'sha256:f16fe2a95694b841f32e033d218e3faa88a5c8a784755053d3a8b6ca4db7f2c8',
+        'sha256:24848f23442bf87b16ce81d48fdd5e19b0a7f7f15a1f1e0d4732cf3f60f47f9d',
+    ):
+        if _same(value['files'], {**reviewed_files, 'control_plane.py': control_reference}):
+            return deepcopy(value)
+    raise ValueError('Historical compiler is not supported by this inspection profile')
+
+
 def gate_bindings():
     def validate(policy):
         c.keys(policy, {'profile', 'request_ref', 'predicate', 'parameters'})
@@ -192,6 +218,13 @@ def gate_bindings():
         return builtin_gates()['result.equals.v1'].evaluate(result, selected)
 
     return {GATE: production.Gate(GATE, compiler_identity(), validate, evaluate)}
+
+
+def inspection_gate_bindings(compiler):
+    """Validate old outcomes with reviewed predicates, retaining their identity."""
+    retained = _inspection_compiler(compiler)
+    gate = gate_bindings()[GATE]
+    return {GATE: production.Gate(GATE, retained, gate.validate_policy, gate.evaluate)}
 
 
 def _recipe(intent, source):
@@ -267,11 +300,12 @@ def check_compilation(value, intent_raw, request_raw, *, host_profile, current_r
     continuation = _continuation(value['continuation'], intent['revision'])
     req = _request(request_raw, host_profile)
     module = profile(host_profile)[0]
+    retained_compiler = _inspection_compiler(value['compiler'])
     source = profile(host_profile)[0].make_source(req, c.bytes_ref(request_raw))
     expected = {'schema': COMPILATION, 'intent_ref': c.bytes_ref(intent_raw), 'request_ref': c.bytes_ref(request_raw),
         'profile': host_profile, 'source_evidence_id': source['evidence_id'], 'intent_id': intent['intent_id'],
         'revision': intent['revision'], 'plan': _recipe(intent, source), 'decision_basis': decision_basis(req, host_profile),
-        'compiler': compiler_identity(), 'continuation': continuation,
+        'compiler': retained_compiler, 'continuation': continuation,
         'typed_plan': plan_graph(module.graph(), module.registry(bind=False)),
         'stop_policy': 'no_automatic_retry_or_physical_dispatch',
         'scope': SCOPE, 'authorizes_execution': False}
@@ -285,7 +319,7 @@ def check_compilation(value, intent_raw, request_raw, *, host_profile, current_r
     graph = module.graph()
     fixed = {'schema': 'ciw.production-bindings.v1', 'workers': {'retained-analysis':
                  [node['operation_id'] for node in graph['nodes']]},
-             'gates': {GATE: compiler_identity()}, 'order': ['assess'],
+             'gates': {GATE: retained_compiler}, 'order': ['assess'],
              'reserved_operations': len(graph['nodes']),
              'max_operations': intent['constraints']['max_operations'], 'authorizes_execution': False}
     if any(not _same(bindings[k], v) for k, v in fixed.items()):
