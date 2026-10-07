@@ -2,6 +2,7 @@
 from contextlib import contextmanager
 from copy import deepcopy
 import hashlib
+import io
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 import json
 from pathlib import Path
@@ -9,6 +10,8 @@ import socket
 import subprocess
 import sys
 from threading import Thread
+from time import sleep
+from types import SimpleNamespace
 
 import pytest
 
@@ -63,7 +66,8 @@ def test_projection_preserves_exact_selected_bytes_and_discards_others(provider)
     b"# TYPE gnb gauge\ngnb 1\ngnb 1\n",
     b"# TYPE gnb gauge\n# TYPE gnb gauge\ngnb 1\n",
     b"# TYPE gnb gauge\ngnb 1 # {trace_id=\"x\"} 1\n",
-    b"# TYPE gnb gauge\ngnb 1\x00\n", b"\xff", b"", b"x" * (c.MAX_EXPORT_BYTES + 1),
+    b"# TYPE gnb gauge\ngnb 1\x00\n", b"\xff", b"",
+    pytest.param(b"x" * (c.MAX_EXPORT_BYTES + 1), id="over-export-byte-limit"),
 ])
 def test_bad_metrics_refuse(bad):
     with pytest.raises((ValueError, UnicodeError)):
@@ -218,7 +222,8 @@ def test_explicit_loopback_endpoints(url, expected):
 
 
 @contextmanager
-def local_exporter(raw, *, status=200, mime="text/plain; version=0.0.4", encoding=None, declared_length=None, framing="length"):
+def local_exporter(raw, *, status=200, mime="text/plain; version=0.0.4", encoding=None,
+                   declared_length=None, framing="length", trickle_headers=False):
     if framing not in ("length", "close", "chunked", "ambiguous"):
         raise ValueError("Invalid synthetic exporter framing")
     calls = []
@@ -226,6 +231,16 @@ def local_exporter(raw, *, status=200, mime="text/plain; version=0.0.4", encodin
         def do_GET(self):
             calls.append(self.path)
             self.send_response(status)
+            if trickle_headers:
+                try:
+                    self.flush_headers()
+                    for _ in range(10):
+                        self.send_header("X-Synthetic-Progress", "fixture")
+                        self.flush_headers()
+                        sleep(0.02)
+                except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+                    return
+                calls.append("headers-complete")
             self.send_header("Content-Type", mime)
             if encoding:
                 self.send_header("Content-Encoding", encoding)
@@ -244,7 +259,7 @@ def local_exporter(raw, *, status=200, mime="text/plain; version=0.0.4", encodin
                     self.wfile.write(b"0\r\n\r\n")
                 else:
                     self.wfile.write(raw)
-            except (BrokenPipeError, ConnectionResetError):
+            except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
                 pass
         def log_message(self, *args):
             pass
@@ -260,19 +275,109 @@ def local_exporter(raw, *, status=200, mime="text/plain; version=0.0.4", encodin
 
 
 @pytest.mark.parametrize("provider", ["open5gs", "free5gc"])
-def test_actual_http_capture_and_native_session(provider, tmp_path):
+@pytest.mark.parametrize("same_tick", [False, True], ids=["host-clock", "same-clock-tick"])
+def test_actual_http_capture_and_native_session(provider, tmp_path, monkeypatch, same_tick):
     # This is a real local HTTP transport test with a synthetic exporter, NOT
     # execution of Open5GS/free5GC or authentication of an operator declaration.
+    if same_tick:
+        monkeypatch.setattr(capture, "time", SimpleNamespace(monotonic_ns=lambda: 1000000000))
     with local_exporter(c.example_metrics(provider)) as (url, calls):
         request = capture.capture(c.example_context(provider), url)
         assert calls == ["/metrics"]
     assert request["capture"]["method"] == "loopback_http"
-    assert request["capture"]["elapsed_ns"] > 0
+    # Clock resolution can place the complete GET within one monotonic tick.
+    # Preserve the observed zero; do not invent positive timing precision.
+    assert type(request["capture"]["elapsed_ns"]) is int
+    assert request["capture"]["elapsed_ns"] >= 0
+    if same_tick:
+        assert request["capture"]["elapsed_ns"] == 0
     assert request["capture"]["clock_uncertainty_ns"] is None
     assert url not in canonical_json(request)
     result = w.run(request, tmp_path / "run")
     assert result["status"] == "OBSERVED"
     assert result["observation"]["authority"]["core_execution"] == "not_performed"
+
+
+@pytest.mark.parametrize("stage", ["headers", "interim", "chunk-framing"])
+def test_total_deadline_bounds_each_response_read(stage, monkeypatch):
+    # Model socket idle timeouts deterministically while using the real
+    # HTTPConnection/HTTPResponse parser. No external endpoint is contacted.
+    payload = c.example_metrics()
+    headers = (b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: "
+               + str(len(payload)).encode() + b"\r\nConnection: close\r\n\r\n")
+    if stage == "headers":
+        chunks = [b"HTTP/1.1 200 OK\r\n", b"Content-Type: text/plain\r\n",
+                  b"Content-Length: " + str(len(payload)).encode() + b"\r\n",
+                  b"Connection: close\r\n\r\n", payload]
+    elif stage == "interim":
+        chunks = [b"HTTP/1.1 100 Continue\r\n\r\n"] * 4 + [headers, payload]
+    else:
+        chunks = [b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nTransfer-Encoding: chunked\r\n\r\n",
+                  b"1", b"\r", b"\n", b"x\r\n", b"0\r\n\r\n"]
+    clock = SimpleNamespace(ns=0)
+    state = SimpleNamespace(timeout=0.05, closed=False)
+
+    class Trickle(io.RawIOBase):
+        def readable(self):
+            return True
+
+        def readinto(self, target):
+            delay_ns = 20000000
+            allowance_ns = round(state.timeout * 1000000000)
+            clock.ns += min(delay_ns, allowance_ns)
+            if allowance_ns < delay_ns:
+                raise TimeoutError("Synthetic socket idle timeout")
+            if not chunks:
+                return 0
+            data = chunks[0][:len(target)]
+            remainder = chunks[0][len(target):]
+            if remainder:
+                chunks[0] = remainder
+            else:
+                chunks.pop(0)
+            target[:len(data)] = data
+            return len(data)
+
+    stream = Trickle()
+
+    class SelectedSocket:
+        def makefile(self, mode):
+            assert mode == "rb"
+            return io.BufferedReader(stream)
+
+        def settimeout(self, value):
+            state.timeout = value
+
+        def sendall(self, data):
+            assert data.startswith(b"GET /metrics ")
+
+        def close(self):
+            state.closed = True
+
+    socket_fixture = SelectedSocket()
+    original_connection = capture.http.client.HTTPConnection
+
+    def connection(host, port, *, timeout):
+        assert (host, port) == ("127.0.0.1", 9090)
+        state.timeout = timeout
+        value = original_connection(host, port, timeout=timeout)
+        value.sock = socket_fixture
+        value.connect = lambda: None
+        return value
+
+    monkeypatch.setattr(capture.http.client, "HTTPConnection", connection)
+    monkeypatch.setattr(capture, "time", SimpleNamespace(monotonic_ns=lambda: clock.ns))
+    with pytest.raises(TimeoutError):
+        capture.capture(c.example_context(), "http://127.0.0.1:9090/metrics", timeout_s=0.05)
+    assert clock.ns <= 50000000, "Per-read idle timeouts must not extend the total capture deadline"
+    assert state.closed and stream.closed
+
+
+def test_real_http_deadline_stops_trickled_headers():
+    with local_exporter(c.example_metrics(), trickle_headers=True) as (url, calls):
+        with pytest.raises(TimeoutError):
+            capture.capture(c.example_context(), url, timeout_s=0.05)
+        assert calls == ["/metrics"], "Capture waited for the complete slow header stream"
 
 
 @pytest.mark.parametrize("options", [{"status": 302}, {"status": 403}, {"mime": "text/html"},

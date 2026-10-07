@@ -6,7 +6,9 @@ The operator must bind an already-running, authorized loopback metrics endpoint.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from functools import partial
 import http.client
+import io
 import ipaddress
 import math
 import time
@@ -14,6 +16,44 @@ from urllib.parse import urlsplit
 import uuid
 
 from . import connectivity as contract
+
+
+def _remaining(deadline_ns):
+    remaining = (deadline_ns - time.monotonic_ns()) / 1e9
+    if remaining <= 0:
+        raise TimeoutError("Metrics capture deadline exceeded")
+    return remaining
+
+
+class _DeadlineReader(io.RawIOBase):
+    """Keep header and chunk-framing reads within the same capture deadline."""
+
+    def __init__(self, stream, sock, deadline_ns):
+        super().__init__()
+        self._stream = stream
+        self._socket = sock
+        self._deadline_ns = deadline_ns
+
+    def readable(self):
+        return True
+
+    def readinto(self, target):
+        self._socket.settimeout(_remaining(self._deadline_ns))
+        return self._stream.readinto(target)
+
+    def close(self):
+        try:
+            self._stream.close()
+        finally:
+            super().close()
+
+
+class _DeadlineResponse(http.client.HTTPResponse):
+    def __init__(self, sock, *args, deadline_ns, **kwargs):
+        super().__init__(sock, *args, **kwargs)
+        # HTTPResponse has not read any bytes yet. Keep the socket makefile's
+        # ownership while enforcing the deadline on every underlying read.
+        self.fp = io.BufferedReader(_DeadlineReader(self.fp.detach(), sock, deadline_ns))
 
 
 def endpoint(value: str) -> tuple[str, int]:
@@ -48,9 +88,12 @@ def capture(context: dict, url: str, *, timeout_s: float = 3.0) -> dict:
     start = time.monotonic_ns()
     deadline = start + int(timeout_s * 1e9)
     connection = http.client.HTTPConnection(host, port, timeout=timeout_s)
+    connection.response_class = partial(_DeadlineResponse, deadline_ns=deadline)
+    response = None
     try:
         connection.connect()
         sock = connection.sock
+        sock.settimeout(_remaining(deadline))
         connection.request("GET", "/metrics", headers={
             "Accept": "text/plain; version=0.0.4", "Accept-Encoding": "identity",
             "Connection": "close", "User-Agent": "NET-connectivity-observer/1"})
@@ -70,10 +113,7 @@ def capture(context: dict, url: str, *, timeout_s: float = 3.0) -> dict:
             raise ValueError("Ambiguous or unsupported response framing")
         raw = bytearray()
         while not response.isclosed():
-            remaining = (deadline - time.monotonic_ns()) / 1e9
-            if remaining <= 0:
-                raise TimeoutError("Metrics capture deadline exceeded")
-            sock.settimeout(remaining)
+            sock.settimeout(_remaining(deadline))
             block = response.read1(min(16384, contract.MAX_EXPORT_BYTES + 1 - len(raw)))
             if not block:
                 break
@@ -83,9 +123,15 @@ def capture(context: dict, url: str, *, timeout_s: float = 3.0) -> dict:
         if declared_length is not None and len(raw) != int(declared_length):
             raise ValueError("Metrics response is truncated")
         end = time.monotonic_ns()
+        if end > deadline:
+            raise TimeoutError("Metrics capture deadline exceeded")
         request = imported_request(context, bytes(raw),
             observed_at=datetime.now(timezone.utc).isoformat(), clock_id="host.capture." + uuid.uuid4().hex)
         request["capture"].update(method="loopback_http", elapsed_ns=end - start)
         return contract.validate_request(request)
     finally:
-        connection.close()
+        try:
+            if response is not None:
+                response.close()
+        finally:
+            connection.close()

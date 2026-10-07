@@ -111,7 +111,8 @@ def test_exact_manifest_anchor_no_reseal_or_mutation():
     assert view(device)['sets']['channels'][0]['unit']=='mm'
 
 
-@pytest.mark.parametrize('raw',[b'',b' '*65537,'not bytes',b'{"duplicate":1,"duplicate":2}'])
+@pytest.mark.parametrize('raw',[b'',pytest.param(b' '*65537,id='over-manifest-byte-limit'),
+                               'not bytes',b'{"duplicate":1,"duplicate":2}'])
 def test_manifest_reader_bounds_and_strict_json(raw):
     with pytest.raises((ValueError,TypeError)):
         p.manifest_view(raw,expected_ref=c.bytes_ref(raw) if isinstance(raw,bytes) else 'sha256:'+'0'*64)

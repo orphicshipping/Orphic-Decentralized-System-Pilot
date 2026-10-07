@@ -84,9 +84,15 @@ HTTP proxy environment variables are not used. An existing output refuses
 before GET. Responses are bounded plain-text exports; compression, ambiguous
 framing and non-200 status codes refuse.
 
-The capture has socket timeouts and a body-read deadline, not a real-time or
-adversarial slow-header service guarantee. Run only against trusted local
-exporters. Refusals return nonzero; the CLI does not manufacture successful
+The configured timeout supplies one monotonic deadline. Request transmission
+uses the remaining time, and every underlying response read uses the remaining
+budget, including status lines, interim responses, headers, chunk framing and
+the body. Slow fragments cannot repeatedly renew an idle timeout. Responses and
+connections close on success or refusal. Scheduling and clock resolution still
+limit observed timing; this is not a hard real-time or physically qualified
+deadline. A capture completing within one monotonic tick retains elapsed_ns=0
+and unknown clock uncertainty; no positive duration or precision is invented.
+Run only against trusted local exporters. Refusals return nonzero; the CLI does not manufacture successful
 observations. Saved requests, Session parameters, inspection and replay can
 never select an endpoint or invoke capture.
 
