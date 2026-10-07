@@ -178,10 +178,11 @@ def test_pin_failure_and_missing_dependency_leave_blocked_receipt(tmp_path,monke
     def missing(*args,**kwargs): raise ValueError('Missing qualification dependency: net-yaml')
     monkeypatch.setattr(q,'dependency_selection',missing,raising=False)
     target=tmp_path/'qualification'
-    import zipfile
-    with zipfile.ZipFile(tmp_path/'absent.whl', 'w') as wheel:
-        wheel.writestr('fixture-1.0.dist-info/METADATA', 'Name: fixture\nVersion: 1.0\n')
-    monkeypatch.setattr(sys,'argv',[str(SCRIPT),'--wheel',str(tmp_path/'absent.whl'),'--output-dir',str(target),'--require-pins'])
+    from test_link_offline_environment import wheel_bytes
+    name, raw = wheel_bytes('net-qualification-fixture')
+    selected = tmp_path/name
+    selected.write_bytes(raw)
+    monkeypatch.setattr(sys,'argv',[str(SCRIPT),'--wheel',str(selected),'--output-dir',str(target),'--require-pins'])
     with pytest.raises(ValueError,match='Missing qualification dependency'): q.main()
     record=json.loads((target/'summary.json').read_bytes())
     assert record['status']=='BLOCKED'

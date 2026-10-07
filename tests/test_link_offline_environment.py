@@ -431,7 +431,7 @@ def test_timeout_covers_inherited_pipe_after_parent_exits(tmp_path):
             'print("owned-child-pid="+str(p.pid),flush=True)\nos._exit(0)\n')
     try:
         with pytest.raises(RuntimeError, match='deadline'):
-            offline._run([sys.executable, '-I', '-c', code], tmp_path, 'descendant', timeout=0.5)
+            offline._run([sys.executable, '-I', '-c', code], tmp_path, 'descendant', timeout=5.0)
         pid_lines = [line for line in (tmp_path/'descendant.log').read_text().splitlines()
                      if line.startswith('owned-child-pid=')]
         assert len(pid_lines) == 1

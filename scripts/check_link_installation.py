@@ -10,6 +10,8 @@ import argparse
 from datetime import datetime, timezone
 import hashlib
 import importlib.metadata
+import io
+import runpy
 import json
 from email.parser import Parser
 import tomllib
@@ -149,6 +151,27 @@ def dependency_selection(project_raw, *, lookup=None, root_metadata=None):
         "publisher_authenticated": False, "vulnerabilities_checked": False}, distributions
 
 
+def review_qualification_wheel(path, *, expected_ref=None):
+    """Reuse the release wheel validator and retain exactly one bounded read.
+
+    The helper is installed release-engineering code, never supplied by a wheel.
+    A hash identifies selected bytes; it does not authenticate their publisher.
+    """
+    tools = runpy.run_path(str(Path(__file__).with_name("provision_link_environment.py")))
+    path = Path(path).absolute()
+    raw = tools["_read"](path, tools["MAX_WHEEL"])
+    if expected_ref is not None:
+        tools["_anchor"](raw, expected_ref)
+    return raw, tools["inspect_wheel"](path.name, raw)
+
+
+def _check_wheel_snapshot(path, expected_sha256):
+    """Check retained input integrity, without reopening the selected source."""
+    tools = runpy.run_path(str(Path(__file__).with_name("provision_link_environment.py")))
+    if tools["digest"](tools["_read"](path, tools["MAX_WHEEL"])) != expected_sha256:
+        raise ValueError("Qualification wheel snapshot changed")
+
+
 def verify_dependency_files(site, records):
     """Recheck copied library bytes, not just package version labels.
 
@@ -174,6 +197,7 @@ def verify_dependency_files(site, records):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--wheel", type=Path, required=True)
+    parser.add_argument("--wheel-ref", help="Optional independently retained sha256: reference of the exact wheel")
     parser.add_argument("--output-dir", type=Path, required=True)
     mode = parser.add_mutually_exclusive_group()
     mode.add_argument("--require-pins", action="store_true")
@@ -192,7 +216,7 @@ def main():
     if args.with_scalar_study and sys.platform != "linux":
         parser.error("The scalar serial qualification is a Linux-only gate")
     source = Path(__file__).resolve().parents[1]
-    wheel = args.wheel.resolve()
+    wheel = args.wheel.absolute()
     root = args.output_dir.resolve()
     root.mkdir(parents=True, exist_ok=False)
     started = datetime.now(timezone.utc).isoformat()
@@ -208,7 +232,11 @@ def main():
     try:
         retain()
         project_raw = (source / "pyproject.toml").read_bytes()
-        with zipfile.ZipFile(wheel) as archive:
+        wheel_raw, wheel_metadata = review_qualification_wheel(wheel, expected_ref=args.wheel_ref)
+        summary["wheel_input"] = {"sha256": wheel_metadata["sha256"][7:],
+            "bytes": len(wheel_raw), "snapshot": "inputs/" + wheel.name,
+            "external_ref_checked": args.wheel_ref is not None}
+        with zipfile.ZipFile(io.BytesIO(wheel_raw)) as archive:
             metadata_paths = [n for n in archive.namelist() if n.endswith('.dist-info/METADATA')]
             if len(metadata_paths) != 1 or archive.getinfo(metadata_paths[0]).file_size > 4 * 1024 * 1024:
                 raise ValueError("Require one bounded root wheel metadata file")
@@ -221,7 +249,7 @@ def main():
         retain()
         if not pin_match and not args.allow_host_dependencies:
             raise ValueError("Host dependencies differ from unchanged repository pins; no pinned pass")
-        with zipfile.ZipFile(wheel) as archive:
+        with zipfile.ZipFile(io.BytesIO(wheel_raw)) as archive:
             expected = {name: hashlib.sha256(archive.read(name)).hexdigest() for name in archive.namelist()
                         if name.startswith("ciw/") and not name.endswith("/")}
         actual_paths = {"ciw/" + str(p.relative_to(source / "src/ciw")).replace(os.sep, "/")
@@ -232,6 +260,14 @@ def main():
             if hashlib.sha256((source / "src" / name).read_bytes()).hexdigest() != digest:
                 raise ValueError("Wheel differs from package source: " + name)
         (root / "expected-package.json").write_text(json.dumps(expected, indent=2), encoding="utf-8")
+        # Source replacement after validation must not change the installation.
+        # This is the same private snapshot rule as the offline provisioner.
+        tools = runpy.run_path(str(Path(__file__).with_name("provision_link_environment.py")))
+        (root / "inputs").mkdir(mode=0o700)
+        selected_wheel = root / "inputs" / wheel.name
+        tools["_write"](selected_wheel, wheel_raw)
+        _check_wheel_snapshot(selected_wheel, wheel_metadata["sha256"])
+        retain()
         venv.EnvBuilder(with_pip=True, system_site_packages=False).create(root / "env")
         python = root / "env" / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
         env = dict(os.environ)
@@ -239,9 +275,10 @@ def main():
             env.pop(key, None)
         env.update(PYTHONNOUSERSITE="1", PYTEST_DISABLE_PLUGIN_AUTOLOAD="1")
 
-        def execute(name, arguments, expected_exit=0):
+        def execute(name, arguments, expected_exit=0, *, environment=None):
             before = datetime.now(timezone.utc).isoformat()
-            process = subprocess.run([str(python), *map(str, arguments)], cwd=root, env=env,
+            process = subprocess.run([str(python), *map(str, arguments)], cwd=root,
+                                     env=env if environment is None else environment,
                                      capture_output=True, text=True, timeout=240)
             (root / (name + ".log")).write_text(process.stdout + process.stderr, encoding="utf-8")
             steps.append({"name": name, "started_at": before, "finished_at": datetime.now(timezone.utc).isoformat(),
@@ -273,11 +310,17 @@ def main():
                             "host_distribution": str(distribution.locate_file("")), "files": hashes})
         (root / "dependency-files.json").write_text(json.dumps(records, indent=2), encoding="utf-8")
         summary["dependency_files_checked_before"] = verify_dependency_files(site, records)
-        execute("install", ["-I", "-m", "pip", "install", "--no-deps", "--no-index", wheel])
+        _check_wheel_snapshot(selected_wheel, wheel_metadata["sha256"])
+        execute("install", ["-I", "-m", "pip", "--isolated", "--disable-pip-version-check",
+            "--no-input", "--no-cache-dir", "install", "--no-deps", "--no-index",
+            "--only-binary=:all:", "--no-user", "--prefix", str(root / "env"), selected_wheel],
+            environment=tools["_environment"](root))
+        _check_wheel_snapshot(selected_wheel, wheel_metadata["sha256"])
         # Reinspect the COPIED metadata with this same trusted qualification
         # script, then ask pip independently about base dependency consistency.
         (root / "scripts").mkdir()
         shutil.copyfile(source / "scripts/check_link_installation.py", root / "scripts/check_link_installation.py")
+        shutil.copyfile(source / "scripts/provision_link_environment.py", root / "scripts/provision_link_environment.py")
         (root / "pyproject.toml").write_bytes(project_raw)
         selection_probe = ("import runpy,json,pathlib,tomllib,importlib.metadata as md; "
             "m=runpy.run_path('scripts/check_link_installation.py'); "
@@ -318,8 +361,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py"])
-            shutil.copyfile(source / "scripts/provision_link_environment.py", root / "scripts/provision_link_environment.py")
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -426,8 +468,9 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if json.loads(execute("installed-dependencies-after", ["-I", "-c", selection_probe])) != dependencies:
             raise ValueError("Dependency metadata changed during qualification")
         summary["dependency_files_checked_after"] = verify_dependency_files(site, records)
+        _check_wheel_snapshot(selected_wheel, wheel_metadata["sha256"])
         summary.update(status="PASS", finished_at=datetime.now(timezone.utc).isoformat(),
-                       wheel_sha256=hashlib.sha256(wheel.read_bytes()).hexdigest(),
+                       wheel_sha256=wheel_metadata["sha256"][7:],
                        scope="installed_link_scalar_serial_mcp_subset_not_full_repository" if args.with_scalar_study else "installed_device_link_native_codec_and_connectivity_not_full_repository")
         retain()
     except BaseException as exc:

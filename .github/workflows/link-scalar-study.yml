@@ -46,7 +46,7 @@ jobs:
       - run: python -m pip install 'setuptools>=77' wheel '.[dev,legibility]'
       - env:
           PYTHONPATH: src
-        run: python -m pytest -q tests/test_link_study.py tests/test_link.py tests/test_connectivity.py tests/test_link_delivery.py tests/test_link_inspection.py tests/test_link_ingress_recovery.py tests/test_link_scientific_guards.py tests/test_link_snapshot_integrity.py tests/test_link_unification.py tests/test_mount_characterization.py tests/test_link_installation.py tests/test_engineering_thread.py tests/test_engineering_continuity.py tests/test_link_offline_environment.py tests/test_link_qualification_dependencies.py --junitxml=source-tests.xml
+        run: python -m pytest -q tests/test_link_study.py tests/test_link.py tests/test_connectivity.py tests/test_link_delivery.py tests/test_link_inspection.py tests/test_link_ingress_recovery.py tests/test_link_scientific_guards.py tests/test_link_snapshot_integrity.py tests/test_link_unification.py tests/test_mount_characterization.py tests/test_link_installation.py tests/test_engineering_thread.py tests/test_engineering_continuity.py tests/test_link_offline_environment.py tests/test_link_qualification_dependencies.py tests/test_link_qualification_artifacts.py --junitxml=source-tests.xml
       - run: python -m pip wheel --no-deps --no-build-isolation . --wheel-dir dist
       - name: Installed bytes, native codec, real PTY and MCP stdio
         shell: bash
@@ -60,7 +60,7 @@ jobs:
           python scripts/provision_link_environment.py prepare --project pyproject.toml --project-ref "$project_ref" --root-ref "$root_ref" --wheelhouse "$RUNNER_TEMP/link-wheels" --profile qualification --output "$RUNNER_TEMP/link-offline-bundle" > "$RUNNER_TEMP/link-offline-prepared.json"
           manifest_ref=$(python -c 'import json,sys; print(json.load(open(sys.argv[1]))["manifest_ref"])' "$RUNNER_TEMP/link-offline-prepared.json")
           python scripts/provision_link_environment.py provision "$RUNNER_TEMP/link-offline-bundle" --manifest-ref "$manifest_ref" --allow-install --output "$RUNNER_TEMP/link-provisioned" > "$RUNNER_TEMP/link-provisioned.json"
-          "$RUNNER_TEMP/link-provisioned/env/bin/python" scripts/check_link_installation.py --wheel "$wheel" --output-dir "$RUNNER_TEMP/link-scalar" --require-pins --with-scalar-study --with-delivery --with-installation --with-engineering
+          "$RUNNER_TEMP/link-provisioned/env/bin/python" scripts/check_link_installation.py --wheel "$wheel" --wheel-ref "$root_ref" --output-dir "$RUNNER_TEMP/link-scalar" --require-pins --with-scalar-study --with-delivery --with-installation --with-engineering
       - uses: actions/upload-artifact@v4
         if: always()
         with:
