@@ -87,6 +87,9 @@ def _gates(profile: str):
 
 def main(argv: list[str] | None = None) -> int:
     argv = list(sys.argv[1:] if argv is None else argv)
+    if argv[:3] == ["engineering", "evidence", "review"]:
+        from .engineering_evidence_assessment import main as assessment_main
+        return assessment_main(argv[3:])
     if argv[:2] == ["engineering", "evidence"]:
         from .engineering_evidence import main as evidence_main
         return evidence_main(argv[2:])

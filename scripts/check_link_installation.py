@@ -361,7 +361,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py", "test_ncp_supporting_evidence.py"])
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py", "test_ncp_supporting_evidence.py", "test_ncp_evidence_assessment.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -507,6 +507,31 @@ print(json.dumps({'aliases':['net','ncp'],'same_dispatcher':True,'exact_scenario
                     or checked["new_scientific_executions"] != 0 or checked["assessment_status"] != "EVIDENCE_REQUIRED"):
                 raise ValueError("Supporting-file custody cleared an evidence or authority hold")
             summary["ncp_supporting_evidence"] = checked
+            # Evidence review is a source-cited declaration, not empirical admission.
+            draft = json.loads(execute("ncp-review-template", ["-I", "-m", "ciw.net", "production", "engineering", "evidence", "review", "template",
+                "supporting-evidence", "--packet-ref", support["packet_ref"], "--thread", "engineering-scalar/execution",
+                "--thread-ref", original["thread_ref"], "--profile", "scalar"]))
+            citation = {"artifact_ref": "sha256:" + hashlib.sha256(support_raw).hexdigest(),
+                "start_byte": 0, "end_byte": 9, "span_ref": "sha256:" + hashlib.sha256(support_raw[:9]).hexdigest()}
+            draft["checks"]["authenticity"] = {"status": "CONTRADICTED",
+                "rationale": "Synthetic source text; this is a fixture declaration, not an authenticity adjudication.",
+                "citations": [citation]}
+            input_raw = (json.dumps(draft, indent=2)+"\n").encode()
+            (root / "assessment-input.json").write_bytes(input_raw)
+            assessment = json.loads(execute("ncp-review-record", ["-I", "-m", "ciw.net", "production", "engineering", "evidence", "review", "record",
+                "supporting-evidence", "--packet-ref", support["packet_ref"], "--thread", "engineering-scalar/execution",
+                "--thread-ref", original["thread_ref"], "--profile", "scalar", "--input", "assessment-input.json",
+                "--input-ref", "sha256:"+hashlib.sha256(input_raw).hexdigest(), "--output-dir", "evidence-assessment"]))
+            reviewed = json.loads(execute("ncp-review-inspect", ["-I", "-m", "ciw.net", "production", "engineering", "evidence", "review", "inspect",
+                "supporting-evidence", "--packet-ref", support["packet_ref"], "--thread", "engineering-scalar/execution",
+                "--thread-ref", original["thread_ref"], "--profile", "scalar", "--assessment", "evidence-assessment",
+                "--assessment-ref", assessment["assessment_ref"]]))
+            if (reviewed != assessment or reviewed["status"] != "CONTRADICTIONS_DECLARED"
+                    or reviewed["counts"] != {"supported": 0, "contradicted": 1, "not_assessed": 5}
+                    or reviewed["evidence_admitted"] is not False or reviewed["semantic_support_checked"] is not False
+                    or reviewed["scope"]["physical_qualification"] != "HELD"):
+                raise ValueError("Evidence-review declaration changed scientific validity or authority")
+            summary["ncp_evidence_assessment"] = reviewed
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         if json.loads(execute("installed-dependencies-after", ["-I", "-c", selection_probe])) != dependencies:
