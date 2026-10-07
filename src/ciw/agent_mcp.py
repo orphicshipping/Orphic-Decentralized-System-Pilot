@@ -411,6 +411,7 @@ def main(argv: list[str] | None = None) -> int:
                          help="Add frozen selected-corpus inspection to a read-only builtin profile")
     command.add_argument("--corpus-ref",
                          help="Independently retained sha256 catalog reference; paired with --corpus-bundle")
+    command.add_argument("--sdk", action="store_true", help="Use optional SDK for modern and legacy MCP")
     command.add_argument("--resume", action="store_true",
                          help="Resume the exact bound profile and retained attempts after restart")
     command.add_argument("--instrument", choices=INSTRUMENTS, default="builtin",
@@ -483,10 +484,14 @@ def main(argv: list[str] | None = None) -> int:
                 host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
                                     resume=args.resume)
             try:
+                if args.sdk:
+                    from .mcp_server import serve_sdk
+                    os.dup2(wire.fileno(), sys.stdout.fileno())
+                    return serve_sdk(host, name="net-agent")
                 return serve(host, sys.stdin.buffer, wire)
             finally:
                 host.close()
-    except (OSError, ValueError, TypeError, KeyError) as exc:
+    except (ImportError, OSError, ValueError, TypeError, KeyError) as exc:
         print(f"NET agent startup refused: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
 

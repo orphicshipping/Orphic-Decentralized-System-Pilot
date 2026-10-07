@@ -28,6 +28,18 @@ NET is useful when a calculation must survive review, revision or a handoff to a
 
 NET is an actively developed research and engineering platform. The core local workflow is executable today; specialist providers have profile-specific setup and validation requirements. The [integration matrix](docs/INTEGRATION_COVERAGE.md) records those boundaries.
 
+## MCP control interface
+
+[NCP control](docs/MCP_CONTROL.md) connects agent discovery, typed compilation,
+retained plan admission, durable execution and evidence inspection. Terminal
+remains the human workbench; MCP uses the existing NCP execution and evidence
+owners. The wider workflow catalog separates provisioning prerequisites from
+capabilities bound and authorized in the current host.
+
+Install `.[mcp-control]`, prepare a profile with
+`ncp control demo-config --output-dir control-demo`, and configure your MCP client
+to launch `ncp control serve --profile control-demo/profile.json`.
+
 ## Proto-Corpus and shared agent work
 
 The [NCP knowledge and work system](docs/NCP_SYSTEM.md) adds a frozen source

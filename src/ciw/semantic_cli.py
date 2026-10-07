@@ -38,7 +38,8 @@ def main(argv=None):
     compile_cmd = commands.add_parser("compile")
     compile_cmd.add_argument("graph", type=Path)
     compile_cmd.add_argument("--output", type=Path, required=True)
-    commands.add_parser("serve")
+    serve_cmd = commands.add_parser("serve")
+    serve_cmd.add_argument("--sdk", action="store_true", help="Use optional SDK for modern and legacy MCP")
     args = parser.parse_args(argv)
 
     try:
@@ -64,11 +65,14 @@ def main(argv=None):
                               "output": str(args.output)}))
             return 0
 
+        if args.sdk:
+            from .mcp_server import serve_sdk
+            return serve_sdk(SemanticHost(semantic), name="ncp-semantic")
         from .agent_mcp import serve
         with os.fdopen(os.dup(sys.stdout.fileno()), "wb", buffering=0) as wire:
             os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
             return serve(SemanticHost(semantic), sys.stdin.buffer, wire)
-    except (OSError, ValueError, TypeError, KeyError) as exc:
+    except (ImportError, OSError, ValueError, TypeError, KeyError) as exc:
         print(json.dumps({"status": "refused", "reason": str(exc)}), file=sys.stderr)
         return 1
 

@@ -18,7 +18,7 @@ COMMAND_REVIEWS = {
     "work": "external_work",
     "device": "link_measurements",
     "observation": "link_measurements",
-    "agent": "agent_protocol",
+    "agent": "agent_protocol", "control": "control_gateway",
     "corpus": "corpus_retrieval",
     "link": "link",
     "connectivity": "connectivity",
