@@ -66,6 +66,9 @@ def _count(value: int, maximum: int) -> int:
 
 def _validated(value: dict) -> dict:
     """Reuse trusted offline readers, never an executable chosen by saved data."""
+    if value.get("schema") == "ciw.provider-catalog.v1":
+        from .control_plane import inspect_provider_catalog
+        return inspect_provider_catalog(value)
     if "workspace_version" in value:
         with tempfile.TemporaryDirectory(prefix="net-agent-inspect-") as directory:
             root = Path(directory)
@@ -358,7 +361,7 @@ class AgentHost:
         key = self._resolve(artifact)
         value = self._get(key)
         # External workspaces are validated without executing providers.
-        if "workspace_version" in value:
+        if "workspace_version" in value or value.get("schema") == "ciw.provider-catalog.v1":
             value = _validated(value)
         selector = [] if selector is None else selector
         if type(selector) is not list or len(selector) > 12:
