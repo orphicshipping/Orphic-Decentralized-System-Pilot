@@ -407,6 +407,8 @@ def _normalize_records(inputs):
     for selected in selections:
         _require(selected.get("schema") == "notation.corpus-selection.source.v1" and selected.get("authorizes_execution") is False,
                  "unsupported selected source contract")
+        mode = selected.get("selection_mode", "staged_copy")
+        _require(mode in ("staged_copy", "retained_original"), "unsupported selection mode")
         stage, original, snapshot = selected.get("staged_copy"), selected.get("original"), selected.get("snapshot")
         _require(all(type(x) is dict for x in (stage, original, snapshot, selected.get("curation"), selected.get("rights"))), "invalid selected metadata")
         staged_id = "gdrive:" + _id(stage.get("drive_file_id"))
@@ -418,6 +420,9 @@ def _normalize_records(inputs):
         native_id = _text(original.get("file_id"), "original file ID")
         native_source = ("gdrive:" if platform == "Google Drive" else "library:") + native_id
         _require(selected.get("source_id") == "urn:notation:source:" + native_source, "selected original identity mismatch")
+        if mode == "retained_original":
+            _require(platform == "Google Drive" and native_source == staged_id,
+                     "retained original identity mismatch")
         annotation = {"selection_id": _text(selected.get("selection_id"), "selection ID"),
                       "original_source_id": selected["source_id"], "staged_source_id": staged_id,
                       "title": _text(selected["curation"].get("title"), "selected title"),
@@ -425,6 +430,8 @@ def _normalize_records(inputs):
                       "rights_status": _text(selected["rights"].get("status"), "rights status"),
                       "fulltext_ingestion_approved": selected["rights"].get("fulltext_ingestion_approved")}
         _require(type(annotation["fulltext_ingestion_approved"]) is bool, "invalid fulltext approval state")
+        if mode == "retained_original":
+            annotation["selection_mode"] = mode
         annotation["annotation_basis"] = _text(selected["curation"].get("annotation_basis"), "annotation basis")
         annotation["source_role"] = _text(selected["curation"].get("source_role"), "selected source role")
         limitations = selected["curation"].get("limitations_to_preserve")
@@ -437,16 +444,18 @@ def _normalize_records(inputs):
         records[staged_id]["provenance"].append({"input": SELECTED, "selection_id": annotation["selection_id"]})
         if native_source in records:
             _require(records[native_source]["source_sha256"] == snapshot["sha256"], "selected original digest mismatch")
-            records[native_source]["selected_annotations"].append(annotation)
+            if mode != "retained_original":
+                records[native_source]["selected_annotations"].append(annotation)
+                records[native_source]["provenance"].append({"input": SELECTED, "selection_id": annotation["selection_id"]})
             records[native_source]["source_aliases"].append(selected["source_id"])
-            records[native_source]["provenance"].append({"input": SELECTED, "selection_id": annotation["selection_id"]})
         else:
             _require(platform == "ChatGPT Library", "selected original Drive source missing")
         for limitation in annotation["limitations"]:
             findings.append({"source_id": staged_id, "kind": "selected_limitation",
                              "selection_id": annotation["selection_id"], "detail": limitation})
-        edges.append({"source_id": staged_id, "target_source_id": native_source, "kind": "curated_copy_of",
-                      "original_source_id": selected["source_id"], "selection_id": annotation["selection_id"]})
+        if mode != "retained_original":
+            edges.append({"source_id": staged_id, "target_source_id": native_source, "kind": "curated_copy_of",
+                          "original_source_id": selected["source_id"], "selection_id": annotation["selection_id"]})
     for finding in _list(pdf.get("review_findings", []), "review findings"):
         key = _text(finding.get("id"), "finding ID")
         for row in pdfs:
