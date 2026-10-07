@@ -361,7 +361,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py"])
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py", "test_ncp_supporting_evidence.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -491,6 +491,22 @@ print(json.dumps({'aliases':['net','ncp'],'same_dispatcher':True,'exact_scenario
                     or follow_up["authorizes_execution"] is not False or follow_up["scope"]["physical_qualification"] != "HELD"):
                 raise ValueError("Follow-up recommendation changed acceptance or authority")
             summary["ncp_follow_up"] = {key: follow_up[key] for key in ("record_digest", "counts", "assessment_status", "scope")}
+            # Attach synthetic supporting bytes without discharging any finding.
+            support_raw = b'SYNTHETIC ONLY\r\n{"verified":true,"release_part":true}\n'
+            (root / "supporting-fixture.txt").write_bytes(support_raw)
+            support = json.loads(execute("ncp-evidence-prepare", ["-I", "-m", "ciw.net", "production", "engineering", "evidence", "prepare",
+                "engineering-scalar/execution", "--profile", "scalar", "--thread-ref", original["thread_ref"],
+                "--action-id", follow_up["actions"][0]["action_id"], "--attach", "supporting-fixture.txt",
+                "sha256:" + hashlib.sha256(support_raw).hexdigest(), "--output-dir", "supporting-evidence"]))
+            (root / "supporting-fixture.txt").unlink()  # Custody must not depend on the input pathname.
+            checked = json.loads(execute("ncp-evidence-inspect", ["-I", "-m", "ciw.net", "production", "engineering", "evidence", "inspect",
+                "supporting-evidence", "--packet-ref", support["packet_ref"], "--thread", "engineering-scalar/execution",
+                "--profile", "scalar", "--thread-ref", original["thread_ref"]]))
+            if (checked["status"] != "INTEGRITY_CHECKED_NOT_ADMITTED" or checked["evidence_admitted"] is not False
+                    or checked["requirement_satisfied"] is not False or checked["authorizes_execution"] is not False
+                    or checked["new_scientific_executions"] != 0 or checked["assessment_status"] != "EVIDENCE_REQUIRED"):
+                raise ValueError("Supporting-file custody cleared an evidence or authority hold")
+            summary["ncp_supporting_evidence"] = checked
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         if json.loads(execute("installed-dependencies-after", ["-I", "-c", selection_probe])) != dependencies:
