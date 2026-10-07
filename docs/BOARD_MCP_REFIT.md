@@ -66,10 +66,9 @@ The returned comparison describes numerical deltas and reused/rerun node identit
 
 ## Verified protocol boundary
 
-The official Python MCP SDK 2.3.0 client journey currently negotiates MCP `2025-11-25`. It exercises three independent stdio server processes, preserving the same profile, baseline, validation and candidate between them. This increment does not claim `2026-07-28` protocol conformance or remote custom-connector qualification.
+The integrated candidate is qualified with the official Python MCP SDK 2.3.0 against MCP `2025-11-25` and `2026-07-28`. Each protocol journey exercises three independent stdio server processes, preserving its own profile, baseline, validation and candidate between them. This qualification covers local stdio; remote custom-connector qualification remains outside its scope. The earlier standalone Board increment qualified only `2025-11-25`.
 
 Only one process may write a retained profile at a time. Use the connected MCP status tool while its server is active; stop that server before opening the same profile through another launcher. A persistence failure closes the host until its durable checkpoint is reopened. A completed computation without a committed outcome remains unknown and is never silently repeated.
 
-The integrated candidate also qualifies this journey against MCP 2026-07-28.
 See [combined installed acceptance](NCP_COMBINED_ACCEPTANCE.md) and
 `scripts/check_board_refit_mcp.py`; each protocol retains its own profile and grant.
