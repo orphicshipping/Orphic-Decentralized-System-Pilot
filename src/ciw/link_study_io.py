@@ -151,7 +151,7 @@ def report(directory, output, *, expected_request_ref=None):
     esc=lambda x:html.escape(str(x),quote=True)
     display=lambda x: "UNKNOWN" if x is None else format(x,".8g") if type(x) in (float,int) else str(x)
     rows="".join("<tr>"+"".join("<td>"+esc(v)+"</td>" for v in
-        (i,display(r["value"]),display(table_values[i]),r["unit"],r["receipt_tick"],
+        (i,c.unpack(r["raw"],128).decode("ascii").split(" ",1)[0],display(table_values[i]),r["unit"],r["receipt_tick"],
          corrected.get("applicability",["UNKNOWN"]*len(decoded.get("rows",[])))[i]))+"</tr>"
         for i,r in enumerate(decoded.get("rows",[])))
     # Match Link's existing visual grammar, keep source text escaped and offline.

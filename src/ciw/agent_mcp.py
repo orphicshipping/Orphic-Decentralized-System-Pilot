@@ -21,7 +21,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar")
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -226,7 +226,14 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     if output is not None and (type(output) is not str or not output):
         raise ValueError("Invalid operator output directory")
     host_class = AgentHost
-    if instrument == "polymer":
+    if instrument == "link-scalar":
+        from .link_study_agent import LinkStudyHost
+        from .link_study import registry as link_registry
+        if value["candidate_domains"]:
+            raise ValueError("Link study has no agent-editable calibration or acceptance parameters")
+        host_class = LinkStudyHost
+        registry = link_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "polymer":
         from .polymer_workflow import capability_registry
         registry = capability_registry(bind=bool(value["allow_operations"]))
     elif instrument == "temperature":

@@ -109,10 +109,25 @@ def semantic_registry(owner):
     by_operation = {}
     aliases = {"statistics.v1": "analysis.statistics.v1",
                "spectrum.periodogram.v1": "analysis.spectrum.v1"}
-    for operation, contract in owner._registry.catalog()["operations"].items():
+    contracts = owner._registry.catalog()["operations"]
+    def concrete_name(operation):
+        name = operation if CAPABILITY.fullmatch(operation) else "operation." + operation
+        return "operation." + name if name in aliases.values() else name
+    names = {}
+    for operation, contract in contracts.items():
         name = aliases.get(operation, contract["capabilities"][0])
         if not CAPABILITY.fullmatch(name):
             name += ".v1"
+        names[operation] = name if CAPABILITY.fullmatch(name) else concrete_name(operation)
+    while len(set(names.values())) != len(names):
+        duplicated = {name for name in names.values() if list(names.values()).count(name) > 1}
+        resolved = {op: concrete_name(op) if name in duplicated and op not in aliases else name
+                    for op, name in names.items()}
+        if resolved == names:
+            raise ValueError("Concrete operation names cannot resolve semantic ambiguity")
+        names = resolved
+    for operation, contract in contracts.items():
+        name = names[operation]
         registry.declare(SemanticMorphism(name, "compute", contract["inputs"],
             {k: v["type"] for k, v in contract["outputs"].items()},
             effects=("read:host-source", "write:retained-result"),
@@ -324,6 +339,7 @@ class ControlHost:
                     raise ValueError("Parameter outside granted domains")
             if any(n["acceptance"] or n["inspection"] for n in graph["nodes"]):
                 raise ValueError("Plan cannot change acceptance or request a renderer")
+            self.owner.validate_plan(source_value, compiled["experiment"])
             body = {"schema": "ncp.control-plan.v1", "source": source_binding,
                 "baseline": binding, "graph": deepcopy(graph), "compilation": compiled,
                 "host_policy_sha256": self.owner._host_policy}

@@ -1,0 +1,107 @@
+name: Calibration and retained history inspection
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/calibration_inspection.py'
+      - 'src/ciw/evidence_history.py'
+      - 'src/ciw/calibration_status.py'
+      - 'src/ciw/link_*.py'
+      - 'src/ciw/agent_*.py'
+      - 'src/ciw/control_*.py'
+      - 'src/ciw/semantic_*.py'
+      - 'src/ciw/session.py'
+      - 'src/ciw/core/**'
+      - 'src/ciw/operations/**'
+      - 'tests/test_calibration_inspection.py'
+      - 'tests/test_evidence_history.py'
+      - 'docs/CALIBRATION_AND_HISTORY_INSPECTION.md'
+      - 'pyproject.toml'
+      - '.github/workflows/calibration-history-inspection.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+jobs:
+  inspect:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - run: git config --global core.autocrlf false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Provision base test and build dependencies
+        run: python -m pip install '.[dev]' build
+      - name: Source inspection contracts
+        run: python -m pytest -q tests/test_calibration_inspection.py tests/test_evidence_history.py --junitxml=inspection-source.xml
+      - name: Build candidate wheel
+        run: python -m build --wheel
+      - name: Qualify installed wheel outside the checkout
+        shell: bash
+        run: |
+          python - <<'PY'
+          from hashlib import sha256
+          import json, os, shutil, subprocess, sys
+          from pathlib import Path
+          import xml.etree.ElementTree as E
+          workspace = Path.cwd().resolve()
+          wheels = list((workspace / 'dist').glob('*.whl'))
+          assert len(wheels) == 1, 'Require one candidate wheel'
+          wheel = wheels[0]
+          subprocess.run([sys.executable, '-m', 'pip', 'install', '--force-reinstall', '--no-deps', str(wheel)], check=True)
+          outside = Path(os.environ['RUNNER_TEMP']) / 'calibration-history-installed'
+          outside.mkdir(exist_ok=False)
+          files = ['test_calibration_inspection.py', 'test_evidence_history.py']
+          for name in files:
+              shutil.copyfile(workspace / 'tests' / name, outside / name)
+          (outside / 'pytest.ini').write_text('[pytest]\n', encoding='utf-8')
+          installed_xml = workspace / 'inspection-installed.xml'
+          env = dict(os.environ)
+          env.pop('PYTHONPATH', None)
+          subprocess.run([sys.executable, '-I', '-m', 'pytest', '-q', '--import-mode=importlib',
+                          '-c', str(outside / 'pytest.ini'), '-o', 'pythonpath=',
+                          '--junitxml=' + str(installed_xml), *files], cwd=outside, env=env, check=True)
+          probe = '''from hashlib import sha256
+          import json
+          from pathlib import Path
+          import ciw.calibration_inspection as calibration
+          import ciw.evidence_history as history
+          print(json.dumps({m.__name__: {"path": str(Path(m.__file__).resolve()), "sha256": sha256(Path(m.__file__).read_bytes()).hexdigest()} for m in (calibration, history)}))
+          '''
+          modules = json.loads(subprocess.check_output([sys.executable, '-I', '-c', probe], cwd=outside, env=env, text=True))
+          for name, info in modules.items():
+              module = Path(info['path']).resolve()
+              assert not module.is_relative_to(workspace), 'Installed test imported the source checkout'
+              source = workspace / 'src' / Path(*name.split('.')).with_suffix('.py')
+              assert sha256(source.read_bytes()).hexdigest() == info['sha256'], 'Installed runtime differs from candidate source'
+          counts = {}
+          for name, path in [('source', workspace / 'inspection-source.xml'), ('installed', installed_xml)]:
+              suites = list(E.parse(path).getroot().iter('testsuite'))
+              count = {key: sum(int(s.attrib[key]) for s in suites) for key in ('tests', 'failures', 'errors', 'skipped')}
+              assert count['tests'] >= 51 and all(count[key] == 0 for key in ('failures', 'errors', 'skipped')), count
+              counts[name] = count
+          receipt = {'schema': 'ncp.calibration-history-ci.v1', 'status': 'PASS', 'python': sys.version,
+                     'wheel': {'filename': wheel.name, 'sha256': sha256(wheel.read_bytes()).hexdigest()},
+                     'modules': modules, 'tests': counts, 'source_installed_groups_overlap': True,
+                     'external_providers': 'not_required', 'physical_qualification': 'not_established'}
+          (workspace / 'inspection-qualification.json').write_text(json.dumps(receipt, indent=2) + '\n', encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: calibration-history-${{ matrix.os }}-py312
+          if-no-files-found: error
+          path: |
+            inspection-source.xml
+            inspection-installed.xml
+            inspection-qualification.json
+            dist/*.whl

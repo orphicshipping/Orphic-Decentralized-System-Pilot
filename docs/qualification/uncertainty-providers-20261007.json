@@ -1,0 +1,175 @@
+{
+  "adapter_identity": "b98ec3509c19f055900981eb2ca2f3fd62f584f80ae9af012b75d4cf4a2d9cdd",
+  "ci_workflow": ".github/workflows/uncertainty-providers.yml",
+  "cli_calls": 6,
+  "counting": "Source and installed suites cover the same44 cases and are not added together;6 real CLI calls were run per environment.",
+  "date": "2026-10-07",
+  "dependency_wheels_retained": 42,
+  "installed_adapter_matches_wheel": true,
+  "installed_cli_calls": 6,
+  "installed_ncp_qualification": "PASS",
+  "installed_qualification_relative_path": "installed-qualified/qualification.json",
+  "installed_qualification_sha256": "e2ecc36fde4c4abf8958c91d09ca7a4f9896315661787304f01944e5abe7fbbd",
+  "installed_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 44
+  },
+  "installed_wheel_code_files_verified": 6639,
+  "isolated_children": true,
+  "isolation_probe_relative_path": "isolation-probe.json",
+  "isolation_probe_sha256": "73f60af1769b1565bf50031782c3d7967467da566b9048326c33fa520d6e6d04",
+  "known_limits": [
+    "PyDynamic 2.5.1 is archived upstream since May 2024",
+    "MetroloPy may lose tiny mixed-scale cross-covariance or fail on degenerate correlation; independent arithmetic checks refuse these results",
+    "Timing and model discrepancy uncertainty are not included in FIR; exact timing must be explicitly declared",
+    "No Monte Carlo, arbitrary unit conversion, constrained-coordinate model or MCP host binding is qualified"
+  ],
+  "local_evidence_root": "e2e14/uncertainty-providers",
+  "lock_identity_basis": "Committed LF bytes",
+  "lock_sha256": "55504e9e03a76c5784a70a5b908ee96e48bb5449ad5312268374a6363f80e42b",
+  "ncp_candidate_wheel_sha256": "a796e00b603e101b26f850cf55776ed3190757f48d794cb0a2db6682295e9bdf",
+  "physical_qualification": "HELD",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "provider_environment_sha256": "1fa8e45cbabb0802eaf8fed05336c03fccf5238404147b0eb4b61fe498e2f374",
+  "providers": [
+    {
+      "artifacts": [
+        {
+          "bytes": 218396,
+          "filename": "metrolopy-1.1.1-py3-none-any.whl",
+          "kind": "wheelhouse",
+          "sha256": "0c453439df91fdba62f42d3363e488d7835010ba419261de3336b7db0f96452f",
+          "url": "https://files.pythonhosted.org/packages/03/31/ee63519c0cb3720b70ec5fa80696ac277c444a8e961167b24322c3698cab/metrolopy-1.1.1-py3-none-any.whl"
+        },
+        {
+          "bytes": 189461,
+          "filename": "metrolopy-1.1.1.tar.gz",
+          "kind": "sources",
+          "sha256": "f40427004e6cd09823129f8b0d64a4a952f249d9f93744a01022eb4a816ac517",
+          "url": "https://files.pythonhosted.org/packages/35/7d/3d6e20adeaacf8571f22ffbe4e73fed6c047c15ece80f2b78039b1c983a5/metrolopy-1.1.1.tar.gz"
+        }
+      ],
+      "installed_code_files_verified": 49,
+      "installed_code_inventory_sha256": "b1fdb2c051851149ad229c1d18008118fc6e067f57b7f3af87c5146947269710",
+      "license": null,
+      "license_expression": "GPL-3.0-only",
+      "license_files": [
+        {
+          "path": "metrolopy-1.1.1.dist-info/licenses/CITATION.cff",
+          "sha256": "1584e5e1070d77cd98881e5184117feb824ac9e2a9b7b4cf3e7bbcb7da1dfd8b"
+        },
+        {
+          "path": "metrolopy-1.1.1.dist-info/licenses/LICENSE",
+          "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+        }
+      ],
+      "name": "metrolopy",
+      "release_metadata_sha256": "1830e89a61567642c3e1a37848772b3bf051268e7ec7051ed5d777ffdc5701d1",
+      "requires_dist": [
+        "ipython>=7.9.0",
+        "matplotlib>=3.1.2",
+        "numpy>=1.25.0",
+        "pandas>=0.25.2",
+        "scipy>=1.3.2",
+        "odrpack>=0.5.0",
+        "lazy-loader>=0.5"
+      ],
+      "source_license_files": [
+        {
+          "path": "metrolopy-1.1.1/LICENSE",
+          "sha256": "230184f60bae2feaf244f10a8bac053c8ff33a183bcc365b4d8b876d2b7f4809"
+        }
+      ],
+      "source_wheel_python_files_verified": 49,
+      "version": "1.1.1"
+    },
+    {
+      "artifacts": [
+        {
+          "bytes": 1928282,
+          "filename": "PyDynamic-2.5.1-py3-none-any.whl",
+          "kind": "wheelhouse",
+          "sha256": "9255c01c5bde4e20cfe603ad38fc484d60901c27936f455e7b21c3b45ee3d371",
+          "url": "https://files.pythonhosted.org/packages/61/eb/d63d06c1fd57afe6b531a8290aaa9af79dd27d5b236f7b2cddd1c06d0bd7/PyDynamic-2.5.1-py3-none-any.whl"
+        },
+        {
+          "bytes": 3372827,
+          "filename": "PyDynamic-2.5.1.tar.gz",
+          "kind": "sources",
+          "sha256": "06814c2e1117fa62e85b864a9c56af241e49f5c567d3e7f335060cfebf3afe93",
+          "url": "https://files.pythonhosted.org/packages/60/f1/9421866a2b4e6f68b65366edde8668c73f791b9dbe693aba8874682c6fc9/PyDynamic-2.5.1.tar.gz"
+        }
+      ],
+      "installed_code_files_verified": 43,
+      "installed_code_inventory_sha256": "693b03e550d168326cc6a96527f8422a8a07475f12822d7932283d881f1299a1",
+      "license": null,
+      "license_expression": null,
+      "license_files": [
+        {
+          "path": "PyDynamic/misc/impinvar_license.txt",
+          "sha256": "96d0254d5de0d17a5545ca24d60d95b6128e2566eeaf65a2dc493d0921ecd3da"
+        }
+      ],
+      "name": "pydynamic",
+      "release_metadata_sha256": "2910101ec888effbaacbf26ae4a09c30e46de909ab92248c8d2860fe30ac8e71",
+      "requires_dist": [
+        "matplotlib",
+        "numpy",
+        "pandas",
+        "scipy",
+        "sympy",
+        "PyWavelets",
+        "time-series-buffer",
+        "black[jupyter]; extra == \"dev\"",
+        "hypothesis; extra == \"dev\"",
+        "ipykernel; extra == \"dev\"",
+        "ipython; extra == \"dev\"",
+        "myst-parser; extra == \"dev\"",
+        "nbsphinx; extra == \"dev\"",
+        "pytest; extra == \"dev\"",
+        "pytest-cov; extra == \"dev\"",
+        "pytest-custom-exit-code; extra == \"dev\"",
+        "python-semantic-release<8; extra == \"dev\"",
+        "sphinx; extra == \"dev\"",
+        "sphinx-rtd-theme; extra == \"dev\"",
+        "tox; extra == \"dev\"",
+        "tweepy; extra == \"dev\"",
+        "notebook; extra == \"examples\""
+      ],
+      "source_license_files": [
+        {
+          "path": "PyDynamic-2.5.1/licence.txt",
+          "sha256": "ea8af5e789cb2d4e9b10bce3874982ade163b749b6bfbdb32e2df21c4d106de1"
+        },
+        {
+          "path": "PyDynamic-2.5.1/src/PyDynamic/misc/impinvar_license.txt",
+          "sha256": "96d0254d5de0d17a5545ca24d60d95b6128e2566eeaf65a2dc493d0921ecd3da"
+        }
+      ],
+      "source_wheel_python_files_verified": 43,
+      "version": "2.5.1"
+    }
+  ],
+  "publication": "Receipts and provider archive metadata; this does not redistribute provider wheels or grant execution",
+  "python": "3.12.14",
+  "pythonpath_probe": {
+    "isolated_candidate_import_passed": true,
+    "nonisolated_poison_detected": true
+  },
+  "schema": "ciw.uncertainty-provider-slice-qualification.v1",
+  "scope": "Opt-in bounded synthetic FIR and first-order Link affine/mean comparison only",
+  "source_qualification_relative_path": "source-lf/qualification.json",
+  "source_qualification_sha256": "2bdcead30151ff0b03a2f52a144d48c4aa16bf6a962d8e8021f49d6bb05d4f82",
+  "source_revision": "458eed730602a4a087c0e059ed12c72badf3ccc8",
+  "source_tests": {
+    "errors": 0,
+    "failures": 0,
+    "skipped": 0,
+    "tests": 44
+  },
+  "source_tree": "e5ad313ac5e1e5fad033cda11a7ecf267bbe2e0d",
+  "status": "PASS",
+  "test_file_sha256": "ef7c4219cca895abbd268dc34e405130dffb2b7c53fe1ce7fc60f0b9407e4ccc"
+}
