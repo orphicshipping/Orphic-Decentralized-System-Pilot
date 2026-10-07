@@ -259,6 +259,7 @@ def _attach_workbench_locked(value, session, *, dataset_id: str, recorded_at: st
     native_artifact["created_at"]=recorded_at
     native_artifact=seal(native_artifact)
     descriptors=[]
+    payloads=[]
     def add(native, suffix, family, dependencies):
         envelope=retain_record(native, dataset_id=dataset_id+suffix, revision=1, parent_source_id=None,
                                recorded_at=recorded_at,data_family=family)
@@ -266,6 +267,7 @@ def _attach_workbench_locked(value, session, *, dataset_id: str, recorded_at: st
                  "bytes_b64":base64.b64encode(c.canonical_json(envelope).encode("utf-8")).decode()}
         if dependencies: payload["input_source_ids"]=dependencies
         descriptor=staged.add_source(payload);descriptors.append(descriptor)
+        payloads.append(payload)
         return descriptor["source_id"]
     root_id=add(native_artifact,"/bundle","artifact",[])
     prior=None
@@ -276,7 +278,10 @@ def _attach_workbench_locked(value, session, *, dataset_id: str, recorded_at: st
         output=add(value["native"]["covariance"],"/output-covariance","covariance",[root_id]+([prior] if prior else []))
     add(value["native"]["stream"],"/observations","observation-stream",[root_id]+([output] if output else []))
     Workbench.restore(staged.serialize())
-    session.workbench=staged
+    # Commit through the existing owner, preserving its live provider bindings,
+    # in-flight reservations and object identity. Concurrent source changes may
+    # refuse atomically; they cannot silently rebind the staged dependencies.
+    descriptors=session.workbench.add_sources(payloads)
     return {"status":"RETAINED_IN_WORKBENCH","bundle_id":value["bundle_id"],"sources":descriptors,
             "new_executions":0,"physical_qualification":"NOT_ESTABLISHED","state_admission":"NOT_PERFORMED"}
 

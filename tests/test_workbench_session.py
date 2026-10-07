@@ -478,3 +478,25 @@ def test_bound_design_rejects_unknown_upstream_before_calling_provider(
     })
     assert reply["type"] == "error", reply
     assert response(session, "bundle.list")["bundles"] == []
+
+
+def test_link_measurement_attachment_preserves_live_provider_binding(calibrated_repositories, tmp_path):
+    from ciw import link_measurement_io, link_measurements, link_study_io
+    from ciw.link_study_cli import example
+    link_study_io.run(example(), tmp_path / "study")
+    bundle = link_measurements.build(tmp_path / "study")
+    _, _, session, _ = link_study_io.read(tmp_path / "study")
+    session.workbench.bind_workflow("calibrated-observable", calibrated_repositories)
+    original = session.workbench
+    before = original.describe_operations()
+    assert next(row for row in before if row["operation_id"] == CALIBRATED_OPERATION)["available"]
+    receipt = link_measurement_io.attach_workbench(bundle, session, dataset_id="synthetic.bound.measurement",
+                                                  recorded_at="2026-10-07T00:00:00Z")
+    assert receipt["status"] == "RETAINED_IN_WORKBENCH" and receipt["new_executions"] == 0
+    assert session.workbench is original
+    assert session.workbench.describe_operations() == before
+    path = session.save_workspace(tmp_path / "attached.json")
+    restored = Session.from_workspace(path, tmp_path / "reopened")
+    assert restored.workbench.serialize() == session.workbench.serialize()
+    assert not next(row for row in restored.workbench.describe_operations()
+                    if row["operation_id"] == CALIBRATED_OPERATION)["available"]

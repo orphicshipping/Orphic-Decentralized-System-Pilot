@@ -1,14 +1,13 @@
-"""Opt-in positive checks through the unchanged typed-data owner's native APIs.
+"""Positive checks through the integrated typed-data owner's native APIs.
 
-Set NET_MEASUREMENT_WORKBENCH=1 only in an explicitly assembled implementation
-containing data_sources and the data-record Workbench path. No mocks or copied
-implementation are supplied by this test. The native file identities are logged
-by the separate qualification runner. This is not full PR200 qualification.
+The package includes the retained-data owner and data-record Workbench path.
+These tests run by default and use real native validators without mocks. The
+installed qualification runner records source identities; this bounded profile
+is not full PR200 or physical qualification.
 """
 import base64
 from copy import deepcopy
 import json
-import os
 from pathlib import Path
 
 import pytest
@@ -17,7 +16,6 @@ from ciw import link_contract as c, link_measurements as m, link_measurement_io 
 from ciw.link_study_cli import example
 from ciw.session import Session
 
-pytestmark=pytest.mark.skipif(os.environ.get('NET_MEASUREMENT_WORKBENCH')!='1',reason='Explicit typed-data owner integration not selected')
 
 
 @pytest.fixture

@@ -53,7 +53,7 @@ def artifact_graph(run: dict, results: dict, executions: dict, workbench) -> dic
     bundles = {bundle["bundle_id"]: bundle for bundle in retained["bundles"]}
     for source in sources.values():
         nodes.setdefault(source["evidence_id"], {"kind": "evidence", "dependencies": []})
-        add(source["source_id"], "source", [source["evidence_id"]],
+        add(source["source_id"], "source", [source["evidence_id"], *source.get("input_source_ids", [])],
             source_kind=source["kind"], evidence_id=source["evidence_id"], label=source["label"])
     for execution in executions.values():
         deps = [execution["evidence_id"]]

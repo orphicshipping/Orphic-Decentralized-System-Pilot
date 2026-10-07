@@ -410,6 +410,18 @@ class Session:
             return self._journal_action(kind, payload)
         if kind == "source.add":
             return self.workbench.add_source(payload)
+        if kind == "data.list":
+            _keys(payload, set())
+            return {"sources": [source for source in self.workbench.list_sources()
+                                if source["kind"] == "data-record"]}
+        if kind == "data.get":
+            _keys(payload, {"source_id"}, {"source_id"})
+            source = self.workbench.get_source(payload["source_id"])
+            if source["kind"] != "data-record":
+                raise ValueError("Requested source is not a retained data record")
+            from .data_sources import _source as data_source
+            import base64
+            return data_source(base64.b64decode(source["bytes_b64"], validate=True))
         if kind == "source.list":
             _keys(payload, set())
             return {"sources": self.workbench.list_sources()}
