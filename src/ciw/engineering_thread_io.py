@@ -19,12 +19,27 @@ import tempfile
 from . import engineering_thread as e, link_contract as c, production
 from .control_contracts import save_new
 from .hardware_workflow import read_bytes
-from .link_store import safe_path
+from .link_store import safe_path as _link_safe_path
+from .filesystem_paths import filesystem_path
 from .operations.runner import seal, check_seal
 
 MAX_FILE = 8 * 1024 * 1024  # Preserve the existing production-reader boundary.
 MAX_TOTAL = 64 * 1024 * 1024
 CORE = {'intent.json', 'request.json', 'compilation.json'}
+
+
+def safe_path(path):
+    # Check the original components before normalization can remove a parent
+    # traversal, then recheck the IO spelling so long symlinks cannot be missed.
+    guarded = _link_safe_path(path)
+    if os.name == 'nt':
+        # A long original component can look absent to ordinary Win32 stat.
+        # Check each lexical parent before removing any '..' components.
+        for item in (guarded, *guarded.parents):
+            if filesystem_path(item).is_symlink():
+                raise ValueError('Link storage paths must not traverse symlinks')
+        return _link_safe_path(filesystem_path(guarded))
+    return guarded
 
 
 def _write_raw(path, raw):
@@ -398,11 +413,12 @@ def report(directory, output, *, expected_thread_ref, host_profile):
 
 def demo(output, *, host_profile):
     e.profile(host_profile)
+    logical_root = _link_safe_path(output)
     root = safe_path(output); root.mkdir(parents=True, exist_ok=False)
     source_fixture = None
     if host_profile == 'installation':
         from .link_installation_example import demo as make
-        source_fixture = make(root/'source', compliant=True)
+        source_fixture = make(logical_root/'source', compliant=True)
         raw = (root/'source/investigation/request.json').read_bytes()
     elif host_profile == 'scalar':
         from .link_study_cli import example
@@ -413,7 +429,7 @@ def demo(output, *, host_profile):
     planned = compile_packet(intent_raw, raw, root/'compiled', host_profile=host_profile)
     result = run_packet(root/'compiled', root/'execution', expected_compiled_ref=planned['compiled_ref'],
                         host_profile=host_profile, allow_compute=True)
-    page = report(root/'execution', root/'engineering.html', expected_thread_ref=result['thread_ref'], host_profile=host_profile)
+    page = report(root/'execution', logical_root/'engineering.html', expected_thread_ref=result['thread_ref'], host_profile=host_profile)
     summary = {'origin': 'synthetic', 'plan': planned, 'review': result, 'report': page,
                'source_fixture': source_fixture,
                'source_fixture_execution_is_separate': source_fixture is not None}

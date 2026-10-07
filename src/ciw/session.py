@@ -20,6 +20,7 @@ from .operations.runner import execute as execute_operation, check_seal, seal, v
 from .adapters.protocol import AdapterRefusal
 from .core.identities import validate_evidence_identity
 from .calibration_status import calibration_status
+from .filesystem_paths import filesystem_path
 
 from .instruments import (
     compute_spectrum, compute_statistics, inspect_sample, run_metadata, validate_run,
@@ -99,23 +100,24 @@ def loads_json(text: str) -> Any:
 
 
 def read_json(path: Path) -> Any:
-    return loads_json(Path(path).read_text(encoding="utf-8"))
+    return loads_json(filesystem_path(path).read_text(encoding="utf-8"))
 
 
 def write_json(path: Path, data: Any) -> Path:
     """Replace only a completely serialized file, on the same filesystem."""
     path = Path(path)
     content = json.dumps(data, indent=2, allow_nan=False) + "\n"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    target = filesystem_path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
     try:
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent,
                                          prefix=".ciw-", suffix=".tmp", delete=False) as stream:
             temporary = Path(stream.name)
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        os.replace(temporary, target)
     finally:
         if temporary is not None and temporary.exists():
             temporary.unlink()
@@ -594,7 +596,7 @@ class Session:
                         # Best-effort cleanup must not erase prior records, publish
                         # partial in-memory state, or mask the original failure.
                         try:
-                            execution_path.unlink(missing_ok=True)
+                            filesystem_path(execution_path).unlink(missing_ok=True)
                         except OSError:
                             # A completion marker may still exist. Preserve its
                             # result dependency instead of creating an orphan.
@@ -602,7 +604,7 @@ class Session:
                         else:
                             if result_path is not None:
                                 try:
-                                    result_path.unlink(missing_ok=True)
+                                    filesystem_path(result_path).unlink(missing_ok=True)
                                 except OSError:
                                     LOG.exception("Unable to remove unpublished operation record: %s", result_path)
                         raise

@@ -215,9 +215,10 @@ def test_restore_freezes_source_before_writing_destination(completed,tmp_path,mo
 
 def test_incomplete_recovery_has_no_completion_manifest(completed,tmp_path,monkeypatch):
     root,view,_,_=completed;before=snapshot(root);dest=tmp_path/'interrupted';writer=io._write_raw
+    # Fault the actual filesystem target on both ordinary and extended Windows paths.
     def fail_copy(path,data):
         writer(path,data)
-        if Path(path).is_relative_to(dest):raise OSError('synthetic storage fault')
+        if io.safe_path(path).is_relative_to(io.safe_path(dest)):raise OSError('synthetic storage fault')
     monkeypatch.setattr(io,'_write_raw',fail_copy)
     with pytest.raises(OSError,match='storage fault'):
         io.restore_thread(root,dest,expected_thread_ref=view['thread_ref'],host_profile='scalar')
@@ -234,13 +235,13 @@ def test_real_process_exit_at_recovery_boundary(completed,tmp_path,phase):
     script='''from pathlib import Path
 import os,sys
 from ciw import engineering_thread_io as io
-source,dest,ref,phase=sys.argv[1:];target=Path(dest);write=io._write_raw
+source,dest,ref,phase=sys.argv[1:];target=io.safe_path(dest);write=io._write_raw
 count=[0]
 def crash(path,data):
     write(path,data)
-    if Path(path).is_relative_to(target):
+    if io.safe_path(path).is_relative_to(target):
         count[0]+=1
-        if (phase=="before_manifest" and count[0]==2) or (phase=="after_manifest" and Path(path)==target/"thread.json"):
+        if (phase=="before_manifest" and count[0]==2) or (phase=="after_manifest" and io.safe_path(path)==target/"thread.json"):
             os._exit(73)
 io._write_raw=crash
 io.restore_thread(source,target,expected_thread_ref=ref,host_profile="scalar")

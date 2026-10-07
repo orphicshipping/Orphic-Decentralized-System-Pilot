@@ -1,0 +1,230 @@
+name: NCP knowledge and shared work system
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/evidence_*.py'
+      - 'tests/test_evidence_*.py'
+      - 'docs/NCP_EVIDENCE.md'
+      - 'src/ciw/proto_corpus.py'
+      - 'src/ciw/knowledge_*.py'
+      - 'src/ciw/external_work*.py'
+      - 'src/ciw/corpus_*.py'
+      - 'src/ciw/routine_wakeup.py'
+      - 'src/ciw/agent_*.py'
+      - 'src/ciw/control_contracts.py'
+      - 'src/ciw/core/identities.py'
+      - 'src/ciw/session.py'
+      - 'src/ciw/engineering_thread_io.py'
+      - 'src/ciw/filesystem_paths.py'
+      - 'tests/test_windows_retained_paths.py'
+      - 'tests/test_corpus_publication*.py'
+      - 'src/ciw/net.py'
+      - 'src/ciw/operator_commands.py'
+      - 'tests/test_proto_corpus.py'
+      - 'tests/test_knowledge_mcp.py'
+      - 'tests/test_knowledge_cli.py'
+      - 'tests/test_external_work.py'
+      - 'tests/test_external_work_http.py'
+      - 'tests/test_corpus_retrieval.py'
+      - 'tests/test_operator_catalog.py'
+      - 'tests/test_scientific_audit.py'
+      - 'src/ciw/scientific_audit.py'
+      - 'tests/test_ncp_corpus*.py'
+      - 'tests/test_ncp_profile_coherence.py'
+      - 'tests/test_agent_protocol.py'
+      - 'tests/test_cli_json_boundary.py'
+      - 'examples/external-work/**'
+      - 'scripts/check_corpus_retrieval.py'
+      - 'docs/NCP_SYSTEM.md'
+      - 'docs/CORPUS_RETRIEVAL.md'
+      - 'docs/EXTERNAL_WORK*.md'
+      - 'pyproject.toml'
+      - '.github/workflows/ncp-system.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  knowledge-and-work:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    env:
+      PYTEST_DISABLE_PLUGIN_AUTOLOAD: "1"
+      PYTHONNOUSERSITE: "1"
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install candidate and pinned optional transport dependencies
+        run: python -m pip install -e ".[dev,external-work,legibility]" build
+      - name: Synthetic catalog, task, MCP and command boundaries
+        run: >-
+          python -m pytest -q
+          tests/test_evidence_corpus.py tests/test_evidence_mcp.py tests/test_evidence_cli.py
+          tests/test_proto_corpus.py tests/test_knowledge_mcp.py
+          tests/test_knowledge_cli.py tests/test_external_work.py
+          tests/test_external_work_http.py tests/test_corpus_retrieval.py
+          tests/test_operator_catalog.py tests/test_scientific_audit.py tests/test_agent_protocol.py
+          tests/test_ncp_corpus_integration.py tests/test_ncp_corpus_link_workspace.py tests/test_ncp_profile_coherence.py
+          tests/test_cli_json_boundary.py tests/test_corpus_publication.py
+          -o addopts= --junitxml=ncp-system-contracts.xml
+      - name: Native Windows retained paths and create-only publication
+        if: runner.os == 'Windows'
+        run: >-
+          python -m pytest -q tests/test_windows_retained_paths.py
+          tests/test_corpus_publication_windows.py
+          -o addopts= --junitxml=ncp-system-windows.xml
+      - name: Require every suite and refuse skipped or failed checks
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import xml.etree.ElementTree as ET
+
+          root = ET.parse('ncp-system-contracts.xml').getroot()
+          suites = list(root.iter('testsuite'))
+          cases = list(root.iter('testcase'))
+          expected = {
+              'test_evidence_corpus', 'test_evidence_mcp', 'test_evidence_cli',
+              'test_proto_corpus', 'test_knowledge_mcp', 'test_knowledge_cli',
+              'test_external_work', 'test_external_work_http', 'test_corpus_retrieval',
+              'test_operator_catalog', 'test_scientific_audit', 'test_agent_protocol', 'test_cli_json_boundary',
+              'test_ncp_corpus_integration', 'test_ncp_corpus_link_workspace', 'test_ncp_profile_coherence',
+              'test_corpus_publication',
+          }
+          observed = {part for case in cases for part in case.attrib.get('classname', '').split('.')}
+          assert expected <= observed, 'Missing test modules: ' + repr(sorted(expected - observed))
+          assert suites and len(cases) == 527, 'Missing expected test coverage'
+          assert all(int(suite.attrib[name]) == 0 for suite in suites
+                     for name in ('failures', 'errors', 'skipped')), 'Non-passing test outcome'
+          assert not any(case.find(tag) is not None for case in cases
+                         for tag in ('failure', 'error', 'skipped')), 'Non-passing testcase'
+          if os.name == 'nt':
+              windows = list(ET.parse('ncp-system-windows.xml').getroot().iter('testcase'))
+              assert len(windows) == 50, 'Missing native Windows checks'
+              assert not any(case.find(tag) is not None for case in windows
+                             for tag in ('failure', 'error', 'skipped')), 'Native Windows check did not pass'
+          print(json.dumps({'synthetic_checks_passed': len(cases), 'expected_modules': sorted(expected),
+                            'scientific_qualification': False, 'live_connector_tested': False}))
+          PY
+      - name: Build distributable wheel
+        run: python -m build --wheel
+      - name: Verify wheel imports and installed NCP commands in a fresh environment
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          from pathlib import Path
+          import subprocess
+          import sys
+          import tempfile
+          import venv
+
+          checkout = Path.cwd().resolve()
+          wheels = list((checkout / 'dist').glob('*.whl'))
+          assert len(wheels) == 1, 'Require one candidate wheel'
+          wheel = wheels[0].resolve()
+          env = {key: value for key, value in os.environ.items() if key != 'PYTHONPATH'}
+          env['PYTHONNOUSERSITE'] = '1'
+          env['PYTHONSAFEPATH'] = '1'
+          with tempfile.TemporaryDirectory(prefix='ncp-wheel-') as temporary:
+              work = Path(temporary).resolve()
+              environment = work / 'environment'
+              venv.EnvBuilder(with_pip=True).create(environment)
+              scripts = environment / ('Scripts' if os.name == 'nt' else 'bin')
+              python = scripts / ('python.exe' if os.name == 'nt' else 'python')
+              ncp = scripts / ('ncp.exe' if os.name == 'nt' else 'ncp')
+              subprocess.run([str(python), '-I', '-m', 'pip', 'install', str(wheel) + '[dev,external-work,legibility]'],
+                             cwd=work, env=env, check=True, timeout=300)
+              probe = '''
+          import importlib, importlib.metadata, json
+          names = ('ciw.evidence_corpus', 'ciw.evidence_cli', 'ciw.proto_corpus', 'ciw.knowledge_mcp', 'ciw.knowledge_cli',
+                   'ciw.external_work', 'ciw.external_work_mcp', 'ciw.external_work_http',
+                   'ciw.external_work_cli', 'ciw.corpus_retrieval')
+          paths = {name: importlib.import_module(name).__file__ for name in names}
+          distribution = importlib.metadata.distribution('computational-instrumentation-workbench')
+          direct = json.loads(distribution.read_text('direct_url.json') or '{}')
+          assert direct.get('dir_info', {}).get('editable') is not True
+          entries = {entry.name: entry.value for entry in distribution.entry_points
+                     if entry.group == 'console_scripts'}
+          assert entries.get('ncp') == 'ciw.net:main'
+          print(json.dumps({'imports': paths, 'editable': False, 'ncp_entrypoint': entries['ncp']}))
+          '''
+              report = json.loads(subprocess.check_output([str(python), '-I', '-c', probe],
+                                  cwd=work, env=env, text=True, timeout=60))
+              for location in report['imports'].values():
+                  path = Path(location).resolve()
+                  assert path.is_relative_to(environment), 'Import escaped installed wheel environment'
+                  assert not path.is_relative_to(checkout), 'Import came from source checkout'
+              help_commands = []
+              for command in ('knowledge', 'evidence', 'work'):
+                  completed = subprocess.run([str(ncp), command, '--help'], cwd=work, env=env,
+                                             check=True, text=True, capture_output=True, timeout=60)
+                  assert 'usage:' in completed.stdout.lower()
+                  help_commands.append('ncp ' + command + ' --help')
+              # Exercise the same contracts through the installed distribution.
+              # Imports and subprocesses must not fall back to the checkout.
+              test_names = (
+                  'test_evidence_corpus', 'test_evidence_mcp', 'test_evidence_cli',
+                  'test_proto_corpus', 'test_knowledge_mcp', 'test_knowledge_cli',
+                  'test_external_work', 'test_external_work_http', 'test_corpus_retrieval',
+                  'test_operator_catalog', 'test_scientific_audit', 'test_agent_protocol',
+                  'test_cli_json_boundary', 'test_ncp_corpus_integration',
+                  'test_ncp_corpus_link_workspace', 'test_ncp_profile_coherence', 'test_corpus_publication',
+              )
+              installed_xml = checkout / 'ncp-system-installed.xml'
+              subprocess.run([str(python), '-I', '-B', '-m', 'pytest', '-q',
+                              *[str(checkout / 'tests' / (name + '.py')) for name in test_names],
+                              '-o', 'pythonpath=', '-o', 'addopts=',
+                              '--junitxml=' + str(installed_xml)],
+                             cwd=work, env=env, check=True, timeout=600)
+              import xml.etree.ElementTree as ET
+              source_cases = list(ET.parse(checkout / 'ncp-system-contracts.xml').getroot().iter('testcase'))
+              installed_cases = list(ET.parse(installed_xml).getroot().iter('testcase'))
+              assert len(installed_cases) == len(source_cases), 'Installed contract coverage changed'
+              observed = {part for case in installed_cases for part in case.attrib.get('classname', '').split('.')}
+              assert set(test_names) <= observed, 'Installed contract suite missing'
+              assert not any(case.find(tag) is not None for case in installed_cases
+                             for tag in ('failure', 'error', 'skipped')), 'Installed contract did not pass'
+              report['installed_contract_checks'] = len(installed_cases)
+              if os.name == 'nt':
+                  windows_xml = checkout / 'ncp-system-windows-installed.xml'
+                  subprocess.run([str(python), '-I', '-B', '-m', 'pytest', '-q',
+                                  str(checkout / 'tests/test_windows_retained_paths.py'),
+                                  str(checkout / 'tests/test_corpus_publication_windows.py'),
+                                  '-o', 'pythonpath=', '-o', 'addopts=',
+                                  '--junitxml=' + str(windows_xml)],
+                                 cwd=work, env=env, check=True, timeout=180)
+                  windows = list(ET.parse(windows_xml).getroot().iter('testcase'))
+                  assert len(windows) == 50, 'Missing installed native Windows checks'
+                  assert not any(case.find(tag) is not None for case in windows
+                                 for tag in ('failure', 'error', 'skipped')), 'Installed native Windows check did not pass'
+                  report['installed_windows_checks'] = len(windows)
+              report.update({'status': 'passed', 'wheel': wheel.name, 'commands': help_commands,
+                             'raw_corpus_accessed': False, 'live_connector_tested': False,
+                             'scientific_qualification': False})
+              (checkout / 'ncp-system-wheel.json').write_text(json.dumps(report, indent=2) + '\n', encoding='utf-8')
+          PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: ncp-system-${{ matrix.os }}
+          if-no-files-found: error
+          path: |
+            ncp-system-contracts.xml
+            ncp-system-installed.xml
+            ncp-system-windows.xml
+            ncp-system-windows-installed.xml
+            ncp-system-wheel.json
+            dist/*.whl

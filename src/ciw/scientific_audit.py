@@ -13,6 +13,9 @@ from pathlib import Path
 # Keys refer to the existing operator catalog. Values name review evidence;
 # they cannot introduce commands, workflows, providers, or executable bindings.
 COMMAND_REVIEWS = {
+    "evidence": "evidence_cli",
+    "knowledge": "knowledge_cli",
+    "work": "external_work",
     "device": "link_measurements",
     "observation": "link_measurements",
     "agent": "agent_protocol",

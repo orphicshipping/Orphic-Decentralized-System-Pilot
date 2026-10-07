@@ -28,6 +28,24 @@ NET is useful when a calculation must survive review, revision or a handoff to a
 
 NET is an actively developed research and engineering platform. The core local workflow is executable today; specialist providers have profile-specific setup and validation requirements. The [integration matrix](docs/INTEGRATION_COVERAGE.md) records those boundaries.
 
+## Proto-Corpus and shared agent work
+
+The [NCP knowledge and work system](docs/NCP_SYSTEM.md) adds a frozen source
+catalog, metadata search and provenance resources over MCP, plus durable scoped
+task exchange. Separate requester and worker clients share explicit source context.
+Exact-task authorization and result review remain trusted host actions.
+
+Use `ncp knowledge` to compile or search a catalog and generate a local MCP launcher,
+and `ncp work` for explicit host administration. The optional
+[`ncp evidence` profile](docs/NCP_EVIDENCE.md) adds hash-checked source passages
+from selected text files and ZIP members, with exact citation locators.
+The existing [`ncp corpus` profile](docs/CORPUS_RETRIEVAL.md) retains selected-source
+sidecars and supports combined read-only inspection of operator-bound NCP records.
+Catalog metadata, source bytes, candidate results and accepted evidence retain
+distinct identities and authority. Discovery alone does not approve a task context.
+The [system coherence guide](docs/NCP_SYSTEM_COHERENCE.md) records the integrated
+profiles, source provenance and authority boundaries.
+
 ## Quickstart
 
 Use **Python 3.11 or newer** from the repository root. On Linux or macOS:
@@ -68,7 +86,7 @@ ciw send workspace.save
 
 `analysis.stats` creates a new result. Save before stopping the service with Ctrl+C. Restarting the workbench reopens saved state without rerunning its numerical operations. The service binds to loopback by default.
 
-The distribution is `computational-instrumentation-workbench`, the Python package is `ciw`, and the command-line entry points are `net` and `ciw`. The root install supplies the workbench; optional engines and imported instruments retain separate runtime requirements. See [installed tools](docs/RUN_NET.md) and [operator readiness](docs/OPERATOR_READINESS.md).
+The distribution is `computational-instrumentation-workbench`, the Python package is `ciw`, and the command-line entry points are `ncp`, its historical alias `net`, and `ciw`. The root install supplies the workbench; optional engines and imported instruments retain separate runtime requirements. See [installed tools](docs/RUN_NET.md) and [operator readiness](docs/OPERATOR_READINESS.md).
 
 ## Explore a manufacturing workflow
 

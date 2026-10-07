@@ -101,11 +101,11 @@ Source span pagination returns at most 50 descriptors per page. Unknown tools an
 arguments refuse. Limits apply only to this optional retrieval profile, not the
 broader CIW/NCP substrate.
 
-The initial real bundle has 15 metadata records and 3 internal text snapshots.
-External literature remains metadata-only. Seven sources still require the prior
-rights review and five have recorded attribution notices, not blanket approvals.
-No PDF is distributed in this retrieval bundle. Original archive copies remain in
-Drive, and the previous selected-corpus register is not silently synchronized.
+No real source bundle or source register is distributed with this module. The
+operator supplies retained sidecars and selects any permitted internal text
+snapshots. External literature remains metadata-only in this profile; attribution
+notices do not become blanket ingestion approvals. Original archive copies remain
+at their retained locations, and a source register is never silently synchronized.
 
 ## Tests and inspection view
 
@@ -144,11 +144,19 @@ certification or physical-device testing.
 
 ## Integration boundary
 
-This increment is based on the recovered package closure at upstream PR219 commit
-`26ffb9c06dec36c2357300b581fff7f415a1d1a0`, whose `src/ciw` tree was verified as
-`5af7336ca3cf1507eb0a7ea92a9f29cd25e10586`. It is not a complete current-main
-monorepo checkout. Apply the additive files only after reconciling newer branches;
-no adjacent provider-catalog or graph-interchange work is replaced.
+The reader reuses the existing MCP transport, strict JSON helpers and identity
+encoder. It does not replace provider catalogs, execution hosts or graph
+interchange. The selected-source sidecar format includes staged copy identities;
+a moved original or new metadata record must not be represented as a separately
+verified staged copy merely to satisfy that format.
+
+The broader [`ncp knowledge` catalog](NCP_SYSTEM.md) indexes retained source
+registries. Its optional [`ncp evidence` bundle](NCP_EVIDENCE.md) exposes selected
+text representations and exact passages. These are separately pinned formats:
+catalog record hashes, selected-source IDs, source hashes, representation hashes
+and native NCP artifact handles are not interchangeable. Explicit host binding is
+required before either source profile supplies an approved external-work context;
+search and retrieval do not grant that authority.
 
 References used in the implementation review:
 - Official MCP tool-annotation boundary: https://blog.modelcontextprotocol.io/posts/2026-03-16-tool-annotations/

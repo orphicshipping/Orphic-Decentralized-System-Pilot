@@ -6,6 +6,9 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('evidence', 'evidence_cli', 'Freeze selected source text, retrieve exact passages and bind evidence context'),
+    ('knowledge', 'knowledge_cli', 'Build and query the frozen Proto-Corpus, bind catalog context and serve MCP'),
+    ('work', 'external_work_cli', 'Provision scoped task clients and retain trusted-host authorization and review'),
     ("device", "link_device_cli", "Retain and inspect explicit device declarations in the existing Link journal"),
     ("observation", "link_observation_cli", "Inspect, recover and export retained Link measurement views"),
     ('agent', 'agent_mcp', 'Serve explicitly bound NCP tools through local MCP stdio'),

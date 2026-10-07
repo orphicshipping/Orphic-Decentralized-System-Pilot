@@ -206,7 +206,7 @@ def test_invalid_json_refused(bad):
 
 
 def test_utf8_spans_are_lossless_and_bounded():
-    raw=('Î±Î²Î³ðŸ™‚\n\n' * 2000).encode()
+    raw=('αβγ🙂\n\n' * 2000).encode()
     parts=list(spans(raw))
     assert b''.join(p[2] for p in parts)==raw
     assert all(0<len(p[2])<=1800 and p[2].decode('utf-8') for p in parts)
