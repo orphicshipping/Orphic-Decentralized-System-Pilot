@@ -25,3 +25,40 @@ Keep the independent audit/export regression in the installed gate:
 That test injects a bounded arithmetic fault into the established scientific module while leaving the independent audit intact. Four completed operations must retain audit FAIL and refuse export before creating the destination. It does not claim physical validation.
 
 The combined package is a local integration candidate, not a merged branch, published release, configured ChatGPT/Codex/Grok host or instrument qualification. The current main documentation update and separate Workbench/typed-data development are not incorporated. Exact candidate hashes, installed paths, command logs, scope and unresolved coverage are recorded in this task's evidence-bearing handoff.
+
+## Integrated Board and GaugeLink candidate (7 October 2026)
+
+The isolated integration joins the `18e5b0c` NCP consumer line with the existing
+`003f3c2` Board/covariance-refit line, whose common ancestor is `d242abd` (#224).
+The `control`, `refit`, and `gaugelink-refit` commands coexist. The `mcp-control`
+and `board-mcp` extras both retain SDK 2.3.0. Existing NET/NCP aliases remain.
+The new combined wheel is paired with the separately identified GaugeLink
+`b09b6d2` producer wheel; the three scientific profiles retain separate grants.
+
+`scripts/check_control_mcp.py --instrument link-scalar --request REQUEST` verifies
+retained scalar decoding, correction, shared-covariance mean and independent audit
+under both supported protocols. `scripts/check_board_refit_mcp.py --output-dir NEW`
+verifies the original oscillator Board journey independently under MCP 2025-11-25
+and 2026-07-28, each across three server processes, with exact retry and CLI status
+inspection. Run both using the same installed `python -I`. The Board checker uses
+the retained source archive's acceptance test helper; its hash joins the receipt.
+Neither checker transfers grants or authorizes candidate acceptance.
+
+Installed generated refit client configurations use `-I` so a caller's working
+directory or PYTHONPATH cannot replace installed modules. Source development keeps
+its explicit source-root configuration for compatibility. The installed Board
+checker deliberately supplies a shadow package through both ambient paths and
+requires the installed server to remain authoritative.
+
+The corpus coverage command builds separate frozen metadata-only topic catalogs
+and one ID-complete coverage index. Historical intake verification, fresh byte
+verification, full-text admission, rights and execution authority remain separate.
+See [CORPUS_COVERAGE.md](CORPUS_COVERAGE.md). Original snapshot pins remain valid.
+
+The previous broad diagnostic ended with a native Windows runtime fault and no
+final XML; it is not a passing candidate qualification. Subsequent qualification
+uses process-level deadlines on the identified Windows runtime, without its
+problematic timed faulthandler watchdog. Exact platform results, artifact hashes,
+unresolved diagnostic failures and release holds belong in the private combined
+handoff, not in aggregate test-count claims. No merge, publication, live client
+activation, physical acquisition or physical qualification is implied.

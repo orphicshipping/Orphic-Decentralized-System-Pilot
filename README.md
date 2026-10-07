@@ -58,6 +58,17 @@ distinct identities and authority. Discovery alone does not approve a task conte
 The [system coherence guide](docs/NCP_SYSTEM_COHERENCE.md) records the integrated
 profiles, source provenance and authority boundaries.
 
+## Board refitting through MCP
+
+The [Board refit profile](docs/BOARD_MCP_REFIT.md) exposes a complete bounded
+parameter-change journey: preview dependencies, validate, recompute under a
+host-selected grant, compare and retain an unreviewed candidate. It reuses the
+System Board, semantic compiler, Session and Needle. The first supported profile
+uses retained synthetic oscillator evidence. The [GaugeLink profile](docs/GAUGELINK_MCP_REFIT.md)
+adds retained measurement uncertainty scenarios, preserves the original capture and
+reuses unchanged results. Both retain candidates for independent review and grant
+no physical control. [Implementation sequence](docs/NCP_GAUGELINK_IMPLEMENTATION.md).
+
 ## Quickstart
 
 Use **Python 3.11 or newer** from the repository root. On Linux or macOS:
