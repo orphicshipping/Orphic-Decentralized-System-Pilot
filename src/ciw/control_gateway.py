@@ -109,10 +109,14 @@ def semantic_registry(owner):
     by_operation = {}
     aliases = {"statistics.v1": "analysis.statistics.v1",
                "spectrum.periodogram.v1": "analysis.spectrum.v1"}
-    for operation, contract in owner._registry.catalog()["operations"].items():
+    contracts = owner._registry.catalog()["operations"]
+    labels = [v["capabilities"][0] for v in contracts.values()]
+    for operation, contract in contracts.items():
         name = aliases.get(operation, contract["capabilities"][0])
         if not CAPABILITY.fullmatch(name):
             name += ".v1"
+        if not CAPABILITY.fullmatch(name) or (operation not in aliases and labels.count(contract["capabilities"][0]) > 1):
+            name = operation
         registry.declare(SemanticMorphism(name, "compute", contract["inputs"],
             {k: v["type"] for k, v in contract["outputs"].items()},
             effects=("read:host-source", "write:retained-result"),
@@ -324,6 +328,7 @@ class ControlHost:
                     raise ValueError("Parameter outside granted domains")
             if any(n["acceptance"] or n["inspection"] for n in graph["nodes"]):
                 raise ValueError("Plan cannot change acceptance or request a renderer")
+            self.owner.validate_plan(source_value, compiled["experiment"])
             body = {"schema": "ncp.control-plan.v1", "source": source_binding,
                 "baseline": binding, "graph": deepcopy(graph), "compilation": compiled,
                 "host_policy_sha256": self.owner._host_policy}

@@ -10,8 +10,11 @@ def main(argv=None):
     parser = argparse.ArgumentParser(prog="ncp control", description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
     demo = commands.add_parser("demo-config", help="Prepare synthetic inputs without execution")
-    demo.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage"], default="builtin")
+    demo.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage", "link-scalar"], default="builtin")
     demo.add_argument("--output-dir", type=Path, required=True)
+    prepare = commands.add_parser("prepare-link", help="Bind retained Link request bytes without acquisition")
+    prepare.add_argument("--request", type=Path, required=True)
+    prepare.add_argument("--output-dir", type=Path, required=True)
     serve = commands.add_parser("serve", help="Serve modern and legacy MCP using the optional SDK")
     serve.add_argument("--profile", type=Path, required=True)
     serve.add_argument("--instrument", choices=INSTRUMENTS, default="builtin")
@@ -20,9 +23,17 @@ def main(argv=None):
     serve.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
     try:
+        if args.command == "prepare-link":
+            from .link_study_agent import prepare
+            from .hardware_workflow import read_bytes
+            from .link_study import MAX_BYTES
+            print(prepare(read_bytes(args.request, limit=MAX_BYTES), args.output_dir))
+            return 0
         if args.command == "demo-config":
+            from .link_study_agent import demo_config as link_config
             factory = {"builtin": demo_config, "polymer": polymer_config,
-                       "temperature": temperature_config, "leakage": leakage_config}[args.instrument]
+                       "temperature": temperature_config, "leakage": leakage_config,
+                       "link-scalar": link_config}[args.instrument]
             print(factory(args.output_dir))
             return 0
         import mcp  # Fail before creating a host if the optional SDK is absent.

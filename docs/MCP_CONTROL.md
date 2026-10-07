@@ -151,3 +151,39 @@ candidate-qualification service, and optional Terminal/MCP Apps presentation.
 A build service must bind an approved source revision and pinned recipe to an
 isolated worker, retain the artifact and checks, and keep promotion separately
 authorized. Broad catalog discovery does not imply these services are implemented.
+
+## GaugeLink retained scalar study
+
+The host-selected link-scalar profile exposes the existing decode, affine
+correction, shared-covariance mean and independent arithmetic audit operations.
+It opens no serial port and has no agent-editable calibration or acceptance
+parameters. GaugeLink remains the acquisition and journal owner.
+
+Prepare a profile from the exact retained scalar-study request produced for a
+GaugeLink investigation:
+
+    ncp control prepare-link --request /absolute/path/request.json --output-dir ./link-profile
+    ncp control serve --instrument link-scalar --profile ./link-profile/profile.json
+
+For an explicitly synthetic example, use:
+
+    ncp control demo-config --instrument link-scalar --output-dir ./link-demo
+    ncp control serve --instrument link-scalar --profile ./link-demo/profile.json
+
+Use the same discovery, plan, admission and job tools described above. The four
+semantic names equal their existing versioned operation IDs; shared descriptive
+capability labels do not collapse distinct operations. Admission checks the
+actual prerequisite chain and the source's exact request-byte commitment.
+
+The graph result contains decoded original line bytes, full corrected covariance,
+the model result and its arithmetic audit. Select those records with
+ncp_artifact_read; completion and a passing arithmetic audit do not change a
+held physical qualification. The original request is a separately retained
+host-bound artifact, byte-for-byte, alongside the unchanged native source wrapper.
+Reopening with --resume and retrying the same attempt does not reacquire or
+repeat a completed calculation.
+
+Reported decimal spelling remains available in the original line bytes and in
+the scalar HTML report. It is separate from derived numeric precision and from
+measurement uncertainty. The existing CRLF decimal grammar still refuses
+exponent notation; those rejected bytes remain available for explicit review.

@@ -20,11 +20,13 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
 from ciw.agent_mcp import demo_config, polymer_config, temperature_config, leakage_config
+from ciw.link_study_agent import demo_config as link_config
 
 
 async def campaign(args, root):
     factory = {"builtin": demo_config, "polymer": polymer_config,
-               "temperature": temperature_config, "leakage": leakage_config}[args.instrument]
+               "temperature": temperature_config, "leakage": leakage_config,
+               "link-scalar": link_config}[args.instrument]
     profile = factory(root / "profile")
     source_files = {str(p): sha256(p.read_bytes()).hexdigest()
                     for p in profile.parent.iterdir() if p.is_file()}
@@ -68,7 +70,10 @@ async def campaign(args, root):
                     workflows = await call("ncp_workflows_list", {"limit": 32})
                     assert workflows["total"] == len(workflows["items"]) == 29
                     assert all(not row["authorizes_execution"] for row in workflows["items"])
-                    await call("ncp_capabilities_list", {})
+                    capabilities = await call("ncp_capabilities_list", {})
+                    if args.instrument == "link-scalar":
+                        assert len(capabilities["items"]) == 4
+                        assert len({x["capability_id"] for x in capabilities["items"]}) == 4
                     template = await call("ncp_plan_template", {"baseline": "baseline"})
                     draft = await call("ncp_plan_create", {"source": "source", "baseline": "baseline",
                                                            "graph": template["graph"]})
@@ -94,6 +99,25 @@ async def campaign(args, root):
                     assert json.loads(run_resource.contents[0].text) == completed
                     await call("ncp_artifact_read", {"artifact": completed["result"]["artifacts"]["graph-run"]["artifact_id"],
                         "selector": ["status"]})
+                    if args.instrument == "link-scalar":
+                        artifact = completed["result"]["artifacts"]["graph-run"]["artifact_id"]
+                        model = (await call("ncp_artifact_read", {"artifact": artifact,
+                            "selector": ["nodes", "model", "result", "data"]}))["data"]
+                        assert abs(model["mean"] - 2.03) < 1e-12
+                        assert abs(model["variance"] - .00190808) < 1e-14
+                        assert model["inspection_qualification"] == "HELD"
+                        covariance = (await call("ncp_artifact_read", {"artifact": artifact,
+                            "selector": ["nodes", "calibration", "result", "data", "covariance"]}))["data"]
+                        assert len(covariance["matrix"]) == 3 and covariance["matrix"][0][1] != 0
+                        decoded = (await call("ncp_artifact_read", {"artifact": artifact,
+                            "selector": ["nodes", "decode", "result", "data", "stream"]}))["data"]
+                        from ciw.link_contract import unpack
+                        assert unpack(decoded,8192) == b"1.000 N\\r\\n2.000 N\\r\\n3.000 N\\r\\n"
+                        invalid = json.loads(json.dumps(template["graph"]))
+                        invalid["nodes"][2]["inputs"]["calibrated"]["node_id"] = "decode"
+                        await call("ncp_plan_create", {"source":"source", "baseline":"baseline",
+                            "graph":invalid}, error=True)
+                        assert len(completed["result"]["execution_ids"]) == 4
                     if args.instrument == "builtin":
                         comparison = await call("ncp_compare", {"left": "reference", "right": "reference", "policy": "strict"})
                         checked = await call("ncp_qualify", {"suite": "regression",
@@ -112,7 +136,7 @@ async def campaign(args, root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage"], default="builtin")
+    parser.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage", "link-scalar"], default="builtin")
     parser.add_argument("--provider-checkout", type=Path)
     args = parser.parse_args()
     root = args.output_dir.absolute()
