@@ -143,7 +143,9 @@ def test_no_overwrite_or_writing_inside_history(history, attachment, tmp_path):
     out=tmp_path/'packet'; result=prepare(history,attachment,out); original=snapshot(out)
     with pytest.raises(FileExistsError): prepare(history,attachment,out)
     assert snapshot(out)==original and snapshot(source)==before
-    assert out.stat().st_mode & 0o777 == 0o700
+    from ncp_test_permissions import assert_private_directory
+    assert_private_directory(out)
+    assert_private_directory(out/"artifacts")
 
 
 @pytest.mark.parametrize('fault', ['bytes','missing','extra_file','extra_dir','symlink','packet_ref'])

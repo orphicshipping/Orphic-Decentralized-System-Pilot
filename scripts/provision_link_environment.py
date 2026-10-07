@@ -425,6 +425,23 @@ def _environment(root):
     env = {'PATH': os.defpath, 'HOME': str(home), 'XDG_CACHE_HOME': str(home/'cache'),
            'PIP_CONFIG_FILE': os.devnull, 'PYTHONNOUSERSITE': '1', 'PYTHONDONTWRITEBYTECODE': '1',
            'LANG': 'C.UTF-8'}
+    if os.name == 'nt':
+        # Windows side-by-side/runtime loading needs SystemRoot even for offline
+        # pip. Obtain it from the OS, never from caller-controlled environment.
+        # https://docs.python.org/3/library/subprocess.html#subprocess.Popen
+        import ctypes
+        from ctypes import wintypes
+        kernel = ctypes.WinDLL('kernel32.dll', use_last_error=True, winmode=0x00000800)
+        get_directory = kernel.GetWindowsDirectoryW
+        get_directory.argtypes = [wintypes.LPWSTR, wintypes.UINT]
+        get_directory.restype = wintypes.UINT
+        directory = ctypes.create_unicode_buffer(32768)
+        count = get_directory(directory, len(directory))
+        if count == 0:
+            raise ctypes.WinError(ctypes.get_last_error())
+        if count >= len(directory):
+            raise OSError('Native Windows directory exceeds the path budget')
+        env['SystemRoot'] = directory.value
     return env
 
 

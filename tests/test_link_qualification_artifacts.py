@@ -72,11 +72,15 @@ def installed_prefix(q, path, destination, monkeypatch, *, mutate=None, extra_ar
         '--output-dir', str(destination), '--require-pins', *extra_args])
     with pytest.raises(InstallationObserved):
         q.main()
-    sites = list((destination/'env/lib').glob('python*/site-packages'))
-    assert len(sites) == 1
-    assert (sites[0]/'ciw/__init__.py').read_bytes() == b'VALUE = 42\n'
+    python = destination/'env'/('Scripts/python.exe' if sys.platform == 'win32' else 'bin/python')
+    probe = real_run([str(python), '-I', '-c',
+                      'import json,sysconfig;print(json.dumps(sysconfig.get_path("purelib")))'],
+                     check=True, capture_output=True, text=True, timeout=30)
+    site = Path(json.loads(probe.stdout))
+    assert site.resolve().is_relative_to((destination/'env').resolve())
+    assert (site/'ciw/__init__.py').read_bytes() == b'VALUE = 42\n'
     assert json.loads((destination/'summary.json').read_bytes())['status'] == 'BLOCKED'
-    return sites[0]
+    return site
 
 
 @pytest.mark.parametrize('mutation', ['replace', 'delete'])
@@ -104,7 +108,8 @@ def test_external_wheel_anchor_is_checked_and_retained(candidate, tmp_path, monk
     summary = json.loads((out/'summary.json').read_bytes())
     assert summary['wheel_input']['external_ref_checked'] is True
     assert (out/summary['wheel_input']['snapshot']).read_bytes() == original
-    assert (out/'inputs'/path.name).stat().st_mode & 0o777 == 0o600
+    from ncp_test_permissions import assert_private_file
+    assert_private_file(out/'inputs'/path.name)
 
 
 @pytest.mark.parametrize('bad', ['sha256:'+'0'*64, 'not-a-hash'])
@@ -175,3 +180,43 @@ def test_host_pip_settings_cannot_redirect_qualification_install(candidate, tmp_
         monkeypatch.setenv('PIP_CONFIG_FILE', str(config))
     installed_prefix(q, path, tmp_path/'qualification', monkeypatch)
     assert not outside.exists()
+
+
+def test_engineering_qualifier_prepares_combined_test_and_checker(candidate, tmp_path, monkeypatch):
+    """Real synthetic installation reaches test preparation, without running NET."""
+    q, path, _, wheel = candidate
+    project = Path(q.__file__).resolve().parents[1]
+    stubs = {f"ciw/{name}.py": b"# Synthetic qualification fixture; no operations.\n"
+             for name in ("link_workflow", "link_security", "connectivity_workflow")}
+    for name, raw in stubs.items():
+        (project / "src" / name).write_bytes(raw)
+    path.write_bytes(wheel(extra=stubs)[1])
+    shutil.copyfile(SOURCE / "check_ncp_integrated.py", project / "scripts/check_ncp_integrated.py")
+    shutil.copytree(SOURCE.parent / "tests", project / "tests", ignore=shutil.ignore_patterns("__pycache__"))
+    shutil.copytree(SOURCE.parent / "examples/device-link/native", project / "examples/device-link/native")
+    out = tmp_path / "prepared"
+    real_run = q.subprocess.run
+
+    class Prepared(RuntimeError):
+        pass
+
+    def run(command, *args, **kwargs):
+        if command[1:4] == ["-I", "-m", "pytest"]:
+            assert "tests/test_ncp_integrated_package.py" in command
+            for relative in ("scripts/check_ncp_integrated.py", "tests/test_ncp_integrated_package.py",
+                             "tests/ncp_test_permissions.py"):
+                assert (out / relative).read_bytes() == (project / relative).read_bytes()
+            raise Prepared("Test preparation reached; synthetic package is not NET qualification")
+        return real_run(command, *args, **kwargs)
+
+    monkeypatch.setattr(q.subprocess, "run", run)
+    # Only this synthetic fixture crosses admission; real platform/dependencies
+    # stay unchanged, and the test stops before the Linux scientific suite.
+    from types import SimpleNamespace
+    monkeypatch.setattr(q, "sys", SimpleNamespace(platform="linux", version=sys.version))
+    monkeypatch.setattr(sys, "argv", [str(q.__file__), "--wheel", str(path),
+        "--output-dir", str(out), "--require-pins", "--with-scalar-study",
+        "--with-delivery", "--with-installation", "--with-engineering"])
+    with pytest.raises(Prepared):
+        q.main()
+    assert json.loads((out / "summary.json").read_bytes())["status"] == "BLOCKED"

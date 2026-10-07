@@ -178,7 +178,8 @@ def test_no_dispatch_no_overwrite_no_write_inside_originals(packet,tmp_path,monk
     out=tmp_path/'review';r=record(packet,out,value);before=snapshot(out)
     with pytest.raises(FileExistsError):record(packet,out,value)
     assert snapshot(out)==before
-    assert out.stat().st_mode & 0o777==0o700
+    from ncp_test_permissions import assert_private_directory
+    assert_private_directory(out)
 
 
 def test_exact_recovery_keeps_review_binding_but_fresh_execution_does_not(packet,tmp_path):

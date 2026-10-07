@@ -361,7 +361,10 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py", "test_ncp_supporting_evidence.py", "test_ncp_evidence_assessment.py"])
+            test_names.append('test_ncp_integrated_package.py')
+            shutil.copyfile(source / 'tests/ncp_test_permissions.py', root / 'tests/ncp_test_permissions.py')
+            shutil.copyfile(source / 'scripts/check_ncp_integrated.py', root / 'scripts/check_ncp_integrated.py')
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py", "test_ncp_supporting_evidence.py", "test_ncp_evidence_assessment.py", "test_ncp_engineering_source.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -437,6 +440,17 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
                     "scope": result["review"]["scope"]}
         if args.with_engineering:
             original = summary["engineering"]["scalar"]
+            selected = root / "engineering-scalar/execution/request.json"
+            source_view = json.loads(execute("engineering-source-inspection", ["-I", "-m", "ciw.net",
+                "production", "engineering", "source", str(selected), "--profile", "scalar",
+                "--request-ref", "sha256:" + hashlib.sha256(selected.read_bytes()).hexdigest()]))
+            if (source_view["request"] != json.loads(selected.read_bytes())
+                    or source_view["computation_readiness"] != "NOT_EVALUATED"
+                    or source_view["authorizes_execution"] is not False
+                    or source_view["new_scientific_executions"] != 0):
+                raise ValueError("Source inspection changed native inputs or implied computation")
+            summary["engineering_source"] = {key: source_view[key] for key in
+                ("status", "request_ref", "origins", "computation_readiness", "scope")}
             recovered = json.loads(execute("engineering-recovery", ["-I", "-m", "ciw.net", "production", "engineering", "restore",
                 "engineering-scalar/execution", "--profile", "scalar", "--thread-ref", original["thread_ref"],
                 "--output-dir", "engineering-recovered"]))
