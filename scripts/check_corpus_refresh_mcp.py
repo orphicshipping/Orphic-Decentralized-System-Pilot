@@ -11,19 +11,61 @@ from hashlib import sha256
 import json
 from pathlib import Path
 import sys
+import subprocess
 import zipfile
 
+import ciw
 from ciw.evidence_corpus import EvidenceCorpus
 from ciw.proto_corpus import ProtoCorpus
+
+
+def _outside_checkout(paths, checkout):
+    checked = {}
+    for name, location in paths.items():
+        path = Path(location).resolve(strict=True)
+        if not path.is_file() or path.is_relative_to(checkout):
+            raise ValueError("Installed qualification imported checkout code: " + name)
+        checked[name] = str(path)
+    return checked
+
+
+def server_configuration(root, receipt, *, installed=False):
+    """Keep installed qualification isolated from this checkout's Python path."""
+    checkout = Path(__file__).resolve().parents[1]
+    runtime = {"mode": "installed" if installed else "source", "ciw_path": str(Path(ciw.__file__).resolve())}
+    arguments = ["-m", "ciw.knowledge_cli", "serve", "--bundle", str(root / "catalog"),
+                 "--expected-ref", receipt["catalog_ref"], "--evidence-bundle", str(root / "evidence"),
+                 "--evidence-ref", receipt["evidence_ref"]]
+    environment = {"PYTHONPATH": str(checkout / "src")}
+    if installed:
+        if not sys.flags.isolated:
+            raise ValueError("Invoke installed qualification with python -I and --installed")
+        _outside_checkout({"ciw": ciw.__file__}, checkout)
+        # Use the exact isolated interpreter/env selected for the MCP subprocess.
+        # The knowledge profile intentionally has no host-path introspection tool.
+        probe = ("import json,ciw,ciw.proto_corpus,ciw.evidence_corpus,ciw.knowledge_cli,ciw.knowledge_mcp;"
+                 "print(json.dumps({name:str(__import__(name,fromlist=['__file__']).__file__) for name in "
+                 "['ciw','ciw.proto_corpus','ciw.evidence_corpus','ciw.knowledge_cli','ciw.knowledge_mcp']}))")
+        completed = subprocess.run([sys.executable, "-I", "-c", probe], env={},
+                                   capture_output=True, text=True, check=True, timeout=20)
+        runtime["isolated_imports"] = _outside_checkout(json.loads(completed.stdout), checkout)
+        if runtime["isolated_imports"]["ciw"] != runtime["ciw_path"]:
+            raise ValueError("Client and server interpreter selected different installed ciw packages")
+        runtime["isolated_import_probe_processes"] = 1
+        arguments.insert(0, "-I")
+        environment = {}
+    return {"command": sys.executable, "args": arguments, "env": environment}, runtime
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--refresh", type=Path, required=True)
     parser.add_argument("--output", type=Path, required=True)
+    parser.add_argument("--installed", action="store_true", help="Require isolated installed ciw imports; launch server with -I and no PYTHONPATH")
     args = parser.parse_args()
     root = args.refresh.resolve()
     receipt = json.loads((root / "receipt.json").read_text(encoding="utf-8"))
+    config, runtime = server_configuration(root, receipt, installed=args.installed)
     catalog = ProtoCorpus.open(root / "catalog", receipt["catalog_ref"])
     evidence = EvidenceCorpus.open(root / "evidence", receipt["evidence_ref"], catalog)
     sources = {r["source_id"]: r for r in receipt["sources"]}
@@ -62,10 +104,6 @@ def main():
                 break
             offset = page["next_offset"]
         assert b"".join(chunks) == raw
-    config = {"command": sys.executable, "args": ["-m", "ciw.knowledge_cli", "serve",
-              "--bundle", str(root / "catalog"), "--expected-ref", receipt["catalog_ref"],
-              "--evidence-bundle", str(root / "evidence"), "--evidence-ref", receipt["evidence_ref"]],
-              "env": {"PYTHONPATH": str(Path(__file__).resolve().parents[1] / "src")}}
     import anyio
     from mcp import ClientSession, StdioServerParameters
     from mcp.client.stdio import stdio_client
@@ -115,7 +153,7 @@ def main():
                             "resource_reads": 1, "server_processes": 1}
     protocols = [anyio.run(run, False), anyio.run(run, True)]
     assert before == {path: sha256(path.read_bytes()).hexdigest() for path in before}
-    result = {"status": "passed", "catalog_ref": catalog.ref, "evidence_ref": evidence.ref,
+    result = {"status": "passed", "runtime": runtime, "catalog_ref": catalog.ref, "evidence_ref": evidence.ref,
               "source_hashes_checked": len(sources), "exact_representations_checked": len(representations),
               "exact_spans_checked": checked_spans, "protocol_runs": protocols, "tool_calls": len(calls),
               "resource_reads": 2, "server_processes": 2, "calls": calls,

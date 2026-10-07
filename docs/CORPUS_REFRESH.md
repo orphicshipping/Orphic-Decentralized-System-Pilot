@@ -67,9 +67,23 @@ initialization and modern discovery. It queries PyDynamic's `None`/certainty
 semantics, timing/sampling limitations, TECKit's observational restrictions,
 metadata-only PDF exclusion and unresolved rights. It tests refusal of arbitrary
 source paths and authorization tools. The generated `*-mcp-config.json` is an
-explicit launch configuration, not an activated host change. Its environment
-currently selects this checkout's source; regenerate against the promoted runtime
-when qualification and operator host binding are completed.
+explicit launch configuration, not an activated host change. Source mode selects
+this checkout through `PYTHONPATH`.
+
+For a separately installed wheel, invoke the script using that environment's
+isolated interpreter:
+
+```text
+/path/to/qualified/env/python -I scripts/check_corpus_refresh_mcp.py --installed --refresh NEW_DIRECTORY --output INSTALLED_RESULT.json
+```
+
+Installed mode refuses imports from the source checkout. It verifies the isolated
+interpreter's `ciw`, catalog, evidence, CLI and MCP module paths before launching
+both servers with `-I` and an empty explicit environment. The generated installed
+MCP configuration contains no source `PYTHONPATH`. The receipt records exact
+module locations and the separate import-probe process; it does not count that
+probe as an MCP server. Source and installed journeys exercise overlapping cases
+and must not be added as independent qualification counts.
 
 Unit coverage uses synthetic documents and unexecuted source code. Local test
 artifacts can contain private corpus bytes and must not be committed or publicly

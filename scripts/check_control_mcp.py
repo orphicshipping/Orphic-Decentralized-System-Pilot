@@ -27,7 +27,21 @@ async def campaign(args, root):
     factory = {"builtin": demo_config, "polymer": polymer_config,
                "temperature": temperature_config, "leakage": leakage_config,
                "link-scalar": link_config}[args.instrument]
-    profile = factory(root / "profile")
+    if args.request is not None:
+        if args.instrument != "link-scalar":
+            raise ValueError("Retained request selection requires the Link profile")
+        from ciw.link_study_agent import prepare
+        from ciw.hardware_workflow import read_bytes
+        from ciw.link_study import MAX_BYTES
+        profile = prepare(read_bytes(args.request, limit=MAX_BYTES), root / "profile")
+    else:
+        profile = factory(root / "profile")
+    if args.instrument == "link-scalar":
+        from ciw import link_study as study, link_contract as link
+        request = link.loads((profile.parent / "request.json").read_bytes(), study.MAX_BYTES)
+        expected_decoded = study.decode(request)
+        expected_corrected = study.affine(request, expected_decoded)
+        expected_model = study.mean_model(request, expected_corrected)
     source_files = {str(p): sha256(p.read_bytes()).hexdigest()
                     for p in profile.parent.iterdir() if p.is_file()}
     command = ["-I", "-m", "ciw.net", "control", "serve", "--profile", str(profile),
@@ -103,16 +117,15 @@ async def campaign(args, root):
                         artifact = completed["result"]["artifacts"]["graph-run"]["artifact_id"]
                         model = (await call("ncp_artifact_read", {"artifact": artifact,
                             "selector": ["nodes", "model", "result", "data"]}))["data"]
-                        assert abs(model["mean"] - 2.03) < 1e-12
-                        assert abs(model["variance"] - .00190808) < 1e-14
+                        assert model == expected_model
                         assert model["inspection_qualification"] == "HELD"
                         covariance = (await call("ncp_artifact_read", {"artifact": artifact,
                             "selector": ["nodes", "calibration", "result", "data", "covariance"]}))["data"]
-                        assert len(covariance["matrix"]) == 3 and covariance["matrix"][0][1] != 0
+                        assert covariance == expected_corrected["covariance"]
                         decoded = (await call("ncp_artifact_read", {"artifact": artifact,
                             "selector": ["nodes", "decode", "result", "data", "stream"]}))["data"]
                         from ciw.link_contract import unpack
-                        assert unpack(decoded,8192) == b"1.000 N\\r\\n2.000 N\\r\\n3.000 N\\r\\n"
+                        assert unpack(decoded,8192) == unpack(expected_decoded["stream"],8192)
                         invalid = json.loads(json.dumps(template["graph"]))
                         invalid["nodes"][2]["inputs"]["calibrated"]["node_id"] = "decode"
                         await call("ncp_plan_create", {"source":"source", "baseline":"baseline",
@@ -125,11 +138,15 @@ async def campaign(args, root):
                         assert checked["summary"]["status"] == "PASS"
     assert protocols == ["2026-07-28", "2025-11-25"], protocols
     assert all(sha256(Path(p).read_bytes()).hexdigest() == h for p, h in source_files.items())
+    if args.request is not None:
+        assert args.request.read_bytes() == (profile.parent / "request.json").read_bytes()
+        source_files[str(args.request.absolute())] = sha256(args.request.read_bytes()).hexdigest()
     (root / "transcript.json").write_text(json.dumps(calls, indent=2), encoding="utf-8")
     return {"status": "PASS", "instrument": args.instrument, "sdk": version("mcp"),
         "protocols": protocols, "calls": len(calls), "execution_ids": completed["result"]["execution_ids"],
         "source_files_unchanged": source_files, "resume_and_retry_preserved_run": True,
-        "scope": "labelled synthetic inputs; actual installed MCP and registered computation; no physical qualification",
+        "scope": "synthetic fixture or explicitly retained request; actual installed MCP and registered computation; no physical qualification",
+        "retained_request": None if args.request is None else str(args.request.absolute()),
         "transcript_sha256": sha256((root / "transcript.json").read_bytes()).hexdigest()}
 
 
@@ -138,6 +155,7 @@ def main():
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage", "link-scalar"], default="builtin")
     parser.add_argument("--provider-checkout", type=Path)
+    parser.add_argument("--request", type=Path, help="Optional exact retained GaugeLink scalar-study request")
     args = parser.parse_args()
     root = args.output_dir.absolute()
     root.mkdir(parents=True, exist_ok=False)
