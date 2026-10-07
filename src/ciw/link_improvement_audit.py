@@ -10,11 +10,14 @@ from . import link_contract as c, link_study as study
 
 
 def audit(source, candidate):
+    return audit_calculation(source, candidate["parameters"], candidate["data"], candidate["result_id"])
+
+
+def audit_calculation(source, parameters, result, candidate_result_id):
+    """Audit declared inputs/data while retaining the caller's real occurrence ID."""
     from .link_improvement import validate_plan, LIMITS
-    parameters = candidate["parameters"]
     plan = validate_plan(parameters["plan"], source=source, model=parameters["model"], audit=parameters["audit"])
     request = study.source_request(source)
-    result = candidate["data"]
     data = result["feedback"]
     checks = []
 
@@ -83,5 +86,5 @@ def audit(source, candidate):
         check("ranking", data["ranking"] == [identity for _, identity, _ in ranking])
         check("proposal", data["proposed_candidate_id"] == (None if variance <= threshold else next((identity for _, identity, delta in ranking if delta > 0), None)))
     return {"schema": "ciw.link-improvement-audit.v1", "status": "PASS" if all(v["passed"] for v in checks) else "FAIL",
-            "candidate_result_id": candidate["result_id"], "checks": checks,
+            "candidate_result_id": candidate_result_id, "checks": checks,
             "scope": "independent_rational_counterfactual_arithmetic_not_empirical_improvement", "limits": dict(LIMITS)}

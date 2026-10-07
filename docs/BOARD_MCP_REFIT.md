@@ -4,6 +4,10 @@ This profile connects the existing System Board, parameter validator, semantic c
 
 A person or trusted host selects the Board, source and execution grant. The agent then discovers the profile, previews one exposed parameter change, validates it, establishes a retained baseline if needed, executes the candidate under that grant, and reads a comparison retained for review. No MCP tool authorizes a grant or accepts the candidate.
 
+The additional [GaugeLink profile](GAUGELINK_MCP_REFIT.md) uses the same seven tools
+for a retained measurement covariance scenario through a trusted host-selected
+execution profile. The oscillator profile described here keeps its existing scope.
+
 ## Supported change
 
 The supplied synthetic demonstration changes the `statistics` node's `channel` selection from `q` to `v`. Needle recomputes `statistics` and its declared dependent `spectrum`; it retains the unrelated `energy_statistics` result. A dependency triggers recomputation, not automatic propagation of parameter values: the spectrum channel remains its own declared value. Comparing statistics of different channels is an observation of the change, not a claim of physical equivalence or improvement.

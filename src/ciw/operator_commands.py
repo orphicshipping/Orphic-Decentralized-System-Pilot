@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ("gaugelink-refit", "link_refit_cli", "Retain, vary and audit GaugeLink uncertainty scenarios through MCP"),
     ("refit", "board_refit_cli", "Preview, validate and recompute bounded Board candidates through MCP"),
     ('evidence', 'evidence_cli', 'Freeze selected source text, retrieve exact passages and bind evidence context'),
     ('knowledge', 'knowledge_cli', 'Build and query the frozen Proto-Corpus, bind catalog context and serve MCP'),

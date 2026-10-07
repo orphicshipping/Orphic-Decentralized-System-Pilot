@@ -85,7 +85,7 @@ class BoardRefitHost:
         "This profile supports synthetic oscillator analysis, not physical control or acceptance.")
 
     def __init__(self, board, output_dir, *, source, grant, authority_check=None,
-                 resume=False, investigation_ref=None):
+                 resume=False, investigation_ref=None, execution_profile=None):
         self._lock = RLock()
         self._store = None
         self._authority_check = authority_check
@@ -93,12 +93,16 @@ class BoardRefitHost:
         self.source = detached(source)
         self.grant = detached(grant)
         self.investigation_ref = None if investigation_ref is None else text(investigation_ref)
-        self.concrete = builtin_registry(bind=True)
-        self.semantic = builtin_semantic_registry(self.concrete)
+        self.execution_profile = execution_profile
+        self._profile_ref = None if execution_profile is None else content_identity(execution_profile.identity())
+        self.concrete = builtin_registry(bind=True) if execution_profile is None else execution_profile.registry()
+        self.semantic = builtin_semantic_registry(self.concrete) if execution_profile is None else execution_profile.semantic(self.concrete)
         self.compilation = compile_board(self.board, self.semantic)
         self._board_ref = self.board["record_digest"]
         self._source_ref = content_identity(self.source)
         self._grant_ref = content_identity(self.grant)
+        if execution_profile is not None:
+            self.instructions = execution_profile.instructions
         self._validate_grant()
         self._preflight(self.board, self.compilation)
         self._check_authority()
@@ -110,6 +114,8 @@ class BoardRefitHost:
                     "semantic_catalog_ref": content_identity(self.semantic.catalog()),
                     "operator_catalog_ref": content_identity(self.concrete.catalog()),
                     "compilation_ref": self.compilation["record_digest"]}
+        if execution_profile is not None:
+            bindings["execution_profile_ref"] = self._profile_ref
         if not resume:
             self.output_dir.mkdir(parents=True, exist_ok=False)
         elif not self.output_dir.is_dir():
@@ -172,6 +178,8 @@ class BoardRefitHost:
                 raise ValueError("Grant target must name an exposed operation parameter")
 
     def _check_authority(self):
+        if self.execution_profile is not None and content_identity(self.execution_profile.identity()) != self._profile_ref:
+            raise BoardRefitRefusal("retained_state_invalid")
         if self._authority_check is not None:
             try:
                 self._authority_check()
@@ -186,6 +194,8 @@ class BoardRefitHost:
             self._store.check_current()
 
     def _preflight(self, board, compilation):
+        if self.execution_profile is not None:
+            return self.execution_profile.preflight(board, compilation, self.source)
         validate_run(self.source)
         validate_evidence_identity(self.source)
         if (board["model_id"] != "analytic-damped-oscillator.v1"
@@ -341,6 +351,8 @@ class BoardRefitHost:
         return bundle
 
     def _check_workspace(self, workspace, run):
+        if self.execution_profile is not None:
+            self.execution_profile.check_workspace(workspace, run)
         if workspace.get("run") != self.source:
             raise BoardRefitRefusal("retained_state_invalid")
         results, executions = workspace.get("results"), workspace.get("executions")
@@ -452,7 +464,8 @@ class BoardRefitHost:
 
     def _workbench(self, attempt_id):
         path = self.output_dir / ("attempt-" + sha256(attempt_id.encode()).hexdigest())
-        return BoardWorkbench(self.board, path, source=self.source, allow_run=True)
+        return BoardWorkbench(self.board, path, source=self.source, allow_run=True,
+                              execution_profile=self.execution_profile)
 
     @staticmethod
     def _workspace(workbench):
@@ -518,7 +531,10 @@ class BoardRefitHost:
             except (ValueError, TypeError, OverflowError, RecursionError) as exc:
                 raise BoardRefitRefusal("invalid_arguments") from exc
             try:
-                return detached(getattr(self, "_call_" + name.removeprefix("ncp_board_"))(arguments))
+                value = getattr(self, "_call_" + name.removeprefix("ncp_board_"))(arguments)
+                if self.execution_profile is not None:
+                    value["execution_profile"] = self.execution_profile.summary()
+                return detached(value)
             except BoardRefitRefusal:
                 raise
             except (ValueError, TypeError, KeyError, OverflowError) as exc:
@@ -598,7 +614,9 @@ class BoardRefitHost:
         try:
             workbench = self._workbench(attempt_id)
             workbench.baseline = self._baseline()["run"]
-            workbench.session = Session(self.source, workbench.output_dir / "session", operations=workbench.concrete.operations)
+            workbench.session = (Session(self.source, workbench.output_dir / "session", operations=workbench.concrete.operations)
+                                 if self.execution_profile is None else self.execution_profile.session(
+                                     workbench.output_dir / "session", workbench.concrete, self._baseline()["workspace"]))
             outcome = workbench.run_candidate(preview["request"], args["baseline_ref"])
             bundle = _record("candidate", attempt_id=attempt_id, investigation_ref=self.investigation_ref,
                              grant_ref=self._grant_ref, source_ref=self._source_ref, preview_ref=args["preview_ref"],

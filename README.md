@@ -52,7 +52,10 @@ The [Board refit profile](docs/BOARD_MCP_REFIT.md) exposes a complete bounded
 parameter-change journey: preview dependencies, validate, recompute under a
 host-selected grant, compare and retain an unreviewed candidate. It reuses the
 System Board, semantic compiler, Session and Needle. The first supported profile
-uses retained synthetic oscillator evidence; it does not grant physical control.
+uses retained synthetic oscillator evidence. The [GaugeLink profile](docs/GAUGELINK_MCP_REFIT.md)
+adds retained measurement uncertainty scenarios, preserves the original capture and
+reuses unchanged results. Both retain candidates for independent review and grant
+no physical control. [Implementation sequence](docs/NCP_GAUGELINK_IMPLEMENTATION.md).
 
 ## Quickstart
 
