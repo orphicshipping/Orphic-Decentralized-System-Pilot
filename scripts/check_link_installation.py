@@ -361,7 +361,7 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
         if args.with_installation:
             test_names.extend(["test_mount_characterization.py", "test_link_installation.py"])
         if args.with_engineering:
-            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py"])
+            test_names.extend(["test_engineering_thread.py", "test_engineering_continuity.py", "test_link_offline_environment.py", "test_link_qualification_dependencies.py", "test_link_qualification_artifacts.py", "test_ncp_next_actions.py"])
         for name in test_names:
             shutil.copyfile(source / "tests" / name, root / "tests" / name)
         shutil.copytree(source / "examples/device-link/native", root / "examples/device-link/native")
@@ -463,6 +463,34 @@ print(json.dumps({"package_files":len(expected),"package_root":str(root),"all_by
                 "prior_thread_ref": original["thread_ref"], "new_thread_ref": continued["thread_ref"],
                 "prior_execution_ids": recovered["execution_ids"], "new_execution_ids": continued["execution_ids"],
                 "status": continued["status"], "scope": continued["scope"]}
+        if args.with_engineering:
+            # Both executable names are installed entry points for the SAME
+            # dispatcher; compare exact read-only output, not normalized IDs.
+            aliases = """import importlib.metadata as m,json,pathlib,subprocess,sys
+entries={e.name:e for e in m.distribution('computational-instrumentation-workbench').entry_points if e.group=='console_scripts'}
+assert entries['ncp'].value==entries['net'].value=='ciw.net:main'
+assert entries['ncp'].load() is entries['net'].load()
+summary=json.loads(pathlib.Path('engineering-scalar/summary.json').read_bytes())
+reference=summary['review']['thread_ref']
+commands=[['link','catalog'],['production','engineering','inspect','engineering-scalar/execution','--profile','scalar','--thread-ref',reference],['production','engineering','next','engineering-scalar/execution','--profile','scalar','--thread-ref',reference]]
+for args in commands:
+    results=[]
+    for name in ('net','ncp'):
+        path=pathlib.Path(sys.executable).parent/name
+        p=subprocess.run([str(path),*args],capture_output=True,timeout=45)
+        results.append((p.returncode,p.stdout,p.stderr))
+    assert results[0]==results[1],args
+    assert results[0][0] in (0,2),results[0]
+print(json.dumps({'aliases':['net','ncp'],'same_dispatcher':True,'exact_scenarios':len(commands),'new_authority':False}))
+"""
+            summary["ncp_aliases"] = json.loads(execute("ncp-alias-equivalence", ["-I", "-c", aliases]))
+            follow_up = json.loads(execute("ncp-follow-up", ["-I", "-m", "ciw.net", "production", "engineering", "next",
+                "engineering-scalar/execution", "--profile", "scalar", "--thread-ref", original["thread_ref"],
+                "--output", "ncp-next-actions.json"]))
+            if (follow_up["counts"] != {"satisfied": 2, "failed": 0, "indeterminate": 5, "proposed": 5}
+                    or follow_up["authorizes_execution"] is not False or follow_up["scope"]["physical_qualification"] != "HELD"):
+                raise ValueError("Follow-up recommendation changed acceptance or authority")
+            summary["ncp_follow_up"] = {key: follow_up[key] for key in ("record_digest", "counts", "assessment_status", "scope")}
         execute("catalog", ["-I", "-m", "ciw.net", "catalog", "--audit", "--json"])
         execute("package-provenance-after", ["-I", "-c", probe])
         if json.loads(execute("installed-dependencies-after", ["-I", "-c", selection_probe])) != dependencies:

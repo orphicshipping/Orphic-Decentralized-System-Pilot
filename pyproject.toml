@@ -12,9 +12,9 @@ requires-python = ">=3.11"
 dependencies = ["numpy==2.4.3", "websockets==16.0"]
 
 [project.urls]
-Repository = "https://github.com/atomtrapping/Notations-Engineering-Terminal"
-Documentation = "https://github.com/atomtrapping/Notations-Engineering-Terminal/blob/main/docs/quickstart.md"
-Issues = "https://github.com/atomtrapping/Notations-Engineering-Terminal/issues"
+Repository = "https://github.com/atomtrapping/Notations-Control-Protocol"
+Documentation = "https://github.com/atomtrapping/Notations-Control-Protocol/blob/main/docs/quickstart.md"
+Issues = "https://github.com/atomtrapping/Notations-Control-Protocol/issues"
 
 [project.optional-dependencies]
 dev = ["pytest==9.0.2", "PyYAML==6.0.3"]
@@ -28,6 +28,7 @@ plsr = ["parameterized-lyapunov-stability-runtime @ git+https://github.com/atomt
 [project.scripts]
 ciw = "ciw.cli:main"
 net = "ciw.net:main"
+ncp = "ciw.net:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

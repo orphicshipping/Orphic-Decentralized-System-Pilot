@@ -237,6 +237,97 @@ def inspect_thread(directory, *, expected_thread_ref, host_profile):
             'scope': deepcopy(e.SCOPE)}
 
 
+
+# Bounded internal evidence guidance, not standards adjudication or provider discovery.
+_FOLLOW_UP_EVIDENCE = {
+    'reference_traceability': (
+        'Assemble applicable reference-chain evidence',
+        ['Identified reference and calibration records, with range, units and validity.',
+         'Applicability to the exact DUT, reference, configuration and installation.']),
+    'timing_qualification': (
+        'Assemble timing and phase evidence',
+        ['Timestamp-event definitions and measured clock, skew and drift evidence.',
+         'Applicable interval, sampling configuration and timing uncertainty.']),
+    'uncertainty_budget': (
+        'Assemble the measurement uncertainty budget',
+        ['Contribution definitions, units, covariance and propagation method.',
+         'Coverage convention and supporting measurement or validation evidence.']),
+    'independent_validation': (
+        'Assemble independent validation evidence',
+        ['Original independent reference observations and identified procedure.',
+         'Comparison against the unchanged acceptance criteria and applicability limits.']),
+    'product_safety_emc': (
+        'Assemble product-specific safety and EMC evidence',
+        ['Reviewed applicable requirements for the exact product configuration.',
+         'Applicable reports, test conditions, limitations and review authority.']),
+}
+
+
+def next_actions(directory, *, expected_thread_ref, host_profile):
+    """Propose bounded follow-up work from an existing validated investigation.
+
+    This is a read-only projection, not another execution graph or authority
+    token. It names unresolved evidence without pretending that an unavailable
+    importer, laboratory, solver or qualification decision has been supplied.
+    The existing reader freezes and validates the source once; no saved status
+    file or model-generated assertion determines the findings.
+    """
+    view = inspect_thread(directory, expected_thread_ref=expected_thread_ref, host_profile=host_profile)
+    actions = []
+    for finding in view['checks']:
+        state = finding['status']
+        if state == 'PASS':
+            continue
+        if state not in {'FAIL', 'INDETERMINATE'}:
+            raise ValueError('Unsupported finding status for an engineering follow-up')
+        check = finding['check']; policy = check['policy']; predicate = policy['predicate']
+        if (check['gate_id'] != e.GATE or policy['profile'] != host_profile
+                or policy['request_ref'] != view['request_ref']):
+            raise ValueError('Follow-up finding differs from the original evidence boundary')
+        if predicate in _FOLLOW_UP_EVIDENCE:
+            title, needed = _FOLLOW_UP_EVIDENCE[predicate]
+            kind, admission = 'ASSEMBLE_EMPIRICAL_EVIDENCE', 'QUALIFIED_IMPORTER_NOT_IMPLEMENTED'
+        else:
+            title = ('Review the numerical discrepancy' if state == 'FAIL'
+                     else 'Review source and analysis prerequisites')
+            needed = ['Original flagged, missing or discrepant records and applicable method.',
+                      'Reviewed explanation or new evidence; keep the acceptance basis unchanged.']
+            kind = 'REVIEW_NUMERICAL_DISCREPANCY' if state == 'FAIL' else 'REVIEW_ANALYSIS_PREREQUISITES'
+            admission = 'REVIEW_REQUIRED_BEFORE_RECOMPILATION'
+        finding_ref = c.content_identity(finding)
+        points = []
+        if predicate == 'sampled_points' and type(finding['detail']) is dict:
+            points = [{'frequency_hz': row['frequency_hz'], 'status': row['status']}
+                      for row in finding['detail'].get('sampled_points', []) if row['status'] != 'PASS']
+        action = {
+            'requirement_id': check['check_id'], 'predicate': predicate, 'finding_status': state,
+            'finding_ref': finding_ref, 'source_result_id': finding['source_result_id'],
+            'source_record_digest': finding['source_record_digest'], 'action_kind': kind,
+            'title': title, 'required_evidence': list(needed), 'sampled_points_to_review': points,
+            'cause_identified': False, 'requested_capability': None, 'executable': False,
+            'admission_status': admission}
+        action['action_id'] = c.content_identity({'thread_ref': expected_thread_ref, 'action': action})
+        actions.append(action)
+    observations = view['workflow_observations']
+    return seal({
+        'schema': 'ciw.engineering-next-actions.v1', 'status': 'FOLLOW_UP_PROPOSED_NOT_AUTHORIZED',
+        'assessment_status': view['status'],
+        'method': {'id': 'ciw.engineering-next-actions.v1',
+                   'source_ref': c.bytes_ref(Path(__file__).read_bytes().replace(b'\r\n', b'\n')),
+                   'selection': 'unmet_existing_predicates_not_optimization_or_causal_inference'},
+        'basis': {key: deepcopy(view[key]) for key in ('thread_ref', 'compiled_ref', 'intent_ref',
+            'request_ref', 'intent_id', 'revision', 'profile', 'evidence_id', 'session_id',
+            'execution_ids', 'result_ids')},
+        'counts': {'satisfied': observations['requirements_passed'],
+                   'failed': observations['requirements_failed'],
+                   'indeterminate': observations['requirements_unresolved'], 'proposed': len(actions)},
+        'actions': actions, 'order_basis': 'original_check_order_not_cost_or_safety_priority',
+        'metrics': {'estimated_cost': None, 'expected_information_gain': None},
+        'execution_plan_generated': False, 'authorizes_execution': False, 'automatic_retry': False,
+        'new_scientific_executions': 0, 'active_authority_restored': False,
+        'scope': deepcopy(e.SCOPE)})
+
+
 def revise(directory, intent_raw, request_raw, output, *, expected_thread_ref, host_profile, reason):
     """Recompile a proposed next work order; never resume or erase old history."""
     c.text(reason, maximum=1024)
@@ -333,17 +424,18 @@ def demo(output, *, host_profile):
 def main(argv=None):
     parser = argparse.ArgumentParser(prog='net production engineering', description=__doc__)
     sub = parser.add_subparsers(dest='command', required=True)
-    for cmd in ('demo', 'example', 'compile', 'run', 'inspect', 'report', 'revise', 'restore'):
+    for cmd in ('demo', 'example', 'compile', 'run', 'inspect', 'report', 'revise', 'restore', 'next'):
         p = sub.add_parser(cmd); p.add_argument('--profile', choices=e.PROFILES, required=True)
         if cmd in {'demo', 'compile', 'run', 'revise', 'restore'}: p.add_argument('--output-dir', type=Path, required=True)
         if cmd in {'example', 'report'}: p.add_argument('--output', type=Path, required=True)
+        if cmd == 'next': p.add_argument('--output', type=Path, help='Optional new review file outside the original thread')
         if cmd == 'example': p.add_argument('--request-ref', required=True)
         if cmd in {'compile', 'revise'}:
             p.add_argument('--intent', type=Path, required=True); p.add_argument('--request', type=Path, required=True)
-        if cmd in {'run', 'inspect', 'report', 'revise', 'restore'}:
+        if cmd in {'run', 'inspect', 'report', 'revise', 'restore', 'next'}:
             p.add_argument('directory', type=Path)
         if cmd == 'run': p.add_argument('--compiled-ref', required=True); p.add_argument('--allow-compute', action='store_true')
-        if cmd in {'inspect', 'report', 'revise', 'restore'}: p.add_argument('--thread-ref', required=True)
+        if cmd in {'inspect', 'report', 'revise', 'restore', 'next'}: p.add_argument('--thread-ref', required=True)
         if cmd == 'revise': p.add_argument('--reason', required=True)
         if cmd == 'run': p.add_argument('--predecessor', type=Path, help='Host-selected immediate predecessor; required for continued revisions')
     a = parser.parse_args(argv)
@@ -361,6 +453,11 @@ def main(argv=None):
         elif a.command == 'run': result = run_packet(a.directory, a.output_dir, expected_compiled_ref=a.compiled_ref,
                                                      host_profile=a.profile, allow_compute=a.allow_compute, predecessor=a.predecessor)
         elif a.command == 'restore': result = restore_thread(a.directory, a.output_dir, expected_thread_ref=a.thread_ref, host_profile=a.profile)
+        elif a.command == 'next':
+            if a.output is not None and safe_path(a.output).resolve().is_relative_to(safe_path(a.directory).resolve()):
+                raise ValueError('Follow-up output must remain outside the original retained thread')
+            result = next_actions(a.directory, expected_thread_ref=a.thread_ref, host_profile=a.profile)
+            if a.output is not None: save_new(safe_path(a.output), result)
         elif a.command == 'inspect': result = inspect_thread(a.directory, expected_thread_ref=a.thread_ref, host_profile=a.profile)
         else: result = report(a.directory, a.output, expected_thread_ref=a.thread_ref, host_profile=a.profile)
         print(json.dumps(result, indent=2, allow_nan=False))
