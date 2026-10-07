@@ -1,36 +1,101 @@
-# Notations Engineering Terminal
+# Notations Control Protocol
 
-**A programmable engineering workbench that connects measurements, models and execution in reproducible investigations.**
+Scientific computing, measurement context, and reproducible engineering investigations.
 
 Developed by **Notation Systems Inc.**
 
-[Quickstart](#quickstart) · [Operator manual](docs/OPERATOR_MANUAL.md) · [Architecture](docs/SYSTEM_ARCHITECTURE.md) · [Instruments](docs/INSTRUMENTS.md) · [Development](docs/DEVELOPMENT.md)
+[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Documentation](#documentation-and-development)
 
-## From a calculation to an engineering record
+<a id="from-a-calculation-to-an-engineering-record"></a>
 
-Engineering work rarely ends with a number. A useful result needs its source data, model assumptions, units, uncertainty, software version and the checks that support it. Those details are easily lost as work moves between scripts, solvers, instruments and reports.
+## Purpose and scope
 
-**Notations Engineering Terminal (NET)** brings them into a retained investigation. Engineers can run supported computational instruments, compose compatible operations, compare alternatives and inspect how a result was produced. Inputs, execution records, results and scoped checks stay connected, including accepted execution refusals and failed candidates. Reopening an investigation reads its history; replay creates a new execution.
+**Notations Control Protocol (NCP)** is a software framework and engineering workbench for composing supported computational operations, retaining their inputs and results, and examining the evidence behind an engineering conclusion. It continues the project previously named **Notations Engineering Terminal (NET)**.
 
-Our near-term application focus is **polymer microfabrication and discrete manufacturing**. NET supplies the broader evidence, execution and instrumentation foundation for that work. Today's polymer profiles cover bounded injection-molding and extrusion-blow-molding studies; microfabrication-specific models and installed machine interfaces require their own implementation and qualification.
+The unit of work is a retained investigation: a question, source records, declared context, selected methods, execution occurrences, results, and separately scoped checks. Specialist instruments retain responsibility for their numerical methods and applicability. NCP provides the common execution and review environment; it is not a universal physical model, a certification service, or an unrestricted equipment controller.
 
-NET is useful when a calculation must survive review, revision or a handoff to another engineer. Its common operating loop is:
+The application focus includes polymer processing, component development, instrumentation, and discrete manufacturing. The same substrate supports bounded thermal, mechanical, geometric, atmospheric, and interactive-system investigations. A component specification, simulated response, indicated measurement, and approved manufacturing decision remain different objects.
 
-**Define the question → retain inputs → run a supported model → inspect and compare → revise → check.**
+## Implementation status and naming
 
-## Why use NET?
+**Repository review: 7 October 2026.** The following references distinguish the default-branch implementation from development work. They are source references, not a new qualification report.
 
-- **Keep the engineering context.** Supported contracts retain quantity meaning, units, frames, clocks, calibration references, uncertainty and source dependencies alongside results.
-- **Use specialist tools through explicit interfaces.** Built-in instruments and pinned external providers share an investigation workflow while retaining their own algorithms and applicability limits.
-- **Make iteration reviewable.** Save, reopen, compare and explicitly replay work without replacing the record of earlier attempts. Distinct evidence, execution, result and verification identities make those actions inspectable.
-- **Compose repeatable workflows.** Typed graphs check declared interfaces. Bounded work orders retain acceptance checks and block dependent stages when prerequisites fail or remain indeterminate.
-- **Give automation a defined scope.** Command-line, Python and supported MCP clients use registered operations and operator-supplied bindings. An agent's request does not create new execution or equipment-control authority.
+| Reference | Scope |
+| --- | --- |
+| [`main` baseline `0374076`](https://github.com/atomtrapping/Notations-Control-Protocol/commit/0374076695475669188d61698e4656ced2263e01) | Local workbench, registered computational workflows, retained investigations, explicit replay, and selected MCP profiles. The installed commands are `net` and `ciw`. |
+| [Draft PR #219](https://github.com/atomtrapping/Notations-Control-Protocol/pull/219), reviewed head `26ffb9c` | Engineering-intent compilation, retained findings, evidence-driven follow-up, and supporting-evidence work on its declared dependency chain. These increments are not included in the default-branch quickstart below. |
+| [NCP continuity note at the reviewed development revision](https://github.com/atomtrapping/Notations-Control-Protocol/blob/26ffb9c06dec36c2357300b581fff7f415a1d1a0/docs/NCP_CONTINUITY_AND_FOLLOW_UP.md) | Adds `ncp` as an alias of the existing `net` implementation while retaining package paths, schemas, and historical records. The alias is not present in the reviewed `main` package metadata. |
 
-NET is an actively developed research and engineering platform. The core local workflow is executable today; specialist providers have profile-specific setup and validation requirements. The [integration matrix](docs/INTEGRATION_COVERAGE.md) records those boundaries.
+The distribution remains `computational-instrumentation-workbench`; the Python package remains `ciw`. Existing guides and commands may therefore use NET terminology. A project-name change does not migrate stored records, change a wire protocol, or grant additional authority.
 
-## Quickstart
+Read the [integration inventory](docs/INTEGRATION_COVERAGE.md) by its stated revision and evidence category. Source implementation, a configured test workflow, an executed test, a qualified installation, and a released product are not interchangeable status claims.
 
-Use **Python 3.11 or newer** from the repository root. On Linux or macOS:
+<a id="how-the-system-fits-together"></a>
+<a id="why-use-net"></a>
+
+## System design
+
+```text
+Source records + engineering context
+                 |
+                 v
+Typed contracts + explicit runtime bindings
+                 |
+                 v
+Session / registered operations
+        |                    |
+        v                    v
+Built-in instruments   Optional specialist providers
+        |                    |
+        +---------+----------+
+                  v
+Retained inputs / results / refusals / dependencies
+                  |
+                  v
+Inspection / comparison / scoped checks / reports
+                  |
+                  +--> Explicit replay: a new execution occurrence
+```
+
+| Responsibility | Design boundary |
+| --- | --- |
+| **Evidence and context** | Retain source material and declared quantity, unit, frame, clock, calibration, uncertainty, and procedure information where supported by the selected contract. Preserve missing information rather than filling it with assumed precision. |
+| **Composition and execution** | Check declared interfaces and dependencies; dispatch registered operations through operator-supplied runtime bindings. Saved workspace content does not supply execution authority. |
+| **Scientific instruments** | Own algorithms, parameters, validity domains, uncertainty treatment, and reference comparisons. An interface match does not establish physical compatibility or model validity. |
+| **Retention and review** | Preserve original inputs, outcomes, failed candidates, and lineage. Reopening reads retained history; explicit replay creates new execution and result occurrences. |
+| **Clients and views** | CLI, Python, local service, and supported MCP profiles expose existing operations or retained state. A report, visualization, or agent explanation is a view of the record, not its replacement. |
+
+Evidence, operation, execution, result, and verification identities remain distinct. Numerical verification, source integrity, empirical validation, and permission to act have separate meanings. A content hash can identify retained bytes; it does not establish the physical origin or accuracy of a measurement.
+
+<a id="mathematical-foundations-and-optional-proofs"></a>
+
+The mathematical structure includes typed serial/parallel composition, covariance transport in supported profiles, declared invariant checks, and exact finite representation-preservation tests. These mechanisms have bounded domains; they do not generate constitutive laws or establish predictive accuracy by themselves. See [research foundations](docs/RESEARCH_FOUNDATIONS.md) and [model validity and evidence](docs/MODEL_VALIDITY_AND_EVIDENCE.md).
+
+<a id="other-supported-starting-points"></a>
+
+## Scientific and industrial workflows
+
+| Work area | Implemented scope and entry point |
+| --- | --- |
+| Recording analysis | Statistics, spectra, explicit selections, and retained results: [recording workflow](docs/quickstart.md#analyze-a-retained-recording). |
+| Measurement processing | Declared calibration and full joint covariance in selected profiles: [covariance](docs/COVARIANCE.md) and [temperature-processing profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile). |
+| Thermal and mechanical studies | Bounded state estimation, held-out reference comparisons, and selected mechanical, fluid, thermal, and atmospheric examples: [recorded thermal workflow](docs/MEASURED_THERMAL.md) and [domain examples](docs/DOMAIN_EXAMPLES.md). |
+| Polymer processing | Injection-molding and extrusion-blow-molding profiles with retained features, part tolerances, bounded reference calculations, and separate arithmetic review: [polymer guide](docs/POLYMER_PROCESSING.md). Microfabrication-specific models and installed-machine interfaces require separate implementation and qualification. |
+| Workflow composition | Typed dependencies and bounded acceptance/repair stages: [workflow algebra](docs/WORKFLOW_ALGEBRA.md) and [work orders](docs/NET_PRODUCTION.md). |
+| Representation and geometry | Exact finite probability/intervention checks, retained counterexamples, and selected geometry/BIM workflows: [finite preservation](docs/FINITE_REPRESENTATION_PRESERVATION.md) and [instrument catalogue](docs/INSTRUMENTS.md). |
+| Equipment and interactive systems | Refurbishment records, explicit release review, and selected engine-specific views: [refurbishment operations](docs/REFURBISHMENT_OPERATIONS.md) and [interactive simulation](docs/INTERACTIVE_SIMULATION.md). |
+
+Optional providers require the exact runtimes and dependencies specified by their guides. The core installation does not qualify every provider or supply every device interface. For example, the recorded-thermal estimator retains input uncertainty but does not propagate it through that kernel; uncertainty handling must be checked at the operation level.
+
+An optional [registered heat profile](docs/PROVED_HEAT.md) connects to the Scientific Computation Runtime and SP1 for a bounded integer calculation. Its proof concerns the registered computation and commitments, not physical calibration or the validity of an arbitrary heat model. Reading a saved proof report is not a fresh verifier execution. The retained profile makes no privacy claim.
+
+## Local evaluation
+
+<a id="quickstart"></a>
+
+### Install and exercise the core
+
+Use Python 3.11 or newer from the repository root. On Linux or macOS:
 
 ```sh
 python3 -m venv .venv
@@ -42,21 +107,21 @@ net catalog
 net start --output-dir results/first-use-001
 ```
 
-For Windows setup, see the [platform-specific quickstart](docs/quickstart.md#install).
+Windows instructions are in the [platform quickstart](docs/quickstart.md#install).
 
-- `doctor` checks installed package and dependency metadata.
-- `catalog` lists command surfaces and provider requirements without running them.
-- `start` runs bounded synthetic oscillator, thermal-observer and atmospheric workflows, including retained-record inspection and a thermal replay.
+`doctor` checks installed package/dependency metadata. `catalog` lists command surfaces and provider requirements without executing them. `start` executes bounded **synthetic** oscillator, thermal-observer, and atmospheric workflows, including retained inspection and a thermal replay.
 
-Read `results/first-use-001/readiness.json` for the named checks and artifact paths. Use a fresh output directory for each run. The receipt establishes what that installation exercised; it is separate from external-provider or physical qualification.
+Inspect `results/first-use-001/readiness.json` for the actual checks and output locations. Use a new output directory for each run. A successful first-use receipt covers that installation and those checks; it is not external-provider or physical qualification. Retain installation failures and dependency mismatches rather than relaxing pins and reporting the result as an unchanged qualified environment.
 
-### Keep a local investigation open
+<a id="keep-a-local-investigation-open"></a>
+
+### Persistent workbench
 
 ```sh
 net workbench --output-dir results/workbench
 ```
 
-Leave the service running, then use a second terminal with the same environment activated:
+In a second terminal with the same environment activated:
 
 ```sh
 ciw health
@@ -66,13 +131,11 @@ ciw send result.list
 ciw send workspace.save
 ```
 
-`analysis.stats` creates a new result. Save before stopping the service with Ctrl+C. Restarting the workbench reopens saved state without rerunning its numerical operations. The service binds to loopback by default.
+`analysis.stats` creates a new result. Save before stopping the service with Ctrl+C. Restarting reopens saved state without rerunning its numerical operations. The default service binds to loopback; this example does not establish a remote or multi-user deployment.
 
-The distribution is `computational-instrumentation-workbench`, the Python package is `ciw`, and the command-line entry points are `net` and `ciw`. The root install supplies the workbench; optional engines and imported instruments retain separate runtime requirements. See [installed tools](docs/RUN_NET.md) and [operator readiness](docs/OPERATOR_READINESS.md).
+<a id="explore-a-manufacturing-workflow"></a>
 
-## Explore a manufacturing workflow
-
-The polymer instrument connects retained sensor features, declared part tolerances, engineering reference calculations and a separate numerical audit. A synthetic example is available without external providers:
+### Polymer investigation
 
 ```sh
 net polymer demo --process injection_molding --output-dir results/polymer-demo-001
@@ -81,85 +144,59 @@ net polymer verify results/polymer-demo-001 --output results/polymer-audit-001.j
 net polymer replay results/polymer-demo-001 --output-dir results/polymer-replay-001 --summary
 ```
 
-Open `results/polymer-demo-001/report/report.html` to review the retained report. The example deliberately includes a nonconforming dimension: a completed workflow and a passing numerical audit can correctly retain a failed part-tolerance decision. Replay creates new occurrence identities while preserving the original run.
+Review `results/polymer-demo-001/report/report.html`. This synthetic example deliberately includes a nonconforming dimension. A completed workflow and passing arithmetic audit can therefore coexist with a failed nominal tolerance comparison. Neither the example nor its replay constitutes a physical experiment, process qualification, or part-release authorization.
 
-The current profiles support injection molding and extrusion blow molding, bounded cooling and pressure-arrival estimates, quantitative sensor-feature ingress and toy-plant control simulation. They prepare a deterministic copilot context; they do not establish automated root-cause diagnosis, live camera processing or machine actuation. Use the [polymer guide](docs/POLYMER_PROCESSING.md) for inputs, native calibration import, applicability and the installed qualification gate. [Fluid and material leakage accounting](docs/leakage.md) is a separate pinned-provider workflow.
+<a id="status-and-operating-boundaries"></a>
 
-### Other supported starting points
+## Technical assessment
 
-| Engineering task | Available workflow | Operating guide |
-| --- | --- | --- |
-| Analyze a recording | Statistics, spectra, explicit selections and retained analysis results | [Recording quickstart](docs/quickstart.md#analyze-a-retained-recording) |
-| Study a measurement chain | Declared calibration, full joint covariance in supported profiles, and separate temperature-processing audits | [Covariance](docs/COVARIANCE.md), [temperature processing](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile) |
-| Estimate thermal state | Bounded estimation from calibrated recordings with a held-out reference | [Measured thermal](docs/MEASURED_THERMAL.md) |
-| Compare physical-model behavior | Bounded oscillator, impact, fluid, thermal and atmospheric examples | [Domain examples](docs/DOMAIN_EXAMPLES.md), [numerical comparisons](docs/EXTERNAL_NUMERICAL_COMPARISONS.md) |
-| Organize repeatable execution | Typed workflow composition, explicit dependencies and bounded acceptance/repair stages | [Workflow algebra](docs/WORKFLOW_ALGEBRA.md), [work orders](docs/NET_PRODUCTION.md) |
-| Test a reduced representation | Exact finite probability and intervention-preservation checks with retained counterexamples | [Finite preservation](docs/FINITE_REPRESENTATION_PRESERVATION.md) |
-| Review hardware refurbishment | Asset histories, bench-data imports, repairs, costs and explicit release-review records | [Refurbishment operations](docs/REFURBISHMENT_OPERATIONS.md) |
-| Inspect spatial and interactive systems | Selected geometry, BIM and engine-specific views and workflows | [Interactive simulation](docs/INTERACTIVE_SIMULATION.md), [instrument catalogue](docs/INSTRUMENTS.md) |
+This repository provides implementation and investigation records for technical review. It does not assert product certification, accredited calibration, standards conformity, or fitness for an unspecified industrial application.
 
-Each guide identifies the executable contract, required environment and remaining validation work. Availability in source does not by itself qualify a provider or installation for an engineering decision.
+For an institutional evaluation or proposed industrial integration, define the assessment around an exact configuration and engineering question:
 
-## How the system fits together
+| Assessment object | Information to establish |
+| --- | --- |
+| **Intended use** | User, environment, measurand or engineering objective, decision to be supported, and excluded uses. |
+| **Configuration** | Repository revision, installed artifact, dependency closure, selected providers, inputs, and any connected hardware/firmware/interface revisions. |
+| **Measurement chain** | Instrument and reference identities, calibration evidence, timing/frame semantics, procedure, operating conditions, and an appropriate uncertainty budget. |
+| **Computational method** | Model version, assumptions, applicability, tolerances, independent reference checks, and handling of missing or out-of-domain inputs. |
+| **Acceptance and authority** | Predeclared decision rules, responsible reviewer, required evidence, and separate authorization for execution or release. |
+| **Reproducibility and custody** | Original records, retention/replay behavior, access controls, permitted disclosure, and the evidence needed to detect or investigate substitutions. |
 
-```mermaid
-flowchart TD
-    Client["CLI / Python / supported MCP clients"] --> Contracts["Inputs, typed contracts and explicit bindings"]
-    Contracts --> Session["Session and registered execution"]
-    Session --> Builtin["Built-in instruments"]
-    Session --> Provider["Optional pinned specialist providers"]
-    Builtin --> Records["Retained results, refusals and dependencies"]
-    Provider --> Records
-    Records --> Review["Inspect / compare / supported views"]
-    Records --> Checks["Profile-specific checks and verification records"]
-    Records --> Replay["Explicit replay"]
-    Replay --> Session
-```
+A numerical check answers its specified computational question. Metrological traceability and physical validity require evidence about the measurement chain. Product safety and EMC assessment require their own supplied-product definition and test evidence. Internal readiness predicates or uploaded documents are not an exhaustive normative assessment and do not automatically discharge those obligations.
 
-- **Contracts and composition** describe state, transformations, quantity meaning and compatible interfaces. The mathematical organizing principle is state, permitted change and preserved structure.
-- **Session and execution** select registered operations, capture their dependencies and retain execution outcomes. Runtime bindings come from the operator rather than from saved workspace content.
-- **Instruments and providers** own numerical algorithms, model assumptions, validity domains and runtime requirements. The monorepo co-locates imported public modules while preserving their package identities and licences.
-- **Evidence and checks** make lineage, comparisons and scoped validation inspectable. A content hash identifies bytes; an independent check must establish its own stated property.
-- **Clients and views** expose the retained investigation through terminal, local service and selected visualization/agent interfaces. A rendering or agent response does not replace the underlying scientific record.
+Use the [model-validity guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md), [operator-readiness guide](docs/OPERATOR_READINESS.md), [capability ledger](release/capability-ledger.json), and [release-qualification guide](docs/QUALIFIED_RELEASE.md) to identify the relevant records and unresolved gates. Check every receipt against its recorded revision, environment, inputs, and observation method.
 
-NET is the public engineering workbench in the wider Notation Systems stack. Acquisition, canonical evidence admission, deployment policy and equipment interfaces retain separate responsibilities. The [stack map](docs/STACK.md), [architecture diagrams](docs/SYSTEM_ARCHITECTURE.md) and [protocol](docs/PROTOCOL.md) describe implemented connections and extension points.
+## Integration
 
-### Mathematical foundations and optional proofs
+### Instruments and GaugeLink
 
-NET makes selected mathematical ideas operational: typed serial/parallel composition, ordered covariance transport, declared invariant checks and exact finite representation-preservation tests. Each implementation has a stated domain. The [research foundations](docs/RESEARCH_FOUNDATIONS.md) distinguish established mathematics, architectural adaptations and project hypotheses.
+[Notations GaugeLink](https://github.com/atomtrapping/Notations-GaugeLink) provides instrument-specific acquisition and product workflows over the shared Link development path. NCP owns the downstream engineering environment and registered scientific operations. Review the GaugeLink and NCP dependency revisions together; a successful test in either repository does not establish the combined installation.
 
-For independently checkable computation, the optional [registered heat profile](docs/PROVED_HEAT.md) integrates the Scientific Computation Runtime with SP1. It binds a bounded integer calculation to the expected program and input/output commitments, then invokes a separate verifier. Proving requires the documented backend and guest setup; it is not part of the core quickstart.
+Adapters must preserve original source records and their declared semantics. Unit/frame changes, correction, filtering, and inference belong to explicit operations with their own inputs and results. Transport identity, measurement identity, and computation occurrences must not be conflated. Use the existing contracts instead of introducing a parallel measurement store or execution engine.
 
-A verified computation supports the registered program's claim under its assumptions. Calibration, physical model validity and permission to operate equipment require separate evidence. Reading a saved proof report performs no fresh verification. The retained heat profile exposes its inputs and outputs and makes no privacy claim; additional checker preparation is not automatically proof coverage.
+### Agent and application access
 
-## Status and operating boundaries
+MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The default-branch adapter is a bounded local stdio implementation over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
 
-NET currently supports bounded research and engineering workflows with local persistence, explicit replay and retained failure history. Its scope is documented per instrument and integration:
+An agent request does not grant permission to execute a provider, contact a device, change a calibration, approve a part, or disclose evidence. Tool descriptions and model responses do not replace enforcement at the owning runtime boundary. Test the actual client, transport, and installed implementation used by the integration; a handler test does not establish compatibility with every host.
 
-- **Numerical evidence:** Reference comparisons and audits cover stated inputs, models and tolerances. They do not establish accuracy outside the exercised domain.
-- **Measurement evidence:** Unknown uncertainty remains unknown. Calibration declarations, numerical consistency, operational acceptance and installed-chain qualification are separate records and decisions.
-- **Provider readiness:** Optional tools require their documented source/runtime pins and setup. Missing or incompatible bindings refuse execution. Planned integrations and draft work are not shipped capability claims.
-- **Deployment:** The default service is local. Remote authentication, multi-user operation, hard real-time control and physical equipment interfaces require separate implementation and qualification.
-- **Information handling:** Retained workspaces, reports and exports can contain source inputs and outputs. Review their contents and the selected provider's data boundary before sharing or deploying them; retention and proof features are not confidentiality guarantees.
+### Data handling and deployment
 
-See [model validity and evidence](docs/MODEL_VALIDITY_AND_EVIDENCE.md), [integration coverage](docs/INTEGRATION_COVERAGE.md), the [capability ledger](release/capability-ledger.json) and [release qualification](docs/QUALIFIED_RELEASE.md) for detailed status. Demonstration results are labeled synthetic, and software checks alone do not qualify a factory process or authorize equipment release.
+Retained workspaces and exports may contain original inputs and outputs. Review content, access permissions, provider boundaries, and disclosure rights before sharing. Retention and computation-proof features do not provide confidentiality by themselves. Only process third-party or standards material under permissions appropriate to the intended use; ordinary access must not be assumed to permit AI ingestion or redistribution.
+
+Remote authentication, multi-user operation, hard real-time guarantees, and physical equipment control are outside the default local workflow and require separate implementation and qualification. The [architecture](docs/SYSTEM_ARCHITECTURE.md), [execution responsibilities](docs/EXECUTION_RESPONSIBILITIES.md), and [stack map](docs/STACK.md) describe the broader boundaries.
 
 ## Documentation and development
 
-- [Operator manual](docs/OPERATOR_MANUAL.md): end-to-end use and command selection
-- [Instrument catalogue](docs/INSTRUMENTS.md): available numerical and domain workflows
-- [Architecture](docs/ARCHITECTURE.md) and [execution responsibilities](docs/EXECUTION_RESPONSIBILITIES.md): implementation boundaries
-- [Agent protocol](docs/NET_AGENT_PROTOCOL.md): supported MCP profiles and grants
-- [Development guide](docs/DEVELOPMENT.md): tests, provider qualification and contribution requirements
-- [Monorepo guide](docs/MONOREPO.md) and [module manifest](instruments/manifest.json): imported packages, history and licences
-- [Technical reference](TECHNICAL_REFERENCE.md): earlier reference material; operation-specific guides own later additions
+The [operator manual](docs/OPERATOR_MANUAL.md) covers end-to-end use. The [instrument catalogue](docs/INSTRUMENTS.md) and [integration inventory](docs/INTEGRATION_COVERAGE.md) organize workflows and their limits. The [development guide](docs/DEVELOPMENT.md) covers testing and provider qualification; the [monorepo guide](docs/MONOREPO.md) and [module manifest](instruments/manifest.json) identify imported packages and provenance. [Technical reference](TECHNICAL_REFERENCE.md) preserves earlier material; operation-specific guides own subsequent additions.
 
-Contributions should close a concrete investigation: identify its question, inputs, provider bindings, independent checks, save/reopen/replay behavior and unresolved gates. Preserve existing numerical engines, identity boundaries and retained history. Use the [issue tracker](https://github.com/atomtrapping/Notations-Engineering-Terminal/issues) for reproducible problems and scoped proposals.
+An implementation contribution should identify its engineering question, inputs, owned interfaces, independent checks, and save/reopen/replay behavior. Preserve existing numerical engines and identity boundaries. Document what changed, what was executed, and which claims remain unverified. Report reproducible defects and scoped proposals through the [issue tracker](https://github.com/atomtrapping/Notations-Control-Protocol/issues).
 
 ## Organization and licence
 
-NET is developed by **[Notation Systems Inc.](https://notation.systems)** as shared infrastructure for scientific computing, systems engineering, manufacturing and interactive environments.
+NCP is developed by **[Notation Systems Inc.](https://notation.systems)** as shared infrastructure for scientific computing, systems engineering, manufacturing and interactive environments.
 
 **© 2026 Giason Pooni, for original contributions.** The root code follows the existing [LICENSE](LICENSE) and [platform licensing policy](docs/LICENSING.md). Imported modules retain their own licences and upstream notices. Project-owned original assets follow the [asset permission policy](docs/licensing/ORIGINAL_ASSETS.md).
 
-Repository publication does not change those terms or confer evidence, signing or execution authority. An imported-component inventory does not establish clearance for a combined distribution; see the [distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source).
+Repository access or publication does not change those terms or confer evidence, signing or execution authority. An imported-component inventory does not establish clearance for a combined distribution; see the [distribution and network-source policy](docs/LICENSING.md#distribution-and-network-source).
