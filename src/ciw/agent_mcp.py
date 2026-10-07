@@ -188,8 +188,11 @@ def _profile(path: Path) -> tuple[Path, dict]:
     return path, value
 
 
-def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False) -> AgentHost:
+def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False,
+                 read_only: bool = False) -> AgentHost:
     """Only the operator's launch command selects this file; not an MCP tool."""
+    if read_only and (instrument != "builtin" or leakage_backend is not None or resume):
+        raise ValueError("Corpus inspection requires a read-only builtin host without resume")
     if type(instrument) is not str or instrument not in INSTRUMENTS:
         raise ValueError("Require a fixed operator-selected instrument")
     if instrument == "leakage":
@@ -199,6 +202,11 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     elif leakage_backend is not None:
         raise ValueError("Native leakage backend requires the explicit leakage instrument selector")
     path, value = _profile(path)
+    # Check the same frozen profile that will be loaded, before input/provider/output work.
+    if read_only and (value["output_dir"] is not None or value["allow_operations"] != []
+                      or value["candidate_domains"] != {} or value["comparisons"] != {}
+                      or value["check_suites"] != {}):
+        raise ValueError("Corpus inspection requires a read-only profile: no output, grants or policies")
     inputs, retained = {}, {}
     total = 0
     for alias, location in value["inputs"].items():
@@ -247,6 +255,10 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
                 _leakage_graph(artifact, registry)
     else:
         registry = builtin_registry(bind=bool(value["allow_operations"]))
+        if read_only:
+            # Fixed trusted offline readers for retained Link results; no operation bindings.
+            from .link_study import register as register_link_readers
+            register_link_readers()
     return host_class(registry=registry, inputs=inputs,
         output_dir=None if output is None else path.parent / output,
         allow_operations=tuple(value["allow_operations"]), candidate_domains=value["candidate_domains"],
@@ -393,6 +405,10 @@ def main(argv: list[str] | None = None) -> int:
     subs = parser.add_subparsers(dest="command", required=True)
     command = subs.add_parser("serve", help="Serve operator-bound NET tools over local MCP stdio")
     command.add_argument("--profile", type=Path, required=True)
+    command.add_argument("--corpus-bundle", type=Path,
+                         help="Add frozen selected-corpus inspection to a read-only builtin profile")
+    command.add_argument("--corpus-ref",
+                         help="Independently retained sha256 catalog reference; paired with --corpus-bundle")
     command.add_argument("--resume", action="store_true",
                          help="Resume the exact bound profile and retained attempts after restart")
     command.add_argument("--instrument", choices=INSTRUMENTS, default="builtin",
@@ -434,6 +450,13 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "measured-thermal-config":
             print(measured_thermal_config(args.output_dir, args.source))
             return 0
+        combined_corpus = args.corpus_bundle is not None or args.corpus_ref is not None
+        if combined_corpus:
+            if args.corpus_bundle is None or args.corpus_ref is None:
+                raise ValueError("Corpus launch requires both --corpus-bundle and --corpus-ref")
+            if (args.instrument != "builtin" or args.resume or args.provider_checkout is not None
+                    or args.python is not None):
+                raise ValueError("Corpus launch requires builtin inspection without native flags or resume")
         leakage_backend = None
         if args.instrument == "leakage":
             if args.provider_checkout is None or not args.provider_checkout.is_absolute():
@@ -451,8 +474,12 @@ def main(argv: list[str] | None = None) -> int:
             if args.instrument == "leakage":
                 from .leakage_native import NativeLeakageBackend
                 leakage_backend = NativeLeakageBackend(args.provider_checkout, python=args.python)
-            host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
-                                resume=args.resume)
+            if combined_corpus:
+                from .corpus_agent import combined_from_profile
+                host = combined_from_profile(args.profile, args.corpus_bundle, expected_ref=args.corpus_ref)
+            else:
+                host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
+                                    resume=args.resume)
             try:
                 return serve(host, sys.stdin.buffer, wire)
             finally:

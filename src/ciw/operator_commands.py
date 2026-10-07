@@ -6,6 +6,8 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('agent', 'agent_mcp', 'Serve explicitly bound NCP tools through local MCP stdio'),
+    ('corpus', 'corpus_agent', 'Inspect hash-pinned Proto-Corpus metadata, internal source spans and reported fields'),
     ('link', 'link_cli', 'Retain device records, local outbox delivery and native observation projections'),
     ('connectivity', 'connectivity_cli', 'Retain Open5GS/free5GC aggregate metrics and declared handheld transport context'),
     ('refurb', 'refurbishment_cli', 'Track assets, repair work, release reviews and customer service records'),
