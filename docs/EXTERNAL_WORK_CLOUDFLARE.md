@@ -75,6 +75,35 @@ python -m ciw.external_work_http --config C:/service-owned/ncp/cloudflare-config
 The optional Windows helper prompts locally for the tunnel token with hidden input
 and supplies it only to the tunnel child environment:
 
+Before starting anything, its dependency-free check can inspect local prerequisites:
+
+```powershell
+python examples/external-work/start_cloudflare.py `
+  --check `
+  --config C:/service-owned/ncp/cloudflare-config.json `
+  --cloudflared C:/service-owned/ncp/tools/cloudflared.exe `
+  --cloudflared-sha256 OPERATOR_VERIFIED_SHA256
+```
+
+This prints a sanitized JSON report and exits 2 when blocked or 0 when the checked
+prerequisites are ready. It verifies the exact base/`external-work` package pins,
+bounded configuration and nonempty subject mappings, provisioned/enabled local
+principal roles, SQLite schema/integrity, and the operator-supplied binary hash.
+It performs no gateway import, network request, token prompt, process startup,
+database initialization, log creation or configuration write. It does not install
+missing dependencies. A dependency-pin blocker is not an executed application-test
+failure.
+
+The database must be quiescent: WAL, SHM and journal sidecars cause a refusal rather
+than an incomplete immutable read. Do not delete these files to make the check pass;
+stop the owning service and use its normal database lifecycle. Config, database
+and binary paths through symlinks/junctions are refused. Prerequisites are a snapshot,
+not a lock or deployment receipt. The existing gateway still performs its complete
+configuration validation during startup, before token entry. Live OAuth, tunnel
+health, client compatibility and activation authority remain unestablished.
+
+For actual startup, retain the existing operator-approved launch arguments:
+
 ```powershell
 python examples/external-work/start_cloudflare.py `
   --config C:/service-owned/ncp/cloudflare-config.json `
@@ -108,3 +137,14 @@ RSA-signed token fixtures, role separation, revocation, Host/Origin enforcement,
 exact citation retention and corpus integrity. JWKS/network substitutions are
 explicit fixtures; they do not represent a live OAuth login, Cloudflare deployment,
 ChatGPT/Grok call, webhook delivery, source disclosure or physical qualification.
+
+The new prerequisite checks can also run without optional dependencies:
+
+```powershell
+$env:PYTHONPATH = "src"
+python -m unittest discover -s tests -p test_external_work_preflight.py -v
+```
+
+These use an inert binary fixture, a synthetic SQLite database and substituted
+package-version metadata. They do not execute the HTTP gateway or establish that
+the gateway's exact pinned dependencies are installed.

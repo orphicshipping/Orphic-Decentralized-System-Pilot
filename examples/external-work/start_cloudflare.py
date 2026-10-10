@@ -14,8 +14,9 @@ import subprocess
 import sys
 import time
 
-from ciw.agent_api import parse
-from ciw.external_work_http import create_app
+# The ordinary --check invocation must not create package __pycache__ files.
+sys.dont_write_bytecode = True
+from ciw.external_work_preflight import inspect_prerequisites
 
 
 def main():
@@ -23,8 +24,20 @@ def main():
     parser.add_argument("--config", required=True, type=Path)
     parser.add_argument("--cloudflared", required=True, type=Path)
     parser.add_argument("--cloudflared-sha256", required=True)
-    parser.add_argument("--log-dir", required=True, type=Path)
+    parser.add_argument("--log-dir", type=Path)
+    parser.add_argument("--check", action="store_true",
+                        help="Read-only prerequisite report; never prompt, start processes or create logs")
     args = parser.parse_args()
+    if not args.check and args.log_dir is None:
+        parser.error("--log-dir is required unless --check is used")
+    report = inspect_prerequisites(args.config, args.cloudflared, args.cloudflared_sha256)
+    if args.check or report["status"] == "blocked":
+        print(json.dumps(report, indent=2))
+        return 2 if report["status"] == "blocked" else 0
+    # Keep optional runtime imports after the dependency gate. The existing
+    # gateway remains the authoritative configuration/authentication validator.
+    from ciw.agent_api import parse
+    from ciw.external_work_http import create_app
     config_path = args.config.resolve(strict=True)
     config = parse(config_path.read_bytes())
     config["database"] = str((config_path.parent / config["database"]).resolve(strict=True))
@@ -85,4 +98,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())
