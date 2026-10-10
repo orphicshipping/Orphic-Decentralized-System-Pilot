@@ -1,5 +1,5 @@
 """Dependency-free synthetic startup checks; no Access login or tunnel launch."""
-from contextlib import redirect_stdout
+from contextlib import closing, redirect_stdout
 import hashlib
 import importlib.util
 import io
@@ -27,7 +27,7 @@ class PreflightTests(unittest.TestCase):
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
         self.database = self.root / "work.sqlite3"
-        with sqlite3.connect(self.database) as db:
+        with closing(sqlite3.connect(self.database)) as db, db:
             db.executescript("""
                 CREATE TABLE clients (id TEXT PRIMARY KEY, role TEXT, parent TEXT, enabled INTEGER);
                 CREATE TABLE contexts (id TEXT PRIMARY KEY, parent TEXT, document TEXT, enabled INTEGER);
@@ -81,6 +81,26 @@ class PreflightTests(unittest.TestCase):
                     (item.split("==") for item in declared)}
         self.assertEqual(REQUIRED_VERSIONS, expected)
 
+    def test_fixture_database_connections_are_explicitly_closed(self):
+        original_connect = sqlite3.connect
+        connections = []
+        def tracked_connect(*args, **kwargs):
+            connection = original_connect(*args, **kwargs)
+            connections.append(connection)
+            return connection
+        case = PreflightTests("test_valid_synthetic_prerequisites_are_read_only_and_not_live_success")
+        try:
+            with patch("sqlite3.connect", side_effect=tracked_connect):
+                case.setUp()
+            self.assertTrue(connections)
+            for connection in connections:
+                with self.assertRaises(sqlite3.ProgrammingError):
+                    connection.execute("SELECT 1")
+        finally:
+            for connection in connections:
+                connection.close()
+            case.doCleanups()
+
     def test_mismatched_pin_is_dependency_blocker_not_test_failure(self):
         versions = dict(REQUIRED_VERSIONS, mcp="1.29.0")
         report = self.inspect(versions)
@@ -127,7 +147,7 @@ class PreflightTests(unittest.TestCase):
         self.assert_blocked(self.inspect(), "database")
 
     def test_revoked_principal_is_blocked(self):
-        with sqlite3.connect(self.database) as db:
+        with closing(sqlite3.connect(self.database)) as db, db:
             db.execute("UPDATE clients SET enabled=0 WHERE id='fixture-requester'")
         self.assert_blocked(self.inspect(), "database")
 
@@ -155,14 +175,14 @@ class PreflightTests(unittest.TestCase):
         self.assertNotIn("sensitive fixture", json.dumps(report))
 
     def test_newer_database_version_is_not_migrated(self):
-        with sqlite3.connect(self.database) as db:
+        with closing(sqlite3.connect(self.database)) as db, db:
             db.execute("PRAGMA user_version=2")
         before = self.database.read_bytes()
         self.assert_blocked(self.inspect(), "database")
         self.assertEqual(self.database.read_bytes(), before)
 
     def test_missing_table_is_not_created(self):
-        with sqlite3.connect(self.database) as db:
+        with closing(sqlite3.connect(self.database)) as db, db:
             db.execute("DROP TABLE contexts")
         before = self.database.read_bytes()
         self.assert_blocked(self.inspect(), "database")
