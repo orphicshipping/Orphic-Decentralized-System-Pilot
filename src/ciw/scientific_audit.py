@@ -19,6 +19,8 @@ COMMAND_REVIEWS = {
     "device": "link_measurements",
     "observation": "link_measurements",
     "agent": "agent_protocol", "control": "control_gateway",
+    # Scoped reference review: docs/SCIENTIFIC_REFIT_COVERAGE_REVIEW.md.
+    "gaugelink-refit": "link_refit", "refit": "board_refit",
     "corpus": "corpus_retrieval",
     "link": "link",
     "connectivity": "connectivity",
