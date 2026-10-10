@@ -109,7 +109,7 @@ jobs:
           }
           observed = {part for case in cases for part in case.attrib.get('classname', '').split('.')}
           assert expected <= observed, 'Missing test modules: ' + repr(sorted(expected - observed))
-          assert suites and len(cases) == 527, 'Missing expected test coverage'
+          assert suites and len(cases) == 531, 'Missing expected test coverage'
           assert all(int(suite.attrib[name]) == 0 for suite in suites
                      for name in ('failures', 'errors', 'skipped')), 'Non-passing test outcome'
           assert not any(case.find(tag) is not None for case in cases
