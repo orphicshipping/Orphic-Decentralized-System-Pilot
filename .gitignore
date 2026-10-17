@@ -25,6 +25,9 @@ docs/adr/
 !/tools/bevy-render-view/**
 !/tools/mcp-operator-console/
 !/tools/mcp-operator-console/**
+!/tools/private-mcp-host/
+!/tools/private-mcp-host/**
+/tools/private-mcp-host/**/__pycache__/
 
 /.julia-depot/
 /.julia-depot2/
