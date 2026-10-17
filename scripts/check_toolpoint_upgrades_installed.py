@@ -13,6 +13,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from installed_command import installed_net_command
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -77,9 +78,7 @@ def main() -> None:
                     raise ValueError(f"Candidate source, wheel and installed bytes differ: {name}")
                 count += 1
         installed = suite(outside, output / "installed.xml", env)
-        executable = Path(sys.executable).parent / ("net.exe" if os.name == "nt" else "net")
-        if not executable.is_file():
-            raise ValueError("Missing installed native net executable")
+        executable = installed_net_command()
 
         def run(expected, *arguments):
             result = subprocess.run([str(executable), "polymer", *map(str, arguments)],

@@ -177,9 +177,10 @@ class GraphicsHandler(BaseHTTPRequestHandler):
                             export = workflow.export_png if fmt == "png" else workflow.export_obj
                             export(directory, output)
                         mime = {"obj": "text/plain", "png": "image/png", "json": "application/json", "manifest": "application/json"}[fmt]
-                        self._respond(200, output.read_bytes(), mime, output.name)
+                        response = (200, output.read_bytes(), mime, output.name)
                 finally:
                     self.server.operation_lock.release()
+                self._respond(*response)
             else:
                 self._respond(404, {"status": "REFUSE", "reason": "Unknown graphics route"})
         except (OSError, ValueError, TypeError, KeyError, IndexError, StopIteration, RecursionError) as exc:
@@ -203,8 +204,8 @@ class GraphicsHandler(BaseHTTPRequestHandler):
                     raise ValueError("Preview requires exactly one request")
                 request = workflow.validate_request(body["request"])
                 artifact = workflow.generate_artifact(request)
-                self._respond(200, {"status": "preview", "transient": True, "request": request,
-                                    "artifact": artifact, "report": workflow.verify_artifact(request, artifact)})
+                response = (200, {"status": "preview", "transient": True, "request": request,
+                                  "artifact": artifact, "report": workflow.verify_artifact(request, artifact)})
             elif parsed.path == "/api/run":
                 if set(body) != {"request"}:
                     raise ValueError("Run requires exactly one request")
@@ -212,7 +213,7 @@ class GraphicsHandler(BaseHTTPRequestHandler):
                     raise ValueError("Graphics history is full; start a new output directory")
                 destination = self.server.root / ("run-" + uuid.uuid4().hex)
                 workflow.run(body["request"], destination)
-                self._respond(200, self._retained(destination))
+                response = (200, self._retained(destination))
             elif re.fullmatch(r"/api/runs/run-[0-9a-f]{32}/replay", parsed.path):
                 if body:
                     raise ValueError("Replay does not accept modified inputs")
@@ -223,14 +224,20 @@ class GraphicsHandler(BaseHTTPRequestHandler):
                 replay = workflow.replay(original, destination)
                 result = self._retained(destination)
                 result["replay"] = replay
-                self._respond(200, result)
+                response = (200, result)
             else:
-                self._respond(404, {"status": "REFUSE", "reason": "Unknown graphics route"})
+                response = (404, {"status": "REFUSE", "reason": "Unknown graphics route"})
         except (OSError, ValueError, TypeError, KeyError, IndexError, StopIteration, RecursionError) as exc:
-            self._respond(400, {"status": "REFUSE", "reason": str(exc)})
+            response = (400, {"status": "REFUSE", "reason": str(exc)})
         finally:
             if acquired:
                 self.server.operation_lock.release()
+        # Completion includes releasing operation ownership. A client may issue
+        # its next request as soon as it receives this response.
+        try:
+            self._respond(*response)
+        except (ValueError, TypeError, RecursionError) as exc:
+            self._respond(400, {"status": "REFUSE", "reason": str(exc)})
 
 
 def serve(output_dir: Path, port: int = 8788):

@@ -42,21 +42,21 @@ def main():
             page = browser.new_page(viewport={"width":1600,"height":1100}, device_scale_factor=1)
             page.on("pageerror", lambda e: errors.append(str(e)))
             page.goto(servers[0].board_url)
-            page.wait_for_function("document.querySelector('#board-title').textContent.startsWith('Industrial Lab')")
+            page.wait_for_function("() => document.querySelector('#board-title').textContent.startsWith('Industrial Lab')")
             assert page.locator(".graph-node").count() == 3
             page.locator("#run-baseline").click()
-            page.wait_for_function("window.netIndustrialLabSnapshot()?.baseline_ref", timeout=30000)
+            page.wait_for_function("() => window.netIndustrialLabSnapshot()?.baseline_ref", timeout=30000)
             assert page.evaluate("window.netIndustrialLabSnapshot().baseline") == run_view(work.baseline)
             before = deepcopy(work.baseline)
             checks.append("browser_baseline_matches_native_records")
             field = page.locator("#parameter-left_temperature_k")
             field.fill("318.15");field.dispatch_event("change")
             field.locator("..").locator("xpath=following-sibling::button[1]").click()
-            page.wait_for_function("document.querySelector('#preview-summary').textContent.includes('Complete coupled rerun')")
+            page.wait_for_function("() => document.querySelector('#preview-summary').textContent.includes('Complete coupled rerun')")
             assert work.baseline == before and len(work.session.results) == 3
             checks.append("browser_preview_is_nonexecuting")
             page.locator("#run-candidate").click()
-            page.wait_for_function("window.netIndustrialLabSnapshot()?.candidate_ref", timeout=30000)
+            page.wait_for_function("() => window.netIndustrialLabSnapshot()?.candidate_ref", timeout=30000)
             assert page.evaluate("window.netIndustrialLabSnapshot().candidate") == run_view(work.latest_candidate)
             assert work.baseline == before and len(work.session.results) == 6
             assert page.locator('[data-series="candidate"]').count() == 1
@@ -76,15 +76,15 @@ def main():
             checks.append("canvas_drag_is_not_physical_edit")
             page.screenshot(path=str(args.output_dir / "industrial-lab.png"), full_page=True)
             # Reload retains latest simulation selection in the same live service.
-            page.reload();page.wait_for_function("window.netIndustrialLabSnapshot()?.candidate_ref")
+            page.reload();page.wait_for_function("() => window.netIndustrialLabSnapshot()?.candidate_ref")
             assert page.evaluate("window.netIndustrialLabSnapshot().candidate") == run_view(work.latest_candidate)
             checks.append("reload_recovers_existing_occurrences_without_rerun")
             # This extension must not turn the original oscillator Board into a lab.
             page.goto(servers[1].board_url)
-            page.wait_for_function("document.querySelector('#board-title').textContent==='Oscillator investigation'")
+            page.wait_for_function("() => document.querySelector('#board-title').textContent==='Oscillator investigation'")
             assert page.evaluate("window.netIndustrialLabSnapshot()") is None
             page.locator("#run-baseline").click()
-            page.wait_for_function("document.querySelector('#run-summary').textContent.includes('operation records retained')", timeout=30000)
+            page.wait_for_function("() => document.querySelector('#run-summary').textContent.includes('operation records retained')", timeout=30000)
             page.screenshot(path=str(args.output_dir / "original-board.png"), full_page=True)
             checks.append("original_board_browser_baseline_unchanged")
             assert not errors, errors
@@ -122,7 +122,7 @@ def offline(args):
         page.on("pageerror", lambda e: errors.append(str(e)))
         # Document injection, not navigation around the administered URL policy.
         page.set_content(render_html(board).decode())
-        page.wait_for_function("document.querySelector('#board-title').textContent.startsWith('Industrial Lab')")
+        page.wait_for_function("() => document.querySelector('#board-title').textContent.startsWith('Industrial Lab')")
         assert page.locator('.graph-node').count() == 3
         assert page.locator('#run-baseline').is_disabled()
         field = page.locator('#parameter-left_temperature_k')
@@ -145,7 +145,7 @@ def offline(args):
         assert before['view']['positions'] != after['view']['positions']
         page.screenshot(path=str(args.output_dir / 'industrial-lab-offline.png'), full_page=True)
         page.set_content(render_html(demo_board()).decode())
-        page.wait_for_function("document.querySelector('#board-title').textContent==='Oscillator investigation'")
+        page.wait_for_function("() => document.querySelector('#board-title').textContent==='Oscillator investigation'")
         assert page.evaluate('window.netIndustrialLabSnapshot()') is None
         assert not errors, errors
         browser_version = browser.version
