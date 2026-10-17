@@ -34,6 +34,15 @@ MAX_ARCHIVE = 16 * 1024 * 1024
 LOCK = asyncio.Lock()
 
 
+def validate_members(members):
+    if sum(m.size for m in members) > MAX_ARCHIVE or len(members) > 10000:
+        raise ValueError('Expanded checkpoint exceeds the deployment bound')
+    for member in members:
+        path = Path(member.name)
+        if path.is_absolute() or '..' in path.parts or not (member.isfile() or member.isdir()):
+            raise ValueError('Checkpoint contains an unsafe entry')
+
+
 def restore(encoded):
     """Only the committed private archive can populate this disposable directory."""
     if STATE.name != 'state' or STATE == Path('/state'):
@@ -51,12 +60,7 @@ def restore(encoded):
         raise ValueError('Checkpoint exceeds the deployment bound')
     with tarfile.open(fileobj=io.BytesIO(raw), mode='r:gz') as archive:
         members = archive.getmembers()
-        if sum(m.size for m in members) > MAX_ARCHIVE or len(members) > 10000:
-            raise ValueError('Expanded checkpoint exceeds the deployment bound')
-        for member in members:
-            path = Path(member.name)
-            if path.is_absolute() or '..' in path.parts or not (member.isfile() or member.isdir()):
-                raise ValueError('Checkpoint contains an unsafe entry')
+        validate_members(members)
         archive.extractall(STATE, members=members, filter='data')
     return True
 
@@ -68,6 +72,9 @@ def checkpoint():
             archive.add(path, arcname=path.name)
     if data.tell() > MAX_ARCHIVE:
         raise ValueError('Checkpoint exceeds the deployment bound')
+    data.seek(0)
+    with tarfile.open(fileobj=data, mode='r:gz') as archive:
+        validate_members(archive.getmembers())
     return base64.b64encode(data.getvalue()).decode('ascii')
 
 
@@ -104,7 +111,7 @@ async def transact(request: Request):
                 result = await bridge.request(action, payload)
             # This deployment grants only the seven bounded numerical models.
             # Finish a submitted run before closing its owning stdio process.
-            if body['action'] == 'call' and body.get('payload', {}).get('name') == 'ncp_run_submit':
+            if action == 'call' and payload.get('name') == 'ncp_run_submit' and not result.get('isError'):
                 data = (result.get('structuredContent') or {}).get('data', {})
                 async with asyncio.timeout(60):
                     while data.get('state') in {'queued', 'running'}:
@@ -126,7 +133,7 @@ async def transact(request: Request):
                 response['plan_arguments_json'] = json.dumps({'source': 'source',
                     'baseline': payload['arguments']['baseline'], 'graph': result['structuredContent']['data']['graph']}, indent=2)
         except ConsoleError as error:
-            if error.code == 'outcome_unknown':
+            if error.code in {'outcome_unknown', 'invalid_server_response'}:
                 raise  # Worker leaves its durable uncertainty marker in place.
             response, status = {'error': {'code': error.code, 'message': str(error)}}, error.status
         finally:

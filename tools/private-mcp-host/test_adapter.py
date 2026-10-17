@@ -4,11 +4,32 @@ from pathlib import Path
 import sys
 import unittest
 import math
+import tempfile
+from unittest.mock import patch, AsyncMock
 
 import httpx
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import adapter
 from adapter import app
+
+
+class CheckpointBounds(unittest.TestCase):
+    def test_compressible_oversize_state_cannot_be_acknowledged(self):
+        with tempfile.TemporaryDirectory() as directory, patch.object(adapter, 'STATE', Path(directory)), patch.object(adapter, 'MAX_ARCHIVE', 1024):
+            (Path(directory) / 'large.json').write_text('0' * 1025)
+            with self.assertRaisesRegex(ValueError, 'Expanded checkpoint'):
+                adapter.checkpoint()
+
+
+class UncertainResponse(unittest.IsolatedAsyncioTestCase):
+    async def test_invalid_server_response_is_not_checkpointed(self):
+        bridge = AsyncMock()
+        bridge.request.side_effect = adapter.ConsoleError('invalid_server_response', 'Operation may have applied')
+        with patch.object(adapter, 'MCPBridge', return_value=bridge):
+            async with httpx.AsyncClient(transport=httpx.ASGITransport(app=app), base_url='http://container') as client:
+                with self.assertRaises(adapter.ConsoleError):
+                    await client.post('/transaction', json={'state': None, 'action': 'call', 'payload': {}})
 
 
 class AdapterJourney(unittest.IsolatedAsyncioTestCase):
@@ -53,6 +74,11 @@ class AdapterJourney(unittest.IsolatedAsyncioTestCase):
             self.assertNotEqual(json.dumps(browser_numbers(template)), json.dumps(template))
             plan = await call('ncp_plan_create', {'source': 'source', 'baseline': 'baseline', 'graph': template['graph']}, True)
             digest = {'plan_id': plan['plan_id'], 'expected_digest': plan['digest']}
+            refused = await client.post('/transaction', json={'state': state, 'action': 'call',
+                'payload': {'name': 'ncp_run_submit', 'arguments_json': json.dumps({**digest, 'attempt': 'not-admitted'}), 'confirmed': True}})
+            self.assertEqual(refused.status_code, 200, refused.text)
+            state = refused.json()['state']
+            self.assertTrue(refused.json()['result']['data']['isError'])
             await call('ncp_plan_admit', digest, True)
             done = await call('ncp_run_submit', {**digest, 'attempt': 'host-acceptance'}, True)
             self.assertEqual(done['state'], 'completed')
