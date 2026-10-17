@@ -1,0 +1,111 @@
+{
+  "schema": "ncp.operational-integration-inventory.v1",
+  "base_commit": "62577c96a280287c5df5d54783be00df1ab7c0de",
+  "foundation_git_blobs": {
+    "src/ciw/agent_tools.py": "88014e68de28e5a9675c060cb9698dede20f00f6",
+    "src/ciw/agent_mcp.py": "7aca95ebb5dec141f485a6ba63b4dba118103427",
+    "src/ciw/link_measurement_agent.py": "5e24d3967dbf5b295e635784a150a5ec80e5d918",
+    "src/ciw/link_gateway.py": "96a91903cd20fad885500e81979a30077aea216b",
+    "src/ciw/link_store.py": "ae2b3081970942faf7106c72e71d2df8d26dc21a",
+    "src/ciw/link_measurements.py": "1abd6847b29995d188866e3bd02405b64bd8b1f4",
+    "src/ciw/evidence_history.py": "cc056d24f6cf51cece32f1e2e80fa992dc2590e8",
+    "src/ciw/acquired_window.py": "84ed3bb46f4a80dcf9dd35ac063d66a2337f81bd",
+    "src/ciw/residual_monitor.py": "32a9eb99a746eef844a01e6d23eb5fb976ab3ddd",
+    "src/ciw/reference_comparison.py": "2db6683dc5a575a3a7d4d57fdc7e4e7f3aaf8957",
+    "src/ciw/energy_nvml.py": "b029da771e13a12786a5b3062ebe02d7964ab483",
+    "src/ciw/energy_gateway.py": "3724a2ea36261b99da646f50ea3814124311204d",
+    "src/ciw/agent_recovery.py": "d64fcaf3f2546f9628e74cdf64806d01a3640af7",
+    "src/ciw/operator_workbench.py": "a00ec2631ceebaed136fd76ced21a71dc40be6e0"
+  },
+  "native_providers": {
+    "thermal": {
+      "status": "executed",
+      "identity": "see installed report and retained native thermal assessment tests"
+    },
+    "reference_comparison": {
+      "status": "executed",
+      "identity": "ciw.reference_comparison"
+    },
+    "calibrated_window_native": {
+      "status": "not_bound_in_operational_profile",
+      "inspection": "validated native source; original provider workflow retained"
+    },
+    "NVML": {
+      "schema": "ciw.energy-gateway.v1",
+      "status": "unavailable",
+      "device_index": 0,
+      "error_type": "NVMLUnavailable",
+      "error": "NVML library_load unavailable (code 12)",
+      "authority": "not_a_laboratory_gateway",
+      "state_admission": "not_performed"
+    }
+  },
+  "GaugeLink": {
+    "reviewed_development": "b09b6d267063361fbcc34016ba126ec6a660c1fd",
+    "overview_main": "10ccca27ab4cb0612a04e92ca6327398344042d5",
+    "installed_here": false,
+    "dependency_closure": "native NCP Link capture/gateway/store contracts; hardware not qualified"
+  },
+  "Elapsed_Gauge_Meter": {
+    "reference": "169bdcd8057b80abda4670a1d9133be54c7f8fc5",
+    "installed_here": false,
+    "contract": "microgauge-research-study/1",
+    "projection": "structural only; native parser/model not replaced",
+    "origin": "synthetic fixture only"
+  },
+  "source_families": {
+    "recording": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "observations": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "link-capture": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "measurement-bundle": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "measured-thermal": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "calibrated-window": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "gpu-telemetry": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    },
+    "elapsed-gauge-study": {
+      "available": "bounded exact retained source after native/declared structural adapter checks",
+      "unavailable": "required source/device/provider absent; investigation remains inspectable",
+      "unsupported": "unregistered source/model combination refuses; no implicit provider binding"
+    }
+  },
+  "limits": {
+    "source_bytes": 524288,
+    "projected_rows": 256,
+    "page_rows": 32,
+    "collector_segments": 64,
+    "collector_bytes_per_occurrence": 8388608,
+    "journal_storage": "existing Link global caps with reserved collector headroom",
+    "host_attempts": 16,
+    "graph_nodes": 2,
+    "GPU_cutoff_c": 80,
+    "GPU_equality": "blocked",
+    "physical_dispatch": "unavailable in installed Link runtime"
+  }
+}

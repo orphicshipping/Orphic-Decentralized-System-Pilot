@@ -1,0 +1,92 @@
+{
+  "schema": "ncp.operational-candidate-evidence.v1",
+  "work_order": "WO-NCP-OE-MCP-20261017",
+  "implementation_commit": "2370567f39fd537d12136b910724fae0c97f6c30",
+  "implementation_tree": "1de104ca4e25f49b23a2ca23e83cea1644fd5283",
+  "base_commit": "62577c96a280287c5df5d54783be00df1ab7c0de",
+  "wheel": {
+    "name": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+    "sha256": "4c368723e07892893acd72f3cc9cee779156c08cb8c4ae0dc837b5485e40fdf6",
+    "bytes": 2746273
+  },
+  "source_to_wheel_matches": 677,
+  "installed_to_wheel_owned_module_asset_match": true,
+  "implementation_file_sha256": {
+    ".github/workflows/operational-engineering.yml": "93d5913f3a9a264adc1fb428782ff2f929c36fbd7a9eada8e494682c4cb3ed97",
+    "docs/OPERATIONAL_ENGINEERING.md": "de5b94c6bb7f855863a654d9d7b08886dfde4907faf130168e155caa27fa8256",
+    "docs/work-orders/WO-NCP-OE-MCP-20261017.md": "a5125a22bb2c431b0be62091244a141e8755d7428a282994fd7085dfe76e32ff",
+    "examples/operational/.gitignore": "a4de566512caff8bd50aca9fb840f0d636665940665b0a33cb3a45db352ca805",
+    "examples/operational/admission.json": "64fc34dbcf55f45ca1489629c1e8e11bf32fb335814928addc47670015e104aa",
+    "examples/operational/collector.json": "4ca25c26ee6329eb00475ed0bb03fd82d78600da0352a85f8e35b06fd5ffacd5",
+    "examples/operational/link-capture.json": "c5a49772e4c73ee0faf870ff9c7c12b9e7fd14d63dba5950eea6609bb56db47b",
+    "examples/operational/observations.json": "a3870c1b1579c765b6b9d5d4f00e95607a6a97d66e350baa2fb71d77300df1d1",
+    "examples/operational/reference-request.json": "c8fa267f069c5e791e0d8fa10709fd0b436e1d111b2c2f2b810b5da70b27c2de",
+    "scripts/check_operational_browser.cjs": "10191ff137646bf55d81354fee219a752515d292ccc1ce7479fbbbe60ecd3c70",
+    "scripts/check_operational_installed.py": "a856ba1afd23bdd9d204a1afae2da07e66a79f89f75846d2f0dceb308db66a36",
+    "src/ciw/mcp_server.py": "9e161fcfc35809b286e1dafc3edc8d927f2e30309bd5d6f2ee3cba92700e2e49",
+    "src/ciw/operational_agent.py": "49260ff2d0aa7acf5628ddc429374e8bd0f468cd65a5fb78fbe7c3fcb028912a",
+    "src/ciw/operational_cli.py": "a79e723521c7684bdba9ccdf7ae20babe4bc2a258a42df6149637982ec45a5aa",
+    "src/ciw/operational_collection.py": "19a456e438195e5ef7042fca6d0d53f7e91422504d733adf47dd6c06da140f11",
+    "src/ciw/operational_context.py": "21b04a16c3c141fa5dc56a0bc30953cd546e3d24c401a04676f6642c944cd558",
+    "src/ciw/operational_egm.py": "09ac6890142e822090be70f65535b9e2d2530b9fd0f938d3f111502caba1302a",
+    "src/ciw/operational_engineering.py": "80214fd495ea577d5249188e30a4eda66174e2036c3a63b4d189f2282dd38a9f",
+    "src/ciw/operational_http.py": "a62dfe32884524198f2231320f4386148c43751e2a599d121aabe0a663db7a37",
+    "src/ciw/operational_store.py": "a0d52059169b61f6d4833d398224c241db5ad238f627254432628283b714583c",
+    "src/ciw/operational_supervision.py": "6bd40077a08a19bdb7d04d6b519c35dde3883923758078e09370eb2b3f23db92",
+    "src/ciw/operational_view.py": "9b2731cc26682f4058cf759c238220c26f82243bff7bf2057408914c7c7b56c4",
+    "src/ciw/operator_commands.py": "a686eb335ab9fbf484cfa30729cb83d9271d0d2a4ef604623f62531503dac0cd",
+    "src/ciw/operator_workbench.py": "c19e97cde7a3797b7ccb6d9e3d32a4afd0cf283d8a21520a34171dbfdaf4de00",
+    "src/ciw/web/operational.css": "961fe0611fdb0c5f2911dbd9d2b24d5525ed200ec947ec0d0a45f4bbbe10a1bc",
+    "src/ciw/web/operational.html": "11010b9bea04ae8908cc04bcfe279862f76dfd0d04f9e699555197bf25f29b74",
+    "src/ciw/web/operational.js": "bf5fb1297910e7ff1a8cf3adef0672f74aa813f7346d91148cf6db6ef1000a57",
+    "tests/fixtures/operational/egm-synthetic-study.json": "96eda553c703167704dd127c6dc270c791a26080b16e49fddda52dafd858de50",
+    "tests/test_operational_audit.py": "3f7db1ba99aaa57ca8d86f293f00794807d9761e562b3ff7dcfa6d2d613ce0a6",
+    "tests/test_operational_engineering.py": "b748e414f0b52bfd89de79fe0ccc27b32583842bdfa9d79d050229056e426aec",
+    "tests/test_operational_mcp.py": "c0cfed5608fdd732d529f4797cbb4d505d0214796e302526e8e694abce491229",
+    "tools/mcp-operator-console/OPERATIONAL.md": "f3ef28134252d9610558c5134a5183b409b023b6894c921381cf459d3168b141",
+    "tools/mcp-operator-console/README.md": "1a4c89209252c7f35abae7231129a112c56b5ba113554ad3eac9392d3262bb6d",
+    "tools/mcp-operator-console/console.py": "aadd366e52632ac42bb33228feb6911ce2b2d64d275241dbb2520d42418f112b",
+    "tools/mcp-operator-console/tests/test_console.py": "39dbac2941fd71b4ba0dd16c93efd5c9a0cd29405577582758e342390d7bb5a6",
+    "tools/mcp-operator-console/web/app.js": "af2e7879f0304e4bc257cc556e01974ba66545fb572f17d30c94fda48e4d50a1"
+  },
+  "wheel_owned_file_sha256": {
+    "ciw/operational_agent.py": "49260ff2d0aa7acf5628ddc429374e8bd0f468cd65a5fb78fbe7c3fcb028912a",
+    "ciw/operational_cli.py": "a79e723521c7684bdba9ccdf7ae20babe4bc2a258a42df6149637982ec45a5aa",
+    "ciw/operational_collection.py": "19a456e438195e5ef7042fca6d0d53f7e91422504d733adf47dd6c06da140f11",
+    "ciw/operational_context.py": "21b04a16c3c141fa5dc56a0bc30953cd546e3d24c401a04676f6642c944cd558",
+    "ciw/operational_egm.py": "09ac6890142e822090be70f65535b9e2d2530b9fd0f938d3f111502caba1302a",
+    "ciw/operational_engineering.py": "80214fd495ea577d5249188e30a4eda66174e2036c3a63b4d189f2282dd38a9f",
+    "ciw/operational_http.py": "a62dfe32884524198f2231320f4386148c43751e2a599d121aabe0a663db7a37",
+    "ciw/operational_store.py": "a0d52059169b61f6d4833d398224c241db5ad238f627254432628283b714583c",
+    "ciw/operational_supervision.py": "6bd40077a08a19bdb7d04d6b519c35dde3883923758078e09370eb2b3f23db92",
+    "ciw/operational_view.py": "9b2731cc26682f4058cf759c238220c26f82243bff7bf2057408914c7c7b56c4",
+    "ciw/web/operational.css": "961fe0611fdb0c5f2911dbd9d2b24d5525ed200ec947ec0d0a45f4bbbe10a1bc",
+    "ciw/web/operational.html": "11010b9bea04ae8908cc04bcfe279862f76dfd0d04f9e699555197bf25f29b74",
+    "ciw/web/operational.js": "bf5fb1297910e7ff1a8cf3adef0672f74aa813f7346d91148cf6db6ef1000a57"
+  },
+  "executed_results": {
+    "baseline": {
+      "passed": 115
+    },
+    "compatibility": {
+      "passed": 512,
+      "skipped": 1,
+      "overlaps_acceptance": true
+    },
+    "final_acceptance": {
+      "passed": 58
+    },
+    "console": {
+      "passed": 6
+    },
+    "console_DOM": {
+      "passed": 3
+    },
+    "installed_J1_J5": "PASS",
+    "actual_Chromium_console_and_offline_view": "PASS"
+  },
+  "physical_validation": "not_established",
+  "external_remote_deployment": "not_performed",
+  "public_deployment": "not_performed",
+  "automatic_merge": "not_performed"
+}

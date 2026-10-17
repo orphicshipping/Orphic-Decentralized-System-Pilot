@@ -1,0 +1,22 @@
+{
+  "status": "PASS",
+  "browser": "143.0.7499.0",
+  "checks": [
+    "authenticated_console_discovery",
+    "explicit_write_confirmation",
+    "configuration_change_J1_J2",
+    "Session_model_comparison_J3",
+    "proposal_J4",
+    "same_retained_UI_MCP_resource",
+    "mobile_render",
+    "retained_offline_asset_selection",
+    "no_page_errors"
+  ],
+  "finding": "sha256:ee2eda69a35badadb8fb491690b9b23abd0a0c62d87c8fe09ca37642b709fff5",
+  "proposal": "sha256:075bcc453a1f7c899319519e06a3d96b2a44bb1fd5df8fcbdfa14a6a682d9232",
+  "result_ids": [
+    "result-2bc8920ece574fdaa4ba31ab9b713109",
+    "result-e0dfbec862eb427692a0bc04c11aba88"
+  ],
+  "scope": "synthetic installed local integration; no physical qualification"
+}
