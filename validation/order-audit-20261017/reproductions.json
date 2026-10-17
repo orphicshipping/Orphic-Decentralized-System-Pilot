@@ -1,0 +1,31 @@
+{
+  "fragmented_link_receive": {
+    "status": "FAIL",
+    "exception": "ValueError",
+    "reason": "Incomplete or failed Link transport; no silent truncation",
+    "input": "one valid manifest+observation stream split after byte 10"
+  },
+  "collector_stop_interleaving": {
+    "status": "FAIL",
+    "segments_after_stop": 3,
+    "final_status": "LIMIT_CLOSED",
+    "stop_requested": false
+  },
+  "runtime_profile_grants": [
+    "annotate",
+    "derive",
+    "inspect",
+    "numerical",
+    "prepare"
+  ],
+  "origin_synthetic": {
+    "binding_origin": "synthetic",
+    "row_origin": "synthetic",
+    "native_semantics": "simulated"
+  },
+  "origin_recorded": {
+    "binding_origin": "recorded",
+    "row_origin": "recorded",
+    "native_semantics": "simulated"
+  }
+}

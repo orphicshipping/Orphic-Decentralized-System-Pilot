@@ -1,5 +1,7 @@
 # Operational-engineering acceptance
 
+> **Superseded closeout assessment:** The [17 October order audit](../order-audit-20261017/AUDIT.md) found reproducible collector stop/fragmentation defects and unsafe generated-client import resolution. PR #242 is a draft and the work order is incomplete. The PASS entries below preserve the original selected test results; they do not establish complete acceptance. Consult the audit for corrected scenario and package status.
+
 Work order: WO-NCP-OE-MCP-20261017. Base: `62577c96a280287c5df5d54783be00df1ab7c0de`.
 
 This is a software acceptance record for the retained operational-engineering profile and its connected console/MCP paths. It is not physical instrument qualification, a general-purpose SCADA qualification, a remote deployment acceptance or authorization to actuate equipment. Code identity and wheel digest are recorded in `candidate.json`; the integration commit is also identified in the pull request.

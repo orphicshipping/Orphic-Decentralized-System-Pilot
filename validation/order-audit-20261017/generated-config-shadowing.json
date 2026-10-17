@@ -1,0 +1,7 @@
+{
+  "generated_configuration": "../delivery-installed/profile/mcp-e32038bf69212218.json",
+  "isolated_flag_present": false,
+  "exit_code": 0,
+  "stdout": "AUDIT_CURRENT_DIRECTORY_PACKAGE_SHADOWED_INSTALLED_NCP",
+  "shadowing_reproduced": true
+}
