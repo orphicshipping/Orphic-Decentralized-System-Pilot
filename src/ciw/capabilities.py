@@ -14,6 +14,8 @@ import platform
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
 from .data_runtime import comparison_identity, polymer_identity, product_study_identity
+from .numerical_contracts import OPERATIONS as NUMERICAL_OPERATIONS
+from .numerical_runtime import runtime_identity as numerical_runtime_identity
 
 
 SCHEMA = "ciw.capability-catalog.v1"
@@ -126,6 +128,12 @@ _CAPABILITIES = (
         notes="Metadata consistency is separate from artifact bytes, signatures, issuer trust and physical validation.",
     ),
     *_SYSTEM_CAPABILITIES,
+    *(_record(capability_id=name, disposition="implemented", kind="registered_operation",
+        summary=description, command=None, operation_id=name,
+        role="calibration" if name == "calibration.fit.v1" else "backend",
+        runtime_identity=numerical_runtime_identity(), module="ciw.numerical_workflow",
+        notes="Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant.")
+      for name, description in NUMERICAL_OPERATIONS.items()),
     _record(
         capability_id="data.project-gltf-mesh.v1", disposition="implemented", kind="registered_operation",
         summary="Project checked retained glTF component geometry into a mesh source.",

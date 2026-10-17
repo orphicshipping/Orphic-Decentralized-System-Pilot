@@ -150,6 +150,13 @@ def validate_request_dependencies(operation_id: str, parameters: dict, retained:
 _FLUID_VERIFY_OPERATIONS = {'fluid.reservoir.verify.v1', 'fluid.interface.verify.v1', 'fluid.experiment.verify.v1', 'fluid.molecular.verify.v1', 'fluid.sph.verify.v1', 'fluid.wave.verify.v1', 'fluid.fsi.verify.v1'}
 
 _BUILTIN_ROLES = {'statistics.v1': 'analysis',
+ 'uncertainty.propagate.v1': 'backend',
+ 'uncertainty.budget.v1': 'backend',
+ 'calibration.fit.v1': 'calibration',
+ 'calibration.residuals.v1': 'backend',
+ 'sensitivity.local.v1': 'backend',
+ 'observability.rank.v1': 'backend',
+ 'model.discrepancy.v1': 'backend',
  'spectrum.periodogram.v1': 'analysis',
  'data.compare-observations.v1': 'backend',
  'data.review-product-study.v1': 'backend',
@@ -299,6 +306,9 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
         from ..hoomd_workflow import validate_payload as validator
     elif operation_id == "hardware.assess.v1":
         from ..hardware_workflow import validate_payload as validator
+    elif operation_id in {"uncertainty.propagate.v1", "uncertainty.budget.v1", "calibration.fit.v1",
+                          "calibration.residuals.v1", "sensitivity.local.v1", "observability.rank.v1", "model.discrepancy.v1"}:
+        from ..numerical_records import validate_payload as validator
     elif operation_id in {"statistics.v1", "spectrum.periodogram.v1"}:
         from ..adapters.oscillator_records import validate_payload as validator
     elif operation_id == "signal.pipeline.v1":

@@ -105,6 +105,10 @@ def execute(registry: OperationRegistry, run: dict, selection: dict, recording_f
             from ..hardware_workflow import validate_runtime
             validate_runtime(runtime)
         execution["runtime"] = runtime
+        from ..numerical_contracts import OPERATIONS as numerical_operations
+        if operation_id in numerical_operations:
+            from ..numerical_runtime import validate_runtime
+            validate_runtime(runtime)
         # A provider receives detached scientific evidence, never live mutable state.
         # Cached provider objects remain provider-owned. Detach the returned
         # payload before validating or retaining it as immutable evidence.
@@ -191,6 +195,10 @@ def validate_execution(execution: dict, run: dict, revision: int, results: dict)
     runtime = execution.get("runtime")
     if runtime is not None and (not isinstance(runtime, dict) or not runtime):
         raise ValueError("Invalid execution runtime identity")
+    from ..numerical_contracts import OPERATIONS as numerical_operations
+    if operation_id in numerical_operations:
+        from ..numerical_runtime import validate_runtime
+        validate_runtime(runtime, allow_absent=execution.get("status") == "refused")
     if operation_id == "hardware.assess.v1":
         from ..hardware_workflow import validate_runtime
         validate_runtime(runtime, allow_absent=execution.get("status") == "refused")

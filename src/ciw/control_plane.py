@@ -420,6 +420,11 @@ def builtin_registry(*, bind: bool = False) -> CapabilityRegistry:
         runtime={"provider": "ciw.oscillator", "version": "1"},
         capabilities={"statistics.v1": ["analyze", "statistics"],
                       "spectrum.periodogram.v1": ["analyze", "spectrum"]})
+    from .numerical_workflow import manifest
+    from .numerical_runtime import runtime_identity
+    from .numerical_contracts import OPERATIONS
+    registry.advertise(manifest(), runtime=runtime_identity(),
+        capabilities={name:[name] for name in OPERATIONS})
     if bind:
         from .operations.registry import default_registry
         existing = default_registry()
