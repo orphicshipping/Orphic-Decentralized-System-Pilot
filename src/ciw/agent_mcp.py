@@ -22,7 +22,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance", "metrology")
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -241,7 +241,16 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     host_class = AgentHost
     if clearance_provider is not None and instrument != "bim-clearance":
         raise ValueError("Clearance provider requires its explicit instrument selector")
-    if instrument == "bim-clearance":
+    if instrument == "metrology":
+        from .metrology_workflow import MetrologyHost, registry as metrology_registry, source_bytes
+        from .metrology_contract import case
+        if (set(inputs) != {"source", "baseline"} or value["candidate_domains"]
+                or value["comparisons"] or value["check_suites"]):
+            raise ValueError("Metrology requires its fixed source/graph with no editable policies")
+        selected = case(source_bytes(parse(inputs["source"])))
+        host_class = MetrologyHost
+        registry = metrology_registry(selected["profile"], bind=bool(value["allow_operations"]))
+    elif instrument == "bim-clearance":
         from .metrology_clearance import ClearanceHost, registry as clearance_registry
         if value["candidate_domains"] or value["comparisons"] or value["check_suites"]:
             raise ValueError("Clearance profile has no editable policies or qualification suites")
