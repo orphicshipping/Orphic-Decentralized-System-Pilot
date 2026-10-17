@@ -19,7 +19,7 @@ def test_current_coverage_and_references_are_complete_without_execution(monkeypa
     monkeypatch.setattr(subprocess, "run", forbidden)
     report = scientific_audit.audit(repository=ROOT)
     assert report["issues"] == []
-    assert report["counts"] == {"commands": 85, "workflows": 29, "ladder_levels": 10}
+    assert report["counts"] == {"commands": 86, "workflows": 29, "ladder_levels": 10}
     assert report["source_references"] == "files_exist_only"
     assert report["tests_executed"] is False
     assert report["authorizes_execution"] is report["authorizes_state_admission"] is False
