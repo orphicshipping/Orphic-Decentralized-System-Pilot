@@ -1,0 +1,30 @@
+{
+  "implementation_commit": "c7bf306d891b5ce603325fea9918d17a1da483c3",
+  "implementation_tree": "d5a7880c3cbe3b4f3d48e9f7571128f7f78c38aa",
+  "main_parent": "c0409a8df2836eca9fafd8b29c08788f88a8a3ec",
+  "wheel": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+  "wheel_sha256": "456782eb8043b3404c36ba7f9e2042b2f591767f3361c371e85e47ae67312c3f",
+  "evidence_sha256": {
+    "ACCEPTANCE.md": "6e512df6fbbca70f8aa4c35e7d2297925fc16e723a263006573721b698653179",
+    "artifact-identity.json": "12299662b665e5bf697ca98efdda3955ec1b9fd8f0fa4a33ae54c78d7b82579b",
+    "browser-report.json": "8d8e8a3be01944a037497e309f99d7599b6197368542fe8a0b807f5dcac0abcc",
+    "compatibility.log": "c6983fcf898b4f602f93616b565fa3e625d241c3b9bbfb9a1b83e444a8182f96",
+    "compatibility.xml": "baeba78ba89dd8d90c31d293d7475dfd7cc644bfcec536e6cc1f4bde6dc57ed4",
+    "console.log": "736f91630ce4e116eb864070bce94cfa5166be2032a3d59ce1c091a0dc11d23e",
+    "dom.log": "6871bb4c3ade539c9b8637d6fe693c35e934c4e05c601a11815ead08edd9aa4d",
+    "hosted-workflows.json": "874b925611c46565cb32cb1b6265727257a21578b539e7a014c79e57db859b30",
+    "http-journeys.json": "6b755a142a1d241e8561962e969ddcc1cac05f121fdbd5d01588d4faae7bd7d7",
+    "installed-report.json": "66eb79f4f7e85b99f833d0a5ee0465ddbfe4abc174629b0196c57c6034be9d7d",
+    "native-providers.json": "e7067a1e1bb917ba854b145d2789c9bd116aa4e9f246f9c507fa5889ada022f8",
+    "native-regressions.log": "b09674f11849a7b0f1c0ab8c67ce62d35b8a0d5c56b7f90867166ef981033694",
+    "native-regressions.xml": "77b211b08eb726f2fe0a9393aeaa7be7a32e6bd87b800117dc8dd564748be328",
+    "native-sdk.log": "0417cddf1367e072b1353df986c9d564d5776d56cf2ea36798fe1fda37eed895",
+    "native-sdk.xml": "3193b587dcef71e2d2cda656601eef2645cb2adc8e9eedcaacfa9920c8b20284",
+    "nvml.json": "964f15d42a13a228f233e7f9155b9794d1247bc2cac8eccf0c3e3484c8fddc5b",
+    "source.log": "ba7cae86b60cb3a1a5d7250850aa12121b22e2f3008410c64572e66378f4e3ac",
+    "source.xml": "63ec3f15bbaf7bec30ceb005194ba3073447c2ad37af77c99a806a2dc6b8c499",
+    "stdio-journeys.json": "958ba0cabaeebfd15224670c3abe2e2a30b7b6fe67816af07c7741eb7afd6073"
+  },
+  "code_scope": "all required connected operational software; physical/production deployment not qualified",
+  "historical_other_orders": "dated all-order inventory preserved; separate review/qualification gates retained"
+}

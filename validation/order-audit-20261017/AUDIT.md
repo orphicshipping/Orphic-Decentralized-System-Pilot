@@ -1,5 +1,7 @@
 # NCP work-order audit — 17 October 2026
 
+> Historical audit snapshot. The operational software defects and integration gaps below were subsequently repaired and tested. Consult the [corrected implementation and acceptance](../operational-completion-20261017/ACCEPTANCE.md) for current operational status. The original findings and all-order snapshot remain intact as evidence.
+
 **Overall result: incomplete. PR #242 is on hold and has been returned to draft.** The earlier operational acceptance report overstates closeout. Its passing test results remain historical evidence; this audit supersedes its all-scenarios PASS interpretation and ready-for-review conclusion. No runtime fixes are included in this audit commit.
 
 ## Scope and identities

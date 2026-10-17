@@ -1,7 +1,10 @@
 """Real pinned native workflows through operational AgentHost and Session."""
 from pathlib import Path
+import asyncio
+import json
 import os
 import runpy
+import sys
 
 import pytest
 
@@ -26,6 +29,30 @@ def run(host,alias,attempt):
     return result,finding
 
 
+async def sdk_run(profile):
+    from mcp import ClientSession,StdioServerParameters
+    from mcp.client.stdio import stdio_client
+    params=StdioServerParameters(command=sys.executable,args=['-I','-m','ciw.net','operational','serve',
+        '--profile',str(profile),'--sdk','--resume'])
+    async with stdio_client(params) as (read,write):
+        async with ClientSession(read,write,read_timeout_seconds=120) as client:
+            await client.discover()
+            async def call(name,args):
+                result=await client.call_tool(name,args)
+                assert not result.is_error,result
+                assert json.loads(result.content[0].text)==result.structured_content
+                return result.structured_content
+            catalog=await call('oe_catalog',{})
+            assert catalog['model_adapters']['assessment']['provider_status']=='operator_bound_pin_check_at_dispatch'
+            first=await call('net_execute',{'source':'assessment','graph':'assessment-graph','attempt':'first'})
+            assert first['status']=='completed',first
+            finding=await call('oe_model_support',{'attempt':'first'})
+            assert finding['data']['status']=='INSUFFICIENT_EVIDENCE'
+            resource=await client.read_resource('ncp://operational-records/'+finding['record'][7:])
+            assert json.loads(resource.contents[0].text)['record']==finding['record']
+            return first,finding
+
+
 def test_native_calibrated_window_preserves_covariance_and_resume_without_providers(tmp_path,stack,monkeypatch):
     raw=(Path(__file__).parents[1]/'examples/calibrated-window/source.json').read_bytes()
     native=window._source(raw)
@@ -34,8 +61,9 @@ def test_native_calibrated_window_preserves_covariance_and_resume_without_provid
         'configurations':[]}},models={'assessment':{'source':'window','engine':'calibrated-window','request':None,
             'policy':{'unit':'m','coverage_factor':2,'max_abs_error':1,'max_standard_uncertainty':1}}},
         providers={'calibrated-window':{r:stack[r] for r in window.ROLES}},templates={'resolve':default_template()})
-    with OperationalHost(profile) as host:
-        first,finding=run(host,'assessment','first')
+    with OperationalHost(profile): pass
+    first,finding=asyncio.run(sdk_run(profile))
+    with OperationalHost(profile,resume=True) as host:
         summary=finding['data']['model']['native_results']
         assert len(summary['steps'])==4 and summary['verification']['outcome']=='passed'
         assert summary['steps'][1]['numerical_result']['data']['temporal_covariance']==[[5.5,3.5],[3.5,8.5]]
@@ -61,8 +89,9 @@ def test_native_residual_monitor_binds_exact_upstream_windows_and_keeps_ambiguit
         models={'assessment':{'source':'monitor','engine':'residual-monitor','request':request,
             'policy':{'unit':'m','coverage_factor':2,'max_abs_error':1,'max_standard_uncertainty':1}}},
         providers={'residual-monitor':{r:stack[r] for r in monitor.ROLES}})
-    with OperationalHost(profile) as host:
-        _,finding=run(host,'assessment','first')
+    with OperationalHost(profile): pass
+    _,finding=asyncio.run(sdk_run(profile))
+    with OperationalHost(profile,resume=True) as host:
         summary=finding['data']['model']['native_results']
         data=summary['steps'][0]['numerical_result']['data']
         assert [row['detection']['raw_residual'] for row in data['rows']]==[[0.0],[0.5],[10.0]]

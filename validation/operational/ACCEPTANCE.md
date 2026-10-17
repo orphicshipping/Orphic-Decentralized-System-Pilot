@@ -1,5 +1,7 @@
 # Operational-engineering acceptance
 
+> Historical candidate results. Current code, wheel identity, corrected scenarios and executed native/installed/HTTP/browser evidence are in the [operational completion report](../operational-completion-20261017/ACCEPTANCE.md).
+
 > **Superseded closeout assessment:** The [17 October order audit](../order-audit-20261017/AUDIT.md) found reproducible collector stop/fragmentation defects and unsafe generated-client import resolution. PR #242 is a draft and the work order is incomplete. The PASS entries below preserve the original selected test results; they do not establish complete acceptance. Consult the audit for corrected scenario and package status.
 
 Work order: WO-NCP-OE-MCP-20261017. Base: `62577c96a280287c5df5d54783be00df1ab7c0de`.

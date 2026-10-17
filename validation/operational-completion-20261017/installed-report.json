@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "scope": "installed synthetic connected software journeys J1-J5",
+  "import_path": "/workspace/scratch/983c4968e2d6/operational-installed/lib/python3.12/site-packages/ciw/__init__.py",
+  "prefix": "/workspace/scratch/983c4968e2d6/operational-installed",
+  "python": "3.12.14",
+  "generated_client_configuration": {
+    "mcpServers": {
+      "ncp-operational": {
+        "command": "/workspace/scratch/983c4968e2d6/Notations-Control-Protocol/../operational-installed/bin/python",
+        "args": [
+          "-I",
+          "-m",
+          "ciw.net",
+          "operational",
+          "serve",
+          "--profile",
+          "/workspace/scratch/983c4968e2d6/Notations-Control-Protocol/../completion-final-installed/profile/profile-d18e84ff4ca8d4c9.json",
+          "--sdk",
+          "--resume"
+        ]
+      }
+    }
+  },
+  "working_directory_shadowing_blocked": true,
+  "dependencies": {
+    "numpy": "2.3.5",
+    "mcp": "2.3.0",
+    "websockets": "16.0",
+    "PyJWT": "2.15.1",
+    "uvicorn": "0.54.0"
+  },
+  "module_asset_sha256": {
+    "operational_context.py": "a86bd23ab38e66170fcdb3b8b1d2fa9a720e97545b6b44a05b3473a0f9116875",
+    "operational_agent.py": "397307566a4e23b257eb0bb39dc1305caaa560ff9ba0b14a0443d97629f4d124",
+    "operational_engineering.py": "e7dd75b76a4ade95fbd192534d1d69f68edcecb4aea3ffcf1bb8d6240b6b0a97",
+    "operational_collection.py": "ba83f63c745b9ea878ecc42b41ac316dada5b5b999ee5ff2670e8cfcfab68cac",
+    "operational_supervision.py": "81291fb232e6af5666658f42dda80dd3f3ef8f159ecbba65f0fb0511e6dbf742",
+    "web/operational.html": "11010b9bea04ae8908cc04bcfe279862f76dfd0d04f9e699555197bf25f29b74",
+    "web/operational.js": "2a6339eca2beaf9ed1e2a1c3733e90af89a95da98fc36766b27f7d9e184aa0dd",
+    "web/operational.css": "961fe0611fdb0c5f2911dbd9d2b24d5525ed200ec947ec0d0a45f4bbbe10a1bc"
+  },
+  "MCP_sessions": [
+    {
+      "protocol": "2026-07-28",
+      "reconnect": false,
+      "results": [
+        "result-9c8ca148c8674d799ec9fe784d4c9942",
+        "result-cec86bc17ef14ea3b60c1436cfccc360"
+      ]
+    },
+    {
+      "protocol": "2025-11-25",
+      "reconnect": true,
+      "results": [
+        "result-9c8ca148c8674d799ec9fe784d4c9942",
+        "result-cec86bc17ef14ea3b60c1436cfccc360"
+      ]
+    },
+    {
+      "protocol": "2026-07-28",
+      "reconnect": true,
+      "results": [
+        "result-9c8ca148c8674d799ec9fe784d4c9942",
+        "result-cec86bc17ef14ea3b60c1436cfccc360"
+      ]
+    }
+  ],
+  "CLI_MCP_UI_same_finding": "sha256:0079a151178e5604518f410a8527a524dfd872dea144eeca664ae1e59859d08e",
+  "original_execution_ids": [
+    "execution-651cf3fff9b3419088ede7739935d897",
+    "execution-d833ae23c6584d34b45f45f4032eb3df"
+  ],
+  "fresh_execution_ids": [
+    "execution-6d2f8e36cd3b4474a155671a034907fa",
+    "execution-9fb8fd33d941407396d89ceb469cfdd6"
+  ],
+  "physical_acquisition": "not_performed",
+  "remote_deployment": "not_performed",
+  "new_workload_launches": 0
+}

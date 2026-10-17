@@ -89,7 +89,7 @@ def main():
         environment = temporary / "environment"
         call([sys.executable, "-m", "venv", str(environment)])
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-        call([str(python), "-m", "pip", "install", str(wheel), "pytest==9.0.2"])
+        call([str(python), "-m", "pip", "install", str(wheel), "pytest==9.0.2", "mcp==2.3.0"])
         work = temporary / "installed-check"
         (work / "tests").mkdir(parents=True)
         for filename in TEST_FILES:
