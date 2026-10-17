@@ -27,6 +27,16 @@ task scratchpads are superseded by the attached work order; its executable code
 and examples are retained. Private-host code already merged by #240 remains
 implemented software, with remote multi-user service explicitly unqualified.
 
+## Integration corrections
+
+The first combined sweep found that #232's new CI matrix omitted the existing
+`fail-fast: false` requirement. Installed NCP coverage also found that the
+operational CLI was missing its read-only scientific review record. Both are
+corrected without weakening those gates. The original failed/interrupted
+attempt and corrected-candidate evidence are retained separately. Installed
+pytest runs use normal test-directory imports so existing sibling fixtures can
+load, with the project source path disabled and `ciw` verified in site-packages.
+
 ## Evidence requirements
 
 Run the unchanged source-integrity verifier and both original history modules.

@@ -4,7 +4,8 @@
   "protected": [
     "main",
     "release/research-baseline-20261017",
-    "work/research-baseline-evidence-20261017"
+    "work/research-baseline-evidence-20261017",
+    "release/research-baseline-20261017-validation"
   ],
   "entries": [
     {
