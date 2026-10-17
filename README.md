@@ -18,13 +18,12 @@ The application focus includes polymer processing, component development, instru
 
 ## Implementation status and naming
 
-**Repository review: 7 October 2026.** The following references distinguish the default-branch implementation from development work. They are source references, not a new qualification report.
-
-| Reference | Scope |
-| --- | --- |
-| [`main` baseline `0374076`](https://github.com/atomtrapping/Notations-Control-Protocol/commit/0374076695475669188d61698e4656ced2263e01) | Local workbench, registered computational workflows, retained investigations, explicit replay, and selected MCP profiles. The installed commands are `net` and `ciw`. |
-| [Draft PR #219](https://github.com/atomtrapping/Notations-Control-Protocol/pull/219), reviewed head `26ffb9c` | Engineering-intent compilation, retained findings, evidence-driven follow-up, and supporting-evidence work on its declared dependency chain. These increments are not included in the default-branch quickstart below. |
-| [NCP continuity note at the reviewed development revision](https://github.com/atomtrapping/Notations-Control-Protocol/blob/26ffb9c06dec36c2357300b581fff7f415a1d1a0/docs/NCP_CONTINUITY_AND_FOLLOW_UP.md) | Adds `ncp` as an alias of the existing `net` implementation while retaining package paths, schemas, and historical records. The alias is not present in the reviewed `main` package metadata. |
+This branch consolidates the open development work into one review candidate. The
+installed aliases are `ncp`, `net`, and `ciw`; package and retained record identities
+are unchanged. Review the [consolidation ledger](docs/PR_CONSOLIDATION_20261017.md)
+for the exact source PRs, integration decisions, executed checks, and blocked
+qualification. This candidate is not a release or a claim of universal provider
+qualification.
 
 The distribution remains `computational-instrumentation-workbench`; the Python package remains `ciw`. Existing guides and commands may therefore use NET terminology. A project-name change does not migrate stored records, change a wire protocol, or grant additional authority.
 
@@ -177,7 +176,7 @@ Adapters must preserve original source records and their declared semantics. Uni
 
 ### Agent and application access
 
-MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The default-branch adapter is a bounded local stdio implementation over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
+MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
 
 An agent request does not grant permission to execute a provider, contact a device, change a calibration, approve a part, or disclose evidence. Tool descriptions and model responses do not replace enforcement at the owning runtime boundary. Test the actual client, transport, and installed implementation used by the integration; a handler test does not establish compatibility with every host.
 

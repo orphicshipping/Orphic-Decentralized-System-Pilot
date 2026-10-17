@@ -1,0 +1,66 @@
+{
+  "schema": "ciw.polymer-manufacturing-local-qualification.v1",
+  "base_commit": "0091492b9dc237b05c33cac77d2307115bd803b2",
+  "base_tree": "41d6e57123c18a075310cafa74a9a409ce2a3d76",
+  "source_blob_sha1": {
+    "src/ciw/manufacturing_contracts.py": "1c5ec5ae216c6ac9775049bf8c5d65e3d457d20d",
+    "src/ciw/polymer_microfab.py": "cf415907184055afa329772ece6c7f4f8d87fe07",
+    "src/ciw/manufacturing_runtime.py": "7910a4bd928398d6d25745d0eb85ef3a4f10c2e9",
+    "src/ciw/manufacturing_example.py": "1d3aa919d9b69097e8a47ccce5035fe45cf5ad39",
+    "src/ciw/polymer_manufacturing_cli.py": "415d960837b083883b1ddf978fd81154f25a0b13",
+    "src/ciw/polymer_cli.py": "32e5abbde2a40ae5d79595cdf2bdf88f6f3cc326",
+    "tests/test_polymer_manufacturing.py": "e9b8a093cafdf647bcb7f40a55a93d105926b14a",
+    "docs/POLYMER_MICROFAB_MANUFACTURING.md": "264956162108a9a2a20130195854b5b2b89f63cb"
+  },
+  "unchanged_inspected_dependencies": {
+    "src/ciw/core/identities.py": "e8f3f3ea30cf4a11a071b95f5ee6eb5a2b3f5344",
+    "src/ciw/__init__.py": "6801cd0fe18a8c1cfd384f107470c42546428561"
+  },
+  "baseline_polymer_cli_blob": "844d6cd52490adb633b96a55cb72688d478e2a51",
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "pytest": "9.0.2"
+  },
+  "tests": {
+    "command": "PYTHONPATH=src python -m pytest -q tests/test_polymer_manufacturing.py",
+    "passed": 179,
+    "failed": 0,
+    "skipped": 1,
+    "skip_reason": "Full repository dispatcher dependencies absent from the connector snapshot"
+  },
+  "demo": {
+    "request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+    "result_ref": "sha256:b82863b9be806afb317a3b1769558f126611d0cefa465cf3385543a37832b7af",
+    "formed_parts": 4,
+    "accepted_components": 3,
+    "scrapped_components": 1,
+    "assemblies": 1,
+    "shipment_status": "HELD"
+  },
+  "verified_locally": [
+    "strict data contracts",
+    "scalar declaration screening",
+    "time-bound preflight",
+    "BOM and route consistency",
+    "inventory allocation",
+    "guard-banded inspection",
+    "serial genealogy",
+    "deterministic report replay",
+    "standalone module CLI",
+    "atomic create-only publication"
+  ],
+  "not_verified": [
+    "full-repository regression",
+    "installed-wheel journey",
+    "existing polymer dispatcher",
+    "Windows",
+    "hosted CI",
+    "physical qualification",
+    "authenticated authority",
+    "external artifact resolution"
+  ],
+  "hardware_actuation": "not_performed",
+  "state_admission": "not_performed",
+  "shipment_release": "not_authorized"
+}

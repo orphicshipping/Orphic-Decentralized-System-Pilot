@@ -33,6 +33,8 @@ def _retain_specification(session, specification):
 def parser():
     root = argparse.ArgumentParser(prog="ciw system")
     commands = root.add_subparsers(dest="action", required=True)
+    lab = commands.add_parser("lab", add_help=False, help="Graph-first Industrial Lab")
+    lab.add_argument("arguments", nargs=argparse.REMAINDER)
     demo = commands.add_parser("demo")
     demo.add_argument("--output-dir", type=Path, required=True)
     demo.add_argument("--skip-worker", action="store_true", help="Omit subprocess parity run")
@@ -64,6 +66,10 @@ def parser():
 
 
 def main(argv=None):
+    argv = list(sys.argv[1:] if argv is None else argv)
+    if argv and argv[0] == "lab":
+        from .industrial_lab_cli import main as lab_main
+        return lab_main(argv[1:])
     args = parser().parse_args(argv)
     from .session import Session, read_json, write_json
     from .system_spec import compile_spec, demo_spec

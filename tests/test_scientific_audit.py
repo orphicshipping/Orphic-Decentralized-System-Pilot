@@ -19,7 +19,7 @@ def test_current_coverage_and_references_are_complete_without_execution(monkeypa
     monkeypatch.setattr(subprocess, "run", forbidden)
     report = scientific_audit.audit(repository=ROOT)
     assert report["issues"] == []
-    assert report["counts"] == {"commands": 54, "workflows": 29, "ladder_levels": 10}
+    assert report["counts"] == {"commands": 85, "workflows": 29, "ladder_levels": 10}
     assert report["source_references"] == "files_exist_only"
     assert report["tests_executed"] is False
     assert report["authorizes_execution"] is report["authorizes_state_admission"] is False
@@ -88,3 +88,31 @@ def test_integrated_system_command_has_explicit_review_references():
     row = next(row for row in report["commands"] if row["command"] == "net system")
     assert row["source"] == "src/ciw/system_cli.py"
     assert row["test"] == "tests/test_system_workflow.py"
+
+
+@pytest.mark.parametrize("name,source,test", [
+    ("refit", "board_refit_cli", "board_refit"),
+    ("gaugelink-refit", "link_refit_cli", "link_refit"),
+])
+def test_refit_commands_have_scoped_references_without_qualification(name, source, test):
+    report = scientific_audit.audit(repository=ROOT)
+    rows = {row["command"]: row for row in report["commands"]}
+    assert rows["net " + name] == {
+        "command": "net " + name,
+        "review": "reference_declared",
+        "source": "src/ciw/" + source + ".py",
+        "test": "tests/test_" + test + ".py",
+    }
+    assert report["tests_executed"] is False
+    assert report["physical_validation"] == "not_established"
+    assert report["qualification"] == "not_performed_by_audit"
+    assert report["authorizes_execution"] is report["authorizes_state_admission"] is False
+
+
+@pytest.mark.parametrize("name", ["refit", "gaugelink-refit"])
+def test_refit_command_still_requires_its_explicit_review(name, monkeypatch):
+    monkeypatch.delitem(scientific_audit.COMMAND_REVIEWS, name)
+    report = scientific_audit.audit()
+    assert report["status"] == "failed"
+    assert {"code": "unreviewed_surface", "surface": "command", "name": name} in report["issues"]
+    assert "net " + name not in {row["command"] for row in report["commands"]}

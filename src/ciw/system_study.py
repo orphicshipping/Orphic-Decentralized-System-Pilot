@@ -24,6 +24,8 @@ MAX_STEPS = 2000
 MAX_WORK_ITEMS = 2_000_000
 MAX_REFERENCE_WORK = 2_000_000
 TAIL_LIMIT_K = 1e-8
+# Retained scalar comparison only; never relax the hard truncation bound.
+_REFERENCE_TAIL_REL_TOL = 1e-14
 IMPROVEMENT_SLACK_K = 1e-9
 _DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
 _RUNTIME_SOURCES = {"system_spec.py", "system_models.py", "system_workflow.py", "system_source.py",
@@ -322,8 +324,6 @@ def validate_temporal_study(report, spec):
     if type(reference["samples"]) is not list or len(reference["samples"]) != len(common_times):
         raise ValueError("Temporal reference sampling dimensions mismatch")
     expected_reference_samples, expected_reference_work = _reference_schedule(base_plan, common_times)
-    if reference["samples"] != expected_reference_samples:
-        raise ValueError("Temporal reference qualification differs from the deterministic scalar contract")
     reference_work = 0
     for index, (time, sample) in enumerate(zip(common_times, reference["samples"])):
         _fields(sample, {"time_s", "status", "tail_bound_k", "series_terms", "reason"}, "reference sample")
@@ -332,10 +332,18 @@ def validate_temporal_study(report, spec):
             raise ValueError("Temporal reference clock or diagnostic mismatch")
         if type(sample["series_terms"]) is not int or not 0 <= sample["series_terms"] <= 4096:
             raise ValueError("Temporal reference work count is invalid")
+        expected_sample = expected_reference_samples[index]
+        if any(sample[key] != expected_sample[key] for key in ("time_s", "status", "series_terms", "reason")):
+            raise ValueError("Temporal reference qualification differs from the deterministic scalar contract")
         if sample["status"] == "ASSESSED":
             _number(sample["tail_bound_k"], "Fourier tail", nonnegative=True)
             if sample["tail_bound_k"] > TAIL_LIMIT_K:
                 raise ValueError("Temporal reference tail exceeds the declared bound")
+            # math.exp can differ by platform roundoff. No absolute floor:
+            # tiny tails still need relative agreement, and exact zeros stay zero.
+            if not math.isclose(sample["tail_bound_k"], expected_sample["tail_bound_k"],
+                                rel_tol=_REFERENCE_TAIL_REL_TOL, abs_tol=0.0):
+                raise ValueError("Temporal reference qualification differs from the deterministic scalar contract")
             reference_work += base["discretization"]["cells"] * sample["series_terms"]
         elif sample["status"] == "NOT_ASSESSED":
             if sample["tail_bound_k"] is not None or sample["series_terms"] != 0:

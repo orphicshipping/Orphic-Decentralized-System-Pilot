@@ -1,0 +1,9 @@
+{
+  "schema": "ciw.polymer-population-request.v1",
+  "model": "finite-molar-mass-population.v1",
+  "weight_basis": "number",
+  "bins": [
+    {"id": "low", "molar_mass_kg_mol": 10.0, "weight": 1.0},
+    {"id": "high", "molar_mass_kg_mol": 100.0, "weight": 1.0}
+  ]
+}

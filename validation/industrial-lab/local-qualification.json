@@ -1,0 +1,159 @@
+{
+  "schema": "net.industrial-lab.local-qualification.v1",
+  "observed_at": "2026-10-06T06:51:09.081304+00:00",
+  "scope": "Graph-first System Board application over existing scientific-system compile/simulate/verify. Synthetic rod reference; no new physics.",
+  "upstream": {
+    "repository": "atomtrapping/Notations-Engineering-Terminal",
+    "commit": "0374076695475669188d61698e4656ced2263e01",
+    "package_tree": "0b462bbb9ab1f6beddc3e187a1999e499688cd11",
+    "retained_artifact_id": 11382618413,
+    "workflow_run_id": 37370241415,
+    "archive_sha256": "fa64f7bb5bc60cc34da63fa8e8f2f74702e9fc0f90fade59fa3cffe537cfe0c8"
+  },
+  "environment": {
+    "os": "Linux",
+    "python": "3.13.5",
+    "numpy": "2.3.5",
+    "websockets": "16.0",
+    "pytest": "9.0.2",
+    "installation": "Noneditable wheel in new venv; /opt/pyvenv/lib/python3.13/site-packages explicitly shared for dependencies using .pth; no source-path override."
+  },
+  "tests": {
+    "source": {
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 5.074,
+      "timestamp": "2026-10-06T06:41:08.638002+00:00",
+      "junit_sha256": "14fe144c550075ecec88598092cfca454a8f01dca10125cfef750786f1fffe46"
+    },
+    "installed": {
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "elapsed_seconds": 4.402,
+      "timestamp": "2026-10-06T06:41:14.933367+00:00",
+      "junit_sha256": "df93fc0df760c98e30e7d740807d1d387b19b1bc09da02ec29ab701906273fef"
+    }
+  },
+  "unique_pytest_cases": 42,
+  "source_and_installed_repeat_same_cases": true,
+  "package_integrity": {
+    "wheel_sha256": "7006c6bf846aabcccb897801c3000de30658cbf6c3ce8eb7cbe9be63fd6850d8",
+    "package_files_verified": 410,
+    "main_package_files": 408,
+    "main_files_unchanged": 406,
+    "modified_main_files": [
+      "ciw/system_cli.py",
+      "ciw/web/system_board.js"
+    ],
+    "tested_package_tree": "3ede03231552e7a8cb91d9ea9b4a8f4ce9e9a48d",
+    "method": "Exact comparison of every source, wheel and noneditable installed package resource; native execution/tests run separately."
+  },
+  "browser_installed": {
+    "status": "PASS",
+    "mode": "offline_browser_export_to_native_subprocess",
+    "observed_at": "2026-10-06T06:38:03.740951+00:00",
+    "browser_version": "144.0.7559.96",
+    "page_errors": [],
+    "native_cli_result": {
+      "status": "PASS",
+      "synthetic": true,
+      "workspace": "/mnt/data/net-lab-build/evidence/browser-installed/native-run/session/workspace.json",
+      "review": "/mnt/data/net-lab-build/evidence/browser-installed/native-run/review.html",
+      "baseline_result_id": "result-5382b821ac2c434ebd73d980a7506ea6",
+      "candidate_result_id": "result-3236d5bcdbe744d2b6c96ece82527811",
+      "physical_validation_status": "not_assessed",
+      "canonical_admission": false
+    },
+    "checks": [
+      "real_DOM_graph_three_models",
+      "offline_execution_disabled",
+      "exact_typed_edit_export",
+      "canvas_drag_does_not_change_board_identity",
+      "original_board_DOM_unchanged",
+      "exported_edit_runs_native_baseline_and_candidate"
+    ],
+    "live_browser_network_qualified": false,
+    "physical_validation_status": "not_assessed"
+  },
+  "additional_checks": {
+    "javascript_syntax": "PASS: node --check",
+    "workflow_yaml": "parsed; not hosted execution",
+    "installed_native_inspection": "PASS",
+    "installed_fresh_numerical_verification": "PASS: two additional native verifier occurrences, originals retained"
+  },
+  "unclosed_gates": [
+    "Live Chromium loopback navigation: net::ERR_BLOCKED_BY_ADMINISTRATOR. Browser policy unchanged. Offline DOM/export/native-CLI campaign is separate.",
+    "Repository NumPy==2.4.3 unavailable from configured package index: No matching distribution found. Dependency pins unchanged.",
+    "Direct Git checkout failed DNS. Full Python package identity verified; no full monorepo regression.",
+    "Hosted Linux/Windows and live-browser workflows not qualified by this local report.",
+    "No CAD/BIM import, KiCad/MEMS/Link integration, vibration model, measured physical validation, machine control or complete industrial twin delivered."
+  ],
+  "integration_boundaries": {
+    "uses_existing_session_and_workbench": true,
+    "uses_existing_board_transport": true,
+    "modified_existing_main_package_files": [
+      "src/ciw/system_cli.py",
+      "src/ciw/web/system_board.js"
+    ],
+    "data_parent_200_files_changed": false,
+    "sensor_project_212_files_changed": false,
+    "new_3d_dependency": false,
+    "new_solver": false,
+    "canonical_admission": false,
+    "physical_authority": false
+  },
+  "change_manifest": [
+    {
+      "path": "src/ciw/industrial_lab.py",
+      "bytes": 14791,
+      "git_blob": "95396ba2fa365203a50bf7e51b451b06ca87a028",
+      "sha256": "e3d884aec7deae8f0ffce95b52d2070b6b3b72416769122ff0bcc2ae621e2d90"
+    },
+    {
+      "path": "src/ciw/industrial_lab_cli.py",
+      "bytes": 4980,
+      "git_blob": "7b79693fd9334c35eb7c45c4cf4a81d01a38e851",
+      "sha256": "a9f587fca28eae05d09908e24ccd3c34c771f187c53fce6f12cafc9d5d600524"
+    },
+    {
+      "path": "src/ciw/system_cli.py",
+      "bytes": 8991,
+      "git_blob": "f1eeed69a7f66f7d2434d3b979a4d5e233e9c3ee",
+      "sha256": "04c3a9893f7954ba3ff96e889ca22d2141092a1103440ed27646062f473e7c0d"
+    },
+    {
+      "path": "src/ciw/web/system_board.js",
+      "bytes": 32720,
+      "git_blob": "7a787e66ae6094c46e89d9da03c162752434099d",
+      "sha256": "b319c45e82af85a6b4e6b3580b91ac2d3e0b430fa9d37eb655607839299405c3"
+    },
+    {
+      "path": "tests/test_industrial_lab.py",
+      "bytes": 13086,
+      "git_blob": "dff460558f9411b6f252d8ec37dbee67de6cfbec",
+      "sha256": "a47c2cfe25c71631d49e6d059801f0f2427a4315bd6c6c98acec40eb128fde76"
+    },
+    {
+      "path": "scripts/check_industrial_lab_browser.py",
+      "bytes": 10906,
+      "git_blob": "c5ab447199513236a9320629e3d9dbdf7478cf91",
+      "sha256": "fc5f87619959895324a968d53da97632c942971c591f8d88e1a196aee428f299"
+    },
+    {
+      "path": "docs/INDUSTRIAL_LAB.md",
+      "bytes": 7150,
+      "git_blob": "89a9290390d285e7b70d736adb0aa9e926e604e1",
+      "sha256": "47eb121d039b6b778343e48588b4658ca0b020befa9292b22b14e552c12d7067"
+    },
+    {
+      "path": ".github/workflows/industrial-lab.yml",
+      "bytes": 2994,
+      "git_blob": "3da8c51b98d4f63225022ac0dfc035085a9670fb",
+      "sha256": "7339d8723a568d68b9ccabbc6d269c0057a36d4c48a878ad55e291552a6d7229"
+    }
+  ]
+}

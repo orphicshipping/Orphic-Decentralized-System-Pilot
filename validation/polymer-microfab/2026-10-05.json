@@ -1,0 +1,216 @@
+{
+  "schema": "net.polymer-microfab-build-verification.v1",
+  "recorded_at": "2026-10-05T16:34:02.038685+00:00",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "base_commit": "0091492b9dc237b05c33cac77d2307115bd803b2",
+  "base_tree": "41d6e57123c18a075310cafa74a9a409ce2a3d76",
+  "base_artifact": {
+    "workflow_run_id": 37255462777,
+    "artifact_id": 11322442624,
+    "archive_sha256": "59fd5d8d962cc9c15d43498d5346d041dfd6282c55428499fc5ec031b206925b",
+    "wheel_sha256": "e13689bcfd03995cce7ee2918346d9e24dcbcb2b47a001dceb167382c9841b34",
+    "original_python_modules": 371
+  },
+  "environment": {
+    "python": "3.13.5",
+    "platform": "Linux-6.18.44-x86_64-with-glibc2.41",
+    "pytest": "9.0.2",
+    "numpy": "2.3.5",
+    "execution": "base-wheel Python source plus tested overlay; PYTHONPATH=src",
+    "numpy_matches_repo_pin": false
+  },
+  "focused_tests": {
+    "tests": 75,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "focused_test_seconds": 2.654,
+  "junit_sha256": "624a1f05b8d2c5745aef4ad8c24d2b13667c09226b916ad17e7c652f5a4be74d",
+  "commands": [
+    "PYTHONPATH=src python -m pytest tests/test_polymer_microfab.py -q --disable-warnings --junitxml=validation/polymer-microfab/junit.xml",
+    "PYTHONPATH=src python -m ciw.net polymer qualify --output-dir /mnt/data/net-validation/polymer-baseline",
+    "PYTHONPATH=src python -m ciw.net polymer microfab demo --output-dir /mnt/data/net-validation/microfab-demo",
+    "PYTHONPATH=src python -m ciw.net polymer microfab verify /mnt/data/net-validation/microfab-demo --output /mnt/data/net-validation/microfab-audit.json"
+  ],
+  "polymer_qualification": {
+    "schema": "ciw.polymer-tool-qualification.v1",
+    "status": "PASS",
+    "scope": "finite_installed_reference_workflows_not_physical_validation",
+    "checks": [
+      {
+        "name": "fixed_tool_contracts",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:complete_and_numerically_verified",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:part_nonconformance_separate",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:scoped_copilot_context",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:replay_evidence_and_fresh_occurrences",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:fresh_read_only_audit",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:complete_typed_agent_graph",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:idempotent_agent_retry",
+        "passed": true
+      },
+      {
+        "name": "extrusion_blow_molding:fresh_agent_replay",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:complete_and_numerically_verified",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:part_nonconformance_separate",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:scoped_copilot_context",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:fresh_read_only_audit",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:replay_evidence_and_fresh_occurrences",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:complete_typed_agent_graph",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:idempotent_agent_retry",
+        "passed": true
+      },
+      {
+        "name": "injection_molding:fresh_agent_replay",
+        "passed": true
+      },
+      {
+        "name": "malformed_ingress_refused",
+        "passed": true
+      }
+    ],
+    "native_ingress_ref": null,
+    "runtime": {
+      "provider": "ciw.polymer.qualification",
+      "version": "1",
+      "code_sha256": "f918f58c81a2ae2c31a598a0c37d4220ab8a28acdb2853bc252e670dc38c2856",
+      "source_normalization": "utf8_lf",
+      "scope": "retained_cycle_reference_models_and_simulated_control_only",
+      "environment": {
+        "python": "3.13.5",
+        "floating_point": "binary64"
+      }
+    },
+    "authority": {
+      "physical_validation": "not_established",
+      "calibration_traceability": "not_established",
+      "structural_acceptance": "not_established",
+      "state_admission": "not_performed",
+      "hardware_actuation": "not_performed",
+      "llm_inference": "not_performed"
+    }
+  },
+  "microfab_demo": {
+    "workflow_status": "PASS",
+    "engineering_review": "READY_FOR_ENGINEERING_REVIEW",
+    "source_kind": "synthetic",
+    "fresh_cycle_audit": "PASS",
+    "product_release": "not_authorized",
+    "residual_k": 0.295813808274886
+  },
+  "audited_sources": {
+    "src/ciw/core/identities.py": "c746d6ecf24723ea9b3481895bb12094e98fff6bd821acd229eb0f5f13e9ead9",
+    "src/ciw/polymer_contract.py": "f589a1a75d62655e24757a1d4d1092e7eaead5728d818aeaf343732b8a8e10cc",
+    "src/ciw/calibrated_window.py": "49ff8049eda6ae470df7d0fb374e6e96e51dd3709439a11fbc6cdc8eaa502350",
+    "src/ciw/polymer_ingress.py": "8c59fe635d129f896ff05a05ca84a6220dd0e82e77b43815899f6c3c91782401",
+    "src/ciw/polymer_metrology.py": "5c9ebd9b5eba51b62f11781b4393de179a9f04d1fd7964832649b57f92093f2f",
+    "src/ciw/system_spec.py": "ec9007d0bfa94ba1ca8a5e05059027875c8d3a905b727e0f8c6187a8e389f01e",
+    "src/ciw/system_models.py": "d2ccff42ee80cbc81bb997494bf47b7d46a6dfad6651cd4b1c2301ce79e87fce",
+    "src/ciw/system_execution.py": "ba2c4e2c8cc35df4546a49ec6af713002d40413e5b7d287100a4360110dff517",
+    "src/ciw/operations/runner.py": "99d484e3ada6893884a69867cc78daacb8293d75633fae4fe28604426366ce94",
+    "src/ciw/industrial_transition.py": "605c597cb36907f17360b7027f4222037d1f8578266c7c564a1e64bbea4a22da",
+    "src/ciw/interop_ingress.py": "d224bd78c12f8defe04c6ac4acc0959619072b7d4e2aac43aa50026e20b8f928",
+    "src/ciw/native_interop.py": "6a3653920554b1341ee7e1f96caa11e83ebd5a7ac906b8cfe5e8b69ee35cfdd8",
+    "src/ciw/geometry_covariance_contract.py": "574710518e6b38b97d3cebde2bce4cb8d4d499ae8a3c4e6daced5298bfdd7b9e",
+    "src/ciw/polymer_workflow.py": "c91788637e956a30ea1b2e0689e837c1aec9095004fb3644d40225398bf16f84",
+    "src/ciw/polymer_models.py": "0ce9c53cb79e6c52b777e8cc46bbac4c185f536f026e3e688e6f689232d4732e",
+    "src/ciw/polymer_verification.py": "a7191d002462801bd24df31fe6e8af4fb3dc2e20b2f91330e785aa63b611f23e",
+    "src/ciw/refurbishment_contract.py": "9674f58c8c80993e1050a6a519e9ee3c6b0ee3f79b164a9691b6c32c223e1698"
+  },
+  "changed_files": {
+    "src/ciw/polymer_microfab_contract.py": {
+      "sha256": "82fd48a84d9d4e6b54d3ca1defc6637991c6fc7461db84e11033ff69668ca58e",
+      "git_blob": "65da82ad8cca702bf715217325f4ac3d18972fd2",
+      "bytes": 12755
+    },
+    "src/ciw/polymer_microfab.py": {
+      "sha256": "fd0828fc47f2fda8d2caebcb6e1dc35e5be1a5d01f0a31c75ea1f000b91ccd74",
+      "git_blob": "350347c2f1f433216885abecf91ce3e51505fde8",
+      "bytes": 11202
+    },
+    "src/ciw/polymer_microfab_cli.py": {
+      "sha256": "7fe01328e095e126e69d450a0c26749224445a4491732c48648856c416c3059f",
+      "git_blob": "2eb5d5fcf5a8879b87c6e61d73b116948e110214",
+      "bytes": 2941
+    },
+    "src/ciw/polymer_cli.py": {
+      "sha256": "0d50bcc08a168f47dfa80363978c4866026feb95a9fdeba45728a14403517b6b",
+      "git_blob": "b080fc6b73f3a5b86a1649635ca2e6ec2e575de8",
+      "bytes": 7982
+    },
+    "tests/test_polymer_microfab.py": {
+      "sha256": "3c13154bf8540305132c2c43e7b253aa0b1c8ac38d0fe6cbc65d8a2a702422a1",
+      "git_blob": "cd311dfc0842c285fd6eb3cc7819a370da59dd90",
+      "bytes": 17280
+    },
+    "docs/POLYMER_MICROFAB_AUDIT.md": {
+      "sha256": "065b8a35c74f293da93ecefc8d7983b8d6e77e3525c44d80e76eb606ec8a3c2e",
+      "git_blob": "c07f63c6ac16810b8bd174fa0d44d7ae01429c23",
+      "bytes": 13312
+    },
+    ".github/workflows/polymer-microfab.yml": {
+      "sha256": "05048ce137c8c3194650646e0c69b44417e6186f3056c3b617089ec28ba3a65f",
+      "git_blob": "4d5858974d8e6155b9b44aea67d924e94f96fcff",
+      "bytes": 2492
+    }
+  },
+  "projection_runtime": {
+    "provider": "ciw.polymer-microfab-projection.v1",
+    "code_sha256": "22fa6f4a7b1a9556b5290777e67be4ca1576ebb2e653237aee42d1a881eaa5f5",
+    "source_normalization": "utf8_lf",
+    "scope": "data_only_production_binding_and_residual_projection"
+  },
+  "limitations": [
+    "No full repository clone or full repository regression run.",
+    "No locally built/installed candidate wheel.",
+    "NumPy 2.3.5 differs from the 2.4.3 project pin.",
+    "Windows and hosted matrix not yet verified.",
+    "Valid native ingress/provider execution not exercised in this increment.",
+    "No hardware connection, OPC UA transport, physical calibration, authenticated identity, product or shipment release.",
+    "Source hashes are content integrity, not signatures.",
+    "Residual runtime verification reuses its deterministic projection; independent Decimal arithmetic is in tests only.",
+    "Open PR172/173/174/175 not incorporated."
+  ]
+}

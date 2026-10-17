@@ -33,7 +33,7 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - run: python -m pip install -e ".[dev]"
+      - run: python -m pip install -e ".[dev,external-work,legibility]"
       - name: Run full Python regression suite with diagnostic evidence
         run: python -m pytest -q --durations=20 -o faulthandler_timeout=300 --junitxml=python-tests.xml
       - name: Retain Python regression results

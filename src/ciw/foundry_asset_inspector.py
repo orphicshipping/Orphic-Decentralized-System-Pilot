@@ -32,6 +32,7 @@ func run() -> void:
             push_error("duplicate imported mesh name");quit(2);return
         var lo:=Vector3(INF,INF,INF);var hi:=Vector3(-INF,-INF,-INF)
         var vertex_count:=0;var triangle_count:=0
+        var surfaces: Array=[]
         for surface in range(node.mesh.get_surface_count()):
             var arrays:=node.mesh.surface_get_arrays(surface)
             var vertices: PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
@@ -39,9 +40,17 @@ func run() -> void:
             for point in vertices:
                 var p: Vector3=node.global_transform*point
                 lo=lo.min(p);hi=hi.max(p)
+            if request.get("schema", "")=="ciw.gltf-import-request.v1":
+                var local_points: Array=[];var world_points: Array=[]
+                for point in vertices:
+                    local_points.append(v(point));world_points.append(v(node.global_transform*point))
+                surfaces.append({"local_positions":local_points,"world_positions":world_points,
+                    "indices":Array(indices)})
             vertex_count+=vertices.size()
             triangle_count+=int(indices.size()/3) if not indices.is_empty() else int(vertices.size()/3)
         parts[str(node.name)]={"min":v(lo),"max":v(hi),"vertices":vertex_count,"triangles":triangle_count}
+        if request.get("schema", "")=="ciw.gltf-import-request.v1":
+            parts[str(node.name)]["surfaces"]=surfaces
         var body:=StaticBody3D.new();body.name=node.name;world.add_child(body)
         body.global_transform=node.global_transform
         var hull:=CollisionShape3D.new();hull.shape=node.mesh.create_trimesh_shape();body.add_child(hull)

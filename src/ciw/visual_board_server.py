@@ -10,6 +10,8 @@ from http.server import BaseHTTPRequestHandler, HTTPServer
 import json
 from pathlib import Path
 import secrets
+import socket
+import time
 from threading import RLock
 import uuid
 
@@ -38,6 +40,7 @@ from .visual_representation_gate import (
 )
 
 MAX_REQUEST_BYTES = 64 * 1024
+CLOSE_DRAIN_SECONDS = 1.0
 MAX_ACTIONS = 256
 SAFE_OPERATIONS = {"statistics.v1", "spectrum.periodogram.v1"}
 
@@ -46,10 +49,11 @@ class BoardWorkbench:
     """Thin UI adapter. It retains the original Board and one ordinary Session."""
     def __init__(self, board: dict, output_dir: Path, *, source: dict | None = None,
                  allow_run=False, morphism_registry: dict | None = None,
-                 intervention_binding: dict | None = None):
+                 intervention_binding: dict | None = None, execution_profile=None):
         self.board = validate_board(board)
-        self.concrete = builtin_registry(bind=True)
-        self.semantic = builtin_semantic_registry(self.concrete)
+        self.execution_profile = execution_profile
+        self.concrete = builtin_registry(bind=True) if execution_profile is None else execution_profile.registry()
+        self.semantic = builtin_semantic_registry(self.concrete) if execution_profile is None else execution_profile.semantic(self.concrete)
         self.source = deepcopy(source)
         self.allow_run = bool(allow_run)
         if (morphism_registry is None) != (intervention_binding is None):
@@ -82,6 +86,8 @@ class BoardWorkbench:
             raise ValueError("Execution is disabled; operator must supply --allow-run")
         if self.source is None or compilation is None:
             raise ValueError("Execution requires a valid source and executable Board")
+        if self.execution_profile is not None:
+            return self.execution_profile.preflight(board, compilation, self.source)
         if board["model_id"] != "analytic-damped-oscillator.v1" or self.source.get("instrument") != board["model_id"]:
             raise ValueError("Visual execution V1 is qualified only for the retained analytic oscillator")
         validate_run(self.source)
@@ -210,7 +216,9 @@ class BoardWorkbench:
         path = self._directory("baseline")
         save_new(path / "compilation.json", self.compilation)
         if self.session is None:
-            self.session = Session(self.source, self.output_dir / "session", operations=self.concrete.operations)
+            self.session = (Session(self.source, self.output_dir / "session", operations=self.concrete.operations)
+                            if self.execution_profile is None else self.execution_profile.session(
+                                self.output_dir / "session", self.concrete))
         run = run_graph(self.session, self.compilation["semantic_compilation"]["experiment"], self.concrete)
         save_new(path / "run.json", run)
         if run["status"] == "completed":
@@ -289,6 +297,31 @@ class BoardWorkbench:
         return {"receipt": receipt, "run": run, "delta": delta,
                 "intervention_gate": gate, "promotion": promotion,
                 "baseline_ref": baseline_ref, "retained_directory": path.name}
+
+
+class _BoardHTTPServer(HTTPServer):
+    def shutdown_request(self, request):
+        # RFC 9112 section 9.6: a full close with a body still in flight can
+        # reset TCP and erase the refusal response, notably on Windows.
+        # Half-close writes, then discard only a bounded amount of trailing
+        # transport data. Discarded bytes never become another API request.
+        try:
+            request.shutdown(socket.SHUT_WR)
+            deadline = time.monotonic() + CLOSE_DRAIN_SECONDS
+            remaining = MAX_REQUEST_BYTES
+            while remaining:
+                timeout = deadline - time.monotonic()
+                if timeout <= 0:
+                    break
+                request.settimeout(min(timeout, CLOSE_DRAIN_SECONDS))
+                received = request.recv(min(8192, remaining))
+                if not received:
+                    break
+                remaining -= len(received)
+        except OSError:
+            pass  # Peer closure or expiry must still release the socket.
+        finally:
+            self.close_request(request)
 
 
 def make_server(workbench: BoardWorkbench, *, port=0) -> HTTPServer:
@@ -393,7 +426,7 @@ def make_server(workbench: BoardWorkbench, *, port=0) -> HTTPServer:
             except OSError:
                 self.send(500, {"status": "refused", "reason": "Local retention failed; no success claimed"})
 
-    server = HTTPServer(("127.0.0.1", port), Handler)
+    server = _BoardHTTPServer(("127.0.0.1", port), Handler)
     server.board_token = token
     server.board_url = f"http://127.0.0.1:{server.server_port}/#token={token}"
     return server

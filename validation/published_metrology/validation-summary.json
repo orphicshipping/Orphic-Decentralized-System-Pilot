@@ -1,0 +1,77 @@
+{
+  "schema": "net.published-experiment-software-qualification.v1",
+  "generated_at_utc": "2026-10-04T22:22:15.189488+00:00",
+  "status": "passed_bounded_kernel_reproduction",
+  "scope": "Version-specific software reproduction of published calibrated-experiment data reductions.",
+  "tested_artifact": {
+    "distribution": "computational-instrumentation-workbench",
+    "version": "0.1.0",
+    "reference_kernel_git_revision": "1f086a30d13193f25847f329e98571479b287369",
+    "wheel_sha256": "5c1eb9c2a8268d549477516ef98996c154d8fa975beaa2f06a50fea04124894c",
+    "module_sha256": {
+      "temperature_processing": "f4dea340ebf3250ee8fca7c4a7d5f9b148f216c8f9dda58302ab8709bec73dea",
+      "calibrated_window": "49ff8049eda6ae470df7d0fb374e6e96e51dd3709439a11fbc6cdc8eaa502350"
+    },
+    "installed_package_files_matched_to_wheel": 392,
+    "python": "3.12.13",
+    "platform": "Windows-11-10.0.26200-SP0"
+  },
+  "summary": {
+    "cases": 147,
+    "passed": 147,
+    "failed": 0,
+    "thermocouple_nominal_range_C": [
+      200,
+      1000
+    ],
+    "GHP_budget_range_C": [
+      200,
+      700
+    ]
+  },
+  "runner_sha256": "0d1dd9595f9baa37597251e1936818753f8e7f3c3c1161b016e3bcf15edee5d8",
+  "inputs_manifest_sha256": "fdcaab8ab0254c92c08352e6b977b93860e27ba3d27be4ace27d8fef496add8c",
+  "reference_kind": "Author-published workbook caches and printed table values; no outputs fitted to NET results.",
+  "harness_disclosures": [
+    "Affine checks are static linearized reference temperature plus published thermocouple deviation, converted to kelvin.",
+    "time_s=0 and zero covariance are harness-only placeholders required by private _sensor_output; their output is discarded. They do not declare actual time or zero measurement uncertainty.",
+    "Only nominal temperature is checked by affine cases; temperature uncertainty is not qualified.",
+    "The reference kernel revision identifies pinned module bytes; the runner does not independently attest the full wheel build provenance.",
+    "RSS uses the published diagonal-covariance reduction, not a physical independence claim.",
+    "Tolerances describe numerical reproduction/printed precision, not instrument accuracy or measurement uncertainty."
+  ],
+  "not_qualified": [
+    "Full MCP admission, acquisition, retained execution and result-to-ledger delivery with these sources",
+    "NET thermal inverse model, core-temperature prediction, or leakage inventory assessment",
+    "Correlated uncertainty propagation against experimental covariance data",
+    "Independent held-out physical accuracy, repeatability or drift claims",
+    "Thermocouple reference serial/certificate chain missing from KRISS workbook",
+    "Use outside the exact tested source rows and numerical conditions"
+  ],
+  "correction_status": "Source snapshots pinned; external corrections not continuously monitored. Source, fixture or module changes require rerun and review.",
+  "build_source_commit": "1f086a30d13193f25847f329e98571479b287369",
+  "build_method": "python -m build --wheel --no-isolation on the main-integrated checkout; each packaged ciw file matched to the named main source, then installed in a fresh isolated runtime.",
+  "source_data_distributed": false,
+  "full_results_retained_locally": true,
+  "integrity_regressions": {
+    "tests": 20,
+    "passed": 20,
+    "failed": 0,
+    "duration_seconds": 5.724
+  },
+  "historical_run": {
+    "source": "NET-metrology-corpus-0.2 qualification/report.json",
+    "reference_git_revision": "f59bd7569c26107f677956e58f2abbaefbf300c4",
+    "wheel_sha256": "93321a2814c4d9c65dcbf34b645f44e4248d9e9148a150a433cf298f30ed7b33",
+    "summary": "147 bounded cases passed in the historical run; this metadata is not the current run result."
+  },
+  "package_files_matched_to_build_source": 392,
+  "tested_harness_local_commit": "77ecf9e189f5ff11c8397c600113890ad9413dd6",
+  "tested_harness_tree": "968718ea645cbd0c656570672799911668b45ec3",
+  "runtime_note": "Fresh wheel built after integrating main. All 392 packaged ciw files match the named source and installed runtime.",
+  "interruption_check": {
+    "exit_code": 130,
+    "retained_report_status": "interrupted",
+    "passing_counts_claimed": false
+  }
+}

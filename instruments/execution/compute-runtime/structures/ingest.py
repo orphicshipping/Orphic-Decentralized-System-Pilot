@@ -88,6 +88,7 @@ GATE_INVARIANTS = (
 _QUANTITY_REFUSALS = (
     "without a unit", "not one of", "contradicts", "requires the",
     "bare scalars",
+    "quantity value", "quantity uncertainty",
 )
 
 

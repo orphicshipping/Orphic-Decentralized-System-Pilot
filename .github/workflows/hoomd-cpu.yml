@@ -1,0 +1,44 @@
+name: HOOMD native CPU
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  native-cpu-installed-wheel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mamba-org/setup-micromamba@v2
+        with:
+          environment-name: hoomd-cpu
+          create-args: >-
+            python=3.12.14
+            hoomd=7.2.0=cpu_py312_h3353ea4_0
+            gsd=5.0.1
+            numpy=2.4.3
+            pip
+            -c conda-forge
+          cache-environment: true
+      - name: Build isolated NET installation and exercise the native gate
+        shell: bash -el {0}
+        run: |
+          python -m venv "$RUNNER_TEMP/net-particles"
+          "$RUNNER_TEMP/net-particles/bin/python" -m pip install '.[dev,particles]'
+          "$RUNNER_TEMP/net-particles/bin/python" scripts/check_hoomd.py \
+            --python "$CONDA_PREFIX/bin/python" --output-dir results/hoomd-cpu
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: hoomd-cpu-evidence
+          path: results/hoomd-cpu

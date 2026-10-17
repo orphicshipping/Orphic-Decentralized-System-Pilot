@@ -1,0 +1,13 @@
+{
+  "schema": "ciw.agent-host-profile.v1",
+  "inputs": {
+    "catalog": "catalog.json"
+  },
+  "output_dir": null,
+  "allow_operations": [],
+  "candidate_domains": {},
+  "comparisons": {},
+  "check_suites": {},
+  "max_executions": 1,
+  "max_nodes": 1
+}

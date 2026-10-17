@@ -1,0 +1,14 @@
+{
+  "schema": "ciw.polymer-viscoelastic-request.v1",
+  "model": "uniaxial-generalized-maxwell.v1",
+  "equilibrium_modulus_pa": 1000000.0,
+  "modes": [
+    {"id": "fast", "modulus_pa": 2000000.0, "relaxation_time_s": 0.1},
+    {"id": "slow", "modulus_pa": 3000000.0, "relaxation_time_s": 10.0}
+  ],
+  "temperature_k": 300.0,
+  "initial_condition": "instantaneous-elastic-at-t0",
+  "time_s": [0.0, 0.01, 0.1, 1.0, 10.0, 100.0],
+  "strain": [0.001, 0.001, 0.001, 0.001, 0.001, 0.001],
+  "frequency_hz": [0.0, 0.001, 0.01, 0.1, 1.0, 10.0, 1000.0]
+}

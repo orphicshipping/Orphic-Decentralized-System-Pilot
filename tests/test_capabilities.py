@@ -20,6 +20,11 @@ INDEXED = (
     "system.verify.v1",
     "system.compare.v1",
     "system.study.v1",
+    "data.project-gltf-mesh.v1",
+    "data.compare-observations.v1",
+    "data.review-product-study.v1",
+    "data.assess-polymer-cycle.v1",
+    "data.review-toolpoint-containment.v1",
     "learning.oscillator-rms",
     "doctor.preflight",
     "linear-response.library",
@@ -137,6 +142,8 @@ forbidden = {
     "ciw.doctor", "ciw.operations", "ciw.operations.registry",
     "ciw.adapters", "ciw.adapters.oscillator", "ciw.adapters.protocol",
     "ciw.adapters.registry", "ciw.server", "ciw.cli",
+    "ciw.data_workflow", "ciw.data_compute_bridge", "ciw.polymer_workflow",
+    "ciw.data_manufacturing_bridge", "ciw.manufacturing_runtime", "ciw.toolpoint_stream_containment",
 }
 print(json.dumps(sorted(forbidden & set(sys.modules))))
 """

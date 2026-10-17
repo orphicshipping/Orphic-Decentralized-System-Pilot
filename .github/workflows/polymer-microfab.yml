@@ -1,0 +1,75 @@
+name: Polymer production dossiers and namespace coexistence
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/**'
+      - 'tests/test_polymer_production_dossier.py'
+      - 'tests/test_polymer_namespace_coexistence.py'
+      - 'tests/test_microfab.py'
+      - 'tests/test_polymer_manufacturing.py'
+      - 'tests/test_polymer_toolpoint_qc.py'
+      - 'pyproject.toml'
+      - '.github/workflows/polymer-microfab.yml'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || (github.event_name == 'push' && github.ref) || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  retained-production:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - name: Preserve source bytes on Windows
+        if: runner.os == 'Windows'
+        run: |
+          git config --global core.longpaths true
+          git config --global core.autocrlf false
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build and install candidate with repository-pinned dependencies
+        run: python -m pip install ".[dev]"
+      - name: Test installed candidate, not the source pythonpath
+        run: python -m pytest -q -o pythonpath= tests/test_polymer_production_dossier.py tests/test_polymer_namespace_coexistence.py tests/test_microfab.py tests/test_polymer_manufacturing.py tests/test_polymer_toolpoint_qc.py --junitxml=microfab-tests.xml
+      - name: Installed CLI outside the source directory
+        working-directory: ${{ runner.temp }}
+        run: |
+          net polymer microfab example --output declaration-plan.json
+          net polymer microfab compile declaration-plan.json --output declaration-envelope.json
+          net polymer microfab verify declaration-plan.json declaration-envelope.json
+          net polymer manufacture demo --quality-control --output manufacturing-report.json
+          net polymer manufacture verify manufacturing-report.json --output manufacturing-audit.json
+          net polymer dossier demo --output-dir microfab-demo
+          net polymer dossier inspect microfab-demo
+          net polymer dossier verify microfab-demo --output microfab-audit.json
+          net polymer dossier replay microfab-demo --output-dir microfab-replay
+          net polymer qualify --output-dir microfab-polymer-baseline
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: microfab-${{ matrix.os }}-python-${{ matrix.python }}
+          path: |
+            microfab-tests.xml
+            ${{ runner.temp }}/microfab-demo
+            ${{ runner.temp }}/microfab-audit.json
+            ${{ runner.temp }}/microfab-replay
+            ${{ runner.temp }}/microfab-polymer-baseline
+          if-no-files-found: error
+          retention-days: 14

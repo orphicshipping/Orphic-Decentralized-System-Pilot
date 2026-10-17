@@ -2,11 +2,12 @@
 
 Added to the NET external-tool inventory: **2026-10-05**.
 
-**Status: planning guide / contract only; adapter and qualification pending.**
-This addition is documentation-only. It installs no dependency, registers no
-executable operation, runs no provider or training job, and grants no equipment
-authority. Existing source references to ALCHEMI, including ecosystem inventories
-and research-test commentary, do not establish a callable NET integration.
+**Status: optional bounded LJ energy/force adapter source implemented; native
+ALCHEMI CPU/CUDA qualification remains pending.** See the [pilot operator and
+validation guide](NVALCHEMI_PILOT.md). This extends the original documentation-only
+inventory with an explicitly bound worker and provider-free contract tests.
+No dependency is installed or provider bound by default. MLIPs, relaxation,
+dynamics and training remain future profiles; no equipment authority is granted.
 
 ## Upstream identity and inspected scope
 
@@ -16,11 +17,11 @@ and research-test commentary, do not establish a callable NET integration.
 | Package / import | `nvalchemi-toolkit` / `nvalchemi` |
 | Official documentation | <https://nvidia.github.io/nvalchemi-toolkit/> |
 | Upstream repository | <https://github.com/NVIDIA/nvalchemi-toolkit> |
-| Inspected upstream source | `bf605f9191b2978fc865f4286d11e4481b679999`; documentation reference, **not** a qualified NET execution pin |
+| Inspected upstream source | `bf605f9191b2978fc865f4286d11e4481b679999`; required pilot source revision; **not** a native qualification receipt |
 | Published documentation observed | Version label `0.2.0`; live documentation may differ from a source checkout |
 | Upstream license | Apache-2.0; retain upstream notices. Model weights, datasets and optional dependencies require their own license review. |
 | NET role | Optional atomistic simulation, interatomic-potential evaluation and future model-training provider |
-| NET runtime qualification | **Not performed** |
+| NET runtime qualification | Explicit CPU LJ gate below; no GPU, learned-model, dynamics or physical qualification |
 
 The [inspected upstream README](https://github.com/NVIDIA/nvalchemi-toolkit/blob/bf605f9191b2978fc865f4286d11e4481b679999/README.md)
 describes batched molecular dynamics and geometry relaxation, machine-learned
@@ -38,7 +39,7 @@ that a particular checkpoint covers a polymer, charge state or process regime.
 
 ```text
 NET evidence, operation, execution and verification contracts
-  -> explicitly bound, isolated ALCHEMI worker (future adapter)
+  -> explicitly bound, isolated ALCHEMI worker (bounded LJ pilot; other profiles pending)
   -> selected model and nvalchemi-toolkit / toolkit-ops dependencies
   -> retained atomic results and trajectories
   -> independent NET review and downstream scientific computation
@@ -57,18 +58,19 @@ runtime, a lattice-Boltzmann solver, continuum polymer-flow computation, or a
 qualified injection-molding model. Atomistic-to-continuum property/closure
 transfer requires its own assumptions, scale mapping and validation evidence.
 
-## Bounded implementation sequence (not registered operations)
+## Bounded implementation sequence
 
 | Stage | Proposed scope | Gate before promotion |
 | --- | --- | --- |
-| 1 | Single-configuration energy and forces; stress only where supported | Pin one model/environment; validate input/output semantics; retain independent reference and refusal checks. |
+| 1 | `atomic.lj-energy-forces.v1`: synthetic non-periodic LJ energy/force pilot | Adapter, scalar checks and offline schemas implemented; operator binding and native qualification required. Stress and MLIP checkpoints remain unsupported. |
 | 2 | Bounded geometry relaxation | Retain convergence criteria, all failures, final residual forces and model applicability; convergence alone does not prove physical correctness. |
 | 3 | Short, specified-ensemble molecular-dynamics trajectory | Verify timestep sensitivity and ensemble-appropriate diagnostics; test checkpoint/replay and preserve stochastic state. |
 | 4 | Private training or fine-tuning | Authorized datasets and weights, frozen dataset manifests, leakage-resistant splits, held-out reference evaluation and separate checkpoint promotion. |
 
-No `ciw.*` operation identifier is claimed or reserved by this guide. The first
-implementation must reuse the existing registration and retained-workflow
-mechanisms rather than introduce a parallel execution registry.
+The pilot reuses `PinnedSubprocessAdapter`, `OperationRegistry`, the existing
+execution/result envelopes and Session save/reopen. Its backend operation and
+offline schema are registered only by trusted setup, never by saved files.
+No parallel execution registry or default provider binding is introduced.
 
 ## Required adapter and evidence contract
 

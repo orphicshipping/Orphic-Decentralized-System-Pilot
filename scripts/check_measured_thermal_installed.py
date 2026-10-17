@@ -24,7 +24,7 @@ import zipfile
 SELECTED = ("test_measured_thermal.py", "test_measured_thermal_review.py",
             "test_measured_thermal_exports.py")
 HELPERS = ("test_scientific_observations.py", "test_thermal_workflow.py")
-EXPECTED_CASES = 73
+EXPECTED_CASES = 106
 
 PYTEST_CHILD = r"""
 import json

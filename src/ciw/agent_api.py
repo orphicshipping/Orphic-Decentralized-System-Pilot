@@ -66,6 +66,9 @@ def _count(value: int, maximum: int) -> int:
 
 def _validated(value: dict) -> dict:
     """Reuse trusted offline readers, never an executable chosen by saved data."""
+    if value.get("schema") == "ciw.provider-catalog.v1":
+        from .control_plane import inspect_provider_catalog
+        return inspect_provider_catalog(value)
     if "workspace_version" in value:
         with tempfile.TemporaryDirectory(prefix="net-agent-inspect-") as directory:
             root = Path(directory)
@@ -79,6 +82,9 @@ def _validated(value: dict) -> dict:
     if value.get("schema") == "ciw.source-selection.v1":
         from .computational_source import validate_capture
         return validate_capture(value)
+    if value.get("schema") == "ciw.link-scalar-study.v1":
+        from .link_study import validate_request
+        return validate_request(value)
     if "run_id" in value and "channels" in value:
         from .instruments import validate_run
         from .core.identities import validate_evidence_identity
@@ -358,7 +364,7 @@ class AgentHost:
         key = self._resolve(artifact)
         value = self._get(key)
         # External workspaces are validated without executing providers.
-        if "workspace_version" in value:
+        if "workspace_version" in value or value.get("schema") == "ciw.provider-catalog.v1":
             value = _validated(value)
         selector = [] if selector is None else selector
         if type(selector) is not list or len(selector) > 12:
@@ -443,6 +449,22 @@ class AgentHost:
         return {"candidate": binding, "baseline": self._binding(key), "changes": deepcopy(changes),
                 "executed": False, "authority": deepcopy(AUTHORITY)}
 
+    def validate_plan(self, run: dict, value: dict):
+        """Check source/graph eligibility before admission or dispatch."""
+        _validated(run)
+        if "run_id" not in run or "channels" not in run:
+            raise ValueError("Execution requires an explicitly bound source run, not a view or workspace")
+        order = plan_graph(value, self._registry)
+        if len(order) > self._max_nodes:
+            raise ValueError("Experiment exceeds host node budget")
+        for node in value["nodes"]:
+            if node["operation_id"] not in self._allow:
+                raise ValueError("Operation is not enabled for this agent")
+            self._registry.operations.get(node["operation_id"])
+        if encode(self._registry.catalog()) != self._catalog:
+            raise ValueError("Registry changed after host policy was frozen")
+        return order
+
     def execute(self, source: str, graph: str, attempt: str) -> dict:
         root = self._check_output()
         identifier(attempt)
@@ -457,18 +479,7 @@ class AgentHost:
         if len(self._attempts) >= self._maximum:
             raise ValueError("Execution budget exhausted")
         value, run = self._get(graph_key), self._get(source_key)
-        _validated(run)
-        if "run_id" not in run or "channels" not in run:
-            raise ValueError("Execution requires an explicitly bound source run, not a view or workspace")
-        order = plan_graph(value, self._registry)
-        if len(order) > self._max_nodes:
-            raise ValueError("Experiment exceeds host node budget")
-        for node in value["nodes"]:
-            if node["operation_id"] not in self._allow:
-                raise ValueError("Operation is not enabled for this agent")
-            self._registry.operations.get(node["operation_id"])
-        if encode(self._registry.catalog()) != self._catalog:
-            raise ValueError("Registry changed after host policy was frozen")
+        self.validate_plan(run, value)
         # Commit the retry identity before creating a Session or invoking a provider.
         # A crash after this checkpoint has an unknown outcome and never auto-replays.
         interrupted = {"attempt": attempt, "status": "incomplete", "reused_response": False,

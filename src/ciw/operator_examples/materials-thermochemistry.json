@@ -1,0 +1,24 @@
+{
+  "schema": "ciw.thermochemical-benchmark-request.v1",
+  "model": "closed-thermochemical-a-to-b.v1",
+  "species_order": ["A", "B"],
+  "initial_concentration_mol_m3": [2.0, 0.25],
+  "initial_temperature_k": 300.0,
+  "bath_temperature_k": 290.0,
+  "reference_temperature_k": 300.0,
+  "reference_rate_s_inv": 0.1,
+  "activation_energy_j_mol": 20000.0,
+  "reaction_internal_energy_j_mol": -20000.0,
+  "heat_capacity_j_m3_k": 2000.0,
+  "heat_transfer_w_m3_k": 100.0,
+  "volume_m3": 0.01,
+  "time_s": [0.0, 0.01, 0.1, 0.5, 1.0, 2.0, 5.0, 10.0, 20.0, 50.0],
+  "solver": {
+    "rtol": 1e-9,
+    "atol_concentration_mol_m3": 1e-11,
+    "atol_temperature_k": 1e-8,
+    "atol_heat_j": 1e-8,
+    "max_step_s": 0.5,
+    "max_steps": 100000
+  }
+}

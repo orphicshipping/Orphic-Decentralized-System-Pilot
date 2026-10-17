@@ -1,0 +1,4904 @@
+{
+  "date": "2026-10-17",
+  "status": "local_scoped_checks_passed_hosted_and_native_qualification_pending",
+  "review_pr": "https://github.com/notationsystems/Notations-Control-Protocol/pull/229",
+  "code_commit": "11b2a72b810adb525e5bbc5aa576662f77c8df99",
+  "environment": {
+    "python": "3.12.14",
+    "numpy": "2.4.3",
+    "platform": "Linux",
+    "source": "GitHub blob reconstruction; no local native Git history"
+  },
+  "modules": 502,
+  "counts": {
+    "tests": 19930,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1168
+  },
+  "passed_cases": 18762,
+  "history_gates_not_qualified": [
+    "test_monorepo.py",
+    "test_module_update.py"
+  ],
+  "selected_checks": {
+    "clean_installed_wheel_ncp": 531,
+    "cli_help_entry_points": 78,
+    "installed_evidence_analysis_inspection_replay": "passed",
+    "wheel_build": "passed",
+    "undefined_names": "passed"
+  },
+  "report_sha256": "b93c3767c6041c335fbf6c356f71f0dacdd946a59902754566779f67012bd419",
+  "skip_reasons": [
+    {
+      "reason": "Actual GPU energy probe requires CIW_ENERGY_GPU=1",
+      "count": 1
+    },
+    {
+      "reason": "Actual OpenUSD SDK is required for this test",
+      "count": 14
+    },
+    {
+      "reason": "Actual OpenUSD SDK required",
+      "count": 1
+    },
+    {
+      "reason": "Bind CIW_MEASUREMENT_CHAIN_STACK_ROOT for the native assembly gate",
+      "count": 8
+    },
+    {
+      "reason": "CIW_LEAKAGE_PROVIDER_CHECKOUT must name an existing FSRT checkout",
+      "count": 43
+    },
+    {
+      "reason": "Exact operator-provisioned FSRT checkout is unavailable",
+      "count": 9
+    },
+    {
+      "reason": "Exact operator-provisioned FlowState checkout is unavailable",
+      "count": 20
+    },
+    {
+      "reason": "Explicit CIW_OPERATOR_MONOREPO native integration source is unavailable",
+      "count": 1
+    },
+    {
+      "reason": "Explicit real PyArrow gate not selected",
+      "count": 1
+    },
+    {
+      "reason": "Independent Rust checker executable is not bound; no native claim",
+      "count": 1
+    },
+    {
+      "reason": "Native Windows directory sharing",
+      "count": 1
+    },
+    {
+      "reason": "Native Windows extended-path filesystem",
+      "count": 18
+    },
+    {
+      "reason": "Native free-energy gate requires pinned CSG, GSIE and PLSR",
+      "count": 33
+    },
+    {
+      "reason": "Native geometry gate requires exact CGGT, ISGT and TSDE checkouts",
+      "count": 18
+    },
+    {
+      "reason": "Native geometry session requires exact CGGT, ISGT and TSDE checkouts",
+      "count": 2
+    },
+    {
+      "reason": "Optional SCR DSP library not bound; dedicated DSP CI requires it",
+      "count": 28
+    },
+    {
+      "reason": "Optional attached-snapshot QC adapter is not installed",
+      "count": 147
+    },
+    {
+      "reason": "Optional legacy evaluator is not installed",
+      "count": 2
+    },
+    {
+      "reason": "Optional qualified Arrow/Parquet runtime is not installed",
+      "count": 2
+    },
+    {
+      "reason": "Original TCLab bytes and native SCR DSP library are both required",
+      "count": 1
+    },
+    {
+      "reason": "Original TCLab bytes and native library are required for the binding test",
+      "count": 1
+    },
+    {
+      "reason": "Original Tclab prefix absent; no synthetic substitution",
+      "count": 1
+    },
+    {
+      "reason": "Original acquired CAREX bytes absent; no synthetic substitution",
+      "count": 1
+    },
+    {
+      "reason": "Original acquired Norris source absent; no data substitution",
+      "count": 1
+    },
+    {
+      "reason": "Original pinned FAO56 worked reference is required",
+      "count": 1
+    },
+    {
+      "reason": "Original pinned academic files not supplied; no synthetic substitution",
+      "count": 2
+    },
+    {
+      "reason": "Pinned academic acquisition absent; no synthetic substitution",
+      "count": 9
+    },
+    {
+      "reason": "Provide GSC_LOCAL_FRAME_ROOT for native provider tests",
+      "count": 3
+    },
+    {
+      "reason": "Python 3.11 Windows PATHEXT compatibility",
+      "count": 1
+    },
+    {
+      "reason": "Real SP1 gate requires SCR, native engine, CPU host and registered heat ELF",
+      "count": 5
+    },
+    {
+      "reason": "Real native stages require CIW_FREE_ENERGY_STACK_ROOT or all three per-provider paths",
+      "count": 16
+    },
+    {
+      "reason": "Requires explicitly bound ALCHEMI CPU environment and clean NET source revision",
+      "count": 1
+    },
+    {
+      "reason": "Requires three clean pinned scientific checkouts",
+      "count": 12
+    },
+    {
+      "reason": "Set CIW_ACQUISITION_REPO, CIW_RUNTIME_REPO and CIW_SET_REPO for actual producer integration",
+      "count": 2
+    },
+    {
+      "reason": "Set CIW_CSG_REPO to the approved native checkout",
+      "count": 34
+    },
+    {
+      "reason": "Set CIW_CSG_REPO to the pinned curved-surface provider checkout",
+      "count": 35
+    },
+    {
+      "reason": "Set CIW_FTR_REPO and CIW_CSG_REPO to exact native checkouts",
+      "count": 2
+    },
+    {
+      "reason": "Set CIW_FTR_REPO to the approved native checkout",
+      "count": 33
+    },
+    {
+      "reason": "Set CIW_GLTF_GODOT for explicit native import",
+      "count": 1
+    },
+    {
+      "reason": "Set CIW_GTE_REPO for the pinned native GTE catalog gate",
+      "count": 16
+    },
+    {
+      "reason": "Set CIW_GTE_REPO to exercise the real pinned GTE subprocess",
+      "count": 19
+    },
+    {
+      "reason": "Set CIW_ISGT_REPO for pinned native mesh solve",
+      "count": 1
+    },
+    {
+      "reason": "Set CIW_MEASUREMENT_VISUALIZER_EVIDENCE_DIR to the retained public evidence v2 package",
+      "count": 28
+    },
+    {
+      "reason": "Set CIW_NIST_DSC_SOURCE_PDF to the retained NIST publication for integration",
+      "count": 1
+    },
+    {
+      "reason": "Set CIW_RCI_REPO and CIW_FSRT_REPO to exercise pinned domain subprocesses",
+      "count": 14
+    },
+    {
+      "reason": "Set CIW_RCI_REPO and CIW_FSRT_REPO to the pinned source checkouts",
+      "count": 1
+    },
+    {
+      "reason": "Set CIW_SCHEMATIC_STACK_ROOT with pinned sra/jspt/plsr checkouts",
+      "count": 30
+    },
+    {
+      "reason": "Set CIW_SET_REPO to the pinned State Estimation Evaluation Testbed",
+      "count": 12
+    },
+    {
+      "reason": "Set CIW_TEST_CUDA=1 to require actual CUDA execution",
+      "count": 14
+    },
+    {
+      "reason": "Set CIW_TEST_REACTION_JULIA and CIW_TEST_REACTION_JULIA_DEPOT for genuine Catalyst tests",
+      "count": 18
+    },
+    {
+      "reason": "Set NET_HOOMD_PYTHON to the qualified HOOMD 7.2.0 CPU interpreter",
+      "count": 19
+    },
+    {
+      "reason": "Windows PATHEXT and implicit lookup semantics",
+      "count": 1
+    },
+    {
+      "reason": "Windows SSL runtime needs its native SystemRoot",
+      "count": 1
+    },
+    {
+      "reason": "Windows directory discovery is platform specific",
+      "count": 1
+    },
+    {
+      "reason": "Windows implicit compiler lookup semantics",
+      "count": 2
+    },
+    {
+      "reason": "Windows implicit executable search semantics",
+      "count": 2
+    },
+    {
+      "reason": "collection skipped",
+      "count": 1
+    },
+    {
+      "reason": "could not import 'PyDynamic': No module named 'PyDynamic'",
+      "count": 16
+    },
+    {
+      "reason": "could not import 'ciw.toolpoint_quality': No module named 'ciw.toolpoint_quality'",
+      "count": 30
+    },
+    {
+      "reason": "could not import 'lyapunov': No module named 'lyapunov'",
+      "count": 11
+    },
+    {
+      "reason": "requires genuine qualified Cantera via CIW_REACTION_CANTERA_BINDING",
+      "count": 1
+    },
+    {
+      "reason": "requires genuine qualified interval provider via CIW_INTERVAL_BINDING",
+      "count": 10
+    },
+    {
+      "reason": "requires qualified cantera binding",
+      "count": 9
+    },
+    {
+      "reason": "requires qualified catalyst binding",
+      "count": 9
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT for exact native acquisition and monitoring",
+      "count": 5
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT for native residual view verification",
+      "count": 5
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers",
+      "count": 18
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT to the exact role-named provider checkouts",
+      "count": 24
+    },
+    {
+      "reason": "set CIW_CALIBRATED_STACK_ROOT to the eight pinned role checkouts",
+      "count": 40
+    },
+    {
+      "reason": "set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts",
+      "count": 13
+    },
+    {
+      "reason": "set CIW_CSE_REPO for exact pinned native IFC execution",
+      "count": 31
+    },
+    {
+      "reason": "set CIW_CSE_REPO for pinned native CSE integration",
+      "count": 32
+    },
+    {
+      "reason": "set CIW_DECLARED_STACK_ROOT and CIW_SCR_ENGINE for native SRA/SCR integration",
+      "count": 20
+    },
+    {
+      "reason": "set CIW_ESM_BUNDLE_FILE, CIW_ESM_RUNTIME_FILE and CIW_ESM_ROOT for actual ESM integration",
+      "count": 15
+    },
+    {
+      "reason": "set CIW_IDENTIFIED_DESIGN_STACK_ROOT to the eleven pinned role checkouts",
+      "count": 52
+    },
+    {
+      "reason": "set CIW_IDENTIFIED_STABILITY_UPSTREAM to an actual retained identified-design bundle",
+      "count": 31
+    },
+    {
+      "reason": "set CIW_INTEGRATED_STACK_ROOT for exact native integrated-module execution",
+      "count": 4
+    },
+    {
+      "reason": "set CIW_PPDA_REPO with the exact initialized PPDA checkout",
+      "count": 12
+    },
+    {
+      "reason": "set CIW_REMAINING_* exact native provider paths for the installed common bench gate",
+      "count": 6
+    },
+    {
+      "reason": "set CIW_SET_PINNED_REPO to an exact SET pin checkout",
+      "count": 1
+    },
+    {
+      "reason": "set CIW_SET_REPO to the pinned State Estimation Evaluation Testbed checkout",
+      "count": 2
+    },
+    {
+      "reason": "set CIW_SHARED_TELEMETRY_STACK_ROOT to exact role-named telemetry checkouts",
+      "count": 10
+    },
+    {
+      "reason": "set CIW_TELEMETRY_STACK_ROOT to explicitly bound sibling checkouts",
+      "count": 15
+    },
+    {
+      "reason": "set CIW_TEST_INTERVAL_JULIA and CIW_TEST_INTERVAL_DEPOT for genuine interval tests",
+      "count": 16
+    },
+    {
+      "reason": "set CIW_TEST_JULIA and CIW_TEST_JULIA_DEPOT for genuine Julia gates",
+      "count": 23
+    },
+    {
+      "reason": "set CIW_TEST_JULIA and CIW_TEST_JULIA_DEPOT for the genuine provider gate",
+      "count": 1
+    },
+    {
+      "reason": "set CIW_TEST_REACTION_CANTERA to run the qualified Cantera worker",
+      "count": 13
+    }
+  ],
+  "modules_results": [
+    {
+      "module": "test_academic_consumers.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 13
+    },
+    {
+      "module": "test_academic_data.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_acquired_dataset.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    {
+      "module": "test_acquired_stream_gate.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 5
+    },
+    {
+      "module": "test_acquired_window.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 24
+    },
+    {
+      "module": "test_adapter_cli.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_adapter_seam.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_experiment.py",
+      "returncode": 0,
+      "seconds": 3.99,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_local_model.py",
+      "returncode": 0,
+      "seconds": 2.48,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_protocol.py",
+      "returncode": 0,
+      "seconds": 13.59,
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_recovery.py",
+      "returncode": 0,
+      "seconds": 5.14,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_transcript.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_agent_unattended.py",
+      "returncode": 0,
+      "seconds": 91.19,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_annotation_nise.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_annotations.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_artifact_provenance.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_comparison_core.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 104,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_comparison_integration_audit.py",
+      "returncode": 0,
+      "seconds": 13.35,
+      "tests": 131,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_comparison_verification.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_comparison_workflow.py",
+      "returncode": 0,
+      "seconds": 15.81,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_core.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_handoff.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_integration_audit.py",
+      "returncode": 0,
+      "seconds": 1.78,
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_measurement_ingress.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_core.py",
+      "returncode": 0,
+      "seconds": 0.46,
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_handoff.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_integration_audit.py",
+      "returncode": 0,
+      "seconds": 4.03,
+      "tests": 98,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_preservation.py",
+      "returncode": 0,
+      "seconds": 1.12,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_verification.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 123,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_moist_workflow.py",
+      "returncode": 0,
+      "seconds": 5.2,
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_preparation_integration_audit.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_preparation_workflow.py",
+      "returncode": 0,
+      "seconds": 2.53,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_preservation.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_reference_benchmark.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_verification.py",
+      "returncode": 0,
+      "seconds": 0.48,
+      "tests": 66,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_atmosphere_workflow.py",
+      "returncode": 0,
+      "seconds": 4.34,
+      "tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_bim_interop.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 9
+    },
+    {
+      "module": "test_bim_quantity.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 23
+    },
+    {
+      "module": "test_board_morphisms.py",
+      "returncode": 0,
+      "seconds": 1.22,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_board_refit.py",
+      "returncode": 0,
+      "seconds": 12.95,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_board_refit_cli.py",
+      "returncode": 0,
+      "seconds": 1.63,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_board_refit_mcp.py",
+      "returncode": 0,
+      "seconds": 15.31,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_board_refit_review.py",
+      "returncode": 0,
+      "seconds": 5.26,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_board_visual.py",
+      "returncode": 0,
+      "seconds": 1.13,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_calibrated_observable.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 27
+    },
+    {
+      "module": "test_calibrated_window.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 13
+    },
+    {
+      "module": "test_calibration_inspection.py",
+      "returncode": 0,
+      "seconds": 0.43,
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_calibration_status.py",
+      "returncode": 0,
+      "seconds": 1.88,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_capabilities.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "rechecked_after_catalog_fix": true,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_check_suite.py",
+      "returncode": 0,
+      "seconds": 1.33,
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ci_recovery.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_cli_json_boundary.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_columnar_optional.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_computational_objects.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_computational_source.py",
+      "returncode": 0,
+      "seconds": 2.03,
+      "tests": 64,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_connectivity.py",
+      "returncode": 0,
+      "seconds": 1.48,
+      "tests": 133,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_container_calculus.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_control_gateway.py",
+      "returncode": 0,
+      "seconds": 12.48,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_control_plane.py",
+      "returncode": 0,
+      "seconds": 5.7,
+      "tests": 119,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_corpus_coverage.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_corpus_publication.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_corpus_publication_windows.py",
+      "returncode": 0,
+      "seconds": 0.26,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_corpus_refresh.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_corpus_refresh_mcp_mode.py",
+      "returncode": 0,
+      "seconds": 0.26,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_corpus_retrieval.py",
+      "returncode": 0,
+      "seconds": 1.62,
+      "tests": 159,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_correction_journal.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_correction_session.py",
+      "returncode": 0,
+      "seconds": 6.14,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_covariance_artifacts.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_covariance_integration.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    {
+      "module": "test_covariance_records.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_covariance_replay_refusal.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_csr_microtools.py",
+      "returncode": 0,
+      "seconds": 13.17,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_curved_path_study.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 35
+    },
+    {
+      "module": "test_data_compute_bridge.py",
+      "returncode": 0,
+      "seconds": 3.19,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_data_integration_matrix.py",
+      "returncode": 0,
+      "seconds": 64.81,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_data_manufacturing_bridge.py",
+      "returncode": 0,
+      "seconds": 26.38,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_data_rank_bridge.py",
+      "returncode": 0,
+      "seconds": 4.85,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_data_sources.py",
+      "returncode": 0,
+      "seconds": 1.58,
+      "tests": 113,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_data_workbench_retention.py",
+      "returncode": 0,
+      "seconds": 0.78,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_data_workflow.py",
+      "returncode": 0,
+      "seconds": 4.77,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_declared_workloads.py",
+      "returncode": 0,
+      "seconds": 0.93,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 20
+    },
+    {
+      "module": "test_dependency_refusals.py",
+      "returncode": 0,
+      "seconds": 3.85,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_deployment.py",
+      "returncode": 0,
+      "seconds": 7.39,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_design_adjustment.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_device_boundary.py",
+      "returncode": 0,
+      "seconds": 5.75,
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_device_review.py",
+      "returncode": 0,
+      "seconds": 12.82,
+      "tests": 74,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_device_review_hardening.py",
+      "returncode": 0,
+      "seconds": 6.6,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_doctor.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_doctor_legibility.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_domain_examples.py",
+      "returncode": 0,
+      "seconds": 45.13,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_dsp.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 28
+    },
+    {
+      "module": "test_dsp_pipeline.py",
+      "returncode": 0,
+      "seconds": 2.37,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_dsp_pipeline_contract.py",
+      "returncode": 0,
+      "seconds": 1.22,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_dsp_pipeline_numerics.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_electronics_repair.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_energy_bench.py",
+      "returncode": 0,
+      "seconds": 1.67,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_energy_cuda.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 14
+    },
+    {
+      "module": "test_energy_nvml.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_energy_records.py",
+      "returncode": 0,
+      "seconds": 0.67,
+      "tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_energy_workflow.py",
+      "returncode": 0,
+      "seconds": 1.63,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_engineering_continuity.py",
+      "returncode": 0,
+      "seconds": 29.09,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_engineering_thread.py",
+      "returncode": 0,
+      "seconds": 16.72,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_evidence_cli.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_evidence_corpus.py",
+      "returncode": 0,
+      "seconds": 1.18,
+      "tests": 56,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_evidence_history.py",
+      "returncode": 0,
+      "seconds": 8.54,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_evidence_mcp.py",
+      "returncode": 0,
+      "seconds": 1.37,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_exact_response.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 89,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_exchange.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 12
+    },
+    {
+      "module": "test_exchange_adapter.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 3
+    },
+    {
+      "module": "test_exchange_integration.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_extension_dependencies.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_external_numerics.py",
+      "returncode": 0,
+      "seconds": 3.66,
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_external_work.py",
+      "returncode": 0,
+      "seconds": 1.56,
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_external_work_http.py",
+      "returncode": 0,
+      "seconds": 3.49,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_external_work_preflight.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_finite_preservation.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_cli.py",
+      "returncode": 0,
+      "seconds": 25.38,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_coupling.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_experiment.py",
+      "returncode": 0,
+      "seconds": 14.01,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_extended_workflow.py",
+      "returncode": 0,
+      "seconds": 68.18,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_fsi.py",
+      "returncode": 0,
+      "seconds": 4.44,
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_handoff.py",
+      "returncode": 0,
+      "seconds": 52.03,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_independent_audit.py",
+      "returncode": 0,
+      "seconds": 8.65,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_interface_workflow.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_molecular.py",
+      "returncode": 0,
+      "seconds": 5.49,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_multiscale_audit.py",
+      "returncode": 0,
+      "seconds": 4.61,
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_reservoir.py",
+      "returncode": 0,
+      "seconds": 1.77,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_sph.py",
+      "returncode": 0,
+      "seconds": 8.99,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_sph_independent.py",
+      "returncode": 0,
+      "seconds": 7.39,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_thermal_measurements.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_wave.py",
+      "returncode": 0,
+      "seconds": 16.21,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_fluid_workflow.py",
+      "returncode": 0,
+      "seconds": 110.61,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry_asset.py",
+      "returncode": 0,
+      "seconds": 1.62,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry_childhood.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry_physics.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry_pipeline.py",
+      "returncode": 0,
+      "seconds": 1.42,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_foundry_queue.py",
+      "returncode": 0,
+      "seconds": 1.87,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_free_energy_contract.py",
+      "returncode": 0,
+      "seconds": 1.22,
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 20
+    },
+    {
+      "module": "test_free_energy_math.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_free_energy_native.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 16
+    },
+    {
+      "module": "test_free_energy_session.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_free_energy_workflow.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 11
+    },
+    {
+      "module": "test_fsrt_view.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_game_project.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 63,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_game_project_feedback.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_game_retention.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_game_session.py",
+      "returncode": 0,
+      "seconds": 1.58,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_game_trace.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geodesic.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 19
+    },
+    {
+      "module": "test_geodesic_reference.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 67
+    },
+    {
+      "module": "test_geodesic_reference_session.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_geomatics_audit.py",
+      "returncode": 0,
+      "seconds": 1.52,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geomatics_eo.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geomatics_gis.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geomatics_radiometry_urban.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 88,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geomatics_workflow.py",
+      "returncode": 0,
+      "seconds": 0.92,
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geometric_circle.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 21,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 16
+    },
+    {
+      "module": "test_geometry_covariance_contract.py",
+      "returncode": 0,
+      "seconds": 0.46,
+      "tests": 73,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geometry_mesh_contract.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_geometry_research.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 18
+    },
+    {
+      "module": "test_geometry_research_session.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_geometry_translation_contract.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 109,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_gltf_reference.py",
+      "returncode": 0,
+      "seconds": 1.53,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_godot_motion.py",
+      "returncode": 0,
+      "seconds": 1.37,
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_godot_simulation.py",
+      "returncode": 0,
+      "seconds": 1.18,
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_graph_atlas_qualification.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hardware_bench.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hardware_bench_cli.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hardware_cli.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hardware_contract.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 102,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hardware_workflow.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_historical_perspective.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_hoomd.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 19
+    },
+    {
+      "module": "test_hypergraph_rewrite.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 82,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_identified_design.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 51
+    },
+    {
+      "module": "test_identified_stability.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 31
+    },
+    {
+      "module": "test_ifc_subset_verifier.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ifc_transition.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 31
+    },
+    {
+      "module": "test_impact_core.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_crush_core.py",
+      "returncode": 0,
+      "seconds": 4.69,
+      "tests": 75,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_crush_preservation.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_crush_workflow.py",
+      "returncode": 0,
+      "seconds": 27.04,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_plate_core.py",
+      "returncode": 0,
+      "seconds": 3.33,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_plate_preservation.py",
+      "returncode": 0,
+      "seconds": 10.64,
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_plate_sweep.py",
+      "returncode": 0,
+      "seconds": 185.4,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_plate_verification.py",
+      "returncode": 0,
+      "seconds": 30.75,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_plate_workflow.py",
+      "returncode": 0,
+      "seconds": 361.21,
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_preservation.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_sweep.py",
+      "returncode": 0,
+      "seconds": 32.05,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_impact_workflow.py",
+      "returncode": 0,
+      "seconds": 5.38,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_industrial_lab.py",
+      "returncode": 0,
+      "seconds": 5.73,
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_industrial_transition.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_information_display.py",
+      "returncode": 0,
+      "seconds": 2.47,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_installed_wheel_binding.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_institutional_campaign.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_institutional_numerics.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_instrument_contracts.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_instruments.py",
+      "returncode": 0,
+      "seconds": 4.43,
+      "tests": 48,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_integrated_modules_gate.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 4
+    },
+    {
+      "module": "test_integration.py",
+      "returncode": 0,
+      "seconds": 2.12,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_integration_failure_dependencies.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_integration_provider_recovery.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_interactive_binding_root.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interactive_contract.py",
+      "returncode": 0,
+      "seconds": 0.51,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interactive_session.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interop_ingress.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interval_benchmark.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interval_contract.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_interval_worker.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 16
+    },
+    {
+      "module": "test_interval_workflow.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 10
+    },
+    {
+      "module": "test_investigation.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 14
+    },
+    {
+      "module": "test_investigation_efficiency.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_irrigation_cli.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_irrigation_numerics.py",
+      "returncode": 0,
+      "seconds": 0.51,
+      "tests": 67,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_irrigation_workflow.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_json_numeric_boundary.py",
+      "returncode": 0,
+      "seconds": 0.56,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_julia_oscillator.py",
+      "returncode": 0,
+      "seconds": 0.56,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_julia_worker_native.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 23
+    },
+    {
+      "module": "test_jump_design.py",
+      "returncode": 0,
+      "seconds": 0.46,
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_knowledge_cli.py",
+      "returncode": 0,
+      "seconds": 0.46,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_knowledge_mcp.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_laboratory_measurements.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 106,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_laboratory_profiles.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 170,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_leakage_agent.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 20
+    },
+    {
+      "module": "test_leakage_cli.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 4
+    },
+    {
+      "module": "test_leakage_native.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 9
+    },
+    {
+      "module": "test_leakage_verification.py",
+      "returncode": 0,
+      "seconds": 1.72,
+      "tests": 67,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_leakage_workflow.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 39
+    },
+    {
+      "module": "test_learning.py",
+      "returncode": 0,
+      "seconds": 7.03,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legacy_analysis_boundary.py",
+      "returncode": 0,
+      "seconds": 7.88,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legacy_analysis_failure.py",
+      "returncode": 0,
+      "seconds": 2.37,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 87,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility_compare.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility_corrections.py",
+      "returncode": 0,
+      "seconds": 2.82,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility_impact_import.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility_operator.py",
+      "returncode": 0,
+      "seconds": 14.48,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_legibility_workflow.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_linear_response.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link.py",
+      "returncode": 0,
+      "seconds": 5.05,
+      "tests": 186,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_delivery.py",
+      "returncode": 0,
+      "seconds": 4.25,
+      "tests": 91,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_ingress_recovery.py",
+      "returncode": 0,
+      "seconds": 2.22,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_inspection.py",
+      "returncode": 0,
+      "seconds": 5.33,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_installation.py",
+      "returncode": 0,
+      "seconds": 30.94,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_measurement_parquet.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_link_measurement_workbench.py",
+      "returncode": 0,
+      "seconds": 8.31,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_measurements.py",
+      "returncode": 0,
+      "seconds": 32.14,
+      "tests": 56,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_offline_environment.py",
+      "returncode": 0,
+      "seconds": 19.99,
+      "tests": 82,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_pinwheel.py",
+      "returncode": 0,
+      "seconds": 101.44,
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_provider_gate.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_qualification_artifacts.py",
+      "returncode": 0,
+      "seconds": 18.68,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_qualification_dependencies.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_references.py",
+      "returncode": 0,
+      "seconds": 5.95,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_refit.py",
+      "returncode": 0,
+      "seconds": 26.47,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_refit_cli.py",
+      "returncode": 0,
+      "seconds": 14.83,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_scientific_guards.py",
+      "returncode": 0,
+      "seconds": 5.03,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_semantic_names.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_serial_bounds.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_snapshot_integrity.py",
+      "returncode": 0,
+      "seconds": 12.46,
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_study.py",
+      "returncode": 0,
+      "seconds": 7.13,
+      "tests": 74,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_study_agent.py",
+      "returncode": 0,
+      "seconds": 2.32,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_unification.py",
+      "returncode": 0,
+      "seconds": 4.99,
+      "tests": 81,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_link_windows_environment.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_local_provider_sources.py",
+      "returncode": 0,
+      "seconds": 1.92,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_machine_manifest.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_machine_workflow.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_manufacturing_study.py",
+      "returncode": 0,
+      "seconds": 2.54,
+      "tests": 132,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_materials_bench.py",
+      "returncode": 0,
+      "seconds": 1.53,
+      "tests": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_materials_uncertainty.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_materials_workflow.py",
+      "returncode": 0,
+      "seconds": 7.36,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_math_inspector.py",
+      "returncode": 0,
+      "seconds": 1.82,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_mcp_sdk.py",
+      "returncode": 0,
+      "seconds": 6.6,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_measured_thermal.py",
+      "returncode": 0,
+      "seconds": 2.53,
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_measured_thermal_agent.py",
+      "returncode": 0,
+      "seconds": 1.87,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_measured_thermal_exports.py",
+      "returncode": 0,
+      "seconds": 8.19,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_measured_thermal_review.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_measurement_chain.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 8
+    },
+    {
+      "module": "test_measurement_visualizer.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 28
+    },
+    {
+      "module": "test_microfab.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 82,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_missing_surfaces.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_model_education.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_molecular_reference_data.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_monorepo_domain_reporting.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_monorepo_web.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_mount_characterization.py",
+      "returncode": 0,
+      "seconds": 2.87,
+      "tests": 37,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_native_interop.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_native_interop_contract.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_corpus_integration.py",
+      "returncode": 0,
+      "seconds": 5.08,
+      "tests": 26,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_corpus_link_workspace.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_engineering_source.py",
+      "returncode": 0,
+      "seconds": 1.73,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_evidence_assessment.py",
+      "returncode": 0,
+      "seconds": 21.93,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_integrated_package.py",
+      "returncode": 0,
+      "seconds": 2.43,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_next_actions.py",
+      "returncode": 0,
+      "seconds": 11.57,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_profile_coherence.py",
+      "returncode": 0,
+      "seconds": 1.22,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_ncp_supporting_evidence.py",
+      "returncode": 0,
+      "seconds": 15.67,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_needle.py",
+      "returncode": 0,
+      "seconds": 5.78,
+      "tests": 9,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_network_lifecycle.py",
+      "returncode": 0,
+      "seconds": 9.26,
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_nise_handoff.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_norris_affine_qualification.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_nvalchemi.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_nvalchemi_contract.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_nvalchemi_lifecycle.py",
+      "returncode": 0,
+      "seconds": 1.77,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_nvalchemi_worker.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_observation_origin_enforcement.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operation_contract_enforcement.py",
+      "returncode": 0,
+      "seconds": 0.67,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operation_failure_retention.py",
+      "returncode": 0,
+      "seconds": 5.96,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operation_publication.py",
+      "returncode": 0,
+      "seconds": 2.98,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operation_runner.py",
+      "returncode": 0,
+      "seconds": 4.79,
+      "tests": 20,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operator_catalog.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operator_doctor.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operator_provision.py",
+      "returncode": 0,
+      "seconds": 4.59,
+      "tests": 25,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_operator_start.py",
+      "returncode": 0,
+      "seconds": 4.14,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_operator_workbench.py",
+      "returncode": 0,
+      "seconds": 1.38,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_oscillator_consumers.py",
+      "returncode": 0,
+      "seconds": 1.12,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_oscillator_kernel.py",
+      "returncode": 0,
+      "seconds": 0.93,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_parameter_program.py",
+      "returncode": 0,
+      "seconds": 0.92,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_persistent_inputs.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_persistent_pipe.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_persistent_simulation.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_physical_measurement_profiles.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 104,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_physical_measurements.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 171,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_pilot_scope.py",
+      "returncode": 0,
+      "seconds": 5.19,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_pinned_profile_provisioning.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_plsr.py",
+      "returncode": 5,
+      "seconds": 0.32,
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_plsr_engine.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 11
+    },
+    {
+      "module": "test_polyglot_linear_map.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polyglot_uncertainty.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 30,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_agent.py",
+      "returncode": 0,
+      "seconds": 1.37,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_cooling_precision.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_copilot.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_ingress.py",
+      "returncode": 0,
+      "seconds": 3.68,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_manufacturing.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 180,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_metrology.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_models.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_namespace_coexistence.py",
+      "returncode": 0,
+      "seconds": 2.18,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_operator.py",
+      "returncode": 0,
+      "seconds": 9.6,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_population.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 79,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_production_dossier.py",
+      "returncode": 0,
+      "seconds": 4.23,
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_rheology.py",
+      "returncode": 0,
+      "seconds": 1.17,
+      "tests": 96,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_rheology_identification.py",
+      "returncode": 0,
+      "seconds": 1.47,
+      "tests": 110,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_toolpoint_qc.py",
+      "returncode": 0,
+      "seconds": 1.22,
+      "tests": 186,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_verification.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 59,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_viscoelastic.py",
+      "returncode": 0,
+      "seconds": 4.13,
+      "tests": 123,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_polymer_workflow.py",
+      "returncode": 0,
+      "seconds": 3.23,
+      "tests": 31,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_preservation_contracts.py",
+      "returncode": 0,
+      "seconds": 1.17,
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_preservation_experiments.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_core.py",
+      "returncode": 0,
+      "seconds": 2.92,
+      "tests": 144,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_integration_audit.py",
+      "returncode": 0,
+      "seconds": 7.6,
+      "tests": 104,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_representation_verification.py",
+      "returncode": 0,
+      "seconds": 1.97,
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_representations.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 67,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_verification.py",
+      "returncode": 0,
+      "seconds": 8.01,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_procedural_workflow.py",
+      "returncode": 0,
+      "seconds": 19.81,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_product_study.py",
+      "returncode": 0,
+      "seconds": 2.48,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_production.py",
+      "returncode": 0,
+      "seconds": 17.14,
+      "tests": 70,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_production_reconstruction.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 74,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_project_model.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_project_workflow.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proof_f2.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_proof_obligations.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proto_corpus.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 45,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_protocol.py",
+      "returncode": 0,
+      "seconds": 3.44,
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proved_heat.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 101,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proved_heat_audit_gate.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 8,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proved_heat_isolation.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_proved_heat_session.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 5
+    },
+    {
+      "module": "test_provider_catalog_inspection.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_provider_provisioning.py",
+      "returncode": 0,
+      "seconds": 1.84,
+      "tests": 34,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_public_provider_gate.py",
+      "returncode": 0,
+      "seconds": 0.64,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_public_thermal_chemistry_data.py",
+      "returncode": 0,
+      "seconds": 0.38,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_published_dsc_measurements.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1
+    },
+    {
+      "module": "test_published_measurement_comparisons.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 53,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_published_thermal_differences.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_rci_records.py",
+      "returncode": 0,
+      "seconds": 0.46,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_reaction_benchmark.py",
+      "returncode": 0,
+      "seconds": 0.92,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_reaction_cantera_worker.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 13
+    },
+    {
+      "module": "test_reaction_contract.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_reaction_julia_worker.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 18
+    },
+    {
+      "module": "test_reaction_retained_metadata.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_reaction_workflow.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 18
+    },
+    {
+      "module": "test_reference_comparison.py",
+      "returncode": 0,
+      "seconds": 0.87,
+      "tests": 71,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_refurbishment_cli.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_refurbishment_contract.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_refurbishment_exchange.py",
+      "returncode": 0,
+      "seconds": 1.87,
+      "tests": 67,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_refurbishment_store.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_registry_identity_boundary.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_release_evidence.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 240,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_release_operator.py",
+      "returncode": 0,
+      "seconds": 4.34,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_remaining_modules_gate.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 6
+    },
+    {
+      "module": "test_replay.py",
+      "returncode": 0,
+      "seconds": 3.63,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_representation_expansion.py",
+      "returncode": 0,
+      "seconds": 8.56,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_representation_interventions.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_representation_lab.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_representation_morphisms.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_representation_realizations.py",
+      "returncode": 0,
+      "seconds": 1.57,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_residual_monitor.py",
+      "returncode": 0,
+      "seconds": 0.41,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 18
+    },
+    {
+      "module": "test_residual_view.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 5
+    },
+    {
+      "module": "test_rheology_empirical.py",
+      "returncode": 0,
+      "seconds": 1.98,
+      "tests": 116,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_rs_operations.py",
+      "returncode": 0,
+      "seconds": 3.22,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_saved_result_discriminator.py",
+      "returncode": 0,
+      "seconds": 3.24,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_schematic_companions.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 42,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 30
+    },
+    {
+      "module": "test_scientific.py",
+      "returncode": 0,
+      "seconds": 3.47,
+      "tests": 46,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_scientific_audit.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_scientific_gate_reports.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_scientific_observations.py",
+      "returncode": 0,
+      "seconds": 9.8,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_semantic_capabilities.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 27,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sensor_manufacturing.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sensor_manufacturing_analysis.py",
+      "returncode": 0,
+      "seconds": 1.87,
+      "tests": 87,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sensor_manufacturing_timing.py",
+      "returncode": 0,
+      "seconds": 2.29,
+      "tests": 98,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sensor_manufacturing_uncertainty.py",
+      "returncode": 0,
+      "seconds": 2.98,
+      "tests": 75,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sensor_project.py",
+      "returncode": 0,
+      "seconds": 2.63,
+      "tests": 113,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sequence_kinetics.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 95,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_sequence_session.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_server_json_boundary.py",
+      "returncode": 0,
+      "seconds": 1.37,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulated_fsrt.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulated_fsrt_view.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_agent.py",
+      "returncode": 0,
+      "seconds": 12.75,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_agent_campaign.py",
+      "returncode": 0,
+      "seconds": 43.1,
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_agent_capture.py",
+      "returncode": 0,
+      "seconds": 19.53,
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_agent_replay.py",
+      "returncode": 0,
+      "seconds": 37.53,
+      "tests": 43,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_campaign.py",
+      "returncode": 0,
+      "seconds": 13.42,
+      "tests": 40,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_capture.py",
+      "returncode": 0,
+      "seconds": 9.69,
+      "tests": 58,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_coexistence.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_control.py",
+      "returncode": 0,
+      "seconds": 18.31,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_study.py",
+      "returncode": 0,
+      "seconds": 17.51,
+      "tests": 54,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_simulation_timeline.py",
+      "returncode": 0,
+      "seconds": 16.41,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_spatial_godot.py",
+      "returncode": 0,
+      "seconds": 0.92,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_spatial_mesh_realizations.py",
+      "returncode": 0,
+      "seconds": 0.67,
+      "tests": 12,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_spatial_provider.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 4
+    },
+    {
+      "module": "test_spatial_requests.py",
+      "returncode": 0,
+      "seconds": 7.61,
+      "tests": 62,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_spatial_transport.py",
+      "returncode": 0,
+      "seconds": 0.97,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_spatial_view.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_state_transformation.py",
+      "returncode": 0,
+      "seconds": 0.35,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_subprocess_adapter.py",
+      "returncode": 0,
+      "seconds": 32.72,
+      "tests": 38,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_superrepo.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_superrepo_doctor.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 63,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 6
+    },
+    {
+      "module": "test_system_atmosphere_integration.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_board.py",
+      "returncode": 0,
+      "seconds": 1.27,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_contract_integration.py",
+      "returncode": 0,
+      "seconds": 0.78,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_execution.py",
+      "returncode": 0,
+      "seconds": 0.83,
+      "tests": 39,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_execution_portable.py",
+      "returncode": 0,
+      "seconds": 0.62,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_models.py",
+      "returncode": 0,
+      "seconds": 1.77,
+      "tests": 32,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_oci_qualification.py",
+      "returncode": 0,
+      "seconds": 0.32,
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_operator_integration.py",
+      "returncode": 0,
+      "seconds": 1.88,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_sources.py",
+      "returncode": 0,
+      "seconds": 3.27,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_spec.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 52,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_study.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_study_portability.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_study_workflow.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 7,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_view.py",
+      "returncode": 0,
+      "seconds": 13.48,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_system_workflow.py",
+      "returncode": 0,
+      "seconds": 65.53,
+      "tests": 19,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_telemetry.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 15
+    },
+    {
+      "module": "test_temperature_agent.py",
+      "returncode": 0,
+      "seconds": 1.47,
+      "tests": 22,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_inspection.py",
+      "returncode": 0,
+      "seconds": 1.63,
+      "tests": 17,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_processing.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 69,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_readiness.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_recording.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 68,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_recording_bridge.py",
+      "returncode": 0,
+      "seconds": 1.87,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_recording_session.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_temperature_verification.py",
+      "returncode": 0,
+      "seconds": 1.47,
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermal_contract.py",
+      "returncode": 0,
+      "seconds": 0.37,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermal_experiment.py",
+      "returncode": 0,
+      "seconds": 5.86,
+      "tests": 86,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermal_identification.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 69,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermal_workflow.py",
+      "returncode": 0,
+      "seconds": 0.82,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermochemical_benchmark.py",
+      "returncode": 0,
+      "seconds": 4.28,
+      "tests": 159,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermochemical_independent_audit.py",
+      "returncode": 0,
+      "seconds": 1.48,
+      "tests": 78,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermofluids_models.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 107,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_thermofluids_workflow.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_tooling_visualizer.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_toolpoint_native_integration.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_toolpoint_outcome_bench.py",
+      "returncode": 0,
+      "seconds": 6.05,
+      "tests": 142,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_toolpoint_stream.py",
+      "returncode": 0,
+      "seconds": 1.98,
+      "tests": 304,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 147
+    },
+    {
+      "module": "test_toolpoint_stream_store.py",
+      "returncode": 0,
+      "seconds": 7.9,
+      "tests": 160,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 30
+    },
+    {
+      "module": "test_toolpoint_validation.py",
+      "returncode": 0,
+      "seconds": 9.52,
+      "tests": 218,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 2
+    },
+    {
+      "module": "test_transport_timing.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 89,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_uncertainty_providers.py",
+      "returncode": 0,
+      "seconds": 0.52,
+      "tests": 44,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 16
+    },
+    {
+      "module": "test_usd_export.py",
+      "returncode": 0,
+      "seconds": 1.28,
+      "tests": 18,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 14
+    },
+    {
+      "module": "test_usda_export.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_view_render.py",
+      "returncode": 0,
+      "seconds": 0.31,
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_visual_board.py",
+      "returncode": 0,
+      "seconds": 9.32,
+      "tests": 47,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_visual_evidence_projection.py",
+      "returncode": 0,
+      "seconds": 8.72,
+      "tests": 10,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_visual_representation_gate.py",
+      "returncode": 0,
+      "seconds": 8.19,
+      "tests": 11,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_weather_dynamics.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 65,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_weather_hydro.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 106,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_weather_storm.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 60,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_weather_thermo.py",
+      "returncode": 0,
+      "seconds": 0.36,
+      "tests": 55,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_weather_workflow.py",
+      "returncode": 0,
+      "seconds": 2.32,
+      "tests": 33,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_windows_retained_paths.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 49,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 18
+    },
+    {
+      "module": "test_workbench_candidates.py",
+      "returncode": 0,
+      "seconds": 1.02,
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 15
+    },
+    {
+      "module": "test_workbench_session.py",
+      "returncode": 0,
+      "seconds": 2.28,
+      "tests": 36,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 14
+    },
+    {
+      "module": "test_workbench_telemetry.py",
+      "returncode": 0,
+      "seconds": 0.72,
+      "tests": 15,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 10
+    },
+    {
+      "module": "test_workbench_transport.py",
+      "returncode": 0,
+      "seconds": 0.57,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workcell.py",
+      "returncode": 0,
+      "seconds": 1.42,
+      "tests": 41,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workcell_smith.py",
+      "returncode": 0,
+      "seconds": 17.48,
+      "tests": 51,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workcell_snapshot.py",
+      "returncode": 0,
+      "seconds": 1.32,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_algebra.py",
+      "returncode": 0,
+      "seconds": 1.07,
+      "tests": 50,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_attempt_records.py",
+      "returncode": 0,
+      "seconds": 0.42,
+      "tests": 61,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_cli.py",
+      "returncode": 0,
+      "seconds": 1.82,
+      "tests": 6,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_failure_history.py",
+      "returncode": 0,
+      "seconds": 4.88,
+      "tests": 24,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_failure_transport.py",
+      "returncode": 0,
+      "seconds": 0.77,
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_workflow_production.py",
+      "returncode": 0,
+      "seconds": 2.78,
+      "tests": 29,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_worktree_lifecycle.py",
+      "returncode": 0,
+      "seconds": 0.47,
+      "tests": 14,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    {
+      "module": "test_worktree_lock.py",
+      "returncode": 0,
+      "seconds": 1.83,
+      "tests": 3,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  ],
+  "note": "Counts overlap with selected checks. Original capability-catalog failure was fixed and that module was rerun successfully. Optional skips are not qualifications. No full-history or native-provider claims."
+}

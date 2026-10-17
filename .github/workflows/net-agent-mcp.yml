@@ -3,6 +3,22 @@ on:
   pull_request:
     paths:
       - 'src/ciw/agent_*.py'
+      - 'src/ciw/corpus_*.py'
+      - 'scripts/provision_link_environment.py'
+      - 'tests/test_link_windows_environment.py'
+      - 'tests/test_link_qualification_artifacts.py'
+      - 'tests/ncp_test_permissions.py'
+      - 'src/ciw/operator_commands.py'
+      - 'src/ciw/link_study.py'
+      - 'tests/test_corpus_retrieval.py'
+      - 'tests/test_ncp_corpus*.py'
+      - 'scripts/check_ncp_corpus.py'
+      - 'scripts/check_corpus_retrieval.py'
+      - 'docs/CORPUS_RETRIEVAL.md'
+      - 'src/ciw/control_plane.py'
+      - 'src/ciw/net.py'
+      - 'tests/test_registry_identity_boundary.py'
+      - 'tests/test_provider_catalog_inspection.py'
       - 'tests/test_agent_protocol.py'
       - 'tests/test_agent_recovery.py'
       - 'tests/test_measured_thermal*.py'
@@ -14,6 +30,8 @@ on:
       - 'examples/measured-thermal/**'
       - 'docs/MEASURED_THERMAL.md'
       - 'scripts/check_agent_mcp.py'
+      - 'scripts/check_provider_catalog_mcp.py'
+      - 'docs/KERNEL_MCP_CATALOG_INSPECTION.md'
       - 'scripts/check_measured_thermal_mcp.py'
       - 'docs/NET_AGENT_PROTOCOL.md'
       - 'examples/agents/**'
@@ -40,14 +58,21 @@ jobs:
         run: python -m pip install -e '.[dev]' build mcp==1.26.0
       - name: Agent contracts and unchanged control/check regressions
         run: python -m pytest -q tests/test_agent_protocol.py tests/test_control_plane.py tests/test_check_suite.py -o addopts= --junitxml=agent-contracts.xml
+      - name: Frozen corpus and mixed inspection boundary
+        run: python -m pytest -q tests/test_corpus_retrieval.py tests/test_ncp_corpus_integration.py tests/test_ncp_corpus_link_workspace.py -o addopts= --junitxml=corpus-contracts.xml
+      - name: Native runtime identity and retained catalog boundary
+        run: python -m pytest -q tests/test_registry_identity_boundary.py tests/test_provider_catalog_inspection.py -o addopts= --junitxml=catalog-contracts.xml
       - name: Thermal delivery and durable attempt regressions
         run: python -m pytest -q tests/test_agent_recovery.py tests/test_measured_thermal_agent.py tests/test_measured_thermal.py tests/test_measured_thermal_review.py tests/test_measured_thermal_exports.py tests/test_polymer_agent.py tests/test_temperature_agent.py tests/test_temperature_processing.py tests/test_temperature_verification.py -o addopts= --junitxml=thermal-contracts.xml
+      - name: Windows offline bootstrap and actual evidence permissions
+        if: runner.os == 'Windows'
+        run: python -m pytest -q tests/test_link_windows_environment.py tests/test_link_qualification_artifacts.py tests/test_ncp_evidence_assessment.py::test_no_dispatch_no_overwrite_no_write_inside_originals tests/test_ncp_supporting_evidence.py::test_no_overwrite_or_writing_inside_history -o addopts= --junitxml=windows-bootstrap.xml
       - run: python -m build --wheel
       - name: Installed wheel and independent MCP SDK process
         shell: bash
         run: |
           python - <<'PY'
-          import os,pathlib,subprocess,sys,tempfile
+          import json,os,pathlib,subprocess,sys,tempfile
           root=pathlib.Path.cwd()
           wheel=next((root/'dist').glob('*.whl'))
           subprocess.run([sys.executable,'-m','pip','install','--force-reinstall','--no-deps',str(wheel)],check=True)
@@ -57,6 +82,15 @@ jobs:
               assert not pathlib.Path(location.strip()).resolve().is_relative_to(root)
               subprocess.run([sys.executable,'-I','-m','pytest','-q',str(root/'tests/test_agent_protocol.py'),
                   '-o','pythonpath=','-o','addopts=','--junitxml='+str(root/'agent-installed.xml')],cwd=tmp,env=env,check=True)
+              subprocess.run([sys.executable,'-I','-m','pytest','-q',
+                  str(root/'tests/test_corpus_retrieval.py'),
+                  str(root/'tests/test_ncp_corpus_integration.py'),
+                  str(root/'tests/test_ncp_corpus_link_workspace.py'),
+                  '-o','pythonpath=','-o','addopts=','--junitxml='+str(root/'corpus-installed.xml')],cwd=tmp,env=env,check=True)
+              subprocess.run([sys.executable,'-I','-m','pytest','-q',
+                  str(root/'tests/test_registry_identity_boundary.py'),
+                  str(root/'tests/test_provider_catalog_inspection.py'),
+                  '-o','pythonpath=','-o','addopts=','--junitxml='+str(root/'catalog-installed.xml')],cwd=tmp,env=env,check=True)
               subprocess.run([sys.executable,'-I','-m','pytest','-q',
                   str(root/'tests/test_agent_recovery.py'), str(root/'tests/test_measured_thermal_agent.py'),
                   str(root/'tests/test_temperature_agent.py'), str(root/'tests/test_temperature_processing.py'),
@@ -68,19 +102,36 @@ jobs:
                   cwd=tmp,env=env,check=True,timeout=240)
               subprocess.run([sys.executable,'-I',str(root/'scripts/check_agent_mcp.py'),
                   '--output-dir',str(root/'agent-sdk-evidence')],cwd=tmp,env=env,check=True,timeout=120)
+              calls=json.loads((root/'agent-sdk-evidence/transcript.json').read_bytes())['calls']
+              first=next(call for call in calls if call['tool']=='net_execute' and not call['isError'])
+              workspace=root/'agent-sdk-evidence/demo/agent-output/.agent-state/artifacts'/(
+                  first['result']['artifacts']['workspace']['artifact_id']+'.json')
+              subprocess.run([sys.executable,'-I',str(root/'scripts/check_provider_catalog_mcp.py'),
+                  '--fixture',str(root/'examples/agents/provider-catalog'),
+                  '--workspace',str(workspace),'--output-dir',str(root/'catalog-sdk-evidence')],
+                  cwd=tmp,env=env,check=True,timeout=120)
           PY
       - name: Refuse skipped or missing qualification
         shell: bash
         run: |
           python - <<'PY'
-          import json,xml.etree.ElementTree as ET
-          for path,count in [('agent-contracts.xml',244),('agent-installed.xml',76)]:
+          import json,os,xml.etree.ElementTree as ET
+          if os.name == 'nt':
+              suites=list(ET.parse('windows-bootstrap.xml').getroot().iter('testsuite'))
+              assert sum(int(s.attrib['tests']) for s in suites)==17
+              assert all(int(s.attrib[k])==0 for s in suites for k in ('failures','errors','skipped'))
+          for path,count in [('agent-contracts.xml',254),('agent-installed.xml',86),
+                             ('catalog-contracts.xml',55),('catalog-installed.xml',55),
+                             ('corpus-contracts.xml',186),('corpus-installed.xml',186)]:
               suites=list(ET.parse(path).getroot().iter('testsuite'))
               assert sum(int(s.attrib['tests']) for s in suites)==count
               assert all(int(s.attrib[k])==0 for s in suites for k in ('failures','errors','skipped'))
           report=json.load(open('agent-sdk-evidence/report.json'))
           assert report['status']=='passed' and report['check_count']==14
           assert len(set(report['execution_ids']))==3
+          catalog=json.load(open('catalog-sdk-evidence/report.json'))
+          assert catalog['status']=='passed' and catalog['scientific_executions']==0
+          assert catalog['client_version']=='1.26.0' and catalog['workspace_sha256']
           for path,count in [('thermal-contracts.xml',288),('thermal-installed.xml',201)]:
               suites=list(ET.parse(path).getroot().iter('testsuite'))
               assert sum(int(s.attrib['tests']) for s in suites)==count
@@ -102,6 +153,12 @@ jobs:
             agent-contracts.xml
             agent-installed.xml
             agent-sdk-evidence/
+            windows-bootstrap.xml
+            corpus-contracts.xml
+            corpus-installed.xml
+            catalog-contracts.xml
+            catalog-installed.xml
+            catalog-sdk-evidence/
             thermal-contracts.xml
             thermal-installed.xml
             thermal-sdk-evidence/

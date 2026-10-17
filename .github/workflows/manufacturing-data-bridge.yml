@@ -1,0 +1,44 @@
+name: Installed retained manufacturing data bridge
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/data_*.py'
+      - 'src/ciw/manufacturing*.py'
+      - 'src/ciw/toolpoint_*.py'
+      - 'src/ciw/polymer_*.py'
+      - 'src/ciw/dependency_graph.py'
+      - 'src/ciw/operations/*.py'
+      - 'src/ciw/session.py'
+      - 'tests/test_data_manufacturing_bridge.py'
+      - 'tests/test_toolpoint_native_integration.py'
+      - 'tests/test_polymer_namespace_coexistence.py'
+      - 'scripts/check_manufacturing_data_bridge_installed.py'
+      - '.github/workflows/manufacturing-data-bridge.yml'
+      - 'pyproject.toml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip wheel --no-deps . --wheel-dir dist
+      - run: python -c "import pathlib, subprocess, sys; wheels=list(pathlib.Path('dist').glob('*.whl')); assert len(wheels)==1; subprocess.check_call([sys.executable,'-m','pip','install',str(wheels[0])+'[dev]'])"
+      - run: python scripts/check_manufacturing_data_bridge_installed.py --wheel-dir dist --output-dir qualification-manufacturing-data
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: manufacturing-data-py${{ matrix.python }}
+          path: qualification-manufacturing-data/
+          if-no-files-found: error

@@ -125,14 +125,20 @@ def test_measurement_SET_explicit_wrong_pin_refuses_without_fallback(
 
 @pytest.fixture
 def checkout(tmp_path):
-    temporary = tempfile.TemporaryDirectory(dir=tmp_path, prefix="checkout-")
+    # A full imported tree can exceed MAX_PATH beneath pytest's parametrized
+    # directories. Git's longpaths setting does not fix Python's later cleanup.
+    # Keep each clone independent, but place Windows clones directly under the
+    # shorter OS temporary root so teardown can remove every retained fixture.
+    temporary = tempfile.TemporaryDirectory(
+        dir=None if sys.platform == "win32" else tmp_path, prefix="ciw-checkout-",
+    )
     path = Path(temporary.name) / "monorepo"
     # Only immutable source objects are shared; each test owns its refs and index.
     try:
         # Windows pytest paths can exceed MAX_PATH once full upstream fixtures
         # are appended. Keep both settings local to this disposable clone.
         subprocess.run(["git", "clone", "--quiet", "--shared", "--config", "core.longpaths=true",
-                        "--config", "core.autocrlf=false", str(ROOT), str(path)], check=True)
+                        "--config", "core.autocrlf=false", str(ROOT), str(path)], check=True, timeout=300)
         # Gate sources may still be staged during development; copy just helper metadata.
         (path / "instruments/manifest.json").write_bytes((ROOT / "instruments/manifest.json").read_bytes())
         yield path

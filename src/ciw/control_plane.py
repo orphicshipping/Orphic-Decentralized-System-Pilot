@@ -343,7 +343,7 @@ class CapabilityRegistry:
 
         def identity():
             actual = detached(operation.runtime_identity())
-            if actual != expected:
+            if content_identity(actual) != content_identity(expected):
                 raise AdapterRefusal("runtime_mismatch", "Provider identity differs from explicit binding")
             return actual
 
@@ -368,6 +368,48 @@ class CapabilityRegistry:
         return {"schema": "ciw.provider-catalog.v1", "authorizes_execution": False,
                 "providers": {key: deepcopy(value) for key, value in self._providers.items() if key in providers},
                 "operations": {key: {**value, "bound": key in bound} for key, value in contracts.items()}}
+
+
+def registry_from_catalog(value: dict) -> CapabilityRegistry:
+    """Read native saved declarations without importing or binding provider code."""
+    value = detached(value)
+    keys(value, {"schema", "authorizes_execution", "providers", "operations"})
+    if value["schema"] != "ciw.provider-catalog.v1" or value["authorizes_execution"] is not False:
+        raise ValueError("Unsupported capability catalog or authority claim")
+    if type(value["providers"]) is not dict or type(value["operations"]) is not dict:
+        raise ValueError("Provider catalog requires objects")
+    for item in value["operations"].values():
+        keys(item, {"provider", "runtime", "capabilities", "inputs", "outputs", "bound"})
+        if type(item["bound"]) is not bool:
+            raise ValueError("Invalid saved binding flag")
+    registry = CapabilityRegistry()
+    for name, manifest in value["providers"].items():
+        parsed = InstrumentManifest.from_dict(manifest)
+        if name != parsed.instrument_id:
+            raise ValueError("Provider catalog identity mismatch")
+        selected = {op: item for op, item in value["operations"].items() if item["provider"] == name}
+        if not selected:
+            raise ValueError("Provider has no declared operation contracts")
+        runtime = next(iter(selected.values()))["runtime"]
+        if any(content_identity(item["runtime"]) != content_identity(runtime) for item in selected.values()):
+            raise ValueError("One manifest must describe one pinned runtime")
+        registry.advertise(parsed, runtime=runtime,
+            capabilities={op: item["capabilities"] for op, item in selected.items()},
+            inputs={op: item["inputs"] for op, item in selected.items()},
+            outputs={op: item["outputs"] for op, item in selected.items()})
+    if set(value["operations"]) != set(registry.catalog()["operations"]):
+        raise ValueError("Catalog operation references an undeclared provider")
+    return registry
+
+
+def inspect_provider_catalog(value: dict) -> dict:
+    """Keep recorded binding claims distinct from this reader's unbound catalog."""
+    value = detached(value)
+    registry = registry_from_catalog(value)
+    return {"schema": "ciw.provider-catalog-inspection.v1",
+            "record": value, "catalog": registry.catalog(),
+            "binding_status": "declarations_only", "authorizes_execution": False,
+            "source_text_is_untrusted_data": True, "verification_status": "not_performed"}
 
 
 def builtin_registry(*, bind: bool = False) -> CapabilityRegistry:

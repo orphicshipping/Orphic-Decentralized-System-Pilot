@@ -1,0 +1,19 @@
+{
+  "schema": "ciw.external-work-cloudflare.v1",
+  "database": "external-work.sqlite3",
+  "issuer": "https://YOUR-TEAM.cloudflareaccess.com",
+  "endpoints": [
+    {
+      "public_url": "https://ncp-requester.example.com/requester/mcp",
+      "audience": "REPLACE_WITH_REQUESTER_ACCESS_APPLICATION_AUD",
+      "role": "requester",
+      "subjects": {}
+    },
+    {
+      "public_url": "https://ncp-worker.example.com/worker/mcp",
+      "audience": "REPLACE_WITH_WORKER_ACCESS_APPLICATION_AUD",
+      "role": "worker",
+      "subjects": {}
+    }
+  ]
+}

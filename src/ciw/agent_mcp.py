@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 from hashlib import sha256
+from copy import deepcopy
 import json
 import os
 from pathlib import Path
@@ -21,7 +22,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar")
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -37,8 +38,13 @@ INSTRUCTIONS = (
 
 class Server:
     """Sequential MCP tools profile; no task, sampling or resource subscriptions."""
-    def __init__(self, host: AgentHost):
+    def __init__(self, host: AgentHost, *, extra_tools=(), image_content=None):
         self.host = host
+        self.image_content = image_content
+        self.tools = getattr(host, "descriptions", descriptions)() + deepcopy(list(extra_tools))
+        names = [item["name"] for item in self.tools]
+        if len(names) != len(set(names)):
+            raise ValueError("Installed tool catalog contains duplicate names")
         self.initialized = False
         self.negotiated = False
         self.seen = set()
@@ -62,7 +68,12 @@ class Server:
         method = message.get("method")
         if (set(message) - {"jsonrpc", "id", "method", "params"} or message.get("jsonrpc") != "2.0"
                 or type(method) is not str or not method):
-            return None if notification else self.error(None, -32600, "Invalid JSON-RPC request")
+            # Only a valid Request object without an ID is a notification.
+            return self.error(None, -32600, "Invalid JSON-RPC request")
+        if not notification and (type(request_id) not in (str, int)
+                or (type(request_id) is str and not 1 <= len(request_id) <= 128)
+                or (type(request_id) is int and abs(request_id) > 2**53 - 1)):
+            return self.error(None, -32600, "Require a bounded request identifier")
         params = message.get("params", {})
         if type(params) is not dict:
             return None if notification else self.error(request_id, -32602, "Parameters must be an object")
@@ -71,9 +82,6 @@ class Server:
                 self.initialized = True
             # Never dispatch a tool from a notification. No responses to notifications.
             return None
-        if (type(request_id) not in (str, int) or (type(request_id) is str and not 1 <= len(request_id) <= 128)
-                or (type(request_id) is int and abs(request_id) > 2**53 - 1)):
-            return self.error(None, -32600, "Require a bounded request identifier")
         key = (type(request_id), request_id)
         if key in self.seen:
             return self.error(request_id, -32600, "Duplicate request ID; use new RPC ID and same attempt to retry")
@@ -100,7 +108,7 @@ class Server:
         elif method == "tools/list":
             if set(params) - {"_meta"}:
                 return self.error(request_id, -32602, "This bounded catalog has no cursor")
-            result = {"tools": getattr(self.host, "descriptions", descriptions)()}
+            result = {"tools": deepcopy(self.tools)}
         elif method == "tools/call":
             if set(params) - {"name", "arguments", "_meta"} or type(params.get("name")) is not str:
                 return self.error(request_id, -32602, "Invalid tool call")
@@ -109,7 +117,14 @@ class Server:
                     value = self.host.call(params["name"], params.get("arguments", {}))
                 formatted = self.host.mcp_result(params["name"], value) if hasattr(self.host, "mcp_result") else None
                 result = formatted if formatted is not None else {"content": [{"type": "text", "text": encode(value).decode("utf-8")}],
-                          "structuredContent": value, "isError": value.get("status") in {"failed", "incomplete"}}
+                          "structuredContent": value, "isError": value.get("status") in {"failed", "incomplete", "refused"}}
+                if self.image_content is not None:
+                    result["content"].extend(self.image_content(params["name"], value))
+                # Binary ImageContent is transport data, not a scientific JSON
+                # string subject to the existing 64 KiB field bound. Bound the
+                # serialized wire envelope without weakening record validators.
+                if len(json.dumps(result, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode("utf-8")) > MAX_MESSAGE - 1024:
+                    raise ValueError("MCP result exceeds bounded wire budget")
             except Exception as exc:
                 value = {"status": "refused", "reason": type(exc).__name__ + ": " + str(exc)[:1000]}
                 result = {"content": [{"type": "text", "text": encode(value).decode("utf-8")}],
@@ -119,8 +134,8 @@ class Server:
         return {"jsonrpc": "2.0", "id": request_id, "result": result}
 
 
-def serve(host: AgentHost, reader: BinaryIO, writer: BinaryIO) -> int:
-    server = Server(host)
+def serve(host: AgentHost, reader: BinaryIO, writer: BinaryIO, *, extra_tools=(), image_content=None) -> int:
+    server = Server(host, extra_tools=extra_tools, image_content=image_content)
     for _ in range(MAX_REQUESTS * 2):
         line = reader.readline(MAX_MESSAGE + 1)
         if not line:
@@ -188,8 +203,11 @@ def _profile(path: Path) -> tuple[Path, dict]:
     return path, value
 
 
-def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False) -> AgentHost:
+def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False,
+                 read_only: bool = False) -> AgentHost:
     """Only the operator's launch command selects this file; not an MCP tool."""
+    if read_only and (instrument != "builtin" or leakage_backend is not None or resume):
+        raise ValueError("Corpus inspection requires a read-only builtin host without resume")
     if type(instrument) is not str or instrument not in INSTRUMENTS:
         raise ValueError("Require a fixed operator-selected instrument")
     if instrument == "leakage":
@@ -199,6 +217,11 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     elif leakage_backend is not None:
         raise ValueError("Native leakage backend requires the explicit leakage instrument selector")
     path, value = _profile(path)
+    # Check the same frozen profile that will be loaded, before input/provider/output work.
+    if read_only and (value["output_dir"] is not None or value["allow_operations"] != []
+                      or value["candidate_domains"] != {} or value["comparisons"] != {}
+                      or value["check_suites"] != {}):
+        raise ValueError("Corpus inspection requires a read-only profile: no output, grants or policies")
     inputs, retained = {}, {}
     total = 0
     for alias, location in value["inputs"].items():
@@ -216,7 +239,14 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     if output is not None and (type(output) is not str or not output):
         raise ValueError("Invalid operator output directory")
     host_class = AgentHost
-    if instrument == "polymer":
+    if instrument == "link-scalar":
+        from .link_study_agent import LinkStudyHost
+        from .link_study import registry as link_registry
+        if value["candidate_domains"]:
+            raise ValueError("Link study has no agent-editable calibration or acceptance parameters")
+        host_class = LinkStudyHost
+        registry = link_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "polymer":
         from .polymer_workflow import capability_registry
         registry = capability_registry(bind=bool(value["allow_operations"]))
     elif instrument == "temperature":
@@ -247,6 +277,10 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
                 _leakage_graph(artifact, registry)
     else:
         registry = builtin_registry(bind=bool(value["allow_operations"]))
+        if read_only:
+            # Fixed trusted offline readers for retained Link results; no operation bindings.
+            from .link_study import register as register_link_readers
+            register_link_readers()
     return host_class(registry=registry, inputs=inputs,
         output_dir=None if output is None else path.parent / output,
         allow_operations=tuple(value["allow_operations"]), candidate_domains=value["candidate_domains"],
@@ -393,6 +427,12 @@ def main(argv: list[str] | None = None) -> int:
     subs = parser.add_subparsers(dest="command", required=True)
     command = subs.add_parser("serve", help="Serve operator-bound NET tools over local MCP stdio")
     command.add_argument("--profile", type=Path, required=True)
+    command.add_argument("--simulation-profile", type=Path)
+    command.add_argument("--corpus-bundle", type=Path,
+                         help="Add frozen selected-corpus inspection to a read-only builtin profile")
+    command.add_argument("--corpus-ref",
+                         help="Independently retained sha256 catalog reference; paired with --corpus-bundle")
+    command.add_argument("--sdk", action="store_true", help="Use optional SDK for modern and legacy MCP")
     command.add_argument("--resume", action="store_true",
                          help="Resume the exact bound profile and retained attempts after restart")
     command.add_argument("--instrument", choices=INSTRUMENTS, default="builtin",
@@ -403,6 +443,12 @@ def main(argv: list[str] | None = None) -> int:
                          help="Absolute operator-selected native interpreter; leakage only")
     command = subs.add_parser("demo-config", help="Create an explicitly synthetic builtin-only operator profile")
     command.add_argument("--output-dir", type=Path, required=True)
+    command.add_argument("--stateful", action="store_true", help="Also create an optional bounded reference-simulation profile")
+    command.add_argument("--stateful-replay", action="store_true", help="Opt in to bounded native/reference suffix replay; requires --stateful")
+    command.add_argument("--stateful-campaign", action="store_true", help="Opt in to fixed-preset intervention campaigns; requires --stateful")
+    command.add_argument("--stateful-capture", action="store_true", help="Opt in to observation image capture; requires --stateful and pinned native Godot")
+    command.add_argument("--godot", type=Path)
+    command.add_argument("--godot-sha256")
     command = subs.add_parser("polymer-config", help="Create a synthetic four-operation polymer profile and typed graph")
     command.add_argument("--output-dir", type=Path, required=True)
     command.add_argument("--process", choices=("injection_molding", "extrusion_blow_molding"),
@@ -418,9 +464,28 @@ def main(argv: list[str] | None = None) -> int:
     command.add_argument("--source", type=Path, required=True,
                          help="Existing ciw.measured-thermal-source.v1 JSON, at most 48 KiB, with exact retained evidence")
     args = parser.parse_args(argv)
+    if args.command == "demo-config" and (args.stateful_replay or args.stateful_campaign) and not args.stateful:
+        parser.error("--stateful-replay and --stateful-campaign require --stateful")
+    if args.command == "demo-config" and args.stateful_capture and (not args.stateful or not args.godot or not args.godot_sha256):
+        parser.error("--stateful-capture requires --stateful, --godot and --godot-sha256")
+    if args.command == "demo-config" and not args.stateful_capture and (args.godot or args.godot_sha256):
+        parser.error("Native image arguments require --stateful-capture")
     try:
         if args.command == "demo-config":
-            print(demo_config(args.output_dir))
+            if args.stateful:
+                from .simulation_agent import demo_profiles
+                if args.stateful_capture:
+                    # Pin preflight before allocating the requested profile directory.
+                    from .godot_capture import GodotObservationRenderer
+                    GodotObservationRenderer(args.godot, args.godot_sha256)
+                base, simulation = demo_profiles(args.output_dir, replay=args.stateful_replay, campaign=args.stateful_campaign)
+                if args.stateful_capture:
+                    from .simulation_agent_capture import native_demo_profile
+                    value = native_demo_profile(parse(_read(simulation)), args.godot, args.godot_sha256)
+                    simulation.write_bytes(encode(value))
+                print(json.dumps({"profile": str(base), "simulation_profile": str(simulation)}))
+            else:
+                print(demo_config(args.output_dir))
             return 0
         if args.command == "polymer-config":
             print(polymer_config(args.output_dir, args.process))
@@ -434,6 +499,15 @@ def main(argv: list[str] | None = None) -> int:
         if args.command == "measured-thermal-config":
             print(measured_thermal_config(args.output_dir, args.source))
             return 0
+        combined_corpus = args.corpus_bundle is not None or args.corpus_ref is not None
+        if combined_corpus:
+            if args.corpus_bundle is None or args.corpus_ref is None:
+                raise ValueError("Corpus launch requires both --corpus-bundle and --corpus-ref")
+            if (args.instrument != "builtin" or args.resume or args.provider_checkout is not None
+                    or args.python is not None):
+                raise ValueError("Corpus launch requires builtin inspection without native flags or resume")
+        if args.simulation_profile is not None and (combined_corpus or args.sdk or args.instrument != "builtin" or args.resume):
+            raise ValueError("Simulation launch requires the builtin stdio host without corpus, SDK or resume")
         leakage_backend = None
         if args.instrument == "leakage":
             if args.provider_checkout is None or not args.provider_checkout.is_absolute():
@@ -451,13 +525,29 @@ def main(argv: list[str] | None = None) -> int:
             if args.instrument == "leakage":
                 from .leakage_native import NativeLeakageBackend
                 leakage_backend = NativeLeakageBackend(args.provider_checkout, python=args.python)
-            host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
-                                resume=args.resume)
+            if combined_corpus:
+                from .corpus_agent import combined_from_profile
+                host = combined_from_profile(args.profile, args.corpus_bundle, expected_ref=args.corpus_ref)
+            else:
+                host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
+                                    resume=args.resume)
             try:
+                if args.simulation_profile is not None:
+                    from .simulation_agent import from_profile as bind_simulation
+                    from .simulation_agent_tools import descriptions as simulation_tools
+                    with bind_simulation(host, args.simulation_profile) as extended:
+                        return serve(extended, sys.stdin.buffer, wire,
+                            extra_tools=simulation_tools(include_replay=extended.replay_enabled,
+                                include_campaign=extended.campaign_enabled, include_capture=extended.capture_enabled),
+                            image_content=extended.image_content if extended.capture_enabled else None)
+                if args.sdk:
+                    from .mcp_server import serve_sdk
+                    os.dup2(wire.fileno(), sys.stdout.fileno())
+                    return serve_sdk(host, name="net-agent")
                 return serve(host, sys.stdin.buffer, wire)
             finally:
                 host.close()
-    except (OSError, ValueError, TypeError, KeyError) as exc:
+    except (ImportError, OSError, ValueError, TypeError, KeyError) as exc:
         print(f"NET agent startup refused: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 1
 

@@ -39,3 +39,7 @@ docs/adr/
 
 # Local Bevy engine checkout — do not vendor
 /bevy/
+
+# Local private corpus snapshots, acceptance transcripts and candidate wheels
+/.work/
+/dist-corpus/

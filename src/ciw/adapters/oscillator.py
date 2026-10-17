@@ -2,6 +2,7 @@
 
 Render geometry is a derived view. Every analysis in this module reads the full
 precision channel arrays and validates its complete source recording first.
+The array-level helpers carry no oscillator, acquisition or calibration claim.
 """
 
 from __future__ import annotations
@@ -267,6 +268,19 @@ def _selected(run: dict, channel: str, interval_s: Any) -> tuple[np.ndarray, str
 def compute_statistics(run: dict, channel: str, interval_s: list[float]) -> dict:
     """Compute statistics from all source samples in the half-open interval."""
     values, unit, _ = _selected(run, channel, interval_s)
+    return summarize_values(values, unit)
+
+
+def summarize_values(values: Any, unit: str) -> dict:
+    """Summarize supplied numeric samples without asserting a source instrument.
+
+    The caller owns selection, units, missingness and source provenance. This
+    array-level kernel performs no calibration, conversion or physical validation.
+    """
+    values = _array(values, "values")
+    _string(unit, "unit")
+    if len(values) == 0:
+        raise ValueError("statistics requires at least one retained sample")
     # Scale before reductions to avoid overflow for otherwise valid large inputs.
     scale = float(np.max(np.abs(values)))
     normalized = values / scale if scale else values
@@ -288,9 +302,28 @@ def compute_spectrum(run: dict, channel: str, interval_s: list[float]) -> dict:
     equals the window-weighted detrended mean square, not the unwindowed RMS.
     """
     values, unit, sample_rate = _selected(run, channel, interval_s)
+    return periodogram_values(values, unit, sample_rate)
+
+
+def periodogram_values(values: Any, unit: str, sample_rate_hz: float) -> dict:
+    """Periodic-Hann density for samples declared uniformly spaced by the caller.
+
+    The numerical kernel does not establish timing, amplitude units, acquisition
+    identity or calibration. The caller must retain those source declarations.
+    """
+    values = _array(values, "values")
+    _string(unit, "unit")
+    sample_rate = _number(sample_rate_hz, "sample_rate_hz")
+    if sample_rate <= 0:
+        raise ValueError("sample_rate_hz must be positive")
+    spacing = 1.0 / sample_rate
+    if not math.isfinite(spacing) or spacing <= 0:
+        raise ValueError("sample_rate_hz does not define a finite positive spacing")
     count = len(values)
     if count < 4:
         raise ValueError("spectrum requires at least four retained samples")
+    if not math.isfinite(count * spacing):
+        raise ValueError("sample_rate_hz and sample count must define finite sample support")
     # np.hanning(n + 1)[:-1] is the periodic (DFT-even) Hann window.
     window = np.hanning(count + 1)[:-1]
     scale = float(np.max(np.abs(values)))
@@ -304,7 +337,7 @@ def compute_spectrum(run: dict, channel: str, interval_s: list[float]) -> dict:
         psd = (psd * scale) * scale
     if not np.all(np.isfinite(psd)):
         raise ValueError("spectrum exceeds finite float64 density range")
-    frequencies = np.fft.rfftfreq(count, d=1.0 / sample_rate)
+    frequencies = np.fft.rfftfreq(count, d=spacing)
     peak = float(frequencies[int(np.argmax(psd))]) if np.any(psd > 0.0) else None
     return {
         "sample_count": count, "method": "periodogram", "window": "hann",

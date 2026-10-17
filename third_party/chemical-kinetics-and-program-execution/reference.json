@@ -1,0 +1,16 @@
+{
+  "schema": "ciw.sequence-reference-source.v1",
+  "repository": "notationsystems/Chemical-Kinetics-and-Program-Execution",
+  "upstream": "paradigms-of-intelligence/chemical-kinetics-and-program-execution",
+  "commit": "8063d68d4f4c0c4ad751deeb27afd3bfb104c156",
+  "paper_doi": "10.1103/dyzr-m21s",
+  "license": "Apache-2.0",
+  "reviewed_source_blobs": {
+    "framework/markov_tapes.py": "3288cc58ba22e214e46ba269748127a059b25c32",
+    "examples/ex3_copolymerization.py": "46201e82443be7e00ca030d545a5cd34ee39ac4f",
+    "LICENSE": "d645695673349e3947e8e5ae42332d0ac3164cd7"
+  },
+  "review_scope": "Python helper definitions, native load/initialization and solver wrapper, copolymerization example; not a full Scheme core audit",
+  "native_execution": "not_performed",
+  "adaptation": "sequence probability concepts and independent binary decay reference, not an upstream engine replacement"
+}

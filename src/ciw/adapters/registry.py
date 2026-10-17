@@ -21,6 +21,9 @@ class RecordAdapter:
 
     def validate_run(self, run: dict) -> None:
         validate_run_structure(run)
+        if run["instrument"] == "temperature-recording.v1" or "temperature_recording" in run["metadata"]:
+            from ..temperature_recording_session import source_recording
+            source_recording(run)
         if run["instrument"] != self.manifest.instrument_id:
             raise ValueError("Run instrument does not match adapter manifest")
         if self.manifest.frames and run["metadata"]["coordinate_frame"] not in self.manifest.frames:

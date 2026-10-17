@@ -519,3 +519,27 @@ def test_profile_duplicate_bytes_share_budget_and_whitespace_keeps_identity(tmp_
     assert captured["spaced"] == spaced
     assert (tmp_path / "first.json").read_bytes() == raw
     assert (tmp_path / "spaced.json").read_bytes() == spaced
+
+
+@pytest.mark.parametrize('bad_id', [[], {}, True, None, 1.5, 2**54, 'x' * 129])
+def test_invalid_rpc_id_is_never_echoed_by_parameter_refusal(bad_id):
+    server = Server(None)
+    for params in ([], None, False):
+        raw = json.dumps({'jsonrpc': '2.0', 'id': bad_id, 'method': 'ping',
+                          'params': params}).encode()
+        reply = server.handle(raw)
+        assert reply['error']['code'] == -32600
+        assert reply['id'] is None
+    # Malformed envelopes do not consume IDs or prevent the next valid request.
+    assert rpc(server, 'ping', id=17)['result'] == {}
+
+
+@pytest.mark.parametrize('invalid', [
+    {'jsonrpc': '2.0', 'method': 1},
+    {'jsonrpc': '2.0'},
+    {'method': 'ping'},
+])
+def test_invalid_envelope_without_id_returns_request_error(invalid):
+    # A malformed object is not a notification (JSON-RPC 2.0 section 7).
+    reply = Server(None).handle(json.dumps(invalid).encode())
+    assert reply['error']['code'] == -32600 and reply['id'] is None

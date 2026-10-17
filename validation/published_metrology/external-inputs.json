@@ -1,0 +1,64 @@
+{
+  "schema": "net.published-metrology-external-inputs.v1",
+  "data_distribution": "External operator-provisioned inputs; this repository contains no source assets or fixture values.",
+  "compatible_existing_corpus": "NET-metrology-corpus-0.2",
+  "files": [
+    {
+      "path": "qualification/kriss-kernel-oracles.json",
+      "sha256": "06fb6c7e1777ef3095137705cdc4480bdd52b3ebc9fb193fb237d6215116f413",
+      "bytes": 193729
+    },
+    {
+      "path": "assets/additions/kriss-ghp-calibration-uncertainty-v2/kriss-ghp-uncertainty.xlsx",
+      "sha256": "1f5c80832cac048ff9e9ed68a1c987d8d6d6934759b62dd29302498066c7e8fe",
+      "bytes": 68224
+    },
+    {
+      "path": "qualification/helium-table12-rss.json",
+      "sha256": "fe53d6fb1fb0ee0d153cd64788cecd797acdee9ac58a29ced843f70c293004d9",
+      "bytes": 3369
+    },
+    {
+      "path": "assets/additions/bipm-ccm-p-k12-helium/helium_leak_report.pdf",
+      "sha256": "0a3a752a0b71bfaaace96b8cdb20560526e7f51d5283a6c2eb597b0738c6bcf1",
+      "bytes": 549956
+    }
+  ],
+  "sources": [
+    {
+      "id": "kriss-ghp-calibration-uncertainty-v2",
+      "authors": [
+        "Inseok Yang",
+        "Daeho Kim"
+      ],
+      "institution": "Korea Research Institute of Standards and Science",
+      "title": "Dataset for the high temperature GHP uncertainty paper",
+      "version": 2,
+      "published": "2022-08-17",
+      "doi": "10.17632/4gw5r25wtz.2",
+      "url": "https://data.mendeley.com/datasets/4gw5r25wtz/2",
+      "license": "CC BY 4.0",
+      "license_url": "https://creativecommons.org/licenses/by/4.0/",
+      "fixture_origin": "Source-addressed workbook cached values retained in the separately provisioned corpus."
+    },
+    {
+      "id": "bipm-ccm-p-k12-helium",
+      "authors": "K. Jousten, K. Arai, U. Becker, O. Bodnar, F. Boineau, J. A. Fedchak, V. Gorobey, Wu Jian, D. Mari, P. Mohan, J. Setina, B. Toman, M. Vicar, Yu Hong Yan",
+      "institution": "BIPM / CCM; PTB pilot and participating national metrology institutes",
+      "title": "Final report of key comparison CCM.P-K12 for very low helium flow rates (leak rates)",
+      "doi": "10.1088/0026-1394/50/1A/07001",
+      "url": "https://www.bipm.org/kcdb/comparison/download/published-section-block-file/16/46/statement/46/ccm.p-k12.pdf",
+      "reuse_terms_url": "https://www.bipm.org/en/copyright",
+      "fixture_origin": "Five manually transcribed Table 12 rows; original report and pinned fixture retained externally."
+    }
+  ],
+  "source_and_terms_checked_on": "2026-10-04",
+  "endorsement": "No source institution endorsement, affiliation or physical qualification is claimed.",
+  "manifest_prerequisite": {
+    "path": "qualification/inputs.json",
+    "required": true,
+    "bytes_in_retained_run": 1020,
+    "sha256_in_retained_run": "fdcaab8ab0254c92c08352e6b977b93860e27ba3d27be4ace27d8fef496add8c",
+    "contract": "Lists exactly the four files above, with byte sizes and hashes; may also list the historical corpus 0.2 wheel, which is excluded from current source verification. Logical completeness and each source/fixture hash are enforced; a new manifest serialization has its own digest in the output report."
+  }
+}

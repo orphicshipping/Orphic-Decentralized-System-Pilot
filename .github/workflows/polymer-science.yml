@@ -1,0 +1,73 @@
+name: Polymer rheology and thermochemical audits
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/polymer_*.py'
+      - 'src/ciw/thermochemical_benchmark.py'
+      - 'src/ciw/control_contracts.py'
+      - 'src/ciw/core/identities.py'
+      - 'src/ciw/core/covariance.py'
+      - 'src/ciw/operations/**'
+      - 'tests/test_polymer_*.py'
+      - 'tests/test_thermochemical_*.py'
+      - 'examples/polymer/rheology/**'
+      - 'pyproject.toml'
+      - '.github/workflows/polymer-science.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'src/ciw/polymer_*.py'
+      - 'src/ciw/thermochemical_benchmark.py'
+      - 'tests/test_polymer_*.py'
+      - 'tests/test_thermochemical_*.py'
+      - 'pyproject.toml'
+      - '.github/workflows/polymer-science.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scientific-reference:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install ".[dev,numerical-checks]"
+      - name: Independent numerical and refusal checks
+        run: python -m pytest -q tests/test_polymer_rheology.py tests/test_polymer_cooling_precision.py tests/test_thermochemical_independent_audit.py tests/test_thermochemical_benchmark.py tests/test_system_study.py tests/test_polymer_rheology_identification.py -o addopts= --junitxml=scientific-tests.xml
+      - name: Installed rheology and retained polymer journeys
+        shell: bash
+        run: |
+          net polymer rheology example --output rheology-campaign/request.json
+          net polymer rheology analyze rheology-campaign/request.json --output rheology-campaign/result.json
+          net polymer rheology inspect rheology-campaign/result.json
+          net polymer rheology verify rheology-campaign/result.json --output rheology-campaign/verification.json
+          net polymer rheology identify example --output rheology-campaign/identification-request.json
+          net polymer rheology identify run rheology-campaign/identification-request.json --output rheology-campaign/identification-result.json
+          net polymer rheology identify inspect rheology-campaign/identification-result.json
+          net polymer rheology identify verify rheology-campaign/identification-result.json --output rheology-campaign/identification-verification.json
+          net polymer rheology identify export rheology-campaign/identification-result.json --output rheology-campaign/identified-forward.json
+          net polymer rheology analyze rheology-campaign/identified-forward.json --output rheology-campaign/identified-response.json
+          net polymer rheology verify rheology-campaign/identified-response.json --output rheology-campaign/identified-response-verification.json
+          net polymer qualify --output-dir polymer-campaign
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scientific-audit-${{ matrix.os }}-${{ matrix.python }}
+          if-no-files-found: error
+          path: |
+            scientific-tests.xml
+            rheology-campaign/*.json
+            polymer-campaign/qualification.json

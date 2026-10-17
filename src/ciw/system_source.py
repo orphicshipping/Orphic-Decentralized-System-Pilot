@@ -31,11 +31,11 @@ def validate_source(source: dict, specification: dict) -> dict:
     """Check every descriptor binding and its normalized scientific content."""
     from .workbench import SOURCE_SCHEMA as DESCRIPTOR_SCHEMA, _source as retained_source
     fields = {"schema", "kind", "label", "source_schema", "evidence_id", "byte_count", "source_id", "bytes_b64"}
-    if (type(source) is not dict or set(source) != fields
+    if (type(source) is not dict or not fields <= set(source) <= fields | {"input_source_ids"}
             or source["schema"] != DESCRIPTOR_SCHEMA or source["kind"] != SOURCE_KIND
             or source["source_schema"] != SOURCE_SCHEMA):
         raise ValueError("System compilation requires a full retained system-specification source")
-    checked = retained_source({key: source[key] for key in ("kind", "label", "bytes_b64")})
+    checked = retained_source({key: source[key] for key in ("kind", "label", "bytes_b64", "input_source_ids") if key in source})
     if canonical_json(checked) != canonical_json(source):
         raise ValueError("System retained source descriptor differs from its exact bytes")
     declared = _source(base64.b64decode(source["bytes_b64"], validate=True))

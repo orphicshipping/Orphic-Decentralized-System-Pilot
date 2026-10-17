@@ -1,0 +1,2667 @@
+{
+  "schema": "ciw.toolpoint-outcome-request.v1",
+  "protocol": {
+    "schema": "ciw.toolpoint-outcome-protocol.v1",
+    "study_id": "synthetic.toolpoint-outcomes",
+    "revision": "A",
+    "source_kind": "synthetic",
+    "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+    "characteristic_id": "synthetic.internal-integrity",
+    "specification_ref": "sha256:51cd7379f6bb1fe2453373fa81f20e64ad74792166ea7b4de2320060811dda73",
+    "inspection_condition": "conditioned",
+    "clock_id": "synthetic.clock",
+    "frozen_at_s": 0,
+    "freeze_evidence_ref": "sha256:f32dc0c0094aa2deb9b4ba09c68b441246e53c8068a5943bbc7691320d49b9a7",
+    "decision_deadline_after_start_s": 1.0,
+    "monitoring_plan_refs": [
+      "sha256:ab6750a030f1f326be4a15ea43e5e83102c4e6ece81432422ff94801d71340ad"
+    ],
+    "enrollment": [
+      {
+        "manufacturing_request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+        "serial": "p001"
+      },
+      {
+        "manufacturing_request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+        "serial": "p002"
+      },
+      {
+        "manufacturing_request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+        "serial": "p003"
+      },
+      {
+        "manufacturing_request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+        "serial": "p004"
+      }
+    ],
+    "development_lot_ids": [
+      "synthetic.development-lot"
+    ],
+    "development_cycle_refs": [],
+    "development_evidence_refs": [],
+    "iid_lot_sampling_declared": true,
+    "sampling_basis_ref": "sha256:1b109f8e10af62b02fb744b2641dc88fc28e6d2c1e531dec6ddc5b30560f27bb",
+    "confidence_level": 0.95,
+    "criteria": {
+      "min_defective_lots": 3,
+      "min_conforming_lots": 3,
+      "max_lot_miss_upper": 0.1,
+      "max_lot_false_hold_upper": 0.2
+    }
+  },
+  "manufacturing_reports": [
+    {
+      "schema": "ciw.polymer-manufacturing-report.v1",
+      "evaluation_id": "execution-48cff7bb9c28453ab7f972dae52db544",
+      "request": {
+        "schema": "ciw.polymer-manufacturing-request.v1",
+        "source_kind": "synthetic",
+        "clock_id": "synthetic.clock",
+        "parts": [
+          {
+            "part_number": "synthetic.housing-half",
+            "revision": "A",
+            "requirement_refs": [
+              "sha256:88c22429690903d47d00227e6f1d8678d6582c6247d3e465df33a8fed3767af4"
+            ],
+            "bom": [],
+            "inspection_plan": [
+              {
+                "characteristic": "width",
+                "unit": "m",
+                "lower": 0.0199,
+                "upper": 0.0201,
+                "condition": "conditioned",
+                "specification_ref": "sha256:4f2b7fde25798c87cbb4b57a68406c77b959cdb064d3862639bf6411f3540b5b"
+              }
+            ]
+          },
+          {
+            "part_number": "synthetic.enclosure",
+            "revision": "A",
+            "requirement_refs": [
+              "sha256:aa3bf0ca7e179991e9e3c14cde7d7b541de1882ed0a9f3ef98b4d38fe7a8f4d7"
+            ],
+            "bom": [
+              {
+                "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+                "quantity": 2
+              }
+            ],
+            "inspection_plan": [
+              {
+                "characteristic": "assembly-width",
+                "unit": "m",
+                "lower": 0.0199,
+                "upper": 0.0201,
+                "condition": "assembled",
+                "specification_ref": "sha256:57226b0f2c8ac2ed83a4f3e47b88e1120dc529377ace29213f47ac60294abdf3"
+              }
+            ]
+          }
+        ],
+        "routes": [
+          {
+            "route_id": "synthetic.form-route",
+            "revision": "A",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "steps": [
+              "form",
+              "inspect"
+            ]
+          },
+          {
+            "route_id": "synthetic.assembly-route",
+            "revision": "A",
+            "part_ref": "sha256:a40b05f26e93ea18ab3b9dc44dff6ea34dad09b07224eaae2831368068517a96",
+            "steps": [
+              "assemble",
+              "inspect"
+            ]
+          }
+        ],
+        "orders": [
+          {
+            "work_order_id": "WO-COMPONENT",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "route_ref": "sha256:9758be56f0da17198da49ba18f8007a650aefaffe4d301f9a67f2ad5b27a284c",
+            "quantity": 3,
+            "max_starts": 4,
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6"
+          },
+          {
+            "work_order_id": "WO-ASSEMBLY",
+            "part_ref": "sha256:a40b05f26e93ea18ab3b9dc44dff6ea34dad09b07224eaae2831368068517a96",
+            "route_ref": "sha256:22e7434461c5aa8eaeddc3f16982d2afd528fd5ec1c12686fdfb065acf24b8e7",
+            "quantity": 1,
+            "max_starts": 1,
+            "configuration_ref": null
+          }
+        ],
+        "configuration": {
+          "schema": "ciw.polymer-microfab-configuration.v1",
+          "configuration_id": "synthetic.config.A",
+          "source_kind": "synthetic",
+          "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+          "material": {
+            "grade_id": "synthetic.resin",
+            "lot_id": "synthetic.lot.1",
+            "specification_ref": "sha256:6623ce072302b1ab115925ab968a801d1bf13220a474e64b34f5f05d8fb057f6",
+            "characterization_refs": [
+              "sha256:545600dcb519f6cae7aa8bbd65c4e0f9ec2b01da072546fb1144c17c44266b89"
+            ],
+            "drying_record_ref": "sha256:5bb029a369e818fdd3461f7f146eef5e5f881f4ba59471fb999e5c056e7d507e",
+            "moisture": {
+              "value": 0.0001,
+              "unit": "kg/kg",
+              "expanded_uncertainty": 1e-05
+            },
+            "moisture_max": {
+              "value": 0.0002,
+              "unit": "kg/kg"
+            },
+            "melt_temperature": {
+              "lower": 450,
+              "upper": 550,
+              "unit": "K"
+            },
+            "mold_temperature": {
+              "lower": 300,
+              "upper": 400,
+              "unit": "K"
+            },
+            "max_residence_time": {
+              "value": 600,
+              "unit": "s"
+            }
+          },
+          "machine": {
+            "machine_id": "synthetic.press",
+            "screw_id": "synthetic.screw",
+            "capability_ref": "sha256:a038b121aba7e0d2f27b9edc11954d0ec1bf3692cd6b294ba2dd5a83b2e30735",
+            "compatible_tool_refs": [
+              "sha256:bdaca4b8f8e49e99780235d0bffdfd24898cbbc0b823b7fcaee7145b08c2f248"
+            ],
+            "compatible_grade_ids": [
+              "synthetic.resin"
+            ],
+            "melt_temperature": {
+              "lower": 400,
+              "upper": 600,
+              "unit": "K"
+            },
+            "mold_temperature": {
+              "lower": 290,
+              "upper": 420,
+              "unit": "K"
+            },
+            "shot_volume": {
+              "lower": 1e-06,
+              "upper": 0.001,
+              "unit": "m3"
+            },
+            "max_injection_pressure": {
+              "value": 100000000,
+              "unit": "Pa"
+            },
+            "max_clamp_force": {
+              "value": 1000000,
+              "unit": "N"
+            }
+          },
+          "tool": {
+            "tool_id": "synthetic.tool",
+            "revision": "A",
+            "cad_ref": "sha256:f2eb4fc5927abc425ac0a5442ef6165457adb6a8369603c280e3dd4da504034a",
+            "cavity_ids": [
+              "cavity.1",
+              "cavity.2"
+            ],
+            "melt_temperature": {
+              "lower": 460,
+              "upper": 540,
+              "unit": "K"
+            },
+            "mold_temperature": {
+              "lower": 300,
+              "upper": 380,
+              "unit": "K"
+            },
+            "max_injection_pressure": {
+              "value": 80000000,
+              "unit": "Pa"
+            },
+            "projected_area": {
+              "value": 0.001,
+              "unit": "m2"
+            }
+          },
+          "recipe": {
+            "process": "injection_molding",
+            "melt_temperature": {
+              "value": 500,
+              "unit": "K"
+            },
+            "mold_temperature": {
+              "value": 350,
+              "unit": "K"
+            },
+            "injection_pressure": {
+              "value": 40000000,
+              "unit": "Pa"
+            },
+            "cavity_pressure_bound": {
+              "value": 20000000,
+              "unit": "Pa"
+            },
+            "shot_volume": {
+              "value": 0.0001,
+              "unit": "m3"
+            },
+            "residence_time": {
+              "value": 120,
+              "unit": "s"
+            },
+            "clamp_factor": {
+              "value": 1.5,
+              "unit": "1"
+            }
+          },
+          "development_refs": [
+            "sha256:3455060e3a138dc150e73da46817f006f431ed9f7c0832318cb93e83ffd98d25"
+          ]
+        },
+        "preflight": {
+          "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+          "checks": [
+            {
+              "check": "coolant",
+              "status": "PASS",
+              "evidence_ref": "sha256:8b9ae561583df947f2b8c331507efa908751e8f74e1b61dcf4b565fcd30fa5b0",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "drying",
+              "status": "PASS",
+              "evidence_ref": "sha256:30ddd4d6bbb3f6e64149721d9413507a8f0e39aa3fbf17f28f273fef6d2cb58c",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "independent_safety_review",
+              "status": "PASS",
+              "evidence_ref": "sha256:028242ce368e0e569c57f84f970a3fce6cce9fb57f2a95b88a822ee240626f2d",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "machine_setup",
+              "status": "PASS",
+              "evidence_ref": "sha256:ed40f0136df40f5ff1547bb20a1b7335f15cb734b73b6ae46e18634e8b54fccc",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "material_identity",
+              "status": "PASS",
+              "evidence_ref": "sha256:0edf162cbefbf1c2ee0621cd1be5764847cf011c74c715dbe630948a5323ac60",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "sensors",
+              "status": "PASS",
+              "evidence_ref": "sha256:1b10ac8d82fc386e1f91ebf4e658c07be7107969b5473f3fa73b0ba4a048ce78",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            },
+            {
+              "check": "tool_setup",
+              "status": "PASS",
+              "evidence_ref": "sha256:025db19d10c6a53e372d4da4f6bc813cef735788c90b0b4ed2c578d67f7f1886",
+              "observed_at_s": 0,
+              "valid_until_s": 100,
+              "source_kind": "synthetic"
+            }
+          ]
+        },
+        "inventory": {
+          "lot_id": "synthetic.lot.1",
+          "mass": {
+            "value": 2.0,
+            "unit": "kg"
+          },
+          "evidence_ref": "sha256:1c9881f6d143050538d0f2cfb7724a00f4b49c8ca39fd679b9e5dff9dc1a4dee"
+        },
+        "development_runs": [
+          {
+            "study_id": "synthetic.study.1",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "hypothesis_ref": "sha256:490082d9476d8ec4e9ed3a04ab52b5eef19b0d1a9328079b234c604fc68410c7",
+            "model_ref": "sha256:fc6df68f88f3bd1633fe6a965c55f54c49d860dde53e150fd152a63b87b410f5",
+            "evidence_refs": [
+              "sha256:79594aedfb36fd0fe40813d15a80cd2d5232cb3a99ab3c23a4beb548341d4da6"
+            ],
+            "result_ref": "sha256:8488ab8bd1882d54b2a986998d764b18288f4a0d405a66c884d4ccd096d92aa1"
+          }
+        ],
+        "events": [
+          {
+            "event_id": "synthetic.event.0",
+            "at_s": 1.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "cycle",
+            "data": {
+              "cycle_id": "synthetic.cycle.0",
+              "work_order_id": "WO-COMPONENT",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "material_lot_id": "synthetic.lot.1",
+              "issued_mass": {
+                "value": 0.5,
+                "unit": "kg"
+              },
+              "waste_mass": {
+                "value": 0.3,
+                "unit": "kg"
+              },
+              "outputs": [
+                {
+                  "serial": "p001",
+                  "cavity_id": "cavity.1",
+                  "mass": {
+                    "value": 0.1,
+                    "unit": "kg"
+                  }
+                },
+                {
+                  "serial": "p002",
+                  "cavity_id": "cavity.2",
+                  "mass": {
+                    "value": 0.1,
+                    "unit": "kg"
+                  }
+                }
+              ],
+              "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+              "model_prediction_ref": "sha256:309236273db5304fcdc3b2be697a91dad283295da32425748a3351a295da42dd"
+            }
+          },
+          {
+            "event_id": "synthetic.event.1",
+            "at_s": 2.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "cycle",
+            "data": {
+              "cycle_id": "synthetic.cycle.1",
+              "work_order_id": "WO-COMPONENT",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "material_lot_id": "synthetic.lot.1",
+              "issued_mass": {
+                "value": 0.5,
+                "unit": "kg"
+              },
+              "waste_mass": {
+                "value": 0.3,
+                "unit": "kg"
+              },
+              "outputs": [
+                {
+                  "serial": "p003",
+                  "cavity_id": "cavity.1",
+                  "mass": {
+                    "value": 0.1,
+                    "unit": "kg"
+                  }
+                },
+                {
+                  "serial": "p004",
+                  "cavity_id": "cavity.2",
+                  "mass": {
+                    "value": 0.1,
+                    "unit": "kg"
+                  }
+                }
+              ],
+              "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+              "model_prediction_ref": "sha256:2a5c746d37b6e81ef05ae1230a53186cd01c48cbdc73046431f373d831076b5b"
+            }
+          },
+          {
+            "event_id": "synthetic.event.2",
+            "at_s": 3.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "inspection",
+            "data": {
+              "serial": "p001",
+              "condition": "conditioned",
+              "measurements": [
+                {
+                  "characteristic": "width",
+                  "unit": "m",
+                  "value": 0.02,
+                  "expanded_uncertainty": 1e-05,
+                  "evidence_ref": "sha256:56553dca1567f27577e22c83f875aa4d9bf4e5e9cf222f2f6c89d06fc443c89f",
+                  "calibration_ref": "sha256:3fbd267827fe7dd37cca4b83491897f4676d0f6e0cfe93d1253c3b23062630be"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "synthetic.event.3",
+            "at_s": 4.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "inspection",
+            "data": {
+              "serial": "p002",
+              "condition": "conditioned",
+              "measurements": [
+                {
+                  "characteristic": "width",
+                  "unit": "m",
+                  "value": 0.02,
+                  "expanded_uncertainty": 1e-05,
+                  "evidence_ref": "sha256:4889cbcadf67661a09c726e097af1c0ad9d70db22aa2286bd425745464b0dc38",
+                  "calibration_ref": "sha256:3fbd267827fe7dd37cca4b83491897f4676d0f6e0cfe93d1253c3b23062630be"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "synthetic.event.4",
+            "at_s": 5.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "inspection",
+            "data": {
+              "serial": "p003",
+              "condition": "conditioned",
+              "measurements": [
+                {
+                  "characteristic": "width",
+                  "unit": "m",
+                  "value": 0.02,
+                  "expanded_uncertainty": 1e-05,
+                  "evidence_ref": "sha256:a5b1a180038ead922c5d347d23c1621ede2e50c4ac9402d63f7f7c8fb208d681",
+                  "calibration_ref": "sha256:3fbd267827fe7dd37cca4b83491897f4676d0f6e0cfe93d1253c3b23062630be"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "synthetic.event.5",
+            "at_s": 6.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "inspection",
+            "data": {
+              "serial": "p004",
+              "condition": "conditioned",
+              "measurements": [
+                {
+                  "characteristic": "width",
+                  "unit": "m",
+                  "value": 0.021,
+                  "expanded_uncertainty": 1e-05,
+                  "evidence_ref": "sha256:16f5244ce5d1fc07f5ddd1d19a9f79a7321a6077333ed1e876036b65324518fc",
+                  "calibration_ref": "sha256:3fbd267827fe7dd37cca4b83491897f4676d0f6e0cfe93d1253c3b23062630be"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "synthetic.event.6",
+            "at_s": 7.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "scrap",
+            "data": {
+              "serial": "p004",
+              "reason": "Outside declared width tolerance",
+              "evidence_ref": "sha256:9e648966d9121c105735989a183952bab135b10f7c02baf7325e1f43fdb0793d"
+            }
+          },
+          {
+            "event_id": "synthetic.event.7",
+            "at_s": 8.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "assemble",
+            "data": {
+              "serial": "a001",
+              "work_order_id": "WO-ASSEMBLY",
+              "component_serials": [
+                "p001",
+                "p002"
+              ],
+              "assembly_evidence_ref": "sha256:cbe4d3b9410195d295c0f9fff425a835d139af2836b9f65ab3ad4021609161c7"
+            }
+          },
+          {
+            "event_id": "synthetic.event.8",
+            "at_s": 9.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "inspection",
+            "data": {
+              "serial": "a001",
+              "condition": "assembled",
+              "measurements": [
+                {
+                  "characteristic": "assembly-width",
+                  "unit": "m",
+                  "value": 0.02,
+                  "expanded_uncertainty": 1e-05,
+                  "evidence_ref": "sha256:f8aa5c98ef372510451aab2ce5070f5776d79f56015b89f5f8f6dc72f655f8d1",
+                  "calibration_ref": "sha256:3fbd267827fe7dd37cca4b83491897f4676d0f6e0cfe93d1253c3b23062630be"
+                }
+              ]
+            }
+          },
+          {
+            "event_id": "synthetic.event.9",
+            "at_s": 10.0,
+            "actor_id": "synthetic.operator",
+            "authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd",
+            "kind": "pack",
+            "data": {
+              "package_id": "synthetic.package",
+              "serials": [
+                "a001",
+                "p003"
+              ],
+              "packaging_ref": "sha256:2006017e9e796cc9d27d067c9e683b9e667ecffbad6b4b47a18b3ed9e2bd3948"
+            }
+          }
+        ]
+      },
+      "request_ref": "sha256:e0cbf41811f5973c8b24ccdc2b0f690ebf08a05bc05699be4765b0ff36615c7b",
+      "result": {
+        "schema": "ciw.manufacturing-replay.v1",
+        "source_kind": "synthetic",
+        "status": "RECORDED_NOT_RELEASED",
+        "planning": {
+          "schema": "ciw.polymer-microfab-evaluation.v1",
+          "status": "CANDIDATE",
+          "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+          "evaluated_at_s": 1.0,
+          "declared_envelope": {
+            "melt_temperature": {
+              "lower": 460,
+              "upper": 540,
+              "unit": "K"
+            },
+            "mold_temperature": {
+              "lower": 300,
+              "upper": 380,
+              "unit": "K"
+            },
+            "required_clamp_force": {
+              "value": 30000.0,
+              "decimal_value": "30000.0000",
+              "unit": "N"
+            }
+          },
+          "diagnostics": [
+            {
+              "check": "characterization",
+              "status": "PASS",
+              "reason": "Declared evidence present"
+            },
+            {
+              "check": "drying_record",
+              "status": "PASS",
+              "reason": "Declared evidence present"
+            },
+            {
+              "check": "machine_capability",
+              "status": "PASS",
+              "reason": "Declared evidence present"
+            },
+            {
+              "check": "tool_compatibility",
+              "status": "PASS",
+              "reason": "Membership in the declared compatibility set"
+            },
+            {
+              "check": "grade_compatibility",
+              "status": "PASS",
+              "reason": "Membership in the declared compatibility set"
+            },
+            {
+              "check": "melt_temperature",
+              "status": "PASS",
+              "reason": "Recipe checked against all three declared windows"
+            },
+            {
+              "check": "mold_temperature",
+              "status": "PASS",
+              "reason": "Recipe checked against all three declared windows"
+            },
+            {
+              "check": "shot_volume",
+              "status": "PASS",
+              "reason": "Declared shot-volume range, not nominal resin shot weight"
+            },
+            {
+              "check": "machine_pressure",
+              "status": "PASS",
+              "reason": "Recipe checked against a declared upper bound"
+            },
+            {
+              "check": "tool_pressure",
+              "status": "PASS",
+              "reason": "Recipe checked against a declared upper bound"
+            },
+            {
+              "check": "residence_time",
+              "status": "PASS",
+              "reason": "Recipe checked against a declared upper bound"
+            },
+            {
+              "check": "moisture",
+              "status": "PASS",
+              "reason": "Entire declared expanded-uncertainty interval must meet the moisture bound"
+            },
+            {
+              "check": "clamp_force",
+              "status": "PASS",
+              "reason": "Total projected area times declared cavity-pressure bound times declared factor; not injection pressure"
+            },
+            {
+              "check": "pressure_basis",
+              "status": "PASS",
+              "reason": "This profile requires a cavity-pressure bound no greater than injection pressure"
+            },
+            {
+              "check": "preflight.coolant",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.drying",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.independent_safety_review",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.machine_setup",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.material_identity",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.sensors",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            },
+            {
+              "check": "preflight.tool_setup",
+              "status": "PASS",
+              "reason": "Time-bound declared record; not authenticated safety feedback"
+            }
+          ],
+          "authority": {
+            "hardware_actuation": "not_performed",
+            "physical_qualification": "not_established",
+            "state_admission": "not_performed",
+            "operator_authentication": "not_established",
+            "shipment_release": "not_authorized"
+          }
+        },
+        "orders": {
+          "WO-COMPONENT": {
+            "requested_good_quantity": 3,
+            "started_quantity": 4,
+            "accepted_quantity": 3,
+            "scrapped_quantity": 1,
+            "target_met_in_records": true
+          },
+          "WO-ASSEMBLY": {
+            "requested_good_quantity": 1,
+            "started_quantity": 1,
+            "accepted_quantity": 1,
+            "scrapped_quantity": 0,
+            "target_met_in_records": true
+          }
+        },
+        "instances": {
+          "p001": {
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "work_order_id": "WO-COMPONENT",
+            "quality": "PASS",
+            "disposition": "CONSUMED",
+            "parents": [],
+            "children": [
+              "a001"
+            ],
+            "birth_event_ref": "sha256:add514f02890ce237013968334fca6e5a40cf13fddb56c8c110696457965028f",
+            "inspection": {
+              "status": "PASS",
+              "characteristics": [
+                {
+                  "characteristic": "width",
+                  "status": "PASS"
+                }
+              ],
+              "measurement_ref": "sha256:102f0944b4dd7441437a19bb6d792c114e022b6b540f0ba729c141ec0ce3c6c0",
+              "event_ref": "sha256:a20474ff4694b83b26934c63845ac07c317fc3412aba29fc63141b5ab2056d28"
+            },
+            "genealogy": {
+              "material_lot_id": "synthetic.lot.1",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "machine_id": "synthetic.press",
+              "screw_id": "synthetic.screw",
+              "tool_id": "synthetic.tool",
+              "tool_revision": "A",
+              "cavity_id": "cavity.1",
+              "cycle_id": "synthetic.cycle.0",
+              "drying_record_ref": "sha256:5bb029a369e818fdd3461f7f146eef5e5f881f4ba59471fb999e5c056e7d507e",
+              "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+              "model_prediction_ref": "sha256:309236273db5304fcdc3b2be697a91dad283295da32425748a3351a295da42dd",
+              "declared_actor_id": "synthetic.operator",
+              "declared_authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd"
+            }
+          },
+          "p002": {
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "work_order_id": "WO-COMPONENT",
+            "quality": "PASS",
+            "disposition": "CONSUMED",
+            "parents": [],
+            "children": [
+              "a001"
+            ],
+            "birth_event_ref": "sha256:add514f02890ce237013968334fca6e5a40cf13fddb56c8c110696457965028f",
+            "inspection": {
+              "status": "PASS",
+              "characteristics": [
+                {
+                  "characteristic": "width",
+                  "status": "PASS"
+                }
+              ],
+              "measurement_ref": "sha256:690e2bd9c6de9ac40f7247b5844c60c00535ac700d8d0cda3f10766a1e32c286",
+              "event_ref": "sha256:25634cf7d63e0d302e40d582186ca0211850e7771d479d1f0ef73419990e8348"
+            },
+            "genealogy": {
+              "material_lot_id": "synthetic.lot.1",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "machine_id": "synthetic.press",
+              "screw_id": "synthetic.screw",
+              "tool_id": "synthetic.tool",
+              "tool_revision": "A",
+              "cavity_id": "cavity.2",
+              "cycle_id": "synthetic.cycle.0",
+              "drying_record_ref": "sha256:5bb029a369e818fdd3461f7f146eef5e5f881f4ba59471fb999e5c056e7d507e",
+              "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+              "model_prediction_ref": "sha256:309236273db5304fcdc3b2be697a91dad283295da32425748a3351a295da42dd",
+              "declared_actor_id": "synthetic.operator",
+              "declared_authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd"
+            }
+          },
+          "p003": {
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "work_order_id": "WO-COMPONENT",
+            "quality": "PASS",
+            "disposition": "PACKED",
+            "parents": [],
+            "children": [],
+            "birth_event_ref": "sha256:4289c3a48f459c7e31287075fcf23cdf0e73b8641499571fef09d996d9a0d906",
+            "inspection": {
+              "status": "PASS",
+              "characteristics": [
+                {
+                  "characteristic": "width",
+                  "status": "PASS"
+                }
+              ],
+              "measurement_ref": "sha256:1609c97316a984ee0cbb1deb03f761123135fd77bf86d94229f6aee67fc107de",
+              "event_ref": "sha256:0d559ad6cb9a66a6c637bc276914c492b747dc2fc53bdfed16973527a7ec65b1"
+            },
+            "genealogy": {
+              "material_lot_id": "synthetic.lot.1",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "machine_id": "synthetic.press",
+              "screw_id": "synthetic.screw",
+              "tool_id": "synthetic.tool",
+              "tool_revision": "A",
+              "cavity_id": "cavity.1",
+              "cycle_id": "synthetic.cycle.1",
+              "drying_record_ref": "sha256:5bb029a369e818fdd3461f7f146eef5e5f881f4ba59471fb999e5c056e7d507e",
+              "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+              "model_prediction_ref": "sha256:2a5c746d37b6e81ef05ae1230a53186cd01c48cbdc73046431f373d831076b5b",
+              "declared_actor_id": "synthetic.operator",
+              "declared_authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd"
+            }
+          },
+          "p004": {
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "work_order_id": "WO-COMPONENT",
+            "quality": "FAIL",
+            "disposition": "SCRAPPED",
+            "parents": [],
+            "children": [],
+            "birth_event_ref": "sha256:4289c3a48f459c7e31287075fcf23cdf0e73b8641499571fef09d996d9a0d906",
+            "inspection": {
+              "status": "FAIL",
+              "characteristics": [
+                {
+                  "characteristic": "width",
+                  "status": "FAIL"
+                }
+              ],
+              "measurement_ref": "sha256:cf70e04fbabb78d1514284da200c405bca2ea30f1a855c0f32bb2f639605b03c",
+              "event_ref": "sha256:32da9a6d96ebad029a567a9fa4283bd6654c2b8582f85c5538aa59d5d82de365"
+            },
+            "genealogy": {
+              "material_lot_id": "synthetic.lot.1",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "machine_id": "synthetic.press",
+              "screw_id": "synthetic.screw",
+              "tool_id": "synthetic.tool",
+              "tool_revision": "A",
+              "cavity_id": "cavity.2",
+              "cycle_id": "synthetic.cycle.1",
+              "drying_record_ref": "sha256:5bb029a369e818fdd3461f7f146eef5e5f881f4ba59471fb999e5c056e7d507e",
+              "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+              "model_prediction_ref": "sha256:2a5c746d37b6e81ef05ae1230a53186cd01c48cbdc73046431f373d831076b5b",
+              "declared_actor_id": "synthetic.operator",
+              "declared_authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd"
+            }
+          },
+          "a001": {
+            "part_ref": "sha256:a40b05f26e93ea18ab3b9dc44dff6ea34dad09b07224eaae2831368068517a96",
+            "work_order_id": "WO-ASSEMBLY",
+            "quality": "PASS",
+            "disposition": "PACKED",
+            "parents": [
+              "p001",
+              "p002"
+            ],
+            "children": [],
+            "birth_event_ref": "sha256:38e0be5a6c5611b49375ff9015f9475662eb8776b16e7bd9a30ff2f31de524ce",
+            "inspection": {
+              "status": "PASS",
+              "characteristics": [
+                {
+                  "characteristic": "assembly-width",
+                  "status": "PASS"
+                }
+              ],
+              "measurement_ref": "sha256:6ee61ad224d6187de2c87f5c17a16f1805966dd3b9e84a5aa9b7deceeb327c3d",
+              "event_ref": "sha256:0c80c87e20026c4dbbaabb9f0e0f0f7697cf61dfaa1de6b7d976a913ccd1cd88"
+            },
+            "genealogy": {
+              "assembly_evidence_ref": "sha256:cbe4d3b9410195d295c0f9fff425a835d139af2836b9f65ab3ad4021609161c7",
+              "declared_actor_id": "synthetic.operator",
+              "declared_authorization_ref": "sha256:c6245b982041229ee2045a6eed7d1ac1ced7722078813f54214577f13fade0fd"
+            }
+          }
+        },
+        "packages": {
+          "synthetic.package": {
+            "serials": [
+              "a001",
+              "p003"
+            ],
+            "event_ref": "sha256:5f61c48eaa5df66dacc137cbbe677586416d9372c51bbc843af1b3ffee1558c1",
+            "shipment_status": "HELD"
+          }
+        },
+        "event_receipts": [
+          {
+            "sequence": 0,
+            "event_id": "synthetic.event.0",
+            "event_ref": "sha256:add514f02890ce237013968334fca6e5a40cf13fddb56c8c110696457965028f",
+            "previous_ref": null,
+            "record_ref": "sha256:5f804524636d5a293c79ba053e9a54eaa29940bf2c14ebcf56092d4f056411be"
+          },
+          {
+            "sequence": 1,
+            "event_id": "synthetic.event.1",
+            "event_ref": "sha256:4289c3a48f459c7e31287075fcf23cdf0e73b8641499571fef09d996d9a0d906",
+            "previous_ref": "sha256:5f804524636d5a293c79ba053e9a54eaa29940bf2c14ebcf56092d4f056411be",
+            "record_ref": "sha256:deed7010eb6d1896f1002ff307413b382a3c168331058f39a953f93bb2e0c696"
+          },
+          {
+            "sequence": 2,
+            "event_id": "synthetic.event.2",
+            "event_ref": "sha256:a20474ff4694b83b26934c63845ac07c317fc3412aba29fc63141b5ab2056d28",
+            "previous_ref": "sha256:deed7010eb6d1896f1002ff307413b382a3c168331058f39a953f93bb2e0c696",
+            "record_ref": "sha256:e51399a3f2090dcff9780780b1a3e753e27bbff23b5b85f044618598e3d8a9b4"
+          },
+          {
+            "sequence": 3,
+            "event_id": "synthetic.event.3",
+            "event_ref": "sha256:25634cf7d63e0d302e40d582186ca0211850e7771d479d1f0ef73419990e8348",
+            "previous_ref": "sha256:e51399a3f2090dcff9780780b1a3e753e27bbff23b5b85f044618598e3d8a9b4",
+            "record_ref": "sha256:7a4738fb6805fe9035b30d57268cf8ed22c6a87f2b187d94e3441976b19ea78d"
+          },
+          {
+            "sequence": 4,
+            "event_id": "synthetic.event.4",
+            "event_ref": "sha256:0d559ad6cb9a66a6c637bc276914c492b747dc2fc53bdfed16973527a7ec65b1",
+            "previous_ref": "sha256:7a4738fb6805fe9035b30d57268cf8ed22c6a87f2b187d94e3441976b19ea78d",
+            "record_ref": "sha256:8a66f4215409d5f08e09adbd58f2329cf46d0dc0327c62fc99fae4d778fb4f89"
+          },
+          {
+            "sequence": 5,
+            "event_id": "synthetic.event.5",
+            "event_ref": "sha256:32da9a6d96ebad029a567a9fa4283bd6654c2b8582f85c5538aa59d5d82de365",
+            "previous_ref": "sha256:8a66f4215409d5f08e09adbd58f2329cf46d0dc0327c62fc99fae4d778fb4f89",
+            "record_ref": "sha256:e3f3e4d53f5dff3c009a14f6001aeb3b9731c442f8f22a1271c7b220c3f60628"
+          },
+          {
+            "sequence": 6,
+            "event_id": "synthetic.event.6",
+            "event_ref": "sha256:f292e0198e96acbf51f6261343a6d8532ed0d5137dbbc240706a4e817044b9f8",
+            "previous_ref": "sha256:e3f3e4d53f5dff3c009a14f6001aeb3b9731c442f8f22a1271c7b220c3f60628",
+            "record_ref": "sha256:c1ad3dedd815dd3cff1b04fb12c157c1a15069285181bd8f4465c9ae42ba4dea"
+          },
+          {
+            "sequence": 7,
+            "event_id": "synthetic.event.7",
+            "event_ref": "sha256:38e0be5a6c5611b49375ff9015f9475662eb8776b16e7bd9a30ff2f31de524ce",
+            "previous_ref": "sha256:c1ad3dedd815dd3cff1b04fb12c157c1a15069285181bd8f4465c9ae42ba4dea",
+            "record_ref": "sha256:169dd57b9c7572d5b1ec1a8e0d169e2ab76aa08b5dbabb46c5ea01c1a5faa844"
+          },
+          {
+            "sequence": 8,
+            "event_id": "synthetic.event.8",
+            "event_ref": "sha256:0c80c87e20026c4dbbaabb9f0e0f0f7697cf61dfaa1de6b7d976a913ccd1cd88",
+            "previous_ref": "sha256:169dd57b9c7572d5b1ec1a8e0d169e2ab76aa08b5dbabb46c5ea01c1a5faa844",
+            "record_ref": "sha256:3188fed38d0ee2bd681e6add6b3fe23f27fc763502e831a723da75208bf64cb4"
+          },
+          {
+            "sequence": 9,
+            "event_id": "synthetic.event.9",
+            "event_ref": "sha256:5f61c48eaa5df66dacc137cbbe677586416d9372c51bbc843af1b3ffee1558c1",
+            "previous_ref": "sha256:3188fed38d0ee2bd681e6add6b3fe23f27fc763502e831a723da75208bf64cb4",
+            "record_ref": "sha256:9185e119f96ce93eb0d627e18ddd468a78e251605c00a6ad4030a50a52d08b24"
+          }
+        ],
+        "development_runs": [
+          {
+            "study_ref": "sha256:fcbcd310a46211cf037c7905e4cbc933f1d66784158eaff09acd3f3d1dd1a181",
+            "record": {
+              "study_id": "synthetic.study.1",
+              "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+              "hypothesis_ref": "sha256:490082d9476d8ec4e9ed3a04ab52b5eef19b0d1a9328079b234c604fc68410c7",
+              "model_ref": "sha256:fc6df68f88f3bd1633fe6a965c55f54c49d860dde53e150fd152a63b87b410f5",
+              "evidence_refs": [
+                "sha256:79594aedfb36fd0fe40813d15a80cd2d5232cb3a99ab3c23a4beb548341d4da6"
+              ],
+              "result_ref": "sha256:8488ab8bd1882d54b2a986998d764b18288f4a0d405a66c884d4ccd096d92aa1"
+            },
+            "physical_qualification": "not_established"
+          }
+        ],
+        "inventory": {
+          "lot_id": "synthetic.lot.1",
+          "initial_mass_kg_decimal": "2.0",
+          "remaining_mass_kg_decimal": "1.0",
+          "allocated_waste_kg_decimal": "0.6"
+        },
+        "shipment": {
+          "status": "HELD",
+          "reasons": [
+            "Physical qualification is not established",
+            "Operator and release authority are not authenticated",
+            "No certificate or shipment adapter is implemented"
+          ]
+        },
+        "authority": {
+          "hardware_actuation": "not_performed",
+          "physical_qualification": "not_established",
+          "state_admission": "not_performed",
+          "operator_authentication": "not_established",
+          "shipment_release": "not_authorized"
+        }
+      },
+      "result_ref": "sha256:b82863b9be806afb317a3b1769558f126611d0cefa465cf3385543a37832b7af"
+    }
+  ],
+  "streams": [
+    {
+      "schema": "ciw.toolpoint-stream-report.v1",
+      "operation_ref": "sha256:057add40f93a4628a8958d88d6e15ac1511ef62a0d10d503ecdeeed791581be9",
+      "execution_id": "execution-340bd6c886c846188d486b66cd170496",
+      "spec": {
+        "schema": "ciw.toolpoint-stream-spec.v1",
+        "plan": {
+          "plan_id": "synthetic.stream.plan",
+          "revision": "A",
+          "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+          "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+          "clock_id": "synthetic.clock",
+          "rules": [
+            {
+              "rule_id": "sensor.cavity.1.pressure",
+              "sensor_id": "sensor.cavity.1",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            },
+            {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            },
+            {
+              "rule_id": "sensor.nozzle.pressure",
+              "sensor_id": "sensor.nozzle",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            }
+          ],
+          "schema": "ciw.toolpoint-monitoring-plan.v1",
+          "source_kind": "synthetic",
+          "process": "injection_molding",
+          "frame": "synthetic.tool-frame",
+          "valid_from_s": 0,
+          "valid_until_s": 100,
+          "max_clock_skew_s": 0.001,
+          "max_sample_gap_s": 0.21,
+          "cavity_ids": [
+            "cavity.1",
+            "cavity.2"
+          ],
+          "reference_evidence_refs": [
+            "sha256:b566c02a643ecd5afdeee3c91cafa977fe8e6c0c46dcc48b005f5f3ac6caaf6e"
+          ],
+          "phases": [
+            {
+              "phase_id": "fill",
+              "start_s": 0,
+              "end_s": 0.8
+            }
+          ],
+          "sensors": [
+            {
+              "sensor_id": "sensor.cavity.1",
+              "quantity": "cavity_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.1",
+                "gate_id": null
+              }
+            },
+            {
+              "sensor_id": "sensor.cavity.2",
+              "quantity": "cavity_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.2",
+                "gate_id": null
+              }
+            },
+            {
+              "sensor_id": "sensor.nozzle",
+              "quantity": "melt_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "nozzle",
+                "cavity_id": null,
+                "gate_id": null
+              }
+            }
+          ]
+        },
+        "binding": {
+          "cycle_id": "synthetic.cycle.0",
+          "cycle_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+          "source_kind": "synthetic",
+          "started_at_s": 0.0
+        },
+        "limits": {
+          "max_updates": 32,
+          "max_samples_per_sensor": 2048,
+          "max_total_samples": 32768
+        }
+      },
+      "spec_ref": "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+      "updates": [
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 0,
+          "previous_receipt_ref": null,
+          "received_at_s": 0.21,
+          "final": false,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.0",
+            "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 0.0,
+            "completed_at_s": 0.2,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6d914454f1ef8b52575a2b4e5d3a2adcaa527201bebabfcf065923710146a713"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:69693ed27cb0aa708b33fc7fc386d9e62ee757f8c30ef85cab2f061f8b80ff62"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:f0260ba81b08e4de354d898c7cc7846b3e81dea825ccceb8a128a143f9e6c5f4"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p001",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p002",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 1,
+          "previous_receipt_ref": "sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8",
+          "received_at_s": 0.61,
+          "final": false,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.0",
+            "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 0.0,
+            "completed_at_s": 0.6,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6ffa2b6425c4b555cbe217ee68c94157ee3bdd4fc1101693b69dd9fbed0b907d"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 18000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:8be6d5f07a9c6a7779cfbc54312c8b679f0e8ee838925b7edc315772002aca71"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:62eb6dfa455ed6c7968f03f9b0a302ddb31f1c708c99997923e2f47ab9b63c4c"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p001",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p002",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 2,
+          "previous_receipt_ref": "sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9",
+          "received_at_s": 0.81,
+          "final": true,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.0",
+            "cycle_evidence_ref": "sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 0.0,
+            "completed_at_s": 0.8,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:1567ea9fbd3ee3f2500cf0cb75fd86ec9479a68bbc20ce146bcff5eaf18675f9"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 18000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:a1e1f29cc1a29b593b16e2409b2629eebe3a7b71c441441d56589884f93287b0"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6dd85f59c25977f81d03f4a83960ce51eaf417e5abe311d77687815d721a818b"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p001",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p002",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "receipts": [
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 0,
+          "previous_receipt_ref": null,
+          "spec_ref": "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+          "update_ref": "sha256:c323b60c20ac2970fc33500012ef29aac7dc388af4d4207f66689d9e479212a4",
+          "assessment_ref": "sha256:426ccd347f793661ad4c164be982684cfb27ec1e5fbafb8a43c7cb1d5d902cf4",
+          "result_ref": "sha256:976e22f67b2a300ee5b96fd846ec5fae69f62edcbb5503465d6cf7f8298dabc5",
+          "status": "PENDING",
+          "receipt_ref": "sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8"
+        },
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 1,
+          "previous_receipt_ref": "sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8",
+          "spec_ref": "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+          "update_ref": "sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5",
+          "assessment_ref": "sha256:a96afe625b3b0c9c93a5ae965e5ac9ec9e211f24e15411fcdb95dc64302dee44",
+          "result_ref": "sha256:2cdc53912687b2df8e92ad005e0778512b17978c8ece8fdc91e7316a674d5a73",
+          "status": "HELD",
+          "receipt_ref": "sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9"
+        },
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 2,
+          "previous_receipt_ref": "sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9",
+          "spec_ref": "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+          "update_ref": "sha256:78657456ff0f3fd967323307cba822f736b2af183094d850d958a5445369255a",
+          "assessment_ref": "sha256:77cfdd1213402e98ca1f613d2b4e6d3f34a537663a564869c24a6b481e81649f",
+          "result_ref": "sha256:425e6b36db1bc9e1f4bb892b9ec5b1e217df71329496d981cf016102530a51b2",
+          "status": "HELD",
+          "receipt_ref": "sha256:973c45d5c477439b16c6ce0b2d7176b2a9205bb5af3384487121e7024b95389d"
+        }
+      ],
+      "result": {
+        "schema": "ciw.toolpoint-stream-result.v1",
+        "status": "HELD",
+        "finalized": true,
+        "cycle_id": "synthetic.cycle.0",
+        "source_kind": "synthetic",
+        "captured_through_s_decimal": "0.8",
+        "declared_capture_to_receipt_s_decimal": "0.01",
+        "latest_assessment": {
+          "schema": "ciw.toolpoint-quality-assessment.v1",
+          "operation_id": "polymer.toolpoint-quality-assessment.v1",
+          "plan_ref": "sha256:ab6750a030f1f326be4a15ea43e5e83102c4e6ece81432422ff94801d71340ad",
+          "observation_ref": "sha256:bd7f246ba32b95409d90d6416f48fb5e6b482208442732b75e5bcdd6a38ae8e5",
+          "cycle_id": "synthetic.cycle.0",
+          "source_kind": "synthetic",
+          "status": "DEVIATION",
+          "rules": [
+            {
+              "rule_id": "sensor.cavity.1.pressure",
+              "sensor_id": "sensor.cavity.1",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.1",
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "reason": "WITHIN_DECLARED_LIMITS",
+              "feature_interval": {
+                "lower_decimal": "7990000",
+                "upper_decimal": "8010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.8"
+            },
+            {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.2",
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "DEVIATION",
+              "reason": "FEATURE_ABOVE_LIMIT",
+              "feature_interval": {
+                "lower_decimal": "17990000",
+                "upper_decimal": "18010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.6"
+            },
+            {
+              "rule_id": "sensor.nozzle.pressure",
+              "sensor_id": "sensor.nozzle",
+              "location": {
+                "kind": "nozzle",
+                "cavity_id": null,
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "reason": "WITHIN_DECLARED_LIMITS",
+              "feature_interval": {
+                "lower_decimal": "7990000",
+                "upper_decimal": "8010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.8"
+            }
+          ],
+          "cavities": {
+            "cavity.1": {
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "rule_ids": [
+                "sensor.cavity.1.pressure",
+                "sensor.nozzle.pressure"
+              ]
+            },
+            "cavity.2": {
+              "status": "DEVIATION",
+              "rule_ids": [
+                "sensor.cavity.2.pressure",
+                "sensor.nozzle.pressure"
+              ]
+            }
+          },
+          "hypotheses": [],
+          "mapping_status": "RESOLVED_DECLARATION",
+          "containment": {
+            "held_serials": [
+              "p002"
+            ],
+            "action": "RECORD_QUALITY_HOLD",
+            "physical_action": "not_performed"
+          },
+          "scope": "supplied limits; retained piecewise-linear signals; conditional on declared aligned times",
+          "final_part_conformity": "not_assessed",
+          "authority": {
+            "physical_qualification": "not_established",
+            "sensor_authentication": "not_established",
+            "reference_qualification": "not_established",
+            "hardware_actuation": "not_performed",
+            "physical_containment": "not_performed",
+            "state_admission": "not_performed",
+            "shipment_release": "not_authorized",
+            "same_shot_control": "not_implemented"
+          }
+        },
+        "latched_findings": [
+          {
+            "kind": "SAMPLED_LIMIT_VIOLATION",
+            "rule_id": "sensor.cavity.2.pressure",
+            "cavity_id": "cavity.2",
+            "first_sequence": 1,
+            "first_received_at_s": 0.61,
+            "first_update_ref": "sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5",
+            "detail": {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "cavity_id": "cavity.2",
+              "kind": "VALID_SAMPLED_LIMIT_VIOLATION",
+              "sample_index": 3,
+              "sample_ref": "sha256:56c3caf1d5e7fbe67dacba3c69fa3f4c0e1f3f043de0e69f8f30de8d614d6280",
+              "sample_time_s_decimal": "0.6",
+              "lower_decimal": "17990000",
+              "upper_decimal": "18010000"
+            },
+            "finding_ref": "sha256:da9f9ab15638e66c83afd84b6722eec718c3753a7c85d12f835abdc6ce920cbb"
+          },
+          {
+            "kind": "EVALUATOR_DEVIATION",
+            "rule_id": "sensor.cavity.2.pressure",
+            "cavity_id": "cavity.2",
+            "first_sequence": 1,
+            "first_received_at_s": 0.61,
+            "first_update_ref": "sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5",
+            "detail": {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.2",
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "DEVIATION",
+              "reason": "FEATURE_ABOVE_LIMIT",
+              "feature_interval": {
+                "lower_decimal": "17990000",
+                "upper_decimal": "18010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.6"
+            },
+            "finding_ref": "sha256:4808cc6b595a185865c87a57254f8c6cde3a70b2a0cf57f68678561f5f4c04e8"
+          }
+        ],
+        "cavities": {
+          "cavity.1": {
+            "state": "NO_PROCESS_HOLD_IDENTIFIED",
+            "finding_refs": []
+          },
+          "cavity.2": {
+            "state": "HELD",
+            "finding_refs": [
+              "sha256:da9f9ab15638e66c83afd84b6722eec718c3753a7c85d12f835abdc6ce920cbb",
+              "sha256:4808cc6b595a185865c87a57254f8c6cde3a70b2a0cf57f68678561f5f4c04e8"
+            ]
+          }
+        },
+        "scope": "append-only retained prefixes; supplied limits; no measured hardware latency or product release",
+        "authority": {
+          "hardware_actuation": "not_performed",
+          "physical_containment": "not_performed",
+          "physical_qualification": "not_established",
+          "state_admission": "not_performed",
+          "source_authentication": "not_established",
+          "shipment_release": "not_authorized",
+          "action_authorized": false
+        }
+      },
+      "result_ref": "sha256:425e6b36db1bc9e1f4bb892b9ec5b1e217df71329496d981cf016102530a51b2"
+    },
+    {
+      "schema": "ciw.toolpoint-stream-report.v1",
+      "operation_ref": "sha256:057add40f93a4628a8958d88d6e15ac1511ef62a0d10d503ecdeeed791581be9",
+      "execution_id": "execution-75857cd22870426cbc15aeb982d91f24",
+      "spec": {
+        "schema": "ciw.toolpoint-stream-spec.v1",
+        "plan": {
+          "plan_id": "synthetic.stream.plan",
+          "revision": "A",
+          "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+          "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+          "clock_id": "synthetic.clock",
+          "rules": [
+            {
+              "rule_id": "sensor.cavity.1.pressure",
+              "sensor_id": "sensor.cavity.1",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            },
+            {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            },
+            {
+              "rule_id": "sensor.nozzle.pressure",
+              "sensor_id": "sensor.nozzle",
+              "phase_id": "fill",
+              "feature": "peak",
+              "limits": {
+                "lower": 0,
+                "upper": 15000000,
+                "unit": "Pa"
+              },
+              "threshold": null,
+              "reference_curve": null
+            }
+          ],
+          "schema": "ciw.toolpoint-monitoring-plan.v1",
+          "source_kind": "synthetic",
+          "process": "injection_molding",
+          "frame": "synthetic.tool-frame",
+          "valid_from_s": 0,
+          "valid_until_s": 100,
+          "max_clock_skew_s": 0.001,
+          "max_sample_gap_s": 0.21,
+          "cavity_ids": [
+            "cavity.1",
+            "cavity.2"
+          ],
+          "reference_evidence_refs": [
+            "sha256:b566c02a643ecd5afdeee3c91cafa977fe8e6c0c46dcc48b005f5f3ac6caaf6e"
+          ],
+          "phases": [
+            {
+              "phase_id": "fill",
+              "start_s": 0,
+              "end_s": 0.8
+            }
+          ],
+          "sensors": [
+            {
+              "sensor_id": "sensor.cavity.1",
+              "quantity": "cavity_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.1",
+                "gate_id": null
+              }
+            },
+            {
+              "sensor_id": "sensor.cavity.2",
+              "quantity": "cavity_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.2",
+                "gate_id": null
+              }
+            },
+            {
+              "sensor_id": "sensor.nozzle",
+              "quantity": "melt_pressure",
+              "unit": "Pa",
+              "location": {
+                "kind": "nozzle",
+                "cavity_id": null,
+                "gate_id": null
+              }
+            }
+          ]
+        },
+        "binding": {
+          "cycle_id": "synthetic.cycle.1",
+          "cycle_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+          "source_kind": "synthetic",
+          "started_at_s": 1.0
+        },
+        "limits": {
+          "max_updates": 32,
+          "max_samples_per_sensor": 2048,
+          "max_total_samples": 32768
+        }
+      },
+      "spec_ref": "sha256:7066bdb350ef1fed9c87a8325a41a288d8f3eb21afa74d35cf9a4da0b1e0c50d",
+      "updates": [
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 0,
+          "previous_receipt_ref": null,
+          "received_at_s": 1.21,
+          "final": false,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.1",
+            "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 1.0,
+            "completed_at_s": 1.2,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "fault",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6d914454f1ef8b52575a2b4e5d3a2adcaa527201bebabfcf065923710146a713"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:69693ed27cb0aa708b33fc7fc386d9e62ee757f8c30ef85cab2f061f8b80ff62"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:f0260ba81b08e4de354d898c7cc7846b3e81dea825ccceb8a128a143f9e6c5f4"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p003",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p004",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 1,
+          "previous_receipt_ref": "sha256:f2ccb7c50ffc8ce8bd121a77c0b6b0a80d4e4727b43364c9fc35a0c241c234f5",
+          "received_at_s": 1.61,
+          "final": false,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.1",
+            "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 1.0,
+            "completed_at_s": 1.6,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6ffa2b6425c4b555cbe217ee68c94157ee3bdd4fc1101693b69dd9fbed0b907d"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:4f5ddda17a24d1c91ee1bf6a625184aee2796aee8d409d11c6cf4289f644b41c"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:62eb6dfa455ed6c7968f03f9b0a302ddb31f1c708c99997923e2f47ab9b63c4c"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p003",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p004",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "schema": "ciw.toolpoint-stream-update.v1",
+          "sequence": 2,
+          "previous_receipt_ref": "sha256:b621318f7b2060c13962220056dda03b01bfe68b27f788f0aa123cc9e562a86c",
+          "received_at_s": 1.81,
+          "final": true,
+          "observation": {
+            "schema": "ciw.toolpoint-observation.v1",
+            "source_kind": "synthetic",
+            "cycle_id": "synthetic.cycle.1",
+            "cycle_evidence_ref": "sha256:7c910966b5c6866362fc831d6623f4e2b553851e60b6d034bdf7387ee9f967d4",
+            "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+            "configuration_ref": "sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6",
+            "clock_id": "synthetic.clock",
+            "frame": "synthetic.tool-frame",
+            "started_at_s": 1.0,
+            "completed_at_s": 1.8,
+            "signals": [
+              {
+                "sensor_id": "sensor.cavity.1",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.1",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:1567ea9fbd3ee3f2500cf0cb75fd86ec9479a68bbc20ce146bcff5eaf18675f9"
+              },
+              {
+                "sensor_id": "sensor.cavity.2",
+                "quantity": "cavity_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "end_of_fill",
+                  "cavity_id": "cavity.2",
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:d7fcfd5a9922a504b40296f6fd438bce52aa0cb7605c6944601eec0739fa72f3"
+              },
+              {
+                "sensor_id": "sensor.nozzle",
+                "quantity": "melt_pressure",
+                "unit": "Pa",
+                "location": {
+                  "kind": "nozzle",
+                  "cavity_id": null,
+                  "gate_id": null
+                },
+                "frame": "synthetic.tool-frame",
+                "clock_id": "synthetic.clock",
+                "calibration_ref": "sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6",
+                "calibration_valid_from_s": 0,
+                "calibration_valid_until_s": 100,
+                "clock_alignment_ref": "sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8",
+                "clock_skew_s": 0,
+                "health": "good",
+                "samples": [
+                  {
+                    "time_s": 0,
+                    "value": 100000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.2,
+                    "value": 1000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.4,
+                    "value": 4000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.6,
+                    "value": 8000000,
+                    "expanded_uncertainty": 10000
+                  },
+                  {
+                    "time_s": 0.8,
+                    "value": 7000000,
+                    "expanded_uncertainty": 10000
+                  }
+                ],
+                "source_ref": "sha256:6dd85f59c25977f81d03f4a83960ce51eaf417e5abe311d77687815d721a818b"
+              }
+            ],
+            "part_mapping": {
+              "status": "cavity_resolved",
+              "evidence_ref": "sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240",
+              "items": [
+                {
+                  "serial": "p003",
+                  "cavity_id": "cavity.1"
+                },
+                {
+                  "serial": "p004",
+                  "cavity_id": "cavity.2"
+                }
+              ]
+            }
+          }
+        }
+      ],
+      "receipts": [
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 0,
+          "previous_receipt_ref": null,
+          "spec_ref": "sha256:7066bdb350ef1fed9c87a8325a41a288d8f3eb21afa74d35cf9a4da0b1e0c50d",
+          "update_ref": "sha256:813a0381b1fb315c05b5aa88183d70ac9654a9f79955cb41a0fb2216963dbc8a",
+          "assessment_ref": "sha256:c8e63e77fde88e7bb824966bce4761dfe5c27ee608b91d998c70c95219abab84",
+          "result_ref": "sha256:a55ba40602e4c1bfd679ae83341758d1086c7d0a95bacfd35cccd2bcb5fdacea",
+          "status": "HELD",
+          "receipt_ref": "sha256:f2ccb7c50ffc8ce8bd121a77c0b6b0a80d4e4727b43364c9fc35a0c241c234f5"
+        },
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 1,
+          "previous_receipt_ref": "sha256:f2ccb7c50ffc8ce8bd121a77c0b6b0a80d4e4727b43364c9fc35a0c241c234f5",
+          "spec_ref": "sha256:7066bdb350ef1fed9c87a8325a41a288d8f3eb21afa74d35cf9a4da0b1e0c50d",
+          "update_ref": "sha256:1029b5d45712c9a2f3ab5426602a4082afcf53739ec3443e154ec0705d6d8502",
+          "assessment_ref": "sha256:006305e6318254522bc3f3efbdd45053d44332bca76881cc887c00e1d4244d65",
+          "result_ref": "sha256:7cf419806ecdbeac06933046a55445746430eba5f8365d7c3c2c206e6d1ca197",
+          "status": "HELD",
+          "receipt_ref": "sha256:b621318f7b2060c13962220056dda03b01bfe68b27f788f0aa123cc9e562a86c"
+        },
+        {
+          "schema": "ciw.toolpoint-stream-receipt.v1",
+          "sequence": 2,
+          "previous_receipt_ref": "sha256:b621318f7b2060c13962220056dda03b01bfe68b27f788f0aa123cc9e562a86c",
+          "spec_ref": "sha256:7066bdb350ef1fed9c87a8325a41a288d8f3eb21afa74d35cf9a4da0b1e0c50d",
+          "update_ref": "sha256:1e88f6293b163f4498698828c4236b568d62f227c363e5cf43a539b2dbcb2f8d",
+          "assessment_ref": "sha256:3b62b18b23de9c8f6ce16fd754156391c967dbe225ee2fd0b4cd23eb28addaa8",
+          "result_ref": "sha256:ccecbf0d2ec349dbf0415a97881a40c22abed92ef8729a2f97cf78a9e83dadd4",
+          "status": "HELD",
+          "receipt_ref": "sha256:782f4989cb2612295f942926cc70be56b489fae56961346be562c3b39c1efdc6"
+        }
+      ],
+      "result": {
+        "schema": "ciw.toolpoint-stream-result.v1",
+        "status": "HELD",
+        "finalized": true,
+        "cycle_id": "synthetic.cycle.1",
+        "source_kind": "synthetic",
+        "captured_through_s_decimal": "0.8",
+        "declared_capture_to_receipt_s_decimal": "0.01",
+        "latest_assessment": {
+          "schema": "ciw.toolpoint-quality-assessment.v1",
+          "operation_id": "polymer.toolpoint-quality-assessment.v1",
+          "plan_ref": "sha256:ab6750a030f1f326be4a15ea43e5e83102c4e6ece81432422ff94801d71340ad",
+          "observation_ref": "sha256:a16e08a99f58fa5c07300622b3384ba6100d2e43bcba2b4f222bea9fa0c14808",
+          "cycle_id": "synthetic.cycle.1",
+          "source_kind": "synthetic",
+          "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+          "rules": [
+            {
+              "rule_id": "sensor.cavity.1.pressure",
+              "sensor_id": "sensor.cavity.1",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.1",
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "reason": "WITHIN_DECLARED_LIMITS",
+              "feature_interval": {
+                "lower_decimal": "7990000",
+                "upper_decimal": "8010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.8"
+            },
+            {
+              "rule_id": "sensor.cavity.2.pressure",
+              "sensor_id": "sensor.cavity.2",
+              "location": {
+                "kind": "end_of_fill",
+                "cavity_id": "cavity.2",
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "reason": "WITHIN_DECLARED_LIMITS",
+              "feature_interval": {
+                "lower_decimal": "7990000",
+                "upper_decimal": "8010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.8"
+            },
+            {
+              "rule_id": "sensor.nozzle.pressure",
+              "sensor_id": "sensor.nozzle",
+              "location": {
+                "kind": "nozzle",
+                "cavity_id": null,
+                "gate_id": null
+              },
+              "phase_id": "fill",
+              "feature": "peak",
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "reason": "WITHIN_DECLARED_LIMITS",
+              "feature_interval": {
+                "lower_decimal": "7990000",
+                "upper_decimal": "8010000",
+                "unit": "Pa"
+              },
+              "detected_at_relative_s_decimal": "0.8"
+            }
+          ],
+          "cavities": {
+            "cavity.1": {
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "rule_ids": [
+                "sensor.cavity.1.pressure",
+                "sensor.nozzle.pressure"
+              ]
+            },
+            "cavity.2": {
+              "status": "PROCESS_SIGNATURE_ACCEPTABLE",
+              "rule_ids": [
+                "sensor.cavity.2.pressure",
+                "sensor.nozzle.pressure"
+              ]
+            }
+          },
+          "hypotheses": [],
+          "mapping_status": "RESOLVED_DECLARATION",
+          "containment": {
+            "held_serials": [],
+            "action": "NO_PROCESS_HOLD_IDENTIFIED",
+            "physical_action": "not_performed"
+          },
+          "scope": "supplied limits; retained piecewise-linear signals; conditional on declared aligned times",
+          "final_part_conformity": "not_assessed",
+          "authority": {
+            "physical_qualification": "not_established",
+            "sensor_authentication": "not_established",
+            "reference_qualification": "not_established",
+            "hardware_actuation": "not_performed",
+            "physical_containment": "not_performed",
+            "state_admission": "not_performed",
+            "shipment_release": "not_authorized",
+            "same_shot_control": "not_implemented"
+          }
+        },
+        "latched_findings": [
+          {
+            "kind": "SENSOR_HEALTH_EVENT",
+            "rule_id": "sensor.cavity.1.pressure",
+            "cavity_id": "cavity.1",
+            "first_sequence": 0,
+            "first_received_at_s": 1.21,
+            "first_update_ref": "sha256:813a0381b1fb315c05b5aa88183d70ac9654a9f79955cb41a0fb2216963dbc8a",
+            "detail": {
+              "sensor_id": "sensor.cavity.1",
+              "health": "fault"
+            },
+            "finding_ref": "sha256:2368af6a279d2ffcbeb0cbf5285c9ebd74c333c6a2971e2861166387332a7e5b"
+          }
+        ],
+        "cavities": {
+          "cavity.1": {
+            "state": "HELD",
+            "finding_refs": [
+              "sha256:2368af6a279d2ffcbeb0cbf5285c9ebd74c333c6a2971e2861166387332a7e5b"
+            ]
+          },
+          "cavity.2": {
+            "state": "NO_PROCESS_HOLD_IDENTIFIED",
+            "finding_refs": []
+          }
+        },
+        "scope": "append-only retained prefixes; supplied limits; no measured hardware latency or product release",
+        "authority": {
+          "hardware_actuation": "not_performed",
+          "physical_containment": "not_performed",
+          "physical_qualification": "not_established",
+          "state_admission": "not_performed",
+          "source_authentication": "not_established",
+          "shipment_release": "not_authorized",
+          "action_authorized": false
+        }
+      },
+      "result_ref": "sha256:ccecbf0d2ec349dbf0415a97881a40c22abed92ef8729a2f97cf78a9e83dadd4"
+    }
+  ],
+  "outcomes": [
+    {
+      "unit_ref": "sha256:b9c9c80bc6079abae13c7e2b9efa1b7dd3040f6e2013ba245f245655a3103bcd",
+      "source_kind": "synthetic",
+      "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+      "characteristic_id": "synthetic.internal-integrity",
+      "specification_ref": "sha256:51cd7379f6bb1fe2453373fa81f20e64ad74792166ea7b4de2320060811dda73",
+      "condition": "conditioned",
+      "label": "CONFORMING",
+      "observed_at_s": 12,
+      "evidence_ref": "sha256:793b7fe90ee5254eaf73211c2dc312292c3ace1bc5ad54dd08f27849e5809546",
+      "method_ref": "sha256:593af70e2b794298372806c4a33fe478a2c7a47e3219eebf3b9a2cf54ae6ce1e",
+      "calibration_ref": "sha256:ce38e3a1153527e5cdc7b194e82166d4fb3791579f4f4af575ac335c246cfddf",
+      "independence_basis_ref": "sha256:ca243df7a7f21547ca55b16682c94a1b2658dd06c17e3f7a53eecbcdf6b3200c",
+      "blinded_to_qc": true
+    },
+    {
+      "unit_ref": "sha256:ff048221a3c72a7a19cdcf16764890598c1e166b8f73df44f876578a892bbab9",
+      "source_kind": "synthetic",
+      "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+      "characteristic_id": "synthetic.internal-integrity",
+      "specification_ref": "sha256:51cd7379f6bb1fe2453373fa81f20e64ad74792166ea7b4de2320060811dda73",
+      "condition": "conditioned",
+      "label": "NONCONFORMING",
+      "observed_at_s": 12,
+      "evidence_ref": "sha256:114411489009475f5d1caa2f5a15c50e2ddfd07c82af0d7638cd06d0d51d8f09",
+      "method_ref": "sha256:593af70e2b794298372806c4a33fe478a2c7a47e3219eebf3b9a2cf54ae6ce1e",
+      "calibration_ref": "sha256:ce38e3a1153527e5cdc7b194e82166d4fb3791579f4f4af575ac335c246cfddf",
+      "independence_basis_ref": "sha256:ca243df7a7f21547ca55b16682c94a1b2658dd06c17e3f7a53eecbcdf6b3200c",
+      "blinded_to_qc": true
+    },
+    {
+      "unit_ref": "sha256:160793df0746214a3e626bad9926f9f5211296b9a2dcc68d1d351c0aa993b0dc",
+      "source_kind": "synthetic",
+      "part_ref": "sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef",
+      "characteristic_id": "synthetic.internal-integrity",
+      "specification_ref": "sha256:51cd7379f6bb1fe2453373fa81f20e64ad74792166ea7b4de2320060811dda73",
+      "condition": "conditioned",
+      "label": "CONFORMING",
+      "observed_at_s": 12,
+      "evidence_ref": "sha256:95c87496220f2abe2c7bec34985e7d8f6ec7669b045c240877830f3fc40bdbe2",
+      "method_ref": "sha256:593af70e2b794298372806c4a33fe478a2c7a47e3219eebf3b9a2cf54ae6ce1e",
+      "calibration_ref": "sha256:ce38e3a1153527e5cdc7b194e82166d4fb3791579f4f4af575ac335c246cfddf",
+      "independence_basis_ref": "sha256:ca243df7a7f21547ca55b16682c94a1b2658dd06c17e3f7a53eecbcdf6b3200c",
+      "blinded_to_qc": true
+    }
+  ],
+  "assessed_at_s": 20
+}

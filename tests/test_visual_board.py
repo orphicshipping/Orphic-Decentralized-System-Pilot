@@ -3,8 +3,10 @@ from http.client import HTTPConnection
 import json
 from pathlib import Path
 import subprocess
+import socket
 import sys
 import threading
+import time
 
 import pytest
 
@@ -17,6 +19,7 @@ from ciw.system_board import board_from_spec, compile_board
 from ciw.visual_board import (apply_parameter_edit, default_view, demo_board, project_scene,
                               render_html, validate_edit, validate_view, view_from_spec, write_html)
 from ciw.visual_board_server import BoardWorkbench, make_server
+from ciw import visual_board_server
 
 
 @pytest.fixture
@@ -285,3 +288,85 @@ def test_api_validation_before_any_candidate_retention(server):
     code,_=http(s,'/api/edit',value=request_for(w.board,'invalid'))
     assert code==400
     assert list(w.output_dir.iterdir())==before
+
+
+@pytest.mark.parametrize("path,overrides,expected", [
+    ("/api/shell", {}, 404),
+    ("/api/edit", {"Content-Type": "text/plain"}, 400),
+    ("/api/edit", {"Content-Length": "9999999"}, 400),
+    ("/api/edit", {"X-NET-Board-Token": "wrong"}, 403),
+    ("/api/edit", {"Host": "attacker.invalid"}, 403),
+])
+def test_refusal_survives_body_arriving_during_connection_teardown(server, monkeypatch, path, overrides, expected):
+    s, work = server
+    closing = threading.Event()
+    shutdown = s.shutdown_request
+
+    def signal_close(request):
+        closing.set()
+        shutdown(request)
+
+    monkeypatch.setattr(s, "shutdown_request", signal_close)
+    payload = b"x" * 60000
+
+    class LateBody:
+        sent = False
+
+        def read(self, count):
+            if self.sent:
+                return b""
+            assert closing.wait(3), "Server did not begin rejecting the request"
+            # The response is complete; release the in-flight body while the
+            # transport is closing, reproducing the Windows CI reset window.
+            time.sleep(.02)
+            self.sent = True
+            return payload
+
+    headers = {"X-NET-Board-Token": s.board_token, "Content-Type": "application/json",
+               "Content-Length": str(len(payload)), **overrides}
+    before = list(work.output_dir.iterdir())
+    connection = HTTPConnection("127.0.0.1", s.server_port, timeout=3)
+    try:
+        connection.request("POST", path, body=LateBody(), headers=headers)
+        response = connection.getresponse()
+        result = json.loads(response.read())
+        assert response.status == expected and result["status"] == "refused"
+    finally:
+        connection.close()
+    assert list(work.output_dir.iterdir()) == before
+    assert work.session is None
+    assert http(s, "/api/state")[0] == 200
+
+
+@pytest.mark.parametrize("incoming", ["silent", "continuous"])
+def test_connection_teardown_has_time_and_byte_budgets(server, monkeypatch, incoming):
+    s, _ = server
+    monkeypatch.setattr(visual_board_server, "CLOSE_DRAIN_SECONDS", .05)
+
+    class Peer:
+        received = 0
+        closed = False
+        half_closed = False
+
+        def shutdown(self, direction):
+            assert direction == socket.SHUT_WR
+            self.half_closed = True
+
+        def settimeout(self, timeout):
+            assert 0 < timeout <= .05
+
+        def recv(self, size):
+            assert self.half_closed and not self.closed
+            if incoming == "silent":
+                raise TimeoutError("Peer did not finish the request")
+            self.received += size
+            return b"x" * size
+
+        def close(self):
+            self.closed = True
+
+    peer = Peer()
+    s.shutdown_request(peer)
+    assert peer.closed
+    assert peer.received == (visual_board_server.MAX_REQUEST_BYTES if incoming == "continuous" else 0)
+    assert http(s, "/api/state")[0] == 200

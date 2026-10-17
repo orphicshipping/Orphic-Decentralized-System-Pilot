@@ -1,0 +1,63 @@
+name: NET device and network lifecycle
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/device_boundary*.py'
+      - 'src/ciw/network*.py'
+      - 'src/ciw/operator_commands.py'
+      - 'src/ciw/scientific_audit.py'
+      - 'tests/test_device_boundary.py'
+      - 'tests/test_network_lifecycle.py'
+      - 'runtimes/device-boundary/**'
+      - 'instruments/execution/compute-runtime/zk/guest-device-boundary/**'
+      - 'scripts/*device_boundary*.py'
+      - 'scripts/check_network_lifecycle.py'
+      - 'docs/NETWORK_TRUST.md'
+      - 'pyproject.toml'
+      - '.github/workflows/net-network-lifecycle.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  contracts:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 25
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install '.[dev,legibility,network]'
+      - name: Source and real cryptography/native scalar contracts
+        run: python scripts/check_network_lifecycle.py --require-pins --output "$RUNNER_TEMP/net-network-source"
+      - run: python -m pip wheel --no-deps --wheel-dir "$RUNNER_TEMP/network-wheels" .
+      - name: Isolated installed package with exact dependency pins
+        run: |
+          WHEEL=$(find "$RUNNER_TEMP/network-wheels" -name '*.whl' -print -quit)
+          python scripts/check_network_lifecycle.py --require-pins --wheel "$WHEEL" --output "$RUNNER_TEMP/net-network-installed"
+      - name: Native Rust kernel test, not an SP1 proof
+        if: runner.os == 'Linux'
+        run: |
+          rustc --edition 2021 --test instruments/execution/compute-runtime/zk/guest-device-boundary/src/kernel.rs -o "$RUNNER_TEMP/boundary-rust-test"
+          "$RUNNER_TEMP/boundary-rust-test"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: network-lifecycle-${{ matrix.os }}
+          path: |
+            ${{ runner.temp }}/net-network-source/*.json
+            ${{ runner.temp }}/net-network-source/*.log
+            ${{ runner.temp }}/net-network-source/*.xml
+            ${{ runner.temp }}/net-network-installed/*.json
+            ${{ runner.temp }}/net-network-installed/*.log
+            ${{ runner.temp }}/net-network-installed/*.xml
+            ${{ runner.temp }}/network-wheels/*.whl
+          if-no-files-found: error
+          retention-days: 14

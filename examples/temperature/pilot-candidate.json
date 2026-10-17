@@ -1,0 +1,336 @@
+{
+  "schema": "ciw.temperature-pilot-candidate.v1",
+  "status": "proposed_complementary_non_executable_planning_record",
+  "executable": false,
+  "hardware_execution_authorized": false,
+  "installed_measurements_supplied": false,
+  "physical_qualification": "not_established",
+  "product_conformity": "unassessed",
+  "source_research_date": "2026-10-04",
+  "companion_document": "../../docs/TEMPERATURE_PILOT_CANDIDATE.md",
+  "published_facts": [
+    {
+      "id": "fact_type_t_reference",
+      "source_ids": [
+        "nist_tc_uncertainty"
+      ],
+      "statement": "NIST gives a Type T thermocouple comparison example using a stirred bath and platinum resistance reference."
+    },
+    {
+      "id": "fact_dvm_example",
+      "source_ids": [
+        "nist_tc_uncertainty"
+      ],
+      "statement": "Section 3.4 gives an illustrative 100 mV DVM range tolerance of 4 ppm of reading plus 0.3 microvolt; this is not an owned-instrument specification."
+    },
+    {
+      "id": "fact_iprt_service",
+      "source_ids": [
+        "nist_industrial_calibration"
+      ],
+      "statement": "NIST lists IPRT calibration U(k=2)=2.4 mK from 0.5 to 95 degrees Celsius; digital-readout uncertainty is excluded."
+    },
+    {
+      "id": "fact_material",
+      "source_ids": [
+        "macfp_material"
+      ],
+      "statement": "Dataset material is nominally 6 mm black cast PMMA, identified as ACRYLITE cast black 9H01 GT."
+    },
+    {
+      "id": "fact_external_experiment",
+      "source_ids": [
+        "nist_pmma_gasification"
+      ],
+      "statement": "External NIST radiant gasification data concern approximately 70 mm PMMA discs, with Type K back-surface thermocouples and a preliminary-release label."
+    },
+    {
+      "id": "fact_conversion",
+      "source_ids": [
+        "nist_srd60"
+      ],
+      "statement": "SRD 60 provides ITS-90 thermocouple EMF/temperature tables; it is not a calibration certificate for an individual sensor."
+    }
+  ],
+  "design_assumptions": {
+    "status": "proposed_requirements_not_demonstrated_performance",
+    "measurand": {
+      "quantity": "local_temperature_in_instrumented_polymer_specimen",
+      "unit": "K",
+      "target": "one-second mean temperature at instrumented coupon midplane centre; finite probe sensing volumes require justified spatial transfer",
+      "undisturbed_polymer_claim": false,
+      "chamber_setpoint_is_not_measurand": true,
+      "whole_field_claim": false,
+      "proposed_temporal_average_s": 1,
+      "temporal_support_requirement": "Document matching integration windows or a qualified averaging procedure, including aperture, filter settings, window start/end and timestamp convention. A 1 Hz cadence alone does not establish a one-second mean. Revise the declared temporal measurand before acquisition if it cannot be supported."
+    },
+    "specimen": {
+      "polymer": "cast PMMA",
+      "candidate_grade": "ACRYLITE cast black 9H01 GT if obtainable; substitution separately identified",
+      "shape": "disc",
+      "nominal_diameter_mm": 70,
+      "nominal_thickness_mm": 6,
+      "actual_grade": null,
+      "lot": null,
+      "conditioning_and_history": "to be recorded from actual material; envelope and material-state review required"
+    },
+    "sensing_chain": {
+      "thermocouple_type": "T",
+      "nominal_wire_diameter_mm": 0.125,
+      "actual_model": null,
+      "actual_serial": null,
+      "wire_lot": null,
+      "calibration_certificate": null,
+      "voltmeter": {
+        "mode": "DC voltage",
+        "candidate_range_mV": 100,
+        "resolution_requirement_microvolt": 0.1,
+        "minimum_input_resistance_ohm": 10000000,
+        "actual_model": null,
+        "actual_serial": null,
+        "range_calibration": null,
+        "readout_uncertainty": "not_evaluated"
+      },
+      "reference_junction": {
+        "candidate": "characterized ice-point assembly",
+        "actual_junction_uncertainty_K": null
+      }
+    },
+    "reference_chain": {
+      "static": "calibrated four-wire PRT with independent resistance readout in stirred bath",
+      "dynamic_candidate": {
+        "sensor": "miniature four-wire PRT",
+        "maximum_sheath_diameter_mm": 1,
+        "maximum_sensitive_length_mm": 3,
+        "availability": "not_established",
+        "installation_feasibility": "not_established"
+      },
+      "actual_model": null,
+      "actual_serial": null,
+      "calibration_certificate": null,
+      "drift_self_heating_readout_and_immersion": "not_evaluated"
+    },
+    "installation": {
+      "candidate": "parallel bores reaching midplane; thermocouple and miniature PRT",
+      "nominal_lateral_separation_mm": 2,
+      "placement_uncertainty_target_mm": 0.2,
+      "actual_geometry": null,
+      "requirement": "drawing and sacrificial-coupon inspection before dynamic use",
+      "transfer_to_common_target": "unimplemented_and_unqualified",
+      "preserve_distinct_sensor_locations_and_frames": true,
+      "never_relabel_to_force_comparability": true,
+      "static_stage_can_proceed_without_dynamic_fit": true
+    },
+    "temperature_range_C": [
+      25,
+      80
+    ],
+    "temperature_range_K": [
+      298.15,
+      353.15
+    ],
+    "nominal_chamber_heating_rates_K_per_min": [
+      0.5,
+      1,
+      2
+    ],
+    "actual_specimen_rates": "not_measured",
+    "nominal_final_hold_s": 600,
+    "plateau_acceptance": "requires_predeclared_stability_criterion_not_elapsed_wait_alone",
+    "cooling": "monitored return to 25 degrees Celsius; no cooling-rate performance claim",
+    "static_comparison_points_C": [
+      25,
+      40,
+      55,
+      70,
+      80
+    ],
+    "static_sequences": [
+      "ascending",
+      "descending",
+      "before_chamber_campaign",
+      "after_chamber_campaign"
+    ],
+    "acquisition": {
+      "nominal_sample_interval_s": 1,
+      "maximum_skew_target_s": 0.1,
+      "actual_skew_measurement": null,
+      "retain": [
+        "raw voltage",
+        "reference-junction observations",
+        "reference resistance",
+        "per-channel timestamps",
+        "original file bytes",
+        "missing/saturation flags"
+      ],
+      "hard_real_time_claim": false
+    },
+    "targets": {
+      "absolute_local_temperature_expanded_uncertainty_K": 0.5,
+      "absolute_multiplier": 2,
+      "comparison_absolute_band_K": 1,
+      "comparison_multiplier": 2,
+      "comparison_maximum_standard_difference_uncertainty_K": 0.25,
+      "coverage_probability": "not_inferred_from_multiplier",
+      "difference_agreement_does_not_establish_absolute_accuracy": true
+    },
+    "development_screen": {
+      "specimens_per_rate": 3,
+      "rate_count": 3,
+      "days": 3,
+      "total_cycles": 9,
+      "allocation": "one independent specimen per rate per day",
+      "status": "feasibility_screen_not_powered_confirmatory_design",
+      "confirmatory_sample_size": null,
+      "confirmatory_rule": "choose after variance/precision analysis; freeze before new specimens and held-out day are opened"
+    },
+    "net_sample_selection": {
+      "maximum_samples_per_request": 64,
+      "complete_raw_record_retained": true,
+      "proposed_heating_phase_instants": 48,
+      "proposed_hold_instants": 16,
+      "selection": "predeclare phase-fraction instants and snap to actual synchronized acquisition indices with frozen rule; record indices and timing uncertainty",
+      "full_cycle_continuous_coverage": false,
+      "peak_or_dwell_claim": false,
+      "windowing": "additional predeclared windows remain separate comparisons; all windows retained"
+    },
+    "conversion": {
+      "thermocouple": "separately qualified nonlinear voltage/reference-junction conversion using bound Type T reference function plus individual calibration",
+      "prt": "separately qualified resistance-to-temperature calibration",
+      "net_affine_role": "only a justified residual affine correction after validated conversion to K, or a separately qualified narrow affine approximation",
+      "current_temperature_processor_is_not_nonlinear_converter": true
+    }
+  },
+  "public_datasets": {
+    "use": "external-data importer, missingness and provenance exercises; not physical validation of proposed chain",
+    "repository": "MaCFP/matl-db",
+    "commit": "2a7d54d057329172d49869efae55363b8d182caa",
+    "doi": "10.18434/mds2-2940",
+    "setup_source_id": "nist_pmma_gasification",
+    "complete_joint_covariance_available_in_selected_csv": false,
+    "files": [
+      {
+        "path": "PMMA/Validation_Data/NIST_Gasification_Apparatus/MaCFP-PMMA_Gasification_q50_Temp_R1.csv",
+        "url": "https://github.com/MaCFP/matl-db/blob/2a7d54d057329172d49869efae55363b8d182caa/PMMA/Validation_Data/NIST_Gasification_Apparatus/MaCFP-PMMA_Gasification_q50_Temp_R1.csv",
+        "git_blob_sha1": "34dc89eb4d74e0c1fb430a4314a2aedf8b227bf7",
+        "repository_reported_byte_count": 1723,
+        "inspected_columns": [
+          "Time",
+          "T_back_1",
+          "T_back_2",
+          "T_back_3"
+        ],
+        "inspected_units": [
+          "s",
+          "K",
+          "K",
+          "K"
+        ]
+      },
+      {
+        "path": "PMMA/Validation_Data/NIST_Gasification_Apparatus/MaCFP-PMMA_Gasification_q50_Temp_R3.csv",
+        "url": "https://github.com/MaCFP/matl-db/blob/2a7d54d057329172d49869efae55363b8d182caa/PMMA/Validation_Data/NIST_Gasification_Apparatus/MaCFP-PMMA_Gasification_q50_Temp_R3.csv",
+        "git_blob_sha1": "830553134dd6319def01de1fb8acf70d9c3ef457",
+        "repository_reported_byte_count": 4188,
+        "inspected_columns": [
+          "Time",
+          "T_back_1",
+          "T_back_2",
+          "T_back_3"
+        ],
+        "inspected_units": [
+          "s",
+          "K",
+          "K",
+          "K"
+        ],
+        "observed_missing_token": "NaN",
+        "required_import_handling": "preserve missingness as explicit null/invalid; never zero or fabricated uncertainty"
+      }
+    ],
+    "local_import_status": "not_imported_by_this_planning_record",
+    "external_data_is_not_independent_reference_for_our_chain": true
+  },
+  "evidence_gaps": [
+    "Actual sensor/readout/clock/material identities and operator-approved installation envelope.",
+    "Calibration certificates, validity, individual conversion functions and readout uncertainty.",
+    "Miniature dynamic-reference availability, calibration, fit and probe perturbation assessment.",
+    "Installation and timing transfer from distinct probe locations to the same target; no label-only mapping.",
+    "Complete uncertainty budgets and joint covariance, with reference/fit/common-error double counting excluded.",
+    "Raw/reference measurements and timing characterization; none supplied.",
+    "Frozen stability, missing/saturation, source-selection and held-out confirmation criteria.",
+    "Independent-cycle precision/sample-size rationale and confirmatory results.",
+    "Nonlinear conversion and installation-transfer software qualification; existing affine operation is insufficient.",
+    "Physical qualification review; no SP1 proof or numerical PASS substitutes for this evidence."
+  ],
+  "sources": [
+    {
+      "id": "nist_tc_uncertainty",
+      "kind": "government_primary_publication",
+      "title": "Uncertainty Budgets for Comparison Calibrations of Thermocouples",
+      "authors": [
+        "Dean C. Ripple",
+        "Karen Garrity"
+      ],
+      "year": 2005,
+      "url": "https://tsapps.nist.gov/publication/get_pdf.cfm?pub_id=830933",
+      "locator": "Sections 3, 3.4 and 3.7; PDF pages 3-4 and 7; Table 1 on PDF page 2",
+      "doi": null,
+      "retrieved_date": "2026-10-04"
+    },
+    {
+      "id": "nist_industrial_calibration",
+      "kind": "government_service_specification",
+      "title": "Industrial Thermometer Calibrations",
+      "url": "https://www.nist.gov/pml/sensor-science/thermodynamic-metrology/industrial-thermometer-calibrations",
+      "locator": "Calibration Measurement Uncertainties tables; digital-readout footnote",
+      "retrieved_date": "2026-10-04"
+    },
+    {
+      "id": "nist_srd60",
+      "kind": "government_reference_database",
+      "title": "NIST Temperature Scale Database SRD 60, version 3.0",
+      "url": "https://its90.nist.gov/",
+      "doi": "10.18434/T4S888",
+      "locator": "Version 3.0 and Introduction; thermocouple tables",
+      "retrieved_date": "2026-10-04"
+    },
+    {
+      "id": "macfp_material",
+      "kind": "primary_data_repository",
+      "title": "MaCFP PMMA material description",
+      "url": "https://github.com/MaCFP/matl-db/blob/2a7d54d057329172d49869efae55363b8d182caa/PMMA/README.md",
+      "locator": "Opening material paragraph",
+      "repository_commit": "2a7d54d057329172d49869efae55363b8d182caa",
+      "retrieved_date": "2026-10-04"
+    },
+    {
+      "id": "nist_pmma_gasification",
+      "kind": "government_primary_experimental_dataset",
+      "title": "Experimental Measurements for Pyrolysis Model Validation - Anaerobic Gasification of PMMA Under External Thermal Radiation",
+      "authors": [
+        "Isaac T. Leventon",
+        "Karen De Lannoye"
+      ],
+      "year": 2023,
+      "doi": "10.18434/mds2-2940",
+      "url": "https://github.com/MaCFP/matl-db/blob/2a7d54d057329172d49869efae55363b8d182caa/PMMA/Validation_Data/NIST_Gasification_Apparatus/README.md",
+      "locator": "Disclaimers; Test Overview; Experimental Procedure and Results / Sample Information / Measurements",
+      "repository_commit": "2a7d54d057329172d49869efae55363b8d182caa",
+      "retrieved_date": "2026-10-04"
+    }
+  ],
+  "selected_industrial_plan": "pilot-setup.json",
+  "relationship_to_selected_pilot": {
+    "role": "complementary_staged_metrology_feasibility_study",
+    "selected_pilot": "Rodrigues-based polycarbonate apparatus in pilot-setup.json",
+    "readiness_guide": "../../docs/TEMPERATURE_PILOT_READINESS.md",
+    "dataset_assessment": "../../docs/POLYMER_TEMPERATURE_DATASETS.md",
+    "replaces_selected_pilot": false,
+    "transfers_physical_qualification": false,
+    "uncertainty_targets_are_separate": true,
+    "compatible_with_temperature_readiness_checker": false,
+    "transfer_requirement": "Methods may inform the selected pilot only after explicit applicability review; PMMA measurements, identities and uncertainty targets cannot silently replace those of the polycarbonate plan.",
+    "repository_context": "Reconciled against origin/main 1f086a30 source-backed pilot plan; actual local measurement/calibration evidence remains absent."
+  }
+}
