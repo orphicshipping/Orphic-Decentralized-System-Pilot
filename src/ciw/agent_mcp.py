@@ -22,7 +22,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance")
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -204,7 +204,7 @@ def _profile(path: Path) -> tuple[Path, dict]:
 
 
 def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False,
-                 read_only: bool = False) -> AgentHost:
+                 read_only: bool = False, clearance_provider=None) -> AgentHost:
     """Only the operator's launch command selects this file; not an MCP tool."""
     if read_only and (instrument != "builtin" or leakage_backend is not None or resume):
         raise ValueError("Corpus inspection requires a read-only builtin host without resume")
@@ -239,7 +239,15 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
     if output is not None and (type(output) is not str or not output):
         raise ValueError("Invalid operator output directory")
     host_class = AgentHost
-    if instrument == "link-scalar":
+    if clearance_provider is not None and instrument != "bim-clearance":
+        raise ValueError("Clearance provider requires its explicit instrument selector")
+    if instrument == "bim-clearance":
+        from .metrology_clearance import ClearanceHost, registry as clearance_registry
+        if value["candidate_domains"] or value["comparisons"] or value["check_suites"]:
+            raise ValueError("Clearance profile has no editable policies or qualification suites")
+        host_class = ClearanceHost
+        registry = clearance_registry(clearance_provider if value["allow_operations"] else None)
+    elif instrument == "link-scalar":
         from .link_study_agent import LinkStudyHost
         from .link_study import registry as link_registry
         if value["candidate_domains"]:
