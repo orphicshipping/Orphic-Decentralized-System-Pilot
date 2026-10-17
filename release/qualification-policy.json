@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "repository": "notationsystems/Notations-Control-Protocol",
   "scope": "Integrated public research baseline: independent packages, installed operator journeys, typed composition including real OCI, and Legibility. CI metadata and artifact presence do not establish independent-human or physical qualification. Hardware refurbishment and asset/bench software journeys are required; recorded or synthetic diagnostic inputs do not establish physical or independent-human qualification.",
   "required_workflows": [
     {

@@ -40,7 +40,7 @@ def main() -> int:
         with (output / (module.stem + ".log")).open("w", encoding="utf-8") as log:
             try:
                 result = subprocess.run(
-                    [sys.executable, "-m", "pytest", "-q", str(module), "--tb=short",
+                    [sys.executable, "-I", "-m", "pytest", "-q", str(module), "--tb=short",
                      "--junitxml=" + str(report)], cwd=root, env=env, stdout=log,
                     stderr=subprocess.STDOUT, timeout=args.timeout, check=False)
                 code = result.returncode

@@ -5,6 +5,10 @@ with its built-in synthetic workflows, then provision a specialist workflow
 when its inputs and runtime are available. The monorepo's 21 public modules
 retain their own packages, execution pins and qualification boundaries.
 
+`ncp` and `net` use the same command implementation. For the selected research
+baseline and its recorded qualification gaps, use the
+[baseline ledger](RESEARCH_BASELINE_20261017.md).
+
 ## Install
 
 Use Python 3.11 or newer from the repository root. A normal installation keeps
@@ -119,6 +123,14 @@ The [atmospheric engine](ATMOSPHERIC_ENGINE.md) and
 [elastic contact benchmark](IMPACT_TESTBED.md) have bounded example/run/inspect/
 verify/export commands. The [shared workbench guide](WORKBENCH_ASSEMBLY.md)
 covers calibrated observations and specialist provider operations.
+
+The [numerical example](NUMERICAL_BUILTINS.md) runs seven supplied-model
+operations through the existing operation and MCP contracts. The
+[operational investigation guide](OPERATIONAL_ENGINEERING.md) connects retained
+operational records to the same engineering operations used by the console.
+[Bounded BIM clearance](METROLOGY_CLEARANCE.md) requires its explicit instrument
+profile and retained CSE provider pin. These guides retain their individual
+permission and evidence limits.
 
 Local JSON persistence, retained failure history and explicit replay are
 implemented. A local WebSocket session accepts bounded JSON frames up to

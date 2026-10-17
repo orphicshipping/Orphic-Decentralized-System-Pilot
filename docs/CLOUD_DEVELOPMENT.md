@@ -1,8 +1,8 @@
 # Cloud development environment
 
 Use the existing checkout in an isolated cloud task; do not create a Git worktree
-unless explicitly requested. The commands below assume the checkout is at
-`/workspace/Notations-Control-Protocol` and use Python 3.12, matching CI.
+unless explicitly requested. Run the commands from the checkout root. Python
+3.11 or newer is required; the consolidated CI lane selects Python 3.12.
 
 ## Install
 
@@ -12,10 +12,9 @@ This follows the common dependency installation in
 alone does not include. External provider qualification is separate.
 
 ```sh
-cd /workspace/Notations-Control-Protocol
+cd "$(git rev-parse --show-toplevel)"
 python3 -m venv .venv
-export PIP_CACHE_DIR=/workspace/.cache/pip
-.venv/bin/python -m pip install -e '.[dev,external-work,legibility,particles]' build
+.venv/bin/python -m pip install -e '.[dev,external-work,legibility,particles,numerical-checks,bench-models]' build
 .venv/bin/python -m pip install --no-deps \
   -e instruments/measurement/signal-processing \
   -e instruments/measurement/signal-conditioning
@@ -84,7 +83,7 @@ python -m pytest -q \
   tests/test_visual_board.py tests/test_needle.py tests/test_system_board.py \
   tests/test_parameter_program.py tests/test_semantic_capabilities.py \
   tests/test_operator_catalog.py
-python -m build --wheel --outdir /workspace/ncp-onboarding-artifacts/wheels
+python -m build --wheel --outdir results/onboarding-artifacts/wheels
 ```
 
 Onboarding at `cc5d7f31cfeaeb4d897e0864e0fcc560355a0d39` on 2026-10-17
@@ -99,3 +98,12 @@ documented setup and qualification. Hosted HTTP integration, remote MCP and
 browser interaction were not validated by this onboarding. Reuse existing
 platform Git authentication and test the required read operation before
 requesting credentials; never save secret values in these instructions.
+
+For the consolidation close-out, run `python scripts/monorepo.py` and
+`python scripts/check_consolidated.py --output-dir results/consolidated-check`.
+These require retained native Git ancestry and original source objects, not a
+file-only export. Keep every per-module refusal, skip, timeout and JUnit report.
+The selected candidate and current results are recorded in
+[the baseline ledger](RESEARCH_BASELINE_20261017.md); the onboarding counts above
+remain historical. Installed-wheel acceptance must run outside the source
+checkout with isolated imports.

@@ -12,9 +12,9 @@ requires-python = ">=3.11"
 dependencies = ["numpy==2.4.3", "websockets==16.0"]
 
 [project.urls]
-Repository = "https://github.com/atomtrapping/Notations-Control-Protocol"
-Documentation = "https://github.com/atomtrapping/Notations-Control-Protocol/blob/main/docs/quickstart.md"
-Issues = "https://github.com/atomtrapping/Notations-Control-Protocol/issues"
+Repository = "https://github.com/notationsystems/Notations-Control-Protocol"
+Documentation = "https://github.com/notationsystems/Notations-Control-Protocol/blob/main/docs/quickstart.md"
+Issues = "https://github.com/notationsystems/Notations-Control-Protocol/issues"
 
 [project.optional-dependencies]
 particles = ["gsd==5.0.1"]
