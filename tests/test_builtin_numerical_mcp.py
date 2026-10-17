@@ -31,6 +31,19 @@ def profile_files(root):
     return root/'profile.json'
 
 
+def test_ci_exercises_source_and_installed_numerical_library():
+    import yaml
+    root = Path(__file__).resolve().parents[1]
+    workflow = yaml.safe_load((root/'.github/workflows/mcp-control.yml').read_text())
+    job = workflow['jobs']['numerical-builtins']
+    assert set(job['strategy']['matrix']['os']) == {'ubuntu-24.04', 'windows-latest'}
+    commands = '\n'.join(step.get('run','') for step in job['steps'])
+    assert 'tests/test_builtin_numerical.py tests/test_builtin_numerical_mcp.py' in commands
+    assert '-I -m pytest -o pythonpath=' in commands
+    assert 'site-packages' in commands
+    assert 'skipped' in commands
+
+
 def test_net_cli_runs_every_operation(tmp_path,capsys):
     from ciw.net import main
     root = tmp_path/'profile'; profile_files(root)

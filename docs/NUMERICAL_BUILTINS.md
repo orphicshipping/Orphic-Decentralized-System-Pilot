@@ -171,6 +171,9 @@ For an installed-wheel check, run those tests with the new wheel installed in
 a separate environment, `python -I -m pytest -o pythonpath= ...`, and confirm
 `ciw.__file__` resolves into that environment's `site-packages`. Clearing the
 repository pytest `pythonpath` override is necessary to test the installed code.
+The MCP control workflow includes a dedicated Linux/Windows numerical job that
+runs both source and installed-wheel checks and rejects skipped cases. A
+configured job is not evidence that a particular hosted run has passed.
 
 Further work is explicit: uncertain-x/nonlinear calibration, automatic model
 derivatives, Monte Carlo/interval propagation, distribution/coverage assumptions,
