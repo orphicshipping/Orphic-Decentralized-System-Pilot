@@ -83,6 +83,11 @@ class AdapterJourney(unittest.IsolatedAsyncioTestCase):
             done = await call('ncp_run_submit', {**digest, 'attempt': 'host-acceptance'}, True)
             self.assertEqual(done['state'], 'completed')
             self.assertEqual(len(done['result']['execution_ids']), 7)
+            artifact = done['result']['artifacts']['graph-run']['artifact_id']
+            for index in range(7):
+                output = await call('ncp_artifact_read', {'artifact': artifact,
+                    'selector': ['nodes', 'operation-' + str(index), 'result', 'data']})
+                self.assertEqual(output['data']['scope'], 'declared_model_only')
             self.assertEqual(await call('ncp_run_get', {'run_id': done['run_id']}), done)
             self.assertEqual(await call('ncp_run_submit', {**digest, 'attempt': 'host-acceptance'}, True), done)
             response = await client.post('/transaction', json={'state': state, 'action': 'runs', 'payload': {}})

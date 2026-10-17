@@ -2,9 +2,9 @@ name: Local MCP operator console
 on:
   push:
     branches: [main]
-    paths: ['tools/mcp-operator-console/**', 'src/ciw/**', 'pyproject.toml', '.github/workflows/mcp-operator-console.yml']
+    paths: ['tools/mcp-operator-console/**', 'tools/private-mcp-host/**', 'examples/numerical_operations/**', 'src/ciw/**', 'pyproject.toml', '.github/workflows/mcp-operator-console.yml']
   pull_request:
-    paths: ['tools/mcp-operator-console/**', 'src/ciw/**', 'pyproject.toml', '.github/workflows/mcp-operator-console.yml']
+    paths: ['tools/mcp-operator-console/**', 'tools/private-mcp-host/**', 'examples/numerical_operations/**', 'src/ciw/**', 'pyproject.toml', '.github/workflows/mcp-operator-console.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -12,6 +12,33 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || (github.event_name == 'push' && github.ref) || github.run_id }}
   cancel-in-progress: true
 jobs:
+  private-host:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.19.0'
+      - name: Install candidate host and adapter test dependencies
+        run: python -m pip install . -r tools/mcp-operator-console/requirements.txt httpx==0.28.1
+      - name: Exercise real MCP, checkpoint and refusal boundaries
+        env:
+          NCP_TRANSACTION_STATE: ${{ runner.temp }}/ncp-private-host/state
+        run: python -m unittest discover -s tools/private-mcp-host -p test_adapter.py -v
+      - name: Check private gateway boundaries
+        run: node --test tools/private-mcp-host/test_gateway.mjs
+      - name: Build and test the mounted panel source
+        working-directory: tools/private-mcp-host/panel
+        run: |
+          npm ci --ignore-scripts --no-audit --no-fund
+          npm run build
+          npm test
   console:
     strategy:
       fail-fast: false
