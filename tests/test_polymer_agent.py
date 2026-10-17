@@ -65,7 +65,10 @@ def test_polymer_profile_requires_explicit_selector_and_does_not_change_builtin_
     with pytest.raises(ValueError, match="not advertised"):
         from_profile(polymer)
     builtin = from_profile(demo_config(tmp_path / "builtin"))
-    assert set(builtin.capabilities()["catalog"]["operations"]) == {"statistics.v1", "spectrum.periodogram.v1"}
+    from ciw.numerical_contracts import OPERATIONS as NUMERICAL_OPERATIONS
+    catalog = builtin.capabilities()["catalog"]["operations"]
+    assert set(catalog) == {"statistics.v1", "spectrum.periodogram.v1"} | set(NUMERICAL_OPERATIONS)
+    assert {name for name, row in catalog.items() if row['agent_execution_enabled']} == {'statistics.v1'}
     assert not OPERATIONS.intersection(item["operation_id"] for item in default_registry().describe())
     value = parse(polymer.read_bytes())
     value["instrument"] = "polymer"

@@ -366,8 +366,9 @@ def test_net_binding_keeps_separate_ciw_specialists_unadvertised():
     # provider or inheriting the oscillator's runtime identity.
     assert default_registry().get("legibility.compile.v1").role == "backend"
     registry = builtin_registry(bind=True)
+    from ciw.numerical_contracts import OPERATIONS
     assert set(registry.catalog()["operations"]) == {
-        "statistics.v1", "spectrum.periodogram.v1"}
+        "statistics.v1", "spectrum.periodogram.v1", *OPERATIONS}
     assert all(item["bound"] for item in registry.catalog()["operations"].values())
     with pytest.raises(AdapterRefusal):
         registry.operations.get("legibility.compile.v1")

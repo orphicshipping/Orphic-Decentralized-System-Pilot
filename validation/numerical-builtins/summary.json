@@ -1,0 +1,81 @@
+{
+  "schema": "notations.numerical-builtins-validation.v1",
+  "date": "2026-10-17",
+  "code_revision": "3cb35d6e54a61105346df429e0ee165255090519",
+  "base_revision": "62577c96a280287c5df5d54783be00df1ab7c0de",
+  "environment": {"os": "Linux", "python": "3.12.14", "numpy": "2.4.3", "mcp": "2.3.0"},
+  "operations": [
+    "uncertainty.propagate.v1", "uncertainty.budget.v1",
+    "calibration.fit.v1", "calibration.residuals.v1",
+    "sensitivity.local.v1", "observability.rank.v1", "model.discrepancy.v1"
+  ],
+  "reports": {
+    "focused-source.xml.gz": {
+      "tests": 556, "failures": 0, "errors": 0, "skipped": 0,
+      "uncompressed_sha256": "f533c6983bb9b96aa10931a01e9703d8c8c27bd831dc64b936b3da77a7d8942b"
+    },
+    "installed.xml.gz": {
+      "tests": 72, "failures": 0, "errors": 0, "skipped": 0,
+      "uncompressed_sha256": "e96b7510b57fac1764f62942d832b6b3514cffa2881ed8bb59711e97f8a6905a"
+    },
+    "provenance.xml.gz": {
+      "tests": 4, "failures": 0, "errors": 0, "skipped": 0,
+      "uncompressed_sha256": "938477bbc5d3377875bc194c79b67afb8456dad903c61b0a5d3c4eee3c0eb647"
+    },
+    "ci-policy.xml.gz": {
+      "tests": 64, "parent_tests": 18, "subtests": 46, "failures": 0, "errors": 0, "skipped": 0,
+      "uncompressed_sha256": "dc7cd99ccecff17eccb22e2a8c248d43ee223880af8e1125456a51f63a03980b"
+    }
+  },
+  "counts_overlap": true,
+  "source_test_modules": [
+    "test_builtin_numerical.py", "test_builtin_numerical_mcp.py",
+    "test_operation_runner.py", "test_capabilities.py", "test_control_plane.py",
+    "test_control_gateway.py", "test_semantic_capabilities.py", "test_agent_protocol.py",
+    "test_covariance_artifacts.py", "test_tooling_visualizer.py", "test_polymer_agent.py",
+    "test_production.py", "test_spatial_requests.py"
+  ],
+  "installed_wheel": {
+    "sha256": "ebddbc4d1db02437dd083ffb968068ed096521d0f065ca1a70fba130fd7dcce3",
+    "noneditable": true,
+    "isolated_interpreter": true,
+    "pytest_source_pythonpath_override_cleared": true,
+    "installed_ciw_files_match_final_source_excluding_pycache": true,
+    "mcp_protocols_exercised": ["2026-07-28", "2025-11-25"]
+  },
+  "clean_source_audit": {
+    "passed": true,
+    "imported_modules": 21,
+    "report": "source-audit.json.gz",
+    "uncompressed_sha256": "ed2e9a13d9d269eeb25f42a8d7c1ad991a3206b8c5c7d2f409f218e4af33e8ec"
+  },
+  "exploratory_broad_sweep": {
+    "scope": "Started on pre-repair development worktree; diagnostic only, not a frozen final-source qualification",
+    "report": "exploratory-sweep.json.gz",
+    "uncompressed_sha256": "bfadd412fcc35d4c14dae1af73e90b1eeaa1cf12505fe97b272d5e207204b76e",
+    "modules": 506,
+    "passed": false,
+    "workers": 8,
+    "module_timeout_seconds": 180,
+    "reported_tests": 19554,
+    "skipped": 1169,
+    "catalogue_expectation_failures_corrected_and_retested": [
+      "test_polymer_agent.py", "test_production.py", "test_spatial_requests.py"
+    ],
+    "timeout_modules": [
+      "test_agent_unattended.py", "test_data_integration_matrix.py", "test_domain_examples.py",
+      "test_fluid_extended_workflow.py", "test_fluid_handoff.py", "test_fluid_workflow.py",
+      "test_impact_plate_sweep.py", "test_impact_plate_workflow.py", "test_link_pinwheel.py",
+      "test_module_update.py", "test_monorepo.py", "test_system_workflow.py"
+    ],
+    "history_followup": "Clean repaired-base audit and primary ancestry/runtime test passed; full history regression module was not requalified",
+    "discarded_mixed_run": "An intermediate combined run encountered expected dirty-tree provenance refusals while CI/tests were being edited; stopped and superseded by clean focused and provenance checks"
+  },
+  "remaining_gates": {
+    "full_repository_regression": "not_qualified; bounded timeouts require a longer isolated hosted run",
+    "hosted_linux_windows_jobs": "configured; pending at handoff",
+    "physical_qualification": "not_performed",
+    "hardware_acquisition": "not_implemented_by_these_operations",
+    "remote_deployment": "not_performed"
+  }
+}

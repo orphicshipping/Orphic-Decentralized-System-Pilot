@@ -69,4 +69,7 @@ def default_registry() -> OperationRegistry:
     registry.register(product_study_operation())
     from ..gltf_reference_runtime import projection_operation
     registry.register(projection_operation())
+    from ..numerical_workflow import operations as numerical_operations
+    for operation in numerical_operations():
+        registry.register(operation)
     return registry

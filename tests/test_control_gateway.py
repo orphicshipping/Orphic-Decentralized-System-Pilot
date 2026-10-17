@@ -44,7 +44,7 @@ def test_discover_compile_admit_execute_inspect_retry(configured):
     profile, owner, host = configured
     source_bytes = (profile.parent / "source.json").read_bytes()
     capabilities = call(host, "ncp_capabilities_list")
-    assert len(capabilities["items"]) == 2
+    assert len(capabilities["items"]) == 9
     assert capabilities["authorizes_execution"] is False
     draft = plan(host)
     assert draft["admitted"] is False

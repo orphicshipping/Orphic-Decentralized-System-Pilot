@@ -77,6 +77,7 @@ The mathematical structure includes typed serial/parallel composition, covarianc
 | Work area | Implemented scope and entry point |
 | --- | --- |
 | Recording analysis | Statistics, spectra, explicit selections, and retained results: [recording workflow](docs/quickstart.md#analyze-a-retained-recording). |
+| Supplied-model numerical library | Seven built-ins for covariance propagation/budgets, affine calibration/residuals, local sensitivity, observability and model discrepancy through existing CLI/MCP plans: [contracts and example](docs/NUMERICAL_BUILTINS.md). |
 | Measurement processing | Declared calibration and full joint covariance in selected profiles: [covariance](docs/COVARIANCE.md) and [temperature-processing profile](docs/NET_AGENT_PROTOCOL.md#temperature-measurement-processing-profile). |
 | Thermal and mechanical studies | Bounded state estimation, held-out reference comparisons, and selected mechanical, fluid, thermal, and atmospheric examples: [recorded thermal workflow](docs/MEASURED_THERMAL.md) and [domain examples](docs/DOMAIN_EXAMPLES.md). |
 | Polymer processing | Injection-molding and extrusion-blow-molding profiles with retained features, part tolerances, bounded reference calculations, and separate arithmetic review: [polymer guide](docs/POLYMER_PROCESSING.md). Microfabrication-specific models and installed-machine interfaces require separate implementation and qualification. |

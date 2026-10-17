@@ -383,6 +383,12 @@ def builtin_semantic_registry(concrete: CapabilityRegistry) -> SemanticRegistry:
         result.implement(EngineLowering(
             capability, operation, "ciw.oscillator", "python",
             "orchestration", "headless", resources=("cpu",), priority=10))
+    from .numerical_contracts import OPERATIONS
+    for operation, description in OPERATIONS.items():
+        result.declare(SemanticMorphism(operation, "compute", {}, {"result": result_port},
+            effects=("read:declared-model", "write:retained-result"), description=description))
+        result.implement(EngineLowering(operation, operation, "ciw.numerical", "python",
+            "scientific", "headless", resources=("cpu",), priority=10))
     return result
 
 

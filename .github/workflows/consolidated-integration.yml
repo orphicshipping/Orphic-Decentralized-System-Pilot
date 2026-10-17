@@ -24,7 +24,7 @@ jobs:
           python-version: '3.12'
       - name: Install common and local DSP dependencies
         run: |
-          python -m pip install -e '.[dev,external-work,legibility,particles,numerical-checks]' build
+          python -m pip install -e '.[dev,external-work,legibility,particles,numerical-checks,bench-models]' build
           python -m pip install --no-deps -e instruments/measurement/signal-processing -e instruments/measurement/signal-conditioning
       - name: Check retained source ancestry and exact imported bytes
         run: python scripts/monorepo.py > retained-source-audit.json
