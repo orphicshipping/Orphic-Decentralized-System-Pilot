@@ -23,7 +23,7 @@
       "uncompressed_sha256": "938477bbc5d3377875bc194c79b67afb8456dad903c61b0a5d3c4eee3c0eb647"
     },
     "ci-policy.xml.gz": {
-      "tests": 18, "subtests": 46, "failures": 0, "errors": 0, "skipped": 0,
+      "tests": 64, "parent_tests": 18, "subtests": 46, "failures": 0, "errors": 0, "skipped": 0,
       "uncompressed_sha256": "dc7cd99ccecff17eccb22e2a8c248d43ee223880af8e1125456a51f63a03980b"
     }
   },
