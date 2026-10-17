@@ -1,0 +1,273 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "linux",
+  "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+  "source": {
+    "tests": 1024,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed": {
+    "tests": 1024,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verified_package_files": 691,
+  "native_command_journeys": 18,
+  "native_commands": [
+    {
+      "arguments": [
+        "qc",
+        "stream",
+        "demo",
+        "--output",
+        "stream.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-stream-report.v1\",\n  \"status\": \"HELD\",\n  \"output\": \"stream.json\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "stream",
+        "verify",
+        "stream.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-stream-verification.v1\",\n  \"status\": \"PASS\",\n  \"verification_id\": \"verification-81a9fe1ab22949d18aea8a45b88fea47\",\n  \"execution_id\": \"execution-eb0da975b71e47b7bb3f41bd878f4562\",\n  \"operation_ref\": \"sha256:057add40f93a4628a8958d88d6e15ac1511ef62a0d10d503ecdeeed791581be9\",\n  \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n  \"result_ref\": \"sha256:ffc5cdaf35916ceeb850f0f99405da5dcab457347b20237804f5e5c6de1c4fde\",\n  \"head_ref\": \"sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05\",\n  \"head_anchor_checked\": false,\n  \"spec_anchor_checked\": false,\n  \"scope\": \"same-implementation full prefix replay; not authenticity or independent physical verification\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "stream",
+        "demo",
+        "--output",
+        "stream.json"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"[Errno 17] File exists: '/tmp/net-qc-upgrades-installed-i7u1i6lh/.net-manufacturing-am7sdo78' -> 'stream.json'\"}\n"
+    },
+    {
+      "arguments": [
+        "qc",
+        "detector",
+        "demo",
+        "--output",
+        "detector.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "stdout": "{\n  \"status\": \"SYNTHETIC_ONLY\",\n  \"criteria_status\": \"CRITERIA_NOT_MET\",\n  \"reasons\": [\n    \"UNRESOLVED_INDEPENDENT_OUTCOMES\",\n    \"MISSING_OR_OPEN_CAPTURES\",\n    \"TIMELY_DETECTION_LOWER_BOUND_BELOW_TARGET\",\n    \"FALSE_HOLD_UPPER_BOUND_ABOVE_TARGET\"\n  ],\n  \"part_metrics\": {\n    \"enrolled\": 16,\n    \"defect_present\": {\n      \"ALARM\": 2,\n      \"NO_ALARM\": 1,\n      \"ABSTAIN\": 1\n    },\n    \"defect_absent\": {\n      \"ALARM\": 2,\n      \"NO_ALARM\": 7,\n      \"ABSTAIN\": 2\n    },\n    \"unresolved_labels\": 1,\n    \"missing_captures\": 2,\n    \"open_captures\": 0,\n    \"alarm_sensitivity\": {\n      \"numerator\": 2,\n      \"denominator\": 4,\n      \"value\": 0.5\n    },\n    \"timely_alarm_sensitivity\": {\n      \"numerator\": 1,\n      \"denominator\": 4,\n      \"value\": 0.25\n    },\n    \"nondefect_alarm_rate\": {\n      \"numerator\": 2,\n      \"denominator\": 11,\n      \"value\": 0.18181818181818182\n    },\n    \"nondefect_hold_rate\": {\n      \"numerator\": 4,\n      \"denominator\": 11,\n      \"value\": 0.36363636363636365\n    },\n    \"defect_without_stream_hold_rate\": {\n      \"numerator\": 1,\n      \"denominator\": 4,\n      \"value\": 0.25\n    },\n    \"scope\": \"descriptive enrolled part counts; abstentions remain in denominators; target characteristic only; stream holds are not physical containment\"\n  },\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  },\n  \"output\": \"detector.json\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "detector",
+        "verify",
+        "detector.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-validation-verification.v1\",\n  \"status\": \"PASS\",\n  \"verification_id\": \"verification-402d76f8d9e04b788b9341bbe6f15c20\",\n  \"execution_id\": \"execution-f67e844afa38437e863b022caaf06b00\",\n  \"operation_ref\": \"sha256:717662a64da56d0bdff51ae8cd3219ab9132b0119913e499066bea2ebcda4373\",\n  \"request_ref\": \"sha256:1da7fdf02b3eae37c5daa52d14b07ea727086f20886e5b26ba92c9910e5ff225\",\n  \"result_ref\": \"sha256:d3e8c62dc93dd543f70542e27bb612b8117bb66d0fbde5af07a7d64a5b472d81\",\n  \"protocol_anchor_checked\": false,\n  \"manifest_anchor_checked\": false,\n  \"scope\": \"full stream replay and same-implementation study recomputation; not label authenticity\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "detector",
+        "demo",
+        "--output",
+        "detector.json"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"[Errno 17] File exists: '/tmp/net-qc-upgrades-installed-i7u1i6lh/.net-manufacturing-ojki0mii' -> 'detector.json'\"}\n"
+    },
+    {
+      "arguments": [
+        "qc",
+        "outcome",
+        "demo",
+        "--output",
+        "outcome.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "stdout": "{\n  \"status\": \"NOT_ESTABLISHED\",\n  \"qualification\": \"NOT_ESTABLISHED\",\n  \"result_ref\": \"sha256:365e4adec0c8385a1ca4863c98a0c8827d872eba9ebc72fbca475d7c747a931d\",\n  \"output\": \"outcome.json\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "outcome",
+        "verify",
+        "outcome.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-outcome-verification.v1\",\n  \"status\": \"PASS\",\n  \"verification_id\": \"verification-4198b7b60eaa481d8e8923286aa481e1\",\n  \"execution_id\": \"execution-74b184c9857b4b738fc1ddb40c431809\",\n  \"protocol_anchor_checked\": false,\n  \"request_ref\": \"sha256:15df765d3ea0aa6f58b31e89ef218c9f8592c81cf492dfac695ce03c4882733f\",\n  \"result_ref\": \"sha256:365e4adec0c8385a1ca4863c98a0c8827d872eba9ebc72fbca475d7c747a931d\",\n  \"scope\": \"Full same-implementation replay; no authenticity or physical qualification\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "outcome",
+        "demo",
+        "--output",
+        "outcome.json"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"[Errno 17] File exists: '/tmp/net-qc-upgrades-installed-i7u1i6lh/.net-manufacturing-6_o1mxqj' -> 'outcome.json'\"}\n"
+    },
+    {
+      "arguments": [
+        "qc",
+        "store",
+        "init",
+        "quality.sqlite3"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-store-created.v1\",\n  \"store_id\": \"session-db1a8a8225174efbbeb9ad66ee98dc59\",\n  \"storage_status\": \"CREATED\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "store",
+        "import",
+        "quality.sqlite3",
+        "cycle0",
+        "stream.json",
+        "--expected-spec-ref",
+        "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+        "--expected-head-ref",
+        "sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-store-head.v1\",\n  \"store_id\": \"session-db1a8a8225174efbbeb9ad66ee98dc59\",\n  \"stream_id\": \"cycle0\",\n  \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n  \"head_ref\": \"sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05\",\n  \"commit_ref\": \"sha256:a919adac186ca5598b6ec1b7fa31c9dbce9c856bdebf9f27cb9d2cd43c8a8549\",\n  \"accepted_updates\": 3,\n  \"finalized\": true,\n  \"quality_status\": \"HELD\",\n  \"storage_statistics\": {\n    \"stored_sample_count\": 15,\n    \"delta_json_bytes\": 9887,\n    \"cumulative_update_json_bytes\": 9849,\n    \"imported_checkpoint_count\": 1\n  },\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  },\n  \"imported_source_head_ref\": \"sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05\",\n  \"imported_source_execution_id\": \"execution-eb0da975b71e47b7bb3f41bd878f4562\",\n  \"storage_status\": \"COMMITTED\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "store",
+        "verify",
+        "quality.sqlite3",
+        "cycle0",
+        "--expected-spec-ref",
+        "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+        "--expected-head-ref",
+        "sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-store-verification.v1\",\n  \"status\": \"PASS\",\n  \"verification_id\": \"verification-c3aea0fb54dd46faa75f5bbeffc5ef23\",\n  \"replay_execution_id\": \"execution-bc9a98e2bda640579c5b634c848cf3d1\",\n  \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n  \"head_ref\": \"sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05\",\n  \"result_ref\": \"sha256:ffc5cdaf35916ceeb850f0f99405da5dcab457347b20237804f5e5c6de1c4fde\",\n  \"head_anchor_checked\": true,\n  \"spec_anchor_checked\": true,\n  \"commit_anchor_checked\": false,\n  \"quality_status\": \"HELD\",\n  \"scope\": \"transaction-consistent lossless reconstruction and unchanged full QC prefix replay\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_containment\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"source_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\",\n    \"action_authorized\": false\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "store",
+        "export",
+        "quality.sqlite3",
+        "cycle0",
+        "--expected-spec-ref",
+        "sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb",
+        "--expected-head-ref",
+        "sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05",
+        "--output",
+        "reopened.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2,
+      "stdout": "{\n  \"schema\": \"ciw.toolpoint-stream-report.v1\",\n  \"operation_ref\": \"sha256:057add40f93a4628a8958d88d6e15ac1511ef62a0d10d503ecdeeed791581be9\",\n  \"execution_id\": \"execution-d578b03aeb9a47598d7bfdde031b5d94\",\n  \"spec\": {\n    \"binding\": {\n      \"cycle_id\": \"synthetic.cycle.0\",\n      \"cycle_ref\": \"sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40\",\n      \"source_kind\": \"synthetic\",\n      \"started_at_s\": 0.0\n    },\n    \"limits\": {\n      \"max_samples_per_sensor\": 2048,\n      \"max_total_samples\": 32768,\n      \"max_updates\": 32\n    },\n    \"plan\": {\n      \"cavity_ids\": [\n        \"cavity.1\",\n        \"cavity.2\"\n      ],\n      \"clock_id\": \"synthetic.clock\",\n      \"configuration_ref\": \"sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6\",\n      \"frame\": \"synthetic.tool-frame\",\n      \"max_clock_skew_s\": 0.001,\n      \"max_sample_gap_s\": 0.21,\n      \"part_ref\": \"sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef\",\n      \"phases\": [\n        {\n          \"end_s\": 0.8,\n          \"phase_id\": \"fill\",\n          \"start_s\": 0\n        }\n      ],\n      \"plan_id\": \"synthetic.stream.plan\",\n      \"process\": \"injection_molding\",\n      \"reference_evidence_refs\": [\n        \"sha256:b566c02a643ecd5afdeee3c91cafa977fe8e6c0c46dcc48b005f5f3ac6caaf6e\"\n      ],\n      \"revision\": \"A\",\n      \"rules\": [\n        {\n          \"feature\": \"peak\",\n          \"limits\": {\n            \"lower\": 0,\n            \"unit\": \"Pa\",\n            \"upper\": 15000000\n          },\n          \"phase_id\": \"fill\",\n          \"reference_curve\": null,\n          \"rule_id\": \"sensor.cavity.1.pressure\",\n          \"sensor_id\": \"sensor.cavity.1\",\n          \"threshold\": null\n        },\n        {\n          \"feature\": \"peak\",\n          \"limits\": {\n            \"lower\": 0,\n            \"unit\": \"Pa\",\n            \"upper\": 15000000\n          },\n          \"phase_id\": \"fill\",\n          \"reference_curve\": null,\n          \"rule_id\": \"sensor.cavity.2.pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"threshold\": null\n        },\n        {\n          \"feature\": \"peak\",\n          \"limits\": {\n            \"lower\": 0,\n            \"unit\": \"Pa\",\n            \"upper\": 15000000\n          },\n          \"phase_id\": \"fill\",\n          \"reference_curve\": null,\n          \"rule_id\": \"sensor.nozzle.pressure\",\n          \"sensor_id\": \"sensor.nozzle\",\n          \"threshold\": null\n        }\n      ],\n      \"schema\": \"ciw.toolpoint-monitoring-plan.v1\",\n      \"sensors\": [\n        {\n          \"location\": {\n            \"cavity_id\": \"cavity.1\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"quantity\": \"cavity_pressure\",\n          \"sensor_id\": \"sensor.cavity.1\",\n          \"unit\": \"Pa\"\n        },\n        {\n          \"location\": {\n            \"cavity_id\": \"cavity.2\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"quantity\": \"cavity_pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"unit\": \"Pa\"\n        },\n        {\n          \"location\": {\n            \"cavity_id\": null,\n            \"gate_id\": null,\n            \"kind\": \"nozzle\"\n          },\n          \"quantity\": \"melt_pressure\",\n          \"sensor_id\": \"sensor.nozzle\",\n          \"unit\": \"Pa\"\n        }\n      ],\n      \"source_kind\": \"synthetic\",\n      \"valid_from_s\": 0,\n      \"valid_until_s\": 100\n    },\n    \"schema\": \"ciw.toolpoint-stream-spec.v1\"\n  },\n  \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n  \"updates\": [\n    {\n      \"final\": false,\n      \"previous_receipt_ref\": null,\n      \"received_at_s\": 0.21,\n      \"schema\": \"ciw.toolpoint-stream-update.v1\",\n      \"sequence\": 0,\n      \"observation\": {\n        \"clock_id\": \"synthetic.clock\",\n        \"completed_at_s\": 0.2,\n        \"configuration_ref\": \"sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6\",\n        \"cycle_evidence_ref\": \"sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40\",\n        \"cycle_id\": \"synthetic.cycle.0\",\n        \"frame\": \"synthetic.tool-frame\",\n        \"part_mapping\": {\n          \"evidence_ref\": \"sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240\",\n          \"items\": [\n            {\n              \"cavity_id\": \"cavity.1\",\n              \"serial\": \"p001\"\n            },\n            {\n              \"cavity_id\": \"cavity.2\",\n              \"serial\": \"p002\"\n            }\n          ],\n          \"status\": \"cavity_resolved\"\n        },\n        \"part_ref\": \"sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef\",\n        \"schema\": \"ciw.toolpoint-observation.v1\",\n        \"source_kind\": \"synthetic\",\n        \"started_at_s\": 0.0,\n        \"signals\": [\n          {\n            \"calibration_ref\": \"sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.1\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.1\",\n            \"source_ref\": \"sha256:6d914454f1ef8b52575a2b4e5d3a2adcaa527201bebabfcf065923710146a713\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.2\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.2\",\n            \"source_ref\": \"sha256:69693ed27cb0aa708b33fc7fc386d9e62ee757f8c30ef85cab2f061f8b80ff62\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": null,\n              \"gate_id\": null,\n              \"kind\": \"nozzle\"\n            },\n            \"quantity\": \"melt_pressure\",\n            \"sensor_id\": \"sensor.nozzle\",\n            \"source_ref\": \"sha256:f0260ba81b08e4de354d898c7cc7846b3e81dea825ccceb8a128a143f9e6c5f4\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              }\n            ]\n          }\n        ]\n      }\n    },\n    {\n      \"final\": false,\n      \"previous_receipt_ref\": \"sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8\",\n      \"received_at_s\": 0.61,\n      \"schema\": \"ciw.toolpoint-stream-update.v1\",\n      \"sequence\": 1,\n      \"observation\": {\n        \"clock_id\": \"synthetic.clock\",\n        \"completed_at_s\": 0.6,\n        \"configuration_ref\": \"sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6\",\n        \"cycle_evidence_ref\": \"sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40\",\n        \"cycle_id\": \"synthetic.cycle.0\",\n        \"frame\": \"synthetic.tool-frame\",\n        \"part_mapping\": {\n          \"evidence_ref\": \"sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240\",\n          \"items\": [\n            {\n              \"cavity_id\": \"cavity.1\",\n              \"serial\": \"p001\"\n            },\n            {\n              \"cavity_id\": \"cavity.2\",\n              \"serial\": \"p002\"\n            }\n          ],\n          \"status\": \"cavity_resolved\"\n        },\n        \"part_ref\": \"sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef\",\n        \"schema\": \"ciw.toolpoint-observation.v1\",\n        \"source_kind\": \"synthetic\",\n        \"started_at_s\": 0.0,\n        \"signals\": [\n          {\n            \"calibration_ref\": \"sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.1\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.1\",\n            \"source_ref\": \"sha256:6ffa2b6425c4b555cbe217ee68c94157ee3bdd4fc1101693b69dd9fbed0b907d\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 8000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.2\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.2\",\n            \"source_ref\": \"sha256:8be6d5f07a9c6a7779cfbc54312c8b679f0e8ee838925b7edc315772002aca71\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 18000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": null,\n              \"gate_id\": null,\n              \"kind\": \"nozzle\"\n            },\n            \"quantity\": \"melt_pressure\",\n            \"sensor_id\": \"sensor.nozzle\",\n            \"source_ref\": \"sha256:62eb6dfa455ed6c7968f03f9b0a302ddb31f1c708c99997923e2f47ab9b63c4c\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 8000000\n              }\n            ]\n          }\n        ]\n      }\n    },\n    {\n      \"final\": true,\n      \"previous_receipt_ref\": \"sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9\",\n      \"received_at_s\": 0.81,\n      \"schema\": \"ciw.toolpoint-stream-update.v1\",\n      \"sequence\": 2,\n      \"observation\": {\n        \"clock_id\": \"synthetic.clock\",\n        \"completed_at_s\": 0.8,\n        \"configuration_ref\": \"sha256:e084e97afea29ac5cacc7fea13ae57617c18bd70515a139991712a627c3d45b6\",\n        \"cycle_evidence_ref\": \"sha256:53017f22b8dade82d72fa7d39eb45c824f084dea37be36f800dd968aa1332d40\",\n        \"cycle_id\": \"synthetic.cycle.0\",\n        \"frame\": \"synthetic.tool-frame\",\n        \"part_mapping\": {\n          \"evidence_ref\": \"sha256:0185374887dd1749cd8659b80a4b9df0af2becbc97d7120e1c5c3661377ec240\",\n          \"items\": [\n            {\n              \"cavity_id\": \"cavity.1\",\n              \"serial\": \"p001\"\n            },\n            {\n              \"cavity_id\": \"cavity.2\",\n              \"serial\": \"p002\"\n            }\n          ],\n          \"status\": \"cavity_resolved\"\n        },\n        \"part_ref\": \"sha256:e3bd63b6b6b3b851692aad3e35519ad5498e1152a5d6cd478690005ff5fad4ef\",\n        \"schema\": \"ciw.toolpoint-observation.v1\",\n        \"source_kind\": \"synthetic\",\n        \"started_at_s\": 0.0,\n        \"signals\": [\n          {\n            \"calibration_ref\": \"sha256:e4bee109fd27d817930fdc4f26ed9777160fe19d13c6a4bd50d3cd6938009e83\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.1\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.1\",\n            \"source_ref\": \"sha256:1567ea9fbd3ee3f2500cf0cb75fd86ec9479a68bbc20ce146bcff5eaf18675f9\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 8000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.8,\n                \"value\": 7000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:8197a4b6fdca362918821d2516badb69f14cfcf5678aae26ab9003d7d2a2b62e\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": \"cavity.2\",\n              \"gate_id\": null,\n              \"kind\": \"end_of_fill\"\n            },\n            \"quantity\": \"cavity_pressure\",\n            \"sensor_id\": \"sensor.cavity.2\",\n            \"source_ref\": \"sha256:cb9f424f63037f22b96ccab527baf4835db7886d6e335f1890d2b4edc7ba94f8\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 18000000\n              },\n              {\n                \"expanded_uncertainty\": null,\n                \"time_s\": 0.8,\n                \"value\": 7000000\n              }\n            ]\n          },\n          {\n            \"calibration_ref\": \"sha256:5945346dabc396a78774fa502168db2c3290a17408fffec5027e3b9c7f1de5a6\",\n            \"calibration_valid_from_s\": 0,\n            \"calibration_valid_until_s\": 100,\n            \"clock_alignment_ref\": \"sha256:25fbc6819f8bd0b185796107e53ab7f3e9b98ec30553ae82eea8d64b9eac36c8\",\n            \"clock_id\": \"synthetic.clock\",\n            \"clock_skew_s\": 0,\n            \"frame\": \"synthetic.tool-frame\",\n            \"health\": \"good\",\n            \"location\": {\n              \"cavity_id\": null,\n              \"gate_id\": null,\n              \"kind\": \"nozzle\"\n            },\n            \"quantity\": \"melt_pressure\",\n            \"sensor_id\": \"sensor.nozzle\",\n            \"source_ref\": \"sha256:6dd85f59c25977f81d03f4a83960ce51eaf417e5abe311d77687815d721a818b\",\n            \"unit\": \"Pa\",\n            \"samples\": [\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0,\n                \"value\": 100000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.2,\n                \"value\": 1000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.4,\n                \"value\": 4000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.6,\n                \"value\": 8000000\n              },\n              {\n                \"expanded_uncertainty\": 10000,\n                \"time_s\": 0.8,\n                \"value\": 7000000\n              }\n            ]\n          }\n        ]\n      }\n    }\n  ],\n  \"receipts\": [\n    {\n      \"schema\": \"ciw.toolpoint-stream-receipt.v1\",\n      \"sequence\": 0,\n      \"previous_receipt_ref\": null,\n      \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n      \"update_ref\": \"sha256:c323b60c20ac2970fc33500012ef29aac7dc388af4d4207f66689d9e479212a4\",\n      \"assessment_ref\": \"sha256:426ccd347f793661ad4c164be982684cfb27ec1e5fbafb8a43c7cb1d5d902cf4\",\n      \"result_ref\": \"sha256:976e22f67b2a300ee5b96fd846ec5fae69f62edcbb5503465d6cf7f8298dabc5\",\n      \"status\": \"PENDING\",\n      \"receipt_ref\": \"sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8\"\n    },\n    {\n      \"schema\": \"ciw.toolpoint-stream-receipt.v1\",\n      \"sequence\": 1,\n      \"previous_receipt_ref\": \"sha256:2cbc940ccaf2839a6abf2d0a8ba28cf652c07ff5c1c69eeb75ed72dcc2c348f8\",\n      \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n      \"update_ref\": \"sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5\",\n      \"assessment_ref\": \"sha256:a96afe625b3b0c9c93a5ae965e5ac9ec9e211f24e15411fcdb95dc64302dee44\",\n      \"result_ref\": \"sha256:2cdc53912687b2df8e92ad005e0778512b17978c8ece8fdc91e7316a674d5a73\",\n      \"status\": \"HELD\",\n      \"receipt_ref\": \"sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9\"\n    },\n    {\n      \"schema\": \"ciw.toolpoint-stream-receipt.v1\",\n      \"sequence\": 2,\n      \"previous_receipt_ref\": \"sha256:7d918a8065f59b54ad1a7e55c349038fe01ef9bde64d7bf70f32a7ed57aef9f9\",\n      \"spec_ref\": \"sha256:cf9e92e95ec8d6f430d68ad5256b48b1485a5ff1450cb3c2076aa1ad3cd718bb\",\n      \"update_ref\": \"sha256:eea69095df2fb5d810dc1f2a3cd97e8a4f9ccb6b288eaf8bbc5f0f17038f45ff\",\n      \"assessment_ref\": \"sha256:c094d9415bb3f66cefc49704b0fd5dc251efcb7dae464f835c9bf6e1cc822587\",\n      \"result_ref\": \"sha256:ffc5cdaf35916ceeb850f0f99405da5dcab457347b20237804f5e5c6de1c4fde\",\n      \"status\": \"HELD\",\n      \"receipt_ref\": \"sha256:ed0295af7255175b23c57c6c2561c3daf96c0f34981675825518c67ce0b2dd05\"\n    }\n  ],\n  \"result\": {\n    \"schema\": \"ciw.toolpoint-stream-result.v1\",\n    \"status\": \"HELD\",\n    \"finalized\": true,\n    \"cycle_id\": \"synthetic.cycle.0\",\n    \"source_kind\": \"synthetic\",\n    \"captured_through_s_decimal\": \"0.8\",\n    \"declared_capture_to_receipt_s_decimal\": \"0.01\",\n    \"latest_assessment\": {\n      \"schema\": \"ciw.toolpoint-quality-assessment.v1\",\n      \"operation_id\": \"polymer.toolpoint-quality-assessment.v1\",\n      \"plan_ref\": \"sha256:ab6750a030f1f326be4a15ea43e5e83102c4e6ece81432422ff94801d71340ad\",\n      \"observation_ref\": \"sha256:a55219b5246df7aabbfd07eb7edcd8a27eb65f6f28673c9de2a1fdcb8106a718\",\n      \"cycle_id\": \"synthetic.cycle.0\",\n      \"source_kind\": \"synthetic\",\n      \"status\": \"INSUFFICIENT_EVIDENCE\",\n      \"rules\": [\n        {\n          \"rule_id\": \"sensor.cavity.1.pressure\",\n          \"sensor_id\": \"sensor.cavity.1\",\n          \"location\": {\n            \"cavity_id\": \"cavity.1\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"phase_id\": \"fill\",\n          \"feature\": \"peak\",\n          \"status\": \"PROCESS_SIGNATURE_ACCEPTABLE\",\n          \"reason\": \"WITHIN_DECLARED_LIMITS\",\n          \"feature_interval\": {\n            \"lower_decimal\": \"7990000\",\n            \"upper_decimal\": \"8010000\",\n            \"unit\": \"Pa\"\n          },\n          \"detected_at_relative_s_decimal\": \"0.8\"\n        },\n        {\n          \"rule_id\": \"sensor.cavity.2.pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"location\": {\n            \"cavity_id\": \"cavity.2\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"phase_id\": \"fill\",\n          \"feature\": \"peak\",\n          \"status\": \"INSUFFICIENT_EVIDENCE\",\n          \"reason\": \"UNKNOWN_MEASUREMENT_UNCERTAINTY\",\n          \"feature_interval\": null,\n          \"detected_at_relative_s_decimal\": null\n        },\n        {\n          \"rule_id\": \"sensor.nozzle.pressure\",\n          \"sensor_id\": \"sensor.nozzle\",\n          \"location\": {\n            \"cavity_id\": null,\n            \"gate_id\": null,\n            \"kind\": \"nozzle\"\n          },\n          \"phase_id\": \"fill\",\n          \"feature\": \"peak\",\n          \"status\": \"PROCESS_SIGNATURE_ACCEPTABLE\",\n          \"reason\": \"WITHIN_DECLARED_LIMITS\",\n          \"feature_interval\": {\n            \"lower_decimal\": \"7990000\",\n            \"upper_decimal\": \"8010000\",\n            \"unit\": \"Pa\"\n          },\n          \"detected_at_relative_s_decimal\": \"0.8\"\n        }\n      ],\n      \"cavities\": {\n        \"cavity.1\": {\n          \"status\": \"PROCESS_SIGNATURE_ACCEPTABLE\",\n          \"rule_ids\": [\n            \"sensor.cavity.1.pressure\",\n            \"sensor.nozzle.pressure\"\n          ]\n        },\n        \"cavity.2\": {\n          \"status\": \"INSUFFICIENT_EVIDENCE\",\n          \"rule_ids\": [\n            \"sensor.cavity.2.pressure\",\n            \"sensor.nozzle.pressure\"\n          ]\n        }\n      },\n      \"hypotheses\": [],\n      \"mapping_status\": \"RESOLVED_DECLARATION\",\n      \"containment\": {\n        \"held_serials\": [\n          \"p002\"\n        ],\n        \"action\": \"RECORD_QUALITY_HOLD\",\n        \"physical_action\": \"not_performed\"\n      },\n      \"scope\": \"supplied limits; retained piecewise-linear signals; conditional on declared aligned times\",\n      \"final_part_conformity\": \"not_assessed\",\n      \"authority\": {\n        \"physical_qualification\": \"not_established\",\n        \"sensor_authentication\": \"not_established\",\n        \"reference_qualification\": \"not_established\",\n        \"hardware_actuation\": \"not_performed\",\n        \"physical_containment\": \"not_performed\",\n        \"state_admission\": \"not_performed\",\n        \"shipment_release\": \"not_authorized\",\n        \"same_shot_control\": \"not_implemented\"\n      }\n    },\n    \"latched_findings\": [\n      {\n        \"kind\": \"SAMPLED_LIMIT_VIOLATION\",\n        \"rule_id\": \"sensor.cavity.2.pressure\",\n        \"cavity_id\": \"cavity.2\",\n        \"first_sequence\": 1,\n        \"first_received_at_s\": 0.61,\n        \"first_update_ref\": \"sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5\",\n        \"detail\": {\n          \"rule_id\": \"sensor.cavity.2.pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"cavity_id\": \"cavity.2\",\n          \"kind\": \"VALID_SAMPLED_LIMIT_VIOLATION\",\n          \"sample_index\": 3,\n          \"sample_ref\": \"sha256:56c3caf1d5e7fbe67dacba3c69fa3f4c0e1f3f043de0e69f8f30de8d614d6280\",\n          \"sample_time_s_decimal\": \"0.6\",\n          \"lower_decimal\": \"17990000\",\n          \"upper_decimal\": \"18010000\"\n        },\n        \"finding_ref\": \"sha256:da9f9ab15638e66c83afd84b6722eec718c3753a7c85d12f835abdc6ce920cbb\"\n      },\n      {\n        \"kind\": \"EVALUATOR_DEVIATION\",\n        \"rule_id\": \"sensor.cavity.2.pressure\",\n        \"cavity_id\": \"cavity.2\",\n        \"first_sequence\": 1,\n        \"first_received_at_s\": 0.61,\n        \"first_update_ref\": \"sha256:3d0909c3dcaef67b3d01d2e2a99adfb4ce18d3b975b3d9d3b8a8939d108486f5\",\n        \"detail\": {\n          \"rule_id\": \"sensor.cavity.2.pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"location\": {\n            \"cavity_id\": \"cavity.2\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"phase_id\": \"fill\",\n          \"feature\": \"peak\",\n          \"status\": \"DEVIATION\",\n          \"reason\": \"FEATURE_ABOVE_LIMIT\",\n          \"feature_interval\": {\n            \"lower_decimal\": \"17990000\",\n            \"upper_decimal\": \"18010000\",\n            \"unit\": \"Pa\"\n          },\n          \"detected_at_relative_s_decimal\": \"0.6\"\n        },\n        \"finding_ref\": \"sha256:4808cc6b595a185865c87a57254f8c6cde3a70b2a0cf57f68678561f5f4c04e8\"\n      },\n      {\n        \"kind\": \"COMPLETED_WINDOW_NOT_CLEARED\",\n        \"rule_id\": \"sensor.cavity.2.pressure\",\n        \"cavity_id\": \"cavity.2\",\n        \"first_sequence\": 2,\n        \"first_received_at_s\": 0.81,\n        \"first_update_ref\": \"sha256:eea69095df2fb5d810dc1f2a3cd97e8a4f9ccb6b288eaf8bbc5f0f17038f45ff\",\n        \"detail\": {\n          \"rule_id\": \"sensor.cavity.2.pressure\",\n          \"sensor_id\": \"sensor.cavity.2\",\n          \"location\": {\n            \"cavity_id\": \"cavity.2\",\n            \"gate_id\": null,\n            \"kind\": \"end_of_fill\"\n          },\n          \"phase_id\": \"fill\",\n          \"feature\": \"peak\",\n          \"status\": \"INSUFFICIENT_EVIDENCE\",\n          \"reason\": \"UNKNOWN_MEASUREMENT_UNCERTAINTY\",\n          \"feature_interval\": null,\n          \"detected_at_relative_s_decimal\": null\n        },\n        \"finding_ref\": \"sha256:8fe8a8967fc91712b0e6641307350a373420c5b19c0331e0be500682381eb400\"\n      }\n    ],\n    \"cavities\": {\n      \"cavity.1\": {\n        \"state\": \"NO_PROCESS_HOLD_IDENTIFIED\",\n        \"finding_refs\": []\n      },\n      \"cavity.2\": {\n        \"state\": \"HELD\",\n        \"finding_refs\": [\n          \"sha256:da9f9ab15638e66c83afd84b6722eec718c3753a7c85d12f835abdc6ce920cbb\",\n          \"sha256:4808cc6b595a185865c87a57254f8c6cde3a70b2a0cf57f68678561f5f4c04e8\",\n          \"sha256:8fe8a8967fc91712b0e6641307350a373420c5b19c0331e0be500682381eb400\"\n        ]\n      }\n    },\n    \"scope\": \"append-only retained prefixes; supplied limits; no measured hardware latency or product release\",\n    \"authority\": {\n      \"hardware_actuation\": \"not_performed\",\n      \"physical_containment\": \"not_performed\",\n      \"physical_qualification\": \"not_established\",\n      \"state_admission\": \"not_performed\",\n      \"source_authentication\": \"not_established\",\n      \"shipment_release\": \"not_authorized\",\n      \"action_authorized\": false\n    }\n  },\n  \"result_ref\": \"sha256:ffc5cdaf35916ceeb850f0f99405da5dcab457347b20237804f5e5c6de1c4fde\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "qc",
+        "store",
+        "verify",
+        "quality.sqlite3",
+        "cycle0",
+        "--expected-head-ref",
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"Stored head differs from independently retained head anchor\", \"commit_outcome\": \"not_confirmed_by_this_response\", \"recovery\": \"Inspect the store or retry the identical update; never regenerate its parent silently\"}\n"
+    },
+    {
+      "arguments": [
+        "qc",
+        "detector",
+        "verify",
+        "detector.json",
+        "--expected-protocol-ref",
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"Study differs from the independently retained anchor\"}\n"
+    },
+    {
+      "arguments": [
+        "qc",
+        "outcome",
+        "verify",
+        "outcome.json",
+        "--expected-protocol-ref",
+        "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      ],
+      "expected_exit": 1,
+      "actual_exit": 1,
+      "stdout": "",
+      "stderr": "{\"status\": \"REFUSE\", \"reason\": \"Protocol differs from the separately retained anchor\"}\n"
+    },
+    {
+      "arguments": [
+        "manufacture",
+        "demo",
+        "--quality-control",
+        "--output",
+        "manufacturing.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.polymer-manufacturing-report.v2\",\n  \"output\": \"manufacturing.json\",\n  \"status\": \"RECORDED_NOT_RELEASED\",\n  \"result_ref\": \"sha256:f8ae57bf66f34233111cac7bbbd09cfd3a872cd3e311bc7bf719ba21b1a96670\",\n  \"orders\": {\n    \"WO-COMPONENT\": {\n      \"requested_good_quantity\": 3,\n      \"started_quantity\": 4,\n      \"accepted_quantity\": 3,\n      \"scrapped_quantity\": 1,\n      \"target_met_in_records\": true\n    },\n    \"WO-ASSEMBLY\": {\n      \"requested_good_quantity\": 1,\n      \"started_quantity\": 1,\n      \"accepted_quantity\": 1,\n      \"scrapped_quantity\": 0,\n      \"target_met_in_records\": true\n    }\n  },\n  \"shipment\": {\n    \"status\": \"HELD\",\n    \"reasons\": [\n      \"Physical qualification is not established\",\n      \"Operator and release authority are not authenticated\",\n      \"No certificate or shipment adapter is implemented\"\n    ]\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "manufacture",
+        "verify",
+        "manufacturing.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "stdout": "{\n  \"schema\": \"ciw.manufacturing-replay-verification.v1\",\n  \"status\": \"PASS\",\n  \"verification_id\": \"verification-febee6cac5bb42568bfd34264ec111a1\",\n  \"evaluation_id\": \"execution-f92370c928be449e8a0ddc968b17e541\",\n  \"request_ref\": \"sha256:066a8f5e0ee60519d42213a04edfedf1738e316351d9b1a66921d1229cf04db0\",\n  \"result_ref\": \"sha256:f8ae57bf66f34233111cac7bbbd09cfd3a872cd3e311bc7bf719ba21b1a96670\",\n  \"scope\": \"content integrity and same-implementation deterministic replay\",\n  \"authority\": {\n    \"hardware_actuation\": \"not_performed\",\n    \"physical_qualification\": \"not_established\",\n    \"state_admission\": \"not_performed\",\n    \"operator_authentication\": \"not_established\",\n    \"shipment_release\": \"not_authorized\"\n  }\n}\n",
+      "stderr": ""
+    }
+  ],
+  "legacy_snapshot_adapter": "excluded; not distributed or qualified",
+  "physical_qualification": "not_established",
+  "live_acquisition": "not_performed",
+  "source_authentication": "not_established",
+  "shipment_release": "not_authorized"
+}

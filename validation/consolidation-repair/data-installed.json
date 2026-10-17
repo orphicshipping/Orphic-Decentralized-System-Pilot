@@ -1,0 +1,195 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "linux",
+  "source": {
+    "tests": 46,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed": {
+    "tests": 46,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verified_package_files": 691,
+  "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+  "native_command_journeys": 10,
+  "native_commands": [
+    {
+      "arguments": [
+        "retain",
+        "manufacturing.json",
+        "--family",
+        "manufacturing-report",
+        "--dataset-id",
+        "native-0",
+        "--revision",
+        "1",
+        "--recorded-at",
+        "2026-10-05T21:00:00Z",
+        "--output",
+        "source-0.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "add",
+        "source-0.json",
+        "--label",
+        "native-0",
+        "--workspace",
+        "empty.json",
+        "--output",
+        "workspace-0.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "retain",
+        "stream-0.json",
+        "--family",
+        "toolpoint-stream-report",
+        "--dataset-id",
+        "native-1",
+        "--revision",
+        "1",
+        "--recorded-at",
+        "2026-10-05T21:00:00Z",
+        "--output",
+        "source-1.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "add",
+        "source-1.json",
+        "--label",
+        "native-1",
+        "--workspace",
+        "workspace-0.json",
+        "--output",
+        "workspace-1.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "retain",
+        "stream-1.json",
+        "--family",
+        "toolpoint-stream-report",
+        "--dataset-id",
+        "native-2",
+        "--revision",
+        "1",
+        "--recorded-at",
+        "2026-10-05T21:00:00Z",
+        "--output",
+        "source-2.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "add",
+        "source-2.json",
+        "--label",
+        "native-2",
+        "--workspace",
+        "workspace-1.json",
+        "--output",
+        "workspace-2.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "review-toolpoint",
+        "--manufacturing-source-id",
+        "source:sha256:68a20d22e2db79abcc99acbb505a8473e49c02b32d4e2e4108d503d963b5505f",
+        "--stream-source-id",
+        "source:sha256:fd19948c9bc18597e23d9fe917ae523c705ea4ba35877f1b0e41dd3c1a6dd999",
+        "--stream-source-id",
+        "source:sha256:dab25584fb7c34057107e923ed4478f54d93d02d8562743d54f483e70a79fd5b",
+        "--assessed-at-s",
+        "12",
+        "--workspace",
+        "workspace-2.json",
+        "--output",
+        "reviewed.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "review-toolpoint",
+        "--manufacturing-source-id",
+        "source:sha256:68a20d22e2db79abcc99acbb505a8473e49c02b32d4e2e4108d503d963b5505f",
+        "--stream-source-id",
+        "source:sha256:fd19948c9bc18597e23d9fe917ae523c705ea4ba35877f1b0e41dd3c1a6dd999",
+        "--stream-source-id",
+        "source:sha256:dab25584fb7c34057107e923ed4478f54d93d02d8562743d54f483e70a79fd5b",
+        "--assessed-at-s",
+        "12",
+        "--workspace",
+        "workspace-2.json",
+        "--output",
+        "replayed.json"
+      ],
+      "expected_exit": 0,
+      "actual_exit": 0
+    },
+    {
+      "arguments": [
+        "review-toolpoint",
+        "--manufacturing-source-id",
+        "source:sha256:68a20d22e2db79abcc99acbb505a8473e49c02b32d4e2e4108d503d963b5505f",
+        "--stream-source-id",
+        "source:sha256:fd19948c9bc18597e23d9fe917ae523c705ea4ba35877f1b0e41dd3c1a6dd999",
+        "--stream-source-id",
+        "source:sha256:dab25584fb7c34057107e923ed4478f54d93d02d8562743d54f483e70a79fd5b",
+        "--assessed-at-s",
+        "12",
+        "--workspace",
+        "workspace-2.json",
+        "--output",
+        "reviewed.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2
+    },
+    {
+      "arguments": [
+        "review-toolpoint",
+        "--manufacturing-source-id",
+        "source:sha256:fd19948c9bc18597e23d9fe917ae523c705ea4ba35877f1b0e41dd3c1a6dd999",
+        "--stream-source-id",
+        "source:sha256:dab25584fb7c34057107e923ed4478f54d93d02d8562743d54f483e70a79fd5b",
+        "--assessed-at-s",
+        "12",
+        "--workspace",
+        "workspace-2.json",
+        "--output",
+        "refused.json"
+      ],
+      "expected_exit": 2,
+      "actual_exit": 2
+    }
+  ],
+  "sqlite_bytes_unchanged": true,
+  "physical_qualification": "not_established",
+  "state_admission": "not_performed",
+  "shipment_release": "not_authorized"
+}

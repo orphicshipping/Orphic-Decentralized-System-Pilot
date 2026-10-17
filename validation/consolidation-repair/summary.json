@@ -1,0 +1,129 @@
+{
+  "schema": "notations.consolidation-repair-evidence.v1",
+  "reviewed_main": "8a6beb844a4a3c3944637b1e3f386d48d28507d0",
+  "native_source": {
+    "revision": "4cbbdd61074d8cf37eba9d560bb83d2865b8e93d",
+    "parent": "114060739239cc245a732ac74d16d5c876eaa08e",
+    "tree": "bfd617fd602502aefed02d8b0bac9bc41cf7ff3d",
+    "matches_reviewed_main_subtree": true,
+    "runtime_execution_pins_changed": false,
+    "source_contract_tests_passed": 300
+  },
+  "regression_reports": {
+    "repair-regression.xml": {
+      "sha256": "24d141eecf92158da71faee82ac7bcb932bd996c621ee8c13816b08386a8937f",
+      "retained": "repair-regression.xml.gz",
+      "counts": {
+        "tests": 662,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    },
+    "procedural-final-2.xml": {
+      "sha256": "cff1bca9a536dbc1a22c24b524512cbf7cd70b1243e10e5e37f746544ecfdaac",
+      "retained": "procedural-final-2.xml.gz",
+      "counts": {
+        "tests": 315,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      }
+    }
+  },
+  "installed_gates": {
+    "polymer": {
+      "source": {
+        "tests": 366,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "installed": {
+        "tests": 366,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native_command_journeys": 8,
+      "verified_package_files": 691,
+      "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+      "receipt": "polymer-installed.json"
+    },
+    "data": {
+      "source": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "installed": {
+        "tests": 46,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native_command_journeys": 10,
+      "verified_package_files": 691,
+      "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+      "receipt": "data-installed.json"
+    },
+    "toolpoint": {
+      "source": {
+        "tests": 1024,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "installed": {
+        "tests": 1024,
+        "failures": 0,
+        "errors": 0,
+        "skipped": 0
+      },
+      "native_command_journeys": 18,
+      "verified_package_files": 691,
+      "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+      "receipt": "toolpoint-installed.json"
+    }
+  },
+  "console": {
+    "python_http_mcp_tests_passed": 5,
+    "DOM_tests_passed": 3,
+    "browser_journey_checks_passed": 4
+  },
+  "industrial_lab_browser_checks_passed": 7,
+  "CI_policy_tests_passed": 18,
+  "source_environment": "GitHub blob reconstruction; incomplete native Git history",
+  "qualification": {
+    "full_history": "hosted_check_required",
+    "Windows": "hosted_check_required",
+    "private_provider_access": "blocked_missing_selected_repository_credential",
+    "remote_transport": "not_qualified",
+    "physical": "not_performed"
+  },
+  "counts_overlap": true,
+  "code_commit": "ba0ed773ff1e29271cfa0565a1c663e3f7df36ce",
+  "changed_files_sha256": {
+    ".github/workflows/consolidated-integration.yml": "4309715d99192ff491ecd87895cf0be765355e14f28090bc5bf1374fe570a409",
+    ".github/workflows/mcp-operator-console.yml": "97c1a6c6d41db8bbd38fb8751ef7a831917c725c35b728e0133bd6019a85f66f",
+    "docs/CONSOLIDATION.md": "d21590927452a2f728b7b6255480bf2320e972aa5154d3afae98e4cb9f8a3358",
+    "docs/DEVELOPMENT_GAPS.md": "2c764ae02eebaf7e7537ebaac0ab620e7d479523c6e68c59250a86c34194650b",
+    "docs/POST_CONSOLIDATION_REPAIR_20261017.md": "e637f17c6ddcd01d810c7b669855573dd024342cd539849ff9f7649a8a2d03db",
+    "instruments/manifest.json": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743",
+    "scripts/check_industrial_lab_browser.py": "5ad1d108ad0d7c7e5fbf1b78e1ad7d4b475e6b36bc49755a3780038128b295a1",
+    "scripts/check_manufacturing_data_bridge_installed.py": "286b74bc5a59b7ba7f5c6a14a93c3bfd4b39367f36a5a4cb78e9777052cecb15",
+    "scripts/check_polymer_manufacturing_installed.py": "346b2ef367c3065cea536aa26f3daa59efd051355db7fedc7b25867506642e85",
+    "scripts/check_toolpoint_upgrades_installed.py": "5404694092c8d4461b1f113ce971725c0b45731dd6695030f8c3d975e1005c46",
+    "scripts/installed_command.py": "285e926169bd9b29cef03cd4d8863693a9579ace1427c88960e0a0d324db5315",
+    "src/ciw/procedural_server.py": "5f91c43c87e71a777fbbdac7f80cd43cab6de41b400beba8354e45050b56d560",
+    "tests/test_procedural_integration_audit.py": "697632959ed59d36a764801c2ac4cf23db4490304ac32c704c248fe35ae19287",
+    "tests/test_installed_command.py": "284f932d0cdf51d2081c406c2d16b16c0bd910c477edd8077b6ae32e2ec18bf9",
+    "tools/mcp-operator-console/VERIFICATION.md": "b88864261fd57b34b9c30b495557e42230abd94ee0c4e7ce314896507401a0de",
+    "tools/mcp-operator-console/tests/browser_journey.py": "e6efc745715b60e627ab7e675e3b5ed48255e7631eb7cef167acb5bada403189",
+    ".github/workflows/polymer-manufacturing.yml": "b09cd331d67a7df8a6cb5cc57474178d3df10d2c03bde3c92278aa943a05ace9",
+    ".github/workflows/manufacturing-data-bridge.yml": "5ceca5f955124aefaa26700cfc3df7b335a9e9c9228160822772e71b9c18ae43",
+    ".github/workflows/toolpoint-upgrades.yml": "80498d0d7dc4e5330566b3368652cda667b620551444b2b74cf2ef4856779314"
+  },
+  "unchanged_verifier": "scripts/monorepo.py"
+}

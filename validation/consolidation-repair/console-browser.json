@@ -1,0 +1,14 @@
+{
+  "status": "PASS",
+  "browser_version": "143.0.7499.0",
+  "checks": [
+    "authenticated_browser_discovers_14_real_MCP_tools",
+    "plan_creation_requires_fresh_confirmation_and_remains_unadmitted",
+    "explicit_admission_submission_and_retained_execution_inspection",
+    "browser_reads_the_same_retained_plan_resource"
+  ],
+  "page_errors": [],
+  "scope": "local synthetic browser/HTTP/MCP integration",
+  "remote_transport": "not_qualified",
+  "physical_qualification": "not_performed"
+}

@@ -1,0 +1,21 @@
+{
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "platform": "linux",
+  "wheel_sha256": "0bb157fb6e5ec9267e3e0e8329cb26a8e4ea1df75825d0f61fc5972c8ac00e30",
+  "source": {
+    "tests": 366,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed": {
+    "tests": 366,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "verified_package_files": 691,
+  "native_command_journeys": 8,
+  "physical_qualification": "not_performed",
+  "private_provider_qualification": "not_performed"
+}
