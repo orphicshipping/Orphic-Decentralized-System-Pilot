@@ -40,9 +40,16 @@ def call(name, arguments, confirmed=False):
 receipt = Path(config['receipt'])
 if config.get('resume'):
     saved = json.loads(receipt.read_text())
+    evidence = config['restart_evidence']
+    assert evidence['status']['state'] == 'inactive', 'Observe the stopped host before recovery'
+    api('/api/tools', authenticated=False)
+    assert len(api('/api/tools')) == saved['tool_count']
+    assert len(call('ncp_capabilities_list', {})['items']) == saved['operation_count']
     retained = call('ncp_run_get',{'run_id':saved['run']['run_id']})
     assert retained==saved['run'], 'Retained result changed across host restart'
     saved['restart_recovery_verified']=True
+    saved['restart_evidence']=evidence
+    saved['panel_url']=config['url']
     receipt.write_text(json.dumps(saved,indent=2)+'\n')
     print(json.dumps({'restart_recovery_verified':True,'run_id':retained['run_id']}),flush=True)
 else:

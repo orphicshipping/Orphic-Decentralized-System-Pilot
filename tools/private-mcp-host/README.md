@@ -56,6 +56,13 @@ stdio MCP, not a new native Streamable HTTP MCP endpoint.
 
 ## Verification
 
+`panel/` contains a reproducible source copy of the owner-private Site, including
+its retained offline explorer. Site source revision:
+`a72d4bfd13f71c69843ff2f73bc4f372f2110506`. Run `npm ci --ignore-scripts`,
+`npm run build`, and `npm test` in that directory. Push changes to the existing
+Site source repository before publishing the matching commit/archive; the GitHub
+copy alone does not deploy a Site. No secret value is present in either source.
+
 ```sh
 node --test tools/private-mcp-host/test_gateway.mjs
 NCP_TRANSACTION_STATE=/absolute/task-owned-test/state python -m unittest discover \

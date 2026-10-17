@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/notationsystems/Notations-Control-Protocol",
+  "revision": "cc5d7f31cfeaeb4d897e0864e0fcc560355a0d39",
+  "mode": "interactive_repository_snapshot",
+  "backend_connected": false,
+  "qualification": "not_performed_by_preview",
+  "catalog_counts": {
+    "commands": 85,
+    "workflows": 29,
+    "builtin_operations": 2
+  },
+  "generators": [
+    "ciw.tooling_visualizer.render_html",
+    "net board demo"
+  ],
+  "board_scope": "synthetic oscillator; inspect and export edit proposals; no execution",
+  "files": {
+    "explorer.html": "c6251486b9443e877dab17db6f8a2d60f63c9f49813233669bbfdef5566bbcf0",
+    "catalog.json": "b9426ccd52fd648326cfb38fab4ef99505761d263ba1376db4f5ea724aa8b0e9",
+    "board.html": "e2a4a88cc19e055206ac183e9e124ee1c184ab178ad0204fe6345a006f061cea",
+    "board.json": "286ff5cb3792a16d28068c55ee88ff04de8b68ab1c629918ab05def710802227"
+  }
+}

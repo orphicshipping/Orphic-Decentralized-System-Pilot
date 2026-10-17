@@ -28,6 +28,8 @@ docs/adr/
 !/tools/private-mcp-host/
 !/tools/private-mcp-host/**
 /tools/private-mcp-host/**/__pycache__/
+/tools/private-mcp-host/panel/node_modules/
+/tools/private-mcp-host/panel/dist/
 
 /.julia-depot/
 /.julia-depot2/
