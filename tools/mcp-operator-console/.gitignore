@@ -1,0 +1,10 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+runtime/
+console-state/
+*.token
+.env
+.env.*
+*.pem

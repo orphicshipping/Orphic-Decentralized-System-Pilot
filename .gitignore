@@ -23,6 +23,8 @@ docs/adr/
 /tools/*
 !/tools/bevy-render-view/
 !/tools/bevy-render-view/**
+!/tools/mcp-operator-console/
+!/tools/mcp-operator-console/**
 
 /.julia-depot/
 /.julia-depot2/
