@@ -1,0 +1,168 @@
+{
+  "actuation_performed": false,
+  "base": {
+    "commit": "029444131ce5abb7793b7b50f94efbb21242e693",
+    "pull_request": 232
+  },
+  "candidate_files": {
+    ".github/workflows/metrology-contract.yml": "334345773ec064a9f6f34a46414b1317914f21585d632264972c7cf2f573a325",
+    ".github/workflows/metrology-sampled.yml": "8e82844a0d4c60a7c497572a2b206280a100d0f6ecf8e3521914e76c71ab6f39",
+    "docs/METROLOGY_CONTRACT.md": "c9df2882ee5264fd20f2433c486cdb12a72c2861e4ff6543e550ec7e977c857a",
+    "docs/METROLOGY_IMPLEMENTATION_STATUS.md": "d3a2ea675b6acd54191131653bf9b681841613bb19aa869ae4d8ed6a07660ca3",
+    "docs/METROLOGY_REMOTE.md": "7b8cf783541693f65831fcc432e2b387c01cf05f2ac861b88a2f90c400205716",
+    "docs/METROLOGY_REVIEW.md": "6e34589a68d002cd192f5d612f9b089879fd64d342329045aa756984af9c38a4",
+    "docs/METROLOGY_SAMPLED_PROFILES.md": "22706246df4e2c7a0202698d24c156fd9519de47ef1d5e98649d310527bf589f",
+    "examples/metrology-sampled/freight-envelope.v1.json": "2e15720296f9b955102a67cdbf4f76dae1fc7fa47dacea4c3fff8100c46fd921",
+    "examples/metrology-sampled/sampled-plane.v1.json": "4d68f48471ff07cd85681b6b702032227b0900baadc4c09147a08dcf22fabdb1",
+    "examples/metrology-sampled/visible-lean.v1.json": "aab03be648be65699f61e9691bd5d512d04d22d8501a25549b3c5c3de536810b",
+    "pyproject.toml": "85c3f5956e8fe76ad046d5c04320ce9fb613d3c7f7e6ba26245bbe308c70b48c",
+    "src/ciw/agent_mcp.py": "abeb845572d476c5e24c0ee48e69de8cc662391e4c318867750d8cd43d5d5ea7",
+    "src/ciw/metrology_audit.py": "ef2ab2a481e7aefdcb85fe073e49fabce63a2470abb4169c0a3f35d6765bff3c",
+    "src/ciw/metrology_contract.py": "cad588d4a841ab0b6ec637117d8b7985707360283d1ae03641bc963a76fbf7a6",
+    "src/ciw/metrology_ingress.py": "b65c340cbcc8b0ef2c6181bf229a3d4d0d36c2b2b207daff956eef56830bbd3b",
+    "src/ciw/metrology_numeric.py": "fc5b5f2e31f778a3ce401ff2c64cf4bfd609ff250a619f2c3c2b394d18999a0b",
+    "src/ciw/metrology_remote.py": "2434b46d08c5400a570c271ffc6cb50c5e6ead58ff34944cf2b20b4e675e8edf",
+    "src/ciw/metrology_review.py": "d37b746f78ad4787408fb77f03b4db053d0022a28851f6bcfc2cd36badc9796c",
+    "src/ciw/metrology_workflow.py": "76a4cc5885c020208d49cc7fc94d0cd056467f6c68d4a5ceb26b5316d883033b",
+    "tests/test_metrology_contract.py": "8f6c5cd5ed2308f1b70b52d7d8afcfcbd5666a432e402a368f75fdb885055d65",
+    "tests/test_metrology_profiles.py": "0bab66cefde5bdc6810933c5f34a1d599b1793267c5b508d1e654b388c917439",
+    "tests/test_metrology_remote.py": "670235ada3e22106c48b39c2ea4ea1f97459368ea258c7a3808c0d456a9029fd",
+    "tests/test_metrology_review.py": "b8115dd394e99b32722fba5ce197d361e9c33d67ec0aedc65a01503acea48253"
+  },
+  "checkpoint_wheels": {
+    "contract": {
+      "file": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+      "sha256": "de3c682d77b68642ebd7a97f9603f2b7043554b46b91464730c634d6973c5050"
+    },
+    "review": {
+      "file": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+      "sha256": "47e0577b45a90da65685f9aec134dde0d78828154ddf8bfad338cff73627545d"
+    },
+    "sampled": {
+      "file": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+      "sha256": "dacc7370668161fbb4eeec91cf73b5dd1e43af7dfb7d14b56682522bc7e10d20"
+    }
+  },
+  "checks": {
+    "bim-native-interop": {
+      "compressed_sha256": "0c3bf7881383aced010f12a73438f57a5edcf54ead39d36796d3d02b2e5af11b",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "bim-native-interop.junit.xml.gz",
+      "junit_sha256": "e57defb4491bb55f2c419e7ddf4107275caf31007788684725e511e8cf20e134",
+      "skipped": 0,
+      "tests": 9
+    },
+    "contract-checkpoint": {
+      "compressed_sha256": "3bb03a2174cac61eefde9cb646f8135ea74714a0dcd5f52c341a156ec4ed0917",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "contract-checkpoint.junit.xml.gz",
+      "junit_sha256": "0e0c82c7ea60dd4a8aa184b116ba348a34ea5fa5497fae4df476056dfc42088c",
+      "skipped": 0,
+      "tests": 14
+    },
+    "focused-final": {
+      "compressed_sha256": "94e71682c9bde423e54db5c8ff28a0213807201a0d3f0b15bd4f69446e2787d5",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "focused-final.junit.xml.gz",
+      "junit_sha256": "62ad64d2c9b6c90c22a458c42e943e11d28c1f8aefa4f2f0c6b2cef4429042f9",
+      "skipped": 0,
+      "tests": 74
+    },
+    "installed-wheel": {
+      "compressed_sha256": "b84031176a5a8753a743fbff400d19edccec13fc28d25c51010e017143dc7ac6",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "installed-wheel.junit.xml.gz",
+      "junit_sha256": "72818c2d8336d2a921d8e2ffe82e2deff312585b9ccb24cb39509ca53b38dd57",
+      "skipped": 0,
+      "tests": 473
+    },
+    "native-scan-likelihood": {
+      "compressed_sha256": "ff505f16ad58a4cadc396dcf0b6bc54f1f8c84aebabea598039547ba0a5d753e",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "native-scan-likelihood.junit.xml.gz",
+      "junit_sha256": "745e06fd5c2aa4a9e03d4e06ec2368440e2ea403755e77d623a2ed8eeca3898e",
+      "skipped": 0,
+      "tests": 12
+    },
+    "review-checkpoint": {
+      "compressed_sha256": "38d23328a76fb2879dee74918f082885459f99cb2da53b592b8c7caf6499d30c",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "review-checkpoint.junit.xml.gz",
+      "junit_sha256": "e61f91649f2491b480f6be6ca9fc63ec3b1e20999dc8b9106cfd95e037c5bf70",
+      "skipped": 0,
+      "tests": 70
+    },
+    "sampled-checkpoint": {
+      "compressed_sha256": "5b8d5dba4eae88956a5558d152ff94c68250eee23e6ab5e2585eaba4a54adda8",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "sampled-checkpoint.junit.xml.gz",
+      "junit_sha256": "3ea05d6c529b0f437b626c611e5690105b067d585a6c6430ecef3803edfaabda",
+      "skipped": 0,
+      "tests": 55
+    },
+    "source-regressions": {
+      "compressed_sha256": "f53d32df5a2d7c6a41b13aec23cc277bf99769780f11d429566063c8a4c1e899",
+      "errors": 0,
+      "failures": 0,
+      "junit_file": "source-regressions.junit.xml.gz",
+      "junit_sha256": "5770c058d7eb739b753605f154cdec54bc779a6c843316239bb7b896b8ef8593",
+      "skipped": 0,
+      "tests": 479
+    }
+  },
+  "date": "2026-10-17",
+  "deployment_performed": false,
+  "physical_qualification": "not_established",
+  "release_ledger_updated": false,
+  "review_stack": [
+    {
+      "commit": "160e22cecdb67a1cdf16105b4e04a3c304fab92a",
+      "pr": 236
+    },
+    {
+      "commit": "ec70f6d1259745a39417746e8266a2a8a46e7eac",
+      "pr": 237
+    },
+    {
+      "commit": "46f4388b11000047450c7f2ae76237b8c1ac6bb6",
+      "pr": 238
+    }
+  ],
+  "runtime": {
+    "contract_sha256": "cad588d4a841ab0b6ec637117d8b7985707360283d1ae03641bc963a76fbf7a6",
+    "numpy": "2.4.3",
+    "provider": "ciw.metrology-numeric",
+    "revision": "1",
+    "source_sha256": "fc5b5f2e31f778a3ce401ff2c64cf4bfd609ff250a619f2c3c2b394d18999a0b"
+  },
+  "schema": "ciw.metrology-software-checkpoint.v1",
+  "scope": "synthetic software candidate; no physical qualification or deployment",
+  "test_harness_corrections": [
+    "Initial installed collection lacked test_workcell_smith helper; copied unchanged helper",
+    "Initial installed run had 19 failures from missing measured-thermal fixture and test_link_study helper; copied unchanged fixtures/helpers and reran all 473 selected installed tests successfully",
+    "Two initial new tests assumed JSON whitespace or decimal display formatting; changed assertions to compare parsed values"
+  ],
+  "unrun_or_external": [
+    "No physical BIM/manufacturing/freight/lean measurements or held-out physical references acquired",
+    "No normative GD&T control qualification or independently reviewed standard examples",
+    "No production hosted TLS/identity/deployment, hardware latency/dropout, Windows/native/SP1/private-provider qualification",
+    "No full repository test suite; selected relevant regressions only",
+    "Hosted CI status recorded separately from local evidence"
+  ],
+  "warnings": [
+    "Two existing Board SDK tests emit pytest record_property/xunit2 compatibility warnings"
+  ],
+  "wheel_identity": {
+    "installed_package": "/workspace/scratch/60e158b62a68/repair-env/lib/python3.12/site-packages/ciw",
+    "matched_source_wheel_installed_files": 700,
+    "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+    "wheel_sha256": "cd18566b2928d147e4cb73bcdbbdb0d2318423f431c91c494c2cfe82010c1a23"
+  }
+}

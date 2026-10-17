@@ -1,0 +1,35 @@
+name: Bounded sampled metrology
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/metrology_*.py'
+      - 'src/ciw/agent_mcp.py'
+      - 'tests/test_metrology_*.py'
+      - 'examples/metrology-sampled/**'
+      - 'pyproject.toml'
+      - '.github/workflows/metrology-sampled.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  sampled:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        python: ['3.12', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python }}'
+      - run: python -m pip install '.[dev,metrology-pilot]'
+      - run: python -m pytest -q tests/test_metrology_contract.py tests/test_metrology_profiles.py tests/test_metrology_review.py tests/test_metrology_remote.py tests/test_reference_comparison.py tests/test_agent_recovery.py tests/test_board_refit_mcp.py --junitxml=metrology-results.xml
+      - run: python -m pip wheel --no-deps . -w dist
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: metrology-results-${{ matrix.python }}
+          path: |
+            metrology-results.xml
+            dist/*.whl
