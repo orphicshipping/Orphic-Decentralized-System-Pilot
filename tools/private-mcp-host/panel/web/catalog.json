@@ -1,0 +1,1607 @@
+{
+  "schema": "ciw.operator-catalog.v1",
+  "read_only": true,
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_catalog",
+  "commands": [
+    {
+      "command": "net spatial",
+      "purpose": "Inspect bounded raster and spatial requests through retained NET evidence",
+      "help_command": "net spatial --help"
+    },
+    {
+      "command": "net control",
+      "purpose": "Discover typed capabilities, admit retained plans and run durable jobs over MCP",
+      "help_command": "net control --help"
+    },
+    {
+      "command": "net gaugelink-refit",
+      "purpose": "Retain, vary and audit GaugeLink uncertainty scenarios through MCP",
+      "help_command": "net gaugelink-refit --help"
+    },
+    {
+      "command": "net refit",
+      "purpose": "Preview, validate and recompute bounded Board candidates through MCP",
+      "help_command": "net refit --help"
+    },
+    {
+      "command": "net evidence",
+      "purpose": "Freeze selected source text, retrieve exact passages and bind evidence context",
+      "help_command": "net evidence --help"
+    },
+    {
+      "command": "net knowledge",
+      "purpose": "Build and query the frozen Proto-Corpus, bind catalog context and serve MCP",
+      "help_command": "net knowledge --help"
+    },
+    {
+      "command": "net work",
+      "purpose": "Provision scoped task clients and retain trusted-host authorization and review",
+      "help_command": "net work --help"
+    },
+    {
+      "command": "net device",
+      "purpose": "Retain and inspect explicit device declarations in the existing Link journal",
+      "help_command": "net device --help"
+    },
+    {
+      "command": "net observation",
+      "purpose": "Inspect, recover and export retained Link measurement views",
+      "help_command": "net observation --help"
+    },
+    {
+      "command": "net agent",
+      "purpose": "Serve explicitly bound NCP tools through local MCP stdio",
+      "help_command": "net agent --help"
+    },
+    {
+      "command": "net corpus",
+      "purpose": "Inspect hash-pinned Proto-Corpus metadata, internal source spans and reported fields",
+      "help_command": "net corpus --help"
+    },
+    {
+      "command": "net link",
+      "purpose": "Retain device records, local outbox delivery and native observation projections",
+      "help_command": "net link --help"
+    },
+    {
+      "command": "net connectivity",
+      "purpose": "Retain Open5GS/free5GC aggregate metrics and declared handheld transport context",
+      "help_command": "net connectivity --help"
+    },
+    {
+      "command": "net refurb",
+      "purpose": "Track assets, repair work, release reviews and customer service records",
+      "help_command": "net refurb --help"
+    },
+    {
+      "command": "net bench",
+      "purpose": "Capture inventory and import bounded bench diagnostics with source provenance",
+      "help_command": "net bench --help"
+    },
+    {
+      "command": "net hardware",
+      "purpose": "Import hardware observations, assess refurbishment criteria and export retained evidence",
+      "help_command": "net hardware --help"
+    },
+    {
+      "command": "net catalog",
+      "purpose": "Discover every command surface and declared scientific provider requirement",
+      "help_command": "net catalog --help"
+    },
+    {
+      "command": "net visualize",
+      "purpose": "Export an offline tooling map and capability inspector from the existing catalog",
+      "help_command": "net visualize --help"
+    },
+    {
+      "command": "net doctor",
+      "purpose": "Check local dependency and explicit provider identity metadata",
+      "help_command": "net doctor --help"
+    },
+    {
+      "command": "net start",
+      "purpose": "Run and retain the bounded first-use installation check",
+      "help_command": "net start --help"
+    },
+    {
+      "command": "net workbench",
+      "purpose": "Start or resume the persistent local Session service",
+      "help_command": "net workbench --help"
+    },
+    {
+      "command": "net provision",
+      "purpose": "Create exact local provider checkouts from retained public Git history",
+      "help_command": "net provision --help"
+    },
+    {
+      "command": "net legibility",
+      "purpose": "Compile, verify, review and compare synchronized specimen representations",
+      "help_command": "net legibility --help"
+    },
+    {
+      "command": "net system",
+      "purpose": "Compile, run and independently verify typed thermomechanical reference systems",
+      "help_command": "net system --help"
+    },
+    {
+      "command": "net reference-compare",
+      "purpose": "Compare aligned observations under an explicit joint uncertainty budget",
+      "help_command": "net reference-compare --help"
+    },
+    {
+      "command": "net timing",
+      "purpose": "Retain bounded local transport timing observations and failed samples",
+      "help_command": "net timing --help"
+    },
+    {
+      "command": "net polymer",
+      "purpose": "Assess retained molding cycles, inspect metrology and run numerical audits",
+      "help_command": "net polymer --help"
+    },
+    {
+      "command": "net graphics",
+      "purpose": "Author bounded visual geometry and textures, inspect artifacts and replay retained runs",
+      "help_command": "net graphics --help"
+    },
+    {
+      "command": "net rewrite",
+      "purpose": "Retain bounded typed hypergraph transformations and replay checks",
+      "help_command": "net rewrite --help"
+    },
+    {
+      "command": "net compose",
+      "purpose": "Compile typed wiring and checked stages into existing NET graphs",
+      "help_command": "net compose --help"
+    },
+    {
+      "command": "net fluid",
+      "purpose": "Run and independently check bounded synthetic reservoir and surface-wave models",
+      "help_command": "net fluid --help"
+    },
+    {
+      "command": "net irrigation",
+      "purpose": "Plan and audit daily agricultural water balances and bounded pump schedules",
+      "help_command": "net irrigation --help"
+    },
+    {
+      "command": "net dsp",
+      "purpose": "Run and inspect the bounded specialist DSP instrument",
+      "help_command": "net dsp --help"
+    },
+    {
+      "command": "net impact",
+      "purpose": "Run the bounded elastic contact benchmark with independent verification",
+      "help_command": "net impact --help"
+    },
+    {
+      "command": "net lab",
+      "purpose": "Run bounded shared-preservation experiments",
+      "help_command": "net lab --help"
+    },
+    {
+      "command": "net foundry",
+      "purpose": "Run explicit foundry workflows and childhood compilation",
+      "help_command": "net foundry --help"
+    },
+    {
+      "command": "net atmosphere",
+      "purpose": "Compile and independently check a bounded dry atmospheric column",
+      "help_command": "net atmosphere --help"
+    },
+    {
+      "command": "net weather",
+      "purpose": "Run, check and replay bounded atmosphere, hydrology and snow/ice science tools",
+      "help_command": "net weather --help"
+    },
+    {
+      "command": "net object",
+      "purpose": "Inspect committed source, export bounded context, and compare retained observations",
+      "help_command": "net object --help"
+    },
+    {
+      "command": "net semantic",
+      "purpose": "Compile stable semantic capabilities into existing NET experiments",
+      "help_command": "net semantic --help"
+    },
+    {
+      "command": "net instrument",
+      "purpose": "Inspect portable instrument manifests and verification reports",
+      "help_command": "net instrument --help"
+    },
+    {
+      "command": "net nise",
+      "purpose": "Compile NISE schematic operations through an operator NET binding plan",
+      "help_command": "net nise --help"
+    },
+    {
+      "command": "net annotation",
+      "purpose": "Create, inspect and project immutable human annotations",
+      "help_command": "net annotation --help"
+    },
+    {
+      "command": "net efficiency",
+      "purpose": "Measure and compare representation-preserving investigation resource use",
+      "help_command": "net efficiency --help"
+    },
+    {
+      "command": "net container",
+      "purpose": "Define/compose computational boundaries and retain occurrence telemetry",
+      "help_command": "net container --help"
+    },
+    {
+      "command": "net needle",
+      "purpose": "Apply an immutable local intervention and selectively recompute dependency descendants",
+      "help_command": "net needle --help"
+    },
+    {
+      "command": "net board",
+      "purpose": "Create and compile the parameterized typed System Board",
+      "help_command": "net board --help"
+    },
+    {
+      "command": "net parameter",
+      "purpose": "Create deterministic parameter programs and immutable candidate Boards",
+      "help_command": "net parameter --help"
+    },
+    {
+      "command": "net preservation",
+      "purpose": "Declare, compose and verify typed preservation contracts",
+      "help_command": "net preservation --help"
+    },
+    {
+      "command": "net transition",
+      "purpose": "Bind cross-system identity and package candidate state transitions for authority review",
+      "help_command": "net transition --help"
+    },
+    {
+      "command": "net interop",
+      "purpose": "Bind external standards/proprietary schemas into NET identity and preservation workflows",
+      "help_command": "net interop --help"
+    },
+    {
+      "command": "net interop-bim",
+      "purpose": "Execute qualified IFC ingress through the existing CSE BIM runtime",
+      "help_command": "net interop-bim --help"
+    },
+    {
+      "command": "net morphism",
+      "purpose": "Create and inspect scientific representation/morphism contracts",
+      "help_command": "net morphism --help"
+    },
+    {
+      "command": "net provenance",
+      "purpose": "Create and inspect portable artifact/IP provenance declarations",
+      "help_command": "net provenance --help"
+    },
+    {
+      "command": "net columnar",
+      "purpose": "Export/import bounded observation streams as Arrow IPC or Parquet",
+      "help_command": "net columnar --help"
+    },
+    {
+      "command": "net workcell",
+      "purpose": "Operator-bound container compilation and agent work slots",
+      "help_command": "net workcell --help"
+    },
+    {
+      "command": "net history",
+      "purpose": "Compile bounded actor perspectives and audit annotated dialogue",
+      "help_command": "net history --help"
+    },
+    {
+      "command": "net production",
+      "purpose": "Plan and inspect explicit game-project and reconstruction production",
+      "help_command": "net production --help"
+    },
+    {
+      "command": "net tools",
+      "purpose": "Surface Path micro-tools: catalog, run, inspect and replay",
+      "help_command": "net tools --help"
+    },
+    {
+      "command": "net simulation",
+      "purpose": "Provider-owned stateful experiments and replay",
+      "help_command": "net simulation --help"
+    },
+    {
+      "command": "net simulate",
+      "purpose": "Stateful oscillator studies: observers, interventions, branches and reproduction",
+      "help_command": "net simulate --help"
+    },
+    {
+      "command": "net math",
+      "purpose": "Derive bounded covariance and innovation display diagnostics",
+      "help_command": "net math --help"
+    },
+    {
+      "command": "net view",
+      "purpose": "Create a local interactive mathematical inspector",
+      "help_command": "net view --help"
+    },
+    {
+      "command": "net check",
+      "purpose": "Apply a declared numerical check plan to retained evidence",
+      "help_command": "net check --help"
+    },
+    {
+      "command": "net science",
+      "purpose": "Existing scientific workflows: catalog, run, replay, inspect, state, observations, study, replay-study",
+      "help_command": "net science --help"
+    },
+    {
+      "command": "net boundary",
+      "purpose": "Review signed recorded device evidence and enforce per-function coherence gates",
+      "help_command": "net boundary --help"
+    },
+    {
+      "command": "net network",
+      "purpose": "Inspect separate human/device/node identities, consent-bound local contributions and signed releases",
+      "help_command": "net network --help"
+    },
+    {
+      "command": "net domains",
+      "purpose": "Run installed private discrete-domain providers through NET Session",
+      "help_command": "net domains --help"
+    },
+    {
+      "command": "net hoomd",
+      "purpose": "Run bounded external particle MD with native GSD evidence and independent static checks",
+      "help_command": "net hoomd --help"
+    },
+    {
+      "command": "net product-study",
+      "purpose": "Review versioned preliminary product requirements against retained calculation artifacts",
+      "help_command": "net product-study --help"
+    },
+    {
+      "command": "net data",
+      "purpose": "Retain typed datasets, inspect data routes and compare observations in existing workspaces",
+      "help_command": "net data --help"
+    },
+    {
+      "command": "net materials",
+      "purpose": "Execute, retain, inspect and replay material investigations with explicit uncertainty",
+      "help_command": "net materials --help"
+    },
+    {
+      "command": "net thermofluids",
+      "purpose": "Calculate and retain bounded convection, exchanger, pipe-flow, radiation and two-phase references",
+      "help_command": "net thermofluids --help"
+    },
+    {
+      "command": "net geomatics",
+      "purpose": "Run, inspect and reproduce bounded GIS, Earth observation and urban-analysis tools",
+      "help_command": "net geomatics --help"
+    },
+    {
+      "command": "net realization",
+      "purpose": "Bind typed representation adapters to retained artifacts",
+      "help_command": "net realization --help"
+    },
+    {
+      "command": "net sensor-project",
+      "purpose": "Inspect retained sensor design records",
+      "help_command": "net sensor-project --help"
+    },
+    {
+      "command": "net manufacturing",
+      "purpose": "Plan sensor manufacturing with retained timing uncertainty",
+      "help_command": "net manufacturing --help"
+    },
+    {
+      "command": "net device-review",
+      "purpose": "Compare retained device observations",
+      "help_command": "net device-review --help"
+    },
+    {
+      "command": "net polymer leakage",
+      "purpose": "Assess coolant volume and material mass balances with the explicitly pinned native provider",
+      "help_command": "net polymer leakage --help"
+    },
+    {
+      "command": "net providers",
+      "purpose": "Read declared oscillator provider manifests",
+      "help_command": "net providers --help"
+    },
+    {
+      "command": "net capabilities",
+      "purpose": "Filter declared oscillator operation capabilities",
+      "help_command": "net capabilities --help"
+    },
+    {
+      "command": "net inspect",
+      "purpose": "Inspect retained records without execution",
+      "help_command": "net inspect --help"
+    },
+    {
+      "command": "net compare",
+      "purpose": "Compare retained observation streams",
+      "help_command": "net compare --help"
+    },
+    {
+      "command": "net run",
+      "purpose": "Execute an explicitly declared NET experiment",
+      "help_command": "net run --help"
+    },
+    {
+      "command": "net demo",
+      "purpose": "Run the retained oscillator statistics and spectrum graph",
+      "help_command": "net demo --help"
+    }
+  ],
+  "workflows": [
+    {
+      "workflow": "acquired-calibrated-window",
+      "operation_id": "ciw.acquired-calibrated-window.v1",
+      "providers": {
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "module": "stfe",
+          "source_root": "."
+        },
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": true,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "state_estimator",
+      "source_kind": "acquired-calibrated-window",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "acquire",
+        "calibrate",
+        "features",
+        "estimate"
+      ],
+      "instrument_highlights": [
+        "PPDA",
+        "TBRT",
+        "MCUR",
+        "STFE",
+        "GSIE",
+        "SET"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan",
+      "execution_entry": "net science run --kind acquired-calibrated-window --help"
+    },
+    {
+      "workflow": "acquired-dataset",
+      "operation_id": "ciw.acquired-dataset.v1",
+      "providers": {
+        "ppda": {
+          "revision": "477d6cb454423a27543b16961d3b169709c40c31",
+          "source_tree": "5d7515101f00763cff7165aa4c61c0b4ae69e152"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "evidence_acquisition",
+      "source_kind": "acquired-dataset",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "acquire"
+      ],
+      "instrument_highlights": [
+        "PPDA"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow acquired-dataset --plan",
+      "execution_entry": "net science run --kind acquired-dataset --help"
+    },
+    {
+      "workflow": "bim-quantity",
+      "operation_id": "ciw.bim-quantity.v1",
+      "providers": {
+        "cse": {
+          "role": "cse",
+          "revision": "4b74abda40bba3277de69bf61e9e09283ae2d5b3",
+          "source_root": ".",
+          "module": "gat.session"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "construction_quantity",
+      "source_kind": "bim-quantity",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "bim",
+        "estimate"
+      ],
+      "instrument_highlights": [
+        "CSE"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow bim-quantity --plan",
+      "execution_entry": "net science run --kind bim-quantity --help"
+    },
+    {
+      "workflow": "calibrated-observable",
+      "operation_id": "ciw.calibrated-observable.v1",
+      "providers": {
+        "fsrt": {
+          "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "module": "set_lcm.bridge.calibrated_observable",
+          "source_root": "src"
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "module": "oit.diagnostics",
+          "source_root": "src"
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "cbsr": {
+          "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "module": "cbsr",
+          "source_root": "src"
+        },
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "module": "fdir.diagnostics",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "state_estimator",
+      "source_kind": "calibrated-observable",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "time",
+        "calibrate",
+        "observe",
+        "estimate",
+        "diagnose"
+      ],
+      "instrument_highlights": [
+        "TBRT",
+        "MCUR",
+        "OIT",
+        "FSRT",
+        "GSIE",
+        "CBSR",
+        "FDIR",
+        "SET"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan",
+      "execution_entry": "net science run --kind calibrated-observable --help"
+    },
+    {
+      "workflow": "calibrated-window",
+      "operation_id": "ciw.calibrated-window.v1",
+      "providers": {
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "module": "stfe",
+          "source_root": "."
+        },
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "state_estimator",
+      "source_kind": "calibrated-window",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "time",
+        "calibrate",
+        "features",
+        "estimate"
+      ],
+      "instrument_highlights": [
+        "TBRT",
+        "MCUR",
+        "STFE",
+        "GSIE",
+        "SET"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan",
+      "execution_entry": "net science run --kind calibrated-window --help"
+    },
+    {
+      "workflow": "covariance-geometry",
+      "operation_id": "ciw.covariance-geometry.v1",
+      "providers": {
+        "cggt": {
+          "role": "cggt",
+          "revision": "510ad2bd0fb96faf77824b72e70ae1b4090646a0",
+          "source_tree": "b2535f95606b0a17eec46b543b7be069e2f8bb89",
+          "module": "covariance_geometry",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "covariance_geometry",
+      "source_kind": "covariance-geometry",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "covariance"
+      ],
+      "instrument_highlights": [
+        "CGGT"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow covariance-geometry --plan",
+      "execution_entry": "net science run --kind covariance-geometry --help"
+    },
+    {
+      "workflow": "curved-path-transfer",
+      "operation_id": "ciw.curved-path-transfer.v1",
+      "providers": {
+        "csg": {
+          "role": "csg",
+          "revision": "bbc535af29c30997e56fd120320c570830676462",
+          "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+          "module": "geodesic_testbed.jacobi",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "geometric_sensitivity",
+      "source_kind": "curved-path-transfer",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "sensitivity",
+        "covariance"
+      ],
+      "instrument_highlights": [
+        "CSR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow curved-path-transfer --plan",
+      "execution_entry": "net science run --kind curved-path-transfer --help"
+    },
+    {
+      "workflow": "energy-accuracy",
+      "operation_id": "ciw.energy-accuracy.v1",
+      "providers": {},
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "offline_energy_accuracy_analysis",
+      "source_kind": "energy-accuracy",
+      "available": true,
+      "scientific_cli": false,
+      "capabilities": [],
+      "instrument_highlights": [],
+      "binding_status": "available_in_unbound_session",
+      "setup_command": "net provision --monorepo ROOT --workflow energy-accuracy --plan",
+      "execution_entry": "ciw serve --help; existing Session operation.execute"
+    },
+    {
+      "workflow": "flat-torus-reference",
+      "operation_id": "ciw.flat-torus-reference.v1",
+      "providers": {
+        "ftr": {
+          "role": "ftr",
+          "revision": "dc918562cd9e351a65475d29f46963c9f2fd7db8",
+          "source_tree": "1f082c6b443f2e301ac5889122912f26968ae756",
+          "module": "flat_torus.companion",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "geometric_reference",
+      "source_kind": "flat-torus-reference",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "reference"
+      ],
+      "instrument_highlights": [
+        "FTR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow flat-torus-reference --plan",
+      "execution_entry": "net science run --kind flat-torus-reference --help"
+    },
+    {
+      "workflow": "geometric-circle",
+      "operation_id": "ciw.geometric-circle.v1",
+      "providers": {
+        "gte": {
+          "role": "gte",
+          "revision": "e55b8be2b3ba05f7e6c6a31807c77b3e42700f07",
+          "source_root": "src",
+          "module": "geodesic_telemetry.ciw_adapter"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "geometric_reconciliation",
+      "source_kind": "geometric-circle",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "covariance"
+      ],
+      "instrument_highlights": [
+        "GTE"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow geometric-circle --plan",
+      "execution_entry": "net science run --kind geometric-circle --help"
+    },
+    {
+      "workflow": "identified-design",
+      "operation_id": "ciw.identified-design.v1",
+      "providers": {
+        "fsrt": {
+          "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "module": "set_lcm.bridge.calibrated_observable",
+          "source_root": "src"
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "module": "oit.diagnostics",
+          "source_root": "src"
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "cbsr": {
+          "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "module": "cbsr",
+          "source_root": "src"
+        },
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "module": "fdir.diagnostics",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        },
+        "sidt": {
+          "revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+          "module": "sidt.declared",
+          "source_root": "src"
+        },
+        "edspt": {
+          "revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+          "module": "edspt.budgeted",
+          "source_root": "src"
+        },
+        "ywir": {
+          "revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+          "module": "ywir.integration",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": true,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "decision",
+      "source_kind": "identified-design",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "identify",
+        "design",
+        "budget"
+      ],
+      "instrument_highlights": [
+        "SIDT",
+        "EDSPT",
+        "YWIR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan",
+      "execution_entry": "net science run --kind identified-design --help"
+    },
+    {
+      "workflow": "identified-stability",
+      "operation_id": "ciw.identified-stability.v1",
+      "providers": {
+        "plsr": {
+          "revision": "19ea6967060166ba09db6cd4563bd87bd6b3d196",
+          "source_root": "src",
+          "module": "lyapunov.model_artifact"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": true,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "stability_assessment",
+      "source_kind": "identified-stability",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "certificate",
+        "stability"
+      ],
+      "instrument_highlights": [
+        "PLSR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow identified-stability --plan",
+      "execution_entry": "net science run --kind identified-stability --help"
+    },
+    {
+      "workflow": "instrument-exchange",
+      "operation_id": "ciw.instrument-exchange.v1",
+      "providers": {
+        "set": {
+          "repository": "https://github.com/giasonpooni/State-Estimation-Evaluation-Testbed",
+          "revision": "542e672be512bf43b61253f2b2a43cd967cb3062",
+          "path": "state_estimation_testbed/contracts.py",
+          "sha256": "2385537daa6147ef2475d17bd75c026fe187077b90841515a9e9378e0246ae54"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "typed_exchange_adapter",
+      "source_kind": "instrument-exchange",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "conformance",
+        "replay"
+      ],
+      "instrument_highlights": [
+        "SET"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow instrument-exchange --plan",
+      "execution_entry": "net science run --kind instrument-exchange --help"
+    },
+    {
+      "workflow": "julia-oscillator",
+      "operation_id": "ciw.julia-oscillator.v1",
+      "providers": {},
+      "external_bindings": {
+        "julia": {
+          "binding_type": "executable_file",
+          "identity": "operator_supplied_not_attested"
+        },
+        "julia_runtime": {
+          "binding_type": "runtime_directory",
+          "identity": "operator_supplied_not_attested"
+        }
+      },
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "julia_tsit5_provider",
+      "source_kind": "julia-oscillator",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "simulate",
+        "reference"
+      ],
+      "instrument_highlights": [
+        "Julia"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow julia-oscillator --plan",
+      "execution_entry": "net science run --kind julia-oscillator --help"
+    },
+    {
+      "workflow": "machine-manifest",
+      "operation_id": "ciw.encoder-position.v1",
+      "providers": {},
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "machine_manifest_reference",
+      "source_kind": "machine-manifest",
+      "available": true,
+      "scientific_cli": false,
+      "capabilities": [],
+      "instrument_highlights": [],
+      "binding_status": "available_in_unbound_session",
+      "setup_command": "net provision --monorepo ROOT --workflow machine-manifest --plan",
+      "execution_entry": "ciw serve --help; existing Session operation.execute"
+    },
+    {
+      "workflow": "measured-thermal",
+      "operation_id": "ciw.measured-thermal.v1",
+      "providers": {},
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "measured_thermal_estimation",
+      "source_kind": "measured-thermal",
+      "available": true,
+      "scientific_cli": true,
+      "capabilities": [
+        "measure",
+        "estimate",
+        "compare"
+      ],
+      "instrument_highlights": [
+        "NET measured thermal"
+      ],
+      "binding_status": "available_in_unbound_session",
+      "setup_command": "net provision --monorepo ROOT --workflow measured-thermal --plan",
+      "execution_entry": "net science run --kind measured-thermal --help"
+    },
+    {
+      "workflow": "measurement-chain",
+      "operation_id": "ciw.measurement-chain.v1",
+      "providers": {
+        "rci": {
+          "revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+          "module": "instrument_chain.ciw_adapter",
+          "source_root": "src",
+          "source_tree": "038522430744d4a7027f9a48669834c46bd94987"
+        },
+        "fsrt": {
+          "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+          "module": "set_lcm.bridge.ciw",
+          "source_root": "src",
+          "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3"
+        },
+        "jspt": {
+          "revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+          "module": "sensitivity.ciw_adapter",
+          "source_root": "src",
+          "source_tree": "5643cc8204b7aa6cbb73df6bf8984abdcec47d3b"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "measurement_chain_testbed",
+      "source_kind": "measurement-chain",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "measure",
+        "calibrate",
+        "estimate",
+        "covariance"
+      ],
+      "instrument_highlights": [
+        "RCI",
+        "FSRT",
+        "JSPT"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow measurement-chain --plan",
+      "execution_entry": "net science run --kind measurement-chain --help"
+    },
+    {
+      "workflow": "mesh-path",
+      "operation_id": "ciw.mesh-path.v1",
+      "providers": {
+        "isgt": {
+          "role": "isgt",
+          "revision": "ef4e64f3b73c83f9cb0e748dd029410fa0dbe76d",
+          "source_tree": "0c9c667ca038edd265d9cdb6522ac891f14f65b6",
+          "module": "intrinsic_surface_geodesics",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "mesh_path_baseline",
+      "source_kind": "mesh-path",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "path"
+      ],
+      "instrument_highlights": [
+        "ISGT"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow mesh-path --plan",
+      "execution_entry": "net science run --kind mesh-path --help"
+    },
+    {
+      "workflow": "native-interop",
+      "operation_id": "ciw.native-interop.v1",
+      "providers": {},
+      "external_bindings": {
+        "runtime": {
+          "binding_type": "binding_json",
+          "identity": "operator_supplied_not_attested"
+        }
+      },
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "native_computation",
+      "source_kind": "native-interop",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "compute",
+        "reference"
+      ],
+      "instrument_highlights": [
+        "SCR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow native-interop --plan",
+      "execution_entry": "net science run --kind native-interop --help"
+    },
+    {
+      "workflow": "numerical-heat",
+      "operation_id": "ciw.numerical-heat.v1",
+      "providers": {
+        "scr": {
+          "role": "scr",
+          "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "source_root": ".",
+          "module": "execution.engine"
+        }
+      },
+      "external_bindings": {
+        "engine": {
+          "binding_type": "executable_file",
+          "identity": "operator_supplied_not_attested"
+        }
+      },
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "numerical_execution",
+      "source_kind": "numerical-heat",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "compute"
+      ],
+      "instrument_highlights": [
+        "SCR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow numerical-heat --plan",
+      "execution_entry": "net science run --kind numerical-heat --help"
+    },
+    {
+      "workflow": "project-graph",
+      "operation_id": "ciw.project-graph.v1",
+      "providers": {},
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "project_graph_inspection",
+      "source_kind": "project-graph",
+      "available": true,
+      "scientific_cli": false,
+      "capabilities": [],
+      "instrument_highlights": [],
+      "binding_status": "available_in_unbound_session",
+      "setup_command": "net provision --monorepo ROOT --workflow project-graph --plan",
+      "execution_entry": "ciw serve --help; existing Session operation.execute"
+    },
+    {
+      "workflow": "proved-heat",
+      "operation_id": "ciw.proved-heat.v1",
+      "providers": {
+        "scr": {
+          "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "source_tree": "4068a711534932e8d89bb0d87d373376dafdf6cd",
+          "module": "execution.proving",
+          "source_root": "."
+        }
+      },
+      "external_bindings": {
+        "engine": {
+          "binding_type": "executable_file",
+          "identity": "operator_supplied_not_attested"
+        },
+        "guest": {
+          "binding_type": "artifact_file",
+          "identity": "operator_supplied_not_attested"
+        },
+        "prover": {
+          "binding_type": "executable_file",
+          "identity": "operator_supplied_not_attested"
+        }
+      },
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "proved_numerical_execution",
+      "source_kind": "proved-heat",
+      "available": false,
+      "scientific_cli": false,
+      "capabilities": [],
+      "instrument_highlights": [],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow proved-heat --plan",
+      "execution_entry": "ciw serve --help; existing Session operation.execute"
+    },
+    {
+      "workflow": "residual-monitor",
+      "operation_id": "ciw.residual-monitor.v1",
+      "providers": {
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "module": "fdir.diagnostics",
+          "source_root": "src"
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "module": "oit.diagnostics",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "residual_diagnostics",
+      "source_kind": "residual-monitor",
+      "available": false,
+      "requires_upstream_bundles": "explicit_ordered_source_selection",
+      "scientific_cli": true,
+      "capabilities": [
+        "diagnose"
+      ],
+      "instrument_highlights": [
+        "FDIR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow residual-monitor --plan",
+      "execution_entry": "net science run --kind residual-monitor --help"
+    },
+    {
+      "workflow": "schematic-assessment",
+      "operation_id": "ciw.schematic-assessment.v1",
+      "providers": {
+        "sra": {
+          "role": "sra",
+          "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+          "source_root": "src",
+          "module": "schematics.eligibility"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "schematic_assessment",
+      "source_kind": "schematic-assessment",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "retrieve",
+        "eligibility"
+      ],
+      "instrument_highlights": [
+        "SRA"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow schematic-assessment --plan",
+      "execution_entry": "net science run --kind schematic-assessment --help"
+    },
+    {
+      "workflow": "schematic-companions",
+      "operation_id": "ciw.schematic-companions.v1",
+      "providers": {
+        "sra": {
+          "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+          "source_root": "src",
+          "module": "schematics.eligibility"
+        },
+        "jspt": {
+          "revision": "7399ab03087b27683620b4c57f97b2ac14546c7f",
+          "source_root": "src",
+          "module": "sensitivity.jacobian"
+        },
+        "plsr": {
+          "revision": "9d0e7b4a1162e038150a71c63d986945d78135d4",
+          "source_root": "src",
+          "module": "lyapunov.runtime"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": true,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "local_model_analysis",
+      "source_kind": "schematic-companions",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "sensitivity",
+        "certificate"
+      ],
+      "instrument_highlights": [
+        "SRA",
+        "JSPT",
+        "PLSR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow schematic-companions --plan",
+      "execution_entry": "net science run --kind schematic-companions --help"
+    },
+    {
+      "workflow": "telemetry",
+      "operation_id": "ciw.telemetry.v1",
+      "providers": {
+        "ppda": {
+          "revision": "209985a8c7482aba037021035c2f0b550c9b1ddc",
+          "module": "instrumentation",
+          "source_root": "bridge",
+          "source_sha256": "d624bcda528165c7692d11846df0bd8a8c1402868f86c1fce407d5e2946963a1"
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "module": "stfe",
+          "source_root": "."
+        },
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "1467ec5058b3e7ebd6ba4a45f2d9b49148a2560d",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        },
+        "cbsr": {
+          "revision": "b543969cb80a69a5df1274eee10d22549bcea773",
+          "module": "cbsr",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "state_estimator",
+      "source_kind": "telemetry",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "acquire",
+        "features",
+        "estimate",
+        "evaluate"
+      ],
+      "instrument_highlights": [
+        "PPDA",
+        "STFE",
+        "GSIE",
+        "SET",
+        "CBSR"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow telemetry --plan",
+      "execution_entry": "net science run --kind telemetry --help"
+    },
+    {
+      "workflow": "thermal-observer",
+      "operation_id": "ciw.thermal-observer.v1",
+      "providers": {},
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "thermal_observer_reference",
+      "source_kind": "thermal-observer",
+      "available": true,
+      "scientific_cli": true,
+      "capabilities": [
+        "estimate",
+        "reference"
+      ],
+      "instrument_highlights": [
+        "NET thermal reference"
+      ],
+      "binding_status": "available_in_unbound_session",
+      "setup_command": "net provision --monorepo ROOT --workflow thermal-observer --plan",
+      "execution_entry": "net science run --kind thermal-observer --help"
+    },
+    {
+      "workflow": "translation-flow",
+      "operation_id": "ciw.translation-flow.v1",
+      "providers": {
+        "tsde": {
+          "role": "tsde",
+          "revision": "5e72693e7e5722c47883ef1a68b2959afdf2e215",
+          "source_tree": "6f2ecbb21617d87c3a1e8b60fa722b109dd7ccc8",
+          "module": "translation_surface_dynamics",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "translation_dynamics",
+      "source_kind": "translation-flow",
+      "available": false,
+      "scientific_cli": true,
+      "capabilities": [
+        "geometry",
+        "dynamics"
+      ],
+      "instrument_highlights": [
+        "TSDE"
+      ],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow translation-flow --plan",
+      "execution_entry": "net science run --kind translation-flow --help"
+    },
+    {
+      "workflow": "variational-free-energy",
+      "operation_id": "ciw.variational-free-energy.v1",
+      "providers": {
+        "csg": {
+          "revision": "bbc535af29c30997e56fd120320c570830676462",
+          "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+          "module": "geodesic_testbed.jacobi",
+          "source_root": "src"
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "source_tree": "375c031c07592d5bcb1d224780f18ceb886df4a1",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "plsr": {
+          "revision": "19ea6967060166ba09db6cd4563bd87bd6b3d196",
+          "source_tree": "e261315f46851d99053e305ef2c03d4160f02a92",
+          "module": "lyapunov.model_artifact",
+          "source_root": "src"
+        }
+      },
+      "external_bindings": {},
+      "requires_upstream_bundle": false,
+      "qualification": "not_performed_by_catalog",
+      "authorizes_execution": false,
+      "role": "variational_inference",
+      "source_kind": "variational-free-energy",
+      "available": false,
+      "scientific_cli": false,
+      "capabilities": [],
+      "instrument_highlights": [],
+      "binding_status": "explicit_bindings_required",
+      "setup_command": "net provision --monorepo ROOT --workflow variational-free-energy --plan",
+      "execution_entry": "ciw serve --help; existing Session operation.execute"
+    }
+  ],
+  "builtin_providers": {
+    "schema": "ciw.provider-catalog.v1",
+    "authorizes_execution": false,
+    "providers": {
+      "analytic-damped-oscillator.v1": {
+        "instrument_id": "analytic-damped-oscillator.v1",
+        "version": "1",
+        "role": "instrument",
+        "inputs": [
+          "analytic-oscillator-parameters.v1"
+        ],
+        "outputs": [
+          "run.v1",
+          "statistics.v1",
+          "spectrum.periodogram.v1"
+        ],
+        "units": {
+          "q": "m",
+          "v": "m/s",
+          "energy": "J"
+        },
+        "frames": [
+          "oscillator-state"
+        ],
+        "sampling": {
+          "kind": "uniform",
+          "time_unit": "s",
+          "endpoint": "excluded"
+        },
+        "normalization": {
+          "statistics": "population",
+          "spectrum": "one-sided density; periodic Hann"
+        },
+        "supported_operations": [
+          "statistics.v1",
+          "spectrum.periodogram.v1"
+        ],
+        "determinism": {
+          "kind": "deterministic",
+          "dtype": "float64"
+        },
+        "tolerance_policy": {
+          "sampling_rtol": 1e-08,
+          "sampling_atol_spacing_factor": 1e-10,
+          "replay": "numeric outputs compared separately from event identities"
+        },
+        "calibration_requirements": {
+          "required": false,
+          "reason": "synthetic analytic model"
+        },
+        "manifest_schema": "ciw.instrument-manifest.v1"
+      }
+    },
+    "operations": {
+      "statistics.v1": {
+        "provider": "analytic-damped-oscillator.v1",
+        "runtime": {
+          "provider": "ciw.oscillator",
+          "version": "1"
+        },
+        "capabilities": [
+          "analyze",
+          "statistics"
+        ],
+        "inputs": {},
+        "outputs": {
+          "result": {
+            "type": {
+              "schema": "ciw.operation-result.v1",
+              "unit": null,
+              "frame": null
+            },
+            "path": []
+          }
+        },
+        "bound": false
+      },
+      "spectrum.periodogram.v1": {
+        "provider": "analytic-damped-oscillator.v1",
+        "runtime": {
+          "provider": "ciw.oscillator",
+          "version": "1"
+        },
+        "capabilities": [
+          "analyze",
+          "spectrum"
+        ],
+        "inputs": {},
+        "outputs": {
+          "result": {
+            "type": {
+              "schema": "ciw.operation-result.v1",
+              "unit": null,
+              "frame": null
+            },
+            "path": []
+          }
+        },
+        "bound": false
+      }
+    }
+  },
+  "doctor_profiles": [
+    "core",
+    "legibility",
+    "declared-workloads",
+    "native-interop",
+    "interval-requirement",
+    "reaction-catalyst",
+    "reaction-cantera"
+  ],
+  "first_use_command": "net start --output-dir NEW",
+  "workbench_command": "net workbench --output-dir STATE",
+  "binding_source": "explicit_host_configuration_only",
+  "boundaries": {
+    "GSC": "Read-only representation consumer; no browser integration is executed by this facade",
+    "ESM": "Existing candidate/admission boundary; not automatically invoked",
+    "ICRH": "Independent conformance/replay qualification; not the SET instrument-exchange validator",
+    "Atelier-MCP/CNC-Machine-MCP": "No machine connection or motion authorization in this facade",
+    "STAQNET": "No new corpus pipeline adapter claimed"
+  },
+  "source_inventory": {
+    "command": "python scripts/superrepo.py list",
+    "qualification_command": "python scripts/superrepo.py check --output-dir NEW",
+    "scope": "source_checkout_only; imports_do_not_install_or_bind_providers"
+  }
+}

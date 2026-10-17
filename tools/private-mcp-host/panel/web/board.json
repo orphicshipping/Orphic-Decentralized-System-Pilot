@@ -1,0 +1,372 @@
+{
+  "schema": "ciw.system-board.v1",
+  "board_id": "visual-oscillator-v1",
+  "title": "Oscillator investigation",
+  "model_id": "analytic-damped-oscillator.v1",
+  "nodes": [
+    {
+      "node_id": "recording",
+      "kind": "STATE",
+      "label": "Retained recording",
+      "semantic_capability": null,
+      "sockets": {
+        "inputs": [],
+        "outputs": []
+      },
+      "parameters": {},
+      "resources": [],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    },
+    {
+      "node_id": "model",
+      "kind": "MODEL",
+      "label": "Damped oscillator",
+      "semantic_capability": null,
+      "sockets": {
+        "inputs": [],
+        "outputs": []
+      },
+      "parameters": {},
+      "resources": [],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    },
+    {
+      "node_id": "signal",
+      "kind": "REPRESENTATION",
+      "label": "Time-series representation",
+      "semantic_capability": null,
+      "sockets": {
+        "inputs": [],
+        "outputs": []
+      },
+      "parameters": {},
+      "resources": [],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    },
+    {
+      "node_id": "statistics",
+      "kind": "OPERATION",
+      "label": "Signal statistics",
+      "semantic_capability": "analysis.statistics.v1",
+      "sockets": {
+        "inputs": [],
+        "outputs": [
+          {
+            "socket_id": "result",
+            "port": {
+              "schema": "ciw.operation-result.v1",
+              "unit": null,
+              "frame": null
+            },
+            "scale": {
+              "length_m": null,
+              "time_s": null,
+              "energy_j": null,
+              "label": "retained signal"
+            },
+            "uncertainty_semantics": "UNKNOWN",
+            "provenance_required": true
+          }
+        ]
+      },
+      "parameters": {
+        "channel": {
+          "type": "STRING",
+          "value": "q",
+          "unit": null,
+          "domain": {
+            "kind": "ENUM",
+            "minimum": null,
+            "maximum": null,
+            "values": [
+              "q",
+              "v",
+              "energy"
+            ],
+            "log_base": null
+          },
+          "exposed": true
+        }
+      },
+      "resources": [
+        "cpu"
+      ],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [
+        "read:recording"
+      ],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    },
+    {
+      "node_id": "spectrum",
+      "kind": "OPERATION",
+      "label": "Periodogram",
+      "semantic_capability": "analysis.spectrum.v1",
+      "sockets": {
+        "inputs": [],
+        "outputs": [
+          {
+            "socket_id": "result",
+            "port": {
+              "schema": "ciw.operation-result.v1",
+              "unit": null,
+              "frame": null
+            },
+            "scale": {
+              "length_m": null,
+              "time_s": null,
+              "energy_j": null,
+              "label": "retained signal"
+            },
+            "uncertainty_semantics": "UNKNOWN",
+            "provenance_required": true
+          }
+        ]
+      },
+      "parameters": {
+        "channel": {
+          "type": "STRING",
+          "value": "q",
+          "unit": null,
+          "domain": {
+            "kind": "ENUM",
+            "minimum": null,
+            "maximum": null,
+            "values": [
+              "q",
+              "v",
+              "energy"
+            ],
+            "log_base": null
+          },
+          "exposed": true
+        }
+      },
+      "resources": [
+        "cpu"
+      ],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [
+        "read:recording"
+      ],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    },
+    {
+      "node_id": "energy_statistics",
+      "kind": "OPERATION",
+      "label": "Energy statistics",
+      "semantic_capability": "analysis.statistics.v1",
+      "sockets": {
+        "inputs": [],
+        "outputs": [
+          {
+            "socket_id": "result",
+            "port": {
+              "schema": "ciw.operation-result.v1",
+              "unit": null,
+              "frame": null
+            },
+            "scale": {
+              "length_m": null,
+              "time_s": null,
+              "energy_j": null,
+              "label": "retained signal"
+            },
+            "uncertainty_semantics": "UNKNOWN",
+            "provenance_required": true
+          }
+        ]
+      },
+      "parameters": {
+        "channel": {
+          "type": "STRING",
+          "value": "energy",
+          "unit": null,
+          "domain": {
+            "kind": "ENUM",
+            "minimum": null,
+            "maximum": null,
+            "values": [
+              "q",
+              "v",
+              "energy"
+            ],
+            "log_base": null
+          },
+          "exposed": true
+        }
+      },
+      "resources": [
+        "cpu"
+      ],
+      "inspection": false,
+      "scale": {
+        "length_m": null,
+        "time_s": null,
+        "energy_j": null,
+        "label": "retained signal"
+      },
+      "provenance_refs": [],
+      "authority_requirements": [
+        "read:recording"
+      ],
+      "invariants": [
+        "source evidence identity retained"
+      ],
+      "validity_conditions": [
+        "Synthetic analytic evidence; physical validation unresolved"
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "edge_id": "signal-dependency",
+      "kind": "DEPENDENCY",
+      "source_node_id": "statistics",
+      "target_node_id": "spectrum",
+      "source_socket": null,
+      "target_socket": null,
+      "relation": "declared_dependency",
+      "metadata": {}
+    },
+    {
+      "edge_id": "evidence-signal",
+      "kind": "SEMANTIC",
+      "source_node_id": "recording",
+      "target_node_id": "signal",
+      "source_socket": null,
+      "target_socket": null,
+      "relation": "declared_semantic",
+      "metadata": {}
+    },
+    {
+      "edge_id": "model-signal",
+      "kind": "SEMANTIC",
+      "source_node_id": "model",
+      "target_node_id": "signal",
+      "source_socket": null,
+      "target_socket": null,
+      "relation": "declared_semantic",
+      "metadata": {}
+    },
+    {
+      "edge_id": "signal-analysis",
+      "kind": "SEMANTIC",
+      "source_node_id": "signal",
+      "target_node_id": "statistics",
+      "source_socket": null,
+      "target_socket": null,
+      "relation": "declared_semantic",
+      "metadata": {}
+    }
+  ],
+  "groups": [
+    {
+      "group_id": "instrument",
+      "label": "Oscillator instrument",
+      "node_ids": [
+        "recording",
+        "model",
+        "signal"
+      ],
+      "parent_group_id": null
+    },
+    {
+      "group_id": "analysis",
+      "label": "Signal analysis",
+      "node_ids": [
+        "statistics",
+        "spectrum"
+      ],
+      "parent_group_id": "instrument"
+    },
+    {
+      "group_id": "energy",
+      "label": "Energy branch",
+      "node_ids": [
+        "energy_statistics"
+      ],
+      "parent_group_id": "instrument"
+    }
+  ],
+  "board_invariants": [
+    "View changes never modify Board identity",
+    "Dependency is not physical causality"
+  ],
+  "notes": "Synthetic oscillator. Groups are existing Board hierarchy, not container contracts.",
+  "claims": {
+    "parameterized_relational_graph": true,
+    "engine_selected": false,
+    "provider_execution": false,
+    "canonical_state_mutated": false,
+    "state_admission": false,
+    "execution_authority": false
+  },
+  "record_digest": "sha256:a8cdc1256475f690a0b0afad8d9891782371f7d3dd319c16bb2f650bd68ec7e7"
+}
