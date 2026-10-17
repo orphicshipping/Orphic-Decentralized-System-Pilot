@@ -51,10 +51,10 @@ def create_server(host, *, name="ncp-control"):
 
         async def templates(context, params):
             cursor(params)
-            return types.ListResourceTemplatesResult.model_validate({"resourceTemplates": [
+            return types.ListResourceTemplatesResult.model_validate({"resourceTemplates": getattr(host, "resource_templates", [
                 {"uriTemplate": "ncp://plans/{plan_id}", "name": "Retained plan", "mimeType": "application/json"},
                 {"uriTemplate": "ncp://runs/{run_id}", "name": "Durable run", "mimeType": "application/json"},
-                {"uriTemplate": "ncp://artifacts/{artifact_id}", "name": "Bounded artifact view", "mimeType": "application/json"}],
+                {"uriTemplate": "ncp://artifacts/{artifact_id}", "name": "Bounded artifact view", "mimeType": "application/json"}]),
                 "ttlMs": 0, "cacheScope": "private"})
 
         async def read(context, params):

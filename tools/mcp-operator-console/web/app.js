@@ -42,7 +42,7 @@ function renderStatus(s) {
   $('runs-metric').textContent = s.known_runs;
   $('profile').textContent = s.profile;
   $('profile').title = s.profile;
-  $('instrument').textContent = s.instrument + (s.resume ? ' · retained profile resumed' : ' · fresh host launch');
+  $('instrument').textContent = (s.surface==='operational'?'operational engineering':s.instrument) + (s.resume ? ' · retained profile resumed' : ' · fresh host launch');
   $('updated').textContent = 'CONSOLE STATUS · ' + new Date().toLocaleTimeString();
   const available = s.connection === 'connected' || s.connection === 'degraded';
   for (const id of ['diagnose','refresh-runs','read-resource']) $(id).disabled = !available || state.busy;
@@ -118,11 +118,13 @@ function renderRuns(data) {
   const list = $('run-list'); list.replaceChildren();
   if (!data || !Array.isArray(data.items)) throw new Error('Invalid run response.');
   if (!data.items.length) {const p=document.createElement('p');p.className='empty';p.textContent='No runs observed. This is not evidence that the server is idle.';list.append(p);}
+  $('runs-metric').textContent=data.items.length;
   for (const run of data.items) {
     const row=document.createElement('div'); row.className='run-row';
     const text=document.createElement('div'), id=document.createElement('code'), small=document.createElement('small'), badge=document.createElement('span');
-    id.textContent=run.run_id;small.textContent='Attempt: '+run.attempt+' · Plan: '+run.plan_id + (run.cancel_requested ? ' · Cancellation requested' : '');
-    badge.className='tag';badge.textContent=run.state; text.append(id,small);row.append(text,badge);list.append(row);
+    if(run.record_kind==='operational_attempt'){id.textContent=run.attempt;small.textContent='Numerical attempt · '+(run.execution_outcome||'retained outcome')+' · '+(run.result_ids?.length??0)+' result identities returned in this console';}
+    else{id.textContent=run.run_id;small.textContent='Attempt: '+run.attempt+' · Plan: '+run.plan_id + (run.cancel_requested ? ' · Cancellation requested' : '');}
+    badge.className='tag';badge.textContent=run.state||run.status; text.append(id,small);row.append(text,badge);list.append(row);
   }
 }
 

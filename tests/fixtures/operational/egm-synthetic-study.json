@@ -1,0 +1,37 @@
+{
+  "schema": "microgauge-research-study/1",
+  "studyId": "inventedStudy",
+  "generation": null,
+  "candidates": [
+    {
+      "candidateId": "candidate1",
+      "kind": "proposal",
+      "resourceId": "inventedCard",
+      "workloadId": "inventedWorkload",
+      "hypothesis": "Invented proposal for exercising the offline data format; no physical experiment occurred.",
+      "factor": {"name": "batch-size", "unit": "items-per-batch", "baseline": 1, "candidate": 2},
+      "plannedRepetitions": 3,
+      "syntheticTrace": {"generator": "offline-seeded-v1", "seed": 42, "steps": 12, "scenario": "valid"}
+    }
+  ],
+  "observations": [
+    {
+      "observationId": "inventedObservation",
+      "candidateId": "candidate1",
+      "arm": "baseline",
+      "resource": {"id": "inventedCard", "model": "Invented interchangeable card", "condition": "used"},
+      "workload": {"id": "inventedWorkload", "revision": "invented-revision-1"},
+      "configurationId": "inventedConfiguration",
+      "provenance": {
+        "kind": "synthetic",
+        "originKind": null,
+        "sourceId": "invented-fixture",
+        "description": "All values, identities and cost are invented test data; no purchase or physical experiment occurred."
+      },
+      "work": {"value": 100, "unit": "item", "definition": "Invented completed items", "scopeId": "inventedInterval"},
+      "duration": {"value": 2, "unit": "s", "basis": "elapsed", "scopeId": "inventedInterval"},
+      "energy": {"value": 10, "unit": "J", "boundary": "gpu-board", "scopeId": "inventedInterval"},
+      "acquisitionCost": {"amount": 40, "currency": "USD", "scope": "device-acquisition", "basis": "quoted"}
+    }
+  ]
+}

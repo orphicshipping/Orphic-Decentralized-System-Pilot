@@ -36,6 +36,15 @@ def main(argv: list[str] | None = None) -> int:
     if not _core_preflight():
         return 2
 
+    if "--operational-profile" in arguments:
+        from .operational_cli import main as operational_main
+        index=arguments.index("--operational-profile")
+        if index+1>=len(arguments):
+            raise ValueError("--operational-profile requires the fixed profile path")
+        profile=arguments[index+1]
+        remaining=arguments[:index]+arguments[index+2:]
+        return operational_main(["view", "--profile", profile, *remaining])
+
     from . import cli
 
     # A default placed before the operator's arguments lets argparse retain its
