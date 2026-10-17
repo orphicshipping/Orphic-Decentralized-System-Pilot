@@ -32,7 +32,7 @@ The remote candidate preserves existing native trees and ancestry; missing local
 Selected checks passed: 531 NCP contract cases; 54 representation cases; 276 simulation-agent/MCP cases;
 77 rank/fluid/geomatics cases (one explicit missing acquired-data skip); installed-wheel generation,
 analysis, inspection and replay outside the source tree; wheel/sdist build; undefined-name scan.
-The final module-by-module regression result is recorded in `validation/consolidation/summary.json`.
+The final isolated pass completed **502 modules: 18,762 passed cases, 1,168 explicit skips, zero failures/errors**. Two full-history modules remain unqualified locally. The module-by-module result and skip reasons are recorded in `validation/consolidation/summary.json`; compressed JUnit reports are retained alongside it. A separate clean installed-wheel run passed all 531 NCP cases with no skips.
 Do not add these overlapping test counts together.
 
 The following remain acceptance gates, not inferred successes:
