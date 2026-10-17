@@ -179,3 +179,7 @@ Further work is explicit: uncertain-x/nonlinear calibration, automatic model
 derivatives, Monte Carlo/interval propagation, distribution/coverage assumptions,
 domain-specific acceptance policies, and physical reference experiments are not
 implemented by these v1 contracts.
+
+The [local validation receipt](../validation/numerical-builtins/summary.json)
+retains source/wheel test reports and separates passing focused checks from the
+incomplete exploratory repository-wide sweep. Counts overlap; do not add them.
