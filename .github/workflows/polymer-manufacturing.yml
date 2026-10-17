@@ -11,6 +11,8 @@ on:
       - 'tests/test_polymer_toolpoint_qc.py'
       - 'validation/polymer-manufacturing/**'
       - 'scripts/check_polymer_manufacturing_installed.py'
+      - 'scripts/installed_command.py'
+      - 'tests/test_installed_command.py'
       - 'pyproject.toml'
       - '.github/workflows/polymer-manufacturing.yml'
   workflow_dispatch:

@@ -12,6 +12,8 @@ on:
       - 'tests/test_polymer_manufacturing.py'
       - 'tests/test_polymer_toolpoint_qc.py'
       - 'scripts/check_toolpoint_upgrades_installed.py'
+      - 'scripts/installed_command.py'
+      - 'tests/test_installed_command.py'
       - 'pyproject.toml'
       - '.github/workflows/toolpoint-upgrades.yml'
   workflow_dispatch:
