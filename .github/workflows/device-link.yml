@@ -1,0 +1,74 @@
+name: Device Link retained acquisition boundary
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/**'
+      - 'tests/test_link.py'
+      - 'tests/test_link_serial_bounds.py'
+      - 'tests/test_connectivity.py'
+      - 'examples/device-link/**'
+      - 'scripts/check_link_installation.py'
+      - 'pyproject.toml'
+      - '.github/workflows/device-link.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  link:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - run: python -m pip install '.[dev,legibility]' wheel
+      - name: Required native C compiler
+        shell: bash
+        run: |
+          set -euo pipefail
+          gcc --version
+          gcc -std=c11 -O2 -Wall -Wextra -Wpedantic -Werror examples/device-link/native/link_wire.c examples/device-link/native/link_wire_cli.c -o "$RUNNER_TEMP/link-wire"
+      - run: python -m pytest -q tests/test_link.py tests/test_connectivity.py tests/test_link_serial_bounds.py --junitxml=link-source.xml
+      - run: python -m pip wheel --no-deps . --wheel-dir link-dist
+      - name: Isolated installed exact-pin and native gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/check_link_installation.py --require-pins \
+            --wheel link-dist/computational_instrumentation_workbench-0.1.0-py3-none-any.whl \
+            --output-dir "$RUNNER_TEMP/link-installed"
+      - name: Native sanitizer gate
+        if: runner.os == 'Linux'
+        shell: bash
+        run: |
+          set -euo pipefail
+          gcc -std=c11 -Wall -Wextra -Wpedantic -Werror -g -O1 -fsanitize=address,undefined -fno-omit-frame-pointer -fno-pie -no-pie examples/device-link/native/link_wire.c examples/device-link/native/link_wire_cli.c -o "$RUNNER_TEMP/link-wire-sanitized"
+          NET_LINK_NATIVE_CODEC="$RUNNER_TEMP/link-wire-sanitized" ASAN_OPTIONS=detect_leaks=1:halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 python -m pytest -q tests/test_link.py -k 'real_native or native_producer or native_refuses' --junitxml=link-sanitizer.xml
+      - name: Existing installed first-use gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          cd "$RUNNER_TEMP"
+          net start --output-dir link-existing-start
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: link-${{ matrix.os }}-${{ matrix.python }}
+          path: |
+            link-source.xml
+            link-sanitizer.xml
+            ${{ runner.temp }}/link-installed/*.json
+            ${{ runner.temp }}/link-installed/*.log
+            ${{ runner.temp }}/link-installed/*.xml
+            ${{ runner.temp }}/link-existing-start/*.json

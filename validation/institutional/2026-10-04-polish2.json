@@ -1,0 +1,67 @@
+{
+  "schema": "net.institutional-polish-evidence.v2",
+  "tested_local_source_commit": "a8c1b97914e56b6d010ca46dcdfe037844e4dee0",
+  "tested_source_tree": "3d07ec8a593d7c56b8595a82679161c04e27b261",
+  "integrated_main": "1f086a30d13193f25847f329e98571479b287369",
+  "source_change_scope": "Campaign interruption handling, spatial CI checkout configuration, tests and operator guidance; installed CIW package unchanged.",
+  "installed_wheel_sha256": "a7fdf191ba6f58f363a3c3412a4e7375a4f1fea6114d6abc5680fdb7b7e63f9e",
+  "installed_package_files_matched_to_wheel": 392,
+  "tests": {
+    "passed": 151,
+    "failed": 0,
+    "skipped": 0,
+    "elapsed_s": 14.04
+  },
+  "campaign": {
+    "status": "PASS",
+    "counts": {
+      "passed": 3,
+      "failed": 0,
+      "not_run": 0
+    },
+    "elapsed_s": 25.72218099993188,
+    "driver_sha256": "a62abb3248a5627ac8c0ecd7b6099f3b2707133dbe1f89dd530c98a8bc559803",
+    "lanes": [
+      {
+        "name": "numerics",
+        "status": "PASS",
+        "report_sha256": "8444adc622ee4f92db396ff3a39a6b0008658954aab35d8931f0f2695ed4e122"
+      },
+      {
+        "name": "academic",
+        "status": "PASS",
+        "report_sha256": "ba995da71d5a8118fe0ef3879dc65a3bf117975022c8f97eec12c8ac9e17a455"
+      },
+      {
+        "name": "epa",
+        "status": "PASS",
+        "report_sha256": "2a2fb874a09a3995180b7cd83a5199faa791b77b2502bcaab03bd26adc6f1a43"
+      }
+    ]
+  },
+  "interruption_regressions": [
+    "Interrupted child retains partial log and outcome; later lanes do not run.",
+    "Preflight and final verification interruptions retain an interrupted campaign report.",
+    "Three completed passing lanes remain honestly counted when final verification is interrupted; overall result is not qualified.",
+    "CLI exits 130 and provides retained evidence location."
+  ],
+  "ci_change": {
+    "repository": "atomtrapping/Notations-FrameMapper-RunTime",
+    "ref": "acc6a4c43dd1d28e3fc6890dadf5cd2b4ae40125",
+    "credential_policy": "Unchanged trusted-event provider read token; pull-request access refusal preserved; credential persistence disabled.",
+    "qualification": "Provider runtime not qualified locally; trusted CI run with provisioned access still required."
+  },
+  "scope_limits": [
+    "Scoped software checks and retained institutional input replay; no physical qualification, hardware operation or end-to-end MCP qualification.",
+    "Full repository and all remote CI success are not claimed.",
+    "External original source archives remain separately provisioned inputs."
+  ],
+  "retained_artifacts": {
+    "institutional-tests/final-tests.xml": "3698e2a67811cdb2113af395c42f8d94c3419553eb4da92f06a4b34df30d63b7",
+    "final-institutional-campaign/campaign.json": "68319ff205af2962e2e48f6fe51ff76c6f5ae47bdba1a0d54da559554408cb6b",
+    "final-campaign-stdout.json": "743f0de0a969b119a37a5d7431910bb8efec7272703372601ea8ac32c2a5ad4c",
+    "final-campaign-progress.log": "0911d8a62f20752ec5191d92e559889c9ea9fbd8242885ddfa0209ec327a3406",
+    "before-interruption.json": "3e8a17a1c9c94c7258559012b71f9a55116e1e373257461c710b28fd2bc239d6",
+    "after-interruption.json": "9f321bc3e9525b9f904655d8e55050eeabc9b66021696b62b5039c6fd0cfc55f"
+  }
+}

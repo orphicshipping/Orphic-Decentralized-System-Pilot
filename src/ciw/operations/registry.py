@@ -59,4 +59,14 @@ def default_registry() -> OperationRegistry:
     from ..system_workflow import operations as system_operations
     for operation in system_operations():
         registry.register(operation)
+    from ..data_workflow import operation as data_operation
+    registry.register(data_operation())
+    from ..data_compute_bridge import polymer_operation
+    registry.register(polymer_operation())
+    from ..data_manufacturing_bridge import operation as manufacturing_review_operation
+    registry.register(manufacturing_review_operation())
+    from ..product_study_workflow import operation as product_study_operation
+    registry.register(product_study_operation())
+    from ..gltf_reference_runtime import projection_operation
+    registry.register(projection_operation())
     return registry

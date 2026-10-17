@@ -113,7 +113,9 @@ def test_installed_operations_are_explicit_and_default_registry_remains_unchange
     assert all(item["operation_id"] not in {workflow.COMPILE, workflow.VERIFY} for item in default)
     registered = workflow.registry().describe()
     assert registered == default + [{"operation_id": workflow.COMPILE, "role": "backend"},
-                                    {"operation_id": workflow.VERIFY, "role": "verification"}]
+                                    {"operation_id": workflow.VERIFY, "role": "verification"},
+                                    {"operation_id": workflow.MOIST_COMPILE, "role": "backend"},
+                                    {"operation_id": workflow.MOIST_VERIFY, "role": "verification"}]
     compiler, verifier = workflow.runtime_identity("compiler"), workflow.runtime_identity("verifier")
     assert compiler["code_sha256"] != verifier["code_sha256"]
     assert compiler["provider"] != verifier["provider"]

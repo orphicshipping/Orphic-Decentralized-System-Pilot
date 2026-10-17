@@ -8,8 +8,12 @@ registry, and it does not register a composition schema.
 from __future__ import annotations
 
 from copy import deepcopy
+from hashlib import sha256
+from pathlib import Path
+import platform
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
+from .data_runtime import comparison_identity, polymer_identity, product_study_identity
 
 
 SCHEMA = "ciw.capability-catalog.v1"
@@ -48,6 +52,22 @@ def _record(**fields):
     if not isinstance(record["capability_id"], str) or not record["capability_id"]:
         raise RuntimeError("capability index entries need an id")
     return record
+
+
+def _toolpoint_containment_identity():
+    """Mirror the owner metadata without importing its execution module.
+
+    The registry-completeness test binds this projection to the owner's actual
+    runtime identity. Do not change owner source bytes just to index them.
+    """
+    root = Path(__file__).parent
+    names = ("data_manufacturing_bridge.py", "manufacturing_contracts.py", "manufacturing_runtime.py",
+             "manufacturing_quality.py", "polymer_microfab.py", "polymer_toolpoint_qc.py",
+             "toolpoint_stream.py", "toolpoint_stream_containment.py", "core/identities.py")
+    return {"provider": "ciw.native-toolpoint-containment", "version": "1",
+            "source_files_sha256": {name: sha256((root / name).read_bytes()).hexdigest() for name in names},
+            "environment": {"python": platform.python_version()},
+            "scope": "bounded_same_implementation_retained_record_replay_no_physical_authority"}
 
 
 _SYSTEM_CAPABILITIES = tuple(_record(
@@ -106,6 +126,43 @@ _CAPABILITIES = (
         notes="Metadata consistency is separate from artifact bytes, signatures, issuer trust and physical validation.",
     ),
     *_SYSTEM_CAPABILITIES,
+    _record(
+        capability_id="data.project-gltf-mesh.v1", disposition="implemented", kind="registered_operation",
+        summary="Project checked retained glTF component geometry into a mesh source.",
+        command=["data", "project-gltf"], operation_id="data.project-gltf-mesh.v1", role="backend",
+        runtime_identity={"provider": "ciw.gltf-reference.component-projection", "version": "1",
+            "adapter_sha256": "sha256:" + sha256(Path(__file__).with_name("gltf_reference.py").read_bytes()).hexdigest(),
+            "mesh_solver": "not_executed_by_projection"}, module="ciw.gltf_reference_runtime",
+        notes="Explicit retained source only; projection does not execute a mesh solver or establish physical qualification.",
+    ),
+    _record(
+        capability_id="data.compare-observations.v1", disposition="implemented", kind="registered_operation",
+        summary="Compare explicitly selected observations from immutable native datasets.",
+        command=None, operation_id="data.compare-observations.v1", role="backend",
+        runtime_identity=comparison_identity(), module="ciw.data_workflow",
+        notes="The net data compare command uses retained Workbench sources. No conversion, interpolation or physical qualification.",
+    ),
+    _record(
+        capability_id="data.review-product-study.v1", disposition="implemented", kind="registered_operation",
+        summary="Review scalar product requirements against exact retained calculation artifacts.",
+        command=["product-study", "review"], operation_id="data.review-product-study.v1", role="backend",
+        runtime_identity=product_study_identity(), module="ciw.product_study_workflow",
+        notes="Separate variants retain source/CAD identities, missing material data and release holds. No physics rerun or physical qualification.",
+    ),
+    _record(
+        capability_id="data.assess-polymer-cycle.v1", disposition="implemented", kind="registered_operation",
+        summary="Apply the existing bounded polymer assessment to a retained native cycle dataset.",
+        command=None, operation_id="data.assess-polymer-cycle.v1", role="backend",
+        runtime_identity=polymer_identity(), module="ciw.data_compute_bridge",
+        notes="Native sensors, histories and uncertainty declarations remain intact. This is not physical product acceptance.",
+    ),
+    _record(
+        capability_id="data.review-toolpoint-containment.v1", disposition="implemented", kind="registered_operation",
+        summary="Review exact retained manufacturing and toolpoint stream reports through the existing containment reducer.",
+        command=["data", "review-toolpoint"], operation_id="data.review-toolpoint-containment.v1", role="backend",
+        runtime_identity=_toolpoint_containment_identity(), module="ciw.data_manufacturing_bridge",
+        notes="Retained-record replay only; no store writes, hold release, shipment authorization or physical qualification.",
+    ),
     _record(
         capability_id="learning.oscillator-rms",
         disposition="implemented",

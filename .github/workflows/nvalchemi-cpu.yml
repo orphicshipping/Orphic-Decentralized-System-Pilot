@@ -1,0 +1,62 @@
+name: ALCHEMI CPU single-point qualification
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/ciw/adapters/**'
+      - 'src/ciw/core/**'
+      - 'runtimes/nvalchemi-lj/**'
+      - 'scripts/check_nvalchemi.py'
+      - 'tests/test_nvalchemi.py'
+      - '.github/workflows/nvalchemi-cpu.yml'
+  pull_request:
+    paths:
+      - 'src/ciw/adapters/**'
+      - 'src/ciw/core/**'
+      - 'runtimes/nvalchemi-lj/**'
+      - 'scripts/check_nvalchemi.py'
+      - 'tests/test_nvalchemi.py'
+      - '.github/workflows/nvalchemi-cpu.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  cpu-lj:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12.14'
+      - name: Install host test dependencies without modifying the source checkout
+        run: python -m pip install numpy==2.4.3 websockets==16.0 pytest==9.0.2
+      - name: Install separately pinned CPU provider
+        run: |
+          python -m venv "$RUNNER_TEMP/nvalchemi-cpu"
+          "$RUNNER_TEMP/nvalchemi-cpu/bin/python" -m pip install 'torch==2.10.0+cpu' --index-url https://download.pytorch.org/whl/cpu
+          "$RUNNER_TEMP/nvalchemi-cpu/bin/python" -m pip install -r runtimes/nvalchemi-lj/requirements-cpu.txt
+          "$RUNNER_TEMP/nvalchemi-cpu/bin/python" -m pip check
+      - name: Check offline input and output refusals
+        run: python -m pytest -q tests/test_nvalchemi.py
+      - name: Execute real CPU provider, compare independently, and replay
+        env:
+          PYTHONPATH: src
+        run: |
+          python scripts/check_nvalchemi.py --python "$RUNNER_TEMP/nvalchemi-cpu/bin/python" \
+            --revision "$(git rev-parse HEAD)" --output "$RUNNER_TEMP/nvalchemi-qualification.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: nvalchemi-cpu-qualification
+          path: ${{ runner.temp }}/nvalchemi-qualification.json
+          if-no-files-found: warn

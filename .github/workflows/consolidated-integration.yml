@@ -1,0 +1,34 @@
+name: Consolidated integration
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: consolidated-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install common and local DSP dependencies
+        run: |
+          python -m pip install -e '.[dev,external-work,legibility,particles]' build
+          python -m pip install --no-deps -e instruments/measurement/signal-processing -e instruments/measurement/signal-conditioning
+      - name: Run all regression modules with isolated provider state
+        run: python scripts/check_consolidated.py --output-dir consolidated-results
+      - name: Retain complete results, including skips and refusals
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: consolidated-regression
+          path: consolidated-results/
+          if-no-files-found: error

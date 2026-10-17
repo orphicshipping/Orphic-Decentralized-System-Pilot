@@ -188,3 +188,11 @@ the existing LOCAL / EXPAND / REFUSE decisions into the same inspector. See
 This extension preserves the distinction already stated above: visual group
 expansion remains a view operation, while scientific EXPAND remains an
 evidence-bound recovery/verification transition.
+
+## Published physical measurement review
+
+The [measurement evidence visualizer](MEASUREMENT_VISUALIZER.md) provides a
+read-only sibling view for retained thermometry, chemistry, density and DSC
+results. Its plots and record inspector retain source uncertainty and
+qualification limits. Public reports are not presented as Board executions or
+as evidence projections from a completed local baseline.

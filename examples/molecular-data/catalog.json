@@ -1,0 +1,618 @@
+{
+  "schema": "net.molecular-reference-catalog.v1",
+  "created_at": "2026-10-05T22:21:44.199178+00:00",
+  "scope": "bounded_curated_source_pack_not_universal_dataset_registry",
+  "sources": [
+    {
+      "source_id": "nist-lj4.xyz",
+      "path": "sources/nist-lj4.xyz",
+      "kind": "reference_configuration",
+      "repository": "usnistgov/feasst",
+      "revision": "af95d31a6401f08f99d38439c71427b30ce22e0a",
+      "upstream_path": "plugin/configuration/test/data/lj_sample_config_periodic4.xyz",
+      "url": "https://github.com/usnistgov/feasst/blob/af95d31a6401f08f99d38439c71427b30ce22e0a/plugin/configuration/test/data/lj_sample_config_periodic4.xyz",
+      "git_blob_sha1": "636d83a91652e85cadb321927fdc1ea5bfd21afd",
+      "sha256": "030b83445008ed21e23a5e949ca85636d5ea2e459b92e137584bec26d3a95b28",
+      "bytes": 2447,
+      "capture": "connector_utf8_content_verified_against_git_blob",
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "license": "NIST public domain / worldwide permission; see FEASST-LICENSE.rst",
+      "physical_measurement": false
+    },
+    {
+      "source_id": "ethane.txt",
+      "path": "sources/ethane.txt",
+      "kind": "force_field_definition",
+      "repository": "usnistgov/feasst",
+      "revision": "af95d31a6401f08f99d38439c71427b30ce22e0a",
+      "upstream_path": "particle/ethane.txt",
+      "url": "https://github.com/usnistgov/feasst/blob/af95d31a6401f08f99d38439c71427b30ce22e0a/particle/ethane.txt",
+      "git_blob_sha1": "2dfb4f9a6c323ebcfbfcfe6d9e58f7028c301cec",
+      "sha256": "dd3ac9220dbcc66a1d6242b45dfe17619db553865902c973f473db34504e884c",
+      "bytes": 350,
+      "capture": "connector_utf8_content_verified_against_git_blob",
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "license": "NIST public domain / worldwide permission; see FEASST-LICENSE.rst",
+      "physical_measurement": false
+    },
+    {
+      "source_id": "n-butane.txt",
+      "path": "sources/n-butane.txt",
+      "kind": "force_field_definition",
+      "repository": "usnistgov/feasst",
+      "revision": "af95d31a6401f08f99d38439c71427b30ce22e0a",
+      "upstream_path": "particle/n-butane.txt",
+      "url": "https://github.com/usnistgov/feasst/blob/af95d31a6401f08f99d38439c71427b30ce22e0a/particle/n-butane.txt",
+      "git_blob_sha1": "bb49e08db61eedf5fbbc7ba230f39a61a43dc8a9",
+      "sha256": "b9513a17824b80c7eaf91c5718a02709f6b06fef1cf317dc5df3e622fccadcb8",
+      "bytes": 749,
+      "capture": "connector_utf8_content_verified_against_git_blob",
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "license": "NIST public domain / worldwide permission; see FEASST-LICENSE.rst",
+      "physical_measurement": false
+    },
+    {
+      "source_id": "FEASST-LICENSE.rst",
+      "path": "sources/FEASST-LICENSE.rst",
+      "kind": "license",
+      "repository": "usnistgov/feasst",
+      "revision": "af95d31a6401f08f99d38439c71427b30ce22e0a",
+      "upstream_path": "LICENSE.rst",
+      "url": "https://github.com/usnistgov/feasst/blob/af95d31a6401f08f99d38439c71427b30ce22e0a/LICENSE.rst",
+      "git_blob_sha1": "aa05e3016a2639f712296eba1975bab41bf96113",
+      "sha256": "f24668272071645a830ee70b641ac5a0a374929daaa0a68e77107fb20aca2786",
+      "bytes": 2467,
+      "capture": "connector_utf8_content_verified_against_git_blob",
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "license": "NIST public domain / worldwide permission; see FEASST-LICENSE.rst",
+      "physical_measurement": false
+    }
+  ],
+  "nist_reference": {
+    "source_url": "https://www.nist.gov/mml/csd/chemical-informatics-group/lennard-jones-fluid-reference-calculations-cuboid-cell",
+    "source_updated": "2026-04-08",
+    "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+    "representation": "selected_factual_table_transcription_not_original_html",
+    "configuration_id": "4",
+    "coordinate_source_id": "nist-lj4.xyz",
+    "particle_count": 30,
+    "box_reduced": [
+      8.0,
+      8.0,
+      8.0
+    ],
+    "units": "Lennard-Jones reduced",
+    "boundary": "minimum_image_xyz",
+    "tail_correction_convention": "total_configuration_energy_N_times_per_particle_LRC",
+    "reference_kind": "published_computed_reference_not_measurement",
+    "uncertainty": "not_reported",
+    "comparisons": [
+      {
+        "mode": "truncated",
+        "cutoff_sigma": 3.0,
+        "pair_energy": "-1.6790E+01",
+        "pair_virial": "-4.6249E+01",
+        "tail_energy": "-5.4517E-01",
+        "tolerance_basis": "half_last_printed_decimal_plus_1e-10_not_measurement_uncertainty"
+      },
+      {
+        "mode": "truncated",
+        "cutoff_sigma": 4.0,
+        "pair_energy": "-1.7060E+01",
+        "pair_virial": "-4.7869E+01",
+        "tail_energy": "-2.3008E-01",
+        "tolerance_basis": "half_last_printed_decimal_plus_1e-10_not_measurement_uncertainty"
+      },
+      {
+        "mode": "linear_force_shift",
+        "cutoff_sigma": 3.0,
+        "pair_energy": "-1.5001E+01",
+        "pair_virial": "-4.3096E+01",
+        "tail_energy": "0.0000E0",
+        "tolerance_basis": "half_last_printed_decimal_plus_1e-10_not_measurement_uncertainty"
+      }
+    ]
+  },
+  "industrial_sources": [
+    {
+      "source_id": "shell-65n8u",
+      "url": "https://www.shell.us/business/sectors/shell-polymers/product-selector/65n8u.html",
+      "capture": "web_page_selected_facts",
+      "raw_document_retained": false,
+      "document_revision": null,
+      "source_updated": "2026-03-31",
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "rights": "manufacturer_document_rights_reserved; selected numerical facts only",
+      "document_redistribution_authorized": false,
+      "training_use_authorized": false
+    },
+    {
+      "source_id": "shell-52n7",
+      "url": "https://www.shell.us/business/sectors/shell-polymers/product-selector/52n7/_jcr_content/root/main/section/simple_1475348609/call_to_action/links/item0.stream/1761689930731/9d96573052c688272538b5fad1912f8776718fe8/shell-polymers-52n7-tds-hdpe.pdf",
+      "capture": "pdf_table_visual_check_selected_facts",
+      "raw_document_retained": false,
+      "document_revision": "HDTD.52N7.R2",
+      "source_updated": null,
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "rights": "manufacturer_document_rights_reserved; selected numerical facts only",
+      "document_redistribution_authorized": false,
+      "training_use_authorized": false
+    },
+    {
+      "source_id": "dow-dgdc2490bk",
+      "url": "https://www.dow.com/en-us/pdp.continuum-dgdc-2490-bk-bimodal-polyethylene-resin.525484z.html",
+      "capture": "web_page_selected_facts",
+      "raw_document_retained": false,
+      "document_revision": null,
+      "source_updated": null,
+      "retrieved_at": "2026-10-05T22:21:44.199178+00:00",
+      "rights": "manufacturer_document_rights_reserved; selected numerical facts only",
+      "document_redistribution_authorized": false,
+      "training_use_authorized": false
+    }
+  ],
+  "industrial_targets": [
+    {
+      "target_id": "shell-65n8u:mass_density:1",
+      "source_id": "shell-65n8u",
+      "material_id": "Shell 65N8U",
+      "polymer": "HDPE",
+      "property": "mass_density",
+      "value_text": "0.965",
+      "unit": "g/cm3",
+      "test_method": "ASTM D792",
+      "conditions": {},
+      "missing_conditions": [
+        "temperature",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {}
+    },
+    {
+      "target_id": "shell-65n8u:melt_mass_flow_rate:2",
+      "source_id": "shell-65n8u",
+      "material_id": "Shell 65N8U",
+      "polymer": "HDPE",
+      "property": "melt_mass_flow_rate",
+      "value_text": "8.2",
+      "unit": "g/10min",
+      "test_method": "ASTM D1238",
+      "conditions": {
+        "temperature_K": 463.15,
+        "load_kg": 2.16
+      },
+      "missing_conditions": [
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "temperature_value_text": "190",
+        "temperature_unit": "degC",
+        "load_value_text": "2.16",
+        "load_unit": "kg"
+      }
+    },
+    {
+      "target_id": "shell-52n7:mass_density:3",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "mass_density",
+      "value_text": "0.952",
+      "unit": "g/cm3",
+      "test_method": "ASTM D792",
+      "conditions": {},
+      "missing_conditions": [
+        "temperature",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {}
+    },
+    {
+      "target_id": "shell-52n7:melt_mass_flow_rate:4",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "melt_mass_flow_rate",
+      "value_text": "6.5",
+      "unit": "g/10min",
+      "test_method": "ASTM D1238",
+      "conditions": {
+        "temperature_K": 463.15,
+        "load_kg": 2.16
+      },
+      "missing_conditions": [
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "temperature_value_text": "190",
+        "temperature_unit": "degC",
+        "load_value_text": "2.16",
+        "load_unit": "kg"
+      }
+    },
+    {
+      "target_id": "shell-52n7:tensile_yield_stress:5",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "tensile_yield_stress",
+      "value_text": "27.8",
+      "unit": "MPa",
+      "test_method": "ASTM D638",
+      "conditions": {
+        "specimen": "Type IV",
+        "plaque_molding": "ASTM D4703C"
+      },
+      "missing_conditions": [
+        "temperature",
+        "strain_rate",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "specimen": "Type IV",
+        "plaque_molding": "ASTM D4703C"
+      }
+    },
+    {
+      "target_id": "shell-52n7:tensile_break_stress:6",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "tensile_break_stress",
+      "value_text": "14.2",
+      "unit": "MPa",
+      "test_method": "ASTM D638",
+      "conditions": {
+        "specimen": "Type IV",
+        "plaque_molding": "ASTM D4703C"
+      },
+      "missing_conditions": [
+        "temperature",
+        "strain_rate",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "specimen": "Type IV",
+        "plaque_molding": "ASTM D4703C"
+      }
+    },
+    {
+      "target_id": "shell-52n7:flexural_secant_modulus:7",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "flexural_secant_modulus",
+      "value_text": "1300",
+      "unit": "MPa",
+      "test_method": "ASTM D790B",
+      "conditions": {
+        "secant_strain_fraction": 0.01,
+        "plaque_molding": "ASTM D4703C"
+      },
+      "missing_conditions": [
+        "temperature",
+        "strain_rate",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "secant_strain_fraction": 0.01,
+        "plaque_molding": "ASTM D4703C"
+      }
+    },
+    {
+      "target_id": "shell-52n7:flexural_secant_modulus:8",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "flexural_secant_modulus",
+      "value_text": "1100",
+      "unit": "MPa",
+      "test_method": "ASTM D790B",
+      "conditions": {
+        "secant_strain_fraction": 0.02,
+        "plaque_molding": "ASTM D4703C"
+      },
+      "missing_conditions": [
+        "temperature",
+        "strain_rate",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "secant_strain_fraction": 0.02,
+        "plaque_molding": "ASTM D4703C"
+      }
+    },
+    {
+      "target_id": "shell-52n7:melting_peak_temperature:9",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "melting_peak_temperature",
+      "value_text": "131",
+      "unit": "degC",
+      "test_method": null,
+      "conditions": {},
+      "missing_conditions": [
+        "thermal_scan_rate",
+        "method",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {}
+    },
+    {
+      "target_id": "shell-52n7:crystallization_peak_temperature:10",
+      "source_id": "shell-52n7",
+      "material_id": "Shell 52N7",
+      "polymer": "HDPE",
+      "property": "crystallization_peak_temperature",
+      "value_text": "117",
+      "unit": "degC",
+      "test_method": null,
+      "conditions": {},
+      "missing_conditions": [
+        "thermal_scan_rate",
+        "method",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {}
+    },
+    {
+      "target_id": "dow-dgdc2490bk:mass_density:11",
+      "source_id": "dow-dgdc2490bk",
+      "material_id": "Dow CONTINUUM DGDC-2490 BK",
+      "polymer": "HDPE",
+      "property": "mass_density",
+      "value_text": "0.959",
+      "unit": "g/cm3",
+      "test_method": null,
+      "conditions": {},
+      "missing_conditions": [
+        "test_method",
+        "temperature",
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {}
+    },
+    {
+      "target_id": "dow-dgdc2490bk:melt_mass_flow_rate:12",
+      "source_id": "dow-dgdc2490bk",
+      "material_id": "Dow CONTINUUM DGDC-2490 BK",
+      "polymer": "HDPE",
+      "property": "melt_mass_flow_rate",
+      "value_text": "0.15",
+      "unit": "g/10min",
+      "test_method": "ASTM D1238",
+      "conditions": {
+        "temperature_K": 463.15,
+        "load_kg": 2.16
+      },
+      "missing_conditions": [
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "temperature_value_text": "190",
+        "temperature_unit": "degC",
+        "load_value_text": "2.16",
+        "load_unit": "kg"
+      }
+    },
+    {
+      "target_id": "dow-dgdc2490bk:melt_mass_flow_rate:13",
+      "source_id": "dow-dgdc2490bk",
+      "material_id": "Dow CONTINUUM DGDC-2490 BK",
+      "polymer": "HDPE",
+      "property": "melt_mass_flow_rate",
+      "value_text": "0.30",
+      "unit": "g/10min",
+      "test_method": "ASTM D1238",
+      "conditions": {
+        "temperature_K": 463.15,
+        "load_kg": 5.0
+      },
+      "missing_conditions": [
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "temperature_value_text": "190",
+        "temperature_unit": "degC",
+        "load_value_text": "5.0",
+        "load_unit": "kg"
+      }
+    },
+    {
+      "target_id": "dow-dgdc2490bk:melt_mass_flow_rate:14",
+      "source_id": "dow-dgdc2490bk",
+      "material_id": "Dow CONTINUUM DGDC-2490 BK",
+      "polymer": "HDPE",
+      "property": "melt_mass_flow_rate",
+      "value_text": "7.5",
+      "unit": "g/10min",
+      "test_method": "ASTM D1238",
+      "conditions": {
+        "temperature_K": 463.15,
+        "load_kg": 21.6
+      },
+      "missing_conditions": [
+        "conditioning",
+        "material_lot"
+      ],
+      "origin": "manufacturer_nominal_property",
+      "measurement_time": null,
+      "material_lot": null,
+      "uncertainty": {
+        "status": "unspecified"
+      },
+      "qualification": "not_performed",
+      "training_use_authorized": false,
+      "reported_conditions": {
+        "temperature_value_text": "190",
+        "temperature_unit": "degC",
+        "load_value_text": "21.6",
+        "load_unit": "kg"
+      }
+    }
+  ],
+  "academic_forcefields": [
+    {
+      "source_id": "ethane.txt",
+      "name": "ethane",
+      "family": "TraPPE-UA",
+      "academic_reference": "10.1021/jp972543+",
+      "representation": "FEASST_native_definition_not_GROMACS_or_LAMMPS_topology",
+      "supported_native_execution": false,
+      "remaining": [
+        "bonded_mixed_site_profile",
+        "rigid_bond_convention",
+        "angle_and_dihedral_conventions",
+        "nonbonded_exclusions",
+        "mixing_rules",
+        "forcefield_and_ensemble_validation"
+      ]
+    },
+    {
+      "source_id": "n-butane.txt",
+      "name": "n-butane",
+      "family": "TraPPE-UA",
+      "academic_reference": "10.1021/jp972543+",
+      "representation": "FEASST_native_definition_not_GROMACS_or_LAMMPS_topology",
+      "supported_native_execution": false,
+      "remaining": [
+        "bonded_mixed_site_profile",
+        "rigid_bond_convention",
+        "angle_and_dihedral_conventions",
+        "nonbonded_exclusions",
+        "mixing_rules",
+        "forcefield_and_ensemble_validation"
+      ]
+    }
+  ],
+  "unit_constants": {
+    "electron_volt_J": "1.602176634e-19",
+    "avogadro_mol_inverse": "6.02214076e23",
+    "source_url": "https://physics.nist.gov/cuu/Constants/Table/allascii.txt",
+    "basis": "SI_defining_constants_exact"
+  },
+  "global_limits": {
+    "physical_validation": "not_performed",
+    "equipment_authority": false,
+    "model_training": "not_performed",
+    "industrial_values_are_specifications": false
+  }
+}

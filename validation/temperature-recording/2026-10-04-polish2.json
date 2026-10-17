@@ -1,0 +1,74 @@
+{
+  "schema": "net.temperature-recording-polish-validation.v1",
+  "recorded_on": "2026-10-04",
+  "pull_request": 163,
+  "status": "passed_bounded_recording_validation",
+  "tested_code_commit": "dff64abbed83c85869e13e959a577539d9f6a391",
+  "tested_code_tree": "41d0ceb613fb8e33673b368036a75212f21cf65d",
+  "integrated_main_commit": "1f086a30d13193f25847f329e98571479b287369",
+  "publication_note": "This evidence-only commit follows the tested code commit; runtime and test sources are unchanged.",
+  "reproduced_issue": {
+    "trigger": "Test-fixture recording timestamp exactly 1e150",
+    "before": "Valid recording was retained, then derived exclusive endpoint exceeded persisted-document numeric bound; CLI refused after creating output/recording.json",
+    "after": "Derived endpoint validated in make_source before CLI creates output; clear refusal and no partial output",
+    "boundary": "Immediate lower binary64 timestamp still imports and survives Session reopen"
+  },
+  "source_tests": {
+    "passed": 615,
+    "skipped": 1,
+    "failed": 0,
+    "errors": 0,
+    "duration_seconds": 101.61,
+    "scope": "17 targeted recording, temperature, thermal, agent, observation and catalog test modules",
+    "skip": "Existing pinned RCI/FSRT integration check requires CIW_RCI_REPO and CIW_FSRT_REPO"
+  },
+  "installed_tests": {
+    "passed": 86,
+    "skipped": 0,
+    "failed": 0,
+    "errors": 0,
+    "duration_seconds": 3.1,
+    "suites": [
+      "test_temperature_recording.py",
+      "test_temperature_recording_session.py"
+    ],
+    "python_flags": [
+      "-I",
+      "-X",
+      "utf8"
+    ],
+    "pytest_pythonpath_override": ""
+  },
+  "wheel": {
+    "sha256": "abc5c168a92628413e91ccd6025e17278989010a54f1b801db1484ec619ab7e9",
+    "installed_package_files_byte_matched": 395
+  },
+  "installed_cli_checks": [
+    "import-temperature",
+    "inspect-temperature",
+    "temperature-observations"
+  ],
+  "retained_recording": {
+    "rows": 201,
+    "digest": "sha256:16fc06a8d585f3b2d89a10a9b2dc11f6dc49a9af5d5dc94782cc1f847a72732e",
+    "digest_unchanged": true,
+    "session_reopened_without_execution": true
+  },
+  "runtime": {
+    "PYTHONUTF8": "1",
+    "python": "3.12.13",
+    "numpy": "2.4.3",
+    "pytest": "9.0.2",
+    "PyYAML": "6.0.3",
+    "websockets": "16.0",
+    "mcp": "1.26.0",
+    "platform": "Windows"
+  },
+  "limits": [
+    "No complete repository suite rerun",
+    "No local hardware acquisition, calibration authentication or physical qualification",
+    "Dataset retains unknown device identity, absolute acquisition epoch, calibration and covariance",
+    "No source-recording handoff to thermal estimator or hardware actuation",
+    "Filesystem failures after validation may retain partial artifacts; operator guide describes retaining them and retrying in a fresh directory"
+  ]
+}

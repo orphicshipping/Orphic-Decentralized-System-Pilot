@@ -1,0 +1,566 @@
+{
+  "main": "e6af2d48bfe7511185f6ebefa8cce7380cbc5d54",
+  "integration_head": "75bad7a8a6b5770c2d68c866f7b035c723c88ad7",
+  "pull_requests": [
+    {
+      "number": 228,
+      "head": "75bad7a8a6b5770c2d68c866f7b035c723c88ad7",
+      "base": "751d25cdc3b5210fd115ab92a41cb4330e429573",
+      "title": "Gate NCP gateway startup with read-only preflight",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 227,
+      "head": "751d25cdc3b5210fd115ab92a41cb4330e429573",
+      "base": "721b45bdaee33d9241a7deb90f9e9b0399c0d75e",
+      "title": "Integrate Board refit and frozen corpus coverage through MCP",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 226,
+      "head": "721b45bdaee33d9241a7deb90f9e9b0399c0d75e",
+      "base": "5d07803ceba4c9e280bdedeaecc106451a2e3408",
+      "title": "Integrate GaugeLink MCP workflows and reviewed metrology evidence",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 225,
+      "head": "5d07803ceba4c9e280bdedeaecc106451a2e3408",
+      "base": "d242abd94f55dc415f1919a22dcddca337fa9485",
+      "title": "Connect MCP planning to admitted durable engineering runs",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 224,
+      "head": "d242abd94f55dc415f1919a22dcddca337fa9485",
+      "base": "1ed585695c887601f936f2efc58cd0d59253f426",
+      "title": "Provision provider stacks and integrate atomic native Link data",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 223,
+      "head": "1ed585695c887601f936f2efc58cd0d59253f426",
+      "base": "fe558935452f7de699c79b7e35003e08b56b497e",
+      "title": "Unify NCP corpus profiles and harden retained Windows evidence",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 222,
+      "head": "fe558935452f7de699c79b7e35003e08b56b497e",
+      "base": "26ffb9c06dec36c2357300b581fff7f415a1d1a0",
+      "title": "Integrate GaugeLink, retained evidence and pinned Proto-Corpus through MCP",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 221,
+      "head": "70c515ba97b1b39693d9446626bf7879800efe03",
+      "base": "e6af2d48bfe7511185f6ebefa8cce7380cbc5d54",
+      "title": "Build NCP with indexed corpus search, cited evidence and scoped MCP work",
+      "disposition": "Reconciled with hardened corpus and MCP integration in #223\u2013228."
+    },
+    {
+      "number": 219,
+      "head": "26ffb9c06dec36c2357300b581fff7f415a1d1a0",
+      "base": "827cbed62b02f1a001869b0fa70daabd6491efcc",
+      "title": "Compile engineering intent into existing NET production plans and retained evidence gates",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 218,
+      "head": "e6f17ff7152c76095d67128b46b107795eeaf2e9",
+      "base": "7485ef056e07afc9fe08e8d0a900f7f24de34cd8",
+      "title": "Propagate correlated timing uncertainty into model and held-out review",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 217,
+      "head": "7485ef056e07afc9fe08e8d0a900f7f24de34cd8",
+      "base": "3a3167e1b1a8b87dbb896510c0f9cd4c19147665",
+      "title": "Connect manufacturing timing observations to setup/batch identification and held-out review",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 216,
+      "head": "3a3167e1b1a8b87dbb896510c0f9cd4c19147665",
+      "base": "fe3626da05cbb4508c12c8d7d4f2e8a4cfe5bb89",
+      "title": "Strengthen manufacturing planning with bounded optimization, bottlenecks and robust process comparison",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 215,
+      "head": "fe3626da05cbb4508c12c8d7d4f2e8a4cfe5bb89",
+      "base": "801b25d453eaeda04910339bef1c4713026ba070",
+      "title": "Compile native sensor definitions into capability-bound manufacturing plans",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 214,
+      "head": "827cbed62b02f1a001869b0fa70daabd6491efcc",
+      "base": "128436b99bb45cb0a7904de1df6dab012173952d",
+      "title": "Connect reference-paired installation response to unified Link and retained NET execution",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 213,
+      "head": "6477059eb24c982017953d4f619fc6dca142cc9d",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Build graph-first Industrial Lab on existing System Board and NET simulation lifecycle",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 212,
+      "head": "801b25d453eaeda04910339bef1c4713026ba070",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Connect retained KiCad and MEMS records to NET Blender/Godot evidence views",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 211,
+      "head": "28644a197f82ca1c5169fd210516a2c9e8aa6dab",
+      "base": "0066a4733645ff39289232075ea31af1e0e8e47e",
+      "title": "Integrate pinned NIST and academic calibration reference data for GaugeLink",
+      "disposition": "Reconciled with the pinned reference integration in #226."
+    },
+    {
+      "number": 210,
+      "head": "0066a4733645ff39289232075ea31af1e0e8e47e",
+      "base": "be20bd2a953ba296a90d009d19d542890948cb5b",
+      "title": "Connect GaugeLink evidence to five-blade pinwheel review and uncertainty-improvement proposals",
+      "disposition": "Reconciled with the later GaugeLink evidence/refit integration in #226."
+    },
+    {
+      "number": 209,
+      "head": "128436b99bb45cb0a7904de1df6dab012173952d",
+      "base": "99137e0ddea057eacb9e0c934d9f249d277f432e",
+      "title": "Simplify GaugeLink Digital Inspection and harden signed local delivery",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 208,
+      "head": "be20bd2a953ba296a90d009d19d542890948cb5b",
+      "base": "99137e0ddea057eacb9e0c934d9f249d277f432e",
+      "title": "Add retained device and measurement views, Workbench handoff and evidence export",
+      "disposition": "Reconciled with the retained Link/device integration in #226."
+    },
+    {
+      "number": 207,
+      "head": "80d3d6d339fe32c2da367d8c63e00b559a8c6bd2",
+      "base": "03bb19e3c6dac6c30ae0f1ee684a8f9a96611a70",
+      "title": "Connect retained device observations to Session comparison and read-only MCP",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 206,
+      "head": "1be80e0ae3085f684b8b6ac6c39bfb4b20ee2ae9",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Add recorded device coherence and permissioned network identity/consent lifecycle",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 205,
+      "head": "99137e0ddea057eacb9e0c934d9f249d277f432e",
+      "base": "03bb19e3c6dac6c30ae0f1ee684a8f9a96611a70",
+      "title": "Connect Link serial acquisition to calibration, model, arithmetic audit and MCP",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 204,
+      "head": "03bb19e3c6dac6c30ae0f1ee684a8f9a96611a70",
+      "base": "1517ef212be6f80092672d1ee6b05ad1df049bfb",
+      "title": "Implement Device Runtime, Link protocol, durable ingress and offline instrument Dashplate",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 203,
+      "head": "f2126a6f9d2627cbf823577b6473080c444234e6",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Document OpenTelemetry and OpenObserve as an optional operational-observability plane",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 202,
+      "head": "1517ef212be6f80092672d1ee6b05ad1df049bfb",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Add bounded Open5GS/free5GC connectivity observations for handheld and edge workflows",
+      "disposition": "Already in the #228 ancestry; retained."
+    },
+    {
+      "number": 201,
+      "head": "2e26200d6b70859fdfc07e64bf99c7cbbb8dbeac",
+      "base": "1293b8cefbab7111c962cd48a3e388106e787c4c",
+      "title": "Connect retained glTF references to existing mesh and Godot consumers",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 200,
+      "head": "cf5342a4e0996bcbe04671572f0c7e6da21c4b7e",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Integrate retained data, native workflows and manufacturing QC evidence",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 199,
+      "head": "a7160e8922c6bd0f482fb603b318837f50479d27",
+      "base": "8569ac95f234c9334224832df15e91c002bfae20",
+      "title": "Procure NIST and industrial polymer data with checked GROMACS/LAMMPS input integration",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 198,
+      "head": "a03af213aa5df22e58f77a3293b68244441ef5e8",
+      "base": "1293b8cefbab7111c962cd48a3e388106e787c4c",
+      "title": "Connect retained CAREX references to native OIT rank diagnostics",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 197,
+      "head": "8569ac95f234c9334224832df15e91c002bfae20",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Add usable bounded LAMMPS external tooling with retained native artifacts and qualification gates",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 196,
+      "head": "1293b8cefbab7111c962cd48a3e388106e787c4c",
+      "base": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "title": "Qualify academic corpus through existing NET data and numerical consumers",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 195,
+      "head": "ef84c048ee4cdef627f8575c89d855adb2fc7121",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Add root security, contributing, and citation policies",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 194,
+      "head": "3465f76468b106e6e12366d6c99f2cc920ffe431",
+      "base": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+      "title": "Integrate durable QC capture and retrospective validation studies",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 193,
+      "head": "076eefe96c0d20c055a4df46fbe50a4d5c9bab2d",
+      "base": "d4924247ae7a8b14d2bd608405b1a2f919b82c83",
+      "title": "Execute retained materials investigations and covariance-dependent comparisons through Session",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 192,
+      "head": "00ea251ef9574148105283443e0f8a3bdf38bf2e",
+      "base": "0374076695475669188d61698e4656ced2263e01",
+      "title": "Harden existing GROMACS provider and add an explicit native qualification gate",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 191,
+      "head": "49e3d38ee43ede6db9b0ccf46328739e1c80a047",
+      "base": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "title": "Integrate bounded HOOMD CPU particle studies and native GSD evidence",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 190,
+      "head": "0be25f7843ea086aa18e6079ab24074b9c8b22e5",
+      "base": "662580211a31c00f6b30d0f60f815d67316d967d",
+      "title": "Qualify trusted scientific extension result relationships",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 189,
+      "head": "b2f712ed583f3042195531228c65948ee893a197",
+      "base": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "title": "Integrate versioned preliminary product studies into NET evidence and replay",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 188,
+      "head": "2e986b1d6e3037b2bd4947b75e9b20ab75dba57a",
+      "base": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "title": "Qualify physics/chemistry inputs and isolate held-out thermal evidence",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 187,
+      "head": "992fc57f6e8288c26c0cfc075c8ace02707d46cf",
+      "base": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "title": "Qualify the isolated NVIDIA ALCHEMI CPU single-point adapter",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 185,
+      "head": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
+      "base": "052124f2904ee6ceab1c256961d11b6865486424",
+      "title": "Integrate retained native datasets and cross-domain NET consumers",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 184,
+      "head": "4265eb2382d694f07fd22e1701c107f992297b42",
+      "base": "052124f2904ee6ceab1c256961d11b6865486424",
+      "title": "Add retained-result dependency contracts and optional private domain-provider dispatch",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 183,
+      "head": "9a3e6c619dedc532fb774a8907eaf1b3784f7799",
+      "base": "dd8782a9df195a79769cbe9e8d63579578dc248e",
+      "title": "Connect engineering study to lot/part genealogy, inspections and dispositions",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 182,
+      "head": "d4924247ae7a8b14d2bd608405b1a2f919b82c83",
+      "base": "3f22b1483bd156f1263d337b271d58bb6cb71ffe",
+      "title": "Make one empirical rheology investigation source-bound and uncertainty-aware",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 181,
+      "head": "55d73b4ea488c3f88978d07ed41342b46102824a",
+      "base": "052124f2904ee6ceab1c256961d11b6865486424",
+      "title": "Add bounded ALCHEMI energy/force pilot with retained evidence and qualification gates",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 180,
+      "head": "894e4d780fa62811422d5d91428270c1f3c8c2eb",
+      "base": "052124f2904ee6ceab1c256961d11b6865486424",
+      "title": "feat: bounded sequence kinetics and Markov diagnostics from Fischbacher reference",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 179,
+      "head": "4f47714d094966705c7ef94d847a06fe6a1a7d7b",
+      "base": "6b1eaf21ea51853bd234a69c52cf6dd00e3c3235",
+      "title": "Model\u2013Reality thermal identification: integrity hardening and separate-experiment assessment",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 178,
+      "head": "fad73e28aab9882fd6878eb7a4ed1e192753fb9d",
+      "base": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+      "title": "Add production dossiers with distinct manufacturing namespace and retained identity checks",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 177,
+      "head": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
+      "base": "6b1eaf21ea51853bd234a69c52cf6dd00e3c3235",
+      "title": "Add Polymer Microfab + Discrete Manufacturing Runtime with tool-point QC",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 175,
+      "head": "505bd406e0ab26447c6ac4ac3d13d506a94fa28d",
+      "base": "367d72f5a2794b0a6ee97224e72e957b3e6862ae",
+      "title": "Extend polymer rheology with covariance-aware identification and independent scientific audits",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 174,
+      "head": "3f22b1483bd156f1263d337b271d58bb6cb71ffe",
+      "base": "367d72f5a2794b0a6ee97224e72e957b3e6862ae",
+      "title": "Add tested polymer viscoelasticity, molar-mass moments and benchmark inspection",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 173,
+      "head": "367d72f5a2794b0a6ee97224e72e957b3e6862ae",
+      "base": "0091492b9dc237b05c33cac77d2307115bd803b2",
+      "title": "Add bounded physics\u2013chemistry coupling with independent numerical verification",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 172,
+      "head": "5ebccdeb0f890d73aa6e86a142b51a54146c9481",
+      "base": "0091492b9dc237b05c33cac77d2307115bd803b2",
+      "title": "Fix cross-platform roundoff rejection in retained temporal-study validation",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 171,
+      "head": "0c2fb09d6b285f7b3d08ddc85a5e0d8f04390cf7",
+      "base": "0091492b9dc237b05c33cac77d2307115bd803b2",
+      "title": "Add bounded reference comparison and transport timing tools",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 170,
+      "head": "ba82f41c0f9602ff3422f0b895e45f06b1984f83",
+      "base": "0091492b9dc237b05c33cac77d2307115bd803b2",
+      "title": "Carry published metrology benchmark harness onto current main",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 169,
+      "head": "5405dd488cd5a87d410595e051a8ca2e3205622c",
+      "base": "0091492b9dc237b05c33cac77d2307115bd803b2",
+      "title": "Carry bounded public temperature recording import onto current main",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 166,
+      "head": "334fbbb26702cdc6f3f89e277cd68d81e9ef58b0",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Retain KRISS and BIPM metrology benchmark harness and current-wheel results",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 165,
+      "head": "f9a109f5cc29bb457279403d5905e4d724196f99",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Add physical and laboratory measurement workflows with public-source replays",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 164,
+      "head": "276d4afdcfe73e22c8e9125407a5849cf61c0b6b",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Run retained NIST, Oxford, CWRU and EPA data against an installed NET wheel",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 163,
+      "head": "5746ab3bb5d7e165278aab593deecafc5962341e",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Import retained temperature recordings through CLI and Session lifecycle",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 162,
+      "head": "fc28a5e50db0dbef20a1aab1fbb7db4bcb1e2a8a",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Add offline tooling catalog visualizer with browser validation",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 161,
+      "head": "4dfd95cd3739551d8e8bef18969c87edcab3ac65",
+      "base": "1f086a30d13193f25847f329e98571479b287369",
+      "title": "Add uncertainty-aware comparisons, timing reports and operator guidance",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 151,
+      "head": "0081cbfef3bfda973e460ba265e7ee94d1be8efc",
+      "base": "ffad7dba2b258339b27170e071c0de431f6f2aef",
+      "title": "Keep Foundry water production usable with current 1792 source",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 148,
+      "head": "5accef9dc4ae94034ebeed31e241a52945292f23",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add qualified DSP conditioning and replayable pump diagnostics",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 146,
+      "head": "ed5c7d4360b8aefa9873b28424cbdc6a19bca49c",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add algebraic graphics workbench with retained mesh and texture replay",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 145,
+      "head": "256cda305557ef127f78b89c1421ccf8c12b6d5f",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add five bounded heat-transfer and thermofluids tools",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 143,
+      "head": "6915d10ce62e5a8da8385d3dac24c9986cb35389",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add qualified fluid multiscale dynamics, conservative coupling, and held-out experiment comparison",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 142,
+      "head": "ff146529146d8a0f31ac80f41ce592c6b9eed1d4",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add 16 course-aligned geomatics and Earth observation tools",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 141,
+      "head": "25e9a245a1a341f8c592f3257b787adcdf333bb2",
+      "base": "d313351f96aad73fe40229b7d705b18c12e96b64",
+      "title": "Add bounded weather, hydrometeorology and cryosphere tools to NET",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 139,
+      "head": "7fd822bea1f62257f8e95ffbdb7139c923375310",
+      "base": "98b7dfccec61f295d0bd0240723fb64bf0f58d17",
+      "title": "Restore the complete 23-instrument NET workspace \u2014 native history transport",
+      "disposition": "History-transport procedure excluded from execution: original PR explicitly says do not merge. Existing remote trees/history preserved; no native refs rewritten."
+    },
+    {
+      "number": 114,
+      "head": "2b4cc74a447660941ef072c55e57c1a8dceba5c2",
+      "base": "40de4145ee72d1f4ede190e0336254bd5aefbc25",
+      "title": "feat: verified impact and atmospheric engine with measurement preparation",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 100,
+      "head": "2fd8d418d7c9604dc7eb731d1798a4826228f84c",
+      "base": "74b2fcf3fc7c317ae5a1782ef5eef58bdbc9f451",
+      "title": "feat: spatial and mesh realization adapters V1",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 99,
+      "head": "74b2fcf3fc7c317ae5a1782ef5eef58bdbc9f451",
+      "base": "09b4007eae59d4bb0f9183e9fb3794070165c1da",
+      "title": "feat: typed representation realization adapters V1",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 98,
+      "head": "09b4007eae59d4bb0f9183e9fb3794070165c1da",
+      "base": "d43a420a22af51231097dfbfed6d8d73595aeb5f",
+      "title": "feat: evidence-bound representation expansion V1",
+      "disposition": "Expansion intent retained through current verification/promotion gates; older permissive CLI implementation not restored."
+    },
+    {
+      "number": 78,
+      "head": "48e62565dd25046a14920874556fa585964495a8",
+      "base": "6861862c9ea0e8280e3e0372d3d0a984b62cecb9",
+      "title": "feat: unattended local coding/vision agent with bounded workcell edits and usage accounting",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 66,
+      "head": "3100894149779823727b48e0b46e72633f2427a5",
+      "base": "55d67d42beea95d7ce98af935b48bd84df5e9b4b",
+      "title": "docs: invert institutional framing around Notation Systems commons and Cartesian commercialization",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 64,
+      "head": "e584e364e3494202e07a865ee4772846ea6bb828",
+      "base": "ba48ba82098ef0274bea471775fd9dcd7f9b743b",
+      "title": "feat: qualified GSC raster inspection and NDVI through the NET workbench",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 63,
+      "head": "ba48ba82098ef0274bea471775fd9dcd7f9b743b",
+      "base": "4ee5f63ff811344e80100559c17a1d3aee50f967",
+      "title": "feat: agent-driven simulation campaigns with bounded branching and replay",
+      "disposition": "Reconciled into the combined subsystem; qualification gates retained."
+    },
+    {
+      "number": 53,
+      "head": "ded994c711d7c9a8a9e4c99eb758c323365157fb",
+      "base": "2e5e0afb720b3d2b3609f9b5bd0ae51f0a6e8e73",
+      "title": "docs: make README easier to read and get started with",
+      "disposition": "Current main README retained; stale default-branch acceptance claims replaced with this review scope."
+    }
+  ]
+}

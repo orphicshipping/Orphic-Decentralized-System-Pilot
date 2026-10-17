@@ -100,6 +100,33 @@ def _policy(**over):
 
 CODES: List[Code] = [
     # -- structures/quantity.py ------------------------------------------------
+    Code("QUANTITY_VALUE_INVALID", "structures.quantity.TypedQuantity",
+         "a quantity value must be a finite non-boolean number",
+         lambda: TypedQuantity(value="invalid", unit="K", uncertainty_kind="absent"),
+         QuantityError, "quantity value",
+         document='PROPERTY: p | method=m | conditions=r:1 | value=invalid | unit=K | uncertainty_kind=absent'),
+    Code("UNCERTAINTY_VALUE_INVALID", "structures.quantity.TypedQuantity",
+         "a declared uncertainty must be a finite non-boolean number",
+         lambda: TypedQuantity(value=1.0, unit="K", uncertainty_kind="stated", uncertainty="invalid"),
+         QuantityError, "quantity uncertainty",
+         document='PROPERTY: p | method=m | conditions=r:1 | value=1 | unit=K | uncertainty_kind=stated | uncertainty=invalid'),
+    Code("UNCERTAINTY_NEGATIVE", "structures.quantity.TypedQuantity",
+         "a declared uncertainty must be nonnegative",
+         lambda: TypedQuantity(value=1.0, unit="K", uncertainty_kind="stated", uncertainty=-1),
+         QuantityError, "nonnegative",
+         document='PROPERTY: p | method=m | conditions=r:1 | value=1 | unit=K | uncertainty_kind=stated | uncertainty=-1'),
+    Code("PROPERTY_NAME_EMPTY", "structures.quantity.assert_property_context",
+         "a property name must be nonempty text",
+         lambda: assert_property_context({"property": "", "method": "m", "conditions": {"r": 1},
+                                          "value": 1, "unit": "K", "uncertainty_kind": "absent"}),
+         QuantityError, "property property",
+         document='PROPERTY: | method=m | conditions=r:1 | value=1 | unit=K | uncertainty_kind=absent'),
+    Code("PROPERTY_METHOD_EMPTY", "structures.quantity.assert_property_context",
+         "a property method must be nonempty text",
+         lambda: assert_property_context({"property": "p", "method": "", "conditions": {"r": 1},
+                                          "value": 1, "unit": "K", "uncertainty_kind": "absent"}),
+         QuantityError, "property method",
+         document='PROPERTY: p | method= | conditions=r:1 | value=1 | unit=K | uncertainty_kind=absent'),
     Code("QUANTITY_NO_UNIT", "structures.quantity.TypedQuantity",
          "a numeric value without a unit is untyped",
          lambda: TypedQuantity(value=1.0, unit="", uncertainty_kind="absent"),
@@ -546,7 +573,7 @@ def emit(root: pathlib.Path, executed: Dict[str, object],
                 "unreached, and they stay labelled. A probe reporting 'clean' "
                 "would be presenting those silences as one number"),
             "before_the_wiring": (
-                f"all {len(CODES)} codes were LIVE and NONE was reachable "
+                "the original 20 codes were LIVE and NONE was reachable "
                 "through any entry path. The gates were correct and had no "
                 "caller: what was missing was POSITION, not correctness"),
         },
@@ -611,9 +638,9 @@ def emit(root: pathlib.Path, executed: Dict[str, object],
             "that a 100% rejection rate says anything about real sources. "
             "Every candidate counted here was PLANTED to violate a gate, so "
             "the rate measures that the plants arrived, not that the world is "
-            "dirty. The claim is narrower: fifteen of twenty refusals are now "
+            f"dirty. The claim is narrower: {len(reachable)} of {len(CODES)} refusals are now "
             "reachable through a real ingest, so a rate over real documents "
-            "would be evidence for those fifteen. It is not one yet"),
+            f"would be evidence for those {len(reachable)}. It is not one yet"),
         "the_alias_correction": {
             "what_happened": (
                 "three of the five invariant ids this gate refuses under were "

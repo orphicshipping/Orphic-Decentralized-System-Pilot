@@ -12,6 +12,7 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 
 | Need | Page |
 | --- | --- |
+| DC electronics repair, refurbishment and retrofit cases | [Electronics repair](ELECTRONICS_REPAIR.md) |
 | Install and check the public Terminal/Legibility workflows together | [Run NET](RUN_NET.md) |
 | Product scope, operating model and scientific workspace | [Workbench overview](WORKBENCH_OVERVIEW.md) |
 | Current provider map and loose-tool collapse rule | [Systems catalog](SYSTEMS_CATALOG.md) |
@@ -20,10 +21,20 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 | Python, Julia, native execution and proof responsibilities | [Execution responsibilities](EXECUTION_RESPONSIBILITIES.md) |
 | Bounded Rust/C++, JuliaControl and JuMP execution | [Native interoperability](NATIVE_INTEROP.md) |
 | Fixed-model chemical kinetics and cross-engine references | [Reaction benchmark](REACTION_BENCHMARK.md) |
+| Dry hydrostatic atmospheric state, independent quadrature and typed provider handoffs | [Atmospheric engine](ATMOSPHERIC_ENGINE.md) (research branch increment) |
+| Unsaturated moist-air state, continuous humidity guard and frozen-composition handoffs | [Moist-air extension](ATMOSPHERIC_MOIST_AIR.md) (research branch increment) |
+| Declared reference comparisons, independent arithmetic and four-point NIST agreement | [Atmospheric reference validation](ATMOSPHERIC_REFERENCE_VALIDATION.md) (research branch increment) |
+| Bounded SI measurement CSV, retained input bindings and fresh mapping checks | [Atmospheric measurement preparation](ATMOSPHERIC_MEASUREMENT_INGRESS.md) (research branch increment) |
+| Elastic contact, independent impulse/energy checks and typed preservation | [Impact contact benchmark](IMPACT_CONTACT_BENCHMARK.md) (research branch increment) |
+| Irreversible crush state, plastic work and independent energy accounting | [Impact crush benchmark](IMPACT_CRUSH_BENCHMARK.md) (research branch increment) |
+| Finite parameter cases and separate numerical/design qualification | [Impact scenario envelope](IMPACT_SCENARIO_ENVELOPE.md) (research branch increment) |
+| Simply supported elastic plate, finite contact patch and temporal/modal refinement | [Impact plate benchmark](IMPACT_PLATE_BENCHMARK.md) (research branch increment) |
 | Bounded scalar linearization error with exact reference | [Interval requirement check](INTERVAL_REQUIREMENT.md) |
 | Optional providers and the next acceptance experiments | [Provider development sequence](PROVIDER_DEVELOPMENT.md) |
 | Multi-provider assembly and local deployment | [Workbench assembly](WORKBENCH_ASSEMBLY.md) |
 | Current executable paths and remaining gates | [Integration coverage](INTEGRATION_COVERAGE.md) |
+| Uncertainty-aware reference comparison, local timing and remaining qualification work | [Qualification progress](QUALIFICATION_PROGRESS.md) |
+| Sourced polymer-temperature design choices, assumptions and evidence gaps | [Temperature pilot candidate](TEMPERATURE_PILOT_CANDIDATE.md) |
 | Capability claims checked against merged source | [Concerns audit, 2026-10-03](CONCERNS_AUDIT_2026-10-03.md) |
 | Source correction, dependent-claim staleness and retained history | [Retained correction loop](CORRECTION_LOOP.md) |
 | User-facing instruments and exact commands | [Instrument catalogue](INSTRUMENTS.md) |
@@ -34,11 +45,17 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 | One worked RMS calculation, retained selection and explicit replay | [Retained RMS lesson](LEARNING.md) |
 | Local dependencies, exact expected identities and unperformed checks | [Read-only profile diagnostics](DOCTOR.md) |
 | Provider-free index of existing surfaces; not discovery or qualification | [Capability index](CAPABILITIES.md) |
+| Offline tooling map and declared capability inspector | [Tooling visualizer](TOOLING_VISUALIZER.md) |
 | Retained native heading candidates and matrix contributions | [Curved-path study](CURVED_PATH_STUDY.md) |
 | Equations, assumptions and bounded what-if previews | [Mathematical model exploration](MODEL_EXPLORATION.md) |
 | Named but unimplemented research directions | [Unimplemented directions](UNIMPLEMENTED_DIRECTIONS.md) |
 
 ## Contracts and operations
+
+- [Finite representation preservation and Board morphism binding](FINITE_REPRESENTATION_PRESERVATION.md) (research branch increment)
+- [Evidence-bound representation expansion](EVIDENCE_BOUND_EXPANSION.md) (research branch increment)
+- [Representation realization adapters](REPRESENTATION_REALIZATIONS.md) (research branch increment)
+- [Spatial and mesh realization adapters](SPATIAL_MESH_REALIZATIONS.md) (research branch increment)
 
 - [Protocol and record identities](PROTOCOL.md)
 - [Contract foundations and typed exchange](CONTRACT_FOUNDATIONS.md)
@@ -69,9 +86,11 @@ or inspecting a record does not establish provider availability.
 | NET command plane and typed composition | [Control plane](NET_CONTROL_PLANE.md) · [Workflow algebra](WORKFLOW_ALGEBRA.md) |
 | Semantic capabilities, container composition and selective recomputation | [Semantic capabilities](SEMANTIC_CAPABILITIES.md) · [Containers](CONTAINER_CALCULUS.md) · [Needle](NEEDLE.md) |
 | Parameterized Boards, offline editing and live evidence views | [System Board](SYSTEM_BOARD.md) · [Offline editor](SYSTEM_BOARD_VISUAL.md) · [Evidence viewer](VISUAL_SYSTEM_BOARD.md) |
+| Published physical measurements, uncertainty plots and source inspection | [Measurement evidence visualizer](MEASUREMENT_VISUALIZER.md) |
 | Preservation contracts, finite morphisms and evidence-bound expansion | [Preservation](PRESERVATION_CONTRACTS.md) · [Finite morphisms](FINITE_REPRESENTATION_PRESERVATION.md) · [Expansion](EVIDENCE_BOUND_EXPANSION.md) |
 | Visual gates and identity-preserving evidence projections | [Representation gates](VISUAL_REPRESENTATION_GATES.md) · [Evidence projection](VISUAL_EVIDENCE_PROJECTION.md) |
 | Dry hydrostatic atmospheric state, independent quadrature and typed provider handoffs | [Atmospheric engine](ATMOSPHERIC_ENGINE.md) |
+| Convection, heat-exchanger design, pipe-flow references, radiation and two-phase balances | [Thermofluids tools](THERMOFLUIDS.md) |
 | Retained molding-cycle metrology, reference estimates, numerical audits and explicit agent profiles | [Polymer processing](POLYMER_PROCESSING.md) · [Agent protocol](NET_AGENT_PROTOCOL.md#polymer-cycle-profile) |
 | Bounded impact models, independent verification and finite scenarios | [Elastic contact](IMPACT_CONTACT_BENCHMARK.md) · [Crush](IMPACT_CRUSH_BENCHMARK.md) · [Plate](IMPACT_PLATE_BENCHMARK.md) · [Scenario envelope](IMPACT_SCENARIO_ENVELOPE.md) |
 | Cross-system transitions, interoperability and artifact provenance | [Transitions](INDUSTRIAL_SEMANTIC_TRANSITIONS.md) · [Interoperability](EXECUTABLE_INTEROPERABILITY.md) · [Provenance](ARTIFACT_PROVENANCE.md) |

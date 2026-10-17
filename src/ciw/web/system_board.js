@@ -10,6 +10,7 @@
   let board, view, executionEnabled=false, scientificGateEnabled=false, baselineRef=null, preview=null, request=null, delta=null, busy=false, baselineRun=null, candidateRun=null;
   let gate=null, scientificContext=null, recoveryAvailable=false, promotion=null, interventionBinding=null, evidenceProjection=null;
   let nodes, groups, owner;
+  let isLab=false, labBase=null, labCurrent=null;
   const short = s => s ? s.slice(0,22)+'…' : 'Not supplied';
   const text = (tag, value, cls) => { const e=document.createElement(tag); e.textContent=value; if(cls)e.className=cls; return e; };
   const svg = (tag, attrs, value) => { const e=document.createElementNS(NS,tag); for(const [k,v] of Object.entries(attrs||{}))e.setAttribute(k,String(v)); if(value!==undefined)e.textContent=value; return e; };
@@ -19,7 +20,7 @@
   async function api(path, value){const options={method:value===undefined?'GET':'POST',headers:{'X-NET-Board-Token':token}};if(value!==undefined){options.headers['Content-Type']='application/json';options.body=JSON.stringify(value);}const res=await fetch(path,options);const data=await res.json();if(!res.ok)throw new Error(data.reason||'Local operation refused');return data;}
   async function task(fn){if(busy)return;busy=true;controls();try{await fn();}catch(err){status(err.message,true);}finally{busy=false;controls();}}
   function controls(){
-    $('run-baseline').disabled=busy||!executionEnabled;
+    $('run-baseline').disabled=busy||!executionEnabled||(isLab&&Boolean(baselineRef));
     const authorized=!scientificGateEnabled||gate?.decision==='LOCAL'||Boolean(promotion);
     $('run-candidate').disabled=busy||!executionEnabled||!baselineRef||!preview||!authorized;
     $('qualify-expansion').disabled=busy||!scientificGateEnabled||!baselineRef||!preview||gate?.decision!=='REFUSE'||!recoveryAvailable||Boolean(promotion);
@@ -87,12 +88,14 @@
 
   function resetCandidateState(){
     preview=null;delta=null;gate=null;scientificContext=null;recoveryAvailable=false;promotion=null;candidateRun=null;
+    if(isLab){labCurrent=null;showLabObservation();}
   }
 
-  function selectNode(id){view.selected_node_id=id;const n=nodes.get(id);$('node-title').textContent=n.label;$('node-kind').textContent=n.kind;$('node-address').textContent=address(id);const editor=$('parameter-editor');editor.replaceChildren();for(const [name,p] of Object.entries(n.parameters)){const row=text('div','','parameter'),label=text('label',name);label.append(text('span',p.unit||'Unit not declared'));const input=(p.domain.kind==='ENUM'||p.type==='BOOLEAN')?document.createElement('select'):document.createElement('input');input.id='parameter-'+name;input.setAttribute('aria-label','Replacement '+name);if(input.tagName==='SELECT'){const options=p.domain.kind==='ENUM'?p.domain.values:[true,false];options.forEach((v,i)=>{const option=text('option',String(v));option.value=String(i);option.selected=Object.is(v,p.value);input.append(option);});}else input.value=String(p.value);input.disabled=!p.exposed||p.domain.kind==='FIXED';const replacement=()=>{if(input.tagName==='SELECT'){const values=p.domain.kind==='ENUM'?p.domain.values:[true,false];return values[Number(input.value)];}return p.type==='STRING'?input.value:Number(input.value);};const make=()=>({schema:'ciw.board-parameter-edit.v1',base_board_ref:board.record_digest,node_id:id,parameter:name,replacement:replacement()});input.addEventListener('change',()=>{request=make();resetCandidateState();$('preview-summary').textContent='Uncompiled proposal. Existing Board is unchanged.';note('Proposed parameter edit',request);showScientific();draw();controls();});row.append(label,input,text('div',p.domain.kind==='ENUM'?'Allowed: '+p.domain.values.join(' · '):JSON.stringify(p.domain),'domain'));editor.append(row);const b=text('button',config.live?'Compile candidate':'Export edit request','edit-button');b.disabled=!p.exposed||p.domain.kind==='FIXED';b.dataset.editable=String(p.exposed&&p.domain.kind!=='FIXED');b.addEventListener('click',()=>task(async()=>{request=make();resetCandidateState();if(config.live){const result=await api('/api/edit',request);preview=result.preview;gate=result.intervention_gate;scientificContext=result.scientific_context;recoveryAvailable=Boolean(result.recovery_available);const gateText=gate?` Gate: ${gate.decision}.`:'';$('preview-summary').textContent=`Compiled, not accepted. ${preview.dependency_closure.length} affected; ${preview.unaffected_operation_ids.length} unaffected operations.${gateText}`;note(gate?'Representation intervention assessment':'Authoritative candidate compilation',gate?{request,gate,scientific_context:scientificContext,candidate_board_ref:preview.candidate_board.record_digest}:{request,candidate_board_ref:preview.candidate_board.record_digest,dependency_closure:preview.dependency_closure,claims:preview.claims});status('Candidate retained in '+result.retained_directory);showScientific();}else{download('board-edit.json',request);note('Exported request · validate with net board edit',request);status('Edit exported. Compilation requires the existing Python Board validator.');}draw();controls();}));editor.append(b);}
+  function selectNode(id){view.selected_node_id=id;const n=nodes.get(id);$('node-title').textContent=n.label;$('node-kind').textContent=n.kind;$('node-address').textContent=address(id);const editor=$('parameter-editor');editor.replaceChildren();for(const [name,p] of Object.entries(n.parameters)){const row=text('div','','parameter'),label=text('label',name);label.append(text('span',p.unit||'Unit not declared'));const input=(p.domain.kind==='ENUM'||p.type==='BOOLEAN')?document.createElement('select'):document.createElement('input');input.id='parameter-'+name;input.setAttribute('aria-label','Replacement '+name);if(input.tagName==='SELECT'){const options=p.domain.kind==='ENUM'?p.domain.values:[true,false];options.forEach((v,i)=>{const option=text('option',String(v));option.value=String(i);option.selected=Object.is(v,p.value);input.append(option);});}else input.value=String(p.value);input.disabled=!p.exposed||p.domain.kind==='FIXED';const replacement=()=>{if(input.tagName==='SELECT'){const values=p.domain.kind==='ENUM'?p.domain.values:[true,false];return values[Number(input.value)];}return p.type==='STRING'?input.value:Number(input.value);};const make=()=>({schema:'ciw.board-parameter-edit.v1',base_board_ref:board.record_digest,node_id:id,parameter:name,replacement:replacement()});input.addEventListener('change',()=>{request=make();resetCandidateState();$('preview-summary').textContent='Uncompiled proposal. Existing Board is unchanged.';note('Proposed parameter edit',request);showScientific();draw();controls();});row.append(label,input,text('div',p.domain.kind==='ENUM'?'Allowed: '+p.domain.values.join(' · '):isLab?(p.exposed?`Authoring range: ${p.domain.minimum} to ${p.domain.maximum}`:'Fixed in this profile'):JSON.stringify(p.domain),'domain'));editor.append(row);const b=text('button',config.live?'Compile candidate':'Export edit request','edit-button');b.disabled=!p.exposed||p.domain.kind==='FIXED';b.dataset.editable=String(p.exposed&&p.domain.kind!=='FIXED');b.addEventListener('click',()=>task(async()=>{request=make();resetCandidateState();if(config.live){const result=await api('/api/edit',request);preview=result.preview;gate=result.intervention_gate;scientificContext=result.scientific_context;recoveryAvailable=Boolean(result.recovery_available);const gateText=gate?` Gate: ${gate.decision}.`:'';$('preview-summary').textContent=isLab?'Native system compilation passed. Complete coupled rerun required; baseline unchanged.':`Compiled, not accepted. ${preview.dependency_closure.length} affected; ${preview.unaffected_operation_ids.length} unaffected operations.${gateText}`;note(gate?'Representation intervention assessment':'Authoritative candidate compilation',gate?{request,gate,scientific_context:scientificContext,candidate_board_ref:preview.candidate_board.record_digest}:{request,candidate_board_ref:preview.candidate_board.record_digest,dependency_closure:preview.dependency_closure,claims:preview.claims});status('Candidate retained in '+result.retained_directory);showScientific();}else{download('board-edit.json',request);note(isLab?'Exported request · use net system lab run --edit':'Exported request · validate with net board edit',request);status(isLab?'Edit exported. Native system validation is required before execution.':'Edit exported. Compilation requires the existing Python Board validator.');}draw();controls();}));editor.append(b);}
     if(!Object.keys(n.parameters).length)editor.append(text('p','No exposed parameters on this object.','small muted'));const meta=$('metadata');meta.replaceChildren();const observations=document.createElement('div');observations.id='node-observations';meta.append(observations);showObservation();meta.append(section('CONTRACT & VALIDITY',n.validity_conditions.length?n.validity_conditions:['No validity conditions declared']),section('INVARIANTS',n.invariants.length?n.invariants:['None declared']),section('AUTHORITY REQUIREMENTS',n.authority_requirements.length?n.authority_requirements:['None declared — this is not a grant']),section('SCALE & UNCERTAINTY',[n.scale.label,`length: ${n.scale.length_m??'not declared'} m · time: ${n.scale.time_s??'not declared'} s`,'Socket uncertainty: '+([...new Set([...n.sockets.inputs,...n.sockets.outputs].map(s=>s.uncertainty_semantics))].join(', ')||'not declared')]),section('PROVENANCE & CONTEXT',[...n.provenance_refs.length?n.provenance_refs:['No node-specific evidence references declared.'],'Selection scope only. A Context Twin is not bound in V1.']));const details=document.createElement('details');details.append(text('summary','Inspect full typed node'),text('pre',JSON.stringify(n,null,2)));const contract=section('SOCKETS / PARAMETERS / DECLARATIONS',[]);contract.append(details);meta.append(contract);showScientific();showEvidence();draw();note('Selected node · exact typed definition',n);controls();}
   function inspectGroup(id){const g=groups.get(id);$('node-title').textContent=g.label;$('node-kind').textContent='GROUP';$('node-address').textContent='group:'+id;$('parameter-editor').replaceChildren(text('p','Existing Board hierarchy. No container contract is created by collapsing this group.','small muted'));$('metadata').replaceChildren(section('DIRECT MEMBER IDENTITIES',g.node_ids.length?g.node_ids:['No direct members; inspect child groups.']));note('Group definition · identity retained',g);}
   function showObservation(){
+    if(isLab){showLabObservation();return;}
     const root=$('node-observations');if(!root||!view.selected_node_id)return;
     root.replaceChildren();const id=view.selected_node_id;
     const prior=baselineRun?.nodes?.[id]?.result;
@@ -107,16 +110,96 @@
     const detail=document.createElement('details');detail.append(text('summary','Full result, including retained arrays'),text('pre',JSON.stringify(current,null,2)));panel.append(detail);root.append(panel);
   }
   function showDelta(value){delta=value;showObservation();$('delta-list').replaceChildren();for(const row of value.nodes){const kind=row.recomputation==='REUSED'?'reused':row.data_changed?'changed':'';const chip=text('span',`${row.node_id}: ${row.recomputation}${row.recomputation==='REUSED'?'':row.data_changed?' · changed':' · unchanged'}`,'delta-chip '+kind);$('delta-list').append(chip);}draw();}
-  $('run-baseline').addEventListener('click',()=>task(async()=>{status('Executing the existing baseline through Session…');const r=await api('/api/baseline',{board_ref:board.record_digest});baselineRef=r.baseline_ref;baselineRun=r.run;evidenceProjection=r.evidence_projection||null;request=null;resetCandidateState();showObservation();$('delta-list').replaceChildren();$('run-summary').textContent=`Baseline ${r.run.status} · ${r.run.order.length} operation records retained`;$('preview-summary').textContent='';note('Ordinary NET baseline graph-run', {record_digest:r.run.record_digest,status:r.run.status,order:r.run.order,source_evidence_id:r.run.source_evidence_id});$('evidence-status').textContent=evidenceProjection?'Realizations + finite witnesses retained':'No evidence projection configured';status('Baseline retained in '+r.retained_directory);showScientific();showEvidence();draw();controls();}));
+  $('run-baseline').addEventListener('click',()=>task(async()=>{status('Executing the existing baseline through Session…');const r=await api('/api/baseline',{board_ref:board.record_digest});if(isLab){receiveLab(r,false);return;}baselineRef=r.baseline_ref;baselineRun=r.run;evidenceProjection=r.evidence_projection||null;request=null;resetCandidateState();showObservation();$('delta-list').replaceChildren();$('run-summary').textContent=`Baseline ${r.run.status} · ${r.run.order.length} operation records retained`;$('preview-summary').textContent='';note('Ordinary NET baseline graph-run', {record_digest:r.run.record_digest,status:r.run.status,order:r.run.order,source_evidence_id:r.run.source_evidence_id});$('evidence-status').textContent=evidenceProjection?'Realizations + finite witnesses retained':'No evidence projection configured';status('Baseline retained in '+r.retained_directory);showScientific();showEvidence();draw();controls();}));
   $('qualify-expansion').addEventListener('click',()=>task(async()=>{if(!preview||!baselineRef)return;status('Replay-verifying retained richer representation…');const r=await api('/api/expand',{request:preview.request,baseline_ref:baselineRef});gate=r.gate;promotion=r.promotion;recoveryAvailable=false;$('preview-summary').textContent=`EXPAND verified (${r.verification.status}) → promoted ${promotion.local_gate.decision} on ${promotion.local_gate.representation_id}.`;note('Evidence-bound representation expansion',{gate:r.gate,expansion:r.expansion,verification:r.verification,promotion:r.promotion});status('Expansion chain retained in '+r.retained_directory);showScientific();draw();controls();}));
-  $('run-candidate').addEventListener('click',()=>task(async()=>{if(!preview)return;status('Executing the existing Needle dependency closure…');const r=await api('/api/candidate',{request:preview.request,baseline_ref:baselineRef,promotion_ref:promotion?.record_digest||null});candidateRun=r.run;showDelta(r.delta);$('run-summary').textContent=`${r.run.rerun_nodes.length} rerun · ${r.run.reused_nodes.length} reused · baseline unchanged`;note('Retained visual action → ordinary Needle lineage',{receipt:r.receipt,intervention_gate:r.intervention_gate,promotion:r.promotion});status('Run, delta and receipt retained in '+r.retained_directory);showScientific();}));
+  $('run-candidate').addEventListener('click',()=>task(async()=>{if(!preview)return;status(isLab?'Running native compile, simulation and verification…':'Executing the existing Needle dependency closure…');const r=await api('/api/candidate',{request:preview.request,baseline_ref:baselineRef,promotion_ref:promotion?.record_digest||null});if(isLab){receiveLab(r,true);return;}candidateRun=r.run;showDelta(r.delta);$('run-summary').textContent=`${r.run.rerun_nodes.length} rerun · ${r.run.reused_nodes.length} reused · baseline unchanged`;note('Retained visual action → ordinary Needle lineage',{receipt:r.receipt,intervention_gate:r.intervention_gate,promotion:r.promotion});status('Run, delta and receipt retained in '+r.retained_directory);showScientific();}));
   $('download-board').addEventListener('click',()=>{if(board)download('board.json',board);});
   $('download-view').addEventListener('click',()=>task(async()=>{if(config.live){const r=await api('/api/view',view);download('board-view.json',r.view);note('Validated view projection',r.view);}else{download('board-view-spec.json',view);note('Exported view specification',view);}status('View exported. Original Board identity remains '+short(board.record_digest));}));
   $('download-request').addEventListener('click',()=>{if(request)download('board-edit.json',request);});
   document.querySelectorAll('[data-mode]').forEach(b=>b.addEventListener('click',()=>{if(!view)return;view.mode=b.dataset.mode;draw();note('Relationship projection · graph unchanged',view);}));
   function zoom(factor){if(!view)return;view.viewport.zoom=Math.max(.2,Math.min(3,view.viewport.zoom*factor));draw();note('Viewport specification',view);}
   $('zoom-in').addEventListener('click',()=>zoom(1.2));$('zoom-out').addEventListener('click',()=>zoom(1/1.2));$('fit-view').addEventListener('click',()=>{if(!view)return;view.viewport={x:0,y:0,zoom:1};draw();note('Viewport reset',view);});
-  async function init(){let data=config;if(config.live)data=await api('/api/state');board=data.board;view=data.view;executionEnabled=Boolean(data.execution_enabled);scientificGateEnabled=Boolean(data.scientific_gate_enabled);interventionBinding=data.intervention_binding||null;evidenceProjection=data.evidence_projection||null;baselineRef=data.baseline_ref||null;nodes=new Map(board.nodes.map(n=>[n.node_id,n]));groups=new Map(board.groups.map(g=>[g.group_id,g]));owner=new Map(board.groups.flatMap(g=>g.node_ids.map(n=>[n,g.group_id])));$('board-title').textContent=board.title;$('board-subtitle').textContent=board.model_id+' · declared graph, not canonical scientific state';$('board-digest').textContent=board.record_digest;$('source-digest').textContent=data.source_evidence_id||'Not supplied to viewer';$('science-status').textContent=scientificGateEnabled?'Bound · LOCAL/EXPAND/REFUSE enforced':'Not configured';$('evidence-status').textContent=evidenceProjection?'Realizations + finite witnesses retained':'Awaiting retained baseline';$('counts').textContent=`${board.nodes.length} nodes · ${board.edges.length} relations · ${board.groups.length} groups`;$('mode-status').textContent=config.live?(executionEnabled?'LOCAL · EXECUTION OPTED IN':'LOCAL · PROPOSALS ONLY'):'OFFLINE · INSPECT + EXPORT';hierarchy();draw();const first=board.nodes.find(n=>n.kind==='OPERATION')||board.nodes[0];selectNode(first.node_id);controls();status(data.compilation_error?'View available; Board compilation refused: '+data.compilation_error:'Ready. Navigating the view does not change the graph.');}
+  async function init(){let data=config;if(config.live)data=await api('/api/state');board=data.board;view=data.view;isLab=data.profile==='scientific-system-lab.v1'||board.model_id==='scientific-system-lab.v1';labBase=data.lab_baseline||null;labCurrent=data.lab_candidate||null;executionEnabled=Boolean(data.execution_enabled);scientificGateEnabled=Boolean(data.scientific_gate_enabled);interventionBinding=data.intervention_binding||null;evidenceProjection=data.evidence_projection||null;baselineRef=data.baseline_ref||null;nodes=new Map(board.nodes.map(n=>[n.node_id,n]));groups=new Map(board.groups.map(g=>[g.group_id,g]));owner=new Map(board.groups.flatMap(g=>g.node_ids.map(n=>[n,g.group_id])));$('board-title').textContent=board.title;$('board-subtitle').textContent=board.model_id+' · declared graph, not canonical scientific state';$('board-digest').textContent=board.record_digest;$('source-digest').textContent=data.source_evidence_id||'Not supplied to viewer';$('science-status').textContent=scientificGateEnabled?'Bound · LOCAL/EXPAND/REFUSE enforced':'Not configured';$('evidence-status').textContent=evidenceProjection?'Realizations + finite witnesses retained':'Awaiting retained baseline';$('counts').textContent=`${board.nodes.length} nodes · ${board.edges.length} relations · ${board.groups.length} groups`;$('mode-status').textContent=config.live?(executionEnabled?'LOCAL · EXECUTION OPTED IN':'LOCAL · PROPOSALS ONLY'):'OFFLINE · INSPECT + EXPORT';if(isLab)setupLab();hierarchy();draw();const first=(isLab?board.nodes.find(n=>n.label==='thermal.rod-fv.v1'):board.nodes.find(n=>n.kind==='OPERATION'))||board.nodes[0];selectNode(first.node_id);controls();status(data.compilation_error?'View available; Board compilation refused: '+data.compilation_error:'Ready. Navigating the view does not change the graph.');}
+
+  // Industrial Lab specializes this existing Board view, not its solver or transport.
+  function setupLab(){
+    $('board-subtitle').textContent='Graph-first scientific reference. SYNTHETIC data; no physical validation or control.';
+    $('qualify-expansion').hidden=true;
+    if(!Object.keys(view.positions).length){
+      const order=['thermal.rod-fv.v1','mechanical.axial-thermoelastic.v1','sensor.rod-observer.v1'];
+      board.nodes.forEach(n=>{const i=order.indexOf(n.label);if(i>=0)view.positions['node:'+n.node_id]={x:35+i*334,y:65};});
+    }
+    $('run-candidate').textContent='Run complete candidate';
+    $('science-status').previousElementSibling.textContent='Numerical verification';
+    $('science-status').textContent='Existing system.verify.v1; no physical claim';
+    $('evidence-status').textContent='Native Session / exact source bytes';
+    if(!config.live)$('mode-status').textContent='OFFLINE · INSPECT + EXPORT';
+    $('run-summary').textContent='Existing compile → simulate → verify. Candidate scenarios rerun the full coupled model.';
+  }
+  function receiveLab(response, candidate){
+    if(candidate)labCurrent=response.lab;
+    else {baselineRef=response.baseline_ref;labBase=response.lab;request=null;resetCandidateState();}
+    const v=response.lab, report=v.verification.report;
+    $('run-summary').textContent=`${candidate?'Candidate':'Baseline'} numerical ${report.status} · 3 native operation results retained · physical validation NOT ASSESSED`;
+    $('delta-list').replaceChildren(text('span','Scenario overlays only. No reduction verification, causal claim or measurement.','delta-chip'));
+    note('Native scientific-system results and scoped verification',candidate?response.receipt:v.verification);
+    status('Native records retained in '+response.retained_directory);
+    showLabObservation();draw();controls();
+  }
+  function labSeries(v, model){
+    if(!v)return [];
+    const t=v.trajectory, series=[];
+    const add=(label,field,index)=>series.push({label,unit:v.units[field],x:t.time_s,y:t[field].map(row=>row[index])});
+    if(model==='thermal.rod-fv.v1')add(`Temperature at cell centre ${t.temperature_cell_centers_m[0]} m`,'temperature_k',0);
+    if(model==='mechanical.axial-thermoelastic.v1')add(`Displacement at node ${t.displacement_nodes_m.at(-1)} m`,'displacement_m',t.displacement_nodes_m.length-1);
+    if(model==='sensor.rod-observer.v1'){
+      add('Synthetic sensor temperature','sensor_temperature_k',0);
+      add('Synthetic sensor displacement','sensor_displacement_m',0);
+    }
+    return series;
+  }
+  function showLabObservation(){
+    const root=$('node-observations');if(!root)return;root.replaceChildren();
+    if(!labBase){root.append(text('p','No simulation has run. This Board projects a declared system specification.','small muted'));return;}
+    const model=nodes.get(view.selected_node_id)?.label;
+    const a=labSeries(labBase,model), b=labSeries(labCurrent,model);
+    const header=section('RETAINED SIMULATIONS',[
+      `Baseline: ${labBase.source_result_id}`,
+      `Candidate: ${labCurrent?.source_result_id||'not run'}`,
+      'Dashed: baseline. Solid: candidate. Plotted segments join retained samples for display only.'
+    ]);root.append(header);
+    a.forEach((first,i)=>{
+      const second=b[i], all=[...first.y,...(second?.y||[])];
+      let lo=Math.min(...all), hi=Math.max(...all);if(hi===lo){lo-=.5;hi+=.5;}
+      const x0=first.x[0],x1=first.x.at(-1);
+      const chart=svg('svg',{viewBox:'0 0 400 155',width:'100%',role:'img','aria-label':first.label});
+      chart.append(svg('path',{d:'M45 10 V120 H390',fill:'none',stroke:'currentColor'}));
+      for(const [j,series] of [first,second].entries()){
+        if(!series)continue;
+        const points=series.x.map((x,k)=>`${45+340*(x-x0)/(x1-x0)},${115-100*(series.y[k]-lo)/(hi-lo)}`).join(' ');
+        chart.append(svg('polyline',{points,fill:'none',stroke:j?'#efc37e':'#98acbf','stroke-width':2,'stroke-dasharray':j?'none':'5 4','data-series':j?'candidate':'baseline'}));
+      }
+      chart.append(svg('text',{x:45,y:143,fill:'currentColor','font-size':11},`${x0} → ${x1} s`));
+      chart.append(svg('text',{x:47,y:9,fill:'currentColor','font-size':11},`${lo.toPrecision(6)} → ${hi.toPrecision(6)} ${first.unit}`));
+      const panel=section(first.label,[`Unit: ${first.unit}; frame: ${labBase.frame}`,
+        `Final baseline: ${first.y.at(-1)}; final candidate: ${second?second.y.at(-1):'not run'}`]);
+      panel.append(chart);root.append(panel);
+    });
+    const current=labCurrent||labBase, detail=document.createElement('details');
+    detail.append(text('summary','Exact retained series and native verification'),text('pre',JSON.stringify({baseline:labBase,candidate:labCurrent},null,2)));
+    root.append(section('NUMERICAL ASSESSMENT ONLY',[
+      `Native report: ${current.verification.report.status}`,
+      `Verifier occurrence: ${current.verification.verification_id}`,
+      'SYNTHETIC observations. Physical validation NOT ASSESSED. No calibration or equipment-release authority.'
+    ]),detail);
+  }
+  window.netIndustrialLabSnapshot=()=>isLab?{
+    board_ref:board.record_digest,baseline_ref:labBase?.source_result_id||null,
+    candidate_ref:labCurrent?.source_result_id||null,
+    baseline:labBase?JSON.parse(JSON.stringify(labBase)):null,
+    candidate:labCurrent?JSON.parse(JSON.stringify(labCurrent)):null
+  }:null;
+
   // Explicit read-only test/inspection hook. No numerical or graph editing authority.
   window.netBoardViewSnapshot=()=>({board_ref:board.record_digest,view:JSON.parse(JSON.stringify(view)),scene:scene()});
   init().catch(e=>status(e.message,true));

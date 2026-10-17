@@ -1,0 +1,49 @@
+{
+  "schema": "net.institutional-polish-evidence.v1",
+  "tested_local_source_commit": "75f9975b0767c991d42bfd18ef861eb8cca8539d",
+  "tested_source_tree": "3a4c817869a77e911158ab864b5d0e76f449e49c",
+  "source_change_scope": "Campaign runner, evidence validation, tests and operator guide; installed CIW package unchanged.",
+  "installed_wheel_sha256": "a7fdf191ba6f58f363a3c3412a4e7375a4f1fea6114d6abc5680fdb7b7e63f9e",
+  "tests": {
+    "passed": 111,
+    "failed": 0,
+    "elapsed_s": 15.55
+  },
+  "campaign": {
+    "status": "PASS",
+    "counts": {
+      "passed": 3,
+      "failed": 0,
+      "not_run": 0
+    },
+    "elapsed_s": 26.878922199946828,
+    "driver_sha256": "6ffb9fed07bb9be5e9e5fe13bdf9e2dbbd9d2f71dc8f3855f66c3745c3c2d64c",
+    "lanes": [
+      {
+        "name": "numerics",
+        "status": "PASS",
+        "report_sha256": "82009c40f0cdcafc15e65bdfd9ac6243a9e588f47ebf3abbea69d4ea72195b7c"
+      },
+      {
+        "name": "academic",
+        "status": "PASS",
+        "report_sha256": "dcaa885215fe2fd91ee2a1208f9b4dbca77844cbad9daa173a3f0effb53d0be9"
+      },
+      {
+        "name": "epa",
+        "status": "PASS",
+        "report_sha256": "218fad287ded2521af8bb3e148a6424af9f9ecbd3f821d23c520d772ef36789e"
+      }
+    ]
+  },
+  "retained_artifacts": {
+    "final-tests.xml": "5da080eb7e3d96aaa2de992d1c3cb533fd0e657b86c2f34a741239217f124c57",
+    "final-campaign/campaign.json": "e9da707c452604bf8b72978a5c09c3da89d259d763945d2152770546c338fc39",
+    "final-stdout.json": "974631df95fa1a08e15cc76d5f064d8767b14d33bc10f807907bb9ff28430963",
+    "final-progress.log": "fbf524e3ec4af0d5fa07609491eb639c4d80e984183fc829148fb05bb788e40e"
+  },
+  "scope_limits": [
+    "Focused software validation and retained institutional source replay; no new physical qualification.",
+    "Full repository suite and remote CI are not claimed."
+  ]
+}

@@ -3,6 +3,10 @@ from __future__ import annotations
 
 import argparse
 from importlib import import_module
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .control_plane import CapabilityRegistry
 from copy import deepcopy
 import json
 from pathlib import Path
@@ -13,47 +17,24 @@ from .operator_commands import COMMANDS
 
 
 def _registry(path: Path | None, *, bind: bool = False) -> CapabilityRegistry:
-    from .control_contracts import load, keys
-    from .control_plane import CapabilityRegistry, builtin_registry
+    from .control_contracts import load
+    from .control_plane import builtin_registry, registry_from_catalog
     if path is None:
         return builtin_registry(bind=bind)
     if bind:
         raise ValueError("A saved catalog never binds executable providers")
-    from .adapters.protocol import InstrumentManifest
-    value = load(path)
-    keys(value, {"schema", "authorizes_execution", "providers", "operations"})
-    if value["schema"] != "ciw.provider-catalog.v1" or value["authorizes_execution"] is not False:
-        raise ValueError("Unsupported capability catalog or authority claim")
-    if type(value["providers"]) is not dict or type(value["operations"]) is not dict:
-        raise ValueError("Provider catalog requires objects")
-    registry = CapabilityRegistry()
-    for name, manifest in value["providers"].items():
-        parsed = InstrumentManifest.from_dict(manifest)
-        if name != parsed.instrument_id:
-            raise ValueError("Provider catalog identity mismatch")
-        selected = {op: item for op, item in value["operations"].items() if item.get("provider") == name}
-        if not selected:
-            raise ValueError("Provider has no declared operation contracts")
-        for item in selected.values():
-            keys(item, {"provider", "runtime", "capabilities", "inputs", "outputs", "bound"})
-            if type(item["bound"]) is not bool:
-                raise ValueError("Invalid saved binding flag")
-        runtime = next(iter(selected.values()))["runtime"]
-        if any(item["runtime"] != runtime for item in selected.values()):
-            raise ValueError("One manifest must describe one pinned runtime")
-        registry.advertise(parsed, runtime=runtime,
-            capabilities={op: item["capabilities"] for op, item in selected.items()},
-            inputs={op: item["inputs"] for op, item in selected.items()},
-            outputs={op: item["outputs"] for op, item in selected.items()})
-    if set(value["operations"]) != set(registry.catalog()["operations"]):
-        raise ValueError("Catalog operation references an undeclared provider")
-    return registry
+    return registry_from_catalog(load(path))
 
 
 def inspect_path(path: Path, kind: str = "auto") -> dict:
     from .control_contracts import load, save_new
     from .control_checks import inspect_record
     value = load(path)
+    if type(value) is dict and value.get("schema") == "ciw.provider-catalog.v1":
+        if kind not in {"auto", "provider-catalog"}:
+            raise ValueError("Requested kind differs from provider catalog")
+        from .control_plane import inspect_provider_catalog
+        return inspect_provider_catalog(value)
     if type(value) is dict and "workspace_version" in value:
         if kind not in {"auto", "workspace", "run"}:
             raise ValueError("Requested kind differs from workspace")

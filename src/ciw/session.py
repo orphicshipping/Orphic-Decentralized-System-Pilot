@@ -20,6 +20,7 @@ from .operations.runner import execute as execute_operation, check_seal, seal, v
 from .adapters.protocol import AdapterRefusal
 from .core.identities import validate_evidence_identity
 from .calibration_status import calibration_status
+from .filesystem_paths import filesystem_path
 
 from .instruments import (
     compute_spectrum, compute_statistics, inspect_sample, run_metadata, validate_run,
@@ -99,23 +100,24 @@ def loads_json(text: str) -> Any:
 
 
 def read_json(path: Path) -> Any:
-    return loads_json(Path(path).read_text(encoding="utf-8"))
+    return loads_json(filesystem_path(path).read_text(encoding="utf-8"))
 
 
 def write_json(path: Path, data: Any) -> Path:
     """Replace only a completely serialized file, on the same filesystem."""
     path = Path(path)
     content = json.dumps(data, indent=2, allow_nan=False) + "\n"
-    path.parent.mkdir(parents=True, exist_ok=True)
+    target = filesystem_path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
     temporary = None
     try:
-        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
+        with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=target.parent,
                                          prefix=".ciw-", suffix=".tmp", delete=False) as stream:
             temporary = Path(stream.name)
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())
-        os.replace(temporary, path)
+        os.replace(temporary, target)
     finally:
         if temporary is not None and temporary.exists():
             temporary.unlink()
@@ -162,7 +164,9 @@ def _validate_evidence(run: dict) -> None:
     elif run["instrument"] == "org.notationsystems.gte":
         from .geodesic import validate_source
         validate_source(run)
-    elif run["instrument"] in {"fluid-reservoir-configuration-declaration.v1", "fluid-wave-configuration-declaration.v1"}:
+    elif run["instrument"] in {"fluid-reservoir-configuration-declaration.v1", "fluid-wave-configuration-declaration.v1",
+                               "fluid-molecular-configuration-declaration.v1",
+                               "fluid-sph-configuration-declaration.v1", "fluid-fsi-configuration-declaration.v1"}:
         from .fluid_workflow import source_request
         source_request(run)
     elif run["instrument"] == "irrigation-configuration-declaration.v1":
@@ -170,6 +174,12 @@ def _validate_evidence(run: dict) -> None:
         source_request(run)
     elif run["instrument"] == "hardware-observation-declaration.v1":
         from .hardware_workflow import source_request
+        source_request(run)
+    elif run["instrument"] == "fluid-experiment-observations.v1":
+        from .fluid_experiment import validate_source
+        validate_source(run)
+    elif run["instrument"] == "fluid-interface-configuration-declaration.v1":
+        from .fluid_interface_workflow import source_request
         source_request(run)
 
 
@@ -272,6 +282,9 @@ def _validate_saved_result(result: Any, run: dict, revision: int, recording_file
         validate_role(result["operation_id"], result["role"])
         validate_payload(result["operation_id"], result["data"], run, result["parameters"],
                          {"channel": channel, "interval_s": [start, end]})
+        if (result["operation_id"] == "particles.hoomd-md.v1"
+                and result["data"]["native_result"]["runtime"] != result["runtime"]):
+            raise ValueError("Saved HOOMD runtime differs from the execution record")
         return
     from .operations.schemas import validate_payload
     validate_payload(result["operation_id"], result["data"], run, {},
@@ -408,6 +421,27 @@ class Session:
             return self._journal_action(kind, payload)
         if kind == "source.add":
             return self.workbench.add_source(payload)
+        if kind == "data.inventory":
+            _keys(payload, set())
+            from .data_inventory import inventory
+            return inventory(session=self)
+        if kind == "data.list":
+            _keys(payload, set())
+            return {"sources": [source for source in self.workbench.list_sources()
+                                if source["kind"] == "data-record"]}
+        if kind == "data.get":
+            _keys(payload, {"source_id"}, {"source_id"})
+            source = self.workbench.get_source(payload["source_id"])
+            if source["kind"] != "data-record":
+                raise ValueError("Requested source is not a retained data record")
+            from .data_sources import _source as data_source
+            import base64
+            return data_source(base64.b64decode(source["bytes_b64"], validate=True))
+        if kind == "data.project-observations":
+            fields = {"source_id", "selector", "dataset_id", "revision", "parent_source_id", "recorded_at", "label"}
+            _keys(payload, fields, fields)
+            from .data_workflow import project_observations
+            return project_observations(self.workbench, **payload)
         if kind == "source.list":
             _keys(payload, set())
             return {"sources": self.workbench.list_sources()}
@@ -569,7 +603,7 @@ class Session:
                                 for identity in dependency_result_ids(operation_id, parameters)
                                 if identity in self.results}
                 retained_sources = (self.workbench.retained_sources()
-                                    if operation_id.startswith("system.") else None)
+                                    if operation_id.startswith(("system.", "data.", "particles.")) else None)
                 self._pending_operations += 1
             try:
                 execution, result = execute_operation(
@@ -594,7 +628,7 @@ class Session:
                         # Best-effort cleanup must not erase prior records, publish
                         # partial in-memory state, or mask the original failure.
                         try:
-                            execution_path.unlink(missing_ok=True)
+                            filesystem_path(execution_path).unlink(missing_ok=True)
                         except OSError:
                             # A completion marker may still exist. Preserve its
                             # result dependency instead of creating an orphan.
@@ -602,7 +636,7 @@ class Session:
                         else:
                             if result_path is not None:
                                 try:
-                                    result_path.unlink(missing_ok=True)
+                                    filesystem_path(result_path).unlink(missing_ok=True)
                                 except OSError:
                                     LOG.exception("Unable to remove unpublished operation record: %s", result_path)
                         raise
@@ -614,7 +648,10 @@ class Session:
                     self._pending_operations -= 1
             if result is None:
                 return {"status": "refused", "execution": copy.deepcopy(execution), "result": None}
-            return {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            response = {"status": "completed", "execution": copy.deepcopy(execution), "result": copy.deepcopy(result)}
+            if operation_id.startswith("data."):
+                response["dependency_status"] = self.dependency_status()["artifact_status"][result["result_id"]]
+            return response
         if kind == "result.list":
             _keys(payload, {"evaluated_at"})
             result = {"results": self._result_summaries() + self.workbench.native_result_summaries()}
@@ -714,14 +751,22 @@ class Session:
                 raise ValueError("Saved result identity mismatch or duplication")
             result_map[result_id] = result
             execution_ids.add(result["execution_id"])
+        from .operations.schemas import validate_extension_result_dependencies
+        validate_extension_result_dependencies(result_map)
         from .adapters.covariance_records import validate_result_dependencies
         validate_result_dependencies(result_map)
         from .impact_workflow import validate_result_dependencies as validate_impact_dependencies
         validate_impact_dependencies(result_map)
         from .system_workflow import validate_saved_dependencies as validate_system_dependencies
         validate_system_dependencies(result_map, retained_workbench.retained_sources())
+        from .data_workflow import validate_saved_dependencies as validate_data_dependencies
+        validate_data_dependencies(result_map, retained_workbench.retained_sources())
         from .atmosphere_workflow import validate_result_dependencies as validate_atmosphere_dependencies
         validate_atmosphere_dependencies(result_map)
+        from .atmosphere_comparison_workflow import validate_result_dependencies as validate_comparison_dependencies
+        validate_comparison_dependencies(result_map)
+        from .weather_workflow import validate_result_dependencies as validate_weather_dependencies
+        validate_weather_dependencies(result_map)
         from .fluid_workflow import validate_result_dependencies as validate_fluid_dependencies
         validate_fluid_dependencies(result_map)
         from .irrigation_workflow import validate_result_dependencies as validate_irrigation_dependencies
@@ -732,6 +777,14 @@ class Session:
         validate_leakage_dependencies(result_map)
         from .temperature_workflow import validate_result_dependencies as validate_temperature_dependencies
         validate_temperature_dependencies(result_map)
+        from .procedural_workflow import validate_result_dependencies as validate_procedural_dependencies
+        validate_procedural_dependencies(result_map)
+        if any(row["operation_id"] in {"fluid.experiment.compare.v1", "fluid.experiment.verify.v1"} for row in result_map.values()):
+            from .fluid_experiment import validate_result_dependencies as validate_experiment_dependencies
+            validate_experiment_dependencies(result_map)
+        if any(row["operation_id"] in {"fluid.interface.transfer.v1", "fluid.interface.verify.v1"} for row in result_map.values()):
+            from .fluid_interface_workflow import validate_result_dependencies as validate_interface_dependencies
+            validate_interface_dependencies(result_map)
         executions = workspace.get("executions", [])
         if not isinstance(executions, list) or len(executions) > 1024:
             raise ValueError("Invalid saved executions")

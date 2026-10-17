@@ -1,0 +1,341 @@
+{
+  "schema": "net.documentation.proved-heat-campaign.v1",
+  "retrieved_date": "2026-10-04",
+  "repository": "atomtrapping/Notations-Engineering-Terminal",
+  "evidence_source": "GitHub Actions run and artifact metadata; retained JSON reports read from job logs",
+  "current_host_proof_execution": "not_performed",
+  "run": {
+    "id": 37220769525,
+    "name": "Proved heat with real SP1",
+    "head_branch": "main",
+    "head_sha": "68084b67be8d8345351bcdd6e3ce62aafb8a868d",
+    "event": "push",
+    "status": "completed",
+    "conclusion": "success",
+    "run_attempt": 1,
+    "created_at": "2026-10-04T17:30:28Z",
+    "run_started_at": "2026-10-04T17:30:28Z",
+    "updated_at": "2026-10-04T17:59:51Z",
+    "html_url": "https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769525"
+  },
+  "job": {
+    "id": 111490470439,
+    "name": "native-proof",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769525/job/111490470439",
+    "steps": [
+      {
+        "name": "Set up job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 1
+      },
+      {
+        "name": "Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 2
+      },
+      {
+        "name": "Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 3
+      },
+      {
+        "name": "Check Linux resource budget",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 4
+      },
+      {
+        "name": "Install native build dependencies",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 5
+      },
+      {
+        "name": "Check out exact SCR and upstream SP1 sources",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 6
+      },
+      {
+        "name": "Restore exact pinned host builds and Cargo downloads",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 7
+      },
+      {
+        "name": "Install the recipe's exact Succinct compiler archive",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 8
+      },
+      {
+        "name": "Rebuild and verify the committed heat ELF recipe",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 9
+      },
+      {
+        "name": "Build native execution and CPU proving hosts",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 10
+      },
+      {
+        "name": "Check build source bytes and provision clean SP1 reference",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 11
+      },
+      {
+        "name": "Save completed pinned hosts before running proof tests",
+        "status": "completed",
+        "conclusion": "skipped",
+        "number": 12
+      },
+      {
+        "name": "Exercise actual proofs through an isolated installed CIW wheel",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 13
+      },
+      {
+        "name": "Show retained reports for evidence review",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 14
+      },
+      {
+        "name": "Run actions/upload-artifact@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 15
+      },
+      {
+        "name": "Post Run actions/setup-python@v5",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 29
+      },
+      {
+        "name": "Post Run actions/checkout@v4",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 30
+      },
+      {
+        "name": "Complete job",
+        "status": "completed",
+        "conclusion": "success",
+        "number": 31
+      }
+    ]
+  },
+  "artifact": {
+    "id": 11310607458,
+    "name": "proved-heat-native-evidence",
+    "size_in_bytes": 7916861,
+    "digest": "sha256:f42907b6c9419392c0f8d76310f184216616f1e36d43161e13ac166b72879a59",
+    "created_at": "2026-10-04T17:59:48Z",
+    "expires_at": "2027-01-02T17:30:28Z",
+    "expired_at_retrieval": false,
+    "download_page": "https://github.com/atomtrapping/Notations-Engineering-Terminal/actions/runs/37220769525/artifacts/11310607458",
+    "archive_verification": "archive_not_downloaded_or_locally_hash_verified_in_this_review; digest reported by GitHub API and upload log"
+  },
+  "test_log_summary": {
+    "passed": 132,
+    "failed": 0,
+    "skipped": 0,
+    "duration_seconds": 1148.84
+  },
+  "retained_reports": [
+    {
+      "metadata": {
+        "bytes": 78,
+        "path": "results/proved-heat/resources.json",
+        "sha256": "ccd3039bda1d22a58d9057844143c96eccdee2765ba162bdf409ceac0cdb2c4c"
+      },
+      "report": {
+        "available_memory_bytes": 15270133760,
+        "free_disk_bytes": 91964977152
+      }
+    },
+    {
+      "metadata": {
+        "bytes": 609,
+        "path": "results/proved-heat/build.json",
+        "sha256": "321d80500310b7f2372d65789b40f1b0ef450b46d948d9ad442637b5bc6d7ecc"
+      },
+      "report": {
+        "compiler_archive_sha256": "12c94435d41bfe4e20131bbcce40b35abd32270ad792befc653af4e3fabc192f",
+        "elf_path": "/tmp/ste-stage/sp1-6e5d1687bcc55243/build-target/riscv64im-succinct-zkvm-elf/release/ste-guest-heat",
+        "elf_sha256": "a14e3750da7e221d31842bd6cf983fcc8c0f530b2811537e2a9a9fe803dacf82",
+        "guest_build": "verified_against_committed_registry",
+        "recipe_identity": "6e5d1687bcc55243d712553a2b7768b6c587a76418bb48a7a2c44224470d423d",
+        "sp1_revision": "b38b61209e45e969289e70d5cf79dc763460bc41",
+        "toolchain_identity": "commit-hash: unknown; host: x86_64-unknown-linux-gnu; release: 1.94.0-dev"
+      }
+    },
+    {
+      "metadata": {
+        "bytes": 273,
+        "path": "results/proved-heat/source-checks.json",
+        "sha256": "c827efaf294878e01d37eb54de39ccfcdee61152b798a16f195958fddaa1c229"
+      },
+      "report": {
+        "generated_build_files_excluded_from_reference": [],
+        "runtime_reference": "separate_clean_checkout",
+        "sp1_revision": "b38b61209e45e969289e70d5cf79dc763460bc41",
+        "sp1_tree": "7deca3aced8d8eb84dfcede98285a192c862ea4c",
+        "tracked_build_source_bytes": "unchanged"
+      }
+    },
+    {
+      "metadata": {
+        "bytes": 1890,
+        "path": "results/proved-heat/gate/gate.json",
+        "sha256": "99d09daac0bceb8793e3bde1e1be04124395a366ebb4f457190af310ed758d2d"
+      },
+      "report": {
+        "execution": "real_sp1_proof_fresh_replay_and_verification",
+        "host_executable_binding": "operator_asserted_not_attested",
+        "installed_wheel": {
+          "byte_count": 1479410,
+          "filename": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+          "sha256": "376a7b0bc50858224a156b697ef4500940f3f03f6f163b88eca81f7f2c9ca04b"
+        },
+        "measurements": {
+          "original": {
+            "memory": {
+              "bytes": 10207600640,
+              "scope": "max_waited_child_peak_rss",
+              "status": "measured",
+              "unit": "byte"
+            },
+            "native_seconds": 0.0008951730000035241,
+            "proof_byte_count": 2778024,
+            "prove_and_verify_seconds": 231.554710347,
+            "reverify_seconds": 83.33755153099997
+          },
+          "replay": {
+            "memory": {
+              "bytes": 10076995584,
+              "scope": "max_waited_child_peak_rss",
+              "status": "measured",
+              "unit": "byte"
+            },
+            "native_seconds": 0.0008579619999977695,
+            "proof_byte_count": 2778024,
+            "prove_and_verify_seconds": 231.09980506,
+            "reverify_seconds": 83.357154337
+          }
+        },
+        "native_artifacts": {
+          "engine": {
+            "byte_count": 509160,
+            "sha256": "636b24475b64d1aa7892ebd8f07871e1adaed3325344e41085f08b6b08cc212e"
+          },
+          "guest": {
+            "byte_count": 50264,
+            "sha256": "a14e3750da7e221d31842bd6cf983fcc8c0f530b2811537e2a9a9fe803dacf82"
+          },
+          "prover": {
+            "byte_count": 55547600,
+            "sha256": "8ac0ad0d06b0da5d3cdacc8c3a5066261edcd2ed0e467a00883e0dcf3cbe2221"
+          }
+        },
+        "physical_truth": "not_established",
+        "schema": "ciw.proved-heat-gate.v1",
+        "scr": {
+          "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "tree": "4068a711534932e8d89bb0d87d373376dafdf6cd"
+        },
+        "sp1": {
+          "revision": "b38b61209e45e969289e70d5cf79dc763460bc41",
+          "tree": "7deca3aced8d8eb84dfcede98285a192c862ea4c"
+        },
+        "status": "passed",
+        "tests_passed": 132
+      }
+    },
+    {
+      "metadata": {
+        "bytes": 2207,
+        "path": "results/proved-heat/gate/reverification.json",
+        "sha256": "a2f5e02afb20155e116d7f7aef421bf54dcb83e8b4dff8cd311e9d2ddbee4e6f"
+      },
+      "report": {
+        "authority": {
+          "physical_truth": "not_established",
+          "sensor_fusion": "not_performed",
+          "state_admission": "not_performed"
+        },
+        "independent": false,
+        "memory": {
+          "bytes": 7457587200,
+          "scope": "max_waited_child_peak_rss",
+          "status": "measured",
+          "unit": "byte"
+        },
+        "method": "fresh_registered_guest_verification",
+        "outcome": "passed",
+        "proof_identity": "a6aa586d83012eb8a00975ea1f79cf26ec899ecefbee915cb7b401d2ce15e9d5",
+        "result_id": "sha256:596682534805888d49320d4ffc2a6bb701fecd9bf2690bb693da0a484dd13f2b",
+        "runtime_digest": "sha256:9c0ecbcd97c00265855d30344f5bb7444c1077fd858f9fa0ee2a0c48fb604853",
+        "schema": "ciw.proved-heat-verification.v1",
+        "seconds": 83.79680986599999,
+        "subject_ref": "sha256:de0725cfbca2c6b11cbf1675af206c8a0582a628a78ef311dd9bec7c4cf5b8ea",
+        "trust_scope": "retained_runtime_report_requires_fresh_verification",
+        "verification_id": "sha256:bfeccb672aa273358d1778f0df2fdf2348d8107bcc951e3658cbd2527e109d7f",
+        "verification_operation_id": "verification-64b9796df24a435eae9665464635a1be",
+        "verifier_digest": "sha256:af5bc008d369873b4a085cc17e5315e589d2fbc203f83a0357569ffdaba6fc38",
+        "verifier_runtime_digest": "sha256:9c0ecbcd97c00265855d30344f5bb7444c1077fd858f9fa0ee2a0c48fb604853",
+        "verifier_runtimes": {
+          "scr": {
+            "adapter_version": "ciw-pinned-subprocess-v1",
+            "dependencies": {
+              "numpy": "2.4.3",
+              "scipy": null
+            },
+            "engine": {
+              "byte_count": 509160,
+              "sha256": "sha256:636b24475b64d1aa7892ebd8f07871e1adaed3325344e41085f08b6b08cc212e",
+              "source_binding": "operator_asserted_not_attested"
+            },
+            "guest": {
+              "byte_count": 50264,
+              "sha256": "sha256:a14e3750da7e221d31842bd6cf983fcc8c0f530b2811537e2a9a9fe803dacf82",
+              "source_binding": "registered_guest_sha256"
+            },
+            "module": "execution.proving",
+            "prover": {
+              "byte_count": 55547600,
+              "sha256": "sha256:8ac0ad0d06b0da5d3cdacc8c3a5066261edcd2ed0e467a00883e0dcf3cbe2221",
+              "source_binding": "operator_asserted_not_attested"
+            },
+            "python_executable": "/tmp/ciw-proved-heat-gate-kzfch_lo/environment/bin/python",
+            "python_sha256": "bef88f140b625959f8af25c7b75cce2cd5d4b29cc2f2b079befd7f68eda4dba0",
+            "python_version": "3.12.14",
+            "repository_root": "/home/runner/work/_temp/proved-heat-stack/scr",
+            "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+            "schema": "ciw.subprocess-runtime.v1",
+            "source_root": ".",
+            "source_tree": "4068a711534932e8d89bb0d87d373376dafdf6cd"
+          }
+        }
+      }
+    }
+  ],
+  "scope": [
+    "One completed Linux x86-64 campaign at the named commit with the existing bounded integer heat profile.",
+    "Guest rebuilt against committed registry; native hosts restored from exact pinned cache; proof tests freshly executed.",
+    "Recorded proof generation, replay, retained-proof verification, corrupted-proof rejection and input/output rebinding rejection.",
+    "Host-source bindings remain operator_asserted_not_attested; no cryptographic build attestation.",
+    "Historical reports are evidence of that campaign, not fresh verification on the current host.",
+    "No physical calibration, equipment authority, general model validity, privacy, expanded workload capacity, affine guest qualification or temperature-specific proof is established."
+  ]
+}

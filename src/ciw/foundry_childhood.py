@@ -1,9 +1,11 @@
 """Input-driven 1792 childhood recipe on the existing NET production substrate."""
 from __future__ import annotations
+from contextlib import contextmanager
 from copy import deepcopy
 from fractions import Fraction as F
 from pathlib import Path
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -167,6 +169,21 @@ def compile_plan(run):
              [_graph('native-childhood',OP,{'nonce':uuid.uuid4().hex},model=MODEL)],checks)])
 
 
+@contextmanager
+def _isolated_project():
+    parent=str(Path(tempfile.gettempdir()).resolve())
+    if os.name=='nt' and not parent.startswith('\\\\?\\'):
+        parent='\\\\?\\UNC\\'+parent[2:] if parent.startswith('\\\\') else '\\\\?\\'+parent
+    # Keep the extended path in TemporaryDirectory itself, including its
+    # finalizer, so Windows can remove long generated editor-cache filenames.
+    # Godot still receives ordinary paths; no cleanup error is suppressed.
+    with tempfile.TemporaryDirectory(prefix='1792-childhood-foundry-',dir=parent) as directory:
+        if os.name=='nt':
+            if directory.startswith('\\\\?\\UNC\\'): directory='\\\\'+directory[8:]
+            elif directory.startswith('\\\\?\\'): directory=directory[4:]
+        yield Path(directory)
+
+
 class ChildhoodBinding:
     def __init__(self,executable,game_root,expected_sha256):
         self.executable=Path(executable).resolve(strict=True);self.root=Path(game_root).resolve(strict=True)
@@ -184,13 +201,14 @@ class ChildhoodBinding:
         if run['metadata']['game_scenario']['parameters']['source_lock']!=self.lock: raise ValueError('SOURCE_BINDING')
         keys(params,{'nonce'});request={'nonce':params['nonce'],'source_lock_id':self.lock['source_lock_id']}
         started=time.monotonic()
-        with tempfile.TemporaryDirectory(prefix='1792-childhood-foundry-') as directory:
-            root=Path(directory)
+        with _isolated_project() as root:
             for name,raw in self.sources.items():
                 path=root/name;path.parent.mkdir(parents=True,exist_ok=True);path.write_bytes(raw)
             project=root/'game/project.godot'
-            isolated=project.read_text().replace('config/name="1792"','config/name="1792-foundry-'+uuid.uuid4().hex+'"')
-            project.write_text(isolated)
+            # Keep the exact isolated bytes for the post-run source integrity check.
+            isolated=project.read_bytes().replace(b'config/name="1792"',
+                ('config/name="1792-foundry-'+uuid.uuid4().hex+'"').encode('utf-8'))
+            project.write_bytes(isolated)
             save_new(root/'request.json',request)
             logs=''
             commands=[['--headless','--path',str(root/'game'),'--editor','--import'],
@@ -206,7 +224,7 @@ class ChildhoodBinding:
             raw=(root/'observations.json').read_bytes()
             if len(raw)>512*1024: raise ValueError('CAPTURE_BUDGET')
             for name,original in self.sources.items():
-                expected=isolated.encode() if name=='game/project.godot' else original
+                expected=isolated if name=='game/project.godot' else original
                 if (root/name).read_bytes()!=expected: raise ValueError('ENGINE_MUTATED_SOURCE')
             data=json.loads(raw)
         self.runtime_identity()

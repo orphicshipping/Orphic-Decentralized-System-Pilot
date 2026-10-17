@@ -1,0 +1,94 @@
+name: Study manufacturing genealogy
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/manufacturing*'
+      - 'src/ciw/polymer_*'
+      - 'src/ciw/core/identities.py'
+      - 'tests/test_manufacturing_study.py'
+      - 'tests/test_polymer_manufacturing.py'
+      - 'examples/study-manufacturing/**'
+      - '.github/workflows/study-manufacturing.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  qualify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python: ['3.11', '3.13']
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build and install actual candidate wheel
+        run: |
+          python -m pip install build pytest==9.0.2
+          python -m build --wheel
+          python - <<'PY'
+          from pathlib import Path
+          import subprocess, sys
+          wheels = list(Path('dist').glob('*.whl'))
+          assert len(wheels) == 1, wheels
+          subprocess.check_call([sys.executable, '-m', 'pip', 'install', str(wheels[0])])
+          PY
+      - name: Source and isolated installed-package checks
+        run: |
+          python - <<'PY'
+          import hashlib, os, shutil, subprocess, sys, tempfile
+          import xml.etree.ElementTree as ET
+          from pathlib import Path
+          root = Path.cwd()
+          evidence = root / 'qualification-study-manufacturing'
+          evidence.mkdir()
+          tests = ['test_manufacturing_study.py', 'test_polymer_manufacturing.py']
+          def check_suite(cwd, files, report, env):
+              subprocess.check_call([sys.executable, '-m', 'pytest', '-q', *files,
+                                     '--junitxml=' + str(report)], cwd=cwd, env=env)
+              suites = ET.parse(report).getroot().iter('testsuite')
+              totals = {key: 0 for key in ('tests', 'failures', 'errors', 'skipped')}
+              for suite in suites:
+                  for key in totals: totals[key] += int(suite.attrib.get(key, '0'))
+              assert totals['tests'] >= 312 and not any(totals[k] for k in ('failures','errors','skipped')), totals
+          check_suite(root, ['tests/' + x for x in tests], evidence / 'source.xml', os.environ.copy())
+          with tempfile.TemporaryDirectory() as temporary:
+              outside = Path(temporary)
+              (outside / 'tests').mkdir()
+              (outside / 'examples').mkdir()
+              for name in tests: shutil.copy2(root / 'tests' / name, outside / 'tests' / name)
+              shutil.copytree(root / 'examples/study-manufacturing', outside / 'examples/study-manufacturing')
+              env = os.environ.copy()
+              env.pop('PYTHONPATH', None)
+              check_suite(outside, ['tests/' + x for x in tests], evidence / 'installed.xml', env)
+              import_code = "from pathlib import Path; import ciw.manufacturing_study as m; print(Path(m.__file__).resolve())"
+              installed_path = Path(subprocess.check_output([sys.executable, '-c', import_code], cwd=outside, env=env, text=True).strip())
+              assert not installed_path.is_relative_to(root), installed_path
+              assert hashlib.sha256(installed_path.read_bytes()).digest() == hashlib.sha256((root / 'src/ciw/manufacturing_study.py').read_bytes()).digest()
+              net = shutil.which('net')
+              assert net, 'Installed native net command is required'
+              commands = [
+                  ['example', '--study', 'examples/study-manufacturing/study.json', '--assessment', 'examples/study-manufacturing/assessment.json', '--output', 'request.json'],
+                  ['run', 'request.json', '--output', 'dossier.json'],
+                  ['verify', 'dossier.json', '--output', 'verification.json'],
+                  ['trace', 'dossier.json', '--lot', 'synthetic.lot.1', '--output', 'lot.json']]
+              for command in commands:
+                  subprocess.check_call([net, 'polymer', 'manufacture', 'study', *command], cwd=outside, env=env)
+              for name in ('request.json', 'dossier.json', 'verification.json', 'lot.json'):
+                  shutil.copy2(outside / name, evidence / name)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: study-manufacturing-${{ matrix.os }}-py${{ matrix.python }}
+          path: |
+            qualification-study-manufacturing/
+            dist/*.whl

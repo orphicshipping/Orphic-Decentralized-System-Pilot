@@ -12,6 +12,20 @@ It is not an executable processing request. The separate
 supplied product, target markets, applicable requirements and reviewed evidence;
 its [template](../examples/temperature/conformity-assessment.json) starts unassessed.
 
+The [TCLab recording path](TEMPERATURE_RECORDINGS.md) supplies one bounded
+empirical input: an existing public temperature experiment with pinned original
+bytes and retained source attribution. It is an archived experiment, not a
+commissioned polymer measurement chain. Its two temperatures and heater-command
+percentages do not supply a calibrated shell/core/reference/power measurement
+set. Unknown device serial, calibration, absolute acquisition time, clock
+uncertainty and covariance remain unknown. Importing or inspecting it leaves
+qualification incomplete and physical validation `not_established`.
+
+The priority is to close the evidence gaps for one named installed chain before
+extending the pilot to more plants. The public recording checks ingress,
+missing-evidence reporting and offline retention. It cannot replace the reference
+comparisons, held-out cycles and review specified below.
+
 ## Review retained processing and decisions
 
 After an MCP execution saves a workspace, inspect that exact attempt:
@@ -117,6 +131,10 @@ here has a separate input/output contract; it is not automatically wired into
 that workflow. Any future handoff must preserve units, location/time semantics,
 observation versus estimate labels, covariance and acquisition/calibration
 lineage. Neither workflow supplies the physical pilot data or qualification.
+
+## Paired reference comparison
+
+The separate [`net reference-compare` command](QUALIFICATION_PROGRESS.md#1-reference-comparison-with-declared-uncertainty) can compare aligned scalar observation streams under a declared joint uncertainty budget. It preserves temporal and cross-stream covariance, binds the exact inputs, and makes guardbanded decisions at the supplied sample instants. It does not create the missing pilot records or establish their uncertainty budget. The thermal observer's conditional covariance is insufficient for a total-comparison claim without the remaining input, model, installation and timing contributions.
 
 ## Independent numerical audit
 

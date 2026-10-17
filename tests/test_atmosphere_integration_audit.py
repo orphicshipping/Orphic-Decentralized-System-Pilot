@@ -64,15 +64,15 @@ def _no_providers(*, verifier=True, operations=True):
 
 def test_atmosphere_operations_are_explicit_and_do_not_mutate_impact_or_default_registry():
     from ciw import impact_workflow
-    from ciw.adapters.protocol import AdapterRefusal
-    for operation_id in (workflow.COMPILE, workflow.VERIFY):
-        with pytest.raises(AdapterRefusal, match="No trusted provider bound"):
-            default_registry().get(operation_id)
+    baseline = default_registry().describe()
+    assert {"statistics.v1", "spectrum.periodogram.v1"} <= {row["operation_id"] for row in baseline}
+    assert not any(row["operation_id"].startswith("atmosphere.") for row in baseline)
     described = {row["operation_id"]: row["role"] for row in workflow.registry().describe()}
     assert described[workflow.COMPILE] == "backend"
     assert described[workflow.VERIFY] == "verification"
     assert {workflow.COMPILE, workflow.VERIFY}.isdisjoint(
         row["operation_id"] for row in impact_workflow.registry().describe())
+    assert default_registry().describe() == baseline
 
 
 @pytest.mark.parametrize("profile", ["elastic", "crush", "plate"])

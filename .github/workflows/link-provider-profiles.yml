@@ -1,0 +1,64 @@
+name: Provisioned Link and provider profiles
+
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/**'
+      - 'scripts/**'
+      - 'tests/**'
+      - 'examples/**'
+      - 'pyproject.toml'
+      - '.github/workflows/link-provider-profiles.yml'
+  push:
+    branches: [main, 'release/**']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  installed-profiles:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Build the selected NCP wheel
+        run: |
+          python -m pip install 'setuptools>=77' wheel
+          python -m pip wheel --no-deps --no-build-isolation . --wheel-dir "$RUNNER_TEMP/profile-wheels"
+      - name: Materialize exact retained provider histories
+        run: |
+          python scripts/provision_pinned_profiles.py --source-repository . \
+            --profile identified-design --profile calibrated-window \
+            --output-dir "$RUNNER_TEMP/link-providers"
+      - name: Install the wheel and declared numerical dependencies
+        run: |
+          python -m venv "$RUNNER_TEMP/link-profile-env"
+          "$RUNNER_TEMP/link-profile-env/bin/python" -m pip install \
+            "$RUNNER_TEMP/profile-wheels/computational_instrumentation_workbench-0.1.0-py3-none-any.whl[dev,numerical-checks,legibility]"
+      - name: Check provisioning refusal and qualification failure handling
+        run: |
+          "$RUNNER_TEMP/link-profile-env/bin/python" -m pytest -q \
+            tests/test_pinned_profile_provisioning.py tests/test_link_provider_gate.py
+      - name: Require actual provider and native typed-data cases without skips
+        run: |
+          "$RUNNER_TEMP/link-profile-env/bin/python" -I scripts/check_link_provider_profiles.py \
+            --net-wheel "$RUNNER_TEMP/profile-wheels/computational_instrumentation_workbench-0.1.0-py3-none-any.whl" \
+            --stack-root "$RUNNER_TEMP/link-providers/identified-design" \
+            --window-stack-root "$RUNNER_TEMP/link-providers/calibrated-window" \
+            --output-dir "$RUNNER_TEMP/link-profile-proof"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: provisioned-link-profiles
+          path: |
+            ${{ runner.temp }}/link-providers/provisioning.json
+            ${{ runner.temp }}/link-profile-proof/report.json
+            ${{ runner.temp }}/link-profile-proof/profiles.log
+            ${{ runner.temp }}/link-profile-proof/profiles.xml

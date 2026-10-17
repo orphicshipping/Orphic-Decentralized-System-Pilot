@@ -1,0 +1,40 @@
+name: Link institutional reference data
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  installed:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build and qualify existing Link plus institutional references
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install 'setuptools>=77' wheel '.[dev,legibility]'
+          python -m pip wheel --no-deps --no-build-isolation . --wheel-dir "$RUNNER_TEMP/reference-wheel"
+          WHEEL=$(find "$RUNNER_TEMP/reference-wheel" -name '*.whl' -print -quit)
+          python scripts/check_link_installation.py --wheel "$WHEEL" --output-dir "$RUNNER_TEMP/reference-check" --with-references --require-pins
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: reference-data-${{ matrix.python }}
+          path: |
+            ${{ runner.temp }}/reference-check/summary.json
+            ${{ runner.temp }}/reference-check/installed-tests.xml
+            ${{ runner.temp }}/reference-check/*.log
+          retention-days: 14

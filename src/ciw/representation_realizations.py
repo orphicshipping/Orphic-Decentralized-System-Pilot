@@ -192,7 +192,7 @@ def operation_result_realization(source: dict, execution: dict, result: dict,
     )
 
 
-def validate_realization(value: dict, source: dict, registry: dict,
+def _validate_evidence_realization(value: dict, source: dict, registry: dict,
                          semantic: SemanticRegistry, *, execution: dict | None = None,
                          result: dict | None = None) -> dict:
     keys(value, {
@@ -402,3 +402,15 @@ def validate_board_evidence_projection(value: dict, board: dict, baseline: dict,
     if value != expected:
         raise ValueError("Board evidence projection differs from exact retained evidence recomputation")
     return detached(value)
+
+
+# Typed adapter records and evidence projections retain separate validators.
+from .typed_realizations import (adapter_from_spec, adapter_registry_from_specs,
+    bind_recovery_realization, realize, validate_adapter, validate_adapter_registry,
+    validate_recovery_binding)
+
+def validate_realization(value, *args, **kwargs):
+    if type(value) is dict and "adapter_registry_ref" in value:
+        from .typed_realizations import validate_realization as validate_typed
+        return validate_typed(value, *args, **kwargs)
+    return _validate_evidence_realization(value, *args, **kwargs)

@@ -6,7 +6,9 @@ schema in trusted process setup, alongside their executable operation binding.
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 
+from ..core.identities import canonical_json
 from ..core.records import finite_tree
 from .registry import valid_operation_id
 
@@ -14,9 +16,74 @@ _VALIDATORS: dict[str, Callable] = {}
 _VALIDATOR_ROLES: dict[str, str] = {}
 _ROLES = frozenset({"analysis", "state_estimator", "calibration", "verification", "decision", "backend"})
 
+# Registered only by installed trusted code, never loaded from saved parameters.
+_DEPENDENCY_FIELDS: dict[str, tuple[str, ...]] = {}
+_RESULT_DEPENDENCY_VALIDATORS: dict[str, Callable] = {}
+
+
+def register_result_dependency_validator(operation_id: str, validator: Callable) -> None:
+    """Register one trusted offline whole-result relationship check.
+
+    This supplements exact retained prerequisites, including for operations with
+    no prerequisite fields. Saved data cannot register code. A validator raises
+    on disagreement and must not bind or execute a scientific provider.
+    """
+    if (operation_id not in _VALIDATORS or operation_id in _RESULT_DEPENDENCY_VALIDATORS
+            or not callable(validator)):
+        raise ValueError("Result dependency validators require a unique trusted extension schema")
+    _RESULT_DEPENDENCY_VALIDATORS[operation_id] = validator
+
+
+def register_dependency_fields(operation_id: str, fields: tuple[str, ...]) -> None:
+    """Bind exact retained-result inputs for a trusted extension payload schema."""
+    if operation_id not in _VALIDATORS or operation_id in _DEPENDENCY_FIELDS:
+        raise ValueError("Dependency fields require a uniquely registered extension schema")
+    if (type(fields) is not tuple or not 1 <= len(fields) <= 8
+            or any(type(f) is not str or not f.isidentifier() for f in fields)
+            or len(set(fields)) != len(fields)):
+        raise ValueError("Require 1..8 unique dependency parameter fields")
+    _DEPENDENCY_FIELDS[operation_id] = fields
+
+
+def validate_extension_result_dependency(result: dict, results: dict) -> None:
+    """Validate one completed extension result against its retained prerequisites."""
+    operation_id = result.get("operation_id")
+    if operation_id not in _DEPENDENCY_FIELDS and operation_id not in _RESULT_DEPENDENCY_VALIDATORS:
+        return
+    _validate_extension_dependencies(operation_id, result["parameters"], results,
+                                     evidence_id=result.get("evidence_id"))
+    validator = _RESULT_DEPENDENCY_VALIDATORS.get(operation_id)
+    if validator is not None:
+        validator(deepcopy(result), deepcopy(results))
+
+
+def validate_extension_result_dependencies(results: dict) -> None:
+    """Batch form for callers validating a retained result collection."""
+    for result in results.values():
+        validate_extension_result_dependency(result, results)
+
+
+def _validate_extension_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                     *, evidence_id: str | None = None) -> None:
+    fields = _DEPENDENCY_FIELDS.get(operation_id, ())
+    if fields and (type(evidence_id) is not str or not evidence_id):
+        raise ValueError("Extension dependencies require source evidence context")
+    for field in fields:
+        candidate = parameters.get(field)
+        if (type(candidate) is not dict or type(candidate.get("result_id")) is not str
+                or type(retained.get(candidate["result_id"])) is not dict
+                or canonical_json(retained[candidate["result_id"]]) != canonical_json(candidate)):
+            raise ValueError("Extension dependency is not the exact retained result occurrence")
+        if candidate.get("evidence_id") != evidence_id:
+            raise ValueError("Extension dependency belongs to different source evidence")
+
+
 
 def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
     """Fixed trusted dependency contracts; saved parameters never load code."""
+    if operation_id in _DEPENDENCY_FIELDS:
+        return [parameters[f]["result_id"] for f in _DEPENDENCY_FIELDS[operation_id]
+                if type(parameters.get(f)) is dict and type(parameters[f].get("result_id")) is str]
     system_fields = {
         "system.simulate.v1": ("plan",), "system.study.v1": ("plan",),
         "system.verify.v1": ("candidate",), "system.compare.v1": ("left", "right"),
@@ -37,10 +104,26 @@ def dependency_result_ids(operation_id: str, parameters: dict) -> list[str]:
         candidate = parameters.get("assessment")
         identity = candidate.get("result_id") if type(candidate) is dict else None
         return [identity] if type(identity) is str else []
+    if operation_id in _FLUID_VERIFY_OPERATIONS | {"weather.verify.v1", "procedural.verify.v1"}:
+        candidate = parameters.get("candidate")
+        identity = candidate.get("result_id") if type(candidate) is dict else None
+        return [identity] if type(identity) is str else []
+    if operation_id == "fluid.interface.verify.v1":
+        candidate = parameters.get("candidate")
+        identity = candidate.get("result_id") if type(candidate) is dict else None
+        return [identity] if type(identity) is str else []
     return []
 
 
-def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict) -> None:
+def validate_request_dependencies(operation_id: str, parameters: dict, retained: dict,
+                                  *, evidence_id: str | None = None) -> None:
+    _validate_extension_dependencies(operation_id, parameters, retained, evidence_id=evidence_id)
+    if operation_id == "weather.verify.v1":
+        from ..weather_workflow import validate_live_dependency
+        validate_live_dependency(parameters, retained)
+    if operation_id == "procedural.verify.v1":
+        from ..procedural_workflow import validate_live_dependency
+        validate_live_dependency(parameters, retained)
     if operation_id == "metrology.temperature.verify.v1":
         from ..temperature_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)
@@ -53,47 +136,94 @@ def validate_request_dependencies(operation_id: str, parameters: dict, retained:
     if operation_id in {"polymer.copilot-context.v1", "polymer.verify-cycle.v1"}:
         from ..polymer_workflow import validate_live_dependency
         validate_live_dependency(parameters, retained)
+    if operation_id in _FLUID_VERIFY_OPERATIONS - {"fluid.experiment.verify.v1", "fluid.interface.verify.v1"}:
+        from ..fluid_workflow import validate_live_dependency
+        validate_live_dependency(parameters, retained)
+    if operation_id == "fluid.experiment.verify.v1":
+        from ..fluid_experiment import validate_live_dependency
+        validate_live_dependency(parameters, retained)
+    if operation_id == "fluid.interface.verify.v1":
+        from ..fluid_interface_workflow import validate_live_dependency
+        validate_live_dependency(parameters, retained)
 
 
-_BUILTIN_ROLES = {"statistics.v1": "analysis", "spectrum.periodogram.v1": "analysis",
-                "hardware.assess.v1": "decision",
-                "fsrt.tank-reconstruct.v1": "state_estimator",
-                "fsrt.tank-reconstruct.v2": "state_estimator",
-                "ciw.simulated-fsrt.v1": "state_estimator",
-                "jspt.covariance-propagate.v1": "backend",
-                "gte.project-circle.v1": "backend",
-                "gsc.local-frame.v1": "backend",
-                "oscillator.rhs-native.v1": "backend",
-                "legibility.compile.v1": "backend",
-                "legibility.fixture-summary.v1": "backend",
-                "impact.spring-contact.v1": "backend",
-                "impact.spring-contact-verify.v1": "verification",
-                "impact.crush-contact.v1": "backend",
-                "impact.crush-contact-verify.v1": "verification",
-                "impact.plate-contact.v1": "backend",
-                "impact.plate-contact-verify.v1": "verification",
-                "atmosphere.compile.v1": "backend",
-                "atmosphere.verify.v1": "verification",
-                "fluid.reservoir.simulate.v1": "backend",
-                "fluid.reservoir.verify.v1": "verification",
-                "fluid.wave.simulate.v1": "backend",
-                "fluid.wave.verify.v1": "verification",
-                "polymer.assess-cycle.v1": "backend",
-                "polymer.copilot-context.v1": "backend",
-                "polymer.control-simulate.v1": "backend",
-                "polymer.verify-cycle.v1": "verification",
-                "metrology.temperature.process.v1": "backend",
-                "measured-thermal.assess.v1": "state_estimator",
-                "metrology.temperature.verify.v1": "verification",
-                "irrigation.plan.v1": "backend",
-                "irrigation.verify.v1": "verification",
-                "leakage.assess-balance.v1": "backend",
-                "leakage.verify-balance.v1": "verification",
-                "system.compile.v1": "backend",
-                "system.simulate.v1": "backend",
-                "system.compare.v1": "backend",
-                "system.study.v1": "backend",
-                "system.verify.v1": "verification"}
+_FLUID_VERIFY_OPERATIONS = {'fluid.reservoir.verify.v1', 'fluid.interface.verify.v1', 'fluid.experiment.verify.v1', 'fluid.molecular.verify.v1', 'fluid.sph.verify.v1', 'fluid.wave.verify.v1', 'fluid.fsi.verify.v1'}
+
+_BUILTIN_ROLES = {'statistics.v1': 'analysis',
+ 'spectrum.periodogram.v1': 'analysis',
+ 'data.compare-observations.v1': 'backend',
+ 'data.review-product-study.v1': 'backend',
+ 'data.project-compute-state.v1': 'backend',
+ 'data.project-gltf-mesh.v1': 'backend',
+ 'data.inspect-gltf.v1': 'backend',
+ 'data.assess-polymer-cycle.v1': 'backend',
+ 'particles.hoomd-md.v1': 'backend',
+ 'data.review-toolpoint-containment.v1': 'backend',
+ 'data.rank-carex-matrices.v1': 'backend',
+ 'hardware.assess.v1': 'decision',
+ 'fsrt.tank-reconstruct.v1': 'state_estimator',
+ 'fsrt.tank-reconstruct.v2': 'state_estimator',
+ 'ciw.simulated-fsrt.v1': 'state_estimator',
+ 'jspt.covariance-propagate.v1': 'backend',
+ 'gte.project-circle.v1': 'backend',
+ 'gsc.local-frame.v1': 'backend',
+ 'oscillator.rhs-native.v1': 'backend',
+ 'legibility.compile.v1': 'backend',
+ 'legibility.fixture-summary.v1': 'backend',
+ 'impact.spring-contact.v1': 'backend',
+ 'impact.spring-contact-verify.v1': 'verification',
+ 'impact.crush-contact.v1': 'backend',
+ 'impact.crush-contact-verify.v1': 'verification',
+ 'impact.plate-contact.v1': 'backend',
+ 'impact.plate-contact-verify.v1': 'verification',
+ 'atmosphere.compile.v1': 'backend',
+ 'atmosphere.verify.v1': 'verification',
+ 'weather.compute.v1': 'backend',
+ 'weather.verify.v1': 'verification',
+ 'fluid.reservoir.simulate.v1': 'backend',
+ 'fluid.reservoir.verify.v1': 'verification',
+ 'fluid.wave.simulate.v1': 'backend',
+ 'fluid.wave.verify.v1': 'verification',
+ 'fluid.molecular.simulate.v1': 'backend',
+ 'fluid.molecular.verify.v1': 'verification',
+ 'fluid.sph.simulate.v1': 'backend',
+ 'fluid.sph.verify.v1': 'verification',
+ 'fluid.fsi.simulate.v1': 'backend',
+ 'fluid.fsi.verify.v1': 'verification',
+ 'fluid.experiment.compare.v1': 'backend',
+ 'fluid.experiment.verify.v1': 'verification',
+ 'fluid.interface.transfer.v1': 'backend',
+ 'fluid.interface.verify.v1': 'verification',
+ 'polymer.assess-cycle.v1': 'backend',
+ 'polymer.identify-thermal-response.v1': 'state_estimator',
+ 'polymer.assess-thermal-experiment.v1': 'backend',
+ 'polymer.copilot-context.v1': 'backend',
+ 'polymer.control-simulate.v1': 'backend',
+ 'polymer.verify-cycle.v1': 'verification',
+ 'metrology.temperature.process.v1': 'backend',
+ 'measured-thermal.assess.v1': 'state_estimator',
+ 'metrology.temperature.verify.v1': 'verification',
+ 'irrigation.plan.v1': 'backend',
+ 'irrigation.verify.v1': 'verification',
+ 'leakage.assess-balance.v1': 'backend',
+ 'leakage.verify-balance.v1': 'verification',
+ 'system.compile.v1': 'backend',
+ 'system.simulate.v1': 'backend',
+ 'system.compare.v1': 'backend',
+ 'system.study.v1': 'backend',
+ 'system.verify.v1': 'verification',
+ 'procedural.generate.v1': 'backend',
+ 'procedural.verify.v1': 'verification',
+ 'atmosphere.moist-compile.v1': 'backend',
+ 'atmosphere.moist-verify.v1': 'verification',
+ 'atmosphere.compare.v1': 'backend',
+ 'atmosphere.compare-verify.v1': 'verification'}
+
+
+# Closed installed geomatics catalog; unknown prefixed IDs still refuse.
+_GEOMATICS_OPERATIONS = frozenset({'geomatics.image.classify.v1', 'geomatics.image.accuracy.v1', 'geomatics.urban.accessibility.v1', 'geomatics.image.change.v1', 'geomatics.raster.zonal.v1', 'geomatics.urban.indicators.v1', 'geomatics.atmosphere.transmission.v1', 'geomatics.image.focal.v1', 'geomatics.atmosphere.optical-depth.v1', 'geomatics.image.radiometry.v1', 'geomatics.terrain.slope.v1', 'geomatics.image.normalized-difference.v1', 'geomatics.coordinates.enu.v1', 'geomatics.raster.suitability.v1', 'geomatics.radiometry.planck.v1', 'geomatics.radiometry.brightness-temperature.v1'})
+_BUILTIN_ROLES.update({name: "backend" for name in _GEOMATICS_OPERATIONS})
+_BUILTIN_ROLES["signal.pipeline.v1"] = "backend"
 
 
 def validate_role(operation_id: str, role: str) -> None:
@@ -101,7 +231,7 @@ def validate_role(operation_id: str, role: str) -> None:
     if expected is None:
         raise ValueError(f"No trusted saved-payload schema and role for {operation_id}")
     if role != expected:
-        raise ValueError("Operation role contradicts the declared payload contract")
+        raise ValueError(f"Operation role contradicts the declared payload contract: expected {expected}")
 
 
 def register_payload_validator(operation_id: str, validator: Callable, *, role: str = "backend") -> None:
@@ -125,10 +255,54 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
     if not isinstance(data, dict):
         raise ValueError("Operation data must be an object")
     finite_tree(data, "operation data")
-    if operation_id == "hardware.assess.v1":
+    if operation_id in _GEOMATICS_OPERATIONS:
+        from ..geomatics_workflow import validate_payload as validator
+    elif operation_id == 'atmosphere.moist-verify.v1':
+        from ..atmosphere_workflow import validate_payload as validator
+    elif operation_id == 'atmosphere.moist-compile.v1':
+        from ..atmosphere_workflow import validate_payload as validator
+    elif operation_id == 'atmosphere.compare.v1':
+        from ..atmosphere_comparison_workflow import validate_payload as validator
+    elif operation_id == 'atmosphere.compare-verify.v1':
+        from ..atmosphere_comparison_workflow import validate_payload as validator
+    elif operation_id == 'weather.compute.v1':
+        from ..weather_workflow import validate_payload as validator
+    elif operation_id == 'weather.verify.v1':
+        from ..weather_workflow import validate_payload as validator
+    elif operation_id == 'fluid.experiment.verify.v1':
+        from ..fluid_experiment import validate_payload as validator
+    elif operation_id == 'fluid.experiment.compare.v1':
+        from ..fluid_experiment import validate_payload as validator
+    elif operation_id == 'fluid.interface.transfer.v1':
+        from ..fluid_interface_workflow import validate_payload as validator
+    elif operation_id == 'fluid.interface.verify.v1':
+        from ..fluid_interface_workflow import validate_payload as validator
+    elif operation_id == 'procedural.generate.v1':
+        from ..procedural_workflow import validate_payload as validator
+    elif operation_id == 'procedural.verify.v1':
+        from ..procedural_workflow import validate_payload as validator
+    elif operation_id == 'data.rank-carex-matrices.v1':
+        from ..data_rank_bridge import validate_payload as validator
+    elif operation_id == 'data.project-gltf-mesh.v1':
+        from ..gltf_reference_runtime import validate_payload as validator
+    elif operation_id == 'data.inspect-gltf.v1':
+        from ..gltf_reference_runtime import validate_payload as validator
+    elif operation_id == "data.review-toolpoint-containment.v1":
+        from ..data_manufacturing_bridge import validate_payload as validator
+    elif operation_id == "data.review-product-study.v1":
+        from ..product_study_workflow import validate_payload as validator
+    elif operation_id == "data.compare-observations.v1":
+        from ..data_workflow import validate_payload as validator
+    elif operation_id in {"data.project-compute-state.v1", "data.assess-polymer-cycle.v1"}:
+        from ..data_compute_bridge import validate_payload as validator
+    elif operation_id == "particles.hoomd-md.v1":
+        from ..hoomd_workflow import validate_payload as validator
+    elif operation_id == "hardware.assess.v1":
         from ..hardware_workflow import validate_payload as validator
     elif operation_id in {"statistics.v1", "spectrum.periodogram.v1"}:
         from ..adapters.oscillator_records import validate_payload as validator
+    elif operation_id == "signal.pipeline.v1":
+        from ..dsp_pipeline import validate_payload as validator
     elif operation_id == "fsrt.tank-reconstruct.v1":
         from ..adapters.fsrt_records import validate_payload as validator
     elif operation_id == "fsrt.tank-reconstruct.v2":
@@ -152,12 +326,19 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
     elif operation_id == "oscillator.rhs-native.v1":
         from ..adapters.oscillator_kernel import validate_payload as validator
     elif operation_id in {"fluid.reservoir.simulate.v1", "fluid.reservoir.verify.v1",
-                          "fluid.wave.simulate.v1", "fluid.wave.verify.v1"}:
+                          "fluid.wave.simulate.v1", "fluid.wave.verify.v1",
+                          "fluid.molecular.simulate.v1", "fluid.molecular.verify.v1",
+                          "fluid.sph.simulate.v1", "fluid.sph.verify.v1",
+                          "fluid.fsi.simulate.v1", "fluid.fsi.verify.v1"}:
         from ..fluid_workflow import validate_payload as validator
     elif operation_id in {"irrigation.plan.v1", "irrigation.verify.v1"}:
         from ..irrigation_workflow import validate_payload as validator
     elif operation_id in {"atmosphere.compile.v1", "atmosphere.verify.v1"}:
         from ..atmosphere_workflow import validate_payload as validator
+    elif operation_id == "polymer.assess-thermal-experiment.v1":
+        from ..thermal_experiment_workflow import validate_payload as validator
+    elif operation_id == "polymer.identify-thermal-response.v1":
+        from ..thermal_identification_workflow import validate_payload as validator
     elif operation_id in {"polymer.assess-cycle.v1", "polymer.copilot-context.v1",
                           "polymer.control-simulate.v1", "polymer.verify-cycle.v1"}:
         from ..polymer_workflow import validate_payload as validator
@@ -167,8 +348,8 @@ def validate_payload(operation_id: str, data: dict, run: dict, parameters: dict,
         from ..temperature_workflow import validate_payload as validator
     elif operation_id == "measured-thermal.assess.v1":
         from ..measured_thermal_agent import validate_payload as validator
-    elif operation_id in {"system.compile.v1", "system.simulate.v1", "system.verify.v1",
-                          "system.compare.v1", "system.study.v1"}:
+    elif operation_id in {"system.compile.v1", "system.simulate.v1", "system.compare.v1", "system.verify.v1",
+                          "system.study.v1"}:
         from ..system_workflow import validate_payload as validator
     else:
         validator = _VALIDATORS.get(operation_id)
