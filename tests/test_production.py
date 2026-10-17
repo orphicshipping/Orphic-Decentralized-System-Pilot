@@ -146,7 +146,8 @@ def test_worker_allowlist_is_not_a_second_capability_registry(setup_case):
     registry = setup_case[2]
     workers = (Worker("local-analysis", ("spectrum.periodogram.v1",)),)
     with pytest.raises(ValueError): preflight(setup_case[1], registry, workers, setup_case[3])
-    assert set(registry.catalog()["operations"]) == {"statistics.v1", "spectrum.periodogram.v1"}
+    from ciw.numerical_contracts import OPERATIONS
+    assert set(registry.catalog()["operations"]) == {"statistics.v1", "spectrum.periodogram.v1"} | set(OPERATIONS)
 
 
 def test_unbound_advertisement_cannot_execute(tmp_path, setup_case):

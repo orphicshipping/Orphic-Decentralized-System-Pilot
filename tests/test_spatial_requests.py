@@ -84,7 +84,8 @@ def test_catalog_is_existing_registry_with_unbound_targets_only():
 
 
 def test_default_catalog_stays_unchanged():
-    assert set(builtin_registry().catalog()['operations']) == {'statistics.v1', 'spectrum.periodogram.v1'}
+    from ciw.numerical_contracts import OPERATIONS
+    assert set(builtin_registry().catalog()['operations']) == {'statistics.v1', 'spectrum.periodogram.v1'} | set(OPERATIONS)
 
 
 @pytest.mark.parametrize('alias', list(ROUTES))
