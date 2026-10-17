@@ -45,13 +45,36 @@ class Collector:
         return {'status':'ABSENT'} if v is None else deepcopy(v['value'])
 
     def _save(self, value):
-        old=self.journal.state(self.key)
-        self.journal.compare_and_set_state(self.key, 0 if old is None else old['revision'],value)
+        # The process lock owns acquisition fields; operators own a monotone stop
+        # flag. Pair each revision with the value read and merge that flag on CAS
+        # conflict. Never adopt a newer revision while writing an older stop.
+        for _ in range(32):
+            old=self.journal.state(self.key)
+            merged=deepcopy(value)
+            if old and old['value'].get('occurrence') == value.get('occurrence'):
+                merged['stop_requested'] = bool(value['stop_requested'] or old['value']['stop_requested'])
+            if merged.get('stop_requested') and merged['status'] in {'CLOSED','LIMIT_CLOSED'}:
+                merged['status']='STOPPED'
+            try:
+                self.journal.compare_and_set_state(self.key, 0 if old is None else old['revision'],merged)
+            except ValueError as exc:
+                if str(exc) != 'Stale simulation/configuration revision': raise
+                continue
+            value.clear(); value.update(merged)
+            return
+        raise RuntimeError('Collector state contention; retained outcome requires explicit recovery')
 
     def request_stop(self):
-        v=self.state()
-        if v['status']!='RUNNING': return v
-        self._save(dict(v,stop_requested=True)); return self.state()
+        for _ in range(32):
+            old=self.journal.state(self.key)
+            if old is None or old['value']['status']!='RUNNING': return self.state()
+            value=dict(old['value'],stop_requested=True)
+            try: self.journal.compare_and_set_state(self.key,old['revision'],value)
+            except ValueError as exc:
+                if str(exc) != 'Stale simulation/configuration revision': raise
+                continue
+            return self.state()
+        raise RuntimeError('Collector stop contention; retry explicit stop')
 
     def recover(self):
         # The OS lock proves the owner is gone. This operation cannot contact sources.
@@ -87,6 +110,8 @@ class Collector:
                     state['gaps'].append({'reason':'reserved_control_headroom_backpressure'}); break
                 state['in_flight']={'index':len(state['segments']),'started_receipt_ns':str(time.time_ns())}
                 self._save(state)  # Claim before any read or receive.
+                if state['stop_requested']:
+                    state.update(status='STOPPED',in_flight=None); break
                 try: raw=read_segment(len(state['segments']))
                 except StopIteration:
                     state.update(status='CLOSED',in_flight=None); break
@@ -129,9 +154,66 @@ def nvml_segments(*, device_index, host, boot, count=4):
                           'host':host,'boot':boot,'readings':[sensor.read() for _ in range(count)]})
 
 
-def link_segments(chunks, journal, *, expected_manifest, boot_id):
-    """Delegate finite receive and capture to the existing Link gateway."""
-    from .link_gateway import receive, capture
+def link_segments(chunks, journal, *, expected_manifest, boot_id, max_records=1,
+                  key=None, require_auth=False):
+    """Incremental native decoding, durable ingress, bounded noncumulative captures.
+
+    A single decoder owns a transport session. Frames are committed before the
+    next frame is parsed; a corrupt/incomplete tail cannot discard that prefix.
+    Rotation never closes a partial wire frame or repeats earlier segments.
+    """
+    from .link_protocol import Decoder, MAX_FRAME
+    from .link_store import decode_bound
+    from .link_gateway import validate_capture
+    c.integer(max_records,minimum=1,maximum=c.MAX_RECORDS)
+    device=c.manifest(expected_manifest); c.text(boot_id)
+    decoder=Decoder(key=key,require_auth=require_auth)
+    manifest_wire=None; pending=[]; seen=set(); ready=[]
+
+    def close_segment():
+        nonlocal pending
+        if not pending: return
+        value={'schema':c.CAPTURE_SCHEMA,'manifest':device,'manifest_wire':manifest_wire,
+            'gateway_id':journal.store_id,'boot_id':boot_id,'frames':pending,'calibrations':[],
+            'joint_covariance':None,'transport':'local_retained_byte_stream','closure':'operator_selected_finite_capture'}
+        validate_capture(value,key=key)
+        raw=encode(value)
+        if len(raw)>MAX_SOURCE: raise ValueError('Link segment exceeds retained source budget')
+        ready.append(raw); pending=[]
+
+    def retain(frame):
+        nonlocal manifest_wire
+        _,record,message_key,_=decode_bound(frame.wire,device,key=key,require_auth=require_auth)
+        journal.append(frame.wire,expected_manifest=device,key=key,require_auth=require_auth)
+        if frame.kind=='manifest':
+            manifest_wire=c.packed(frame.wire,MAX_FRAME); return
+        if record['boot_id']!=boot_id: raise ValueError('Link collector boot differs; select a new source occurrence')
+        if message_key in seen: return  # transport retry, not a new observation
+        if len(seen)>=MAX_MESSAGES: raise ValueError('Link session budget exceeded; explicit restart required')
+        seen.add(message_key)
+        # Native receipt metadata comes from committed original rows, including retries.
+        row=journal.db.execute('SELECT * FROM messages WHERE message_key=?',(message_key,)).fetchone()
+        retained=journal._row(row)
+        item={'wire':c.packed(frame.wire,MAX_FRAME),'received_ns':retained['received_ns'],
+              'host_clock':retained['host_clock'],'authentication_at_capture':retained['authentication_at_capture']}
+        if pending and (len(pending)>=max_records or len(encode(pending))+len(encode(item))+len(encode(device))+8192>MAX_SOURCE):
+            close_segment()
+        pending.append(item)
+        if len(pending)>=max_records: close_segment()
+
     for chunk in chunks:
-        receive([chunk],journal,expected_manifest=expected_manifest)
-        yield encode(capture(journal,expected_manifest=expected_manifest,boot_id=boot_id))
+        if type(chunk) is not bytes: raise ValueError('Link transport chunks must be bytes')
+        # Feed one bounded byte at a time only when necessary to preserve native
+        # decoder bounds; callback commits a prefix even when a later frame fails.
+        for offset in range(0,len(chunk),MAX_FRAME):
+            try: decoder.feed(chunk[offset:offset+MAX_FRAME],on_frame=retain)
+            except BaseException:
+                # Closed frames remain available to this collector before failure
+                # is propagated on its next read. Partial pending frames are held.
+                for raw in ready: yield raw
+                ready.clear()
+                raise
+            while ready: yield ready.pop(0)
+    decoder.finish()
+    close_segment()
+    yield from ready

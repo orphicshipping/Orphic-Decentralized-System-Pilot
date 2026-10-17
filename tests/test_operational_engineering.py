@@ -432,7 +432,16 @@ def test_supervisory_configuration_review_approval_dispatch_and_retry(tmp_path):
             'expiry_duration_s':300,'required_proposal_template':'resolve'}}},
         grants=['inspect','derive','numerical','prepare','supervise'])
     with OperationalHost(p) as h:
-        execute(h);f=h.call('oe_model_support',{'attempt':'first'})
+        execute(h)
+        unrelated=h.call('oe_model_support',{'attempt':'first'})
+        unrelated_proposal=h.call('oe_propose',{'finding':unrelated['record'],'template':'resolve'})
+        with pytest.raises(ValueError,match='candidate source'):
+            h.call('oe_command_prepare',{'proposal':unrelated_proposal['record'],'candidate':'range-change'})
+        rows=h.call('oe_rows',{'source':'link'})['rows']
+        first=rows[0]
+        q=h.call('oe_query',{'source':'link','channel':first['channel'],'clock':first['clock'],
+            'boot':first['boot'],'start':0,'end':1})
+        f=h.call('oe_change',{'baseline':q['record'],'changed':q['record']})
         prop=h.call('oe_propose',{'finding':f['record'],'template':'resolve'})
         cmd=h.call('oe_command_prepare',{'proposal':prop['record'],'candidate':'range-change'})
         assert cmd['data']['approval']=='not_granted' and cmd['data']['dispatch']=='not_performed'
@@ -466,7 +475,7 @@ def test_same_records_attach_existing_workbench_and_offline_view(tmp_path):
         output=tmp_path/'attached.json'
         attached=attach_workbench(h,workspace,output,recorded_at='2026-10-17T21:00:00Z')
         assert attached['status']=='RETAINED_IN_WORKBENCH' and attached['new_executions']==0
-        original=parse(workspace.read_bytes());new=parse(output.read_bytes())
+        original=json.loads(workspace.read_bytes());new=json.loads(output.read_bytes())
         assert original['results']==new['results'] and original['executions']==new['executions']
         restored=Session.from_workspace(output,output_dir=tmp_path/'restored')
         assert len(restored.results)==2

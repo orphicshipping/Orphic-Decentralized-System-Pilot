@@ -19,7 +19,7 @@ from . import operational_context as ctx
 from . import operational_engineering as eng
 
 
-def prepare(directory, *, investigation_id, sources, models=None, templates=None, grants=None, journal=None, supervision=None):
+def prepare(directory, *, investigation_id, sources, models=None, templates=None, grants=None, journal=None, supervision=None, providers=None):
     """Trusted operator admission. New arrivals make a new immutable generation.
 
     sources are exact bytes plus connective declarations, never MCP arguments.
@@ -50,6 +50,9 @@ def prepare(directory, *, investigation_id, sources, models=None, templates=None
             if model['engine']=='thermal' and raw!=compiled[model['source']][0]: raise ValueError('Thermal source substitution refused')
             if model['engine']=='reference' and encode(parse(raw)['right'])!=compiled[model['source']][0]:
                 raise ValueError('Reference observation substitution refused')
+            if model['engine'] in {'scalar','calibrated-window','residual-monitor'}:
+                from .operational_native import binds
+                if not binds(raw,model['engine'],compiled[model['source']][0]): raise ValueError('Native source substitution refused')
             graph=experiment('operational-'+alias,model_id=content_identity(run['metadata']['operational']),
                 parent_checkpoint=selected['binding'],nodes=[{'node_id':'assessment','operation_id':eng.ASSESS,
                     'parameters':{},'inputs':{},'depends_on':[]},
@@ -65,14 +68,19 @@ def prepare(directory, *, investigation_id, sources, models=None, templates=None
     suffix=ref[7:23]
     profile={'schema':'ncp.operational-host.v1','journal':os.path.relpath(path,root),'investigation':ref,
         'execution_output':'execution-'+suffix,'grants':grants if grants is not None else ['inspect','derive','numerical','prepare','annotate']}
+    if providers is not None: profile['providers']=deepcopy(providers)
     profile_path=root/('profile-'+suffix+'.json')
     if profile_path.exists():
         if parse(profile_path.read_bytes())!=profile: raise ValueError('Existing immutable host profile differs')
     else: save_new(profile_path,profile)
-    config={'mcpServers':{'ncp-operational':{'command':sys.executable,'args':['-m','ciw.net','operational','serve',
+    config={'mcpServers':{'ncp-operational':{'command':sys.executable,'args':['-I','-m','ciw.net','operational','serve',
         '--profile',str(profile_path.absolute()),'--sdk','--resume']}}}
     # --resume is only used after the one explicit initialization below in the guide.
     config_path=root/('mcp-'+suffix+'.json')
+    if config_path.exists() and parse(config_path.read_bytes())!=config:
+        # Keep earlier generated launch files as evidence; create the corrected
+        # isolated launch with an explicit content suffix rather than reuse it.
+        config_path=root/('mcp-'+suffix+'-'+content_identity(config)[7:15]+'.json')
     if not config_path.exists(): save_new(config_path,config)
     return profile_path
 
@@ -159,7 +167,8 @@ def main(argv=None):
     try:
         if args.command=='example': result={'status':'PREPARED_SYNTHETIC','profile':str(example(args.output_dir,case=args.case))}
         elif args.command=='admit':
-            spec=parse(args.manifest.read_bytes());keys(spec,{'schema','id','sources','models','templates','grants','supervision'})
+            spec=parse(args.manifest.read_bytes())
+            keys({k:v for k,v in spec.items() if k!='providers'},{'schema','id','sources','models','templates','grants','supervision'})
             if spec['schema']!='ncp.operational-admission.v1':raise ValueError('Unknown admission schema')
             sources={}
             for alias,item in spec['sources'].items():
@@ -170,7 +179,9 @@ def main(argv=None):
             for m in models.values():
                 if m['request'] is not None:m['request']=safe_path(args.manifest.parent/m['request']).read_bytes()
             result={'status':'ADMITTED','profile':str(prepare(args.output_dir,investigation_id=spec['id'],sources=sources,
-                models=models,templates=spec['templates'],grants=spec['grants'],supervision=spec['supervision']))}
+                models=models,templates=spec['templates'],grants=spec['grants'],supervision=spec['supervision'],
+                providers={engine:{role:str(safe_path(args.manifest.parent/path).resolve()) for role,path in bindings.items()}
+                    for engine,bindings in spec.get('providers',{}).items()} if 'providers' in spec else None))}
         elif args.command.startswith('collector-'):
             from .operational_collection import Collector
             with Journal(args.journal) as db:
@@ -193,10 +204,12 @@ def main(argv=None):
                     if type(binding['paths']) is not list or len(binding['paths'])>64:raise ValueError('Bounded source files required')
                     iterator=(read_source(args.manifest.parent/p) for p in binding['paths'])
                 elif spec['adapter']=='link-receive':
-                    keys(binding,{'paths','manifest','boot_id'})
+                    keys({k:v for k,v in binding.items() if k!='segment_records'},{'paths','manifest','boot_id'})
+                    if type(binding['paths']) is not list or not 1<=len(binding['paths'])<=64:
+                        raise ValueError('Link receive requires 1..64 operator-bound input files')
                     device=parse(safe_path(args.manifest.parent/binding['manifest']).read_bytes())
                     iterator=link_segments((read_source(args.manifest.parent/p) for p in binding['paths']),
-                        db,expected_manifest=device,boot_id=binding['boot_id'])
+                        db,expected_manifest=device,boot_id=binding['boot_id'],max_records=binding.get('segment_records',1))
                 else:raise ValueError('Unsupported collector adapter; no data-selected imports')
                 result=collector.run(lambda index:next(iterator),source_identity={'adapter':spec['adapter'],'binding':binding},restart=args.restart)
         elif args.command=='approve-command':

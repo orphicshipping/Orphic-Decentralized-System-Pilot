@@ -98,9 +98,10 @@ After reviewing the concrete command, an operator can run `approve-command` with
 |---|---|---|---|
 | Native scalar recording / observation stream | Exact source, channels, units, frames, clocks and declared configurations | Fixed paired-reference comparison of retained predictions | No new prediction is claimed for the retained-prediction adapter |
 | Measured thermal source | Four original calibrated streams and native context | Existing two-capacity thermal workflow, prediction/estimation and guarded joint-reference comparison | Conditional marginals do not establish a complete joint uncertainty budget |
-| Link / GaugeLink native capture | Original wire commitments, manifest/configuration/boot and receipt context | Existing scalar/measurement workflows remain separately available | Report-receipt ticks are not sensor sample times; no implicit clock conversion |
+| Link / GaugeLink native capture | Original wire commitments, manifest/configuration/boot and receipt context | Existing scalar decoding, affine calibration, shared-covariance mean model and arithmetic audit connected through the same AgentHost | Report-receipt ticks are not sensor sample times; no implicit clock conversion |
 | Measurement bundle | Existing frozen MeasurementHost records and lineage | Earlier native results stay authoritative | No reinterpretation of unknown acquisition time |
-| Calibrated window | Original pre-correction samples, profile and full joint covariance | Original qualified window/provider workflow remains separately available | This operational profile does not silently bind unavailable native providers |
+| Calibrated window | Original pre-correction samples, profile and full joint covariance | Native calibrated-window workflow connected through operator-bound exact role stacks | Missing stacks refuse; native clock/calibration/covariance checks remain authoritative |
+| Residual-monitor declaration and retained upstream windows | Exact original window identities and lineage | Existing pinned FDIR/OIT monitor connected through operator-bound stacks | Temporal dependence stays unknown; anomaly detection cannot uniquely nominate a physical fault |
 | GPU telemetry | Exact NVML identity, errors, nulls and call brackets | Retained inspection | Context reads have unknown instrument sample timestamps; no GPU workload |
 | Elapsed-Gauge-Meter research-study/1 | Candidate/observation separation, durations/work/energy and asserted provenance | Upstream parser/generator/model remains separately owned | Structural projection only; native validation, ratios, ranking, comparison and physical timing qualification are not inferred |
 
@@ -115,3 +116,96 @@ Thermal model support uses the native held-out reference and fixed assumptions. 
 Configuration schema `ncp.operational-access.v1` requires `profile`, `resume`, `issuer`, `endpoint`, `caller`, `worker`, `investigation`. The endpoint contains `public_url` ending `/operational/mcp`, the Access `audience`, `role: worker`, and the exact subject-to-caller mapping. Issuer must be the selected `https://<organization>.cloudflareaccess.com` origin. These values come from your private deployment; none are fabricated by preparation. The local workflow is independently usable. Signed-token and local transport tests do not qualify an actual remote network, credentials, OAuth edge or physical worker installation.
 
 Revoke an investigation using `net operational revoke --profile "$PROFILE"`. Inspection/reconnect, numerical dispatch, supervisory dispatch and authenticated requests all check the revocation state. Export before revocation if a retained review copy is needed. Revocation does not erase evidence.
+
+
+## Corrected collection and installed launch
+
+The generated MCP configuration uses the selected installed interpreter with `-I`.
+Use that generated file unchanged. An earlier launch file without `-I` is obsolete;
+readmission preserves it and emits a corrected launch with a content suffix.
+Initialization remains explicit before `--resume`. Working-directory packages and
+ambient Python import paths cannot substitute for the installed package.
+
+Link receive uses one native incremental decoder per transport session. Native
+frames commit before later frames are parsed. Arbitrary byte fragmentation is
+supported; incomplete/corrupt tails retain their committed prefix and report a
+failure. Each closed capture contains only that segment's frames. Operator collector
+bindings may set `segment_records` from 1 to 256 (default 1), subject to the native
+and retained-byte limits. Choose the boundary required by the scientific source
+contract; a wire frame alone does not guarantee a complete scalar CRLF recording.
+Stop is monotone within an occurrence and survives concurrent acquisition saves.
+An in-flight read may finish and be retained; stop never authorizes another read.
+
+`oe_rows` provides bounded discovery of original observations, with optional
+`unplaced_only`, `offset` and `limit`. Unknown-time rows remain outside interval
+attribution. Their native acquisition origin and the operator's recording/replay
+origin are separate fields. The existing console exposes the same read operation;
+the offline view includes an unknown-sample-time selector and exact row identities.
+
+## Native engineering bindings
+
+The model `engine` may be `thermal`, `reference`, `scalar`, `calibrated-window` or
+`residual-monitor`. A scalar request is the unchanged native scalar-study request;
+its capture must equal the selected source. Calibrated-window requests must be the
+exact admitted source bytes. A residual-monitor request contains `source` (the
+native packed declaration bytes) and `upstreams` (the exact native window catalog).
+The admission family for its declaration is `residual-monitor`. Native validators
+reject substituted windows and replayed samples before execution.
+
+The latter three adapters use a fixed policy object containing `unit`,
+`coverage_factor`, `max_abs_error` and `max_standard_uncertainty`. Units must match
+native declarations. Their native estimates, residuals, covariance, operations,
+execution/result identities and verification remain available in the retained
+model finding and AgentHost artifacts. Without an independent paired comparison
+and total budget, model support remains INSUFFICIENT_EVIDENCE. A successful native
+workflow or conditional arithmetic check cannot supply that missing evidence.
+
+Admission manifests may additionally supply a `providers` object. Its keys are
+`calibrated-window` or `residual-monitor`; each value maps exactly the native
+role names to operator-selected repository paths, resolved relative to the
+admission manifest. Window roles are tbrt/mcur/stfe/gsie/set; monitor roles are
+fdir/oit. The installed native validators enforce their existing exact revision,
+source-tree, interpreter and dependency contracts at dispatch. Paths are never MCP
+arguments or retained-source-selected imports. Catalog status distinguishes an
+available built-in adapter, an operator-bound stack awaiting its pin check, and an
+unavailable provider. Retained inspection requires no native dispatch.
+
+## Findings and proposed tests
+
+Each changed configuration field gets its own hypothesis with the actual before/
+after values, selected response, named confounders and retained evidence. Model
+findings retain the actual comparison outcome/reason and fixed policy. Proposed
+tests bind these hypothesis identities to controlled/observed variables,
+distinguishing evidence, decision targets, prerequisites and resource limits.
+Unsupported intervention predictions remain explicitly absent and information gain
+is not quantified. A prepared plan is held for new evidence and applicability
+review; it neither executes nor grants approval. Findings for different source/model
+scopes coexist. A later finding for the same scope invalidates its earlier proposal.
+Supervisory configuration preparation additionally requires the proposal's evidence
+to bind the selected command source.
+
+## Reproduce complete acceptance
+
+Run the focused operational suites, build/install a wheel, then invoke these with
+that installed interpreter and `-I`:
+
+- `scripts/check_operational_installed.py --output-dir <new-directory>` executes
+  generated-config stdio J1–J5, scalar native calculations, reconnect, replay,
+  retained resources and working-directory shadow resistance.
+- `scripts/check_operational_http.py --output-dir <new-directory>` executes real
+  SDK HTTP across a separate loopback worker process, RSA fixture signatures,
+  reconnect/restart, abrupt death with unknown-outcome recovery and revocation.
+  Its fixture public key and kill marker belong only to this test driver; production
+  service configuration continues to use the existing Access verifier and JWKS.
+- `scripts/check_operational_browser.cjs` exercises the actual existing console,
+  SDK, installed package and offline view, including unknown-time observations.
+
+With `CIW_ACQUIRED_STREAM_STACK_ROOT` pointing at exact role-named native checkouts,
+`tests/test_operational_native.py` executes native window and monitor journeys.
+Use isolated pytest outside the checkout (`-I`, `-c /dev/null`, importlib mode) to
+verify the installed artifact. The existing acquired-stream gate now includes those
+cases and retains its original provider-access and no-skip requirements.
+
+Loopback HTTP acceptance is software evidence. A production Access/TLS/network
+installation and physical acquisition/control qualification still require their
+selected environments, credentials, devices and independent measurement evidence.

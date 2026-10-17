@@ -100,6 +100,9 @@ def command_prepare(host, *, proposal, candidate):
             raise ValueError('Command requires the specified evidence-linked proposal')
         if host.inspect_record(proposal)['applicability']!='BOUND_TO_FROZEN_INVESTIGATION':raise ValueError('Proposal is stale')
         raw,context=host._source(records,binding['source'])
+        selected=host.investigation['sources'][binding['source']]['binding']
+        if selected not in p.get('binding_dependencies',[]):
+            raise ValueError('Proposal evidence does not bind the configuration candidate source')
         if context['family']!='link-capture':raise ValueError('Configuration adapter requires an exact Link capture')
         capture=parse(raw)
         device=capture['manifest']

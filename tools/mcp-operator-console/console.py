@@ -38,7 +38,7 @@ WRITE_TOOLS = frozenset({
     'ncp_plan_create', 'ncp_plan_admit', 'ncp_run_submit', 'ncp_run_cancel',
     'ncp_compare', 'ncp_qualify',
 })
-OPERATIONAL_READ_TOOLS = frozenset({'oe_catalog','oe_inspect','oe_trace','oe_search','oe_alarm_inspect',
+OPERATIONAL_READ_TOOLS = frozenset({'oe_catalog','oe_rows','oe_inspect','oe_trace','oe_search','oe_alarm_inspect',
     'net_capabilities','net_inspect','net_observe'})
 OPERATIONAL_WRITE_TOOLS = frozenset({'oe_query','oe_change','oe_model_support','oe_propose','oe_annotation',
     'oe_alarm_evaluate','oe_alarm_acknowledge','oe_command_prepare','oe_command_dispatch',

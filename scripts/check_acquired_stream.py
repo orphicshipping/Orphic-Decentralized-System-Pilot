@@ -20,7 +20,7 @@ REPOSITORIES = {
     "oit": "Observability-Identifiability-Testbed",
     "fdir": "Fault-Detection-Isolation-Runtime",
 }
-TEST_FILES = ("test_acquired_window.py", "test_residual_monitor.py", "test_residual_view.py", "test_acquired_stream_gate.py")
+TEST_FILES = ("test_acquired_window.py", "test_residual_monitor.py", "test_residual_view.py", "test_acquired_stream_gate.py", "test_operational_native.py")
 
 
 def call(command, **kwargs):

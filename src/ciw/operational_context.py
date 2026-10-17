@@ -17,7 +17,7 @@ from .core.identities import content_identity
 SCHEMA = 'ncp.operational-binding.v1'
 MAX_SOURCE = 512 * 1024
 MAX_ROWS = 256
-FAMILIES = ('recording', 'observations', 'link-capture', 'measurement-bundle', 'measured-thermal', 'calibrated-window', 'gpu-telemetry', 'elapsed-gauge-study')
+FAMILIES = ('recording', 'observations', 'link-capture', 'measurement-bundle', 'measured-thermal', 'calibrated-window', 'gpu-telemetry', 'elapsed-gauge-study', 'residual-monitor')
 AUTHORITY = {'physical_validation': 'not_established', 'source_authentication': 'not_established',
              'equipment_permission': 'not_granted', 'causal_identification': 'not_established'}
 
@@ -117,7 +117,10 @@ def rows(raw, binding):
     if type(binding['parent_receipts']) is not list or len(binding['parent_receipts'])>16: raise ValueError('Bounded parent receipts required')
     for ref in binding['parent_receipts']: c.content_ref(ref)
     v = parse(raw); family = binding['family']; result = []
-    if family == 'recording':
+    if family == 'residual-monitor':
+        from .residual_monitor import _source
+        _source(raw)  # Native monitor declarations name retained upstream windows.
+    elif family == 'recording':
         from .instruments import validate_run
         from .core.identities import validate_evidence_identity
         validate_run(v); validate_evidence_identity(v)
@@ -129,6 +132,7 @@ def rows(raw, binding):
                 if type(val) is list: raise ValueError('Operational recording adapter requires scalar channels')
                 result.append(_row(content_identity([v['evidence_id'], channel, i]), channel, channel,
                     data['unit'], v['metadata']['coordinate_frame'], t, val,
+                    origin='synthetic' if declared_origin in {'synthetic','simulated','fixture','test_fixture'} else None,
                     lineage={'evidence_id': v['evidence_id'], 'sample_index': i}))
     elif family == 'observations':
         from .control_checks import inspect_record
@@ -140,6 +144,7 @@ def rows(raw, binding):
             if row['clock']['id'] != ctx['clock']: raise ValueError('Observation clock differs')
             result.append(_row(content_identity(row), row['quantity'], row['quantity'], row['unit'], row['frame'],
                 row['clock']['time_s'], row['value'], uncertainty=row['uncertainty'],
+                origin='synthetic' if row['provenance']['semantics']=='simulated' else None,
                 lineage={'observation_ref':content_identity(row), 'provenance':row['provenance']}))
     elif family == 'measured-thermal':
         from . import measured_thermal as thermal
@@ -213,6 +218,7 @@ def rows(raw, binding):
         raise ValueError('Unsupported operational source family')
     if len(result) > MAX_ROWS: raise ValueError('Source exceeds 256 projected observations; rotate segments')
     for row in result:
+        row['recording_origin']=ctx['origin']
         row['boot'] = row['boot'] or ctx['boot']; row['clock'] = row['clock'] or ctx['clock']
         row['origin'] = row['origin'] or ctx['origin']
         for f in ('id', 'channel', 'quantity', 'unit', 'frame', 'boot', 'clock'): text(row[f])

@@ -51,6 +51,14 @@ const args=process.argv.slice(2);const get=name=>args[args.indexOf(name)+1];
       await page.locator('#sources button').first().click();
       await page.locator('#start').fill('0');await page.locator('#end').fill('2');await page.locator('#filter').click();
       if(await page.locator('#observations tr').count()!==2)throw Error('Offline retained interval view failed');
+      const scalarSource=page.locator('#sources button').filter({hasText:'scalar'});
+      if(await scalarSource.count()){
+        await scalarSource.click();await page.locator('#unplaced').check();
+        if(await page.locator('#observations tr').count()!==3)throw Error('Unknown-time native rows not discoverable');
+        if(!(await page.locator('#coverage').innerText()).includes('excluded from interval attribution'))throw Error('Unknown time was assigned to an interval');
+        await page.locator('#observations tr').first().click();
+        if(!(await page.locator('#identity').innerText()).startsWith('sha256:'))throw Error('Unknown-time evidence identity missing');
+      }
       await page.locator('#records button').first().click();
       if(!(await page.locator('#identity').innerText()).startsWith('sha256:'))throw Error('Offline identity missing');
       await page.screenshot({path:path.join(output,'investigation.png'),fullPage:true});

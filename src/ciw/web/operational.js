@@ -9,11 +9,12 @@
   function rows(){
     $('observations').replaceChildren();if(!source)return;
     const lower=Number($('start').value),upper=Number($('end').value),channel=$('channel').value;
-    const all=queries.filter(q=>q.data.source===source).flatMap(q=>q.data.rows);
+    const all=[...(data.source_rows?.[source]??[]),...queries.filter(q=>q.data.source===source).flatMap(q=>q.data.rows)];
     const unique=[...new Map(all.map(r=>[r.id,r])).values()];
-    const shown=unique.filter(r=>r.channel===channel&&r.time!==null&&lower<=r.time&&r.time<upper);
-    for(const r of shown){const tr=make('tr');for(const v of [r.time,`${r.value??'unknown'} ${r.unit}`,r.configuration.configuration??r.configuration.status,r.quality])tr.append(make('td',String(v)));tr.tabIndex=0;tr.setAttribute('aria-label',`Inspect observation ${r.id}`);tr.addEventListener('click',()=>inspect(r.id,r));tr.addEventListener('keydown',e=>{if(e.key==='Enter')inspect(r.id,r);});$('observations').append(tr);}
-    $('coverage').textContent=`${shown.length} retained observations in selected interval. Only exported query pages are displayed; source completeness remains explicit.`;
+    const unplaced=$('unplaced').checked;
+    const shown=unique.filter(r=>r.channel===channel&&(unplaced?r.time===null:r.time!==null&&lower<=r.time&&r.time<upper));
+    for(const r of shown){const tr=make('tr');for(const v of [r.time??'Unknown sample time',`${r.value??'unknown'} ${r.unit}`,r.configuration?.configuration??r.configuration?.status??'Attribution not queried',r.quality])tr.append(make('td',String(v)));tr.tabIndex=0;tr.setAttribute('aria-label',`Inspect observation ${r.id}`);tr.addEventListener('click',()=>inspect(r.id,r));tr.addEventListener('keydown',e=>{if(e.key==='Enter')inspect(r.id,r);});$('observations').append(tr);}
+    $('coverage').textContent=`${shown.length} retained observations ${unplaced?'with unknown sample time (excluded from interval attribution)':'in selected interval'}. Source completeness remains explicit.`;
     $('status').textContent='Historical interval selected. Scientific records and decisions unchanged.';
   }
   function showSource(alias){source=alias;selected=null;const s=data.catalog.sources[alias];$('title').textContent=alias;
@@ -26,6 +27,7 @@
     const b=make('button',`${r.question??r.template??'Annotation'} · ${r.status??'review context'}`);b.dataset.record=record.record;
     b.addEventListener('click',()=>{selected=record;source=null;$('title').textContent=r.question??'Proposed next test';$('scope').textContent=`${r.status??'REVIEW_CONTEXT'} · ${record.applicability} · historical retained result`;
       $('observations').replaceChildren();$('answer').replaceChildren(make('h3',r.status??'Human review context'),make('pre',JSON.stringify(r,null,2)));$('coverage').textContent='No new numerical execution. Proposal approval remains separate.';inspect(record.record,r);$('status').textContent=`Inspecting retained ${r.schema}`;});$('records').append(b);}
+  const unplacedLabel=make('label','Show unknown sample time');const unplaced=make('input');unplaced.type='checkbox';unplaced.id='unplaced';unplacedLabel.append(unplaced);document.querySelector('.filters').append(unplacedLabel);unplaced.addEventListener('change',rows);
   $('filter').addEventListener('click',rows);$('channel').addEventListener('change',rows);
   if(Object.keys(data.catalog.sources).length)showSource(Object.keys(data.catalog.sources)[0]);
 })();

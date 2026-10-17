@@ -19,13 +19,20 @@ from .operations.runner import seal
 def snapshot(host):
     catalog=host.call('oe_catalog',{})
     records=[host.call('oe_inspect',{'record':r['ref']}) for r in catalog['records']]
+    source_rows={}
+    for source in catalog['sources']:
+        source_rows[source]=[]
+        for offset in range(0,256,32):
+            page=host.call('oe_rows',{'source':source,'offset':offset,'limit':32})
+            source_rows[source]+=page['rows']
+            if page['next_offset'] is None: break
     return {'schema':'ncp.operational-view.v1','investigation':host.spec['investigation'],
-            'catalog':catalog,'records':records,'historical':True,'provider_execution':False}
+            'catalog':catalog,'records':records,'source_rows':source_rows,'historical':True,'provider_execution':False}
 
 
 def render_html(report):
     from .control_contracts import keys
-    keys(report,{'schema','investigation','catalog','records','historical','provider_execution'})
+    keys({k:v for k,v in report.items() if k!='source_rows'},{'schema','investigation','catalog','records','historical','provider_execution'})
     if report['schema']!='ncp.operational-view.v1' or report['historical'] is not True or report['provider_execution'] is not False:
         raise ValueError('Operational view requires a historical retained projection')
     assets=files('ciw').joinpath('web')

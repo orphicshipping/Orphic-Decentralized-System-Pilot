@@ -11,6 +11,7 @@ from hashlib import sha256
 from importlib.metadata import version
 from importlib.resources import files
 import json
+import math
 from pathlib import Path
 import platform
 import subprocess
@@ -29,19 +30,31 @@ def run(output):
     if not package.is_relative_to(Path(sys.prefix).resolve()):raise RuntimeError('Installed test refuses source fallback')
     output.mkdir(parents=True,exist_ok=False)
     req=example_request();ctx=default_context(clock='synthetic.clock',origin='synthetic')
+    from ciw.link_study_cli import example as scalar_example
+    scalar=scalar_example();capture=scalar['capture']
     configs=[configuration('before',{'power':10,'fan':1},clock='synthetic.clock'),
              configuration('after',{'power':20,'fan':2},effective=(0.5,0.5),clock='synthetic.clock')]
     profile=prepare(output/'profile',investigation_id='installed-operational',sources={'recorded':{
-        'raw':encode(req['right']),'family':'observations','context':ctx,'configurations':configs}},
-        models={'assessment':{'source':'recorded','engine':'reference','policy':{},'request':encode(req)}},
+        'raw':encode(req['right']),'family':'observations','context':ctx,'configurations':configs},
+        'scalar':{'raw':encode(capture),'family':'link-capture','configurations':[],
+            'context':default_context(producer=capture['manifest']['device_id'],clock=capture['manifest']['clock']['id'],
+                boot=capture['boot_id'],origin='synthetic')}},
+        models={'assessment':{'source':'recorded','engine':'reference','policy':{},'request':encode(req)},
+                'scalar-model':{'source':'scalar','engine':'scalar','request':encode(scalar),
+                    'policy':{'unit':'N','coverage_factor':2,'max_abs_error':.1,'max_standard_uncertainty':.1}}},
         templates={'resolve':default_template()})
     with OperationalHost(profile):pass
+    config_path=next((output/'profile').glob('mcp-*.json'))
+    config=parse(config_path.read_bytes())['mcpServers']['ncp-operational']
+    if config['args'][:3]!=['-I','-m','ciw.net']:raise RuntimeError('Generated launch must isolate installed imports')
+    shadow=output/'unrelated-client-cwd';(shadow/'ciw').mkdir(parents=True)
+    (shadow/'ciw/__init__.py').write_text('')
+    (shadow/'ciw/net.py').write_text("raise RuntimeError('Working-directory package shadowed installed NCP')\n")
     receipts={}
     async def journey(modern,reconnect):
         from mcp import ClientSession,StdioServerParameters
         from mcp.client.stdio import stdio_client
-        params=StdioServerParameters(command=sys.executable,args=['-I','-m','ciw.net','operational','serve',
-            '--profile',str(profile),'--sdk','--resume'],cwd=str(output))
+        params=StdioServerParameters(command=config['command'],args=config['args'],cwd=str(shadow))
         with (output/'sdk-stderr.log').open('a') as errors:
             async with stdio_client(params,errlog=errors) as (read,write):
                 async with ClientSession(read,write,read_timeout_seconds=30) as client:
@@ -53,11 +66,18 @@ def run(output):
                         if json.loads(r.content[0].text)!=v:raise RuntimeError('MCP content mismatch')
                         return v
                     catalog=await call('oe_catalog')
+                    assert len((await call('oe_rows',{'source':'recorded'}))['rows'])==2
                     sel={'source':'recorded','clock':'synthetic.clock','boot':'boot-1','channel':'temperature','start':0,'end':0.5}
                     a=await call('oe_query',sel);b=await call('oe_query',{**sel,'start':0.5,'end':2})
                     changed=await call('oe_change',{'baseline':a['record'],'changed':b['record']})
                     run=await call('net_execute',{'source':'assessment','graph':'assessment-graph','attempt':'installed-first'})
                     finding=await call('oe_model_support',{'attempt':'installed-first'})
+                    scalar_run=await call('net_execute',{'source':'scalar-model','graph':'scalar-model-graph','attempt':'installed-scalar'})
+                    scalar_finding=await call('oe_model_support',{'attempt':'installed-scalar'})
+                    assert scalar_finding['data']['status']=='INSUFFICIENT_EVIDENCE'
+                    assert math.isclose(scalar_finding['data']['model']['native_results']['link.mean-model.v1']['mean'],2.03,rel_tol=1e-14)
+                    unplaced=await call('oe_rows',{'source':'scalar','unplaced_only':True})
+                    assert unplaced['rows'] and all(row['time'] is None for row in unplaced['rows'])
                     proposal=await call('oe_propose',{'finding':finding['record'],'template':'resolve'})
                     assert changed['data']['status']=='RECORDED_ASSOCIATION'
                     assert finding['data']['status']=='AGREEMENT'
@@ -68,7 +88,7 @@ def run(output):
                     if reconnect:
                         assert run['reused_response'] and run['result_ids']==receipts['J3']['result_ids']
                         assert finding['record']==receipts['finding']['record']
-                    else:receipts.update(J1=a,J2=changed,J3=run,finding=finding,J4=proposal)
+                    else:receipts.update(J1=a,J2=changed,J3=run,finding=finding,J4=proposal,native_scalar=scalar_run,native_finding=scalar_finding)
                     return {'protocol':client.protocol_version,'reconnect':reconnect,'results':run['result_ids']}
     sessions=[asyncio.run(journey(True,False)),asyncio.run(journey(False,True)),asyncio.run(journey(True,True))]
     with OperationalHost(profile,resume=True) as host:
@@ -87,6 +107,7 @@ def run(output):
         raw=files('ciw').joinpath(name).read_bytes();identities[name]=sha256(raw).hexdigest()
     report={'status':'PASS','scope':'installed synthetic connected software journeys J1-J5',
         'import_path':str(package),'prefix':sys.prefix,'python':platform.python_version(),
+        'generated_client_configuration':json.loads(config_path.read_bytes()),'working_directory_shadowing_blocked':True,
         'dependencies':{name:version(name) for name in ('numpy','mcp','websockets','PyJWT','uvicorn')},
         'module_asset_sha256':identities,'MCP_sessions':sessions,'CLI_MCP_UI_same_finding':receipts['finding']['record'],
         'original_execution_ids':receipts['J3']['execution_ids'],'fresh_execution_ids':fresh['execution_ids'],
