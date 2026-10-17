@@ -20,7 +20,7 @@ REPOSITORIES = {
     "oit": "Observability-Identifiability-Testbed",
     "fdir": "Fault-Detection-Isolation-Runtime",
 }
-TEST_FILES = ("test_acquired_window.py", "test_residual_monitor.py", "test_residual_view.py", "test_acquired_stream_gate.py")
+TEST_FILES = ("test_acquired_window.py", "test_residual_monitor.py", "test_residual_view.py", "test_acquired_stream_gate.py", "test_operational_native.py")
 
 
 def call(command, **kwargs):
@@ -89,7 +89,7 @@ def main():
         environment = temporary / "environment"
         call([sys.executable, "-m", "venv", str(environment)])
         python = environment / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-        call([str(python), "-m", "pip", "install", str(wheel), "pytest==9.0.2"])
+        call([str(python), "-m", "pip", "install", str(wheel), "pytest==9.0.2", "mcp==2.3.0"])
         work = temporary / "installed-check"
         (work / "tests").mkdir(parents=True)
         for filename in TEST_FILES:

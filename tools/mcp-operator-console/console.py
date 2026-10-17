@@ -38,6 +38,11 @@ WRITE_TOOLS = frozenset({
     'ncp_plan_create', 'ncp_plan_admit', 'ncp_run_submit', 'ncp_run_cancel',
     'ncp_compare', 'ncp_qualify',
 })
+OPERATIONAL_READ_TOOLS = frozenset({'oe_catalog','oe_rows','oe_inspect','oe_trace','oe_search','oe_alarm_inspect',
+    'net_capabilities','net_inspect','net_observe'})
+OPERATIONAL_WRITE_TOOLS = frozenset({'oe_query','oe_change','oe_model_support','oe_propose','oe_annotation',
+    'oe_alarm_evaluate','oe_alarm_acknowledge','oe_command_prepare','oe_command_dispatch',
+    'net_execute','net_replay','net_extract','net_candidate','net_compare','net_qualify'})
 MAX_BODY = 262144
 ASSETS = Path(__file__).resolve().parent / 'web'
 
@@ -59,6 +64,7 @@ class ConsoleConfig:
     instrument: str = 'builtin'
     resume: bool = False
     state_dir: Path = Path('console-state')
+    surface: str = 'control'
 
 
 def security_error(host, origin, authorization, token, port):
@@ -78,6 +84,9 @@ class MCPBridge:
     """
     def __init__(self, config):
         self.config = config
+        if config.surface not in {'control','operational'}:raise ValueError('Unsupported console surface')
+        self.read_tools=OPERATIONAL_READ_TOOLS if config.surface=='operational' else READ_TOOLS
+        self.write_tools=OPERATIONAL_WRITE_TOOLS if config.surface=='operational' else WRITE_TOOLS
         self.connection = 'disconnected'
         self.protocol = None
         self.server = None
@@ -191,7 +200,9 @@ class MCPBridge:
         error_path.touch(mode=0o600, exist_ok=True)
         os.chmod(error_path, 0o600)
         errors = stack.enter_context(error_path.open('a', encoding='utf-8'))
-        args = ['-I', '-m', 'ciw.net', 'control', 'serve', '--profile', str(cfg.profile), '--instrument', cfg.instrument]
+        args = ['-I','-m','ciw.net',cfg.surface,'serve','--profile',str(cfg.profile)]
+        if cfg.surface=='operational':args.append('--sdk')
+        else:args += ['--instrument',cfg.instrument]
         if cfg.resume:
             args.append('--resume')
         self.connection = 'connecting'
@@ -214,7 +225,7 @@ class MCPBridge:
 
     def snapshot(self):
         return {'connection': self.connection, 'protocol': self.protocol, 'transport': 'stdio',
-            'profile': self.config.profile.name, 'instrument': self.config.instrument,
+            'profile': self.config.profile.name, 'surface':self.config.surface, 'instrument': self.config.instrument,
             'resume': self.config.resume, 'tools': len(self.tools), 'last_ok': self.last_ok,
             'last_error': self.last_error, 'uptime_seconds': round(time.monotonic() - self.started),
             'known_runs': len(self.runs), 'run_inventory_complete': False,
@@ -230,7 +241,7 @@ class MCPBridge:
         if self.client is None:
             raise ConsoleError('disconnected', 'MCP is not connected.', 503)
         if action == 'tools':
-            return [{**tool, 'console_access': 'read' if name in READ_TOOLS else 'confirm' if name in WRITE_TOOLS else 'unsupported'} for name, tool in sorted(self.tools.items())]
+            return [{**tool, 'console_access': 'read' if name in self.read_tools else 'confirm' if name in self.write_tools else 'unsupported'} for name, tool in sorted(self.tools.items())]
         if action == 'diagnostics':
             started = time.monotonic()
             ping_ok = None
@@ -252,13 +263,21 @@ class MCPBridge:
         if action == 'call':
             return await self._call(payload)
         if action == 'runs':
+            if self.config.surface=='operational':
+                catalog=(await self._call({'name':'net_capabilities','arguments':{}}))['structuredContent']
+                items=[]
+                for attempt in catalog['attempts']:
+                    retained=self.runs.get(attempt['attempt'],{})
+                    items.append({**retained,**attempt,'record_kind':'operational_attempt'})
+                return {'items':items,'complete':False,'scope':'All numerical attempts in this frozen AgentHost; collectors and supervisory commands remain separately inspectable.'}
             for run_id, run in list(self.runs.items()):
                 if run.get('state') in {'queued', 'running'}:
                     await self._call({'name': 'ncp_run_get', 'arguments': {'run_id': run_id}})
             return {'items': list(self.runs.values()), 'complete': False, 'scope': 'Runs observed by this console process. Inspect another retained run by ID.'}
         if action == 'resource':
             uri = payload.get('uri')
-            if not isinstance(uri, str) or not re.fullmatch(r'ncp://(?:plans|runs|artifacts)/[A-Za-z0-9_.:-]{1,200}', uri):
+            pattern=(r'ncp://(?:investigations|operational-records)/[0-9a-f]{64}' if self.config.surface=='operational' else r'ncp://(?:plans|runs|artifacts)/[A-Za-z0-9_.:-]{1,200}')
+            if not isinstance(uri, str) or not re.fullmatch(pattern, uri):
                 raise ConsoleError('invalid_resource', 'Use an ncp://plans, runs, or artifacts URI with a retained ID.')
             result = (await self.client.read_resource(uri)).model_dump(mode='json', by_alias=True)
             self.last_ok = now()
@@ -270,9 +289,9 @@ class MCPBridge:
         if set(payload) - {'name', 'arguments', 'confirmed'}:
             raise ConsoleError('invalid_request', 'Unknown tool-call fields.')
         name, arguments = payload.get('name'), payload.get('arguments', {})
-        if not isinstance(name, str) or name not in self.tools or name not in READ_TOOLS | WRITE_TOOLS:
-            raise ConsoleError('unsupported_tool', 'Tool is not on the discovered control-server allowlist.')
-        if name in WRITE_TOOLS and payload.get('confirmed') is not True:
+        if not isinstance(name, str) or name not in self.tools or name not in self.read_tools | self.write_tools:
+            raise ConsoleError('unsupported_tool', 'Tool is not on the discovered selected-surface allowlist.')
+        if name in self.write_tools and payload.get('confirmed') is not True:
             raise ConsoleError('confirmation_required', 'Review and confirm this state-changing MCP call.', 409)
         try:
             jsonschema.validate(arguments, self.tools[name]['inputSchema'])
@@ -287,7 +306,10 @@ class MCPBridge:
                 jsonschema.validate(raw.get('structuredContent'), output_schema)
             except jsonschema.ValidationError:
                 raise ConsoleError('invalid_server_response', 'Server output failed its published schema. The operation may have applied; do not blindly retry.', 502) from None
-        data = (raw.get('structuredContent') or {}).get('data')
+        original=raw.get('structuredContent') or {}
+        if self.config.surface=='operational' and name in {'net_execute','net_replay'} and isinstance(original.get('attempt'),str):
+            self.runs[original['attempt']]=dict(original)
+        data = original.get('data')
         if isinstance(data, dict) and isinstance(data.get('run_id'), str) and 'state' in data:
             self.runs[data['run_id']] = data
         self.last_ok = now()
@@ -358,6 +380,7 @@ def main():
     parser.add_argument('--python', type=Path, required=True, help='Absolute installed NCP Python interpreter; launched with -I.')
     parser.add_argument('--profile', type=Path, required=True)
     parser.add_argument('--instrument', choices=['builtin', 'polymer', 'temperature', 'link-scalar'], default='builtin')
+    parser.add_argument('--surface',choices=['control','operational'],default='control')
     parser.add_argument('--resume', action='store_true', help='Reopen an existing host; never automatically reruns jobs.')
     parser.add_argument('--state-dir', type=Path, required=True, help='Private local directory for console diagnostics.')
     parser.add_argument('--token-file', type=Path, required=True, help='Mode-0600 file containing at least 32 random characters.')
@@ -369,7 +392,7 @@ def main():
     if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077:
         parser.error('Token file must be a regular private file (mode 0600).')
     token = args.token_file.read_text().strip()
-    config = ConsoleConfig(args.python, args.profile, args.instrument, args.resume, args.state_dir.resolve())
+    config = ConsoleConfig(args.python, args.profile, args.instrument, args.resume, args.state_dir.resolve(),args.surface)
     uvicorn.run(create_app(MCPBridge(config), token=token, port=args.port), host='127.0.0.1', port=args.port, access_log=False)
 
 

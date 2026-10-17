@@ -1,0 +1,24 @@
+........................................................................ [ 18%]
+........................................................................ [ 36%]
+........................................................................ [ 54%]
+........................................................................ [ 72%]
+..............................................sssss.sssssssssssss.s..... [ 90%]
+...........ssssssssssss...............                                   [100%]
+=========================== short test summary info ============================
+SKIPPED [1] tests/test_residual_monitor.py:67: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:97: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:109: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:119: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:128: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [11] tests/test_residual_monitor.py:157: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:178: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_residual_monitor.py:190: set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers
+SKIPPED [1] tests/test_calibrated_window.py:71: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [1] tests/test_calibrated_window.py:148: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [1] tests/test_calibrated_window.py:170: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [1] tests/test_calibrated_window.py:180: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [3] tests/test_calibrated_window.py:197: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [1] tests/test_calibrated_window.py:212: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [4] tests/test_calibrated_window.py:222: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+SKIPPED [1] tests/test_calibrated_window.py:237: set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts
+367 passed, 31 skipped in 68.38s (0:01:08)

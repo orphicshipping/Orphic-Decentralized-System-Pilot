@@ -1,0 +1,62 @@
+{
+  "status": "PASS",
+  "scope": "installed synthetic connected software journeys J1-J5",
+  "import_path": "/workspace/scratch/983c4968e2d6/operational-installed/lib/python3.12/site-packages/ciw/__init__.py",
+  "prefix": "/workspace/scratch/983c4968e2d6/operational-installed",
+  "python": "3.12.14",
+  "dependencies": {
+    "numpy": "2.3.5",
+    "mcp": "2.3.0",
+    "websockets": "16.0",
+    "PyJWT": "2.15.1",
+    "uvicorn": "0.54.0"
+  },
+  "module_asset_sha256": {
+    "operational_context.py": "21b04a16c3c141fa5dc56a0bc30953cd546e3d24c401a04676f6642c944cd558",
+    "operational_agent.py": "49260ff2d0aa7acf5628ddc429374e8bd0f468cd65a5fb78fbe7c3fcb028912a",
+    "operational_engineering.py": "80214fd495ea577d5249188e30a4eda66174e2036c3a63b4d189f2282dd38a9f",
+    "operational_collection.py": "19a456e438195e5ef7042fca6d0d53f7e91422504d733adf47dd6c06da140f11",
+    "operational_supervision.py": "6bd40077a08a19bdb7d04d6b519c35dde3883923758078e09370eb2b3f23db92",
+    "web/operational.html": "11010b9bea04ae8908cc04bcfe279862f76dfd0d04f9e699555197bf25f29b74",
+    "web/operational.js": "bf5fb1297910e7ff1a8cf3adef0672f74aa813f7346d91148cf6db6ef1000a57",
+    "web/operational.css": "961fe0611fdb0c5f2911dbd9d2b24d5525ed200ec947ec0d0a45f4bbbe10a1bc"
+  },
+  "MCP_sessions": [
+    {
+      "protocol": "2026-07-28",
+      "reconnect": false,
+      "results": [
+        "result-a5bfe57001464c4e9abaac2db1af723b",
+        "result-bf227f85167a45f7af5baa9f0aac7226"
+      ]
+    },
+    {
+      "protocol": "2025-11-25",
+      "reconnect": true,
+      "results": [
+        "result-a5bfe57001464c4e9abaac2db1af723b",
+        "result-bf227f85167a45f7af5baa9f0aac7226"
+      ]
+    },
+    {
+      "protocol": "2026-07-28",
+      "reconnect": true,
+      "results": [
+        "result-a5bfe57001464c4e9abaac2db1af723b",
+        "result-bf227f85167a45f7af5baa9f0aac7226"
+      ]
+    }
+  ],
+  "CLI_MCP_UI_same_finding": "sha256:c7657cd3369dcf8a4b578063d354e4f6738be95a8f62dbd218e651b02fabf2a1",
+  "original_execution_ids": [
+    "execution-2abb5e4365cc425a9596900e20f47669",
+    "execution-893eeacb4f124796a7ca70bac3298dd5"
+  ],
+  "fresh_execution_ids": [
+    "execution-1328b03f971a4ddeba3db7bffd52bcc6",
+    "execution-e99a0a3924224132b36f9670ae150a86"
+  ],
+  "physical_acquisition": "not_performed",
+  "remote_deployment": "not_performed",
+  "new_workload_launches": 0
+}

@@ -4,6 +4,8 @@ A separate operator interface for the existing NCP **control** MCP server. No ex
 
 Built against `notationsystems/Notations-Control-Protocol` at `cc5d7f31cfeaeb4d897e0864e0fcc560355a0d39`. Retained in `tools/mcp-operator-console/` as an optional local client; core repairs can be integrated independently. It does not change the installed NCP package or its CLI entry points.
 
+The additive [operational profile](OPERATIONAL.md) connects the same console to retained operational-engineering investigations with `--surface operational`.
+
 ## What works
 
 - Actual MCP discovery and protocol status, with the last successful MCP response timestamp.

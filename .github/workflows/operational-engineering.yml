@@ -1,0 +1,64 @@
+name: Operational engineering MCP
+on:
+  pull_request:
+    paths: ['src/ciw/operational*', 'src/ciw/mcp_server.py', 'src/ciw/operator*', 'src/ciw/web/operational*', 'tests/test_operational*', 'tests/fixtures/operational/**', 'scripts/check_operational*', 'tools/mcp-operator-console/**', 'examples/operational/**', '.github/workflows/operational-engineering.yml']
+  push:
+    branches: [main]
+    paths: ['src/ciw/operational*', 'src/ciw/mcp_server.py', 'tests/test_operational*', 'scripts/check_operational*', '.github/workflows/operational-engineering.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+jobs:
+  connected:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.19.0'
+      - name: Install scientific, SDK and test dependencies
+        run: python -m pip install '.[external-work,dev]' build jsonschema==4.26.0
+      - name: Connected acceptance and compatibility
+        run: python -m pytest -q tests/test_operational_engineering.py tests/test_operational_completion.py tests/test_operational_mcp.py tests/test_operational_audit.py tests/test_agent_recovery.py tests/test_link_measurements.py tests/test_evidence_history.py tests/test_mcp_sdk.py tests/test_measured_thermal_agent.py tests/test_reference_comparison.py --junitxml=results/source.xml
+      - name: Build and install an isolated candidate wheel
+        run: |
+          python -m build --wheel --outdir results/wheels
+          python -m venv results/installed
+          results/installed/bin/python -m pip install results/wheels/*.whl mcp==2.3.0 'PyJWT[crypto]==2.15.1' uvicorn==0.54.0 jsonschema==4.26.0
+      - name: Complete installed J1-J5 with modern and legacy MCP clients
+        run: results/installed/bin/python -I scripts/check_operational_installed.py --output-dir results/installed-journey
+      - name: Actual SDK HTTP with a separate authenticated worker and restart
+        run: results/installed/bin/python -I scripts/check_operational_http.py --output-dir results/http-journey
+      - name: Install browser driver
+        run: |
+          npm install --prefix results/browser-runtime --ignore-scripts --no-audit --no-fund playwright@1.62.1
+          results/browser-runtime/node_modules/.bin/playwright install --with-deps chromium
+      - name: Existing interactive console through actual MCP to installed wheel
+        env:
+          NODE_PATH: ${{ github.workspace }}/results/browser-runtime/node_modules
+        run: node scripts/check_operational_browser.cjs --output-dir results/browser --profile results/installed-journey/profile --python ${{ github.workspace }}/results/installed/bin/python --console tools/mcp-operator-console/console.py --view results/installed-journey/investigation.html
+      - name: Retain synthetic acceptance and wheel
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: operational-engineering
+          path: |
+            results/source.xml
+            results/wheels/*.whl
+            results/installed-journey/report.json
+            results/installed-journey/journey-receipts.json
+            results/installed-journey/representative-investigation.json
+            results/http-journey/report.json
+            results/browser/report.json
+            results/browser/console.png
+            results/browser/console-mobile.png
+          if-no-files-found: error

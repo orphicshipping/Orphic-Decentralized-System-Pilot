@@ -1,0 +1,1 @@
+{"adapter":"retained-files","binding":{"paths":["observations.json","link-capture.json"]},"cadence_s":0,"id":"file-recorder","journal":"recordings.sqlite","max_bytes":1048576,"max_segments":4,"schema":"ncp.operational-collector-profile.v1"}

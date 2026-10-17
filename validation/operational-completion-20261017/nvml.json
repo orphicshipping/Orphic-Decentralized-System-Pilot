@@ -1,0 +1,6 @@
+{
+  "status": "UNAVAILABLE",
+  "exception": "NVMLUnavailable",
+  "reason": "NVML library_load unavailable (code 12)",
+  "workload_launched": false
+}

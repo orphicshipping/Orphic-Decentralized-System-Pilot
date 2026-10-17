@@ -1,0 +1,11 @@
+✔ unlock selects the first discovered tool without executing it (143.858272ms)
+✔ changing arguments invalidates confirmation; response content is rendered as text (96.383283ms)
+✔ network failure does not automatically retry a write (87.888212ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 929.841325

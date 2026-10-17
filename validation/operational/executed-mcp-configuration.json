@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "ncp-operational": {
+      "command": "/workspace/scratch/983c4968e2d6/Notations-Control-Protocol/../operational-installed/bin/python",
+      "args": [
+        "-m",
+        "ciw.net",
+        "operational",
+        "serve",
+        "--profile",
+        "/workspace/scratch/983c4968e2d6/Notations-Control-Protocol/../delivery-installed/profile/profile-e32038bf69212218.json",
+        "--sdk",
+        "--resume"
+      ]
+    }
+  }
+}

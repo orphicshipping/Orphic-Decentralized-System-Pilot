@@ -181,3 +181,29 @@ class RealMCPTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+
+class OperationalMCPTests(unittest.TestCase):
+    def test_same_operational_attempts_and_results_through_existing_console(self):
+        from ciw.operational_cli import example
+        from ciw.operational_agent import OperationalHost
+        async def journey(root):
+            profile=example(root/'profile')
+            with OperationalHost(profile):pass
+            bridge=MCPBridge(ConsoleConfig(Path(sys.executable),profile,resume=True,state_dir=root/'console',surface='operational'))
+            await bridge.open()
+            try:
+                tools=await bridge.request('tools')
+                self.assertIn('oe_query',[t['name'] for t in tools])
+                with self.assertRaises(ConsoleError):
+                    await bridge.request('call',{'name':'net_execute','arguments':{'source':'assessment','graph':'assessment-graph','attempt':'console-ops'}})
+                run=await bridge.request('call',{'name':'net_execute','arguments':{'source':'assessment','graph':'assessment-graph','attempt':'console-ops'},'confirmed':True})
+                inventory=await bridge.request('runs')
+                self.assertEqual(inventory['items'][0]['attempt'],'console-ops')
+                self.assertEqual(inventory['items'][0]['result_ids'],run['structuredContent']['result_ids'])
+                self.assertNotIn('run_id',inventory['items'][0])
+                finding=(await bridge.request('call',{'name':'oe_model_support','arguments':{'attempt':'console-ops'},'confirmed':True}))['structuredContent']
+                resource=await bridge.request('resource',{'uri':'ncp://operational-records/'+finding['record'][7:]})
+                self.assertEqual(json.loads(resource['contents'][0]['text'])['record'],finding['record'])
+            finally:await bridge.close()
+        with tempfile.TemporaryDirectory() as temp:asyncio.run(journey(Path(temp)))
