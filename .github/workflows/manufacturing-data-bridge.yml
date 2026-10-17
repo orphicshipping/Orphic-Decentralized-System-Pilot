@@ -14,6 +14,8 @@ on:
       - 'tests/test_polymer_namespace_coexistence.py'
       - 'scripts/check_manufacturing_data_bridge_installed.py'
       - '.github/workflows/manufacturing-data-bridge.yml'
+      - 'scripts/installed_command.py'
+      - 'tests/test_installed_command.py'
       - 'pyproject.toml'
   workflow_dispatch:
 permissions:

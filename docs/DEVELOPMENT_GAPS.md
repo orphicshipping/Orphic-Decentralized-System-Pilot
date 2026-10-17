@@ -1,5 +1,13 @@
 # Development-window gap audit
 
+> Current implementation status (2026-10-17): PRs #229, #230 and #231 have
+> merged. The earlier roadmap below retains its original scope and evidence
+> dates; open source PRs alone do not identify unimplemented functionality.
+> See [the post-consolidation repair record](POST_CONSOLIDATION_REPAIR_20261017.md)
+> and [the pinned consolidation ledger](PR_CONSOLIDATION_20261017.md).
+> Integrated software, hosted qualification and physical validation remain
+> separate claims.
+
 Audit date: 2026-09-26. This follows the native interoperability, curved-path
 study and bounded Catalyst/Cantera increments. It distinguishes executable
 repairs from research proposals and external qualification gates.

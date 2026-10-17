@@ -776,3 +776,54 @@ def test_browser_api_preview_retain_and_export_preserve_typed_representation(loc
     else:
         assert b"\nv " in content and b"\nf " in content
     assert _bytes(original) == before
+
+
+@pytest.mark.parametrize("route,body,expected", [
+    ("/api/preview", {"request": {"invalid": True}}, 400),
+    ("/api/preview", {"request": _request()}, 200),
+    ("/api/missing", {}, 404),
+])
+def test_mutation_response_is_sent_after_operation_ownership_is_released(
+    local_server, monkeypatch, route, body, expected,
+):
+    from ciw.procedural_server import GraphicsHandler
+    original = GraphicsHandler._respond
+    observed = []
+
+    def respond(handler, status, *args, **kwargs):
+        observed.append((status, handler.server.operation_lock.locked()))
+        return original(handler, status, *args, **kwargs)
+
+    monkeypatch.setattr(GraphicsHandler, "_respond", respond)
+    assert _http(local_server, "POST", route, json.dumps(body).encode())[0] == expected
+    assert observed == [(expected, False)]
+
+
+def test_export_response_releases_operation_ownership_before_delivery(local_server, monkeypatch):
+    from ciw.procedural_server import GraphicsHandler
+    status, _, raw = _http(local_server, "POST", "/api/run",
+                           json.dumps({"request": _request()}).encode())
+    assert status == 200
+    identity = json.loads(raw)["id"]
+    original = GraphicsHandler._respond
+    observed = []
+
+    def respond(handler, status, *args, **kwargs):
+        observed.append((status, handler.server.operation_lock.locked()))
+        return original(handler, status, *args, **kwargs)
+
+    monkeypatch.setattr(GraphicsHandler, "_respond", respond)
+    assert _http(local_server, "GET", "/api/runs/" + identity + "/export?format=json")[0] == 200
+    assert observed == [(200, False)]
+
+
+def test_response_budget_refusal_remains_controlled_after_unlock(local_server, monkeypatch):
+    from ciw import procedural_server
+    monkeypatch.setattr(procedural_server, "MAX_RESPONSE_BYTES", 256)
+    status, _, raw = _http(local_server, "POST", "/api/preview",
+                           json.dumps({"request": _request()}).encode())
+    assert status == 400
+    assert json.loads(raw)["status"] == "REFUSE"
+    assert "transfer budget" in json.loads(raw)["reason"]
+    assert not local_server.operation_lock.locked()
+    assert list(local_server.root.iterdir()) == []

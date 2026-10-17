@@ -13,6 +13,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from installed_command import installed_net_command
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -90,9 +91,7 @@ def main() -> None:
             ["qc", "assess", "qc-request.json", "--output", "qc-report.json"],
             ["qc", "verify", "qc-report.json", "--output", "qc-verification.json"],
         ]
-        executable = Path(sys.executable).parent / ("net.exe" if os.name == "nt" else "net")
-        if not executable.is_file():
-            raise ValueError(f"Missing installed native command: {executable}")
+        executable = installed_net_command()
         for command in commands:
             subprocess.run([str(executable), "polymer", *command], cwd=outside, env=env, check=True)
         for path in outside.glob("*.json"):

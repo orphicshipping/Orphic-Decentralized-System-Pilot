@@ -1,5 +1,13 @@
 # Cross-system consolidation
 
+> Current implementation status (2026-10-17): PRs #229, #230 and #231 have
+> merged. The earlier roadmap below retains its original scope and evidence
+> dates; open source PRs alone do not identify unimplemented functionality.
+> See [the post-consolidation repair record](POST_CONSOLIDATION_REPAIR_20261017.md)
+> and [the pinned consolidation ledger](PR_CONSOLIDATION_20261017.md).
+> Integrated software, hosted qualification and physical validation remain
+> separate claims.
+
 This page describes how the existing Notation Systems components fit together.
 It is an architecture map, not a new wire contract, operation catalogue, or
 claim that every linked repository is already integrated.

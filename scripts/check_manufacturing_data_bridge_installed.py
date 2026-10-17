@@ -9,6 +9,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+from installed_command import installed_net_command
 import tempfile
 import xml.etree.ElementTree as ET
 import zipfile
@@ -61,8 +62,7 @@ def main():
                         raise ValueError("Candidate source/wheel/installed mismatch: " + name)
                     count += 1
         installed = suite(outside, output / "installed.xml", env)
-        executable = Path(sys.executable).parent / ("net.exe" if os.name == "nt" else "net")
-        if not executable.is_file(): raise ValueError("Missing installed native net command")
+        executable = installed_net_command()
         setup = '''
 import json
 from pathlib import Path

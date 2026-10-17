@@ -1,0 +1,23 @@
+test_both_push_and_pr_filters_are_checked (test_ci_policy.PolicyTests.test_both_push_and_pr_filters_are_checked) ... ok
+test_cantera_direct_worker_uses_shared_event_policy_with_its_existing_paths (test_ci_policy.PolicyTests.test_cantera_direct_worker_uses_shared_event_policy_with_its_existing_paths) ... ok
+test_check_does_not_mutate_input (test_ci_policy.PolicyTests.test_check_does_not_mutate_input) ... ok
+test_checked_in_release_and_collector_push_routes (test_ci_policy.PolicyTests.test_checked_in_release_and_collector_push_routes) ... ok
+test_code_and_future_documentation_fixtures_cannot_be_ignored (test_ci_policy.PolicyTests.test_code_and_future_documentation_fixtures_cannot_be_ignored) ... ok
+test_core_and_qualification_policies_are_accepted (test_ci_policy.PolicyTests.test_core_and_qualification_policies_are_accepted) ... ok
+test_core_cannot_skip_documentation_changes (test_ci_policy.PolicyTests.test_core_cannot_skip_documentation_changes) ... ok
+test_feature_push_duplication_is_rejected (test_ci_policy.PolicyTests.test_feature_push_duplication_is_rejected) ... ok
+test_manual_dispatch_does_not_require_inputs (test_ci_policy.PolicyTests.test_manual_dispatch_does_not_require_inputs) ... ok
+test_manual_qualification_remains_available (test_ci_policy.PolicyTests.test_manual_qualification_remains_available) ... ok
+test_non_pr_runs_cannot_cancel_each_other (test_ci_policy.PolicyTests.test_non_pr_runs_cannot_cancel_each_other) ... ok
+test_pyyaml_pin_lives_only_in_the_dev_extra (test_ci_policy.PolicyTests.test_pyyaml_pin_lives_only_in_the_dev_extra) ... ok
+test_release_push_rejects_malformed_mappings (test_ci_policy.PolicyTests.test_release_push_rejects_malformed_mappings) ... ok
+test_release_push_rejects_missing_or_broadened_routes (test_ci_policy.PolicyTests.test_release_push_rejects_missing_or_broadened_routes) ... ok
+test_release_workflows_match_the_evidence_policy (test_ci_policy.PolicyTests.test_release_workflows_match_the_evidence_policy) ... ok
+test_selected_release_workflows_require_isolated_candidate_pushes (test_ci_policy.PolicyTests.test_selected_release_workflows_require_isolated_candidate_pushes) ... ok
+test_stacked_pr_targets_cannot_be_filtered (test_ci_policy.PolicyTests.test_stacked_pr_targets_cannot_be_filtered) ... ok
+test_tag_push_coverage_is_required (test_ci_policy.PolicyTests.test_tag_push_coverage_is_required) ... ok
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.069s
+
+OK

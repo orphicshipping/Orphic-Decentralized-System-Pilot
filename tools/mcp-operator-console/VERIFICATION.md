@@ -26,3 +26,15 @@ The pinned server returns MCP `-32601` (method not found) for `ping`, while `too
 - Physical instrument qualification, external/private/native provider readiness, release qualification, or passing the repository-wide suite. Separate pre-existing audit work is not console acceptance evidence.
 
 All console test fixtures were synthetic and temporary. Test-owned server processes were stopped after verification. No production profile was restarted or altered.
+
+
+## Post-consolidation verification
+
+The follow-up [repair record](../../docs/POST_CONSOLIDATION_REPAIR_20261017.md)
+records a real Chromium journey through this console, HTTP, the actual MCP host,
+explicit plan admission, synthetic execution and retained resource inspection.
+`tests/browser_journey.py` is the repeatable browser gate. The console workflow
+runs the existing five Python/real-HTTP tests and three DOM tests on Linux and
+Windows, plus the browser journey on Linux. Hosted outcomes belong to the
+reviewed commit and are not inferred from local results. Remote transport,
+complete job enumeration/drain and physical qualification remain separate work.
