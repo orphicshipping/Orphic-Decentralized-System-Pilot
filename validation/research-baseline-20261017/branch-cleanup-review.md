@@ -247,3 +247,7 @@ The branch inventory separately retains 39 heads for individual scope review and
 ## Repository refresh
 
 PRs #244 and #139 were merged during the audit; no PRs were open at the final pre-publication observation. The merged native-history transport branch remains retained pending its separate publication/retirement obligations. The evidence follow-up branch `work/research-baseline-closeout-20261018` is also protected. The 235 pinned cleanup entries remain unchanged; no branch has been archived or deleted.
+
+## Exact archive references
+
+Every entry in the JSON plan now declares its full archive tag reference under `refs/tags/archive/research-baseline-20261017/`, preserving the complete source branch name. All 235 references are unique and pass Git ref-format validation. Before deleting a branch, verify the archive ref resolves to its exact expected head. Refuse a conflicting archive tag; never overwrite it. Confirmation and the expected-head recheck remain required.

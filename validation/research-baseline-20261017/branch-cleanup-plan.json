@@ -15,7 +15,8 @@
       "expected_head": "585bfcca43122227e4355e473c9c7fa9742de2da",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Bounded BIM clearance, sampled metrology contracts, retained CSE execution and explicit local MCP instrument are integrated in this candidate. Historical task scratchpads are replaced by the current work order. Later metrology directions remain separate scope."
+      "reason": "Bounded BIM clearance, sampled metrology contracts, retained CSE execution and explicit local MCP instrument are integrated in this candidate. Historical task scratchpads are replaced by the current work order. Later metrology directions remain separate scope.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/bounded-bim-clearance-20261017"
     },
     {
       "pr": 228,
@@ -23,7 +24,8 @@
       "expected_head": "75bad7a8a6b5770c2d68c866f7b035c723c88ad7",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-gateway-preflight-20261010"
     },
     {
       "pr": 227,
@@ -31,7 +33,8 @@
       "expected_head": "751d25cdc3b5210fd115ab92a41cb4330e429573",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-integrated-20261007"
     },
     {
       "pr": 226,
@@ -39,7 +42,8 @@
       "expected_head": "721b45bdaee33d9241a7deb90f9e9b0399c0d75e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/gaugelink-corpus-integration-20261007"
     },
     {
       "pr": 225,
@@ -47,7 +51,8 @@
       "expected_head": "5d07803ceba4c9e280bdedeaecc106451a2e3408",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-mcp-control-20261007"
     },
     {
       "pr": 224,
@@ -55,7 +60,8 @@
       "expected_head": "d242abd94f55dc415f1919a22dcddca337fa9485",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-provisioned-profiles-20261007"
     },
     {
       "pr": 223,
@@ -63,7 +69,8 @@
       "expected_head": "1ed585695c887601f936f2efc58cd0d59253f426",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-system-coherence-20261007"
     },
     {
       "pr": 222,
@@ -71,7 +78,8 @@
       "expected_head": "fe558935452f7de699c79b7e35003e08b56b497e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/ncp-corpus-integration-20261007"
     },
     {
       "pr": 221,
@@ -79,7 +87,8 @@
       "expected_head": "70c515ba97b1b39693d9446626bf7879800efe03",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled with hardened corpus and MCP integration in #223–228. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled with hardened corpus and MCP integration in #223\u2013228. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/proto-corpus-system"
     },
     {
       "pr": 219,
@@ -87,7 +96,8 @@
       "expected_head": "26ffb9c06dec36c2357300b581fff7f415a1d1a0",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/engineering-intent-evidence-gates-20261006"
     },
     {
       "pr": 218,
@@ -95,7 +105,8 @@
       "expected_head": "e6f17ff7152c76095d67128b46b107795eeaf2e9",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-manufacturing-timing-uncertainty-20261006"
     },
     {
       "pr": 217,
@@ -103,7 +114,8 @@
       "expected_head": "7485ef056e07afc9fe08e8d0a900f7f24de34cd8",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-manufacturing-timing-characterization-20261006"
     },
     {
       "pr": 216,
@@ -111,7 +123,8 @@
       "expected_head": "3a3167e1b1a8b87dbb896510c0f9cd4c19147665",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-manufacturing-analysis-20261006"
     },
     {
       "pr": 215,
@@ -119,7 +132,8 @@
       "expected_head": "fe3626da05cbb4508c12c8d7d4f2e8a4cfe5bb89",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-executable-manufacturing-plan-20261006"
     },
     {
       "pr": 214,
@@ -127,7 +141,8 @@
       "expected_head": "827cbed62b02f1a001869b0fa70daabd6491efcc",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/link-installation-investigation-20261006"
     },
     {
       "pr": 213,
@@ -135,7 +150,8 @@
       "expected_head": "6477059eb24c982017953d4f619fc6dca142cc9d",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-industrial-lab-graph-first-20261006"
     },
     {
       "pr": 212,
@@ -143,7 +159,8 @@
       "expected_head": "801b25d453eaeda04910339bef1c4713026ba070",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-sensor-project-toolchain-20261006"
     },
     {
       "pr": 211,
@@ -151,7 +168,8 @@
       "expected_head": "28644a197f82ca1c5169fd210516a2c9e8aa6dab",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled with the pinned reference integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled with the pinned reference integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-institutional-reference-data-20261006"
     },
     {
       "pr": 210,
@@ -159,7 +177,8 @@
       "expected_head": "0066a4733645ff39289232075ea31af1e0e8e47e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled with the later GaugeLink evidence/refit integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled with the later GaugeLink evidence/refit integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-pinwheel-feedback-20261006"
     },
     {
       "pr": 209,
@@ -167,7 +186,8 @@
       "expected_head": "128436b99bb45cb0a7904de1df6dab012173952d",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/gaugelink-custody-inspection-20261006"
     },
     {
       "pr": 208,
@@ -175,7 +195,8 @@
       "expected_head": "be20bd2a953ba296a90d009d19d542890948cb5b",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled with the retained Link/device integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled with the retained Link/device integration in #226. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-measurement-views-20261006"
     },
     {
       "pr": 207,
@@ -183,7 +204,8 @@
       "expected_head": "80d3d6d339fe32c2da367d8c63e00b559a8c6bd2",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-retained-device-review-20261006"
     },
     {
       "pr": 206,
@@ -191,7 +213,8 @@
       "expected_head": "1be80e0ae3085f684b8b6ac6c39bfb4b20ee2ae9",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/network-trust-consent-20261006"
     },
     {
       "pr": 205,
@@ -199,7 +222,8 @@
       "expected_head": "99137e0ddea057eacb9e0c934d9f249d277f432e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-link-scalar-developer-kit-20261005"
     },
     {
       "pr": 204,
@@ -207,7 +231,8 @@
       "expected_head": "03bb19e3c6dac6c30ae0f1ee684a8f9a96611a70",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Already in the #228 ancestry; retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-device-link-runtime-20261005"
     },
     {
       "pr": 203,
@@ -215,7 +240,8 @@
       "expected_head": "f2126a6f9d2627cbf823577b6473080c444234e6",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/operational-observability-20261005"
     },
     {
       "pr": 201,
@@ -223,7 +249,8 @@
       "expected_head": "2e26200d6b70859fdfc07e64bf99c7cbbb8dbeac",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/gltf-reference-consumers"
     },
     {
       "pr": 200,
@@ -231,7 +258,8 @@
       "expected_head": "cf5342a4e0996bcbe04671572f0c7e6da21c4b7e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-integrated-data-program-20261005"
     },
     {
       "pr": 199,
@@ -239,7 +267,8 @@
       "expected_head": "a7160e8922c6bd0f482fb603b318837f50479d27",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/molecular-reference-data-20261005"
     },
     {
       "pr": 198,
@@ -247,7 +276,8 @@
       "expected_head": "a03af213aa5df22e58f77a3293b68244441ef5e8",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/carex-rank-reference"
     },
     {
       "pr": 197,
@@ -255,7 +285,8 @@
       "expected_head": "8569ac95f234c9334224832df15e91c002bfae20",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/lammps-retained-native-tooling-20261005"
     },
     {
       "pr": 196,
@@ -263,7 +294,8 @@
       "expected_head": "1293b8cefbab7111c962cd48a3e388106e787c4c",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/academic-consumer-qualification"
     },
     {
       "pr": 195,
@@ -271,7 +303,8 @@
       "expected_head": "ef84c048ee4cdef627f8575c89d855adb2fc7121",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-governance-security-contributing-citation"
     },
     {
       "pr": 194,
@@ -279,7 +312,8 @@
       "expected_head": "3465f76468b106e6e12366d6c99f2cc920ffe431",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/manufacturing-upgrades-qualified"
     },
     {
       "pr": 193,
@@ -287,7 +321,8 @@
       "expected_head": "076eefe96c0d20c055a4df46fbe50a4d5c9bab2d",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/materials-session-execution-20261005-076eefe"
     },
     {
       "pr": 192,
@@ -295,7 +330,8 @@
       "expected_head": "00ea251ef9574148105283443e0f8a3bdf38bf2e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/gromacs-native-boundary-20261005"
     },
     {
       "pr": 191,
@@ -303,7 +339,8 @@
       "expected_head": "49e3d38ee43ede6db9b0ccf46328739e1c80a047",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-hoomd-particle-engine"
     },
     {
       "pr": 190,
@@ -311,7 +348,8 @@
       "expected_head": "0be25f7843ea086aa18e6079ab24074b9c8b22e5",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-scientific-boundary-qualification"
     },
     {
       "pr": 189,
@@ -319,7 +357,8 @@
       "expected_head": "b2f712ed583f3042195531228c65948ee893a197",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/integrate-product-study-variants"
     },
     {
       "pr": 188,
@@ -327,7 +366,8 @@
       "expected_head": "2e986b1d6e3037b2bd4947b75e9b20ab75dba57a",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-physics-chemistry-qualification"
     },
     {
       "pr": 187,
@@ -335,7 +375,8 @@
       "expected_head": "992fc57f6e8288c26c0cfc075c8ace02707d46cf",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/work/external-adapter-qualification"
     },
     {
       "pr": 185,
@@ -343,7 +384,8 @@
       "expected_head": "a7724105b5c3f59cabaef7085c9329bb7dfe1279",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-system-data-integration"
     },
     {
       "pr": 184,
@@ -351,7 +393,8 @@
       "expected_head": "4265eb2382d694f07fd22e1701c107f992297b42",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/domain-provider-boundary-20261005-6625802"
     },
     {
       "pr": 183,
@@ -359,7 +402,8 @@
       "expected_head": "9a3e6c619dedc532fb774a8907eaf1b3784f7799",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/study-manufacturing-genealogy-20261005"
     },
     {
       "pr": 182,
@@ -367,7 +411,8 @@
       "expected_head": "d4924247ae7a8b14d2bd608405b1a2f919b82c83",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/empirical-rheology-investigation-20261005"
     },
     {
       "pr": 181,
@@ -375,7 +420,8 @@
       "expected_head": "55d73b4ea488c3f88978d07ed41342b46102824a",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/alchemi-lj-energy-forces-pilot"
     },
     {
       "pr": 180,
@@ -383,7 +429,8 @@
       "expected_head": "894e4d780fa62811422d5d91428270c1f3c8c2eb",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/sequence-kinetics-reference-v1-20261005"
     },
     {
       "pr": 179,
@@ -391,7 +438,8 @@
       "expected_head": "4f47714d094966705c7ef94d847a06fe6a1a7d7b",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/work/net-model-reality-thermal-identification-20261005"
     },
     {
       "pr": 178,
@@ -399,7 +447,8 @@
       "expected_head": "fad73e28aab9882fd6878eb7a4ed1e192753fb9d",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-microfab-evidence-v1-20261005"
     },
     {
       "pr": 177,
@@ -407,7 +456,8 @@
       "expected_head": "c47295ad9d0abc4a2bbb4030abbc7857e6528bda",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-microfab-discrete-runtime-20261005"
     },
     {
       "pr": 175,
@@ -415,7 +465,8 @@
       "expected_head": "505bd406e0ab26447c6ac4ac3d13d506a94fa28d",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-rheology-scientific-audit-20261005"
     },
     {
       "pr": 174,
@@ -423,7 +474,8 @@
       "expected_head": "3f22b1483bd156f1263d337b271d58bb6cb71ffe",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-materials-validation-20261005"
     },
     {
       "pr": 173,
@@ -431,7 +483,8 @@
       "expected_head": "367d72f5a2794b0a6ee97224e72e957b3e6862ae",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/thermochemical-coupling-20261005"
     },
     {
       "pr": 172,
@@ -439,7 +492,8 @@
       "expected_head": "5ebccdeb0f890d73aa6e86a142b51a54146c9481",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/temporal-reference-roundoff-20261005"
     },
     {
       "pr": 171,
@@ -447,7 +501,8 @@
       "expected_head": "0c2fb09d6b285f7b3d08ddc85a5e0d8f04390cf7",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/reference-comparison-timing-current-main"
     },
     {
       "pr": 170,
@@ -455,7 +510,8 @@
       "expected_head": "ba82f41c0f9602ff3422f0b895e45f06b1984f83",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/published-metrology-current-main"
     },
     {
       "pr": 169,
@@ -463,7 +519,8 @@
       "expected_head": "5405dd488cd5a87d410595e051a8ca2e3205622c",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/temperature-recording-current-main"
     },
     {
       "pr": 166,
@@ -471,7 +528,8 @@
       "expected_head": "334fbbb26702cdc6f3f89e277cd68d81e9ef58b0",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/published-metrology-benchmarks-20261004"
     },
     {
       "pr": 165,
@@ -479,7 +537,8 @@
       "expected_head": "f9a109f5cc29bb457279403d5905e4d724196f99",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/physical-measurement-workflows-20261004"
     },
     {
       "pr": 164,
@@ -487,7 +546,8 @@
       "expected_head": "276d4afdcfe73e22c8e9125407a5849cf61c0b6b",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/institutional-campaign-20261004"
     },
     {
       "pr": 163,
@@ -495,7 +555,8 @@
       "expected_head": "5746ab3bb5d7e165278aab593deecafc5962341e",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/temperature-recording-import-20261004"
     },
     {
       "pr": 162,
@@ -503,7 +564,8 @@
       "expected_head": "fc28a5e50db0dbef20a1aab1fbb7db4bcb1e2a8a",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/tooling-visualizer-20261004"
     },
     {
       "pr": 161,
@@ -511,7 +573,8 @@
       "expected_head": "4dfd95cd3739551d8e8bef18969c87edcab3ac65",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/qualification-progress"
     },
     {
       "pr": 151,
@@ -519,7 +582,8 @@
       "expected_head": "0081cbfef3bfda973e460ba265e7ee94d1be8efc",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/1792-foundry-source-closure"
     },
     {
       "pr": 148,
@@ -527,7 +591,8 @@
       "expected_head": "5accef9dc4ae94034ebeed31e241a52945292f23",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/dsp-conditioning-pump"
     },
     {
       "pr": 146,
@@ -535,7 +600,8 @@
       "expected_head": "ed5c7d4360b8aefa9873b28424cbdc6a19bca49c",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/procedural-graphics-workbench-v1-20261003"
     },
     {
       "pr": 145,
@@ -543,7 +609,8 @@
       "expected_head": "256cda305557ef127f78b89c1421ccf8c12b6d5f",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/thermofluids-toolset-20261003"
     },
     {
       "pr": 143,
@@ -551,7 +618,8 @@
       "expected_head": "6915d10ce62e5a8da8385d3dac24c9986cb35389",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/fluid-multiscale-qualified-20261003"
     },
     {
       "pr": 142,
@@ -559,7 +627,8 @@
       "expected_head": "ff146529146d8a0f31ac80f41ce592c6b9eed1d4",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/geomatics-course-tools-20261003"
     },
     {
       "pr": 141,
@@ -567,7 +636,8 @@
       "expected_head": "25e9a245a1a341f8c592f3257b787adcdf333bb2",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/weather-science-toolkit-20261003"
     },
     {
       "pr": 114,
@@ -575,7 +645,8 @@
       "expected_head": "2b4cc74a447660941ef072c55e57c1a8dceba5c2",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/impact-contact-benchmark-v1-20261002"
     },
     {
       "pr": 100,
@@ -583,7 +654,8 @@
       "expected_head": "2fd8d418d7c9604dc7eb731d1798a4826228f84c",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/spatial-mesh-realization-adapters-v1-20260929"
     },
     {
       "pr": 99,
@@ -591,7 +663,8 @@
       "expected_head": "74b2fcf3fc7c317ae5a1782ef5eef58bdbc9f451",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/representation-realization-registry-v1-20260929"
     },
     {
       "pr": 98,
@@ -599,7 +672,8 @@
       "expected_head": "09b4007eae59d4bb0f9183e9fb3794070165c1da",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Expansion intent retained through current verification/promotion gates; older permissive CLI implementation not restored. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Expansion intent retained through current verification/promotion gates; older permissive CLI implementation not restored. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/evidence-bound-representation-expansion-v1-20260929"
     },
     {
       "pr": 78,
@@ -607,7 +681,8 @@
       "expected_head": "48e62565dd25046a14920874556fa585964495a8",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/unattended-local-agent-v1-20260929"
     },
     {
       "pr": 66,
@@ -615,7 +690,8 @@
       "expected_head": "3100894149779823727b48e0b46e72633f2427a5",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/coupled-game-foundry-scope-20260929"
     },
     {
       "pr": 64,
@@ -623,7 +699,8 @@
       "expected_head": "e584e364e3494202e07a865ee4772846ea6bb828",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/gis-rs-request-routes-v1-20260928"
     },
     {
       "pr": 63,
@@ -631,7 +708,8 @@
       "expected_head": "ba48ba82098ef0274bea471775fd9dcd7f9b743b",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/stateful-agent-bridge-v1-20260928"
     },
     {
       "pr": 53,
@@ -639,7 +717,8 @@
       "expected_head": "ded994c711d7c9a8a9e4c99eb758c323365157fb",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Current main README retained; stale default-branch acceptance claims replaced with this review scope. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Current main README retained; stale default-branch acceptance claims replaced with this review scope. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force.",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/readme-reader-first-20260928"
     },
     {
       "pr": null,
@@ -648,7 +727,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/agent/project-graph-operation-v2"
     },
     {
       "pr": null,
@@ -657,7 +737,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/claude/modest-thompson-7bm177"
     },
     {
       "pr": null,
@@ -666,7 +747,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/audit-gaugelink-and-ncp"
     },
     {
       "pr": null,
@@ -675,7 +757,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/builtin-numerical-library-20261017"
     },
     {
       "pr": null,
@@ -684,7 +767,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/cantera-worker-ci-v1"
     },
     {
       "pr": null,
@@ -693,7 +777,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/cloud-development-setup-20261017"
     },
     {
       "pr": null,
@@ -702,7 +787,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/consolidated-ncp-review-20261017"
     },
     {
       "pr": null,
@@ -711,7 +797,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/cps-contract-audit"
     },
     {
       "pr": null,
@@ -720,7 +807,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/curved-path-study-v1"
     },
     {
       "pr": null,
@@ -729,7 +817,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/exchange-refusal-fixture-v1"
     },
     {
       "pr": null,
@@ -738,7 +827,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/free-energy-demo-20260923"
     },
     {
       "pr": null,
@@ -747,7 +837,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/fsrt-retained-view-v1"
     },
     {
       "pr": null,
@@ -756,7 +847,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/geometry-implementations-20260923"
     },
     {
       "pr": null,
@@ -765,7 +857,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/integration-qualification-v1"
     },
     {
       "pr": null,
@@ -774,7 +867,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/interval-requirement-v1"
     },
     {
       "pr": null,
@@ -783,7 +877,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/julia-oscillator-kernel-v1-20260928"
     },
     {
       "pr": null,
@@ -792,7 +887,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/math-learning-v1"
     },
     {
       "pr": null,
@@ -801,7 +897,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/mcp-operator-console-20261017"
     },
     {
       "pr": null,
@@ -810,7 +907,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/measured-thermal-mcp-pilot"
     },
     {
       "pr": null,
@@ -819,7 +917,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/measurement-review-polish"
     },
     {
       "pr": null,
@@ -828,7 +927,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/metrology-numerics-ci-readiness"
     },
     {
       "pr": null,
@@ -837,7 +937,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/metrology-quality-polish"
     },
     {
       "pr": null,
@@ -846,7 +947,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/model-validity-evidence"
     },
     {
       "pr": null,
@@ -855,7 +957,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/native-interop-v1"
     },
     {
       "pr": null,
@@ -864,7 +967,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/native-references-verified-20260923"
     },
     {
       "pr": null,
@@ -873,7 +977,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/net-connectivity-observation-20261005"
     },
     {
       "pr": null,
@@ -882,7 +987,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/operational-engineering-mcp-work-order-20261017"
     },
     {
       "pr": null,
@@ -891,7 +997,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/pdt-ci-routing-v1"
     },
     {
       "pr": null,
@@ -900,7 +1007,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/persistent-simulation-v1"
     },
     {
       "pr": null,
@@ -909,7 +1017,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/platform-policy-closure-v1"
     },
     {
       "pr": null,
@@ -918,7 +1027,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/polyglot-linear-map-v1"
     },
     {
       "pr": null,
@@ -927,7 +1037,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/polymer-fluid-material-leakage-20261003"
     },
     {
       "pr": null,
@@ -936,7 +1047,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/polymer-temperature-qualification"
     },
     {
       "pr": null,
@@ -945,7 +1057,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/post-consolidation-repair-20261017"
     },
     {
       "pr": null,
@@ -954,7 +1067,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/private-mcp-host-20261017"
     },
     {
       "pr": null,
@@ -963,7 +1077,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/qualified-release-baseline"
     },
     {
       "pr": null,
@@ -972,7 +1087,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/reaction-kinetics-v1"
     },
     {
       "pr": null,
@@ -981,7 +1097,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/scientific-core-20260923"
     },
     {
       "pr": null,
@@ -990,7 +1107,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/scr-proof-verification-20260923"
     },
     {
       "pr": null,
@@ -999,7 +1117,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/shared-adapter-substrate"
     },
     {
       "pr": null,
@@ -1008,7 +1127,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/simulation-observation-fsrt-v1"
     },
     {
       "pr": null,
@@ -1017,7 +1137,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/temperature-numerical-verification"
     },
     {
       "pr": null,
@@ -1026,7 +1147,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/workbench-integration-review-20260923"
     },
     {
       "pr": null,
@@ -1035,7 +1157,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/codex/workflow-attempts-v1"
     },
     {
       "pr": null,
@@ -1044,7 +1167,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/copilot/fix-code-for-review-comments"
     },
     {
       "pr": null,
@@ -1053,7 +1177,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/copilot/repository-analysis"
     },
     {
       "pr": null,
@@ -1062,7 +1187,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/cyber-physical-laboratory-mandate"
     },
     {
       "pr": null,
@@ -1071,7 +1197,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/interactive-simulation-targets-20260928"
     },
     {
       "pr": null,
@@ -1080,7 +1207,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/licensing-child-companies-20261003"
     },
     {
       "pr": null,
@@ -1089,7 +1217,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/licensing-name-reconciliation-20261003"
     },
     {
       "pr": null,
@@ -1098,7 +1227,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/net-controller-boundary-20260927"
     },
     {
       "pr": null,
@@ -1107,7 +1237,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/notations-design-terminal-readme"
     },
     {
       "pr": null,
@@ -1116,7 +1247,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/notations-organization-20261003"
     },
     {
       "pr": null,
@@ -1125,7 +1257,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/permission-only-licensing-review-20261002"
     },
     {
       "pr": null,
@@ -1134,7 +1267,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/physical-virtual-systems-20261003"
     },
     {
       "pr": null,
@@ -1143,7 +1277,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/professional-readme-pitch"
     },
     {
       "pr": null,
@@ -1152,7 +1287,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/rename-parametric-design-terminal"
     },
     {
       "pr": null,
@@ -1161,7 +1297,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/docs/research-whitepaper-foundations-20260929"
     },
     {
       "pr": null,
@@ -1170,7 +1307,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/experiment/agrofood-cold-chain-v1-20260929"
     },
     {
       "pr": null,
@@ -1179,7 +1317,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/experiment/oscillator-representation-reduction-v1-20260929"
     },
     {
       "pr": null,
@@ -1188,7 +1327,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/experiment/single-agent-workcell-20260929"
     },
     {
       "pr": null,
@@ -1197,7 +1337,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/annotation-nise-loop-v1-20260929"
     },
     {
       "pr": null,
@@ -1206,7 +1347,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/annotation-record-v1-20260929"
     },
     {
       "pr": null,
@@ -1215,7 +1357,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/artifact-provenance-v1-20260929"
     },
     {
       "pr": null,
@@ -1224,7 +1367,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/bim-interop-runtime-bridge-v1-20261001"
     },
     {
       "pr": null,
@@ -1233,7 +1377,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/closed-pilot-scene"
     },
     {
       "pr": null,
@@ -1242,7 +1387,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/columnar-interchange-v1-20260929"
     },
     {
       "pr": null,
@@ -1251,7 +1397,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/computational-object-selection-v1-20260928"
     },
     {
       "pr": null,
@@ -1260,7 +1407,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/container-experiment-calculus-v1-20260929"
     },
     {
       "pr": null,
@@ -1269,7 +1417,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/cse-preservation-verifier-v1-20261002"
     },
     {
       "pr": null,
@@ -1278,7 +1427,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/dsp-instrument-v1-20260929"
     },
     {
       "pr": null,
@@ -1287,7 +1437,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/engineering-monorepo-wave1-audit-20261002"
     },
     {
       "pr": null,
@@ -1296,7 +1447,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/engineering-superrepo-20261003"
     },
     {
       "pr": null,
@@ -1305,7 +1457,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/evidence-bound-expansion-v1-20260929"
     },
     {
       "pr": null,
@@ -1314,7 +1467,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/executable-agent-workcells-v1-20260929"
     },
     {
       "pr": null,
@@ -1323,7 +1477,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/executable-interoperability-ingress-v1-20261001"
     },
     {
       "pr": null,
@@ -1332,7 +1487,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/f2-proof-obligations"
     },
     {
       "pr": null,
@@ -1341,7 +1497,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/finite-representation-preservation-v1-20260929"
     },
     {
       "pr": null,
@@ -1350,7 +1507,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/foundry-asset-worker-v1-20260929"
     },
     {
       "pr": null,
@@ -1359,7 +1517,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/foundry-production-queue-v1-20261002"
     },
     {
       "pr": null,
@@ -1368,7 +1527,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/game-foundry-1792-v1-20260929"
     },
     {
       "pr": null,
@@ -1377,7 +1537,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/game-production-pipeline-v1-20260929"
     },
     {
       "pr": null,
@@ -1386,7 +1547,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/game-project-production-v1-20260929"
     },
     {
       "pr": null,
@@ -1395,7 +1557,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/game-trace-workbench-v1"
     },
     {
       "pr": null,
@@ -1404,7 +1567,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/godot-stateful-owner-v1-20260928"
     },
     {
       "pr": null,
@@ -1413,7 +1577,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/historical-perspective-v1-20260929"
     },
     {
       "pr": null,
@@ -1422,7 +1587,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/industrial-semantic-transition-v1-20261001"
     },
     {
       "pr": null,
@@ -1431,7 +1597,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/interactive-projectile-v1"
     },
     {
       "pr": null,
@@ -1440,7 +1607,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/investigation-efficiency-v1-20260929"
     },
     {
       "pr": null,
@@ -1449,7 +1617,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/legibility-instrument-v1-20261003"
     },
     {
       "pr": null,
@@ -1458,7 +1627,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/legibility-version-comparison"
     },
     {
       "pr": null,
@@ -1467,7 +1637,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/local-provider-qualification"
     },
     {
       "pr": null,
@@ -1476,7 +1647,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/microfab-plan-envelope-v1-20261005"
     },
     {
       "pr": null,
@@ -1485,7 +1657,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/monorepo-continuation-20261003"
     },
     {
       "pr": null,
@@ -1494,7 +1667,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/monorepo-source-and-corrections-20261003"
     },
     {
       "pr": null,
@@ -1503,7 +1677,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/needle-v1-20260929"
     },
     {
       "pr": null,
@@ -1512,7 +1687,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-agent-mcp-v1-20260928"
     },
     {
       "pr": null,
@@ -1521,7 +1697,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-agriculture-irrigation-20261003"
     },
     {
       "pr": null,
@@ -1530,7 +1707,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-control-primitives-v1-20260928"
     },
     {
       "pr": null,
@@ -1539,7 +1717,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-csr-microtools-v1-20260928"
     },
     {
       "pr": null,
@@ -1548,7 +1727,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-operator-ready-20261003"
     },
     {
       "pr": null,
@@ -1557,7 +1737,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/net-usable-readiness-20261003"
     },
     {
       "pr": null,
@@ -1566,7 +1747,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/nise-net-handoff-v1-20260929"
     },
     {
       "pr": null,
@@ -1575,7 +1757,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/oscillator-native-consumers-v1"
     },
     {
       "pr": null,
@@ -1584,7 +1767,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/parameter-program-v1-20260929"
     },
     {
       "pr": null,
@@ -1593,7 +1777,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/parameterized-system-board-v1-20260929"
     },
     {
       "pr": null,
@@ -1602,7 +1787,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/physics-backend-qualification-v1-20260929"
     },
     {
       "pr": null,
@@ -1611,7 +1797,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-cycle-instrument-20261003"
     },
     {
       "pr": null,
@@ -1620,7 +1807,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/polymer-operator-20261003"
     },
     {
       "pr": null,
@@ -1629,7 +1817,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/portable-instrument-contract-v1-20260929"
     },
     {
       "pr": null,
@@ -1638,7 +1827,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/preservation-contracts-v1-20261001"
     },
     {
       "pr": null,
@@ -1647,7 +1837,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/production-workorders-v1-20260929"
     },
     {
       "pr": null,
@@ -1656,7 +1847,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/qualified-fluid-dynamics-20261003"
     },
     {
       "pr": null,
@@ -1665,7 +1857,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/real-ifc-transition-v1-20261001"
     },
     {
       "pr": null,
@@ -1674,7 +1867,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/representation-aware-needle-v1-20260929"
     },
     {
       "pr": null,
@@ -1683,7 +1877,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/representation-morphism-registry-v1-20260929"
     },
     {
       "pr": null,
@@ -1692,7 +1887,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/retained-correction-loop-20261003"
     },
     {
       "pr": null,
@@ -1701,7 +1897,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/semantic-capability-plane-v1-20260929"
     },
     {
       "pr": null,
@@ -1710,7 +1907,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/shared-preservation-experiments-v1-20261001"
     },
     {
       "pr": null,
@@ -1719,7 +1917,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/spatial-godot-consumer-v1-20260928"
     },
     {
       "pr": null,
@@ -1728,7 +1927,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/spatial-provider-starter-v1-20260928"
     },
     {
       "pr": null,
@@ -1737,7 +1937,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/stateful-simulation-control-v1-20260928"
     },
     {
       "pr": null,
@@ -1746,7 +1947,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/stateful-simulation-studies-v1-20260928"
     },
     {
       "pr": null,
@@ -1755,7 +1957,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/superrepo-devtools-20261003"
     },
     {
       "pr": null,
@@ -1764,7 +1967,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/synthetic-fsrt-gsc-v1"
     },
     {
       "pr": null,
@@ -1773,7 +1977,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/system-board-visual-editor-v1-20260930"
     },
     {
       "pr": null,
@@ -1782,7 +1987,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/system-composition-v2-20261003"
     },
     {
       "pr": null,
@@ -1791,7 +1997,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/title-smith-workcell-v1-20260929"
     },
     {
       "pr": null,
@@ -1800,7 +2007,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/typed-hypergraph-rewrite-c6078eeb"
     },
     {
       "pr": null,
@@ -1809,7 +2017,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/typed-workflow-algebra-v1-20260929"
     },
     {
       "pr": null,
@@ -1818,7 +2027,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/visual-evidence-projection-v1-20260930"
     },
     {
       "pr": null,
@@ -1827,7 +2037,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/visual-representation-gates-v1-20260930"
     },
     {
       "pr": null,
@@ -1836,7 +2047,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/visual-system-board-v1-20260929"
     },
     {
       "pr": null,
@@ -1845,7 +2057,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feat/1792-reconstruction-production-v1"
     },
     {
       "pr": null,
@@ -1854,7 +2067,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feature/open-problem-registry"
     },
     {
       "pr": null,
@@ -1863,7 +2077,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/feature/systems-visualizer-render"
     },
     {
       "pr": null,
@@ -1872,7 +2087,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/audit-operation-failures-json-boundary"
     },
     {
       "pr": null,
@@ -1881,7 +2097,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/audit-session-integrity-publication"
     },
     {
       "pr": null,
@@ -1890,7 +2107,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/github-ci-failures-20261003"
     },
     {
       "pr": null,
@@ -1899,7 +2117,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/inbox-ci-repair"
     },
     {
       "pr": null,
@@ -1908,7 +2127,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/monorepo-source-audit-and-timezones-20261003"
     },
     {
       "pr": null,
@@ -1917,7 +2137,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/monorepo-windows-clone-20261003"
     },
     {
       "pr": null,
@@ -1926,7 +2147,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/proof-statement-isolation-and-negative-gates"
     },
     {
       "pr": null,
@@ -1935,7 +2157,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/review-evidence-and-examples-20261004"
     },
     {
       "pr": null,
@@ -1944,7 +2167,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/fix/windows-f2-test-identifiers"
     },
     {
       "pr": null,
@@ -1953,7 +2177,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/import/native-superrepo-6989ffd2-20261003"
     },
     {
       "pr": null,
@@ -1962,7 +2187,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/integrate/qualified-atmosphere-20261003"
     },
     {
       "pr": null,
@@ -1971,7 +2197,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/integrate/qualified-net-work-20261003"
     },
     {
       "pr": null,
@@ -1980,7 +2207,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/integrate/qualified-public-modules-20261003"
     },
     {
       "pr": null,
@@ -1989,7 +2217,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/integration/identified-budgeted-observation"
     },
     {
       "pr": null,
@@ -1998,7 +2227,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/qualified/net-public-operator-20261003-7ca5a411"
     },
     {
       "pr": null,
@@ -2007,7 +2237,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/qualify/net-integration-20260928"
     },
     {
       "pr": null,
@@ -2016,7 +2247,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/repair/capability-index-pyyaml"
     },
     {
       "pr": null,
@@ -2025,7 +2257,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/repair/cli-duplicate-json"
     },
     {
       "pr": null,
@@ -2034,7 +2267,8 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/repair/legacy-analysis-failure"
     },
     {
       "pr": null,
@@ -2043,11 +2277,12 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
-      "ancestry_proof": "verified_original_Git_commit_DAG"
+      "ancestry_proof": "verified_original_Git_commit_DAG",
+      "archive_ref": "refs/tags/archive/research-baseline-20261017/work/operational-engineering-mcp-20261017"
     }
   ],
   "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
-  "archive_tag_prefix": "archive/research-baseline-20261017/pr-",
+  "archive_tag_prefix": "archive/research-baseline-20261017/",
   "confirmation_instruction": "Archive/delete long-lived branches after confirmation (Task 4).",
   "entry_count": 235,
   "scope": {
@@ -2057,5 +2292,7 @@
     "retained_current_release_or_deferred": 8,
     "other_heads_deferred_for_scope_review": 39
   },
-  "post_inventory_observation": "PRs 139 and 244 were merged externally. Preserve the transport branch pending its independent publication/retirement obligations. The 235 cleanup entries and expected heads are unchanged."
+  "post_inventory_observation": "PRs 139 and 244 were merged externally. Preserve the transport branch pending its independent publication/retirement obligations. The 235 cleanup entries and expected heads are unchanged.",
+  "archive_ref_conflict_policy": "Refuse an existing archive ref unless it already resolves to the exact expected head; never overwrite a different tag.",
+  "archive_ref_count": 235
 }
