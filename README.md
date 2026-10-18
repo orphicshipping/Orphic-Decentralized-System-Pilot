@@ -179,6 +179,10 @@ Adapters must preserve original source records and their declared semantics. Uni
 
 ### Agent and application access
 
+[Provider discovery and native console bindings](docs/PROVIDER_INTEGRATION.md)
+connect the source/license inventory to existing workflow pins and expose the
+bounded BIM clearance profile through the common admitted-plan interface.
+
 MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
 
 An agent request does not grant permission to execute a provider, contact a device, change a calibration, approve a part, or disclose evidence. Tool descriptions and model responses do not replace enforcement at the owning runtime boundary. Test the actual client, transport, and installed implementation used by the integration; a handler test does not establish compatibility with every host.

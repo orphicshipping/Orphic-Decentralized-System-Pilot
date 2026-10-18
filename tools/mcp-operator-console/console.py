@@ -31,6 +31,7 @@ from starlette.responses import FileResponse, JSONResponse
 from starlette.routing import Route
 
 READ_TOOLS = frozenset({
+    'ncp_integrations_list', 'ncp_integration_describe',
     'ncp_workflows_list', 'ncp_capabilities_list', 'ncp_capability_describe',
     'ncp_plan_template', 'ncp_plan_get', 'ncp_run_get', 'ncp_artifact_read', 'ncp_observe',
 })
@@ -65,6 +66,47 @@ class ConsoleConfig:
     resume: bool = False
     state_dir: Path = Path('console-state')
     surface: str = 'control'
+    provider_checkout: Path | None = None
+    provider_revision: str | None = None
+    provider_python: Path | None = None
+
+
+def launch_arguments(config):
+    """Trusted launch configuration only; no web/MCP request selects providers."""
+    if config.surface not in {'control', 'operational'}:
+        raise ConsoleError('invalid_configuration', 'Select an existing control or operational surface.')
+    if config.instrument not in {'builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance'}:
+        raise ConsoleError('unsupported_instrument', 'Select a supported existing instrument profile.')
+    native = (config.provider_checkout, config.provider_revision, config.provider_python)
+    if config.surface == 'operational':
+        if config.instrument != 'builtin' or any(value is not None for value in native):
+            raise ConsoleError('invalid_configuration', 'Operational provider bindings belong to its frozen host profile.')
+    elif config.instrument in {'leakage', 'bim-clearance'}:
+        if config.provider_checkout is None or not config.provider_checkout.is_absolute():
+            raise ConsoleError('invalid_configuration', 'Select an absolute trusted provider checkout.')
+        if config.provider_python is not None and not config.provider_python.is_absolute():
+            raise ConsoleError('invalid_configuration', 'Select an absolute native interpreter.')
+        if config.instrument == 'bim-clearance':
+            if type(config.provider_revision) is not str or re.fullmatch(r'[0-9a-f]{40}', config.provider_revision) is None:
+                raise ConsoleError('invalid_configuration', 'BIM clearance requires the full trusted provider revision.')
+        elif config.provider_revision is not None:
+            raise ConsoleError('invalid_configuration', 'Leakage retains its fixed provider revision.')
+    elif any(value is not None for value in native):
+        raise ConsoleError('invalid_configuration', 'Native bindings require leakage or BIM clearance.')
+    args = ['-I', '-m', 'ciw.net', config.surface, 'serve', '--profile', str(config.profile)]
+    if config.surface == 'operational':
+        args.append('--sdk')
+    else:
+        args += ['--instrument', config.instrument]
+    if config.provider_checkout is not None:
+        args += ['--provider-checkout', str(config.provider_checkout)]
+    if config.provider_revision is not None:
+        args += ['--provider-revision', config.provider_revision]
+    if config.provider_python is not None:
+        args += ['--python', str(config.provider_python)]
+    if config.resume:
+        args.append('--resume')
+    return args
 
 
 def security_error(host, origin, authorization, token, port):
@@ -184,8 +226,7 @@ class MCPBridge:
         cfg = self.config
         if not cfg.python.is_absolute() or not cfg.python.is_file() or not cfg.profile.is_absolute() or not cfg.profile.is_file():
             raise ConsoleError('invalid_configuration', 'Executable and profile must be existing absolute paths.')
-        if cfg.instrument not in {'builtin', 'polymer', 'temperature', 'link-scalar'}:
-            raise ConsoleError('unsupported_instrument', 'Native provider launch configuration is not supported by this console increment.')
+        args = launch_arguments(cfg)
         cfg.state_dir.mkdir(parents=True, exist_ok=True, mode=0o700)
         os.chmod(cfg.state_dir, 0o700)
         self.logger = logging.getLogger('ncp-console.' + str(id(self)))
@@ -200,11 +241,6 @@ class MCPBridge:
         error_path.touch(mode=0o600, exist_ok=True)
         os.chmod(error_path, 0o600)
         errors = stack.enter_context(error_path.open('a', encoding='utf-8'))
-        args = ['-I','-m','ciw.net',cfg.surface,'serve','--profile',str(cfg.profile)]
-        if cfg.surface=='operational':args.append('--sdk')
-        else:args += ['--instrument',cfg.instrument]
-        if cfg.resume:
-            args.append('--resume')
         self.connection = 'connecting'
         read, write = await stack.enter_async_context(stdio_client(StdioServerParameters(command=str(cfg.python), args=args), errlog=errors))
         self.client = await stack.enter_async_context(ClientSession(read, write, read_timeout_seconds=30))
@@ -379,7 +415,10 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--python', type=Path, required=True, help='Absolute installed NCP Python interpreter; launched with -I.')
     parser.add_argument('--profile', type=Path, required=True)
-    parser.add_argument('--instrument', choices=['builtin', 'polymer', 'temperature', 'link-scalar'], default='builtin')
+    parser.add_argument('--instrument', choices=['builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance'], default='builtin')
+    parser.add_argument('--provider-checkout', type=Path, help='Absolute trusted native checkout; never supplied by the browser.')
+    parser.add_argument('--provider-revision', help='Full CSE revision; BIM clearance only.')
+    parser.add_argument('--provider-python', type=Path, help='Absolute interpreter for the pinned native provider.')
     parser.add_argument('--surface',choices=['control','operational'],default='control')
     parser.add_argument('--resume', action='store_true', help='Reopen an existing host; never automatically reruns jobs.')
     parser.add_argument('--state-dir', type=Path, required=True, help='Private local directory for console diagnostics.')
@@ -392,7 +431,9 @@ def main():
     if not stat.S_ISREG(info.st_mode) or info.st_mode & 0o077:
         parser.error('Token file must be a regular private file (mode 0600).')
     token = args.token_file.read_text().strip()
-    config = ConsoleConfig(args.python, args.profile, args.instrument, args.resume, args.state_dir.resolve(),args.surface)
+    config = ConsoleConfig(args.python, args.profile, args.instrument, args.resume, args.state_dir.resolve(),args.surface,
+                           args.provider_checkout, args.provider_revision, args.provider_python)
+    launch_arguments(config)
     uvicorn.run(create_app(MCPBridge(config), token=token, port=args.port), host='127.0.0.1', port=args.port, access_log=False)
 
 

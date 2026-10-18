@@ -20,11 +20,23 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
     parser.add_argument("--browser")
+    parser.add_argument('--instrument', choices=['builtin', 'bim-clearance'], default='builtin')
+    parser.add_argument('--inspection', type=Path)
+    parser.add_argument('--provider-checkout', type=Path)
+    parser.add_argument('--provider-revision')
     args = parser.parse_args()
     output = args.output_dir.absolute()
     output.mkdir(parents=True, exist_ok=False)
     console = Path(__file__).resolve().parents[1]
-    profile = demo_config(output / "profile")
+    parser_instrument = args.instrument
+    if parser_instrument == 'bim-clearance':
+        from ciw.metrology_clearance import prepare, MAX_BYTES
+        from ciw.hardware_workflow import read_bytes
+        if args.inspection is None or args.provider_checkout is None or args.provider_revision is None:
+            parser.error('BIM clearance requires inspection and exact provider bindings')
+        profile = prepare(read_bytes(Path(args.inspection), limit=MAX_BYTES), output / 'profile')
+    else:
+        profile = demo_config(output / "profile")
     token = secrets.token_urlsafe(32)
     token_file = output / "token"
     token_file.touch(mode=0o600)
@@ -35,11 +47,15 @@ def main():
     url = f"http://127.0.0.1:{port}"
     checks, errors = [], []
     with (output / "http.log").open("w", encoding="utf-8") as log:
-        process = subprocess.Popen([
+        command = [
             sys.executable, str(console / "console.py"), "--python", sys.executable,
             "--profile", str(profile), "--state-dir", str(output / "state"),
             "--token-file", str(token_file), "--port", str(port),
-        ], cwd=console, stdout=log, stderr=log)
+            '--instrument', parser_instrument]
+        if parser_instrument == 'bim-clearance':
+            command += ['--provider-checkout', str(args.provider_checkout), '--provider-revision', args.provider_revision,
+                        '--provider-python', sys.executable]
+        process = subprocess.Popen(command, cwd=console, stdout=log, stderr=log)
         try:
             opener = urllib.request.build_opener(urllib.request.ProxyHandler({}))
             deadline = time.monotonic() + 30
@@ -63,9 +79,9 @@ def main():
                     assert page.locator("#call").is_disabled()
                     page.locator("#token").fill(token)
                     page.locator("#connect-form button").click()
-                    page.wait_for_function("() => document.querySelector('#tools-metric').textContent === '14'")
+                    page.wait_for_function("() => document.querySelector('#tools-metric').textContent === '16'")
                     assert page.locator("#token").input_value() == ""
-                    checks.append("authenticated_browser_discovers_14_real_MCP_tools")
+                    checks.append("authenticated_browser_discovers_16_real_MCP_tools")
 
                     def call(name, arguments, *, write=False):
                         page.locator("#tool-list button").filter(has_text=name).click()
@@ -87,6 +103,9 @@ def main():
                         assert json.loads(page.locator("#result").inner_text()) == result
                         return result["structuredContent"]["data"]
 
+                    imported = call('ncp_integrations_list', {'section': 'imports', 'limit': 32})
+                    assert imported['total'] == 21 and not imported['authorizes_execution']
+                    checks.append('read_only_catalog_exposes_21_imports_without_execution_grants')
                     graph = call("ncp_plan_template", {"baseline": "baseline"})["graph"]
                     plan = call("ncp_plan_create", {"source": "source", "baseline": "baseline", "graph": graph}, write=True)
                     assert plan["admitted"] is False
@@ -102,6 +121,12 @@ def main():
                     assert run["state"] == "completed" and run["result"]["execution_ids"]
                     assert page.locator("#runs-metric").inner_text() == "1"
                     checks.append("explicit_admission_submission_and_retained_execution_inspection")
+                    if parser_instrument == 'bim-clearance':
+                        result = call('ncp_artifact_read', {'artifact': run['result']['artifacts']['graph-run']['artifact_id'],
+                            'selector': ['nodes', 'assess', 'result', 'data']})['data']
+                        assert result['authority']['physical_qualification'] == 'not_established'
+                        assert result['native']['status'] in {'held', 'assessed'}
+                        checks.append('pinned_native_CSE_result_preserves_held_or_unresolved_scientific_outcome')
                     page.locator("#resource-uri").fill(plan["uri"])
                     with page.expect_response(lambda response: response.url == url + "/api/resources") as received:
                         page.locator("#read-resource").click()
@@ -120,7 +145,7 @@ def main():
                 process.kill()
                 process.wait(timeout=5)
             token_file.unlink(missing_ok=True)
-    report = {"status": "PASS", "browser_version": version, "checks": checks,
+    report = {"status": "PASS", "browser_version": version, "instrument": parser_instrument, "checks": checks,
               "page_errors": errors, "scope": "local synthetic browser/HTTP/MCP integration",
               "remote_transport": "not_qualified", "physical_qualification": "not_performed"}
     (output / "report.json").write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")

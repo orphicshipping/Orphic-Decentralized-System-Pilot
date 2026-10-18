@@ -10,6 +10,10 @@ revision named by the applicable CIW manifest.
 
 ## Status vocabulary
 
+The installed [provider discovery interface](PROVIDER_INTEGRATION.md) projects
+these declarations through CLI, MCP and the local console, retaining each
+profile's separate pins and explicit launch/grant requirements.
+
 | Status | Meaning |
 | --- | --- |
 | **Built-in kernel** | A bounded calculation is implemented in this repository and is callable with the base installation; its guide states numerical and retention limits. |

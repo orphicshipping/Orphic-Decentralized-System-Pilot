@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import sys
-from .agent_mcp import INSTRUMENTS, from_profile, demo_config, polymer_config, temperature_config, leakage_config
+from .agent_mcp import INSTRUMENTS, from_profile, native_bindings, demo_config, polymer_config, temperature_config, leakage_config
 
 
 def main(argv=None):
@@ -15,14 +15,23 @@ def main(argv=None):
     prepare = commands.add_parser("prepare-link", help="Bind retained Link request bytes without acquisition")
     prepare.add_argument("--request", type=Path, required=True)
     prepare.add_argument("--output-dir", type=Path, required=True)
+    bim = commands.add_parser("prepare-bim", help="Freeze an existing bounded BIM inspection without execution")
+    bim.add_argument("--inspection", type=Path, required=True)
+    bim.add_argument("--output-dir", type=Path, required=True)
     serve = commands.add_parser("serve", help="Serve modern and legacy MCP using the optional SDK")
     serve.add_argument("--profile", type=Path, required=True)
     serve.add_argument("--instrument", choices=INSTRUMENTS, default="builtin")
     serve.add_argument("--provider-checkout", type=Path)
+    serve.add_argument("--provider-revision", help="Full original CSE revision; BIM clearance only")
     serve.add_argument("--python", type=Path)
     serve.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
     try:
+        if args.command == "prepare-bim":
+            from .metrology_clearance import prepare, MAX_BYTES
+            from .hardware_workflow import read_bytes
+            print(prepare(read_bytes(args.inspection, limit=MAX_BYTES), args.output_dir))
+            return 0
         if args.command == "prepare-link":
             from .link_study_agent import prepare
             from .hardware_workflow import read_bytes
@@ -39,17 +48,9 @@ def main(argv=None):
         import mcp  # Fail before creating a host if the optional SDK is absent.
         from .mcp_server import serve_sdk
         from .control_gateway import ControlHost
-        backend = None
-        if args.instrument == "leakage":
-            if args.provider_checkout is None or not args.provider_checkout.is_absolute():
-                raise ValueError("Leakage requires an absolute host-selected provider checkout")
-            if args.python is not None and not args.python.is_absolute():
-                raise ValueError("Provider interpreter must be absolute")
-            from .leakage_native import NativeLeakageBackend
-            backend = NativeLeakageBackend(args.provider_checkout, python=args.python)
-        elif args.provider_checkout is not None or args.python is not None:
-            raise ValueError("Provider options require leakage")
-        with from_profile(args.profile, instrument=args.instrument, leakage_backend=backend, resume=args.resume) as owner:
+        bindings = native_bindings(args.instrument, checkout=args.provider_checkout,
+                                   revision=args.provider_revision, python=args.python)
+        with from_profile(args.profile, instrument=args.instrument, resume=args.resume, **bindings) as owner:
             with ControlHost(owner, resume=args.resume) as host:
                 return serve_sdk(host)
     except (ImportError, OSError, ValueError, TypeError, KeyError) as exc:

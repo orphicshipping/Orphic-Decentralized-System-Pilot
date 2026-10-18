@@ -26,15 +26,20 @@ from ciw.link_study_agent import demo_config as link_config
 async def campaign(args, root):
     factory = {"builtin": demo_config, "polymer": polymer_config,
                "temperature": temperature_config, "leakage": leakage_config,
-               "link-scalar": link_config}[args.instrument]
+               "link-scalar": link_config}.get(args.instrument)
     if args.request is not None:
-        if args.instrument != "link-scalar":
+        if args.instrument == 'bim-clearance':
+            from ciw.metrology_clearance import prepare, MAX_BYTES
+        elif args.instrument == 'link-scalar':
+            from ciw.link_study_agent import prepare
+            from ciw.link_study import MAX_BYTES
+        else:
             raise ValueError("Retained request selection requires the Link profile")
-        from ciw.link_study_agent import prepare
         from ciw.hardware_workflow import read_bytes
-        from ciw.link_study import MAX_BYTES
         profile = prepare(read_bytes(args.request, limit=MAX_BYTES), root / "profile")
     else:
+        if factory is None:
+            raise ValueError('BIM clearance requires an explicitly selected inspection request')
         profile = factory(root / "profile")
     if args.instrument == "link-scalar":
         from ciw import link_study as study, link_contract as link
@@ -48,6 +53,8 @@ async def campaign(args, root):
                "--instrument", args.instrument]
     if args.provider_checkout:
         command += ["--provider-checkout", str(args.provider_checkout), "--python", sys.executable]
+    if args.provider_revision:
+        command += ['--provider-revision', args.provider_revision]
     calls, protocols = [], []
     completed = None
     for modern in (True, False):
@@ -84,6 +91,10 @@ async def campaign(args, root):
                     workflows = await call("ncp_workflows_list", {"limit": 32})
                     assert workflows["total"] == len(workflows["items"]) == 29
                     assert all(not row["authorizes_execution"] for row in workflows["items"])
+                    imported = await call('ncp_integrations_list', {'section': 'imports', 'limit': 32})
+                    assert imported['total'] == 21 and not imported['authorizes_execution']
+                    details = await call('ncp_integration_describe', {'section': 'imports', 'source_id': 'state-inference'})
+                    assert len({row['runtime_pin']['revision'] for row in details['item']['workflow_connections']}) > 1
                     capabilities = await call("ncp_capabilities_list", {})
                     if args.instrument == "link-scalar":
                         assert len(capabilities["items"]) == 4
@@ -113,6 +124,12 @@ async def campaign(args, root):
                     assert json.loads(run_resource.contents[0].text) == completed
                     await call("ncp_artifact_read", {"artifact": completed["result"]["artifacts"]["graph-run"]["artifact_id"],
                         "selector": ["status"]})
+                    if args.instrument == 'bim-clearance':
+                        native = (await call('ncp_artifact_read', {'artifact': completed['result']['artifacts']['graph-run']['artifact_id'],
+                            'selector': ['nodes', 'assess', 'result', 'data']}))['data']
+                        from ciw.metrology_clearance import AUTHORITY
+                        assert native['authority'] == AUTHORITY
+                        assert native['native']['status'] in {'assessed', 'held'}
                     if args.instrument == "link-scalar":
                         artifact = completed["result"]["artifacts"]["graph-run"]["artifact_id"]
                         model = (await call("ncp_artifact_read", {"artifact": artifact,
@@ -139,7 +156,8 @@ async def campaign(args, root):
     assert protocols == ["2026-07-28", "2025-11-25"], protocols
     assert all(sha256(Path(p).read_bytes()).hexdigest() == h for p, h in source_files.items())
     if args.request is not None:
-        assert args.request.read_bytes() == (profile.parent / "request.json").read_bytes()
+        request_name = 'inspection.json' if args.instrument == 'bim-clearance' else 'request.json'
+        assert args.request.read_bytes() == (profile.parent / request_name).read_bytes()
         source_files[str(args.request.absolute())] = sha256(args.request.read_bytes()).hexdigest()
     (root / "transcript.json").write_text(json.dumps(calls, indent=2), encoding="utf-8")
     return {"status": "PASS", "instrument": args.instrument, "sdk": version("mcp"),
@@ -153,9 +171,10 @@ async def campaign(args, root):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output-dir", type=Path, required=True)
-    parser.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage", "link-scalar"], default="builtin")
+    parser.add_argument("--instrument", choices=["builtin", "polymer", "temperature", "leakage", "link-scalar", "bim-clearance"], default="builtin")
     parser.add_argument("--provider-checkout", type=Path)
-    parser.add_argument("--request", type=Path, help="Optional exact retained GaugeLink scalar-study request")
+    parser.add_argument('--provider-revision', help='Full CSE source revision for BIM clearance')
+    parser.add_argument("--request", type=Path, help="Exact retained GaugeLink scalar-study or BIM inspection request")
     args = parser.parse_args()
     root = args.output_dir.absolute()
     root.mkdir(parents=True, exist_ok=False)

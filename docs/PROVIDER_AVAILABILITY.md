@@ -11,6 +11,10 @@ No credential configuration or repository visibility is changed by these gates.
 
 ## Existing-checkout gates
 
+Use [installed source-to-workflow discovery](PROVIDER_INTEGRATION.md) to inspect
+module and profile-specific pins before selecting a checkout. The existing
+native BIM and leakage profiles also have explicit control/console launch paths.
+
 Provision the exact commits from the relevant runtime manifest before starting
 the gate. A branch name or a newer compatible-looking revision is insufficient.
 The flags select directories; they do not select alternate numerical versions.
