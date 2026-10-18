@@ -1,0 +1,65 @@
+{
+  "code_commit": "ecb1c301926f411069b4608287f8a0d4f3208fb1",
+  "parent_review_head": "793d2d6d4c45edfa09dbcf2ab88cceb5ec599812",
+  "status": "LOCAL_TARGETED_GATES_PASSED",
+  "findings": {
+    "F06": "implemented_and_native_window_path_qualified",
+    "F07": "ten_family_input_pipeline_and_Godot_catalog_implemented; historical_9074_inputs_unrecovered",
+    "F09": "separate_atomic_CPU_native_Session_gate_passed"
+  },
+  "tests": {
+    "source": {
+      "tests": 120,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "installed": {
+      "tests": 105,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "rust": {
+    "passed": 5,
+    "failed": 0,
+    "ignored": 0
+  },
+  "godot_catalog_checks": 33,
+  "native_atomic": {
+    "cases": 12,
+    "checks": 58,
+    "tamper_rejections": 5,
+    "invalid_input_refusals": 5,
+    "source_revision": "c7bf306d891b5ce603325fea9918d17a1da483c3",
+    "script_sha256": "02b676da83038ec139977d9940d514182e6ddecc9f4f84b273e58f1cc90fc83a",
+    "status": "PASS"
+  },
+  "bevy": {
+    "status": "PASS",
+    "native_window": true,
+    "may_authorize": false,
+    "binary_sha256": "12d8ee9ef38179d6d3c3c673839a2a4ad5b09ff8491474315bacb4328b49e66e",
+    "input_sha256": "8fc865f2e49c2026d02b8e838190b5d8fdd9e4d1154dcc7696e32ec79e4b5b57",
+    "pillow": "12.3.0",
+    "visible_path_pixels": 742,
+    "screenshot_size": [
+      1280,
+      900
+    ],
+    "screenshot_sha256": "384a6caa3c175923d347f8af17045fddb4bc791f8dee8de02bbf3e6daf291139",
+    "exit_code": 0,
+    "render_errors": []
+  },
+  "teaching": {
+    "families": 10,
+    "emitted": 10,
+    "historical_9074_corpus_restored": false
+  },
+  "same_sha_hosted_qualification": "NOT_CLOSED",
+  "waivers": [],
+  "physical_validation": "not_performed",
+  "may_authorize": false,
+  "attribution": "Python/Godot tests ran on bd11a73b385f1de997112bc64bdd6769263dac08; their code and inputs are unchanged at code_commit. Rust/native-viewer checks tested the exact source blobs retained at code_commit. The atomic gate ran the separately recorded clean worker pin with identical atomic code and retained the gate implementation hash."
+}

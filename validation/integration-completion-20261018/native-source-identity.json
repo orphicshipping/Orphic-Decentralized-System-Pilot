@@ -1,0 +1,31 @@
+{
+  "revision": "c7bf306d891b5ce603325fea9918d17a1da483c3",
+  "tree": "d5a7880c3cbe3b4f3d48e9f7571128f7f78c38aa",
+  "files": 5179,
+  "all_tracked_blob_bytes_verified": true,
+  "source_history": "shallow_snapshot_not_full_history_qualification",
+  "recovery_artifact_id": 12122872839,
+  "recovery_artifact_sha256": "bf35cb6674ab21e99ac76bb6d20de8a6018d17491a335a2fd0cab2eb31dc8a1e",
+  "implementation_equivalence": [
+    {
+      "path": "src/ciw/nvalchemi_adapter.py",
+      "sha256": "4f2cb1699802eb2662e22304cd5c122478a7ae77a6e92f20433d647c2c7ceaa0",
+      "candidate_bytes_identical": true
+    },
+    {
+      "path": "src/ciw/nvalchemi_contract.py",
+      "sha256": "f129a23b881e0f7ee75fc30d6937e4531ef42b7bbe95d9f15b86d8c8b6a3f2ac",
+      "candidate_bytes_identical": true
+    },
+    {
+      "path": "src/ciw/nvalchemi_worker.py",
+      "sha256": "89dcca57d8b06fab50ae1bbdbe6a4a5e0aa0c882d0cfc7140bd0dccc803f0aa5",
+      "candidate_bytes_identical": true
+    },
+    {
+      "path": "src/ciw/adapters/subprocess.py",
+      "sha256": "06e5d30990324e4e059e2191f2f3a0e6ba8d8ce847b196b0e05927811b4ef257",
+      "candidate_bytes_identical": true
+    }
+  ]
+}

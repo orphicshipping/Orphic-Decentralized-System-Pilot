@@ -1,0 +1,419 @@
+{
+  "code_commit": "ecb1c301926f411069b4608287f8a0d4f3208fb1",
+  "files": [
+    {
+      "path": ".github/workflows/net-math-visuals.yml",
+      "bytes": 7454,
+      "sha256": "1e739c5e1678490286b8b384a801619348c2ba53d8d9fe30f68309635f93ec79",
+      "git_blob": "add09f23bcef8792f4035fdb4ea93986f1109364"
+    },
+    {
+      "path": ".github/workflows/net-nvalchemi.yml",
+      "bytes": 3637,
+      "sha256": "b3a9eb1882ec662edf87f307e4fe90a185d32abd98425f37220fba23de480c97",
+      "git_blob": "0e2e3bc23b53938dd31705476262f87b4fe207a0"
+    },
+    {
+      "path": ".github/workflows/workflow-contracts.yml",
+      "bytes": 2929,
+      "sha256": "b8fd2f26f35df5704159fcc1527f2589eece644437f8cbc0f5248d2a0e8a6a5b",
+      "git_blob": "0e318dabd8a035e861abe2966762b8dda8bda6aa"
+    },
+    {
+      "path": "docs/INTEGRATION_COMPLETION_20261018.md",
+      "bytes": 4313,
+      "sha256": "5622b28fa6a1b3faa219eedc54b92e631dcbf1eb580eee5ce3fcb7c7fb2fa4e6",
+      "git_blob": "1d8bb0defbc3937d3c4af512e7b7093ebe1e1997"
+    },
+    {
+      "path": "docs/NVALCHEMI_PILOT.md",
+      "bytes": 9351,
+      "sha256": "992106bfccf61042ebaa37e311be54dda49bc57b69f0eb93bbbac9c095d86e1b",
+      "git_blob": "1a2ddfcf1237ab0993ee92c233dec6c166c4f07b"
+    },
+    {
+      "path": "docs/REPOSITORY_FOLDER_AUDIT_20261018.md",
+      "bytes": 11011,
+      "sha256": "6c539960072af8ed5faa51effd2f2e6656a66f3b451ad30655cc1fd2e291fdec",
+      "git_blob": "165f2dc2790c52fa1ee6154d0a971f760e8ffdd5"
+    },
+    {
+      "path": "docs/SYSTEMS_CATALOG.md",
+      "bytes": 16020,
+      "sha256": "f87967ce1864689d1fa3f942e112be33b422bd30190a3d5d33ec0b539375d644",
+      "git_blob": "6d1458d460be4a1d2977f5dcb2aecd73bd36de26"
+    },
+    {
+      "path": "docs/VISUALIZATION_PROVIDERS.md",
+      "bytes": 4927,
+      "sha256": "bd456faecaa811998a1a6e4f38c848e6ad93181efb3160e48b4b7f1958b13fe3",
+      "git_blob": "c34d18435df99bab019a658673523f6a847266ee"
+    },
+    {
+      "path": "examples/_teaching_payloads.py",
+      "bytes": 3434,
+      "sha256": "78d10a90d9a6d735b102923275388772a8c30d46ab95d69f9e6e6bd15ec1da51",
+      "git_blob": "bc0bf053528ad38c16a9ae74219fc7f6e4215db2"
+    },
+    {
+      "path": "examples/cse-bim-quantity/README.md",
+      "bytes": 2431,
+      "sha256": "7887a1fbc2f0749612a8637d1d6e1447a25afc86abd78e109c6708bd9bf86cc3",
+      "git_blob": "8bbca3474c6432b8f805107a384c7ef8e68961ef"
+    },
+    {
+      "path": "examples/cse-bim-quantity/emit_render.py",
+      "bytes": 430,
+      "sha256": "c97ddc4660f70fa99c4b38aa42f00c91fe0ea772913c9471ef3b17fab854e80c",
+      "git_blob": "1bed958a43e648f589977d86783ec273bce2230e"
+    },
+    {
+      "path": "examples/csg-path-sensitivity/README.md",
+      "bytes": 1945,
+      "sha256": "c47e91e56348033d6479d20a3b2687ad9c38ce15fe5c358ed5602fe6ec2f1feb",
+      "git_blob": "42943fdea832a49c5d035b2eaf3dd444c31c8577"
+    },
+    {
+      "path": "examples/csg-path-sensitivity/emit_render.py",
+      "bytes": 430,
+      "sha256": "77cbefec36a401285a3ea4c0c7b404ba2b2f9e7592f20787b13eabacbb3689b4",
+      "git_blob": "eb8430f3e394a56b2286161d9f3b1631d3fdb8eb"
+    },
+    {
+      "path": "examples/energy-accuracy-teach/README.md",
+      "bytes": 2193,
+      "sha256": "dedcf5e77eb5daa62cc0f423fb962dac9cb348021fdb33ff857d8ba3f19197f8",
+      "git_blob": "5897c00e6b81a672bcacb508be60d65c3b49dff3"
+    },
+    {
+      "path": "examples/energy-accuracy-teach/emit_render.py",
+      "bytes": 479,
+      "sha256": "8b1ab5d199cdee570ad7999ce3e36cca288225ee2d2da873fedc08c9ee2d85b2",
+      "git_blob": "c53d7b95ab556f746e5ec81af397fa3e3e8cde21"
+    },
+    {
+      "path": "examples/fsrt-two-reservoir/README.md",
+      "bytes": 1856,
+      "sha256": "5f6648d66d987dcc8ce28db011882e285c8097ac024ffed1c740df1c3b90bc8e",
+      "git_blob": "c8884e134af0aa2ff61d8442e6d7c2b81c01380f"
+    },
+    {
+      "path": "examples/fsrt-two-reservoir/emit_render.py",
+      "bytes": 432,
+      "sha256": "984259b816004cf5d6424a73ba60666f730ef3dfc8498ac5929f14eecba5d408",
+      "git_blob": "279d6a7adac9a1f70272fdb5fca1053de4adb93e"
+    },
+    {
+      "path": "examples/gte-circle-eligibility/README.md",
+      "bytes": 2073,
+      "sha256": "482e43bafa55cf983c2af419424e798e07e4f8e3a54e6aff2c52c97d3814f97a",
+      "git_blob": "36641b82b64996c4e4ed643cff6950785727a97c"
+    },
+    {
+      "path": "examples/measurement-chain-teach/README.md",
+      "bytes": 2187,
+      "sha256": "f23aca4a50a83e9683621723b3ca957338d425e26282a680965ae45b89eed5b4",
+      "git_blob": "584ab344b2d5874db6ce234655ff729f1bf728a6"
+    },
+    {
+      "path": "examples/measurement-chain-teach/emit_render.py",
+      "bytes": 489,
+      "sha256": "db8828750bbc6b4fd1dd7ffc2d6852b7478bb97d5103740aa178649f27464c5f",
+      "git_blob": "6dd7655e5a16f9646726bc2be32bb09101334a60"
+    },
+    {
+      "path": "examples/plsr-stability-verdict/README.md",
+      "bytes": 1799,
+      "sha256": "d06aa4ee8820e9e375a97e1d33c3e093a9cb7c137191fdf327fd25cc17dca71b",
+      "git_blob": "4d088d164b2f1573460dfa5bb19e51671d1284ac"
+    },
+    {
+      "path": "examples/plsr-stability-verdict/emit_render.py",
+      "bytes": 436,
+      "sha256": "2ce230f2b0dea3eb3f665645ded8badc254b85e1d089cfb870738947bc9241a8",
+      "git_blob": "453ca81ed04510dcd11f8caba2574b3da6bc244d"
+    },
+    {
+      "path": "examples/proved-heat/README.md",
+      "bytes": 2516,
+      "sha256": "f1dfa43b85a6954a68a7a347b5260aaae3b4ecf53a862a49ffde6a88d962e8f8",
+      "git_blob": "9cbc400c50604e9e72f400b71e25d4ecfdb3ec97"
+    },
+    {
+      "path": "examples/proved-heat/emit_proof_render.py",
+      "bytes": 447,
+      "sha256": "01c9082c7606eb8c0126161f899aa874ed1af7d922c74d897aac5f4f13cb43e9",
+      "git_blob": "e18cee6a98a2b87be2ab7d706646e2ed799abe30"
+    },
+    {
+      "path": "examples/residual-cusum-teach/README.md",
+      "bytes": 1820,
+      "sha256": "4c0a32dc2186e992050c5830e8b56f19b16740aedba441ac36069ac854627f44",
+      "git_blob": "c30f092383427ac8bda49e5ba95f42758d1d5e82"
+    },
+    {
+      "path": "examples/usecase-index.json",
+      "bytes": 5466,
+      "sha256": "da945af5b2d0817648abd951d34c05f9d7d6f1257e2de65cd95b10fd18a9b46e",
+      "git_blob": "fb27b2b96f3f17ae12e43cb7c41e70f525323e9b"
+    },
+    {
+      "path": "examples/usecase-thermal-proof-gate/emit_render.py",
+      "bytes": 895,
+      "sha256": "a2b2bda052a9bd013dbed66189405d7c3fbab4e61a8dc680b0949850a537a542",
+      "git_blob": "633f4f5b2d7d8d60052bdd6840a0e45c28ce1a94"
+    },
+    {
+      "path": "examples/vfe-sensor-bias-teach/README.md",
+      "bytes": 2326,
+      "sha256": "614f5608aefe7c0169660f98a5943c72eb3658f97e90d39f400099e7bdc64d44",
+      "git_blob": "adc5323cafa44be563b372cf87c72ba409430051"
+    },
+    {
+      "path": "examples/vfe-sensor-bias-teach/emit_render.py",
+      "bytes": 443,
+      "sha256": "e01bbab6ffdd0c248d68397d748acea05c402576c6dbe2957b28894d3877b490",
+      "git_blob": "13dec291cdc8f4c26748f276f84e05463f0b7b1d"
+    },
+    {
+      "path": "examples/workflows/README.md",
+      "bytes": 5192,
+      "sha256": "baacd51a1c7e24afccfb60afc5c0732e8928c7602de8bb18987abeab1af96d57",
+      "git_blob": "08c5766e2182d162669550e129cc0d8cf327725a"
+    },
+    {
+      "path": "examples/workflows/emit_all_usecases.py",
+      "bytes": 3025,
+      "sha256": "0730eaf5bc5b0675d06b379faa45fee71f00681047c33decb5b4e4b0a0cfb7f2",
+      "git_blob": "efc8cabebbc735f85f34d17842080711df55860f"
+    },
+    {
+      "path": "examples/workflows/generate_usecase_corpus.py",
+      "bytes": 1198,
+      "sha256": "2e1a24b137206e9a8608f811b7cc9f52e3553153acaaacee44e8d3764e41324e",
+      "git_blob": "25f3803e10835025b0dcf5d855789e3421af67e1"
+    },
+    {
+      "path": "examples/workflows/teaching-inputs.json",
+      "bytes": 11334,
+      "sha256": "d663fbc2b98986a9a384fb2cb1493973c4ba993c4165d6f7fe4403abff823891",
+      "git_blob": "198bb73ee182042cd2b2a82f4e25c8a325dd80bd"
+    },
+    {
+      "path": "examples/workflows/usecase_catalog.py",
+      "bytes": 4694,
+      "sha256": "0636d25e0df04bf89ef1d5cc7630d25c8c54de02848e0ad9c85ec949233682eb",
+      "git_blob": "05c66892f5d280ddca71beeaaf69b7858958133d"
+    },
+    {
+      "path": "examples/workflows/usecase_templates.py",
+      "bytes": 5319,
+      "sha256": "806da306ccb6ea7e5ab44e443f1f1f19da1eef24112257060cd9babd3e550db4",
+      "git_blob": "0c79276f6406d04c609b2b8dfde560efe058b54b"
+    },
+    {
+      "path": "godot/scripts/analog_state_view.gd.uid",
+      "bytes": 19,
+      "sha256": "ebad694c11852704eb15fe5147a6581669161c9e1afe22cad1675e6e212e3e7b",
+      "git_blob": "7136bac0602c7d4dc5ced12d1d09a2b164cf19ee"
+    },
+    {
+      "path": "godot/scripts/analog_strip.gd.uid",
+      "bytes": 20,
+      "sha256": "33dddcae1d8cd10298f3a3f02e47f287776b8f682d0e8b2206327f0b24ac6b4a",
+      "git_blob": "4cd7f5b899d1d69d1ccdc904862345ec69f633d6"
+    },
+    {
+      "path": "godot/scripts/circle_geometry_view.gd.uid",
+      "bytes": 20,
+      "sha256": "13b61700eed6158654d300628f51d20744b8710f994b8ddd4a81e871c0c9b248",
+      "git_blob": "f731867043530abe8c5dd0a7714f3f9496ea5f1d"
+    },
+    {
+      "path": "godot/scripts/main.gd",
+      "bytes": 16854,
+      "sha256": "249979dac538769b569532b8b617984bc9a56fc1a6066d9f9aa1797e55750167",
+      "git_blob": "4af6e4477cda123a1670a16c2e5f451900000182"
+    },
+    {
+      "path": "godot/scripts/presentation_kit.gd.uid",
+      "bytes": 20,
+      "sha256": "b26dc11826a9dbea3e6196b81ccda714e3493c7e2aeafe80533f56f6cca659a7",
+      "git_blob": "31ac3ae8e6b3a6b13ed7246912da9e3628450459"
+    },
+    {
+      "path": "godot/scripts/presentation_schematic.gd.uid",
+      "bytes": 20,
+      "sha256": "e7608fe1e26679d562c2c64a7fd52fde13146138ea7c730382a26d3e23af6acf",
+      "git_blob": "7347134867effe5ab782b31679af98f565a40cf3"
+    },
+    {
+      "path": "godot/scripts/presentation_strip.gd.uid",
+      "bytes": 20,
+      "sha256": "9815facb829d3fb9e18b67e27a93398c864d65fcc56bff6e7ef5c53dd8d33bbb",
+      "git_blob": "a7eb9ddece8c21b9c30cb44d7ada3b6410e2917d"
+    },
+    {
+      "path": "godot/scripts/simulation.gd.uid",
+      "bytes": 20,
+      "sha256": "7a788cfb2e1c801eac90687c74993ad746eabd8f82f62e5fbe76b5b41c02e874",
+      "git_blob": "1daf5ce03dae384b6fa4764ad9f3d8a188f50bb0"
+    },
+    {
+      "path": "godot/scripts/usecase_catalog_view.gd",
+      "bytes": 4986,
+      "sha256": "7fc33d27a654c8499fb7f16366f804e877c4fecf3129690bea835a34ed7c2ad4",
+      "git_blob": "fed44146d937d112c92ae088979b8844fda96023"
+    },
+    {
+      "path": "godot/scripts/usecase_catalog_view.gd.uid",
+      "bytes": 20,
+      "sha256": "3a38e3a29f4d1404c4e56777a3f9960ab157933d3d10ec4f60a8b0a1aa0eedeb",
+      "git_blob": "43535dde8df81c9ba2b599eabe9706ed9ba52e61"
+    },
+    {
+      "path": "godot/tests/presentation_smoke.gd.uid",
+      "bytes": 20,
+      "sha256": "cc965022371403a02e95cf103df30a18d02b7c46732055127233543adbf59db7",
+      "git_blob": "7697f14e9fff297c843a62770bc2ebd264822a18"
+    },
+    {
+      "path": "godot/tests/retained_views.gd.uid",
+      "bytes": 20,
+      "sha256": "fc891b8a76a449ebf417ce09231a6761345ef4a386ea2ca93eccd12826b50ed7",
+      "git_blob": "b5d048817c9a9c6ad19d063c41dd21bc2287840e"
+    },
+    {
+      "path": "godot/tests/simulation_smoke.gd.uid",
+      "bytes": 20,
+      "sha256": "7e690d63f6f25a7facfcda4b6b19a3e4165ab16213da75b62f6790feb23f129e",
+      "git_blob": "496bb7ec9710eb8ea59ce876739d968e59d17da2"
+    },
+    {
+      "path": "godot/tests/teaching_catalog_smoke.gd",
+      "bytes": 1359,
+      "sha256": "6807272e95bf6d9c3b24386d54296440bc2d3ddf2550f972511422befab63290",
+      "git_blob": "5f11838b8836dfd713009e886b98a6f036ee1c6e"
+    },
+    {
+      "path": "godot/tests/teaching_catalog_smoke.gd.uid",
+      "bytes": 19,
+      "sha256": "88d465921d4848cfff3d4c958cfce692560342f95046a1d5d255f1f0f0082182",
+      "git_blob": "62e954fb474b96e33ed895db4bb22b104505fc86"
+    },
+    {
+      "path": "runtimes/atomic-alchemi/README.md",
+      "bytes": 1586,
+      "sha256": "cb7845dd41c8012921510dadb058879e5d95a767697d217410dc8e52d3bd068b",
+      "git_blob": "0d2b83eb310274b44caf1bf6ac3478453dd99b1a"
+    },
+    {
+      "path": "runtimes/atomic-alchemi/requirements-linux-cpu.txt",
+      "bytes": 2043,
+      "sha256": "832e7d3e5dc2a4a0fc88fda9dabab61d0a0937b2bd4a909ff76ccb774e6b4e85",
+      "git_blob": "4eccc0c373b94ca89fbad3e927ff24671265b05b"
+    },
+    {
+      "path": "scripts/check_atomic_nvalchemi.py",
+      "bytes": 11047,
+      "sha256": "02b676da83038ec139977d9940d514182e6ddecc9f4f84b273e58f1cc90fc83a",
+      "git_blob": "b73688fc0d12e323945176a1a67791f4d0a6098b"
+    },
+    {
+      "path": "scripts/check_bevy_projector.py",
+      "bytes": 4342,
+      "sha256": "3637bceedacbb81d05152605a63e78d45f1d85b973d2bbd34671aee0eef00a7d",
+      "git_blob": "a51d086580fd7de1396af432ec8a10050abe1dde"
+    },
+    {
+      "path": "scripts/check_godot.py",
+      "bytes": 10183,
+      "sha256": "2be08a96404cb613d2d6b5c200cb4e39c3f101c68e8df0a5bbe1f41d0d800a3d",
+      "git_blob": "3793ddda7dbed5475d48ba6f48ed2748325165a8"
+    },
+    {
+      "path": "scripts/prepare_atomic_nvalchemi.py",
+      "bytes": 2201,
+      "sha256": "ef48e3724bf31e554c6d8c0e87a75bbcda7d7d5e99286dc42f0c6a7f5037badc",
+      "git_blob": "1f06ea9132ae13a6242719876a4f94452ab90c2f"
+    },
+    {
+      "path": "src/ciw/integration-sources.json",
+      "bytes": 36383,
+      "sha256": "fe1ba783ab001aa619197b472b6d9ba9fa5b32175f1773b8fabebb5bde4863cf",
+      "git_blob": "c958e18cb3fa6f726a5f9f8103da0182f28c13b4"
+    },
+    {
+      "path": "tests/test_atomic_nvalchemi_gate.py",
+      "bytes": 1668,
+      "sha256": "9b28d922954c8a8f269bce77b4816c5c669e50f3b62f69083a7b8b7b53f315ae",
+      "git_blob": "174b9944f931706edd2b93d0327740ea1089b6c2"
+    },
+    {
+      "path": "tests/test_nvalchemi_lifecycle.py",
+      "bytes": 5026,
+      "sha256": "3536a4becf1fbdfb39dff63b58e04083d0bd964adc0bc2d823522775460f59aa",
+      "git_blob": "8edd5f1f31d0350005d0bfb164ab5de3d5406586"
+    },
+    {
+      "path": "tests/test_teaching_corpus.py",
+      "bytes": 4086,
+      "sha256": "c8923be764783f269095ded718dc7234b77282a395e5ca05afa4c55a16745de8",
+      "git_blob": "02b68ad0a54630a2660cc15fe10ec312307ab342"
+    },
+    {
+      "path": "tools/bevy-render-view/.cargo/config.toml",
+      "bytes": 289,
+      "sha256": "31bdbbcde519cf03111a0aa1b01b0db515876b8d34ef560f7dcae3d3f5afce7a",
+      "git_blob": "a23a7bd49933bed87ee77ec50dc020d49e96a9bd"
+    },
+    {
+      "path": "tools/bevy-render-view/.gitignore",
+      "bytes": 34,
+      "sha256": "13c2efeea1708216ec4c7dd43ed79d7c8e1a1dbb8d4eb93ee40970a97ba877a8",
+      "git_blob": "5c205b6b64089b3b3fcecf043b7e1a947aeb36d6"
+    },
+    {
+      "path": "tools/bevy-render-view/Cargo.lock",
+      "bytes": 128910,
+      "sha256": "e06f08df85bedf66ea41ce8e0f8a608cc085e90623bee93cc54c1ff028a24779",
+      "git_blob": "c3f449292a14ac1341ea8f37e80aa6cbbe7d1451"
+    },
+    {
+      "path": "tools/bevy-render-view/Cargo.toml",
+      "bytes": 939,
+      "sha256": "2d8b40c6a1d87eec4dd718f527e1c9dc87873821c60d596378a726bf07c91c26",
+      "git_blob": "435857744ad0e4b0333944c22cb33078efbf554f"
+    },
+    {
+      "path": "tools/bevy-render-view/README.md",
+      "bytes": 2916,
+      "sha256": "4af3ff0872d45b606725a7972f6a9177de71ec06e5879019cd4f012c3c5fdc52",
+      "git_blob": "da98df8fc9cfbf8ee3853691fa6835552c5a9e1f"
+    },
+    {
+      "path": "tools/bevy-render-view/rust-toolchain.toml",
+      "bytes": 51,
+      "sha256": "3003a09987459e5921dcddde94f8ea929b2d5e66efbbc30160e9d78de7ff010a",
+      "git_blob": "725551148a2f17f16fd661a8b57e437e036442a5"
+    },
+    {
+      "path": "tools/bevy-render-view/src/lib.rs",
+      "bytes": 9249,
+      "sha256": "990c16f1d48361b0c7ef1db643507fa74e02f73a665352653a1a705f69c14e96",
+      "git_blob": "d71b2a61620275b13a0a49c124beb36579e10c95"
+    },
+    {
+      "path": "tools/bevy-render-view/src/main.rs",
+      "bytes": 4335,
+      "sha256": "5c1db47e607b33de6ae91290b2883c62fd453fe41f7822e0adc4de37d97e7313",
+      "git_blob": "714c2d5fc6f44c948f55a84b05af9d0377db246a"
+    }
+  ],
+  "unavailable_local_unchanged_transport_parts": [
+    "delivery/source-retirement/native-full-final.bundle.part01",
+    "delivery/source-retirement/native-full-final.bundle.part02",
+    "delivery/source-retirement/native-full-final.bundle.part03"
+  ],
+  "note": "The remote trees retain these unchanged delivery blobs. The native worker instead binds its fully materialized, byte-verified source snapshot; no archive deletion or full-history qualification is claimed."
+}

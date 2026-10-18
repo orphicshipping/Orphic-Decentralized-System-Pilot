@@ -1,0 +1,153 @@
+{
+  "observed_at": "2026-10-18T03:33:03.992Z",
+  "baseline": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "required_count": 14,
+  "counts": {
+    "queued": 8,
+    "pending": 6
+  },
+  "runs": [
+    {
+      "workflow": "monorepo.yml",
+      "id": 39080520370,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520370",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "test.yml",
+      "id": 39080520408,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520408",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "workflow-contracts.yml",
+      "id": 39080520381,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520381",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "declared-workloads.yml",
+      "id": 39080520368,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520368",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "calibrated-observable.yml",
+      "id": 39080520448,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520448",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "identified-design.yml",
+      "id": 39080520424,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520424",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "calibrated-window.yml",
+      "id": 39080520444,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520444",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "proved-heat.yml",
+      "id": 39080520456,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520456",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "system-composition.yml",
+      "id": 39080520390,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520390",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "legibility.yml",
+      "id": 39080520428,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520428",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "release-operator.yml",
+      "id": 39080520379,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520379",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "operator-readiness.yml",
+      "id": 39080520376,
+      "event": "push",
+      "status": "pending",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520376",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "hardware.yml",
+      "id": 39080520465,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520465",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    },
+    {
+      "workflow": "refurbishment.yml",
+      "id": 39080520430,
+      "event": "push",
+      "status": "queued",
+      "conclusion": null,
+      "url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520430",
+      "sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+      "attempt": 1
+    }
+  ],
+  "waivers": [],
+  "qualification": "NOT_CLOSED"
+}
