@@ -18,14 +18,15 @@ from console import ConsoleConfig, MCPBridge, ConsoleError, security_error, crea
 
 class SecurityTests(unittest.TestCase):
     def test_native_launch_is_explicit_and_incompatible_flags_refuse(self):
-        base = ConsoleConfig(Path(sys.executable), Path('/trusted/profile.json'))
-        valid = replace(base, instrument='bim-clearance', provider_checkout=Path('/trusted/cse'),
+        trusted = Path(tempfile.gettempdir()).resolve()
+        base = ConsoleConfig(Path(sys.executable), trusted / 'profile.json')
+        valid = replace(base, instrument='bim-clearance', provider_checkout=trusted / 'cse',
                         provider_revision='a' * 40, provider_python=Path(sys.executable), resume=True)
         args = launch_arguments(valid)
         self.assertIn('--provider-checkout', args)
         self.assertIn('--provider-revision', args)
         self.assertIn('--resume', args)
-        for invalid in [replace(base, provider_checkout=Path('/trusted/cse')),
+        for invalid in [replace(base, provider_checkout=trusted / 'cse'),
                         replace(valid, provider_revision='main'), replace(valid, provider_checkout=Path('relative')),
                         replace(valid, surface='operational'), replace(valid, instrument='leakage')]:
             with self.assertRaises(ConsoleError):

@@ -1,0 +1,40 @@
+{
+  "candidate_sha": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+  "tree": "e4a277693b63dde7d53cb319efdc490edde58c0a",
+  "parent": "284081912f99c0bebbee48e8b654e71e1d7713fb",
+  "git": {
+    "sha": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+    "node_id": "C_kwDOUh9rmdoAKDBlNGFlYWZkNDRmY2YzYWUzZTI1ODA4NTUwOTAzYjMyMjYwZWVhYTE",
+    "url": "https://api.github.com/repos/notationsystems/Notations-Control-Protocol/git/commits/0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+    "html_url": "https://github.com/notationsystems/Notations-Control-Protocol/commit/0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+    "author": {
+      "name": "Notation Systems",
+      "email": "giason96@my.yorku.ca",
+      "date": "2026-10-18T00:43:36Z"
+    },
+    "committer": {
+      "name": "Notation Systems",
+      "email": "giason96@my.yorku.ca",
+      "date": "2026-10-18T00:43:36Z"
+    },
+    "tree": {
+      "sha": "e4a277693b63dde7d53cb319efdc490edde58c0a",
+      "url": "https://api.github.com/repos/notationsystems/Notations-Control-Protocol/git/trees/e4a277693b63dde7d53cb319efdc490edde58c0a"
+    },
+    "message": "Connect source and runtime discovery to MCP and native console profiles\n\nProject all imported modules, surrounding systems and external boundaries from\nexisting source authorities without granting execution or qualification. Keep\nper-workflow runtime pins separate, and expose explicit native BIM and leakage\nlaunch bindings through the existing control and console owners.\n\nRetain original source pins, licences, native tree validation and grant/retry\nboundaries. Extend source, SDK, browser and CI checks for the shared paths.",
+    "parents": [
+      {
+        "sha": "284081912f99c0bebbee48e8b654e71e1d7713fb",
+        "url": "https://api.github.com/repos/notationsystems/Notations-Control-Protocol/git/commits/284081912f99c0bebbee48e8b654e71e1d7713fb",
+        "html_url": "https://github.com/notationsystems/Notations-Control-Protocol/commit/284081912f99c0bebbee48e8b654e71e1d7713fb"
+      }
+    ],
+    "verification": {
+      "verified": false,
+      "reason": "unsigned",
+      "signature": null,
+      "payload": null,
+      "verified_at": null
+    }
+  }
+}

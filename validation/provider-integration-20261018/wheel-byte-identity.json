@@ -1,0 +1,2905 @@
+{
+  "candidate_sha": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+  "wheel_sha256": "71cc7c881705b7e22cae2b6f5e9b0fb058deaefa986059d11220f6699c540d09",
+  "matched_files": 724,
+  "installed_origin": "/workspace/scratch/983c4968e2d6/latent-installed/lib/python3.12/site-packages/ciw/__init__.py",
+  "files": [
+    {
+      "path": "ciw/__init__.py",
+      "sha256": "15173e8fbf8d1900cbd0ad936632f394a8bea0c8c1d364aa6f760983895aad39"
+    },
+    {
+      "path": "ciw/__main__.py",
+      "sha256": "935a1c1166b0c1ea35a82256345000bf2c73ded718d77773bc27a71ecce28f7d"
+    },
+    {
+      "path": "ciw/acquired_dataset.py",
+      "sha256": "da71e59e78e8991427bba2c35e706e0d03407defe15643605d18d7d89c4ed3a3"
+    },
+    {
+      "path": "ciw/acquired_window.py",
+      "sha256": "de198004d995a31dfd691dd07de51564ce0edbb7da27c6b036c36d49b4dfb5f6"
+    },
+    {
+      "path": "ciw/adapter-runtimes.json",
+      "sha256": "79098fa4fb0cb9dfe9269224c146c0874a058bf5191824609245389d2b9f80fc"
+    },
+    {
+      "path": "ciw/agent_api.py",
+      "sha256": "0c5a0bef295254ebdbcae18a07de1e556cdd2640c8d57752a2e8a9566fd5e85c"
+    },
+    {
+      "path": "ciw/agent_experiment.py",
+      "sha256": "abc313dd5cd7bb2cb858ccb2c4d046b73aa0cff51f91d70bc9c9a74a29796f32"
+    },
+    {
+      "path": "ciw/agent_local_model.py",
+      "sha256": "06ba7c3b578eb749866dae704ee4a4124480082dd125a88d2a4544ddd643e927"
+    },
+    {
+      "path": "ciw/agent_mcp.py",
+      "sha256": "7a8a8de992a8d1e6a4e8f4bca52a6e680bd31b7a49f6f3a3284e7269e3efc1f0"
+    },
+    {
+      "path": "ciw/agent_recovery.py",
+      "sha256": "740a7e94dddb6caf50ddea93164333bd603c0dbbd38355ac211cff4157b329e1"
+    },
+    {
+      "path": "ciw/agent_tools.py",
+      "sha256": "8040bd0084745f8c4369a945d9bc4904008ecbb88378aeeeda3266ada6e7c6e1"
+    },
+    {
+      "path": "ciw/agent_transcript.py",
+      "sha256": "7fed9e29a84c3472fd4697b3c2b751d2dae4b891588d65b8e16ceee28fada6db"
+    },
+    {
+      "path": "ciw/agent_unattended.py",
+      "sha256": "843c582256410bf1210e589cfaebf21464cc894beb1b7df2f43805422e68eaa1"
+    },
+    {
+      "path": "ciw/annotation_cli.py",
+      "sha256": "283ec354fef32e05d2737a97d32b257f762caa0ad9272e43b1cb6fd799954c40"
+    },
+    {
+      "path": "ciw/annotation_nise.py",
+      "sha256": "42de9c8303ec3fe908e053e73741bec485a4deea153671741cac57f8a8a17abd"
+    },
+    {
+      "path": "ciw/annotations.py",
+      "sha256": "0a050b4d78710d4e2510e720f2dae79e0bc73a9ab05a707eade19068a7eef553"
+    },
+    {
+      "path": "ciw/artifact_provenance.py",
+      "sha256": "3ba20da2db8f8ac70cf1919653d308da655ca049d1b78bd266d6eae2ceacbf72"
+    },
+    {
+      "path": "ciw/atmosphere_cli.py",
+      "sha256": "79fc128e5da8396b3070a8990dda2a1d735d04b6b72a3b720d026d9fdd55c4e9"
+    },
+    {
+      "path": "ciw/atmosphere_comparison.py",
+      "sha256": "5fa05fbcf5099e81c93b811750318a70ab0aaf0db341251b706e3220ceebc65f"
+    },
+    {
+      "path": "ciw/atmosphere_comparison_contract.py",
+      "sha256": "402ce2e1b54c5d48ee894e494655dabe7ce1341b9f9bba1d8e61568af634d744"
+    },
+    {
+      "path": "ciw/atmosphere_comparison_verification.py",
+      "sha256": "3d251f2d5c3089af49d889e3a387441c51c8ff850328e154540a2fd9091706b3"
+    },
+    {
+      "path": "ciw/atmosphere_comparison_workflow.py",
+      "sha256": "f8d98e1063eaf854ee89023e3ea52a9e7992c599cf27e6c22ae2339c7b2c37e2"
+    },
+    {
+      "path": "ciw/atmosphere_compiler.py",
+      "sha256": "cecef496f0c12676430df7b41020bce8d0beff7607229b6e057105d6f6fc00f0"
+    },
+    {
+      "path": "ciw/atmosphere_contract.py",
+      "sha256": "8d5e39e1316d85b37f5c693b935734aba8b173de6b445957f77a1a9616624a05"
+    },
+    {
+      "path": "ciw/atmosphere_handoff.py",
+      "sha256": "e1112d4d3e8e14c55a9386ff0858f13781411335f3f5adcd6238c355a927f4ea"
+    },
+    {
+      "path": "ciw/atmosphere_measurement_ingress.py",
+      "sha256": "c1630f8cf9f16c1d944000722eebe4edd85d74ae0ad9b0c23093d1da292ec9e2"
+    },
+    {
+      "path": "ciw/atmosphere_moist_compiler.py",
+      "sha256": "f1144758e3cee7185f0af3a37165887162e5adb91cfa47d197a8bb7de9f77378"
+    },
+    {
+      "path": "ciw/atmosphere_moist_contract.py",
+      "sha256": "e0f2aa25473f6fac060e8e5d84a1b02f8cb98c7395f374e26ddd7630a19520f6"
+    },
+    {
+      "path": "ciw/atmosphere_moist_handoff.py",
+      "sha256": "08eec0d33a32634aed689df289e8c1726b358bbc9659536623d19c34b144f654"
+    },
+    {
+      "path": "ciw/atmosphere_moist_preservation.py",
+      "sha256": "e6945c505e7a637d0c86842d696df2e11b9fd7f85a620dfa078683d0bffe67bf"
+    },
+    {
+      "path": "ciw/atmosphere_moist_verification.py",
+      "sha256": "070dbbdb71c7b6b2cac12b3d91c5e58ba19e6201883984cb3956556afa99455c"
+    },
+    {
+      "path": "ciw/atmosphere_preservation.py",
+      "sha256": "60b8bf3f310c7d02fcf4bcd277ccc28bbe0b7418ef4c0c5c92052296e2ae8019"
+    },
+    {
+      "path": "ciw/atmosphere_reference_benchmark.py",
+      "sha256": "6847ba7e689872eef25d99fa8cef2c3043f1ef5fc455972199d97c88a7af3569"
+    },
+    {
+      "path": "ciw/atmosphere_reference_preparation.py",
+      "sha256": "9f4d46d5bdd57e0a1d5dd9a451469530f85215a3b44d9a7725a5199f83f9e58a"
+    },
+    {
+      "path": "ciw/atmosphere_verification.py",
+      "sha256": "963963f13a194a4fe35cf7ced4dcb76c32ff004c598bc410e69cb310b06e821d"
+    },
+    {
+      "path": "ciw/atmosphere_workflow.py",
+      "sha256": "3158e72fa9a348c994820d18639898e29361e18e983c774700cd648f5a370e16"
+    },
+    {
+      "path": "ciw/bim_interop.py",
+      "sha256": "b240d4ba0f78ea54d12261fba6412baefd699580e20ec4e045f251d6665f5582"
+    },
+    {
+      "path": "ciw/bim_interop_cli.py",
+      "sha256": "4decac12c231863a6bbeb9409c0e07bc0f20c0a93e822ee9525ced3c668f64f3"
+    },
+    {
+      "path": "ciw/bim_quantity.py",
+      "sha256": "c79efea4770860532493fedd5b5c9e938c5b9f8b17f6a8e3cc0ceb2e5d9025d2"
+    },
+    {
+      "path": "ciw/board_cli.py",
+      "sha256": "bc2ab2916a2268eca6aa72c2d4c22272a0450816b760b822e833244b7afebdd9"
+    },
+    {
+      "path": "ciw/board_morphisms.py",
+      "sha256": "e2f4f7c27b172f5b42f7c68015842f7104bf30ea28546d430b205ddb5b65a73e"
+    },
+    {
+      "path": "ciw/board_refit.py",
+      "sha256": "4a8511760ef4de242e1e1bc7ae0d2e844b9ae656d804cb5eb5f88b57bd4f11a9"
+    },
+    {
+      "path": "ciw/board_refit_cli.py",
+      "sha256": "5fb1df05f064d7b2bab2011cb17c674e0915f79676862d95560219fc1724f89f"
+    },
+    {
+      "path": "ciw/board_refit_mcp.py",
+      "sha256": "9be63e80b0785d631953057bfc530a42928d34154bdf17553fae273682210d09"
+    },
+    {
+      "path": "ciw/board_visual.py",
+      "sha256": "899cc0d47080da92d9d52cc82d51df8b1322da5c323ecf7c6aeeef6a2b928951"
+    },
+    {
+      "path": "ciw/calibrated-observable-runtimes.json",
+      "sha256": "c9431c28e3bdcf2c2c15bdc42b83dceb799801dbcadf2cb3dbe802e8a093fa08"
+    },
+    {
+      "path": "ciw/calibrated-window-runtimes.json",
+      "sha256": "36849335cdc35070564fc6f790d2faf679fa7f6a906c29b455b236158b3ecdbd"
+    },
+    {
+      "path": "ciw/calibrated_observable.py",
+      "sha256": "15184a7742d3daf97c294858d7e60b1ebd0564a68d0829a8585c61c2c85dbf05"
+    },
+    {
+      "path": "ciw/calibrated_window.py",
+      "sha256": "49ff8049eda6ae470df7d0fb374e6e96e51dd3709439a11fbc6cdc8eaa502350"
+    },
+    {
+      "path": "ciw/calibration_inspection.py",
+      "sha256": "8128bdb63ba8b52d386e146a0adeae1529d445b43bdbf0b3179c75b82df4fb7b"
+    },
+    {
+      "path": "ciw/calibration_status.py",
+      "sha256": "9837dbc44e37ac339a81d5aa14e2dbf0cf4dcf0b62e8660e5b7a2d705f31cd8b"
+    },
+    {
+      "path": "ciw/candidate_evidence.py",
+      "sha256": "584490f09f99c829553566c72669eb3260cace177fcdbbb57f2e35fef5c76725"
+    },
+    {
+      "path": "ciw/capabilities.py",
+      "sha256": "5741f6dbb4ede459dd1a202521d5ed806c24970a5dd272205230987ba77e99e1"
+    },
+    {
+      "path": "ciw/check_suite.py",
+      "sha256": "c86c8a323c33dff0aab5d09d7d00d71d4aedfe858fc846df9ee251c402c1d101"
+    },
+    {
+      "path": "ciw/cli.py",
+      "sha256": "4e9451f7c9d7b7a6d896c1cd25cd74cd85eebc5dede9ad98ee4c2d1654bc0fea"
+    },
+    {
+      "path": "ciw/columnar.py",
+      "sha256": "9b03ddd4a46d2618c9ff465ff193e9fc3c509aa6ee2da2df879803ceced1b16e"
+    },
+    {
+      "path": "ciw/columnar_cli.py",
+      "sha256": "c2390f8e96ec9d65eedc1bd9599b8edc4a0ca344b248aad651a3d1bade99a320"
+    },
+    {
+      "path": "ciw/computational_cli.py",
+      "sha256": "d893092bde6ab11dfa405fa7d5e829a6853bebebc16ec40b241915c3605c2c5a"
+    },
+    {
+      "path": "ciw/computational_objects.py",
+      "sha256": "34b42060b12f69f7cd0459a5c4de6c95c1f529e35614665952969dde8d60dcab"
+    },
+    {
+      "path": "ciw/computational_source.py",
+      "sha256": "ab1d8c47ab9c7f09a2c8490d58af47527f88adf0c5de3ec0deecda3212f04293"
+    },
+    {
+      "path": "ciw/computational_view.py",
+      "sha256": "00d21ed736b2b248e6f04b587997b96627d3da87fd3a87525a45564a807c36fa"
+    },
+    {
+      "path": "ciw/connectivity.py",
+      "sha256": "d00dbb5ee383550c75e43cec0466f68413958a5a625c5e02ebe39efb04c903e6"
+    },
+    {
+      "path": "ciw/connectivity_capture.py",
+      "sha256": "cd9ffebcdfb9142933ced9aa2515af107d9ff15320f0e8945c5df6be6a003c27"
+    },
+    {
+      "path": "ciw/connectivity_cli.py",
+      "sha256": "aeee38813d7b729bc37c7091413a7b4adea8b1f6d4061cffe97083b72e0a1712"
+    },
+    {
+      "path": "ciw/connectivity_workflow.py",
+      "sha256": "73082f9bcf2375b8941244082be2bfea5089d28108b7e289e74832527e06932b"
+    },
+    {
+      "path": "ciw/container_calculus.py",
+      "sha256": "b40cb98f3b6dea70537cd41ff452e447fb44f39e10dd6adcf0dc682206ea67f5"
+    },
+    {
+      "path": "ciw/container_cli.py",
+      "sha256": "af6be54c428b9cc5ef7b7a962582381704781264863aca0669fface209f88072"
+    },
+    {
+      "path": "ciw/control_checkpoint.py",
+      "sha256": "aaa2ead0b2743ef9aaff90f73c417ee6763fbf71dde51a09510c356874e2a911"
+    },
+    {
+      "path": "ciw/control_checks.py",
+      "sha256": "137940cbedf8f0f6aa87734d372cb1d67ff2876cf1ae303abd4a437ef2007ff4"
+    },
+    {
+      "path": "ciw/control_cli.py",
+      "sha256": "cef70f6815ddb4f9791cc61faf4aa060c7be83b45cffe15c15384d8979d479b1"
+    },
+    {
+      "path": "ciw/control_contracts.py",
+      "sha256": "abbf4350e784efbc580318739a57e8e1a0a5e8f1d5dd8edb2b7b6a7385528a00"
+    },
+    {
+      "path": "ciw/control_gateway.py",
+      "sha256": "33b9fd1b99b1ed56b5b42b58a4aa1edcfd3780b8f1df82b52a19cefd036689ab"
+    },
+    {
+      "path": "ciw/control_plane.py",
+      "sha256": "694d245b8f3297091d89addce2d6a2e25f004509fa0395f5caebc73997ba3541"
+    },
+    {
+      "path": "ciw/corpus_agent.py",
+      "sha256": "79904a50ed7efe0c233bd382fd0d7431a981bcca7adf00833b99ce29141a2e4a"
+    },
+    {
+      "path": "ciw/corpus_coverage.py",
+      "sha256": "504a9c77ad75ac0966108c81d48a4cb80cf7825ee69ccb68354e2a5850c751ad"
+    },
+    {
+      "path": "ciw/corpus_refresh.py",
+      "sha256": "f4e59ef5ee52efbb95b7bec9c0586c5cee2e0468108f5375fc596c7d050de8f1"
+    },
+    {
+      "path": "ciw/corpus_retrieval.py",
+      "sha256": "4e91bfd31ceabe51a8157551361a44a28fd6e9abc215040853fcd7b716cb131b"
+    },
+    {
+      "path": "ciw/corpus_view.py",
+      "sha256": "22edf226697ee96f12d724f067d1875f6bc284c91affb66b8630bed9f288624d"
+    },
+    {
+      "path": "ciw/correction_journal.py",
+      "sha256": "1840bafb4f7e4c3afc19f420ac84d7fa4145c06b1e6a434ad9ed22799dc1ff6a"
+    },
+    {
+      "path": "ciw/covariance_workflow.py",
+      "sha256": "82cbb41f7293e936d8d6d98147821a2258aaaa584e65d98add32bb19a1805a23"
+    },
+    {
+      "path": "ciw/cse_preservation.py",
+      "sha256": "f2a820c77468a3cebf0f6d9bc7d7d23b1b473cebd1b6310095eae82a6b9c0649"
+    },
+    {
+      "path": "ciw/csr_microtools.py",
+      "sha256": "6999b54624af397b041f6e04070e8e85c2b56754002b355c23893f1ea65cb45c"
+    },
+    {
+      "path": "ciw/curved_path_study.py",
+      "sha256": "406aba38d497c9e653a412d6d5037c45cb6f5884bd205ba277f7e035ed2fc7ed"
+    },
+    {
+      "path": "ciw/data_cli.py",
+      "sha256": "d6621f93f98b6a2db8f560c88b5f2fd9ee0f63a8f0e4fe3766049ae266f942a4"
+    },
+    {
+      "path": "ciw/data_compute_bridge.py",
+      "sha256": "e9fcdcc8c1476b23665686342f00b707b3c832ca56deb49c7ca2f7b0824cf173"
+    },
+    {
+      "path": "ciw/data_field_bridge.py",
+      "sha256": "11d5abf489a6b21cd6d254fc500e2eebdd87f566e836f268c8f7cb63cb20bb91"
+    },
+    {
+      "path": "ciw/data_inventory.py",
+      "sha256": "5ace089f6d8d521d15f4db947646fb2feafd8037fee80a4dc82fafa036b369ca"
+    },
+    {
+      "path": "ciw/data_manufacturing_bridge.py",
+      "sha256": "f6065d39ae282643104f3b521d8e6b81981ca22c22553c3116e8164a218b1cea"
+    },
+    {
+      "path": "ciw/data_rank_bridge.py",
+      "sha256": "885fdf9be44a3942a337e20c897f740f2ec13de542b345ba18a9df4090533852"
+    },
+    {
+      "path": "ciw/data_runtime.py",
+      "sha256": "43784edfaac4d375bf93aeaa5537f89a4983c72649132064242e0b62028115b0"
+    },
+    {
+      "path": "ciw/data_sources.py",
+      "sha256": "0919898dc09abfdc4ee31a74bb6d3f11f043ceeed5f58a17e5c2a93407150a60"
+    },
+    {
+      "path": "ciw/data_workflow.py",
+      "sha256": "fec3668f2726c042917e7bc8448d5efd8eebf219615b4815a750b71da83a10d3"
+    },
+    {
+      "path": "ciw/declared_workload.py",
+      "sha256": "d78641236802b296afff11be406791473a40276eb7de37a019bbf192daa03db6"
+    },
+    {
+      "path": "ciw/dependency_graph.py",
+      "sha256": "16911bf82418d68145d41f494c1060013029be6ffdac233debf95a1df9109df5"
+    },
+    {
+      "path": "ciw/design_adjustment.py",
+      "sha256": "fe4da7733f513761b2c71c80a7e8606e9c5b54ff96d5b9f4d639b4824dd1986f"
+    },
+    {
+      "path": "ciw/design_manifold.py",
+      "sha256": "7355fff1ead763f921b1b8151182ffb36a3a58399b09f7ddcfd7e4cf5efa8ed2"
+    },
+    {
+      "path": "ciw/device_boundary.py",
+      "sha256": "65f7664472d9e2a6d6dbd8acbceb96415a4307e5ad0cbd7e25dceda047172be8"
+    },
+    {
+      "path": "ciw/device_boundary_cli.py",
+      "sha256": "05b82df66c091a9bf7be5f29e4bc39773a35538589f7ab6182d88d3721d3bb46"
+    },
+    {
+      "path": "ciw/device_boundary_sp1.py",
+      "sha256": "b5eeb2357c115ee74937e7230eae31206ae2ea0e9edd010566c69c0c73155b10"
+    },
+    {
+      "path": "ciw/device_boundary_workflow.py",
+      "sha256": "5f80dbdc867fe74bca9c5a7963f8a0964395a226918af132fd87b3f10bfa5f32"
+    },
+    {
+      "path": "ciw/device_review.py",
+      "sha256": "75c9505a897278966ddbf4d506a5e61d67aa58481b8fbb0c54fccb9abdd21738"
+    },
+    {
+      "path": "ciw/device_review_cli.py",
+      "sha256": "04aa2b62d8206f679c1b806a5e8e5acd2147749fdbbd4ae8facad06a9fd15f2d"
+    },
+    {
+      "path": "ciw/doctor.py",
+      "sha256": "790fc45ea17e6576c8f58896798d6fa6d777c02685ca9b1ddf1dff465e6f428e"
+    },
+    {
+      "path": "ciw/domain_cli.py",
+      "sha256": "f243de4b8bf135df9dac6659500f919da5fe52d31bea602bcf0aa40c0bf5516f"
+    },
+    {
+      "path": "ciw/dsp.py",
+      "sha256": "6e4ac99d3cb0dbd5a94bcb959101e019f063d01395a4c84cb36d441e13f7fc1b"
+    },
+    {
+      "path": "ciw/dsp_abi.py",
+      "sha256": "668e4a1e10e53bb14361a322692f7c7e8b5bf3dbbe85f68fb05c3d8f6f0507a3"
+    },
+    {
+      "path": "ciw/dsp_pipeline.py",
+      "sha256": "a391ca8538a66e0f8a56a736dfca93e7d18df7c15320fe99a739398f58b4c86e"
+    },
+    {
+      "path": "ciw/dsp_pipeline_cli.py",
+      "sha256": "9776d29f133e09d307ffb8571c1d6f3d0b3e19ff762950c3b0d962aca757bb18"
+    },
+    {
+      "path": "ciw/dsp_pipeline_contract.py",
+      "sha256": "abcfce4935abe96a595721631fa81501544f5f3ac91548e627cfc7921f75cb94"
+    },
+    {
+      "path": "ciw/dsp_workflow.py",
+      "sha256": "c878fafacda0065f360f77d121fb4013fe8b36ff59d1bb1574668f17dcb01bfb"
+    },
+    {
+      "path": "ciw/efficiency_cli.py",
+      "sha256": "654cd210e1d9d16bc9c017aed8bda7985dcc27588d47447d84681978913ab57f"
+    },
+    {
+      "path": "ciw/electronics_repair.py",
+      "sha256": "38a81ce060837dc6941278f1874ee72479ea04d7db0b254e7d35134db7073c88"
+    },
+    {
+      "path": "ciw/electronics_repair_demo.py",
+      "sha256": "b0f8acbae4de5f2283b06c55f5ebe0b1fb8b985afe3cc35dcfef6bb8294f13f6"
+    },
+    {
+      "path": "ciw/energy_bench.py",
+      "sha256": "bd50806ba3128ff85a1d240bc9670db04082196ec050c51597ec0cc725e45046"
+    },
+    {
+      "path": "ciw/energy_cuda.py",
+      "sha256": "9b4b86809e47cba7683dc0c238b0b052b6785fd09e629224c5f8f37b6d5a0e64"
+    },
+    {
+      "path": "ciw/energy_gateway.py",
+      "sha256": "20f0d857f5ad1c38f4779c090727550ce483c3d4caad60e0654b3d60a878e4f5"
+    },
+    {
+      "path": "ciw/energy_nvml.py",
+      "sha256": "c91ef318880af2225cf34278ff1e9ea24960f3957d0d65b76810eda8bf599a49"
+    },
+    {
+      "path": "ciw/energy_records.py",
+      "sha256": "60bde3232ec4a2adb288b171c018817514d9a0c6f9709bce79d08917bf923a46"
+    },
+    {
+      "path": "ciw/energy_view.py",
+      "sha256": "d4efae780f001c0f3681bda1e7fcda7bc6c41f8c358eb489e2bada0070729d9d"
+    },
+    {
+      "path": "ciw/energy_workflow.py",
+      "sha256": "951f39d84dc857ea4b37479d52a58e08effe6fbf057a52aa8ca0f2dd2ceb8774"
+    },
+    {
+      "path": "ciw/engineering_evidence.py",
+      "sha256": "d7f4f15399734b2c2644da01d499f9b6472a02a3a15358d27f7eedf5ced2359c"
+    },
+    {
+      "path": "ciw/engineering_evidence_assessment.py",
+      "sha256": "8363cf3e659c641692465a4a5cc0fdce26e52f653c54210f83a404cce448ff6b"
+    },
+    {
+      "path": "ciw/engineering_source.py",
+      "sha256": "8a3ec34b30b5d349a7624afa3fe66f87f827e50e216512c24735a1a119a0380c"
+    },
+    {
+      "path": "ciw/engineering_thread.py",
+      "sha256": "18ece0afb4356c63b24498d8650d03cabe7eda76247503fdc0b8df0722a4267a"
+    },
+    {
+      "path": "ciw/engineering_thread_io.py",
+      "sha256": "d144981918cfb7ecb35a336926709c64adc68c1b134b4a1a2da26b878464cfd2"
+    },
+    {
+      "path": "ciw/esm-runtime.json",
+      "sha256": "1623a4e52d7580b6857eed07397bf12b50a8dd52b31130024f9b8d4f11c8fbae"
+    },
+    {
+      "path": "ciw/evidence_cli.py",
+      "sha256": "d32abd653915e6461489decc39843983a60549c500b9c1319fbe3612847ec58b"
+    },
+    {
+      "path": "ciw/evidence_corpus.py",
+      "sha256": "72eeb888773261697ff51f738e4295e3bb880bb1ad5f48b2aa777f18068c37a4"
+    },
+    {
+      "path": "ciw/evidence_history.py",
+      "sha256": "3f13a0f4936d1f7c8648d9557644280d4016dc57a453dce1f3f6c4148b6232d6"
+    },
+    {
+      "path": "ciw/exact_response.py",
+      "sha256": "199196b69347a35bec9310596029cfac5a32c9eae8e8ce99847adf735eff23d3"
+    },
+    {
+      "path": "ciw/exchange-runtime.json",
+      "sha256": "2dbf31fcf8c40430f2ea91ada4ca7de7d18008210a6e4f4301ac811ed3262671"
+    },
+    {
+      "path": "ciw/exchange.py",
+      "sha256": "34dbce3bd326ea8450d9cc1b2b659c1068da2c395f33a56670b24df47c3bff88"
+    },
+    {
+      "path": "ciw/exchange_adapter.py",
+      "sha256": "09bb23ffa421f069a670e7b53ca31c46de3e013aa02add9a7193ba97f3f28bbb"
+    },
+    {
+      "path": "ciw/exchange_view.py",
+      "sha256": "5668bd1b07a12c272620727b5145e6aca8593def2cfee1d5c82ecfb777d4ccf0"
+    },
+    {
+      "path": "ciw/experiment_receipts.py",
+      "sha256": "b31416c77dd9fa1a1c2da494e8492d6fd42ad683186099c931f02f2ff03d650d"
+    },
+    {
+      "path": "ciw/experiment_view.py",
+      "sha256": "9ee3045b589fc43252c27fb1eade33adf30cd7bed6e3726d6cd40d66d165d186"
+    },
+    {
+      "path": "ciw/external_work.py",
+      "sha256": "b3c03fdcdb64d66a1de60f915ccffbe1985a35969e3da352e685999d7af3038c"
+    },
+    {
+      "path": "ciw/external_work_cli.py",
+      "sha256": "6aacdbbbfbd6faa189c82ef84c318ff399db24ba72557081eccf44962f8c3e57"
+    },
+    {
+      "path": "ciw/external_work_corpus.py",
+      "sha256": "a35c71eee68e0634c741f658c1f473ae9ebec6ddfa98056b400a3204851b82d8"
+    },
+    {
+      "path": "ciw/external_work_http.py",
+      "sha256": "5a83c54b3e9310c2233a8d19f077ffb595bcdc552ceae3a5bc7af7f612ae4a0d"
+    },
+    {
+      "path": "ciw/external_work_mcp.py",
+      "sha256": "81ffb4434287972212c4647f107cf113a24eadf1b2ab2a4c529780bd9bcbc221"
+    },
+    {
+      "path": "ciw/external_work_preflight.py",
+      "sha256": "f6d79fdf88ad3ffd6ddffac7825dfb500ccfd180af680b8d84aaba2ec57a2e3c"
+    },
+    {
+      "path": "ciw/filesystem_paths.py",
+      "sha256": "bfbb25ae6c503febd7684664318fead0bd874e77366b0ca7068de749c058ea73"
+    },
+    {
+      "path": "ciw/finite_preservation.py",
+      "sha256": "a757a09eada4afa57ab4379403e07bd0710621564f678424faff2eb7030ed9f9"
+    },
+    {
+      "path": "ciw/fluid_cli.py",
+      "sha256": "1cdb49df3928b53b2f1d8ec64a3bb5abd5ae87b9c4d8e9fa257dfd73776441b9"
+    },
+    {
+      "path": "ciw/fluid_contract.py",
+      "sha256": "f671226368865724908236ddf1e59f564597abd080e3c039659210894f5ad49b"
+    },
+    {
+      "path": "ciw/fluid_coupling.py",
+      "sha256": "2dce40f416e298db4a9f70585a2f40e946d6d036f9d8650c9c548d5574b86367"
+    },
+    {
+      "path": "ciw/fluid_experiment.py",
+      "sha256": "eeafa673d6dcdc2e0f96c59572d0a2cc3b98b662d28a308df862ddd97c85b730"
+    },
+    {
+      "path": "ciw/fluid_experiment_contract.py",
+      "sha256": "1955b7bfa9ed0c0ef1ac51120fffa0dd51a72cd8b42d32696b65e80537a017bb"
+    },
+    {
+      "path": "ciw/fluid_experiment_statistics.py",
+      "sha256": "b744700b16bbde9d430080c071253ae7e187cb35aff3176577ac539f0b988bc7"
+    },
+    {
+      "path": "ciw/fluid_fsi_contract.py",
+      "sha256": "b7873b5a42d89533f6749d6b91b42a03329bd9767d770fcc5a18a7f4522f98d7"
+    },
+    {
+      "path": "ciw/fluid_fsi_reference.py",
+      "sha256": "adbc5bcd5a5d6e189c9053a5aac12e0781ce655482e5d87cffc9cf0d94d4b833"
+    },
+    {
+      "path": "ciw/fluid_fsi_solver.py",
+      "sha256": "081f46ae9fc55f4da7479e1fd40ab63a4143d4b40b7ddae0a0956a8426189426"
+    },
+    {
+      "path": "ciw/fluid_fsi_verification.py",
+      "sha256": "cb8fdaaeab732ce73574d61ef8e691708a3eae944159971ede523400d139022a"
+    },
+    {
+      "path": "ciw/fluid_handoff.py",
+      "sha256": "33f3379addbd9d9b7ba2fbd1735a85e43a59024520e32d5f5d9df8fb479eb497"
+    },
+    {
+      "path": "ciw/fluid_interface_cli.py",
+      "sha256": "f302199c929003d21bffea2c6e2af59399f294031224b5a06c23f1f0196ccf7d"
+    },
+    {
+      "path": "ciw/fluid_interface_workflow.py",
+      "sha256": "58d6a4b2f77683836d5015ec7a09410cf3115f7fbfb21d4c834c309922f0159e"
+    },
+    {
+      "path": "ciw/fluid_molecular_contract.py",
+      "sha256": "1e34a65d447c1cfb24d06040a10d566de09e167d92cbe4ee14e4468fb43d7a4c"
+    },
+    {
+      "path": "ciw/fluid_molecular_reference.py",
+      "sha256": "ec0b2b8a9e3a4df5ca4732c09a162c5f323d574bbb63883de2d41f1e6d9a3271"
+    },
+    {
+      "path": "ciw/fluid_molecular_solver.py",
+      "sha256": "09ea65bdd64ecbc13338e5ab3d76d1107c49f6dee6f98ea2f6c1ef16716c729d"
+    },
+    {
+      "path": "ciw/fluid_molecular_verification.py",
+      "sha256": "7994b57d41a1c52a5b76e1176b9ae8ebdb277ac72fcb7f8c9d774e2bb3000d7a"
+    },
+    {
+      "path": "ciw/fluid_preservation.py",
+      "sha256": "d7c39521824cd39708b4f33c06cab0a90d7153e7d6819d6dccb85e5aa4fce6b9"
+    },
+    {
+      "path": "ciw/fluid_reservoir_contract.py",
+      "sha256": "7af9f2fb8d2ae02eafb811ab30986a879fc54f7a16c3983051e3f5e25913ef53"
+    },
+    {
+      "path": "ciw/fluid_reservoir_reference.py",
+      "sha256": "9cf23181f512ec85b19901c0b2c1cc6624283e352eff066adea328e1bec0760f"
+    },
+    {
+      "path": "ciw/fluid_reservoir_solver.py",
+      "sha256": "dcedaf22f652c0e5d7315a403440b768445dfcd8e8a9f01461fdc91f21783ee3"
+    },
+    {
+      "path": "ciw/fluid_reservoir_verification.py",
+      "sha256": "ed55b5323197ae4a2c1881fce755e419e3f0a96be16d12dc3b2ca2f4ebfba5a7"
+    },
+    {
+      "path": "ciw/fluid_scale_maps.py",
+      "sha256": "bccfcd8cbeac8ae27b24fda96081110af3f59a4da6a2eda18d264cb8dc98232f"
+    },
+    {
+      "path": "ciw/fluid_sph_contract.py",
+      "sha256": "7ff374b3cfa0ca950419247dc84f3a858f38293de8d7e9115bd40eef34bfbd68"
+    },
+    {
+      "path": "ciw/fluid_sph_reference.py",
+      "sha256": "09e5eb0fcd14c5970da8696c87d0a860193a70f2b6cbdabd774b3cdfca5be307"
+    },
+    {
+      "path": "ciw/fluid_sph_solver.py",
+      "sha256": "0513d50b9bf93890f07597fef72ced236600aba0402b87592bf03432daaefe9b"
+    },
+    {
+      "path": "ciw/fluid_sph_verification.py",
+      "sha256": "bdd9cbcc515d5ae2626917b38511346de72045f7cb2523bed53c68b44060b8a7"
+    },
+    {
+      "path": "ciw/fluid_thermal_measurements.py",
+      "sha256": "ae042d123eb77bf347318b4766020eb5758a316c61e96ce880aa2e80e39af095"
+    },
+    {
+      "path": "ciw/fluid_wave_contract.py",
+      "sha256": "8fd7473fe1762e71dbd3cebe898550144a8f4a9011e14afa5d2af18e4546eb5c"
+    },
+    {
+      "path": "ciw/fluid_wave_reference.py",
+      "sha256": "8a120873619053743dd944638772cf753cd9fbdbf4804fea28da385be7d432ea"
+    },
+    {
+      "path": "ciw/fluid_wave_solver.py",
+      "sha256": "874716e921e0f727a9a80d9e86f29dca559d2e0c17780dd469162abc5fdab47c"
+    },
+    {
+      "path": "ciw/fluid_wave_verification.py",
+      "sha256": "ba34024677cec4cd6103ecab896a8537962ce18a921d5dd82ee474332f6724bc"
+    },
+    {
+      "path": "ciw/fluid_workflow.py",
+      "sha256": "4e1f1f36619f86db8b25e659924d064d6b215fb27abf79c6585ab1a52f746261"
+    },
+    {
+      "path": "ciw/foundry_asset_blender.py",
+      "sha256": "989da4f8b87336ad26b08935eded40d5586f68f00c95a338b47a40f4177ae885"
+    },
+    {
+      "path": "ciw/foundry_asset_cli.py",
+      "sha256": "007dd872e37df264b4968cade827b49af48ad650df778c93bb99c150f4620260"
+    },
+    {
+      "path": "ciw/foundry_asset_contract.py",
+      "sha256": "38e27ea8363791587ce4eb05b00b7f8e56da0e583cad4c549ad7e28abc796dd8"
+    },
+    {
+      "path": "ciw/foundry_asset_inspector.py",
+      "sha256": "63f8877c3f2b6d6ae4cce71231362718ff51da1bfe5ab86cf295d4b5abfc93bf"
+    },
+    {
+      "path": "ciw/foundry_asset_worker.py",
+      "sha256": "7828f62745bd5aa0a51f04a60c07bbbce51c1b84d78b07627946da3631d9a4ee"
+    },
+    {
+      "path": "ciw/foundry_batch_review.py",
+      "sha256": "7733347a4264b4c30e32b5b3e5c547e197c9b588dde6aa3d589c79f7e0b0c27d"
+    },
+    {
+      "path": "ciw/foundry_catalog.py",
+      "sha256": "56be0206d19a5425c65fd9c560224022d6dfb91b5e837da3a59d9a63ac154429"
+    },
+    {
+      "path": "ciw/foundry_childhood.py",
+      "sha256": "f00055f031db9b9f40274a66e046fc9a8c077611738f58f8795fc547c9036cb4"
+    },
+    {
+      "path": "ciw/foundry_packets.py",
+      "sha256": "1c01a57d64888b0cec4c0c9d5cd8b09698483918776c36ff21059d6fd055b5a9"
+    },
+    {
+      "path": "ciw/foundry_physics.py",
+      "sha256": "ae44975d956c17bcedd24cd8af3f7ecd51d070b2f051450b400160863834dd54"
+    },
+    {
+      "path": "ciw/foundry_physics_checks.py",
+      "sha256": "9e822ef4bf16db1096075a0faa2082ff89a73bbba4d661db9c429af9fab8dd24"
+    },
+    {
+      "path": "ciw/foundry_physics_launch.py",
+      "sha256": "759b708c08eb44b932bdcebc0195106c274c85215163d46536ea2fbf45001336"
+    },
+    {
+      "path": "ciw/foundry_physics_native.py",
+      "sha256": "22562c8fe7fbd37e9fc6220d7d8aff99c81c8cdd5f249264144547bde0a7c6ed"
+    },
+    {
+      "path": "ciw/foundry_physics_spec.py",
+      "sha256": "b6082657b400fc24a14396bbbd423a770115eb4c49548962ffd8898761042258"
+    },
+    {
+      "path": "ciw/foundry_pipeline.py",
+      "sha256": "3b5275ccd21c3782c36eb482b207420c98bf839a491e26a26b091ef5a978714b"
+    },
+    {
+      "path": "ciw/foundry_pipeline_cli.py",
+      "sha256": "c473da6072935f8da1be69754b7afd1537bb2dd91278b8e4b4ad9f4d7f5143ae"
+    },
+    {
+      "path": "ciw/foundry_project.py",
+      "sha256": "0cb83a5b4dd86f56ec4b4e5e7d583dbdffea0779e963c432c1b1c4492ab8ca02"
+    },
+    {
+      "path": "ciw/foundry_queue.py",
+      "sha256": "f0115963dbadf110c2ba9ec068ed8170a1f464c01b117f39850dc466a48cc7af"
+    },
+    {
+      "path": "ciw/foundry_water.py",
+      "sha256": "a7070da8a71b8872a38c1387aded7d10b95cc35de5c81e8cfcde911f5e312c9a"
+    },
+    {
+      "path": "ciw/foundry_workflow.py",
+      "sha256": "1bb03d68ed8db4b40fa0e869604be4fc65acb7a00c5dad13b2eb6fd1d7e8684b"
+    },
+    {
+      "path": "ciw/free_energy_contract.py",
+      "sha256": "0553b1bed36c052e9155fc5a631c0e837c82c646fb2e2f347790348ab86b230b"
+    },
+    {
+      "path": "ciw/free_energy_math.py",
+      "sha256": "4f096c281c548e92ed7bb1d49a8fd58f3a4d6b48ababef2958331ca13f088a6e"
+    },
+    {
+      "path": "ciw/free_energy_native.py",
+      "sha256": "2e998f831946052234bc9259a0da280cc31997e6016f8a332ebe4cd7448abb8c"
+    },
+    {
+      "path": "ciw/free_energy_profile.py",
+      "sha256": "f216822c87b6eef5320700e3700c1abdc98b77da8b0450a201bb2fc763773445"
+    },
+    {
+      "path": "ciw/free_energy_view.py",
+      "sha256": "e5ba89821735913db07e01b89f50efdd97af83500e54e087cc40c18e6205eeda"
+    },
+    {
+      "path": "ciw/free_energy_workflow.py",
+      "sha256": "11d6ab5c3a5cacd5d931e18b1fd31beea076dad71d9a6e7028c82cb672f580be"
+    },
+    {
+      "path": "ciw/fsrt_view.py",
+      "sha256": "5b0627b1870f41f3dc42f78a441c043d85391f58280bc06ae44ebc8b199dab11"
+    },
+    {
+      "path": "ciw/game_project.py",
+      "sha256": "073c1ccc353424c2eda195fd46dc357f65605f02ac85df17199cbc6a83b95c6d"
+    },
+    {
+      "path": "ciw/game_project_workflow.py",
+      "sha256": "3397313652e66860ee7fa7a78a89748676636f2b3c1c9443571941a382fdbb19"
+    },
+    {
+      "path": "ciw/game_trace.py",
+      "sha256": "0f2c001704b8b96f7b4b9c08d84fa185cbb5856dafaf880ee0454a2bc337bc02"
+    },
+    {
+      "path": "ciw/game_workflow.py",
+      "sha256": "032f5171ecf43c12e0d225ea48270586f200f36499e344392a61f6d4906a2eec"
+    },
+    {
+      "path": "ciw/geodesic.py",
+      "sha256": "ead458b8535767139d285146b31968655bae00482fce5b20517e57e5149d70fb"
+    },
+    {
+      "path": "ciw/geodesic_reference.py",
+      "sha256": "72cad00d68a99f929a905079fc56c6044cfd8c624e6160dcb8d3fb1636b7a379"
+    },
+    {
+      "path": "ciw/geodesic_reference_view.py",
+      "sha256": "9d0c6b2837e957f650d72ed4ab608afe9aaa04568c33d3db44e5ae63da7d1c3b"
+    },
+    {
+      "path": "ciw/geomatics_cli.py",
+      "sha256": "c0840efee4b5577e98165ad2c2f7944d5fecdd68e16501b7d3bf1ba4ea4d4182"
+    },
+    {
+      "path": "ciw/geomatics_workflow.py",
+      "sha256": "590cd15bbe95c1dd4b03702c0f94c681d68fd029c06c4890f66348e676fc7d7b"
+    },
+    {
+      "path": "ciw/geometric_circle.py",
+      "sha256": "4d0f579b391811456376cb2afbfa9ad60b09a85ed38991fa6e028c52b6d9542d"
+    },
+    {
+      "path": "ciw/geometric_circle_view.py",
+      "sha256": "d0ef3dbcc92793e62504938c7aad2f7e393227fb3ab0be33688aada3bb6f2a6b"
+    },
+    {
+      "path": "ciw/geometry_covariance_contract.py",
+      "sha256": "574710518e6b38b97d3cebde2bce4cb8d4d499ae8a3c4e6daced5298bfdd7b9e"
+    },
+    {
+      "path": "ciw/geometry_mesh_contract.py",
+      "sha256": "088cd15c3a498953f6d4845fa8c3bf7590a147792cba422f2c415379793ae6f2"
+    },
+    {
+      "path": "ciw/geometry_research.py",
+      "sha256": "4b61e1fe25b4733beea598ff9b7114569c9f4a9ef4ba94af4ac81177fce7e2c0"
+    },
+    {
+      "path": "ciw/geometry_research_view.py",
+      "sha256": "9e0460ccd387a0cc82038eb2f8a3ba52c988f04aa5b1227f42181b0ecf7da820"
+    },
+    {
+      "path": "ciw/geometry_translation_contract.py",
+      "sha256": "e632be5f5d5916581d526972de441c278270c35f261d4355def4e0ed10f32f9a"
+    },
+    {
+      "path": "ciw/gltf_reference.py",
+      "sha256": "6a0faf382e0700f28956696725dc4c7336e08a83a0eb4b311ae772ae5a4ceb0d"
+    },
+    {
+      "path": "ciw/gltf_reference_runtime.py",
+      "sha256": "7bca40465968269ce34926cb4727f4cf01a2599df84a0da96c4aea32ba62dc14"
+    },
+    {
+      "path": "ciw/godot_capture.py",
+      "sha256": "e522d9b3859e16cf749c5b1658d3a2ccf9b2f370d4295055227603e259e6a875"
+    },
+    {
+      "path": "ciw/godot_motion.py",
+      "sha256": "08c507ecfda91d6c6ba6fe3c80cf8a29b9c1981757b18e763daf4f8cb7c59ef6"
+    },
+    {
+      "path": "ciw/godot_motion_study.py",
+      "sha256": "39daace84d51645437ad563340a19aabe302b2c5805b209a1aeb25da9ccc076d"
+    },
+    {
+      "path": "ciw/godot_simulation.py",
+      "sha256": "68bd68444839d203504ccad39dab43715fed5732ce9467d4cc4950154aed9dc5"
+    },
+    {
+      "path": "ciw/godot_simulation_cli.py",
+      "sha256": "e940454472eea2092a58497c0086c1f9f231447cac8d1b594fde739b96014f56"
+    },
+    {
+      "path": "ciw/graphics_notation.py",
+      "sha256": "9c838faaafcaddd7959ef10839fb7806ca0360c4e178874bc703748efb1fd592"
+    },
+    {
+      "path": "ciw/hardware_bench.py",
+      "sha256": "71d66ed44415b1aa58eb9fb03441d8cae29b6e9ac9740faa8177c8dafec07da1"
+    },
+    {
+      "path": "ciw/hardware_bench_cli.py",
+      "sha256": "843caf2c5b2ae9a31ac18b9a62c74c7718576289cfa9736ae7364fc8ca31df20"
+    },
+    {
+      "path": "ciw/hardware_cli.py",
+      "sha256": "e5ae29e07f5bf4720e0d8ac4d8878b70e6f5ae8b81876b9d0967ab56d6b243a1"
+    },
+    {
+      "path": "ciw/hardware_contract.py",
+      "sha256": "93d7551e3e60dbdee9120d7317c471698e46196cdd2a2db81a110bd2b67c603b"
+    },
+    {
+      "path": "ciw/hardware_workflow.py",
+      "sha256": "7ed77d8281ed7f23210324e78dcbcb05b3f76f5b7fe5054b5f11e0a3167fd1ae"
+    },
+    {
+      "path": "ciw/historical_perspective.py",
+      "sha256": "81b6d27dfd63a31e3a6c6c05c032159aa8605a6560ab93ee080c4aa20d63da8f"
+    },
+    {
+      "path": "ciw/hoomd_checks.py",
+      "sha256": "ec79381f2749910fc2e7a5392910521fe0fab2f231779ad70ed4df6dc25c4b1f"
+    },
+    {
+      "path": "ciw/hoomd_cli.py",
+      "sha256": "9e6147df4f5f94d40fd912625e0235e49012a47a327d163c43a1f7ee2edc647a"
+    },
+    {
+      "path": "ciw/hoomd_contract.py",
+      "sha256": "53490293b06809896add7d5f2b47d34d78306e1058dfcd2d2a20ecd7ddcdc100"
+    },
+    {
+      "path": "ciw/hoomd_worker.py",
+      "sha256": "7a93fa6b45f686326e9ce83ed2fd59d5e95f600b285c8833d0d3638376fbc954"
+    },
+    {
+      "path": "ciw/hoomd_workflow.py",
+      "sha256": "496d35bb7504e920acd484edd87b3968a8bdb611d0f34dd22854b3f46d26fd29"
+    },
+    {
+      "path": "ciw/hypergraph_rewrite.py",
+      "sha256": "e8739127c172c33042bf88a9f3607a05ed02c60856d647fd24b2a842ce9a5cf0"
+    },
+    {
+      "path": "ciw/identified-design-runtimes.json",
+      "sha256": "84868db50a22533e8564fb34b2a09a03c5453c7fb72515a77a39c58397efc4cd"
+    },
+    {
+      "path": "ciw/identified_design.py",
+      "sha256": "df823a171a9fd120fd07f7c8dd2c4772ab9173b693349e8c76779d147e8db6dc"
+    },
+    {
+      "path": "ciw/identified_semantics.py",
+      "sha256": "746455261c7a822b14bc1c082c8d051daafedb2aa142855a8e2f26222c82138e"
+    },
+    {
+      "path": "ciw/identified_stability.py",
+      "sha256": "88bd9b6019c57d22a8283a530ea8f033e833b98f8f4dc64a5e585bbe9ae851d9"
+    },
+    {
+      "path": "ciw/identified_stability_view.py",
+      "sha256": "535ecd6c7071de6cc8b1e8497945d55bf171b77adb23c8664d0e800d0bdfb30f"
+    },
+    {
+      "path": "ciw/ifc_subset_verifier.py",
+      "sha256": "8e8672db61a4fe78e2ab10ef09e411f01c9959601d77fd1c01a305b3e9913677"
+    },
+    {
+      "path": "ciw/ifc_transition.py",
+      "sha256": "61f4312333840035ba9f4e67378bd22a2af45f0e21667b8ef5b14b93328e6059"
+    },
+    {
+      "path": "ciw/impact_cli.py",
+      "sha256": "6f694ee0390c07002d08d76ba6d10daa6f45fb40df6b49902553fdffec3635ce"
+    },
+    {
+      "path": "ciw/impact_contract.py",
+      "sha256": "a887e6941a851a53bb4f1ff2d21dc304156cbb0db1b41e1c4cc01554a4a05575"
+    },
+    {
+      "path": "ciw/impact_crush_contract.py",
+      "sha256": "6dd56604910212e82b9421ea2556aa04cce59128a34fc5af9e3fce65a9eb0338"
+    },
+    {
+      "path": "ciw/impact_crush_preservation.py",
+      "sha256": "e692e8db2c38714c5f390d587de4379115da5a4a2f944cb81f684bdc5070e28a"
+    },
+    {
+      "path": "ciw/impact_crush_reference.py",
+      "sha256": "9264b6b6defb332a65996d2d6384aceb870dc6b42a23584e6084ff845c5cbde6"
+    },
+    {
+      "path": "ciw/impact_crush_solver.py",
+      "sha256": "93bc570da7065671009a5073333730b536ab4cafc1b33fa8292f69465f17eb30"
+    },
+    {
+      "path": "ciw/impact_crush_verification.py",
+      "sha256": "dd0482d795a60348935beccdc772447e721c74d3b6afcffab0c18129a0c6c083"
+    },
+    {
+      "path": "ciw/impact_plate_contract.py",
+      "sha256": "0d69d29a4f3a22be9009d84eed62c70208d5a0eec9b204fd4ee53110f15c18bc"
+    },
+    {
+      "path": "ciw/impact_plate_preservation.py",
+      "sha256": "1e692c961026160fcc378612da3e5cfade249e6aec789624c8e5cb4826df5bda"
+    },
+    {
+      "path": "ciw/impact_plate_reference.py",
+      "sha256": "90c24eb1835b2222f152425f1ffec2a09c6164b8b30d4afeb7099db2d356683a"
+    },
+    {
+      "path": "ciw/impact_plate_solver.py",
+      "sha256": "fab46c5f62b2da003d33d8d6304f8ecc7451952b5a144bbd143768b1ace61dd2"
+    },
+    {
+      "path": "ciw/impact_plate_verification.py",
+      "sha256": "3cdab1af5fce4272d098c0ea65611f32a4a8399b3649059059e371d63bf2c54c"
+    },
+    {
+      "path": "ciw/impact_preservation.py",
+      "sha256": "bab48f522073cc127ccf5547c4539669c1027ab70a353c217d90097faa764553"
+    },
+    {
+      "path": "ciw/impact_reference.py",
+      "sha256": "2db3c5558f0759e4500977c385601858a8dd0d2a94fc69cf7263f9c236a40c36"
+    },
+    {
+      "path": "ciw/impact_solver.py",
+      "sha256": "da35ab3fbebf70fe586c4c6ce4d77379641c61ff527bf6655fad0dbd511fe073"
+    },
+    {
+      "path": "ciw/impact_sweep.py",
+      "sha256": "7cd2c55a85c9b85bad5ae4300c757be0043ca1454977b8d09e2e455add4a0e7b"
+    },
+    {
+      "path": "ciw/impact_verification.py",
+      "sha256": "e7a4c8f3d37c61b9e6bb3183a2efa543765d68d5f1bbe02f61299b2b6262fa15"
+    },
+    {
+      "path": "ciw/impact_workflow.py",
+      "sha256": "3f5f1a56ea0f6cc99592d3a102bd783f288e1462420c053920903e68ad014683"
+    },
+    {
+      "path": "ciw/industrial_lab.py",
+      "sha256": "e3d884aec7deae8f0ffce95b52d2070b6b3b72416769122ff0bcc2ae621e2d90"
+    },
+    {
+      "path": "ciw/industrial_lab_cli.py",
+      "sha256": "a9f587fca28eae05d09908e24ccd3c34c771f187c53fce6f12cafc9d5d600524"
+    },
+    {
+      "path": "ciw/industrial_transition.py",
+      "sha256": "605c597cb36907f17360b7027f4222037d1f8578266c7c564a1e64bbea4a22da"
+    },
+    {
+      "path": "ciw/information_display.py",
+      "sha256": "4a314be8e16e7769430bde91d4701767d804d942beb1c59f0548c25495068635"
+    },
+    {
+      "path": "ciw/instrument_cli.py",
+      "sha256": "8b8b88d8c1276791403f3b19e9f2ed5e7818bd4f2f4c3ff35430009fcafe8fe2"
+    },
+    {
+      "path": "ciw/instrument_contracts.py",
+      "sha256": "860f26db8f211de217dcb1b7cb5fda5dcffb0c98575b52ef058ada60822d469e"
+    },
+    {
+      "path": "ciw/instruments.py",
+      "sha256": "7ad54cf9e253034764e9285e0f1bab647442a058ca4fc9a81c6c20428ef6dd68"
+    },
+    {
+      "path": "ciw/integration-sources.json",
+      "sha256": "be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079"
+    },
+    {
+      "path": "ciw/integration_catalog.py",
+      "sha256": "d9b9990600eb649ab0892bc838b5fdc32bb50c35e6acbc0b49d14494e61f27f8"
+    },
+    {
+      "path": "ciw/interactive_contract.py",
+      "sha256": "681c2b88deb07610426e8bcc72e3b2e8df87330533586936c670997fed057015"
+    },
+    {
+      "path": "ciw/interactive_simulation.py",
+      "sha256": "e1db837db3869d7992625fd4a06497410e73fb420538bcdecfa20dbd58700169"
+    },
+    {
+      "path": "ciw/interop_cli.py",
+      "sha256": "c8ee61e4aebb84ef88bb96f9c18982f29931d569c877449fe97f31333e0e927f"
+    },
+    {
+      "path": "ciw/interop_ingress.py",
+      "sha256": "d224bd78c12f8defe04c6ac4acc0959619072b7d4e2aac43aa50026e20b8f928"
+    },
+    {
+      "path": "ciw/interval_contract.py",
+      "sha256": "4aca9183c023f6769d826087a44984da39578222617f3b85db9783327c976e68"
+    },
+    {
+      "path": "ciw/interval_runtime.py",
+      "sha256": "9d630e5a6ebeac1d9c0583e1e542420387d7535f40f24b5dd9bda8bf970f3b53"
+    },
+    {
+      "path": "ciw/investigation.py",
+      "sha256": "03978de81b677d57e65ec2321400ef18eb40b8e81c1d6846071685a4286ffa2a"
+    },
+    {
+      "path": "ciw/investigation_efficiency.py",
+      "sha256": "4c6255fe14835e260fc2a8b95125563a6e855e703ff6b37139080a821a085cdc"
+    },
+    {
+      "path": "ciw/irrigation_cli.py",
+      "sha256": "6ebcb70c79faca1f817a1e13ff91f787586564da6f47265f17a8983fc2628169"
+    },
+    {
+      "path": "ciw/irrigation_contract.py",
+      "sha256": "dc9bded8063da7dd0fdbb4a6f7a70377347bb6148765be77a76aa0f3cffe22f4"
+    },
+    {
+      "path": "ciw/irrigation_metrology.py",
+      "sha256": "50da2b036dfda6960f2d85dd7df05654f865638efa128d3e973085e640896264"
+    },
+    {
+      "path": "ciw/irrigation_reference.py",
+      "sha256": "fff6aaef771680e52d6cb99d1e48dc9bb97c6d351227c8e25a08ab84c35168e0"
+    },
+    {
+      "path": "ciw/irrigation_solver.py",
+      "sha256": "5589ebc16e67afa1a80b5b52589a0c0363552851305bf7d49d62db1b2910dbd9"
+    },
+    {
+      "path": "ciw/irrigation_verification.py",
+      "sha256": "87e70efa5d702bcaf62c068f0eac96437c7eddfc618d9e869232ee006fba2ad5"
+    },
+    {
+      "path": "ciw/irrigation_workflow.py",
+      "sha256": "b0a673b6f8471dc987ca69bbea771d5994f113f6fcc6201ba7582e21378abb8f"
+    },
+    {
+      "path": "ciw/julia_oscillator.py",
+      "sha256": "6bc49213da82b275c83e275c9c8214885d9a630c41c9458f6026cb21de97177b"
+    },
+    {
+      "path": "ciw/jump_design.py",
+      "sha256": "3a28fc421e682f4dd0acc530486b3d8f5ca5692571e7ad4ec2446ce1a2fe1935"
+    },
+    {
+      "path": "ciw/knowledge_cli.py",
+      "sha256": "3898449437e86f03c1ad1bda31dc172a3e273336945ab8daa7c12ad060b9d31b"
+    },
+    {
+      "path": "ciw/knowledge_mcp.py",
+      "sha256": "7dc9338fc487a1865a970c844391a1f922fe2142d723dcb2dc40f86930de086c"
+    },
+    {
+      "path": "ciw/laboratory_measurements.py",
+      "sha256": "fb39a315dc146d747d68f71a717615874529f2ee2d10cc377e6e1ac25cb61f1f"
+    },
+    {
+      "path": "ciw/laboratory_profiles.py",
+      "sha256": "78f4a679251169f05495e5e39bf49c4c72ea37001a8b30f8297cb1b6cbb16534"
+    },
+    {
+      "path": "ciw/language_bindings.py",
+      "sha256": "5225099a625b496c17b3b29838fcd117b5c5a01727fad9b1fdf721aada21bd23"
+    },
+    {
+      "path": "ciw/leakage_cli.py",
+      "sha256": "668f7640de7d4c0d6431705106c306f9455bba8614f5d1af88a698e477cb9689"
+    },
+    {
+      "path": "ciw/leakage_contract.py",
+      "sha256": "497a51b286a87ca9f01a2cd734ebb329e0fb3eb98c1477a1b32f34d1cdb06b64"
+    },
+    {
+      "path": "ciw/leakage_native.py",
+      "sha256": "da9e918cc3734cae9098c2f7ac6dad7a1bdad0a4e5d11cbc844e161659ec2567"
+    },
+    {
+      "path": "ciw/leakage_verification.py",
+      "sha256": "a364bde465cd8fb112df1d97268b2f7aa47f4e8c8bf158eb188ec7cd45d521d2"
+    },
+    {
+      "path": "ciw/leakage_workflow.py",
+      "sha256": "13010dd7eb130bd012271efe1fc6dddbc90ea30882d0eb9535a955c8a64d6a8f"
+    },
+    {
+      "path": "ciw/learning.py",
+      "sha256": "035460089aa712d04d7e3b89da1d9d1c52e052457435a0dc5b9449a5bde111cc"
+    },
+    {
+      "path": "ciw/legibility.py",
+      "sha256": "a035b058df589dd992fa58a5e66332d827932be319060f35a0fc1300eb025987"
+    },
+    {
+      "path": "ciw/legibility_cli.py",
+      "sha256": "9c0f47296ab9adb1973ad733e4bab24efd15c392d084133db3781f069d4a1456"
+    },
+    {
+      "path": "ciw/legibility_compare.py",
+      "sha256": "085dd163cb25d096796e0012a7d970ea89d970238a45226e4f1e9f7123be73ac"
+    },
+    {
+      "path": "ciw/legibility_runtime.py",
+      "sha256": "75fe2e62bc38aa4509bc945e52d3322c0135bf173f888bb97b407cd63e228a22"
+    },
+    {
+      "path": "ciw/legibility_view.py",
+      "sha256": "663bbb813e7d53f6f7323d43bc7112790f26d07162b31caf270e5164a1dc13ef"
+    },
+    {
+      "path": "ciw/legibility_workflow.py",
+      "sha256": "3abd9f9037a54bb98236db814df33ce5d6b78d7f7f8c361a2af88e22e34b7063"
+    },
+    {
+      "path": "ciw/linear_response.py",
+      "sha256": "f7258bd864d8b96a6303dc51d90719aeb46a19dd0bf41388785e3b787c7182f2"
+    },
+    {
+      "path": "ciw/link_capture_model.py",
+      "sha256": "c4697b48e46dd6ae5105f2d5a49a67ef249d33b290724ec0af4bd4a9961bc6a4"
+    },
+    {
+      "path": "ciw/link_cli.py",
+      "sha256": "e9ef08c57a32a144f72cf1f6574cd35da7d4bc2afe041f871c77ab14d77b6a40"
+    },
+    {
+      "path": "ciw/link_contract.py",
+      "sha256": "cc6de44bed2fd2b1dacb8f58acdf5cd13342e0390d79c0de13e89c56807358fe"
+    },
+    {
+      "path": "ciw/link_delivery.py",
+      "sha256": "eb9dd9d93129b2909718cf07838fe43389aefb9d9f84ca0615ce637445b4ad69"
+    },
+    {
+      "path": "ciw/link_delivery_cli.py",
+      "sha256": "bf111dd659cf1c46f4ca1fd4d3a5c32bd9012f0d04d19da2ed50e67124ab89ad"
+    },
+    {
+      "path": "ciw/link_device_cli.py",
+      "sha256": "e8fe99dddc4e454b4fac315d66a6e6c70dac649ea03d67ea1b81b5f6c657964c"
+    },
+    {
+      "path": "ciw/link_devices.py",
+      "sha256": "46c56d4e742652411d2e77769c5ed7da38ce953571e09f7be0e03eed2dd96f6c"
+    },
+    {
+      "path": "ciw/link_gateway.py",
+      "sha256": "3b8746d163b1aa8dac5135341e770b27d93ade4efa1ae1a8d5686fb820aeed54"
+    },
+    {
+      "path": "ciw/link_improvement.py",
+      "sha256": "9434157dc747ac4f7c6ae0cc75c72a0fe17b873d6a20264171ccdfabbe11714f"
+    },
+    {
+      "path": "ciw/link_improvement_audit.py",
+      "sha256": "4c8d0a800876443a36508fa84c9ce1e77313928fcf30659df7444489210a37ea"
+    },
+    {
+      "path": "ciw/link_inspection_cli.py",
+      "sha256": "332446472183474c2f6dccbc10d6fdc53fa9bf76717bd1d0ee7dbc022b9a199e"
+    },
+    {
+      "path": "ciw/link_installation.py",
+      "sha256": "530126423b4a18de7798ae0da458a047222c0c78be854b23896c8dd874bce714"
+    },
+    {
+      "path": "ciw/link_installation_example.py",
+      "sha256": "8722f5027abd71ae9cd85917bcacd0fcd55b254578d5aa4746678eac1f958091"
+    },
+    {
+      "path": "ciw/link_installation_io.py",
+      "sha256": "6d8b5b80a28ecad5c999d690d9371b64f3ec753f59813fc08ea669bc6a867fe4"
+    },
+    {
+      "path": "ciw/link_measurement_agent.py",
+      "sha256": "f75c144a2c4c9489045edef6195b1b88ed5e9759c13f6b7ef49f9f6846233034"
+    },
+    {
+      "path": "ciw/link_measurement_io.py",
+      "sha256": "d6c2a2123129cfd88beb91ae71d7775a4cc43f7ed684783d8a8191c50b50f5d6"
+    },
+    {
+      "path": "ciw/link_measurements.py",
+      "sha256": "56b4d81af76a2377ad8e6674316456242c1dd3f702c326c2ee78d11f9c282bc6"
+    },
+    {
+      "path": "ciw/link_observation_cli.py",
+      "sha256": "bd93afcba1bef97ee7c02c3e26f031dde86481ccfc12f92ca080fd6678fa9725"
+    },
+    {
+      "path": "ciw/link_pinwheel.py",
+      "sha256": "9cd67e4b6853a14dde38a9294d10b24c4900fc75c53c782e55164cb7dae388e0"
+    },
+    {
+      "path": "ciw/link_pinwheel_cli.py",
+      "sha256": "7fc6c29821c95d86532e1745121acf1a47f5eadec525ecf7f0ed6e5e19fd51f9"
+    },
+    {
+      "path": "ciw/link_profiles.py",
+      "sha256": "887523bf6b10ad485440485d012bf4d8dc8500c263f346fb7f1fc33cd87f727b"
+    },
+    {
+      "path": "ciw/link_protocol.py",
+      "sha256": "ef46d11976faa966ab002b49854fd64d0cdbc123ded9c6f79e0af3577855860d"
+    },
+    {
+      "path": "ciw/link_reference_io.py",
+      "sha256": "570cb3e74a5497cde9a7eac2c178cf396dc43c436903da85532bcdee4bf930c1"
+    },
+    {
+      "path": "ciw/link_references.py",
+      "sha256": "2dee41da82561171b6d0cc181aa3d29230e6d8532a043185d7066d10429e2d22"
+    },
+    {
+      "path": "ciw/link_refit.py",
+      "sha256": "8f8f179049e55615d9db3a9df93f3e81e938b07ffe776fda5c342062cdae4927"
+    },
+    {
+      "path": "ciw/link_refit_cli.py",
+      "sha256": "1702002a7bfae0e1c2c4cbf8fb5b43e46ee483542a196a9b418cd9cf89b3a9bd"
+    },
+    {
+      "path": "ciw/link_runtime.py",
+      "sha256": "93f09b788a38cbde02c8045f4be79c8d3b8e9705f3823469b0df538ba91c3dfe"
+    },
+    {
+      "path": "ciw/link_security.py",
+      "sha256": "d8c8c37235976783a4a5ee23eb188169a7a3d8b5fc6308c99d8ddab20ce3f3df"
+    },
+    {
+      "path": "ciw/link_semantics.py",
+      "sha256": "ae90e59dbef65d927303d1f673a43b82ee6405b2271bdc6b050f54303893c85f"
+    },
+    {
+      "path": "ciw/link_serial.py",
+      "sha256": "f5dd4f8f82a3513328cdbb12a1f91a4efea0743949e6bd6eced9077eddf789b3"
+    },
+    {
+      "path": "ciw/link_store.py",
+      "sha256": "1420da1cfefd8d4900d0d53b389b92a04b9ca07569732306b27c240a6160b236"
+    },
+    {
+      "path": "ciw/link_study.py",
+      "sha256": "6287cccc8e52f1974026a1de2fd48e490e74df6df9e9931db17a78df5b019189"
+    },
+    {
+      "path": "ciw/link_study_agent.py",
+      "sha256": "647e8fb93d96cb77d889500816c904a4d420ea71ae0f9700e41133436e9ba1c8"
+    },
+    {
+      "path": "ciw/link_study_cli.py",
+      "sha256": "de428ceef68f156241a4948f5db8c6885eb0468628eceb7274bc1de6d495dfb3"
+    },
+    {
+      "path": "ciw/link_study_io.py",
+      "sha256": "4405189f28007444fb208ed549c36c6cf98b4d39f40a045f35ccfdefd283af1d"
+    },
+    {
+      "path": "ciw/link_view.py",
+      "sha256": "bb2d2d133b56aa50d239965bad99b4b79cc1423904fdaf1cce29de7f84e6007c"
+    },
+    {
+      "path": "ciw/link_workflow.py",
+      "sha256": "ee2825e66fbc21ac6b2e0d47ddba5a99eb0af5a72e3cd0b13c1c00e16bf0899c"
+    },
+    {
+      "path": "ciw/machine_manifest.py",
+      "sha256": "3d0c0c33e74b3f1e06701c08ec510c94334ba5630406973c78ad16eea1451778"
+    },
+    {
+      "path": "ciw/machine_workflow.py",
+      "sha256": "5d311d6a7cc77435f07ab3e26c5c649d58704a4ade882cb9c1493c05f02adf3b"
+    },
+    {
+      "path": "ciw/manufacturing_contracts.py",
+      "sha256": "4cd383447fd4794d2e1548b28ee25c6900bd475d001809c5307483236fe9ffa8"
+    },
+    {
+      "path": "ciw/manufacturing_example.py",
+      "sha256": "97c7a3d82ca900240f14e39137e1a789e44d7ca252549f95af47668e692e1d8b"
+    },
+    {
+      "path": "ciw/manufacturing_quality.py",
+      "sha256": "de426d6daaf439081dfa66c0307d4cb070af8eba3fac3c478cd39075674472db"
+    },
+    {
+      "path": "ciw/manufacturing_runtime.py",
+      "sha256": "ed9814c95c0a3cde0deb4c7eebc995fbfbd1fb62f6fdf1430ebaaedc45d4baff"
+    },
+    {
+      "path": "ciw/manufacturing_study.py",
+      "sha256": "6298fe23a471c73f5a751b51f12e91d673ea2dcb90b7fa759024a0814b5f1ccf"
+    },
+    {
+      "path": "ciw/manufacturing_study_example.py",
+      "sha256": "308296b305dba85fb372dfbffafdea44d39ab0bccf1e52ee9698eb28a3aac400"
+    },
+    {
+      "path": "ciw/materials_bench.py",
+      "sha256": "349c6c949ab52db7eba23e8c16e2604989f60d24b33cf6555bb086ec83b167ee"
+    },
+    {
+      "path": "ciw/materials_cli.py",
+      "sha256": "21976eebe785909d9864039f09e50bbe69eb74041eab0690dea023f23a2d28fc"
+    },
+    {
+      "path": "ciw/materials_uncertainty.py",
+      "sha256": "b49fc1e98ec1184ad660c67d4661f0d243b412c61106c3370364b57cdbe6b800"
+    },
+    {
+      "path": "ciw/materials_workflow.py",
+      "sha256": "49855ebbdb48b7ca9cff0c1842857b936e42e8c82d77195c2ab8b468ef9c822c"
+    },
+    {
+      "path": "ciw/math_inspector.py",
+      "sha256": "f44811a1a5ce94a3babed08154e8870358e0d5e5c907e889f139a210b382059f"
+    },
+    {
+      "path": "ciw/math_visual.py",
+      "sha256": "9d95d6f4b5e98053b64211d43fe1f30bc08389c4e53e40b1faf9dc6924d0e9a5"
+    },
+    {
+      "path": "ciw/mcp_server.py",
+      "sha256": "9e161fcfc35809b286e1dafc3edc8d927f2e30309bd5d6f2ee3cba92700e2e49"
+    },
+    {
+      "path": "ciw/measured_thermal.py",
+      "sha256": "d99113aa30745c45d0588a62f91fc023be4971c8e51a7fc8205f70095aab5220"
+    },
+    {
+      "path": "ciw/measured_thermal_agent.py",
+      "sha256": "a784e1d2528caa7dce941f42cbc05fff8ac2886e898ccaef9cc0305655f66957"
+    },
+    {
+      "path": "ciw/measured_thermal_workflow.py",
+      "sha256": "db2d109fbccd292762e5ad592d79ecdebc8ea5ab47e25833af417a7419dfe5a0"
+    },
+    {
+      "path": "ciw/measurement_chain.py",
+      "sha256": "43e5e6ec0bc73739ebcae77384449b48363914379a946ee0bd690ccc1ec4886b"
+    },
+    {
+      "path": "ciw/measurement_chain_view.py",
+      "sha256": "d8e6b0e9b3eedb1013f4b4fb4d6f899f82447e1c6da711935f8b22c4ff076b5b"
+    },
+    {
+      "path": "ciw/measurement_evidence.py",
+      "sha256": "747b6dbd7e694c6e269deb8adadcc588d0d929f1e9c729b099e4c55244e4a6ca"
+    },
+    {
+      "path": "ciw/measurement_visualizer.py",
+      "sha256": "d4e9f757c0fc30e98487376ab06b72f7946d7d3b52b0cfe4f7c300312faa8408"
+    },
+    {
+      "path": "ciw/metrology_clearance.py",
+      "sha256": "6be2d2eef106eb197947d0a9f4647a6e743fb22864f8df8d766c837cd92e8cec"
+    },
+    {
+      "path": "ciw/metrology_clearance_worker.py",
+      "sha256": "726489a839c0e2ab4117d218cf9a4b861bc8b25988ad1d8980c179318357ae2d"
+    },
+    {
+      "path": "ciw/metrology_contract.py",
+      "sha256": "cad588d4a841ab0b6ec637117d8b7985707360283d1ae03641bc963a76fbf7a6"
+    },
+    {
+      "path": "ciw/metrology_ingress.py",
+      "sha256": "b65c340cbcc8b0ef2c6181bf229a3d4d0d36c2b2b207daff956eef56830bbd3b"
+    },
+    {
+      "path": "ciw/microfab.py",
+      "sha256": "a36703c707b55d8f5b2570f33f6e88a2b467082dc8268b1c5eb8c3670aa10327"
+    },
+    {
+      "path": "ciw/microfab_cli.py",
+      "sha256": "7014dcd7b54e59d87b0ff61a32eecf6931742ea74a93b9195271f0323ce206c9"
+    },
+    {
+      "path": "ciw/model_education.py",
+      "sha256": "b1415c3f4094876b9dca13ee99784484932938e081879d659a083ed8f696d557"
+    },
+    {
+      "path": "ciw/model_reality.py",
+      "sha256": "5414d4c37cb81c840bcf976b9da32624d67285023ea37a935a052523908ee834"
+    },
+    {
+      "path": "ciw/morphism_cli.py",
+      "sha256": "2cfb7d786a31ed7ab597de6b86246377563f88e352df0b0f1f1bc3fba2c27513"
+    },
+    {
+      "path": "ciw/mount_characterization.py",
+      "sha256": "cc8491836c242c42df6b236e0fde814422b7faa072804c7c448c973d39e7217d"
+    },
+    {
+      "path": "ciw/native-interop-runtimes.json",
+      "sha256": "bab1be76e41a2dcf165b253e8d263822edd4e3ac76eecdac574f6138d782076a"
+    },
+    {
+      "path": "ciw/native_interop.py",
+      "sha256": "6a3653920554b1341ee7e1f96caa11e83ebd5a7ac906b8cfe5e8b69ee35cfdd8"
+    },
+    {
+      "path": "ciw/native_interop_contract.py",
+      "sha256": "a960704335ac7db7dcbb58e3be5ea66dc29f89c9f0cb477aac35b481c7b698e2"
+    },
+    {
+      "path": "ciw/needle.py",
+      "sha256": "b9b9f4c2d350270e2ef61d8481317f9b60015659bde0a602e43bd096f5deae41"
+    },
+    {
+      "path": "ciw/needle_cli.py",
+      "sha256": "d64951370e5d3e88b254c62c90aedb17d7ea0c843e07ca71c6194750966ba257"
+    },
+    {
+      "path": "ciw/net.py",
+      "sha256": "943183c5835014968d9b8ebab5d21386e3159379225b80cb11e38c7ffb84e990"
+    },
+    {
+      "path": "ciw/network_cli.py",
+      "sha256": "d43859f13e1aacef1e41f7216b0eef1f04dab37d39e740c21092181234154f73"
+    },
+    {
+      "path": "ciw/network_data.py",
+      "sha256": "73520b11f772e117eecb71221f3bbe83a938fabf7e2a54c322cac7b0b2e77061"
+    },
+    {
+      "path": "ciw/network_example.py",
+      "sha256": "91713239faf07b32b7e270b3d0d63f0bbbfe3de6be3e29dd895f23dd3ef7b872"
+    },
+    {
+      "path": "ciw/network_trust.py",
+      "sha256": "fde9d8c4d40be49a80f895409ac0862812cfaed8c76bfebfde5489ca0a79b3c7"
+    },
+    {
+      "path": "ciw/network_workflow.py",
+      "sha256": "003a93debe785f9a8b4cd98b578b1ff2de079678e878a30bc908ebe21f5040fd"
+    },
+    {
+      "path": "ciw/nise_cli.py",
+      "sha256": "7a4d5f59429e84d5a01317d275b8d17c46fe2cd720cc196cb8853d1a4b8c0fcd"
+    },
+    {
+      "path": "ciw/nise_handoff.py",
+      "sha256": "b7c8f26670708d755fde3bc5c93b9656b6fdfaea8195737428275a4b57264564"
+    },
+    {
+      "path": "ciw/numerical_contracts.py",
+      "sha256": "641148081ae2a9a497352615dfadb707f08c8e11a7f1fb5e3a52b23d32778ba0"
+    },
+    {
+      "path": "ciw/numerical_kernels.py",
+      "sha256": "5a08cb5e0b12e01417faeadc77c5cc6fae043a88443ca90394d496e9c1e986c3"
+    },
+    {
+      "path": "ciw/numerical_records.py",
+      "sha256": "3aa5f021bcb33bacecee22cfd2d52d0511b2b189b04820c17b8570c043ae7699"
+    },
+    {
+      "path": "ciw/numerical_runtime.py",
+      "sha256": "d9e4bb46e431fdc5e9922085e22d3fd2ac3eea180a03506eed9f352927028aa7"
+    },
+    {
+      "path": "ciw/numerical_workflow.py",
+      "sha256": "40fc4d4056ce4068dc98090266696767f19c3d88c07dfd5cf48c0fc0014aab64"
+    },
+    {
+      "path": "ciw/nvalchemi_adapter.py",
+      "sha256": "4f2cb1699802eb2662e22304cd5c122478a7ae77a6e92f20433d647c2c7ceaa0"
+    },
+    {
+      "path": "ciw/nvalchemi_contract.py",
+      "sha256": "f129a23b881e0f7ee75fc30d6937e4531ef42b7bbe95d9f15b86d8c8b6a3f2ac"
+    },
+    {
+      "path": "ciw/nvalchemi_worker.py",
+      "sha256": "89dcca57d8b06fab50ae1bbdbe6a4a5e0aa0c882d0cfc7140bd0dccc803f0aa5"
+    },
+    {
+      "path": "ciw/operational_agent.py",
+      "sha256": "397307566a4e23b257eb0bb39dc1305caaa560ff9ba0b14a0443d97629f4d124"
+    },
+    {
+      "path": "ciw/operational_cli.py",
+      "sha256": "63b0c22863385b4e8e1fe3cc50a0f3e596a27895be267a96891dc7cbd52b284c"
+    },
+    {
+      "path": "ciw/operational_collection.py",
+      "sha256": "ba83f63c745b9ea878ecc42b41ac316dada5b5b999ee5ff2670e8cfcfab68cac"
+    },
+    {
+      "path": "ciw/operational_context.py",
+      "sha256": "a86bd23ab38e66170fcdb3b8b1d2fa9a720e97545b6b44a05b3473a0f9116875"
+    },
+    {
+      "path": "ciw/operational_egm.py",
+      "sha256": "09ac6890142e822090be70f65535b9e2d2530b9fd0f938d3f111502caba1302a"
+    },
+    {
+      "path": "ciw/operational_engineering.py",
+      "sha256": "e7dd75b76a4ade95fbd192534d1d69f68edcecb4aea3ffcf1bb8d6240b6b0a97"
+    },
+    {
+      "path": "ciw/operational_findings.py",
+      "sha256": "73fbc4455982160597390263763b9ca59ff81c7ac7a218a68b322797f5ad1d32"
+    },
+    {
+      "path": "ciw/operational_http.py",
+      "sha256": "a62dfe32884524198f2231320f4386148c43751e2a599d121aabe0a663db7a37"
+    },
+    {
+      "path": "ciw/operational_native.py",
+      "sha256": "7abbe4ab063e01311a7f0b821ac9219973fdf05e454a4beaa107fc2916867a98"
+    },
+    {
+      "path": "ciw/operational_store.py",
+      "sha256": "a0d52059169b61f6d4833d398224c241db5ad238f627254432628283b714583c"
+    },
+    {
+      "path": "ciw/operational_supervision.py",
+      "sha256": "81291fb232e6af5666658f42dda80dd3f3ef8f159ecbba65f0fb0511e6dbf742"
+    },
+    {
+      "path": "ciw/operational_view.py",
+      "sha256": "63181eeb0eb6fe7cbd4c422325d471198fd216183a60f95182ad60afac7a41b3"
+    },
+    {
+      "path": "ciw/operator_catalog.py",
+      "sha256": "20feec065b76b567e62f770bc81b60d0cea3988d799ab2919daf9c17851f0b3d"
+    },
+    {
+      "path": "ciw/operator_commands.py",
+      "sha256": "a686eb335ab9fbf484cfa30729cb83d9271d0d2a4ef604623f62531503dac0cd"
+    },
+    {
+      "path": "ciw/operator_doctor.py",
+      "sha256": "4b8d7d36324b73ff8beb46a567e266c9b14c919847fc5088399ed4a2a421e104"
+    },
+    {
+      "path": "ciw/operator_provision.py",
+      "sha256": "bb3725e0279daf3b1554d47f404ea60184dda3866b5411fe0eefadee5a4e64d7"
+    },
+    {
+      "path": "ciw/operator_start.py",
+      "sha256": "c26a40be485a24c3415a37b98fcc3f2eb14eae44cc89819b4d06423ebad5d602"
+    },
+    {
+      "path": "ciw/operator_workbench.py",
+      "sha256": "c19e97cde7a3797b7ccb6d9e3d32a4afd0cf283d8a21520a34171dbfdaf4de00"
+    },
+    {
+      "path": "ciw/parameter_cli.py",
+      "sha256": "189b9aee64d74aaaa22696eaded66a0cab3be1d94b8dcf233fddccff6edb7e56"
+    },
+    {
+      "path": "ciw/parameter_program.py",
+      "sha256": "8ae491f3a64c67ed46c6afe9a01b6838fa5155669df4530cfb4f9282b6542e37"
+    },
+    {
+      "path": "ciw/persistent_native.py",
+      "sha256": "bc2fae6cca628a54f8820ca62a2d11c32ce9601b69b753627d7651cdff5576a8"
+    },
+    {
+      "path": "ciw/perspective_workflow.py",
+      "sha256": "30aab9eadbbcd22cfb9ae51b127ae0127892737f12b14e708cdca82115fa650c"
+    },
+    {
+      "path": "ciw/physical_measurement_profiles.py",
+      "sha256": "155f53bdb24eedb64d966fee1b52d8c4a0835da84d148e6810b38bbde53faee6"
+    },
+    {
+      "path": "ciw/physical_measurements.py",
+      "sha256": "e86c98199d52a1aa53a9be5764a5707328cc88ed82c99a3390bf59bd5627f46a"
+    },
+    {
+      "path": "ciw/pilot.py",
+      "sha256": "435f0424600d822a05c7e52bb86238c859722e4a0c6afeb4d51f14efdf800672"
+    },
+    {
+      "path": "ciw/plsr-runtime.json",
+      "sha256": "bc40205c1c6227fb1ad23f78323514bf4224aca0c0949da808be7499112c9960"
+    },
+    {
+      "path": "ciw/plsr.py",
+      "sha256": "fb0466e0ceb93718f43f4b90a24d6600c60fda871ffa62fc3cb2143821c7862e"
+    },
+    {
+      "path": "ciw/plsr_engine.py",
+      "sha256": "9dd38dbaa89b1719cbd18f03a0bed796943bbe5ec3edabbe1c45a9ba329177ef"
+    },
+    {
+      "path": "ciw/polyglot_linear_map.py",
+      "sha256": "e6b360fadd9bde8ea34caebb0a7eddee06d318efe995f5f2247b0005984bed44"
+    },
+    {
+      "path": "ciw/polyglot_uncertainty.py",
+      "sha256": "3a15ec24c24f9ac9f2e52f7243ed8731f7c5f201bab15fad366292792ef4cc7f"
+    },
+    {
+      "path": "ciw/polymer_cli.py",
+      "sha256": "016e2b8e6292c414d306cf3aa98a3a24b0df95525fe2f17c693767d579b6704d"
+    },
+    {
+      "path": "ciw/polymer_contract.py",
+      "sha256": "f589a1a75d62655e24757a1d4d1092e7eaead5728d818aeaf343732b8a8e10cc"
+    },
+    {
+      "path": "ciw/polymer_copilot.py",
+      "sha256": "8fb60131abf09298337c50df967c85d82fb582a9625b341576d3189dd50a2960"
+    },
+    {
+      "path": "ciw/polymer_ingress.py",
+      "sha256": "8c59fe635d129f896ff05a05ca84a6220dd0e82e77b43815899f6c3c91782401"
+    },
+    {
+      "path": "ciw/polymer_manufacturing_cli.py",
+      "sha256": "995d8e7bbeda35c3cfc73fad0ffc407a74714704d16ddfa564306490cab40cdb"
+    },
+    {
+      "path": "ciw/polymer_metrology.py",
+      "sha256": "5c9ebd9b5eba51b62f11781b4393de179a9f04d1fd7964832649b57f92093f2f"
+    },
+    {
+      "path": "ciw/polymer_microfab.py",
+      "sha256": "5f4cd7c103db3ef8dc6797c7343597796c89a31b398968bac54af811c83d342f"
+    },
+    {
+      "path": "ciw/polymer_models.py",
+      "sha256": "a11ab3642ec9dfb083d0da518edc7dbf6ecc902e19084a1c4f9df577dea3dff8"
+    },
+    {
+      "path": "ciw/polymer_operator.py",
+      "sha256": "bf1e71667e47e8bac0f7ab09443219141572be5559443c5e8e6e6e53dcd8770a"
+    },
+    {
+      "path": "ciw/polymer_population.py",
+      "sha256": "95b68b9dacaafaa0c0f04d8746d72efce4dc98dc36006643be451b9e436d7a74"
+    },
+    {
+      "path": "ciw/polymer_production_dossier.py",
+      "sha256": "ce260ee7568f55342ba483f566658d13bd66bdb136464077193a0a841e94bfa3"
+    },
+    {
+      "path": "ciw/polymer_production_dossier_cli.py",
+      "sha256": "6e932a8b2030661365f3e0e222330ec1241961a4511fb1109136f5002b9d3164"
+    },
+    {
+      "path": "ciw/polymer_production_dossier_contract.py",
+      "sha256": "82fd48a84d9d4e6b54d3ca1defc6637991c6fc7461db84e11033ff69668ca58e"
+    },
+    {
+      "path": "ciw/polymer_quality_cli.py",
+      "sha256": "756f272f5bb93ac1dc98171e5a40e94d8fd804041a91b2b5d5e92e699bee44ea"
+    },
+    {
+      "path": "ciw/polymer_quality_example.py",
+      "sha256": "176fdd0919c5306d7565627583dddf4503af180a2adcefe5ba52afcbce4f0d4c"
+    },
+    {
+      "path": "ciw/polymer_rheology.py",
+      "sha256": "848bfc3922721eda6f134f0a0121d696a64597ac0a112cb3ccc5a323ac7688c9"
+    },
+    {
+      "path": "ciw/polymer_rheology_cli.py",
+      "sha256": "eb539a17ad9bf8b3f4fbdf1619b68209b08d14aedf4f75d43da6d88e4d9da39d"
+    },
+    {
+      "path": "ciw/polymer_rheology_identification.py",
+      "sha256": "c58faf4c7e2395e4dbae3618f552ac07b087c43e8be6bc2c8fafa12f2e325f29"
+    },
+    {
+      "path": "ciw/polymer_rheology_identification_cli.py",
+      "sha256": "462e630848c57ea14db5f89c851c8282f2700dadf13f642f75c7c7c4fbfff4c6"
+    },
+    {
+      "path": "ciw/polymer_rheology_identification_reference.py",
+      "sha256": "56931c54e74db82b97c529ea729b891f25e311f3b64634d73cc283e1dadf56ab"
+    },
+    {
+      "path": "ciw/polymer_rheology_reference.py",
+      "sha256": "b52f65e766a7c94d964a3bb14a55df2c277917abad715f05e8cfcb6f8b770636"
+    },
+    {
+      "path": "ciw/polymer_toolpoint_qc.py",
+      "sha256": "cb0639810a902b96e22ad5f017c01e6b16ada34062b35758a7cacac5fa4ce4bb"
+    },
+    {
+      "path": "ciw/polymer_verification.py",
+      "sha256": "4a1b54ce29632077400772ab0ed241e7b865c1a79a11bc5468aeb3dcec528696"
+    },
+    {
+      "path": "ciw/polymer_viscoelastic.py",
+      "sha256": "7330a1d59fc19cb13bab7eaa206928fe59f6a63f633f5ddaf813fefd7bcc49c0"
+    },
+    {
+      "path": "ciw/polymer_workflow.py",
+      "sha256": "c91788637e956a30ea1b2e0689e837c1aec9095004fb3644d40225398bf16f84"
+    },
+    {
+      "path": "ciw/preservation_cli.py",
+      "sha256": "dc6722f79e84860bdea18ec3835adbb63442e04c4f0784a9f99ed3899c2178c6"
+    },
+    {
+      "path": "ciw/preservation_contracts.py",
+      "sha256": "033e864f2c1ac23d8649b5b6a289102658fa6f43baca4759c622e9228b566033"
+    },
+    {
+      "path": "ciw/preservation_experiments.py",
+      "sha256": "d0fb6f79d92439445828c9e352020444531ec66ee6d2b9e038e0582c94490734"
+    },
+    {
+      "path": "ciw/procedural_cli.py",
+      "sha256": "89d8520e180c1474178fb0c7055c48c1932783a93e61f43f96f4898cfeed17ae"
+    },
+    {
+      "path": "ciw/procedural_compiler.py",
+      "sha256": "4d8c152fe2ddb3cba19c572678e36ba87018caae222fa4b805708a95a40a99a9"
+    },
+    {
+      "path": "ciw/procedural_contract.py",
+      "sha256": "97e0d55eba32577ae894d612dd372d72e48613867575696447d5b269e90fa113"
+    },
+    {
+      "path": "ciw/procedural_representation_verification.py",
+      "sha256": "a963a7dfb0a65b3acfd393b79a43c430b7e7207eb3045fccb48548138b40b1fb"
+    },
+    {
+      "path": "ciw/procedural_server.py",
+      "sha256": "5f91c43c87e71a777fbbdac7f80cd43cab6de41b400beba8354e45050b56d560"
+    },
+    {
+      "path": "ciw/procedural_surface.py",
+      "sha256": "8b51e2a8a8efe2e04168edd2b3d560c1b5d8e7f4c0a28fbbd62603f1caf8ceb6"
+    },
+    {
+      "path": "ciw/procedural_texture.py",
+      "sha256": "120510ec4738bf7e56d11ff4839e87f622267886b6162e27c45b5d7e7626ea6b"
+    },
+    {
+      "path": "ciw/procedural_verification.py",
+      "sha256": "e0058872f397dae6b8def8456b6ecaad2535f0b2971265b111a65b59fd8f6023"
+    },
+    {
+      "path": "ciw/procedural_workflow.py",
+      "sha256": "d656aa70c35fab1b6b5d3b37eb0727e87fa975be0ace0a9c9253b87fb7fc0ffb"
+    },
+    {
+      "path": "ciw/product_study.py",
+      "sha256": "20d0ef268e312cc08dcfe0e8063603c37b593403ffa8361cf4c4301ad25c610d"
+    },
+    {
+      "path": "ciw/product_study_cli.py",
+      "sha256": "4c6c16d677bcab8e1e403275799dbc9d4bf250724d5709e2e13b5187806fc88c"
+    },
+    {
+      "path": "ciw/product_study_workflow.py",
+      "sha256": "bd6cfd0c138b31401e8abdb615eb05f80a2ef9ece4d97a59a20104d784c21e8b"
+    },
+    {
+      "path": "ciw/production.py",
+      "sha256": "90c6c45483e2bc058a57d2a5b303380740ddf04965946234fbf4fc24674c8d2b"
+    },
+    {
+      "path": "ciw/production_gates.py",
+      "sha256": "043bd8d63825e0fa2410cc238aba226b17c2eda15f50398c21b5268bb13fcca8"
+    },
+    {
+      "path": "ciw/production_reconstruction.py",
+      "sha256": "7f8be2cd24de73e55033137043330d199e1a4e082f58f25c37849b5f4404ab42"
+    },
+    {
+      "path": "ciw/production_reconstruction_cli.py",
+      "sha256": "0d6ddc14ebbe1edc138ab40df6d853078bfeaf75b6b2f3ebc92d1e8398f6521e"
+    },
+    {
+      "path": "ciw/production_workflow.py",
+      "sha256": "455669ae8629c65918e9d9d4f9cbe208474a4d7dceba090d4cffbf80922f481a"
+    },
+    {
+      "path": "ciw/project_model.py",
+      "sha256": "42ecddeab0f0fa897b483448cc005bf798338da88ad29aff7ba7694564728753"
+    },
+    {
+      "path": "ciw/project_workflow.py",
+      "sha256": "dd9b6fe2a2ea930d3d6071530d996c6af622a6b2b874691b9212522b5019f6ef"
+    },
+    {
+      "path": "ciw/proof_f2.py",
+      "sha256": "886244253d49233d7ecd91d666bddb34fccb919e1e4509990ba93e88d07a2e18"
+    },
+    {
+      "path": "ciw/proof_obligations.py",
+      "sha256": "d7eceb9c5808dc44de8eba59ec87d187a4510a18f31a159c15ea69e885fa158d"
+    },
+    {
+      "path": "ciw/proto_corpus.py",
+      "sha256": "50b259bf0dda46dd6d046f7a01dc35de07326514bca54d088e6cf26dceab63f4"
+    },
+    {
+      "path": "ciw/proved_heat.py",
+      "sha256": "035ebc50b60c10b93bb86100b9b485dca5d0a8e98262b843e173f666bc5daa62"
+    },
+    {
+      "path": "ciw/provenance_cli.py",
+      "sha256": "89879e5a36683f80b1025706686d4939416dd793ebdf731ea8c627ee07be3514"
+    },
+    {
+      "path": "ciw/provider_catalog.py",
+      "sha256": "a9e9ae09cefeac2376effc98d0ed3994a7019e300068a6c500521dc660ffcdb6"
+    },
+    {
+      "path": "ciw/provider_checkouts.py",
+      "sha256": "c341fac9ee845693f165dc3c005f72a1f0692d13f797e8dc49bb256b30683d83"
+    },
+    {
+      "path": "ciw/published_dsc_measurements.py",
+      "sha256": "350751dcbb96cb48621285d481642c3be91c2f49a473876e9d5a19d33ab1045d"
+    },
+    {
+      "path": "ciw/published_measurement_comparisons.py",
+      "sha256": "b2324e0cab06efa69815de2f5b11c6f2a8c83f6498e708ff6555788db09a519a"
+    },
+    {
+      "path": "ciw/published_thermal_differences.py",
+      "sha256": "cad954a2a054e1ca7bc3aa20fa8bfb438270b822d5b4f6a3880a4375a52355c7"
+    },
+    {
+      "path": "ciw/reaction_contract.py",
+      "sha256": "d9fd1ed24044ac4c7c4bc3db8e037fa639cc15d8575024f7cba0e21ef488d520"
+    },
+    {
+      "path": "ciw/reaction_runtime.py",
+      "sha256": "e86377ea9626237cf792cf05d1135e1075bcdcf53b6b4b2665d62ad3272a022f"
+    },
+    {
+      "path": "ciw/realization_cli.py",
+      "sha256": "9d13fda76ef5e5bd5c93c555c723bb99af1476d664ea22f7b0dac4fd510f4077"
+    },
+    {
+      "path": "ciw/reference_comparison.py",
+      "sha256": "7cdafa23eb42021371ce53afa34e83859830bbb287788c74ed3b8ac7df3a9023"
+    },
+    {
+      "path": "ciw/reference_evidence.py",
+      "sha256": "e5b8ff1668b6d74f63c69cc1d04371bab5dd0db734f38b66d642b500d63e412e"
+    },
+    {
+      "path": "ciw/refurbishment_cli.py",
+      "sha256": "f1d6d2956fabe18bb43c063f562b1e4ed7f9fc90006b796eb8e2606e4ebea088"
+    },
+    {
+      "path": "ciw/refurbishment_contract.py",
+      "sha256": "9674f58c8c80993e1050a6a519e9ee3c6b0ee3f79b164a9691b6c32c223e1698"
+    },
+    {
+      "path": "ciw/refurbishment_exchange.py",
+      "sha256": "efb6a4ff834a126af73f4b3e1d1d38b8041eb21ad98b192afa5cf7d614acc506"
+    },
+    {
+      "path": "ciw/refurbishment_report.py",
+      "sha256": "108e4058f2d9ff828f26dfa2f285028b16c19550e6a027ea7b817c98b6cca386"
+    },
+    {
+      "path": "ciw/refurbishment_store.py",
+      "sha256": "6d27f38eea22dd9eea6c81e51859f7c21a0b45566bb61425e102947ddb2121ce"
+    },
+    {
+      "path": "ciw/representation_expansion.py",
+      "sha256": "6d399d1a6096079c06999d34a28bbebf7d640558fae5d4bf67d0076b2a91c23f"
+    },
+    {
+      "path": "ciw/representation_interventions.py",
+      "sha256": "623ac776ab520f826e35446dee84fca0d60d3385f9a036e1d36af5329cafc6bb"
+    },
+    {
+      "path": "ciw/representation_lab.py",
+      "sha256": "cc3057b3c6be743261142828c1f1334532ac25f4355dd22d8c4f2ff04f8a00fb"
+    },
+    {
+      "path": "ciw/representation_morphisms.py",
+      "sha256": "d7ee74216f6043fe29e9d0470009a6563e75ccad1b4d04bdf91f1580e2002190"
+    },
+    {
+      "path": "ciw/representation_realizations.py",
+      "sha256": "5c590b3eeb04f45643d49a2d9dd87d4acf8b208dd412b7d6cec7c7404fbef40c"
+    },
+    {
+      "path": "ciw/residual_monitor.py",
+      "sha256": "4c49a7436f4506528536932e15777a5d96f8671302f307c4dfbb82d63c6a157f"
+    },
+    {
+      "path": "ciw/residual_view.py",
+      "sha256": "6689daaf233a973fd60ac13adaf2136b4ba5f1c317cb427fb5a1683de08abe48"
+    },
+    {
+      "path": "ciw/rewrite_cli.py",
+      "sha256": "bbe20b500dd8b2f73938abb921b8f5c63c5005b65d261491abd2a0f2bcf2552e"
+    },
+    {
+      "path": "ciw/rheology_empirical.py",
+      "sha256": "0ae2867229109c8926e3e69fdd1e0678fbddd10067ac5cea4d82a75af90860b3"
+    },
+    {
+      "path": "ciw/routine_wakeup.py",
+      "sha256": "87b749a11de1845538c348bcfbda0f4d213fab70c864f38f7268c08027cbfe7f"
+    },
+    {
+      "path": "ciw/rs_cli.py",
+      "sha256": "a135f4c57a88a5ca582ca5b23035728efd3b4d319527235531a2ccb6758b62b9"
+    },
+    {
+      "path": "ciw/rs_operations.py",
+      "sha256": "b8f8fb14b3b5dc6c76658856622b905585e8031481e8270e6b45c79f77ce6273"
+    },
+    {
+      "path": "ciw/schematic_companions.py",
+      "sha256": "9c3c59c36a45e7978d6b020fd5b7c7b2aad5e2a377bf0cc2b9ed6d33dc9e2d00"
+    },
+    {
+      "path": "ciw/scientific.py",
+      "sha256": "56d8730270ae8669df14e719bb484d69eb64d921e80a83db2dd3012e4d43ca11"
+    },
+    {
+      "path": "ciw/scientific_audit.py",
+      "sha256": "e3bbd8bbe7343d39209978e176b3263f22c547b89c35a313923d89d8afba10de"
+    },
+    {
+      "path": "ciw/scientific_cli.py",
+      "sha256": "ee2158f6204c9f3631823b20a1ea0d606d4a8bfb3254d67232a60e1b37912561"
+    },
+    {
+      "path": "ciw/scientific_observations.py",
+      "sha256": "9cde9317f0ced32d7ec1e90a92129d8e8bf85164068ee45ef40f22e942f4892f"
+    },
+    {
+      "path": "ciw/scientific_state.py",
+      "sha256": "74d34de8bfce0ef493b02188ae81963ecc58f30337210880863bdf88394136ff"
+    },
+    {
+      "path": "ciw/semantic_capabilities.py",
+      "sha256": "20f6dd6e13883ef66f063c0e8a62b2fef8f045ffe75ee5a96a107146d980ba0c"
+    },
+    {
+      "path": "ciw/semantic_cli.py",
+      "sha256": "fd8d676d9955a74169dc94adc71b09d71d673dd5ceb31c747fc5ee22db258744"
+    },
+    {
+      "path": "ciw/sensor_manufacturing.py",
+      "sha256": "545877e927ad1ca68084a8176cbacc4870b5b38f82656591a7d5b39eb6721c1a"
+    },
+    {
+      "path": "ciw/sensor_manufacturing_analysis.py",
+      "sha256": "32706cba9e5954c668e82250b36e3076f6d74da5b85d4eec582ff5e53a477f6a"
+    },
+    {
+      "path": "ciw/sensor_manufacturing_cli.py",
+      "sha256": "fab24c482f66b842659d2786dfc6f87786927f951675f5ed258b1d40cd15801f"
+    },
+    {
+      "path": "ciw/sensor_manufacturing_timing.py",
+      "sha256": "a4e136adbca340f4ebe8b6cefc4f6522831fb6c6f8eee1331b364bf17e91dcea"
+    },
+    {
+      "path": "ciw/sensor_manufacturing_uncertainty.py",
+      "sha256": "3309b41beae8d411c6701c3d1f6034ef2968ef79361104f40502e0c3769de57e"
+    },
+    {
+      "path": "ciw/sensor_project.py",
+      "sha256": "b8ea269fe01856fa9ce6ba6ed749f525d673ef9188394cd6640e3747fea49999"
+    },
+    {
+      "path": "ciw/sensor_project_blender.py",
+      "sha256": "1fffd4b372bc42b4c9eaf3f6d09db5e1f2af2331e24e39c85249fd14eda4b193"
+    },
+    {
+      "path": "ciw/sensor_project_cli.py",
+      "sha256": "220f80d55ff71c364a39e308d5f0d5553a363fe455662c4021b02b7be2ea66a0"
+    },
+    {
+      "path": "ciw/sensor_project_kicad.py",
+      "sha256": "6c697c355c0b0c62905e57bbee0de178bdfbaa5463e81ffa762937e25a3d974a"
+    },
+    {
+      "path": "ciw/sensor_project_mems.py",
+      "sha256": "318b7f3ec0f6ae541472492a4f6543508a5a1b34b4834ef4a1af992a413c4f94"
+    },
+    {
+      "path": "ciw/sequence_cli.py",
+      "sha256": "1f74e63f725b5549a4d8081e7b16175aff90bf1593872439d175b4708d008143"
+    },
+    {
+      "path": "ciw/sequence_kinetics.py",
+      "sha256": "7a1c882ad9d1e78799d7407561445a851abf385a2166c8b2646ce8afbd45b6e8"
+    },
+    {
+      "path": "ciw/sequence_workflow.py",
+      "sha256": "427d26c4484183157dcabea8353813f16193f5ad1d13b1314124dfdea7a9f8a7"
+    },
+    {
+      "path": "ciw/server.py",
+      "sha256": "ffa50e62fb951c0b4fd9f85c48261f2c8950a68523597c531f324de46b7f1d14"
+    },
+    {
+      "path": "ciw/session.py",
+      "sha256": "7b464449e182b454178cd661a37c128b5411746c829805d70cdbe01ff4577cde"
+    },
+    {
+      "path": "ciw/simulated_fsrt.py",
+      "sha256": "057bc678800f0771e5ee377d83510b69aedbbc316a30fc9bb1a1128f90653a85"
+    },
+    {
+      "path": "ciw/simulated_fsrt_view.py",
+      "sha256": "53abbfee209d81bfeb966268e8359da460fed5ad9d7c11a3cc2d254b8ec60eed"
+    },
+    {
+      "path": "ciw/simulation.py",
+      "sha256": "f75fc488a9828c28a8134d83aa104ddabb69bd13076a817e273aea91b78184fd"
+    },
+    {
+      "path": "ciw/simulation_agent.py",
+      "sha256": "9c489f9ad2fc696dbbf15da3cd15aed85c54b32e109ff3fe16e17c2921bff8b0"
+    },
+    {
+      "path": "ciw/simulation_agent_campaign.py",
+      "sha256": "abc15af2fd60947eafbc2d601b5fdddac3fe9725a7fe30bed670346f856fb109"
+    },
+    {
+      "path": "ciw/simulation_agent_capture.py",
+      "sha256": "cd6c0fe7372ab2dab4e11a4c563ea01a27771e957842831b0b871ddd59e48d7f"
+    },
+    {
+      "path": "ciw/simulation_agent_replay.py",
+      "sha256": "d0289ee1ab9e0a7a497f8b2831e74f23b2407cb0d9a1b2f143894acc2b15099e"
+    },
+    {
+      "path": "ciw/simulation_agent_tools.py",
+      "sha256": "fa1344794bf133e1e64cec3fcbf23fd958669ebc4a20531141cb287cca157686"
+    },
+    {
+      "path": "ciw/simulation_campaign.py",
+      "sha256": "cd8be7c4ce2a83ba1ecbea98a96e52de921aee771971332d4961fdb2632331b7"
+    },
+    {
+      "path": "ciw/simulation_campaign_view.py",
+      "sha256": "ef855245ecabb70619e71bc1318d103d0973b50ab2b374c667c6e68b7a0f5a81"
+    },
+    {
+      "path": "ciw/simulation_capture.py",
+      "sha256": "8c9d742f0c06d048e00b22e34a3914813181b135c082f651ea7439da7a4b92cc"
+    },
+    {
+      "path": "ciw/simulation_cli.py",
+      "sha256": "9093d973d0d430d9af294513c7862b525ff890cb5e4c69f033f340eff2246d3a"
+    },
+    {
+      "path": "ciw/simulation_control.py",
+      "sha256": "8d17e850635f97029b5bab75871cc93bbba270fcbef2d1ac2c5d7de9670faf3f"
+    },
+    {
+      "path": "ciw/simulation_observers.py",
+      "sha256": "8dc264ae589c1ffd0602cdd29a53d92a1b11bdce7881b04f457c038d952ed8a7"
+    },
+    {
+      "path": "ciw/simulation_records.py",
+      "sha256": "1db8b695cf09cef732b32cf6993462ed6a1aa26e5a92ebe3dabee60a34a68dbf"
+    },
+    {
+      "path": "ciw/simulation_reference.py",
+      "sha256": "129944b0e251197726b6985fac30a45ff579e45bc999e9ff421f44faee5a92dd"
+    },
+    {
+      "path": "ciw/simulation_replay.py",
+      "sha256": "198370267847e4870ddb97715bccd0505bbd13151344075be34206386d0ee39c"
+    },
+    {
+      "path": "ciw/simulation_session.py",
+      "sha256": "f0160850a6774ca09a226188c9b7af2edf57aed9c627a849695581b572649e69"
+    },
+    {
+      "path": "ciw/simulation_study.py",
+      "sha256": "7ca91538e7dacfdf6df1a503d5a81406753629a4d3ce4e656b7d6b5b7b62eacd"
+    },
+    {
+      "path": "ciw/simulation_study_view.py",
+      "sha256": "6aee3bdd4a41b69e312ce9e5367246eb758d350b827506295d82fc8b41fd3b1b"
+    },
+    {
+      "path": "ciw/simulation_timeline.py",
+      "sha256": "01d96b8cfe3b72f3b3c1501ab1aa68f4f178c4a4d4f3b9e8b18d0114a2c5bf8d"
+    },
+    {
+      "path": "ciw/simulation_timeline_cli.py",
+      "sha256": "d5314a766066228b9b216ef570422263d04c79f34c2b742819930c71292ddd64"
+    },
+    {
+      "path": "ciw/simulation_timeline_view.py",
+      "sha256": "2dca25f170aea3bd17ae8e1ee80e4e62ed8881ee3a81da149e544cb406b0e4a9"
+    },
+    {
+      "path": "ciw/spatial_cli.py",
+      "sha256": "d80d6794766f4142b1b8175c9ab34346988f0e6005ba8905b4d09d62bcc54f61"
+    },
+    {
+      "path": "ciw/spatial_godot.py",
+      "sha256": "33f184fb5ee8bda30173cce7441d503326e35ccb87832e01bfdbd83fa7e8db6f"
+    },
+    {
+      "path": "ciw/spatial_provider.py",
+      "sha256": "952440efc6d9d574f32102484b4c2213f10eb1c042cb1e6ca8069ab0c6cf8ac4"
+    },
+    {
+      "path": "ciw/spatial_records.py",
+      "sha256": "037b5ca3279b382ae786fa8a9c0f82c9e7dc0abe80977eeccdaaf3bbc024ca10"
+    },
+    {
+      "path": "ciw/spatial_requests.py",
+      "sha256": "8c4c6040582326b70008db0ff7931301af852ee416fd9b9fc08ec63597c5de22"
+    },
+    {
+      "path": "ciw/spatial_scene.py",
+      "sha256": "a786c83768aa21ea70fdb23d0b17c4b9f52eaaff4a1ea683edaab2870cd65df6"
+    },
+    {
+      "path": "ciw/spatial_view.py",
+      "sha256": "b9be4291aaccfc438bb7bdbbfc54c8757932423c43019b883338f863e78aa1bc"
+    },
+    {
+      "path": "ciw/spatial_workflow.py",
+      "sha256": "418d0e385c91a1082aca6d3f3d1d418b424d5bb10f8164958ec055aa0c6b773b"
+    },
+    {
+      "path": "ciw/state_transformation.py",
+      "sha256": "589fd4febc30d024f09a696798b11b7382655018ebc81cec9a5d09e1e8f696ee"
+    },
+    {
+      "path": "ciw/system_board.py",
+      "sha256": "91af8ae6836ba272901e6c652680ce52fe2153fc447f54a2f5bb9086f91041da"
+    },
+    {
+      "path": "ciw/system_cli.py",
+      "sha256": "04c3a9893f7954ba3ff96e889ca22d2141092a1103440ed27646062f473e7c0d"
+    },
+    {
+      "path": "ciw/system_execution.py",
+      "sha256": "ba2c4e2c8cc35df4546a49ec6af713002d40413e5b7d287100a4360110dff517"
+    },
+    {
+      "path": "ciw/system_models.py",
+      "sha256": "d2ccff42ee80cbc81bb997494bf47b7d46a6dfad6651cd4b1c2301ce79e87fce"
+    },
+    {
+      "path": "ciw/system_runtime.py",
+      "sha256": "81c6f4de0543ec64979c80bd64d0e1d0471536698627dbbae9825b10f5b60009"
+    },
+    {
+      "path": "ciw/system_source.py",
+      "sha256": "9784eb17370615f59de913ace5682bbe4e49226d94f3021d17b1a50c60c80e42"
+    },
+    {
+      "path": "ciw/system_spec.py",
+      "sha256": "ec9007d0bfa94ba1ca8a5e05059027875c8d3a905b727e0f8c6187a8e389f01e"
+    },
+    {
+      "path": "ciw/system_study.py",
+      "sha256": "d89246e23b1ee4a15b0511929cf297c01e1f6abb7c7657fa30114a5f61cd3244"
+    },
+    {
+      "path": "ciw/system_view.py",
+      "sha256": "9a2b485bd50c4ed1a8facc95db77b1455767cd5ba902edd2e04fff341b4de351"
+    },
+    {
+      "path": "ciw/system_workflow.py",
+      "sha256": "cf0dfb6313074fe04d03b7777ba44a2cf24df7f9796a503afb49e0b7b21b8cb2"
+    },
+    {
+      "path": "ciw/telemetry-runtimes.json",
+      "sha256": "92a300341c16b3019b6f046b1d664968ca67c728beb6a313f8986b304a987013"
+    },
+    {
+      "path": "ciw/telemetry.py",
+      "sha256": "95e102fb6f14bdcbc3a339ba74f0cab537ccabbb83f5f98d4bc76e3127d2b60e"
+    },
+    {
+      "path": "ciw/temperature_contract.py",
+      "sha256": "d695b057ebfc3597da5257658005a8510bbe265ecc7b040c4bf306a2eec040ce"
+    },
+    {
+      "path": "ciw/temperature_processing.py",
+      "sha256": "f4dea340ebf3250ee8fca7c4a7d5f9b148f216c8f9dda58302ab8709bec73dea"
+    },
+    {
+      "path": "ciw/temperature_readiness.py",
+      "sha256": "133129975a1e963fb214c00aa7be6a2e7ec1abd3959cce05832ea7efbb5495cd"
+    },
+    {
+      "path": "ciw/temperature_recording.py",
+      "sha256": "8442aff880cbd5e2cd8034cfd299a359c9afe2f93c3f47e5b4046481d75b1555"
+    },
+    {
+      "path": "ciw/temperature_recording_bridge.py",
+      "sha256": "6b6e53ad02d922d3fdecc4365ed3c68920d5c7cbf49bccf817edd94c3f440aef"
+    },
+    {
+      "path": "ciw/temperature_recording_session.py",
+      "sha256": "d33920eb4061a9ed11e07165372ea05ce5c350862ea13a1f1262573a0c1c7e3e"
+    },
+    {
+      "path": "ciw/temperature_recording_sources.py",
+      "sha256": "551c4d7526c5c8bcf2853b18625025bfcd20951a4cb1cf3ded8e80dcfbd61974"
+    },
+    {
+      "path": "ciw/temperature_review.py",
+      "sha256": "32a4fb5f28b05d26e4d690490ee1b96de61e5d82dedef12e5d6c9430bfbff0ce"
+    },
+    {
+      "path": "ciw/temperature_verification.py",
+      "sha256": "9281c4546f4a93eb0626017ad5c48b0b3e8826a75c7b5b5b13c787c0e5a41b7a"
+    },
+    {
+      "path": "ciw/temperature_workflow.py",
+      "sha256": "c7978c4edbdfb2b0ddac2d8de8e57dff0d72f7b06b52e6b0c077332df6d65c14"
+    },
+    {
+      "path": "ciw/thermal_contract.py",
+      "sha256": "fd283b9b245d3f4f7e8b20dd82d428e515a90e7b57fb936d442634113cfde69c"
+    },
+    {
+      "path": "ciw/thermal_experiment.py",
+      "sha256": "4c9ea012653bd889d0b49fd95cf06aa2a2eda4094d2416a8aa9a4d6fba9226f9"
+    },
+    {
+      "path": "ciw/thermal_experiment_workflow.py",
+      "sha256": "f584b11b11924de9b567fb863bb9a2bcf5a0846d3e2f3ed56ccd91a2f6b7ea51"
+    },
+    {
+      "path": "ciw/thermal_identification.py",
+      "sha256": "174d6dd0fe91524ed95e889642e59cfc6c3f45fec40f9383b9a0c469822cb8db"
+    },
+    {
+      "path": "ciw/thermal_identification_cli.py",
+      "sha256": "3437f0825264a8e26d83f30b3cda68f2a0e6489ef96c2a85db23c66fc31a3dfe"
+    },
+    {
+      "path": "ciw/thermal_identification_workflow.py",
+      "sha256": "05e92e9ba3693fb22b8ef0ce5924fe4bd4811e3fdd3f30c10c9216c2a048b5c1"
+    },
+    {
+      "path": "ciw/thermal_reference.py",
+      "sha256": "ea6c5774b25cb213daa455c03326a30038e26747a5fefc3637dd5d8c54f97c0d"
+    },
+    {
+      "path": "ciw/thermal_workflow.py",
+      "sha256": "dcb00586ddc20d70a6a8fe6726b7920aee9a1a5372fe67e12068ceafb7e6f02c"
+    },
+    {
+      "path": "ciw/thermochemical_benchmark.py",
+      "sha256": "c29c8dfdee4b67c81444c21ac3506ec032367fb3397c79955a5daafe17a87706"
+    },
+    {
+      "path": "ciw/thermofluids_cli.py",
+      "sha256": "a53bb3413d59cc5805e771a4eaa5b4e2b165f057880aa783adbd339a7f551bec"
+    },
+    {
+      "path": "ciw/thermofluids_models.py",
+      "sha256": "77bedfc39fcff3a5a1fd76a56e25527632cb7bf725bbaf37dbcda3a56ef86ed7"
+    },
+    {
+      "path": "ciw/thermofluids_workflow.py",
+      "sha256": "95ce5505f790bb614beed37b6f4df869eda74c8fb3f4569a8d4d1cfd9c99bb0d"
+    },
+    {
+      "path": "ciw/tooling_visualizer.py",
+      "sha256": "c2d710bb34c80b954f8468138eeb2f2ded28100c377cb2f94befc0453855ac07"
+    },
+    {
+      "path": "ciw/toolpoint_binomial.py",
+      "sha256": "a496a7264570a573dbfa3e48f6a0711251cc2be049eda11416e6ff2a2d1965d5"
+    },
+    {
+      "path": "ciw/toolpoint_outcome_bench.py",
+      "sha256": "33e4ad9fc57d75a05b390452b593566a6d16209415a5a2ab376e3f9d8e6c26d6"
+    },
+    {
+      "path": "ciw/toolpoint_outcome_cli.py",
+      "sha256": "9d5459548bf81f108f0628aed0a7e458db96cc3f516c65d259ada08e6f2a308e"
+    },
+    {
+      "path": "ciw/toolpoint_outcome_example.py",
+      "sha256": "cca4b9833f043859ad7c67f61659fa945b19535d7b141b3f9242fc118c3d200e"
+    },
+    {
+      "path": "ciw/toolpoint_outcome_stats.py",
+      "sha256": "cf1ab2441735da7ccc2befeca8dce07818f1f896e0343f83de5d8b384c705f19"
+    },
+    {
+      "path": "ciw/toolpoint_store_cli.py",
+      "sha256": "1c58a0fb5fd483ace05445d9fd36a1527bf8cab1d8b3680c4b94dc7072909ac1"
+    },
+    {
+      "path": "ciw/toolpoint_stream.py",
+      "sha256": "bf3e2e430fa5c3444e35a63a82468a92cfa6c519ed34a16b47087771526a871e"
+    },
+    {
+      "path": "ciw/toolpoint_stream_cli.py",
+      "sha256": "8bc30a8e938d4d7da084d55509a83cb139d6760d34501072e91100f991277aef"
+    },
+    {
+      "path": "ciw/toolpoint_stream_codec.py",
+      "sha256": "b95b44cb0463419528319e22eacee2d77a3009ed3b120df60bd40f00c34cdd95"
+    },
+    {
+      "path": "ciw/toolpoint_stream_containment.py",
+      "sha256": "c768b3950f541a47ab615d8f6195ebf1cf67392b7a940ccab65dd5e17fd55214"
+    },
+    {
+      "path": "ciw/toolpoint_stream_example.py",
+      "sha256": "ecd95e94fd7e633ac678be9c6daf81213230b50474b5647eea2ef4aa7c261e55"
+    },
+    {
+      "path": "ciw/toolpoint_stream_store.py",
+      "sha256": "8d790337aad4682f522b9298a2954a7a54d33910ded1c01524b618933cd2df7b"
+    },
+    {
+      "path": "ciw/toolpoint_validation.py",
+      "sha256": "4edef756d32f92a290736b3076acc98e7aaabc4b07fd85c89441c13ad4a1e7bc"
+    },
+    {
+      "path": "ciw/toolpoint_validation_cli.py",
+      "sha256": "59d4f326eccaf3bfd44308a7378fedd0be1c071f8886a863fafc72500cebdd59"
+    },
+    {
+      "path": "ciw/toolpoint_validation_example.py",
+      "sha256": "21227969125f2065090d8b59a5945d37be33b6c24568694bdc9e789dbc8dbd1a"
+    },
+    {
+      "path": "ciw/toolpoint_validation_store.py",
+      "sha256": "74f38502356ac98baa07a3bcf7651df11d66575e4abca96f1975328b207d0654"
+    },
+    {
+      "path": "ciw/transition_cli.py",
+      "sha256": "db18c584be0226379289a7b023ef5aab7b6a2377accdf9ee3e941e9d4997f305"
+    },
+    {
+      "path": "ciw/transport_timing.py",
+      "sha256": "6c7d6053968c0ca261f114e7af0dfe2d76ee7c220bab7cc0f63127ae671d0d69"
+    },
+    {
+      "path": "ciw/typed_realizations.py",
+      "sha256": "76dc16105255f9735894c8cd8f466da4dab18c4d9b47f058ced34dbd3df459f4"
+    },
+    {
+      "path": "ciw/uncertainty_display.py",
+      "sha256": "b518c02ba24690ed2d95b467bbb3457c3e35ca3a148256943f8bbcee2e43efe6"
+    },
+    {
+      "path": "ciw/uncertainty_providers.py",
+      "sha256": "b98ec3509c19f055900981eb2ca2f3fd62f584f80ae9af012b75d4cf4a2d9cdd"
+    },
+    {
+      "path": "ciw/usd_export.py",
+      "sha256": "c4a1022d106bbbd9fe8e2a47789233b954701f0c342f138c39f488dd500af950"
+    },
+    {
+      "path": "ciw/usda_export.py",
+      "sha256": "a3ba16f0e411ab9502d664de3dcac7b59a6416d51f4d8515e6d1ceb6927479c5"
+    },
+    {
+      "path": "ciw/view_render.py",
+      "sha256": "d493f2e6e998fc559c5b69fbc84a371be727093b53051b981b3d4df5493272b5"
+    },
+    {
+      "path": "ciw/visual_board.py",
+      "sha256": "c9fa6ce7fc418db12ce821b9dcab7b943ba2e4a67a070c995eab231d098ee1c1"
+    },
+    {
+      "path": "ciw/visual_board_server.py",
+      "sha256": "e7667f45da047101cc6c782fdc6b4963d67d5ee5d8c97db63e6256c06c6805fa"
+    },
+    {
+      "path": "ciw/visual_representation_gate.py",
+      "sha256": "c9f539acca07767fc8976e8121df7e1957a01a170a0248f64cadd30fbb13c483"
+    },
+    {
+      "path": "ciw/weather_cli.py",
+      "sha256": "a9330d7ebd1c4bd5bbe8d7e7dae1f03135d7e5de7cd6ddb0d400876b60fab5a8"
+    },
+    {
+      "path": "ciw/weather_contract.py",
+      "sha256": "b4ebf170a2f22852cf24c680dcaff9d9961197a9e4a1c8079aa719fc631d807e"
+    },
+    {
+      "path": "ciw/weather_dynamics.py",
+      "sha256": "9897763df8ef6eb45ead37a560496296b2ecbbe292b11c3787b4b67be113cd45"
+    },
+    {
+      "path": "ciw/weather_hydro.py",
+      "sha256": "c2b63d9f828e3f2242c7208dc93813c6fb5478cf354c79244d2b751da39641d4"
+    },
+    {
+      "path": "ciw/weather_storm.py",
+      "sha256": "2dad1b23fd365556d0fdfdfa4857639a15fcea8c99d0810ac0355943f6cd45a9"
+    },
+    {
+      "path": "ciw/weather_thermo.py",
+      "sha256": "46d7b58771882086298f089e8646f076ec005246342007dcdd0c93b2982868cc"
+    },
+    {
+      "path": "ciw/weather_workflow.py",
+      "sha256": "dce2fda2fd6221c700d4557de1a2b6914bbd6c35d4bf750063e2ecc8fc615b49"
+    },
+    {
+      "path": "ciw/workbench.py",
+      "sha256": "393d3e931e917cb54fd49ac0d8bc3f60f1bf826fa1b8719bf4644463f9529004"
+    },
+    {
+      "path": "ciw/workcell.py",
+      "sha256": "300cdee687a079aefe2c298801e47fa9accbc71519466ebeeee763ab4149d0a1"
+    },
+    {
+      "path": "ciw/workcell_cli.py",
+      "sha256": "78c9235160c57a702a681eaea0778ef57b4ffc80e02106d90b8cbde644b097a9"
+    },
+    {
+      "path": "ciw/workcell_container.py",
+      "sha256": "2d63a9135154260bd3eed44f3dc4198213fa5f71f8664de53ffcf03a70e25800"
+    },
+    {
+      "path": "ciw/workcell_contracts.py",
+      "sha256": "7896027f32c7b5184f8b0a3da601cdc3ba70de9b6913a8f628f0fadb46081a3f"
+    },
+    {
+      "path": "ciw/workcell_pixels.py",
+      "sha256": "71e4dfaa14452d9dc22dae533cf1498c83be666f88c682b764d61c7f28de2cc9"
+    },
+    {
+      "path": "ciw/workcell_recipe.py",
+      "sha256": "ca92708a014db9595bacb865463c7a764fbd3b2fa5b32909c357db56561591a4"
+    },
+    {
+      "path": "ciw/workcell_smith.py",
+      "sha256": "71d7a86cea887900e0506405ec2a2d546b9118ce07952a048fe4b9d30965f531"
+    },
+    {
+      "path": "ciw/workcell_title.py",
+      "sha256": "0544b03264efb27b014c53509feedaa14037fd0ce406ad7a7727cc8541370837"
+    },
+    {
+      "path": "ciw/workflow_algebra.py",
+      "sha256": "2b7723eae32bdd433de159d3274a832954bc07850c36bc7c49025e6e9d00aa97"
+    },
+    {
+      "path": "ciw/workflow_attempts.py",
+      "sha256": "0f2193bfd5645d1421b8543bcb7e311297420a02e9b64bb2d9da3eeb62aa35af"
+    },
+    {
+      "path": "ciw/workflow_cli.py",
+      "sha256": "1154819bb5f28a9e8bcab150a7d9997c82e96d05de0cad62e3ea97e0ee6c8dfa"
+    },
+    {
+      "path": "ciw/workflow_production.py",
+      "sha256": "bd0f52853f62cdae90215ca23eb8e10b5f77a620427df05ae752d2e2adf1d4be"
+    },
+    {
+      "path": "ciw/workload_view.py",
+      "sha256": "be9d59898bf83a195ef9cc2b25cec74a0602815a31264c4e9893d0b629d67847"
+    },
+    {
+      "path": "ciw/adapters/__init__.py",
+      "sha256": "6a3a54f5d80278f9209d48e8ab42c64479477c1ff87dcc09aa9c7ad3223dab80"
+    },
+    {
+      "path": "ciw/adapters/covariance_records.py",
+      "sha256": "da96b95ee65d10b9af101f626fc12c1423b373202342f1c36400204ebc72fb06"
+    },
+    {
+      "path": "ciw/adapters/fsrt_records.py",
+      "sha256": "7913ba3dc4ed6ff73eeaa7ee527a42ca2791a8e0eb09f246f003e0dd58125042"
+    },
+    {
+      "path": "ciw/adapters/gte_records.py",
+      "sha256": "62a43d3d0987d2365edbae279700c5e47d70b9707c3c0af10d28bc682a700ea9"
+    },
+    {
+      "path": "ciw/adapters/nvalchemi.py",
+      "sha256": "c613285a7b2d7d2595ca3f5fbae3d55decf44440674dfb1fc4d1bed95e51e9d9"
+    },
+    {
+      "path": "ciw/adapters/nvalchemi_contract.py",
+      "sha256": "bf6c04195cbb61a0adada6467674a64930ad84749f67fd7b4e696eeae3cad593"
+    },
+    {
+      "path": "ciw/adapters/nvalchemi_worker.py",
+      "sha256": "cbcff7f627c61dc4b8174de885de6ec01a489637d7c363409d5b51a10f0fb148"
+    },
+    {
+      "path": "ciw/adapters/oscillator.py",
+      "sha256": "cfecc515dcc113b9981296e95153fd9b072ec4d6ee190354cb27956ed0317da1"
+    },
+    {
+      "path": "ciw/adapters/oscillator_kernel.py",
+      "sha256": "2587f05c66ae040da4c632c04b21681c103a966f0b16afd44255e3cc1b8e34d4"
+    },
+    {
+      "path": "ciw/adapters/oscillator_records.py",
+      "sha256": "2fc6ab9cdd374cb3a6d8d7ebb27b18c74957796290b0632d963e16d9e9e6c728"
+    },
+    {
+      "path": "ciw/adapters/ppda_acquisition.py",
+      "sha256": "e09ee220033217731be66eea2ecb795dffabfcc0150399886b18b92bbf0d5f7b"
+    },
+    {
+      "path": "ciw/adapters/protocol.py",
+      "sha256": "b42237492057b2e19b8ded693c24cd780ff0620184e863ad5453397b13d7a303"
+    },
+    {
+      "path": "ciw/adapters/rci_records.py",
+      "sha256": "071a700fe9e413a61414c1be9907d6ea6a4f7a6de21e5a564d295fe0a99512a0"
+    },
+    {
+      "path": "ciw/adapters/registry.py",
+      "sha256": "00a40f54a76653d9b8955666d2e9db33d63cf01e1485d97eb3fa56b32d2617a7"
+    },
+    {
+      "path": "ciw/adapters/subprocess.py",
+      "sha256": "06e5d30990324e4e059e2191f2f3a0e6ba8d8ce847b196b0e05927811b4ef257"
+    },
+    {
+      "path": "ciw/bench_examples/LICENSE.txt",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "path": "ciw/bench_examples/attribution.json",
+      "sha256": "309aa29bcb2cfa9576938238e9eea5af1d479e9fcd8c350fb1b8d52fe02a560b"
+    },
+    {
+      "path": "ciw/bench_examples/smartctl-public.json",
+      "sha256": "2fd5253bb0792ac6472db1add36feb757218b8d42dee40d60752cfa73d6b68cf"
+    },
+    {
+      "path": "ciw/core/__init__.py",
+      "sha256": "0afdbf9fb7e52dbcc16988d90e2ce188bd9d398ffd2d3f578ad3b018e2730090"
+    },
+    {
+      "path": "ciw/core/covariance.py",
+      "sha256": "12151b40d863ccce85d60d2a94169587094d2468cd032cdc405d3d19985e9730"
+    },
+    {
+      "path": "ciw/core/identities.py",
+      "sha256": "c746d6ecf24723ea9b3481895bb12094e98fff6bd821acd229eb0f5f13e9ead9"
+    },
+    {
+      "path": "ciw/core/records.py",
+      "sha256": "07147c30fca044ec8b488a8d63bbcb8c561cd763c976810dfd7ab3a68369e7e9"
+    },
+    {
+      "path": "ciw/engine_assets/godot_motion/project.godot",
+      "sha256": "d9d679af697491b541504cf980a0d812ae962c05a9ff82ac3cb271c82e696f89"
+    },
+    {
+      "path": "ciw/engine_assets/godot_motion/worker.gd",
+      "sha256": "d0ba6a9a9edecaf15d094fb3be186341be88ffa049122e4ccf5d5fddea31cd29"
+    },
+    {
+      "path": "ciw/godot_runtime/observation_capture.gd",
+      "sha256": "24f493c631d076fea6bf5d3bdf344f4479b09dc67ed3f8cf83232830623f9f6e"
+    },
+    {
+      "path": "ciw/godot_runtime/point_worker.gd",
+      "sha256": "6f3b9f68f0132555fe629253453ae5622b0323d5fdbcad26ca8446e0f4bc981a"
+    },
+    {
+      "path": "ciw/operations/__init__.py",
+      "sha256": "f0620989f4d979f683d4dace91fa62811a65d71c2ffcd823b5a766f0dcba2be2"
+    },
+    {
+      "path": "ciw/operations/registry.py",
+      "sha256": "08d5d130d893ff9abb1acff5b02ee458f6e2f14e0cb088c720a8619f4c569c3a"
+    },
+    {
+      "path": "ciw/operations/runner.py",
+      "sha256": "a8bf4367a21491484f9aa969933032101cdc8622b4fc2573b5b6d07dfda1f530"
+    },
+    {
+      "path": "ciw/operations/schemas.py",
+      "sha256": "b861547e3d68104bf72d857eacde7fb99983c1e811f765ea3c3a26ad18ea19ae"
+    },
+    {
+      "path": "ciw/operator_examples/materials-complex-viscosity.json",
+      "sha256": "d7a21b8e523137ea3b079437b97744dd3391579b07584b443cd4077dc0df0c7a"
+    },
+    {
+      "path": "ciw/operator_examples/materials-empirical-rheology.json",
+      "sha256": "cf6645b5585f8075050c049ba29b869b49c793c820fff7256a9f90facdf3b80a"
+    },
+    {
+      "path": "ciw/operator_examples/materials-joint-residual.json",
+      "sha256": "1a9ad236aeb0c8b1cf950a0c862e4daf4d4305c5f54867abc6562818de8f46d5"
+    },
+    {
+      "path": "ciw/operator_examples/materials-population.json",
+      "sha256": "32c861bf91c02ee3c2e7995b69c0c670959ad6d2d566271374cef5e207e4c9ee"
+    },
+    {
+      "path": "ciw/operator_examples/materials-thermochemistry.json",
+      "sha256": "187e73170d9e093e4a6da0b331211bb2109a5c06ca048f1e65d0cca4ff64ec94"
+    },
+    {
+      "path": "ciw/operator_examples/materials-viscoelasticity.json",
+      "sha256": "1efdbb2506fa4637bfa2d69afdfd0bb24d3a258fa7c02c37dcceb5e5f032b77c"
+    },
+    {
+      "path": "ciw/operator_examples/thermal-source.json",
+      "sha256": "417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82"
+    },
+    {
+      "path": "ciw/viewer_assets/spatial/main.tscn",
+      "sha256": "93ae888b4b75a4af0fe8abe1738011087c2ad907402b5d845a68028d648c7ba1"
+    },
+    {
+      "path": "ciw/viewer_assets/spatial/project.godot",
+      "sha256": "17c93b187362bd9249a666dd5957bc138c876f99e13dfc4616aa5fa2feb5f021"
+    },
+    {
+      "path": "ciw/viewer_assets/spatial/self_test.gd",
+      "sha256": "e63bf1818f1f10a665610c2402d40a51edd1e0183c733487244756795e79e6be"
+    },
+    {
+      "path": "ciw/viewer_assets/spatial/view.gd",
+      "sha256": "667e693ce613b1db95fcf6a26b9a4cd33ad7c1d755346f9ba27d5f1366c0a88f"
+    },
+    {
+      "path": "ciw/web/electronics_repair.css",
+      "sha256": "05443cafe6f333625e7dd1e114ebc7681ab0f09ee2b76f03f623c35ea8b51330"
+    },
+    {
+      "path": "ciw/web/electronics_repair.html",
+      "sha256": "a62b36323dc3e3ca406b213028e80df800578fbbb3758ac111f02567442d1f67"
+    },
+    {
+      "path": "ciw/web/electronics_repair.js",
+      "sha256": "cc9f0963f4fcbef9f40662fda9de2eb096b233c5615f03e8c5a31d14f7012017"
+    },
+    {
+      "path": "ciw/web/electronics_repair_scene.js",
+      "sha256": "a33d9344ab4cf637456170cb961c178acc507c49f2d81907f9207916468d32f0"
+    },
+    {
+      "path": "ciw/web/math_inspector.css",
+      "sha256": "a3ffe1caf05cf81d240c9cc3cc5b7df9615684f71deddde27cf7125e460858f3"
+    },
+    {
+      "path": "ciw/web/math_inspector.html",
+      "sha256": "ee37ccdae33d310da0fd345f7905d733b151d5e25a86b56fffff2bd989453454"
+    },
+    {
+      "path": "ciw/web/math_inspector.js",
+      "sha256": "dc181024c51a2c38592af3160426ccb591b9de32af1fc465d596e31a62e71670"
+    },
+    {
+      "path": "ciw/web/measurement_visualizer.css",
+      "sha256": "ababee94e868ca1271a792590361d41348102d62349c807d52a1cb10b44cfe10"
+    },
+    {
+      "path": "ciw/web/measurement_visualizer.html",
+      "sha256": "b4aa6ac8990fef885befe3a1f09b2871e76df79b646bac22009549002e2747fb"
+    },
+    {
+      "path": "ciw/web/measurement_visualizer.js",
+      "sha256": "78dedfe65524c25a797167d519f4598c2a77d2c1ae56470c72ebd9de11d096b1"
+    },
+    {
+      "path": "ciw/web/operational.css",
+      "sha256": "961fe0611fdb0c5f2911dbd9d2b24d5525ed200ec947ec0d0a45f4bbbe10a1bc"
+    },
+    {
+      "path": "ciw/web/operational.html",
+      "sha256": "11010b9bea04ae8908cc04bcfe279862f76dfd0d04f9e699555197bf25f29b74"
+    },
+    {
+      "path": "ciw/web/operational.js",
+      "sha256": "2a6339eca2beaf9ed1e2a1c3733e90af89a95da98fc36766b27f7d9e184aa0dd"
+    },
+    {
+      "path": "ciw/web/procedural_workbench.css",
+      "sha256": "c1ae5d94c7d36a6f31d3bb21e0d2128699a5fe61f501d9566499aaddf047adcf"
+    },
+    {
+      "path": "ciw/web/procedural_workbench.html",
+      "sha256": "89d5112546ba2040739c6784f479e8b812124587b3fa2cf67fd3fbed808095fc"
+    },
+    {
+      "path": "ciw/web/procedural_workbench.js",
+      "sha256": "9e6bb5e9a5ff8beca82789472a565f997312a3737c64d55110dee727655742f7"
+    },
+    {
+      "path": "ciw/web/simulation_timeline.css",
+      "sha256": "f9b881b1e63428435a092ac56693cb5596c7c59034c4b7450e90f91d6b8f33f7"
+    },
+    {
+      "path": "ciw/web/simulation_timeline.js",
+      "sha256": "0023196d325c9a9d0931dfbfb6a86ebddf7bcb9794aa388d19984097bb71b9e8"
+    },
+    {
+      "path": "ciw/web/system_board.css",
+      "sha256": "54871d1ec296405d5b3e4c7412d5eafad0005f286a14ea0cda0f91a72e65783d"
+    },
+    {
+      "path": "ciw/web/system_board.html",
+      "sha256": "24d347eb01b1d6ec2fcfbc639bbde84a3cbc1bb501ba4ab2b069a4931c8f1cd1"
+    },
+    {
+      "path": "ciw/web/system_board.js",
+      "sha256": "b319c45e82af85a6b4e6b3580b91ac2d3e0b430fa9d37eb655607839299405c3"
+    },
+    {
+      "path": "ciw/web/system_board_core.js",
+      "sha256": "a80bd514a12a8ff9e8981aee5a322c2a863418ae013d6251f27f2650f13a7d48"
+    },
+    {
+      "path": "ciw/web/system_board_editor.css",
+      "sha256": "dc1274fd2e898ab5ac2627894bb7d3b87dc33b8091561e9aaa86c777a0e7b52d"
+    },
+    {
+      "path": "ciw/web/system_board_editor.html",
+      "sha256": "c00ac06b2346568b3c133cb31e4ba62fe7d3dd24ad146b62a3b3820c18e2c68a"
+    },
+    {
+      "path": "ciw/web/system_board_graph.js",
+      "sha256": "d10a26e858cdb881506a11e0c559c20b05b29f58a57ef08ace1af5d9e7a0ae38"
+    },
+    {
+      "path": "ciw/web/system_board_init.js",
+      "sha256": "d90f3fbb1deccbae0cfb6a9c8afce2143b6bdbcc52c707b9c90276b388e60ef8"
+    },
+    {
+      "path": "ciw/web/system_board_inspector.js",
+      "sha256": "41f3f7de6a2735f22490d29c3bf7264ab8b326a8ff8b557133c11f15e7628892"
+    },
+    {
+      "path": "ciw/web/tooling_explorer.css",
+      "sha256": "5fa3f32dfe2ccf94b2639f3e1eb9d5acb573cac2e9dd5d0bf60661f5d5160a1d"
+    },
+    {
+      "path": "ciw/web/tooling_explorer.html",
+      "sha256": "94d5eb49c43173cf93a378200397ddd74c1f7aa564fd26b37bde24aa0ba7f612"
+    },
+    {
+      "path": "ciw/web/tooling_explorer.js",
+      "sha256": "c54792422938653665753f59682b80ce3a263fa7b82f2a2700afb52fc86059da"
+    },
+    {
+      "path": "net_geomatics/__init__.py",
+      "sha256": "30adc79c2e9f45f7b2cdc3a22b98f1513ba75d24256d40aa47d182282bcabccd"
+    },
+    {
+      "path": "net_geomatics/catalog.py",
+      "sha256": "34258f926193797e581ecfc854866e1e5093440b730dbd2aee5fa09c2a99f2a4"
+    },
+    {
+      "path": "net_geomatics/common.py",
+      "sha256": "c353d3296055491869eea1a7e36a6ce4941f00502fd5c98694cbba578d848c4a"
+    },
+    {
+      "path": "net_geomatics/earth_observation.py",
+      "sha256": "922700c705ec096c515fd3d9e7a2fb2fbfff9d6e92c70c15cbbccb4e1a3d1d7f"
+    },
+    {
+      "path": "net_geomatics/gis.py",
+      "sha256": "2026ca9d2a65b179082cb82ccc9fb08d3d524854c987504baf50f00b2a93ad37"
+    },
+    {
+      "path": "net_geomatics/radiometry.py",
+      "sha256": "7b0bad766515c48d79068f2bcbb4aa91625ed20ae2d2c341d221a494a967e967"
+    },
+    {
+      "path": "net_geomatics/urban.py",
+      "sha256": "69e6a116d31406696423c79f652b8677a696698dc3b46bc06347a459c76e7dc7"
+    }
+  ],
+  "status": "PASS"
+}

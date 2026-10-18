@@ -1,5 +1,7 @@
 # Research baseline candidate — close-out evidence
 
+This historical ledger records the earlier frozen candidate. The subsequent [provider integration audit](PROVIDER_INTEGRATION_20261018.md) records the implementation merged through PR #245 and its separate validation.
+
 Selected immutable code: `312a37ba613a0b57ea027b8d00df5b3b4fe08d69`. Source tree:
 `862785f15628cb3d1c2ec0c620e357dbd1ddb876`. The candidate is retained on
 `release/research-baseline-20261017`; [PR #244](https://github.com/notationsystems/Notations-Control-Protocol/pull/244)
