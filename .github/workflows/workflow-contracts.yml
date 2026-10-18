@@ -29,8 +29,10 @@ jobs:
           python -m unittest discover -s scripts/tests -p test_ci_policy.py -v
           python -m unittest discover -s scripts/tests -p test_branch_cleanup.py -v
           python -m unittest discover -s scripts/tests -p test_workflow_inventory.py -v
+          python -m unittest discover -s scripts/tests -p test_repository_folders.py -v
           python scripts/check_ci_policy.py
           python scripts/audit_workflow_inventory.py --output workflow-inventory.json
+          python scripts/audit_repository_folders.py --output repository-folders.json
       - name: Audit scientific contract coverage and shared enforcement
         run: |
           python -m ciw.net catalog --audit --repository . --json
@@ -46,5 +48,7 @@ jobs:
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: workflow-inventory
-          path: workflow-inventory.json
+          path: |
+            workflow-inventory.json
+            repository-folders.json
           if-no-files-found: error

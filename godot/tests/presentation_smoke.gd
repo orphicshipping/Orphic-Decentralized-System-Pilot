@@ -3,7 +3,7 @@ extends SceneTree
 ## Godot may be absent from PATH; keep this script for local runs:
 ##   godot --headless --path godot --script res://tests/presentation_smoke.gd
 
-const AnalogView = preload("res://scripts/analog_view.gd")
+const AnalogStateView = preload("res://scripts/analog_state_view.gd")
 const Kit = preload("res://scripts/presentation_kit.gd")
 
 var _failures: Array[String] = []
@@ -32,32 +32,22 @@ func _run() -> void:
 		Kit.verification_label({"fresh_verifier_occurrence": true}) == "VERIFIED"
 	)
 
-	var missing := AnalogView.new()
-	root.add_child(missing)
-	# Force a missing path by clearing data after ready load attempt against default.
+	# Exercise the retained geometry component actually present in this checkout.
+	# The old full Analog tab and its file loader are not shipped here.
+	var state := AnalogStateView.new()
+	root.add_child(state)
 	await process_frame
 	await process_frame
-	# If default analog_render exists this tab may be LOADED; probe STALE path via apply.
-	missing._apply_stale("STALE", "smoke missing fixture")
-	_check("missing_marks_stale_status", missing._status.text.contains("STALE"))
-	_check("missing_plsr_stale", str(missing._plsr_value.text).contains("STALE") or missing._plsr_value.text == "STALE")
-	missing.queue_free()
-
-	var analog_path := ProjectSettings.globalize_path("res://").path_join(
-		"../examples/pyramid-method-gap/results/analog_render.json"
-	).simplify_path()
-	if FileAccess.file_exists(analog_path):
-		var loaded := AnalogView.new()
-		root.add_child(loaded)
-		await process_frame
-		await process_frame
-		loaded._try_load()
-		await process_frame
-		_check("analog_loaded_flag", loaded._loaded)
-		_check("analog_cards_non_empty", loaded._v_value.text != "—" and not loaded._v_value.text.is_empty())
-		loaded.queue_free()
-	else:
-		print("  SKIP  analog_render.json absent (generate with run_analog.py --write-render)")
+	_check("geometry_starts_stale", state._stale)
+	state.set_render({"trajectories": {"renewal": {"points": [[0, 0, 0], [1, 1, 1]]}}})
+	_check("retained_points_projected", state._renewal_points.size() == 2)
+	state.set_stale(false)
+	_check("explicit_fresh_display_state", not state._stale)
+	state.set_stale(true)
+	_check("stale_state_restored", state._stale)
+	state.clear_view()
+	_check("clear_removes_retained_geometry", state._renewal_points.is_empty() and state._surface.mesh == null)
+	state.queue_free()
 
 	if _failures.is_empty():
 		print("PASS: presentation smoke")

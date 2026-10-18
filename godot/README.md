@@ -36,7 +36,7 @@ The optional **Geodesic path** tab reads HOST / synthetic CSG presentation JSON 
 
 ## Shared presentation kit
 
-Provider-neutral helpers in `scripts/presentation_kit.gd` (also projected by Bevy — see
+Provider-neutral helpers in `scripts/presentation_kit.gd` (Bevy projector source is incomplete — see
 [`docs/VISUALIZATION_PROVIDERS.md`](../docs/VISUALIZATION_PROVIDERS.md)):
 
 - Colors, unshaded `StandardMaterial3D`, panel/card/label builders
@@ -45,14 +45,23 @@ Provider-neutral helpers in `scripts/presentation_kit.gd` (also projected by Bev
 - `resolve_render_path` / `load_json` / `apply_stale` / caption constant
 - **VERIFIED** only when JSON has `fresh_verifier_occurrence: true`
 
-Tabs sharing the kit: **Analog**, **Fluid balance**, **Geodesic path**, **BIM quantity**, **Proof**.
+The main client currently attaches **Workbench** and **Oscillator**; the
+Oscillator tab contains phase and energy displays.
+The retained analog/circle geometry and presentation helpers are reusable source
+components, not attached specialty tabs. The earlier Analog, Fluid balance,
+Geodesic, BIM, Proof and use-case tab descriptions require missing client source;
+see the linked source inventory before attempting those workflows.
 
 Optional: `presentation_strip.gd` (theta vs y series), `presentation_schematic.gd` (2-node bars + residual).
 
-### BIM quantity / Proof
+### Intended BIM quantity / Proof presentation inputs
 
 - BIM: `../examples/cse-bim-quantity/results/cse_bim_render.json` — prior/posterior/disposition/ledger; ACCEPT is recommendation; STALE if missing; no building mesh
 - Proof: `../examples/proved-heat/results/proved_heat_render.json` — execution/result/verification identities + pins; never draws proof bytes; HISTORICAL/UNAVAILABLE/REFUSED; STALE if missing
+
+These generated presentation records and their full client tabs are not shipped
+by this snapshot. The presentation smoke exercises the existing shared kit and
+analog geometry component without requiring generated teaching files.
 
 ### Presentation smoke (Godot may be off PATH)
 

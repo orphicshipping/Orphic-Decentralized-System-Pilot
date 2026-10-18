@@ -1,5 +1,12 @@
 # Use-case coverage report (executable layer)
 
+**Historical local evidence only.** The 18 October 2026 folder audit found no
+tracked 9,074-folder corpus, use-case index or generator at
+`5bde337174bdfb2add357042aceae2286bb7e56b`. Its machine-readable twins named
+below are also absent. These reported counts and command excerpts are retained
+as history, not current source or qualification. See the
+[current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 Generated: `2026-09-27T21:14:49.346628+00:00`
 
 ## Catalog exhausted ≠ experiments exhausted
@@ -56,7 +63,7 @@ Catalog exhausted ≠ experiments exhausted. 9,074 application descriptions coll
 
 ## Computational profiles (deduped)
 
-See also [`computational_profiles.json`](computational_profiles.json). **10** profiles cover **9074** descriptions.
+The historical `computational_profiles.json` is absent here. This report described **10** profiles covering **9074** descriptions.
 
 | Profile | Family | Operation | Members | Verbs | Input |
  | --- | --- | --- | ---: | --- | --- |
@@ -208,8 +215,8 @@ orchestrated=2 emitters=proved-heat,usecase-thermal-proof-gate operation=ciw.pro
 
 ## Machine-readable twin
 
-- [`coverage_report.json`](coverage_report.json)
-- [`computational_profiles.json`](computational_profiles.json)
+- `coverage_report.json` (not present in this snapshot)
+- `computational_profiles.json` (not present in this snapshot)
 
 ## Non-claims
 

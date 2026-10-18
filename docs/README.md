@@ -12,6 +12,7 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 
 | Need | Page |
 | --- | --- |
+| Every tracked folder, loose/latent candidates and explicit integration gates | [Complete repository folder audit, 2026-10-18](REPOSITORY_FOLDER_AUDIT_20261018.md) |
 | DC electronics repair, refurbishment and retrofit cases | [Electronics repair](ELECTRONICS_REPAIR.md) |
 | Install and check the public Terminal/Legibility workflows together | [Run NET](RUN_NET.md) |
 | Product scope, operating model and scientific workspace | [Workbench overview](WORKBENCH_OVERVIEW.md) |

@@ -72,7 +72,7 @@ schema, tool installation or architecture entry does not mean **available**.
 | --- | --- | --- | --- | --- | --- | --- |
 | Godot existing inspection client | Source present in `godot/` | Viewer/session interaction, not a general game launch/step contract | Retained views and supported shared-session displays | Retained inspection; no general game reproduction claim | Client import/protocol checks are documented; not simulation qualification | No authoring claim |
 | Godot simulation adapter | Pending | Pending | Runtime tick telemetry pending | Input reproduction and checkpoint qualification pending | Simulation profile pending | Not required |
-| Bevy existing projector | Source present in `tools/bevy-render-view` | Projector launch, not simulation control | Retained `*_render.json` projection | Retained display, not re-simulation | `--summary` path documented; not a physics run | No authoring claim |
+| Bevy retained-record projector metadata | Cargo metadata and instructions present in `tools/bevy-render-view`; Rust application target absent in the 2026-10-18 folder audit | Launch unavailable until source is supplied | Intended retained `*_render.json` projection | Intended retained display | Documented `--summary` is not executable here | No authoring claim |
 | Bevy simulation adapter | Pending | Pending | Selected ECS observation projection pending | Input reproduction and checkpoint qualification pending | Simulation profile pending | Optional future workload |
 | Blender authoring adapter | Pending | Declared job launch pending | Artifact/derivation capture pending | Regeneration is a fresh execution; not gameplay replay | Authoring-job qualification pending | Geometry/scene/bake/export pending |
 

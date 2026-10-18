@@ -165,4 +165,4 @@ Gate claim allowed only when execution + fresh verify + replay + tamper are
 
 - [ ] [`examples/workflows/README.md`](README.md) lists workflow 05 first-class
 - [ ] [`examples/proved-heat/README.md`](../proved-heat/README.md) Evidence seam → workflow 05
-- [ ] [`examples/usecase-thermal-proof-gate/README.md`](../usecase-thermal-proof-gate/README.md) Evidence seam → workflow 05
+- [ ] `examples/usecase-thermal-proof-gate/README.md` Evidence seam → workflow 05 (source absent in this snapshot; remains open)

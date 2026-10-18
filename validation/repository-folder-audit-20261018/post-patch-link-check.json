@@ -1,0 +1,6 @@
+{
+  "scope": "Candidate worktree tracked source plus audit additions; file targets only, not anchors or web URLs.",
+  "ncp_missing_relative_targets": [],
+  "audited_base_missing_ncp_targets": 13,
+  "imported_signal_count": 11
+}

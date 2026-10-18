@@ -8,8 +8,11 @@ on:
       - 'src/ciw/session.py'
       - 'tests/test_atmosphere*.py'
       - 'scripts/check_atmosphere_installed.py'
+      - 'scripts/check_atmosphere_reference_installed.py'
       - 'docs/ATMOSPHERIC_ENGINE.md'
+      - 'docs/ATMOSPHERIC_*.md'
       - 'examples/atmosphere/**'
+      - 'examples/atmosphere-reference/**'
       - '.github/workflows/atmosphere-engine.yml'
   workflow_dispatch:
 permissions:
@@ -35,7 +38,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -e '.[dev]' build
       - name: Atmospheric engine and shared substrate
-        run: python -m pytest -q tests/test_atmosphere_core.py tests/test_atmosphere_verification.py tests/test_atmosphere_workflow.py tests/test_atmosphere_preservation.py tests/test_atmosphere_handoff.py tests/test_atmosphere_integration_audit.py tests/test_operation_runner.py tests/test_operation_failure_retention.py tests/test_operation_publication.py tests/test_preservation_contracts.py tests/test_finite_preservation.py tests/test_control_plane.py tests/test_semantic_capabilities.py --junitxml=atmosphere-tests.xml
+        run: python -m pytest -q tests/test_atmosphere_core.py tests/test_atmosphere_verification.py tests/test_atmosphere_workflow.py tests/test_atmosphere_preservation.py tests/test_atmosphere_handoff.py tests/test_atmosphere_integration_audit.py tests/test_atmosphere_moist_core.py tests/test_atmosphere_moist_verification.py tests/test_atmosphere_moist_workflow.py tests/test_atmosphere_moist_preservation.py tests/test_atmosphere_moist_handoff.py tests/test_atmosphere_moist_integration_audit.py tests/test_atmosphere_comparison_core.py tests/test_atmosphere_comparison_verification.py tests/test_atmosphere_comparison_workflow.py tests/test_atmosphere_comparison_integration_audit.py tests/test_atmosphere_reference_benchmark.py tests/test_atmosphere_measurement_ingress.py tests/test_atmosphere_preparation_workflow.py tests/test_atmosphere_preparation_integration_audit.py tests/test_operation_runner.py tests/test_operation_failure_retention.py tests/test_operation_publication.py tests/test_preservation_contracts.py tests/test_finite_preservation.py tests/test_control_plane.py tests/test_semantic_capabilities.py --junitxml=atmosphere-tests.xml
       - name: Require complete qualification
         shell: bash
         run: |
@@ -68,6 +71,7 @@ jobs:
           fi
           "$ATMOSPHERE_PYTHON" -m pip install dist/*.whl
           "$ATMOSPHERE_PYTHON" scripts/check_atmosphere_installed.py --net "$ATMOSPHERE_NET" --output-dir installed-atmosphere-smoke
+          "$ATMOSPHERE_PYTHON" -I scripts/check_atmosphere_reference_installed.py --net "$ATMOSPHERE_NET" --output-dir installed-atmosphere-reference
       - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
         with:
           name: atmosphere-engine-${{ matrix.os }}
@@ -75,6 +79,7 @@ jobs:
             atmosphere-tests.xml
             atmosphere-qualification.json
             installed-atmosphere-smoke/**
+            installed-atmosphere-reference/**
             dist/*.whl
           if-no-files-found: error
           retention-days: 14

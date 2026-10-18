@@ -1,0 +1,1253 @@
+{
+  "source_commit": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb",
+  "scope": "Reviewed integration candidates and deliberate boundaries; not an authorization or universal qualification list.",
+  "findings": [
+    {
+      "id": "F01",
+      "title": "Atmospheric reference qualification was disconnected from its CI lane",
+      "status": "repaired",
+      "priority": "P1",
+      "paths": [
+        ".github/workflows/atmosphere-engine.yml",
+        "scripts/check_atmosphere_reference_installed.py",
+        "tests/test_atmosphere_reference_benchmark.py"
+      ],
+      "existing_owner": "Existing atmospheric Session operations, CLI and qualification workflow",
+      "observation": "The reference/measurement-preparation installed gate had no invocation or path reference outside its own source. The dedicated lane selected only the original dry atmospheric tests.",
+      "next_action": "Existing Linux/Windows matrix now selects all 20 atmospheric test files, invokes the existing installed reference gate and retains its outputs; no new workflow or job.",
+      "required_gates": [
+        "Fresh hosted execution of the changed lane remains required; local results are retained separately."
+      ],
+      "evidence": [
+        {
+          "path": "scripts/check_atmosphere_reference_installed.py",
+          "present_in_audited_tree": true,
+          "sha256": "2c44338121b91762193bbb0755dae2c9d7fa5dfafe8f8a29a863cd92a33255e0",
+          "line": 145,
+          "excerpt": "def qualify(executable: Path, destination: Path) -> dict:"
+        },
+        {
+          "path": ".github/workflows/atmosphere-engine.yml",
+          "present_in_audited_tree": true,
+          "sha256": "32c5fcb97e0c9ec0247fbcbdaee2abe958e0001c850c3f9179ba28130ad1b36b",
+          "line": 10,
+          "excerpt": "      - 'scripts/check_atmosphere_installed.py'"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F02",
+      "title": "Godot presentation smoke preloaded an absent Analog tab",
+      "status": "repaired",
+      "priority": "P1",
+      "paths": [
+        "godot/tests/presentation_smoke.gd",
+        "scripts/check_godot.py"
+      ],
+      "existing_owner": "Existing Godot client qualification runner",
+      "observation": "The standalone smoke preloaded scripts/analog_view.gd, which is absent, and was never invoked by the live-client gate.",
+      "next_action": "Smoke now exercises PresentationKit and the existing AnalogStateView retained geometry component; the existing Godot gate requires its PASS sentinel.",
+      "required_gates": [
+        "Pinned Godot 4.5.2 import, nine presentation assertions and existing live-client boundary checks passed locally."
+      ],
+      "evidence": [
+        {
+          "path": "godot/tests/presentation_smoke.gd",
+          "present_in_audited_tree": true,
+          "sha256": "18f2e4c0b348a7489e014a7be67fc50bf9551698d24090607814ca702b41a47c",
+          "line": 6,
+          "excerpt": "const AnalogView = preload(\"res://scripts/analog_view.gd\")"
+        },
+        {
+          "path": "godot/scripts/analog_view.gd",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "scripts/check_godot.py",
+          "present_in_audited_tree": true,
+          "sha256": "4fbd492a55e24c2ed8d7545da74a47f3febfbd0fdf784198917c4e40e2c9a6a3",
+          "line": 137,
+          "excerpt": "def check(executable: str) -> None:"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F03",
+      "title": "Backend container omitted its declared licence file",
+      "status": "repaired",
+      "priority": "P1",
+      "paths": [
+        "Dockerfile",
+        ".dockerignore",
+        "LICENSE"
+      ],
+      "existing_owner": "Existing wheel metadata and backend container build",
+      "observation": "pyproject.toml declares LICENSE as a licence file, but the allowlisted container context and COPY excluded it.",
+      "next_action": "Allow LICENSE in the existing context and COPY it beside pyproject.toml; retain the actual rebuilt wheel licence bytes.",
+      "required_gates": [
+        "Package build and wheel licence-byte check passed. Docker/Compose execution was not performed in this audit."
+      ],
+      "evidence": [
+        {
+          "path": "pyproject.toml",
+          "present_in_audited_tree": true,
+          "sha256": "3710c66cf0270a875b2a02a67e5c5518be74d2d1103fbc0031464db52b9aced4",
+          "line": 10,
+          "excerpt": "license-files = [\"LICENSE\"]"
+        },
+        {
+          "path": "Dockerfile",
+          "present_in_audited_tree": true,
+          "sha256": "e6d094ae5ce54215e900bf687db931fc763ca8a11ea5c1ef9295e6893bbcf7df",
+          "line": 8,
+          "excerpt": "COPY pyproject.toml README.md ./"
+        },
+        {
+          "path": ".dockerignore",
+          "present_in_audited_tree": true,
+          "sha256": "24db11b80e136129542057f0923fdd4fa47de8bb4d7786a829cdd4751d916e0d"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F04",
+      "title": "Broken documentation paths and cold-chain formatting",
+      "status": "repaired",
+      "priority": "P2",
+      "paths": [
+        "docs/UNIMPLEMENTED_DIRECTIONS.md",
+        "docs/quickstart.md",
+        "experiments/AGROFOOD_COLD_CHAIN.md"
+      ],
+      "existing_owner": "Existing documentation and bounded cold-chain experiment",
+      "observation": "Five relocated links used docs/docs, quickstart named absent IMPACT_TESTBED.md, and the cold-chain guide contained literal backslash-n sequences.",
+      "next_action": "Resolve links to existing contracts/contact benchmark and render the existing cold-chain text with real newlines. Historical missing corpus links are labelled absent.",
+      "required_gates": [
+        "Post-patch NCP Markdown file-target scan has zero missing targets; imported third-party prose is separately retained."
+      ],
+      "evidence": [
+        {
+          "path": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+          "present_in_audited_tree": true,
+          "sha256": "1ca63c23524e8f7fbe62fba39f97fb0ce21be62c1890c5183be59c609c01daec",
+          "line": 134,
+          "excerpt": "See [Julia/SP1 contracts](docs/JULIA_SP1.md) and [integration coverage](docs/INTEGRATION_COVERAGE.md)."
+        },
+        {
+          "path": "docs/quickstart.md",
+          "present_in_audited_tree": true,
+          "sha256": "27c145521fdbe436f79b174e045c51d2eb629d712167aba289f6914363465d61",
+          "line": 123,
+          "excerpt": "[elastic contact benchmark](IMPACT_TESTBED.md) have bounded example/run/inspect/"
+        },
+        {
+          "path": "experiments/AGROFOOD_COLD_CHAIN.md",
+          "present_in_audited_tree": true,
+          "sha256": "1bd4eb21a22359abba76d6b09433e94e28f1237de831b70e2c98d84e22072866"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F05",
+      "title": "Unattached retained Godot geometry and presentation components",
+      "status": "eligible_after_baseline_hygiene",
+      "priority": "P2",
+      "paths": [
+        "godot/scripts/analog_state_view.gd",
+        "godot/scripts/analog_strip.gd",
+        "godot/scripts/circle_geometry_view.gd",
+        "godot/scripts/presentation_strip.gd",
+        "godot/scripts/presentation_schematic.gd"
+      ],
+      "existing_owner": "Host-owned render records and existing Godot client",
+      "observation": "These reusable components are present but are not preloaded or attached by main.gd. Main currently exposes Workbench and Oscillator, with phase/energy within Oscillator.",
+      "next_action": "Choose one retained render contract and attach one component through the existing client. Current documentation now distinguishes components from shipped specialty tabs.",
+      "required_gates": [
+        "Close/disposition baseline hygiene first. Retain source binding, missing/stale states, disconnected operation and one executed operator journey."
+      ],
+      "evidence": [
+        {
+          "path": "godot/scripts/main.gd",
+          "present_in_audited_tree": true,
+          "sha256": "353bd8605ca04188e7d6e202ce45daee783cebba73b88c0113fd9ea1cfa944f8",
+          "line": 157,
+          "excerpt": "\t_experiments.name = \"Workbench\""
+        },
+        {
+          "path": "godot/scripts/main.gd",
+          "present_in_audited_tree": true,
+          "sha256": "353bd8605ca04188e7d6e202ce45daee783cebba73b88c0113fd9ea1cfa944f8",
+          "line": 160,
+          "excerpt": "\toscillator.name = \"Oscillator\""
+        },
+        {
+          "path": "godot/scripts/analog_state_view.gd",
+          "present_in_audited_tree": true,
+          "sha256": "4d9815e8ff90ab45ecbb151c8c19ae35b6c013f5379d988319bc79468d00b084"
+        },
+        {
+          "path": "godot/scripts/circle_geometry_view.gd",
+          "present_in_audited_tree": true,
+          "sha256": "aad1a0057db9ea13b7c06204016207714a19b330bfeab196eb72332ec0dd19c0"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F06",
+      "title": "Bevy retained-render projector has metadata but no Rust target",
+      "status": "conditional_source_required",
+      "priority": "P1",
+      "paths": [
+        "tools/bevy-render-view"
+      ],
+      "existing_owner": "Optional Bevy projector over existing retained render JSON",
+      "observation": "Cargo.toml has a pinned engine dependency but no explicit target, src/main.rs or src/lib.rs. README cargo-run commands therefore cannot launch this projector. The separate Bevy projectile runtime is present.",
+      "next_action": "Supply/review the exact missing application source or deliberately retire the stale projector proposal. Preserve the engine pin and existing render/authority contract; do not substitute the projectile simulation.",
+      "required_gates": [
+        "Separate source review, pinned engine/toolchain/dependency closure, build/headless summary and stale/historical display tests."
+      ],
+      "evidence": [
+        {
+          "path": "tools/bevy-render-view/Cargo.toml",
+          "present_in_audited_tree": true,
+          "sha256": "0baddd2dc4f9ba6638f80b074fb512c271ed3bf9ca25d26f8ea8f7c68644b9c5"
+        },
+        {
+          "path": "tools/bevy-render-view/src/main.rs",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "tools/bevy-render-view/src/lib.rs",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "tools/interactive-simulation/bevy/src/main.rs",
+          "present_in_audited_tree": true,
+          "sha256": "fddfa4831ce7f5f0f55157a07806a01a8856a75abccf8aec9a998aa06859ec83"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F07",
+      "title": "Teaching-corpus tools lack their input corpus and eight emitters",
+      "status": "conditional_source_required",
+      "priority": "P1",
+      "paths": [
+        "examples/workflows",
+        "examples/usecase-EXHAUSTION.md"
+      ],
+      "existing_owner": "Existing host render helper and owned example calculations",
+      "observation": "The ten-family template map has only two existing emitter targets. The batch tool needs absent usecase-index.json; the generator, scenario folders, catalog and usecase_catalog_view.gd are absent. Reported 9,074 counts are historical local claims.",
+      "next_action": "Keep historical reports labelled; first repair one bounded owned example/client seam. Any historical restoration requires an exact reviewed source revision. Do not regenerate thousands of descriptions to claim integration.",
+      "required_gates": [
+        "Exact source/input identity, executable operation/result lineage, honest synthetic/retained labels, replay and meaningful comparison."
+      ],
+      "evidence": [
+        {
+          "path": "examples/workflows/usecase_templates.py",
+          "present_in_audited_tree": true,
+          "sha256": "8fde9a8f6c97105a96fb1617698c76a1cc44fb3e2851815cd139bea3cf0de39c",
+          "line": 23,
+          "excerpt": "_EMITTERS = {"
+        },
+        {
+          "path": "examples/workflows/emit_all_usecases.py",
+          "present_in_audited_tree": true,
+          "sha256": "e31984232d759116ba659a60ed1b1e86221bdac8deef7ea3e3d07b35288afd2e",
+          "line": 22,
+          "excerpt": "INDEX = EXAMPLES / \"usecase-index.json\""
+        },
+        {
+          "path": "examples/usecase-index.json",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "examples/workflows/generate_usecase_corpus.py",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "godot/scripts/usecase_catalog_view.gd",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F08",
+      "title": "Pinned glTF qualification tool has no documented/root-CI entry",
+      "status": "eligible_with_explicit_prerequisites",
+      "priority": "P2",
+      "paths": [
+        "scripts/qualify_gltf_reference.py"
+      ],
+      "existing_owner": "Existing data-record source, glTF projection, mesh-path and Godot import operations",
+      "observation": "This opt-in qualifier has no path/token reference elsewhere in the original tree. It already checks a pinned publisher Box acquisition and seam-preserving mesh/Godot consumers; the core glTF reader and data route are connected.",
+      "next_action": "Expose an opt-in operator recipe or integrate the qualifier into an appropriate existing lane after provisioning its exact publisher acquisition, ISGT source and Godot binary. No new glTF parser is needed.",
+      "required_gates": [
+        "Publisher hashes/attribution, acquisition receipt, exact ISGT binding, Godot identity, source-free reopen and fresh replays. Not executed here."
+      ],
+      "evidence": [
+        {
+          "path": "scripts/qualify_gltf_reference.py",
+          "present_in_audited_tree": true,
+          "sha256": "90e13f6b2b8dda197b60bfc2664fa4a77d79c5339717349fd574d9028717c70f",
+          "line": 25,
+          "excerpt": "REVISION = \"edc7c9e67c639d230715049ee31f9a96a6babbbe\""
+        },
+        {
+          "path": "scripts/qualify_gltf_reference.py",
+          "present_in_audited_tree": true,
+          "sha256": "90e13f6b2b8dda197b60bfc2664fa4a77d79c5339717349fd574d9028717c70f",
+          "line": 72,
+          "excerpt": "def qualify(root, output, provider, godot, stamp):"
+        },
+        {
+          "path": "src/ciw/data_inventory.py",
+          "present_in_audited_tree": true,
+          "sha256": "5ace089f6d8d521d15f4db947646fb2feafd8037fee80a4dc82fafa036b369ca",
+          "line": 333,
+          "excerpt": "    from .gltf_reference_runtime import INSPECT"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F09",
+      "title": "Atomic ALCHEMI pilot lost its profile-specific native gate entry",
+      "status": "conditional_implementation_required",
+      "priority": "P1",
+      "paths": [
+        "src/ciw/nvalchemi_adapter.py",
+        "src/ciw/nvalchemi_contract.py",
+        "src/ciw/nvalchemi_worker.py",
+        "docs/NVALCHEMI_PILOT.md"
+      ],
+      "existing_owner": "Existing optional atomic operation and retained Session contracts",
+      "observation": "The atomic pilot guide documented check_nvalchemi.py --binding. That script currently accepts --python/--revision and qualifies a distinct nvalchemi.lj-single-point.v1 CPU adapter, not atomic.lj-energy-forces.v1.",
+      "next_action": "Guide now identifies the gap. Implement/restore a separately reviewed atomic-profile native gate using its existing adapter and records; keep the working CPU gate and both identities intact.",
+      "required_gates": [
+        "Explicit environment/device binding, native pair/cluster/transform and force finite differences, Session retention/reopen/replay, missing-runtime refusal. No native qualification performed here."
+      ],
+      "evidence": [
+        {
+          "path": "docs/NVALCHEMI_PILOT.md",
+          "present_in_audited_tree": true,
+          "sha256": "a2960241baecc2b5eea63ad4f253c0483f10d3f88ef34ae51ce52f846de6a6af",
+          "line": 120,
+          "excerpt": "  --binding /absolute/reviewed-alchemi-binding.json \\"
+        },
+        {
+          "path": "scripts/check_nvalchemi.py",
+          "present_in_audited_tree": true,
+          "sha256": "c1a8b0d07e893a89e4a67de7f5b5e7a6287725214a3b6e7783dddf9229490d85",
+          "line": 167,
+          "excerpt": "    parser.add_argument(\"--python\", required=True, help=\"Explicit isolated ALCHEMI CPU interpreter\")"
+        },
+        {
+          "path": "src/ciw/nvalchemi_contract.py",
+          "present_in_audited_tree": true,
+          "sha256": "f129a23b881e0f7ee75fc30d6937e4531ef42b7bbe95d9f15b86d8c8b6a3f2ac",
+          "line": 17,
+          "excerpt": "OPERATION = \"atomic.lj-energy-forces.v1\""
+        },
+        {
+          "path": "src/ciw/adapters/nvalchemi_contract.py",
+          "present_in_audited_tree": true,
+          "sha256": "bf6c04195cbb61a0adada6467674a64930ad84749f67fd7b4e696eeae3cad593",
+          "line": 17,
+          "excerpt": "OPERATION = \"nvalchemi.lj-single-point.v1\""
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F10",
+      "title": "Affine-temperature recording bridge is already a declared data route",
+      "status": "existing_connection_preserved",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/temperature_recording_bridge.py",
+        "src/ciw/data_inventory.py"
+      ],
+      "existing_owner": "Existing temperature contracts, data inventory and measured-thermal records",
+      "observation": "A direct-import-only scan makes the bridge look unused; data_inventory already names bridge_temperature_recording as a fixed consumer. Joint temporal covariance is retained and is not propagated by the thermal estimator.",
+      "next_action": "Reuse this explicit handoff for a future operator/MCP journey rather than creating another temperature store or implicit conversion.",
+      "required_gates": [
+        "Explicit channel/location/clock/evidence binding, no sample shifts/drops, retained covariance, candidate grants and native lifecycle evidence for any new exposed journey."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/data_inventory.py",
+          "present_in_audited_tree": true,
+          "sha256": "5ace089f6d8d521d15f4db947646fb2feafd8037fee80a4dc82fafa036b369ca",
+          "line": 81,
+          "excerpt": "         \"ciw.temperature_contract.validate_request\", \"ciw.temperature_recording_bridge.bridge_temperature_recording\","
+        },
+        {
+          "path": "src/ciw/temperature_recording_bridge.py",
+          "present_in_audited_tree": true,
+          "sha256": "6b6e53ad02d922d3fdecc4365ed3c68920d5c7cbf49bccf817edd94c3f440aef",
+          "line": 36,
+          "excerpt": "UNCERTAINTY_SCOPE = ("
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F11",
+      "title": "Metrology inspection ingress is a tested host utility, not a mounted grant",
+      "status": "eligible_with_explicit_host_binding",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/metrology_ingress.py"
+      ],
+      "existing_owner": "Existing metrology contract and opaque retained inspection handles",
+      "observation": "Only its tests import this utility. It provides bounded retained case/handle resolution with explicit authorized handles, but is not mounted into the current HTTP/MCP host.",
+      "next_action": "If an operator journey needs these inspections, bind the existing helper through trusted host setup and existing grants. A tested helper alone must not become an implicit public endpoint.",
+      "required_gates": [
+        "Contained storage, digest/handle checks, disclosure grants, tamper/refusal tests and lifecycle retention."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/metrology_ingress.py",
+          "present_in_audited_tree": true,
+          "sha256": "b65c340cbcc8b0ef2c6181bf229a3d4d0d36c2b2b207daff956eef56830bbd3b",
+          "line": 38,
+          "excerpt": "def resolve(root, handle, *, authorized):"
+        },
+        {
+          "path": "tests/test_metrology_contract.py",
+          "present_in_audited_tree": true,
+          "sha256": "8f6c5cd5ed2308f1b70b52d7d8afcfcbd5666a432e402a368f75fdb885055d65",
+          "line": 6,
+          "excerpt": "from ciw.metrology_ingress import retain,resolve"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F12",
+      "title": "Local-frame spatial workflow is an intentional optional module CLI",
+      "status": "existing_optional_surface_preserved",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/spatial_workflow.py",
+        "src/ciw/spatial_scene.py",
+        "docs/SPATIAL_PROVIDER_STARTER.md"
+      ],
+      "existing_owner": "Existing Session/Workbench, external GSC and detached spatial display",
+      "observation": "python -m ciw.spatial_workflow is documented, tested and installed-gated. The ncp spatial command addresses a separate bounded raster/request surface; identical words do not establish equivalent operations.",
+      "next_action": "Preserve both meanings. Any future navigation consolidation should dispatch explicitly to existing operations without replacing their source, frame or runtime contracts.",
+      "required_gates": [
+        "Exact GSC/PROJ binding and existing spatial installed gate; optional SDK/Godot gates remain profile-specific."
+      ],
+      "evidence": [
+        {
+          "path": "docs/SPATIAL_PROVIDER_STARTER.md",
+          "present_in_audited_tree": true,
+          "sha256": "caeaaf45d20b2d01ce53b5cad0e1fc1b8e06734113ab78ecc6cb6cae3e95f49e",
+          "line": 8,
+          "excerpt": "The optional command surface is `python -m ciw.spatial_workflow`. It uses the"
+        },
+        {
+          "path": "scripts/check_spatial_installed.py",
+          "present_in_audited_tree": true,
+          "sha256": "2d41225b28da0d2156ff1c55c3e7b6f8aea9bea412bd2ca34121569517bb8a29"
+        },
+        {
+          "path": "src/ciw/spatial_cli.py",
+          "present_in_audited_tree": true,
+          "sha256": "d80d6794766f4142b1b8175c9ab34346988f0e6005ba8905b4d09d62bcc54f61"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F13",
+      "title": "Two ALCHEMI contracts are not duplicate implementations to merge blindly",
+      "status": "existing_optional_surface_preserved",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/adapters/nvalchemi.py",
+        "src/ciw/adapters/nvalchemi_contract.py",
+        "runtimes/nvalchemi-lj"
+      ],
+      "existing_owner": "Existing pinned CPU single-point adapter and distinct atomic operation",
+      "observation": "The CPU binding fingerprints its installed environment and has a dedicated qualification script. The atomic Session operation has separate schema/runtime semantics and an open native gate.",
+      "next_action": "Retain both contract identities and their own evidence. Consolidate shared infrastructure only after explicit equivalence/migration analysis.",
+      "required_gates": [
+        "Do not transfer CPU, CUDA, Session-lifecycle or physical claims between profiles."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/adapters/nvalchemi.py",
+          "present_in_audited_tree": true,
+          "sha256": "c613285a7b2d7d2595ca3f5fbae3d55decf44440674dfb1fc4d1bed95e51e9d9",
+          "line": 31,
+          "excerpt": "class NvalchemiLJBinding(PinnedSubprocessAdapter):"
+        },
+        {
+          "path": "src/ciw/nvalchemi_adapter.py",
+          "present_in_audited_tree": true,
+          "sha256": "4f2cb1699802eb2662e22304cd5c122478a7ae77a6e92f20433d647c2c7ceaa0",
+          "line": 36,
+          "excerpt": "class AlchemiAdapter(PinnedSubprocessAdapter):"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F14",
+      "title": "Twenty-one imported providers retain separate execution and qualification pins",
+      "status": "conditional_qualification_required",
+      "priority": "P1",
+      "paths": [
+        "instruments",
+        "src/ciw/integration-sources.json",
+        "src/ciw/operator_provision.py"
+      ],
+      "existing_owner": "instruments/manifest.json, workflow-specific runtime manifests and existing native bindings",
+      "observation": "All 21 committed import trees/ancestry passed the existing monorepo audit on the exact source SHA. Nineteen roles have existing Workbench connections; Globe/FrameMapper retain independent npm boundaries. Import/default/profile revisions can differ.",
+      "next_action": "Choose an existing profile and provision its exact checkout/runtime, then use existing save/reopen/replay/independent gates. Do not activate all imports or repin to their imported/default heads.",
+      "required_gates": [
+        "Exact source/tree, interpreter and dependency closure; private/full-history/native/platform gates as declared per profile. Import verification is not native or physical qualification."
+      ],
+      "evidence": [
+        {
+          "path": "instruments/manifest.json",
+          "present_in_audited_tree": true,
+          "sha256": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743"
+        },
+        {
+          "path": "src/ciw/integration_catalog.py",
+          "present_in_audited_tree": true,
+          "sha256": "d9b9990600eb649ab0892bc838b5fdc32bb50c35e6acbc0b49d14494e61f27f8"
+        },
+        {
+          "path": "scripts/monorepo.py",
+          "present_in_audited_tree": true,
+          "sha256": "82e1b7903d5d54d7975279841cb2f30d51f9b22e09d947b37e973a582b5e8a8b"
+        },
+        {
+          "path": "scripts/check_monorepo_web.py",
+          "present_in_audited_tree": true,
+          "sha256": "718824b225ba541ca1c6d45f3d85782925d2bf49ee1f546b05724a12fd8ce2ee"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F15",
+      "title": "FrameMapper preserves tracked dependencies and Python bytecode",
+      "status": "conditional_upstream_hygiene_review",
+      "priority": "P2",
+      "paths": [
+        "instruments/representation/frame-mapper/intel/node_modules",
+        "instruments/representation/frame-mapper/engine/__pycache__"
+      ],
+      "existing_owner": "Original FrameMapper import revision and independent package source",
+      "observation": "589 dependency files and 15 CPython-3.14 bytecode files are committed in the exact imported tree. Their presence is source hygiene debt, not authorization to run the intel service or promote cached code.",
+      "next_action": "Review an upstream source cleanup/refresh and its new exact import tree, lock/notice and independent build gates. Keep this import byte-identical until that review; do not delete retained upstream bytes in place.",
+      "required_gates": [
+        "Upstream ownership, licence/notice retention, clean reproducible package build and manifest/tree update."
+      ],
+      "evidence": [
+        {
+          "path": "instruments/representation/frame-mapper/engine/__pycache__/__init__.cpython-314.pyc",
+          "present_in_audited_tree": true,
+          "sha256": "93b39a5cd6b1ae34186c5d12fa09350cb30fa96b73cec829b961d80cad85fd8c"
+        },
+        {
+          "path": "instruments/representation/frame-mapper/intel/node_modules/express/package.json",
+          "present_in_audited_tree": true,
+          "sha256": "2980b885bad92f757a2d44674e905cf875867d5685111d8ab8f285635b11367d"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F16",
+      "title": "Nested provider workflows are preserved reference definitions",
+      "status": "intentional_boundary",
+      "priority": "P2",
+      "paths": [
+        "instruments"
+      ],
+      "existing_owner": "Independent source repositories and root monorepo qualification lanes",
+      "observation": "27 workflow definitions occur below imported provider paths. GitHub root Actions do not activate those nested .github directories; some are release templates, not dormant NCP jobs.",
+      "next_action": "Keep source history/templates. Integrate needed checks through existing root monorepo lanes and preserve provider-specific environments; do not copy all nested workflows into root.",
+      "required_gates": [
+        "Existing root import/package/native/web/operations gates and explicit qualification scope."
+      ],
+      "evidence": [
+        {
+          "path": ".github/workflows/monorepo.yml",
+          "present_in_audited_tree": true,
+          "sha256": "a8d1d2573c73bd73648dc8c1660182a28419e559f91660306008a79b3b893c32"
+        },
+        {
+          "path": "scripts/check_monorepo.py",
+          "present_in_audited_tree": true,
+          "sha256": "9e2117cd0e82f57c4881aaa1722d380eb1b3f9d4cb668072aa327c3ac98e8bba"
+        },
+        {
+          "path": "scripts/check_monorepo_operations.py",
+          "present_in_audited_tree": true,
+          "sha256": "6b101b20f201bb582318c242de10d1734a56643555d23ba0ca0501723dddc5a8"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F17",
+      "title": "Imported data/results and validation receipts are historical evidence",
+      "status": "intentional_retention",
+      "priority": "P2",
+      "paths": [
+        "validation",
+        "qualification/weather-science-local.json",
+        "instruments/domain/flowstate/data",
+        "instruments/domain/flowstate/results"
+      ],
+      "existing_owner": "Original provider datasets/results and source-bound validation ledgers",
+      "observation": "Large observation/result JSONs, XML, logs and receipts retain specific historical inputs and runs. They are not loose runtime source and their PASS fields do not qualify the current SHA.",
+      "next_action": "Keep immutable source/time/scope labels and use explicit fresh jobs for current qualification. Archive indexing may improve discoverability without changing evidence bytes.",
+      "required_gates": [
+        "Retained hashes, source SHA, skip/failure scope and licence/provenance; no qualification-by-filename."
+      ],
+      "evidence": [
+        {
+          "path": "qualification/weather-science-local.json",
+          "present_in_audited_tree": true,
+          "sha256": "0adf5d5b91968136dfeaa60b2352360456e0e6d798293796efb3ec45863151b4"
+        },
+        {
+          "path": "validation/research-baseline-20261017/summary.json",
+          "present_in_audited_tree": false,
+          "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+        },
+        {
+          "path": "instruments/domain/flowstate/results/summary.json",
+          "present_in_audited_tree": true,
+          "sha256": "071eb426616a77b6b73d24107b69f5cdea4645e26b8a540dd5ac25599aa7b875"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F18",
+      "title": "Delivery and source-retirement bundles are deliberate transport material",
+      "status": "intentional_retention",
+      "priority": "P1",
+      "paths": [
+        "delivery"
+      ],
+      "existing_owner": "Existing foundry delivery preservation and source-retirement ledger",
+      "observation": "Foundry ZIP/overlay and split Git bundles have explicit handoff/manifests. publish.py and restore.py are transport tools with separate effects, not package modules to import.",
+      "next_action": "Preserve bundle hashes/restore instructions. No unbundle, restore, publication, source retirement or branch deletion was performed during this folder audit.",
+      "required_gates": [
+        "Original source-retirement/transport work-order permissions and exact backup verification before any later transaction."
+      ],
+      "evidence": [
+        {
+          "path": "delivery/source-retirement/README.md",
+          "present_in_audited_tree": true,
+          "sha256": "6899062c32dff4c5c4fdb8054e898547a27c283238630bbc8a7c6810c5d1c28d"
+        },
+        {
+          "path": "delivery/source-retirement/backup-verification.json",
+          "present_in_audited_tree": true,
+          "sha256": "434db0e47ceaeedc048fa45fd9c59bf0a2b9457b7194d804b97cfc614dfd9298"
+        },
+        {
+          "path": "delivery/foundry-v1/retained/HANDOFF.md",
+          "present_in_audited_tree": true,
+          "sha256": "ef08842bbef2167e6a52d4cbcedc68b1bc856243d28cceed5035fd3996b7d97f"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F19",
+      "title": "Contract-only and trusted-host helper modules are intentionally sparse",
+      "status": "intentional_boundary",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/state_transformation.py",
+        "src/ciw/link_capture_model.py",
+        "src/ciw/routine_wakeup.py",
+        "src/ciw/external_work_corpus.py",
+        "src/ciw/external_work_preflight.py"
+      ],
+      "existing_owner": "Existing provider-free declarations, trusted task context and deployment adapters",
+      "observation": "These tested modules expose declarations, a synthetic FPGA reference, scoped host context, deployment preflight or an explicitly configured routine sender. They do not belong in default execution solely because they have few imports.",
+      "next_action": "Retain their explicit APIs and boundaries. Add a host binding only for a concrete authorized journey, reusing existing stores and disclosure/egress grants.",
+      "required_gates": [
+        "No automatic network call, FPGA program, source disclosure, declaration execution or added task authority."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/state_transformation.py",
+          "present_in_audited_tree": true,
+          "sha256": "589fd4febc30d024f09a696798b11b7382655018ebc81cec9a5d09e1e8f696ee",
+          "line": 4,
+          "excerpt": "preserve. It does not execute the transformation, inspect a provider, or"
+        },
+        {
+          "path": "src/ciw/link_capture_model.py",
+          "present_in_audited_tree": true,
+          "sha256": "c4697b48e46dd6ae5105f2d5a49a67ef249d33b290724ec0af4bd4a9961bc6a4",
+          "line": 3,
+          "excerpt": "Python integer ticks model a producer clock. This is NOT HDL, synthesis, a board"
+        },
+        {
+          "path": "src/ciw/routine_wakeup.py",
+          "present_in_audited_tree": true,
+          "sha256": "87b749a11de1845538c348bcfbda0f4d213fab70c864f38f7268c08027cbfe7f",
+          "line": 24,
+          "excerpt": "class RoutineWakeup:"
+        },
+        {
+          "path": "src/ciw/external_work_corpus.py",
+          "present_in_audited_tree": true,
+          "sha256": "a35c71eee68e0634c741f658c1f473ae9ebec6ddfa98056b400a3204851b82d8"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F20",
+      "title": "Standalone JuMP design study is eligible for a scoped retained-operation seam",
+      "status": "eligible_after_baseline_hygiene",
+      "priority": "P2",
+      "paths": [
+        "src/ciw/jump_design.py",
+        "runtimes/jump-design",
+        "scripts/check_design_adjustment_native.py"
+      ],
+      "existing_owner": "Existing standalone worker/checker and operation/execution/result owners",
+      "observation": "The JuMP adjustment study is a documented executable worker with an independent checker, but has no registered operation identity of its own. It is distinct from design-qp.v1 inside native-interop.",
+      "next_action": "If needed, wrap the existing bounded study through the existing operation/Session records and retain a native lifecycle; do not create another solver, registry or result store.",
+      "required_gates": [
+        "Close/disposition hygiene first; preserve exact Julia environment, bounded inputs, independent checks, refusal, reopen and fresh replay."
+      ],
+      "evidence": [
+        {
+          "path": "docs/INTEGRATION_COVERAGE.md",
+          "present_in_audited_tree": true,
+          "sha256": "7faf9c332fb3d25da19c6f28d654e2f2e0d4a714dc8ea5c6f723f1c4f4cffd1b",
+          "line": 129,
+          "excerpt": "The standalone [JuMP adjustment study](DESIGN_ADJUSTMENT.md) is a real worker"
+        },
+        {
+          "path": "src/ciw/jump_design.py",
+          "present_in_audited_tree": true,
+          "sha256": "3a28fc421e682f4dd0acc530486b3d8f5ca5692571e7ad4ec2446ce1a2fe1935",
+          "line": 116,
+          "excerpt": "def run_study(problem, julia_executable, *, depot=None, timeout=120):"
+        },
+        {
+          "path": "scripts/check_design_adjustment_native.py",
+          "present_in_audited_tree": true,
+          "sha256": "0f0e9c6d912dc528a3fe545290b0e4ac841280796f201b2e0c766fa9e053188d"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F21",
+      "title": "Bounded OpenUSD SDK reload is implemented; general interchange remains open",
+      "status": "existing_connection_preserved",
+      "priority": "P1",
+      "paths": [
+        "src/ciw/usd_export.py",
+        "src/ciw/usda_export.py",
+        "src/ciw/spatial_scene.py",
+        "src/ciw/pilot.py"
+      ],
+      "existing_owner": "Existing optional OpenUSD SDK profiles and separate ASCII inspect writer",
+      "observation": "The older unimplemented-directions text incorrectly called all runtime reload pending. Oscillator displacement and local-frame spatial SDK export/reload already exist, with dedicated tests/workflows. ASCII-only copies retain their separate contract.",
+      "next_action": "Documentation now identifies the existing SDK profiles. Reuse them for bounded reload. General import, binary usdc/usdz and arbitrary scene reload remain distinct future work.",
+      "required_gates": [
+        "Pinned optional SDK, existing pilot/spatial native gates, bounded source/layer checks. No fresh SDK execution is claimed by this audit."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/usd_export.py",
+          "present_in_audited_tree": true,
+          "sha256": "c4a1022d106bbbd9fe8e2a47789233b954701f0c342f138c39f488dd500af950",
+          "line": 17,
+          "excerpt": "PROFILE = \"ciw.oscillator-displacement-usd.v1\""
+        },
+        {
+          "path": "src/ciw/usd_export.py",
+          "present_in_audited_tree": true,
+          "sha256": "c4a1022d106bbbd9fe8e2a47789233b954701f0c342f138c39f488dd500af950",
+          "line": 202,
+          "excerpt": "def verify_export(output_dir: Path) -> dict:"
+        },
+        {
+          "path": ".github/workflows/pilot-scope.yml",
+          "present_in_audited_tree": true,
+          "sha256": "ce47648c5c6a8fbd92f5781c9a8afebdb6d0ec9f343ddb6627bff61af24df06a"
+        },
+        {
+          "path": "scripts/check_spatial_installed.py",
+          "present_in_audited_tree": true,
+          "sha256": "2d41225b28da0d2156ff1c55c3e7b6f8aea9bea412bd2ca34121569517bb8a29"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F22",
+      "title": "Learning/reasoning proposals do not imply an absent general command plane",
+      "status": "design_only",
+      "priority": "P3",
+      "paths": [
+        "docs/UNIMPLEMENTED_DIRECTIONS.md",
+        "src/ciw/learning.py",
+        "src/ciw/perspective_workflow.py"
+      ],
+      "existing_owner": "Existing learning walkthroughs, actor-perspective history and operation records",
+      "observation": "A bounded history command and learning examples already exist. The proposed universal history/learn/explore layer, curriculum and theorem reasoning remain future semantics, not merely unregistered existing modules.",
+      "next_action": "Keep existing bounded meanings; design any extension on the same concept/operation/evidence identities after the stated retention and qualification prerequisites.",
+      "required_gates": [
+        "No new tutor/session/store or claims of universal proof/scientific authority from prose."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/operator_commands.py",
+          "present_in_audited_tree": true,
+          "sha256": "a686eb335ab9fbf484cfa30729cb83d9271d0d2a4ef604623f62531503dac0cd",
+          "line": 66,
+          "excerpt": "    ('history', 'perspective_workflow', 'Compile bounded actor perspectives and audit annotated dialogue'),"
+        },
+        {
+          "path": "docs/LEARNING.md",
+          "present_in_audited_tree": true,
+          "sha256": "4e264bacd40b59b12e455bb2a401bd7764ba30954185a11a3d4776bc0854022a"
+        },
+        {
+          "path": "docs/CONNECTIVE_TISSUE_READINESS_20261018.md",
+          "present_in_audited_tree": true,
+          "sha256": "ca1cf10c7b4a76c8c26acc07ab2d6281305d30c01c2202337224b30db35bb2ac"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F23",
+      "title": "Operational OpenTelemetry/OpenObserve plane is contract/planning only",
+      "status": "design_only",
+      "priority": "P3",
+      "paths": [
+        "docs/OPERATIONAL_OBSERVABILITY.md"
+      ],
+      "existing_owner": "Existing operational correlation contract; scientific telemetry/OIT remain separate",
+      "observation": "There is no NCP exporter/Collector/backend binding in the tracked runtime. Transitive SDK dependencies do not implement a configured NCP observability plane.",
+      "next_action": "Select a concrete operational journey before adding bounded optional export; preserve offline execution and scientific evidence ownership.",
+      "required_gates": [
+        "Explicit endpoint/credential setup, failure isolation, bounded signals, correlation and no sensitive evidence export by default."
+      ],
+      "evidence": [
+        {
+          "path": "docs/OPERATIONAL_OBSERVABILITY.md",
+          "present_in_audited_tree": true,
+          "sha256": "d93f9d70db97376d178dd1ce93be29fcf1e3f55e11044143256f24b513667952"
+        },
+        {
+          "path": "docs/SYSTEMS_CATALOG.md",
+          "present_in_audited_tree": true,
+          "sha256": "ab7639368f14feecba322e15555cf48cf475cbfa28ae3c47438173cbabfddcb9",
+          "line": 130,
+          "excerpt": "Operational-observability inventory addition: **2026-10-05**. OTel/OTLP and the"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F24",
+      "title": "Capability/profile and typed-composition extensions must reuse existing owners",
+      "status": "design_only",
+      "priority": "P2",
+      "paths": [
+        "docs/CONNECTIVE_TISSUE_READINESS_20261018.md",
+        "src/ciw/workflow_algebra.py",
+        "src/ciw/control_plane.py",
+        "src/ciw/project_model.py"
+      ],
+      "existing_owner": "Existing registries, typed Boards/graphs, control plans and retained records",
+      "observation": "Data-only provider discovery, operation registries and typed graph contracts are already present. General shared validity-envelope/profile/relationship semantics are design-only extensions, not a reason to create parallel registries or executors.",
+      "next_action": "After baseline hygiene, select one bounded existing profile and add only the missing data projection/compatibility checks over its existing identities.",
+      "required_gates": [
+        "No executable loading from data, unchanged grants/refusals, compatible units/frames/clocks/dependence, round-trip retention and invalidation."
+      ],
+      "evidence": [
+        {
+          "path": "docs/CONNECTIVE_TISSUE_READINESS_20261018.md",
+          "present_in_audited_tree": true,
+          "sha256": "ca1cf10c7b4a76c8c26acc07ab2d6281305d30c01c2202337224b30db35bb2ac"
+        },
+        {
+          "path": "src/ciw/workflow_algebra.py",
+          "present_in_audited_tree": true,
+          "sha256": "2b7723eae32bdd433de159d3274a832954bc07850c36bc7c49025e6e9d00aa97"
+        },
+        {
+          "path": "src/ciw/control_plane.py",
+          "present_in_audited_tree": true,
+          "sha256": "694d245b8f3297091d89addce2d6a2e25f004509fa0395f5caebc73997ba3541"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F25",
+      "title": "Physical acquisition/control qualification cannot be inferred from source density",
+      "status": "conditional_qualification_required",
+      "priority": "P1",
+      "paths": [
+        "src/ciw/link_runtime.py",
+        "src/ciw/operational_supervision.py",
+        "src/ciw/temperature_readiness.py",
+        "examples/temperature",
+        "docs/DEVICE_GATEWAY_ACCEPTANCE.md"
+      ],
+      "existing_owner": "Existing Link/operational journals, admitted command paths and independent local controllers",
+      "observation": "Software acquisition, command authorization, retention and supervisory contracts exist. Unfilled device/temperature setup records, unavailable device configuration and physical/platform gates remain explicit.",
+      "next_action": "Deepen one exact GaugeLink/acquisition profile through existing owners only after software hygiene and its device-specific qualification. Do not infer installed-chain validity or time-critical safety from simulation/MCP success.",
+      "required_gates": [
+        "Identity/configuration/clock/units/covariance, stale/loss/recovery/alarm and command cases, retained actual outcomes and independent equipment interlocks. No hardware was operated here."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/link_runtime.py",
+          "present_in_audited_tree": true,
+          "sha256": "93f09b788a38cbde02c8045f4be79c8d3b8e9705f3823469b0df538ba91c3dfe",
+          "line": 99,
+          "excerpt": "            raise PermissionError(\"Physical/recorded device configuration is not implemented\")"
+        },
+        {
+          "path": "docs/DEVICE_GATEWAY_ACCEPTANCE.md",
+          "present_in_audited_tree": true,
+          "sha256": "450384b0d24b69f949d22320a43233dd6241e4f5241b242bc154b183f2d96d50"
+        },
+        {
+          "path": "src/ciw/temperature_readiness.py",
+          "present_in_audited_tree": true,
+          "sha256": "133129975a1e963fb214c00aa7be6a2e7ec1abd3959cce05832ea7efbb5495cd"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F26",
+      "title": "Hosted qualification and authorized branch cleanup remain operational dependencies",
+      "status": "operational_gate_open",
+      "priority": "P1",
+      "paths": [
+        "release",
+        "validation/research-baseline-20261017",
+        "scripts/cleanup_reconciled_branches.py"
+      ],
+      "existing_owner": "Unchanged release policy and exact guarded branch-cleanup plan",
+      "observation": "Prior retained ledger records required baseline jobs without artifacts and 235 exact eligible heads awaiting an authenticated archive/delete capability. This folder audit does not supply those capabilities or a waiver.",
+      "next_action": "Use the existing same-SHA hosted jobs/collector and authorized guarded transaction; retain current/release/transport refs. This audit did not delete branches, create archive tags or waive required jobs.",
+      "required_gates": [
+        "Current authenticated execution and fresh post-verification. Operational state is cited from the prior source-bound ledger, not re-observed here."
+      ],
+      "evidence": [
+        {
+          "path": "release/qualification-policy.json",
+          "present_in_audited_tree": true,
+          "sha256": "b10ca366f4318934889c26631a8675f8fb29e23be510cab9ba95ca162ef568d9"
+        },
+        {
+          "path": "validation/research-baseline-20261017/branch-cleanup-plan.json",
+          "present_in_audited_tree": true,
+          "sha256": "9166b17b6062debaec3546c70850869209910e644fe2e3601c00af3593b20c8f"
+        },
+        {
+          "path": "docs/WORKFLOW_LANE_REVIEW_20261018.md",
+          "present_in_audited_tree": true,
+          "sha256": "616e4e772a7d599c3002e826a2878709d0262834183ddcf854e00bd8c49f550a"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F27",
+      "title": "Byte-identical examples and packaged resources have deliberate separate roles",
+      "status": "intentional_retention",
+      "priority": "P3",
+      "paths": [
+        "examples",
+        "src/ciw/operator_examples",
+        "third_party"
+      ],
+      "existing_owner": "Source examples, installed package resources and retained upstream notices",
+      "observation": "52 equal-byte groups include shared licences/empty metadata, source/reference copies and five example/package fixture pairs. Equal bytes are not a semantic deduplication mandate.",
+      "next_action": "Keep resources needed by installed workflows and upstream notice/source ancestry. Consider generation/checking from one source only with package and provenance tests.",
+      "required_gates": [
+        "Installed resource availability, preserved attribution and no evidence/fixture identity rewrite."
+      ],
+      "evidence": [
+        {
+          "path": "src/ciw/operator_examples/materials-empirical-rheology.json",
+          "present_in_audited_tree": true,
+          "sha256": "cf6645b5585f8075050c049ba29b869b49c793c820fff7256a9f90facdf3b80a"
+        },
+        {
+          "path": "examples/polymer/nist2491-investigation.json",
+          "present_in_audited_tree": true,
+          "sha256": "cf6645b5585f8075050c049ba29b869b49c793c820fff7256a9f90facdf3b80a"
+        },
+        {
+          "path": "third_party/chemical-kinetics-and-program-execution/NOTICE.md",
+          "present_in_audited_tree": true,
+          "sha256": "81d388348d50c3c5c5e422c7069af396483c8ec88970b19123965cb403198646"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F28",
+      "title": "All source package files are present in the selected and rebuilt wheels",
+      "status": "existing_connection_preserved",
+      "priority": "P2",
+      "paths": [
+        "src",
+        "pyproject.toml"
+      ],
+      "existing_owner": "Existing setuptools package-data declarations and installed CLI/MCP registries",
+      "observation": "All 724 tracked source files, including 666 Python modules and 58 resources, match the earlier selected wheel. The audit changes only integration-sources.json in that package; all 723 other source files remain byte-identical.",
+      "next_action": "Retain rebuilt wheel hash and full per-file identity manifest. CLI navigation has all 79 declared modules; direct-import sparsity is separately triaged.",
+      "required_gates": [
+        "Rebuilt wheel 724-file identity, installed discovery/grant tests and pip dependency check passed. No new numerical/native qualification is implied."
+      ],
+      "evidence": [
+        {
+          "path": "pyproject.toml",
+          "present_in_audited_tree": true,
+          "sha256": "3710c66cf0270a875b2a02a67e5c5518be74d2d1103fbc0031464db52b9aced4"
+        },
+        {
+          "path": "src/ciw/operator_commands.py",
+          "present_in_audited_tree": true,
+          "sha256": "a686eb335ab9fbf484cfa30729cb83d9271d0d2a4ef604623f62531503dac0cd"
+        },
+        {
+          "path": "src/ciw/integration-sources.json",
+          "present_in_audited_tree": true,
+          "sha256": "be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F29",
+      "title": "Research experiment scripts already have bounded root workflows",
+      "status": "existing_connection_preserved",
+      "priority": "P2",
+      "paths": [
+        "experiments"
+      ],
+      "existing_owner": "Existing thermal observer and oscillator/NISE/efficiency operation paths",
+      "observation": "Both root experiment scripts are selected by dedicated workflows. They are intentional bounded synthetic/reduction experiments, not loose domain architectures.",
+      "next_action": "Keep their scope and retained metrics; the cold-chain documentation formatting repair adds no biology/food-safety/physical claims.",
+      "required_gates": [
+        "Use existing experiment-specific workflows and retain input/result/metric scope. Not re-executed in this audit."
+      ],
+      "evidence": [
+        {
+          "path": ".github/workflows/agrofood-cold-chain.yml",
+          "present_in_audited_tree": true,
+          "sha256": "d3729a0bbd949dd4a943ba485f9e6605abc7c950caced2656fe2fd406f5d0eb5"
+        },
+        {
+          "path": ".github/workflows/oscillator-reduction.yml",
+          "present_in_audited_tree": true,
+          "sha256": "5f92c1afbbef9206156c6ebe6706a18711607cd2062d280b8232ab0e442e27e6"
+        },
+        {
+          "path": "experiments/agrofood_cold_chain.py",
+          "present_in_audited_tree": true,
+          "sha256": "d5311092eb518a8fc741a0e592e4accb6ebfdebcc2cbd4d2779d94033332c6e6"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F30",
+      "title": "Optional clients and worker assets are connected through explicit launchers",
+      "status": "existing_optional_surface_preserved",
+      "priority": "P2",
+      "paths": [
+        "tools/interactive-simulation",
+        "tools/game-development",
+        "tools/workcell-godot",
+        "tools/mcp-operator-console",
+        "tools/private-mcp-host",
+        "runtimes",
+        "src/ciw/engine_assets",
+        "src/ciw/godot_runtime",
+        "src/ciw/viewer_assets"
+      ],
+      "existing_owner": "Existing trusted worker launchers, Session/AgentHost/ControlHost and native profiles",
+      "observation": "These source/config/worker trees are optional execution or client boundaries. Relative npm scripts and process module names explain sparse full-path references. Generated request/result/scene/library paths are not missing committed inputs by default.",
+      "next_action": "Use existing launcher/configuration contracts; preserve one state/clock owner per simulation. Qualify each selected optional runtime separately, without auto-installing all tools.",
+      "required_gates": [
+        "Pinned executable/environment, generated input/output checks, bounded transport, retained refusal/recovery/replay and explicit host grants."
+      ],
+      "evidence": [
+        {
+          "path": "tools/mcp-operator-console/package.json",
+          "present_in_audited_tree": true,
+          "sha256": "d7467d75932a883a0465dc0df64a3305c1b2cbfd1ca45e4d1e0e3b5fb789a31b"
+        },
+        {
+          "path": "tools/private-mcp-host/panel/package.json",
+          "present_in_audited_tree": true,
+          "sha256": "623cee2e9dae9daf2b3585a1e6987b61dbd93535fb65343c3266e4abdbc27a40"
+        },
+        {
+          "path": "src/ciw/interactive_simulation.py",
+          "present_in_audited_tree": true,
+          "sha256": "e1db837db3869d7992625fd4a06497410e73fb420538bcdecfa20dbd58700169"
+        },
+        {
+          "path": "src/ciw/adapters/subprocess.py",
+          "present_in_audited_tree": true,
+          "sha256": "06e5d30990324e4e059e2191f2f3a0e6ba8d8ce847b196b0e05927811b4ef257"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F31",
+      "title": "Imported licence, schema and independent build boundaries remain intact",
+      "status": "intentional_boundary",
+      "priority": "P2",
+      "paths": [
+        "instruments",
+        "third_party"
+      ],
+      "existing_owner": "Original manifest ownership/licences and provider package/build contracts",
+      "observation": "The imports include Python packages, source-only SCR and two independent npm applications with their own schemas, notices and tests. Their nested schemas/build files are not missing core-wheel package data.",
+      "next_action": "Retain independent builds and original source attribution. Any further distribution or source update must preserve the applicable notices and exact qualification/pin choices.",
+      "required_gates": [
+        "Manifest licence/notice checks and original package/native/web gate scopes; no automatic core inclusion."
+      ],
+      "evidence": [
+        {
+          "path": "instruments/manifest.json",
+          "present_in_audited_tree": true,
+          "sha256": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743"
+        },
+        {
+          "path": "scripts/check_monorepo_web.py",
+          "present_in_audited_tree": true,
+          "sha256": "718824b225ba541ca1c6d45f3d85782925d2bf49ee1f546b05724a12fd8ce2ee"
+        },
+        {
+          "path": "scripts/check_monorepo.py",
+          "present_in_audited_tree": true,
+          "sha256": "9e2117cd0e82f57c4881aaa1722d380eb1b3f9d4cb668072aa327c3ac98e8bba"
+        },
+        {
+          "path": "docs/licensing/README.md",
+          "present_in_audited_tree": true,
+          "sha256": "535956952be27e0a734a664af9d74eee32bdaf70d14d1b29eccbe454893d8190"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F32",
+      "title": "Qualification files outside default pytest discovery are deliberately opt-in",
+      "status": "existing_optional_surface_preserved",
+      "priority": "P2",
+      "paths": [
+        "qualification",
+        "scripts/tests",
+        "validation"
+      ],
+      "existing_owner": "Existing root workflows and opt-in qualification commands",
+      "observation": "Default testpaths selects tests/, but the columnar qualification file is explicitly invoked by columnar-interchange.yml. Script unit tests and validation browser/native tools have explicit workflows/operators and separate prerequisites.",
+      "next_action": "Keep declared collection and optional dependencies. No blanket move of every qualification script into default core tests.",
+      "required_gates": [
+        "Existing workflow selection, required zero-skip native gates where applicable and source-bound receipts."
+      ],
+      "evidence": [
+        {
+          "path": "pyproject.toml",
+          "present_in_audited_tree": true,
+          "sha256": "3710c66cf0270a875b2a02a67e5c5518be74d2d1103fbc0031464db52b9aced4",
+          "line": 46,
+          "excerpt": "testpaths = [\"tests\"]"
+        },
+        {
+          "path": ".github/workflows/columnar-interchange.yml",
+          "present_in_audited_tree": true,
+          "sha256": "2a226e043c26a98f42a6067736c72dd4e62ba98e28ce8ca4d140690d8b53a459",
+          "line": 8,
+          "excerpt": "      - 'qualification/test_columnar_interchange.py'"
+        },
+        {
+          "path": "scripts/tests/test_ci_policy.py",
+          "present_in_audited_tree": true,
+          "sha256": "ea3919d4a9f57f6c720c27a0ae09dbedd3f61380a8b6387655bcb8987e7bfc1b"
+        }
+      ],
+      "authorizes_execution": false
+    },
+    {
+      "id": "F33",
+      "title": "Workflow overlap is maintenance debt, not proof of redundant lanes",
+      "status": "operational_gate_open",
+      "priority": "P2",
+      "paths": [
+        ".github/workflows",
+        "scripts/audit_workflow_inventory.py"
+      ],
+      "existing_owner": "Existing semantic lane review and root qualification policies",
+      "observation": "Root retains 156 workflows/192 jobs. The preceding immutable lane review records 121 shared test-file correlations with distinct or partly computed contexts; 27 nested provider definitions are a different inventory.",
+      "next_action": "Preserve declared platform/setup/permissions/selection/artifact differences. The new folder auditor runs inside workflow-contracts; no new workflow/job was added.",
+      "required_gates": [
+        "Any later consolidation needs scoped semantic equivalence and preserved required artifact contracts, not filename overlap alone."
+      ],
+      "evidence": [
+        {
+          "path": "docs/WORKFLOW_LANE_REVIEW_20261018.md",
+          "present_in_audited_tree": true,
+          "sha256": "616e4e772a7d599c3002e826a2878709d0262834183ddcf854e00bd8c49f550a"
+        },
+        {
+          "path": "scripts/audit_workflow_inventory.py",
+          "present_in_audited_tree": true,
+          "sha256": "6473913b84615c71e60c3a09073cf31a21e8527ad8bddb2ac6a7817b390d1f40"
+        },
+        {
+          "path": ".github/workflows/workflow-contracts.yml",
+          "present_in_audited_tree": true,
+          "sha256": "1d1a5459adb5046d4fe9d8e6caa507b2f10705d4f435cc1fd2b940c3e1d2beee"
+        }
+      ],
+      "authorizes_execution": false
+    }
+  ]
+}

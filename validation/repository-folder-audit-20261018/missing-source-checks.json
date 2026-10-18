@@ -1,0 +1,295 @@
+{
+  "source_commit": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "bevy_projector_targets": [
+    {
+      "path": "tools/bevy-render-view/src/main.rs",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "path": "tools/bevy-render-view/src/lib.rs",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    }
+  ],
+  "template_emitters": [
+    {
+      "family": "FSRT",
+      "path": "examples/fsrt-two-reservoir/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "CSG",
+      "path": "examples/csg-path-sensitivity/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "CSE",
+      "path": "examples/cse-bim-quantity/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "PROVED_HEAT",
+      "path": "examples/proved-heat/emit_proof_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "RESIDUAL_CUSUM",
+      "path": "examples/residual-cusum-teach/emit_render.py",
+      "present_in_audited_tree": true,
+      "sha256": "5c0d46ce6687b4b1c6d6327f8cf2576438841e3fb820462ae3f2bb0613f3eed6"
+    },
+    {
+      "family": "GTE_CIRCLE",
+      "path": "examples/gte-circle-eligibility/run_or_emit.py",
+      "present_in_audited_tree": true,
+      "sha256": "3e232d8e8d73cf70601e769f760b35873e93af007ecdb2f00f64c24d4d4455db"
+    },
+    {
+      "family": "PLSR",
+      "path": "examples/plsr-stability-verdict/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "ENERGY_ACCURACY",
+      "path": "examples/energy-accuracy-teach/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "VFE",
+      "path": "examples/vfe-sensor-bias-teach/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "family": "MEASUREMENT_CHAIN",
+      "path": "examples/measurement-chain-teach/emit_render.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    }
+  ],
+  "missing_corpus_inputs": [
+    {
+      "path": "examples/usecase-index.json",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "path": "examples/usecase-catalog.md",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "path": "examples/workflows/generate_usecase_corpus.py",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    },
+    {
+      "path": "godot/scripts/usecase_catalog_view.gd",
+      "present_in_audited_tree": false,
+      "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb"
+    }
+  ],
+  "tracked_usecase_scenario_directories": [],
+  "raw_link_signals": [
+    {
+      "source": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+      "line": 134,
+      "target": "docs/docs/JULIA_SP1.md",
+      "raw": "docs/JULIA_SP1.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+      "line": 134,
+      "target": "docs/docs/INTEGRATION_COVERAGE.md",
+      "raw": "docs/INTEGRATION_COVERAGE.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+      "line": 141,
+      "target": "docs/docs/COVARIANCE.md",
+      "raw": "docs/COVARIANCE.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+      "line": 186,
+      "target": "docs/docs/RESEARCH_CONTEXT.md",
+      "raw": "docs/RESEARCH_CONTEXT.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/UNIMPLEMENTED_DIRECTIONS.md",
+      "line": 187,
+      "target": "docs/docs/STATE_TRANSFORMATIONS.md",
+      "raw": "docs/STATE_TRANSFORMATIONS.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/VISUALIZATION_PROVIDERS.md",
+      "line": 96,
+      "target": "examples/usecase-catalog.md",
+      "raw": "../examples/usecase-catalog.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "docs/quickstart.md",
+      "line": 123,
+      "target": "docs/IMPACT_TESTBED.md",
+      "raw": "IMPACT_TESTBED.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/04_real_world_usecase.md",
+      "line": 60,
+      "target": "examples/usecase-catalog.md",
+      "raw": "../usecase-catalog.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/05_sp1_verifiable_experiment.md",
+      "line": 272,
+      "target": "examples/usecase-thermal-proof-gate",
+      "raw": "../usecase-thermal-proof-gate/",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/checklist_sp1.md",
+      "line": 168,
+      "target": "examples/usecase-thermal-proof-gate/README.md",
+      "raw": "../usecase-thermal-proof-gate/README.md",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/coverage_report.md",
+      "line": 59,
+      "target": "examples/workflows/computational_profiles.json",
+      "raw": "computational_profiles.json",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/coverage_report.md",
+      "line": 211,
+      "target": "examples/workflows/coverage_report.json",
+      "raw": "coverage_report.json",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "examples/workflows/coverage_report.md",
+      "line": 212,
+      "target": "examples/workflows/computational_profiles.json",
+      "raw": "computational_profiles.json",
+      "owner": "ncp",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/cookie/README.md",
+      "line": 112,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/cookie/rfc-cutler-httpbis-partitioned-cookies",
+      "raw": "rfc-cutler-httpbis-partitioned-cookies",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/debug/README.md",
+      "line": 20,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/debug/examples/node/app.js",
+      "raw": "./examples/node/app.js",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/debug/README.md",
+      "line": 43,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/debug/examples/node/worker.js",
+      "raw": "./examples/node/worker.js",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/debug/README.md",
+      "line": 252,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/debug/examples/node/stdout.js",
+      "raw": "./examples/node/stdout.js",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/ee-first/README.md",
+      "line": 76,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/ee-first/LICENSE.md",
+      "raw": "LICENSE.md",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/express/Readme.md",
+      "line": 157,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/express/SECURITY.md",
+      "raw": "SECURITY.md",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/http-errors/README.md",
+      "line": 97,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/http-errors/\\[msg]\\",
+      "raw": "\\[msg]\\",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/path-to-regexp/Readme.md",
+      "line": 224,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/path-to-regexp/LICENSE.md",
+      "raw": "LICENSE.md",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/qs/README.md",
+      "line": 746,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/qs/LICENSE",
+      "raw": "LICENSE",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/router/README.md",
+      "line": 86,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/router/path,",
+      "raw": "path,",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    },
+    {
+      "source": "instruments/representation/frame-mapper/intel/node_modules/router/README.md",
+      "line": 167,
+      "target": "instruments/representation/frame-mapper/intel/node_modules/router/handler",
+      "raw": "handler",
+      "owner": "frame-mapper",
+      "tracked_target_exists": false
+    }
+  ],
+  "limits": "Missing generated request/result/native library files are not automatically missing committed inputs. Imported dependency README pseudo-links are not automatically actionable defects."
+}
