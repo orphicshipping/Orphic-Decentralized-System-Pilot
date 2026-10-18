@@ -159,6 +159,12 @@ def check(executable: str) -> None:
                     ["--script", "res://tests/presentation_smoke.gd"], timeout=30)
                 if "PASS: presentation smoke" not in presentation:
                     raise CheckError("Presentation smoke exited without its PASS sentinel")
+                subprocess.run([sys.executable, str(ROOT / "examples/workflows/emit_all_usecases.py")],
+                               cwd=ROOT, env=environment, check=True, timeout=60)
+                teaching = run_godot(executable, "retained teaching catalog",
+                    ["--script", "res://tests/teaching_catalog_smoke.gd"], timeout=30)
+                if "CIW_TEACHING_CATALOG_SMOKE_PASS" not in teaching:
+                    raise CheckError("Teaching catalog smoke exited without its PASS sentinel")
                 if process.poll() is not None:
                     raise CheckError("Temporary CIW service stopped during Godot import")
                 output = run_godot(

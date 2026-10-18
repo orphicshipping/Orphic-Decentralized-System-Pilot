@@ -51,6 +51,7 @@ def _owned_payload(family: str) -> dict[str, Any]:
 
 def _render_json(family: str, output: Path | str, scenario: Mapping[str, Any]) -> Path:
     data = _owned_payload(family)
+    retained_upstream_status = data.get("upstream_status", "HOST_FROM_OWNED_CONFIG")
     slug = str(scenario["slug"])
     title = str(scenario["title"])
     industry = str(scenario["industry"])
@@ -58,6 +59,8 @@ def _render_json(family: str, output: Path | str, scenario: Mapping[str, Any]) -
     non_claim = str(scenario["non_claim"])
     source_label = f"HOST_FROM_OWNED_CONFIG::{family}::{slug}"
     data.update({"source": source_label, "upstream_status": "HOST_FROM_OWNED_CONFIG", "claim_scope": "computational-integrity-only", "may_authorize": False, "presentation_only": True, "use_case_slug": slug, "scenario": {"title": title, "industry": industry, "lesson": sentence, "owned_family": family, "non_claim": non_claim}, "data_source": f"HOST_FROM_OWNED_CONFIG: examples/{_EMITTERS[family].parent.name}/ owned {family} teaching emitter; same retained numbers, no second solver.", "caption": f"{title}. {sentence} Presentation only; {non_claim}.", "evidence_seam": {"provider": "Evidence-and-State-Management", "role": "evidence seam / retention path only", "url": ESM_URL, "local_receipt": f"examples/{slug}/results/{slug}_render.json", "verification": "not claimed; may_authorize remains false", "variant": "UNADMITTED_CANDIDATE_RETENTION", "canonicalAdmission": False}, "canonicalAdmission": False, "forbidden_claims": sorted(set(list(data.get("forbidden_claims", [])) + [non_claim, "new CIW kind", "second solver", "physical verification"])), "may_authorize": False})
+    data["upstream_status"] = retained_upstream_status
+    data["evidence_seam"]["local_receipt"] = f"examples/usecase-{slug}/results/{slug}_render.json"
     return _write_render(output, data)
 
 

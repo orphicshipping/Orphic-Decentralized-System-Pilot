@@ -1,6 +1,6 @@
 """NET Session lifecycle with an EXPLICIT TRANSPORT DOUBLE, not ALCHEMI physics.
 
-The native gate is scripts/check_nvalchemi.py and must not close with skips.
+The native gate is scripts/check_atomic_nvalchemi.py and must not close with skips.
 """
 from copy import deepcopy
 from threading import RLock

@@ -4,6 +4,7 @@ const Client = preload("res://scripts/ciw_client.gd")
 const PhasePlot = preload("res://scripts/phase_plot.gd")
 const EnergyView = preload("res://scripts/energy_view.gd")
 const ExperimentView = preload("res://scripts/experiment_view.gd")
+const UsecaseCatalogView = preload("res://scripts/usecase_catalog_view.gd")
 const TEXT := Color("dce6f1")
 const MUTED := Color("899cb2")
 const TEAL := Color("60dfcd")
@@ -159,6 +160,9 @@ func _build_ui() -> void:
 	var oscillator := VBoxContainer.new()
 	oscillator.name = "Oscillator"
 	_tabs.add_child(oscillator)
+	var teaching := UsecaseCatalogView.new()
+	teaching.name = "Teaching samples"
+	_tabs.add_child(teaching)
 	column = oscillator
 	var context := _panel()
 	column.add_child(context)

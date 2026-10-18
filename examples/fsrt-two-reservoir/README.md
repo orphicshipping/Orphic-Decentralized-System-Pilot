@@ -1,5 +1,7 @@
 # fsrt-two-reservoir (HOST replay of published quickstart)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST replay of Fluid-State-Reconstruction-Testbed `examples/quickstart.py` for
 the Godot **Fluid balance** tab. Does **not** mint `ciw.fluid-volume.v1` or
 import `set_lcm`.

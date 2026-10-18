@@ -113,21 +113,30 @@ than resolving its symlink to a system interpreter. Put reports and environments
 outside the clean source checkout (the existing adapter permits named venv/cache
 directories, but arbitrary untracked source/output files are refused).
 
-**Native gate gap (18 October 2026 source audit):** the earlier command
-`scripts/check_nvalchemi.py --binding ...` does not match the current script.
-That script now qualifies the separate CPU `nvalchemi.lj-single-point.v1`
+**Separate native gate (18 October 2026 follow-up):** use
+`scripts/check_atomic_nvalchemi.py --binding reviewed.json --output-dir NEW_DIR`.
+The earlier `scripts/check_nvalchemi.py --binding ...` command was incorrect:
+`check_nvalchemi.py` qualifies the separate CPU `nvalchemi.lj-single-point.v1`
 binding under `ciw.adapters`, using `--python`, `--revision`, `--repository`
 and `--output`. It does not qualify this page's
 `atomic.lj-energy-forces.v1` Session operation. Both contracts remain present;
 their records, bindings and qualification claims are not interchangeable.
 
-An atomic-profile native gate must still retain a Session workspace/report and
-exercise known pair limits, an asymmetric cluster, transformed/permuted inputs,
-native force/energy finite differences, fresh execution identities, offline
-reopen and explicit missing-runtime refusal. Those are acceptance requirements,
-not current execution results. Do not rename the CPU profile or promote its
-historical evidence to close this gate. Stress/PBC/MLIP/dynamics/physical gates
-remain separate.
+The atomic gate retains Session workspaces, worker transport and a report for
+known pair limits, an asymmetric cluster, the maximum 32-atom input,
+transformed/permuted inputs, native force/energy finite differences, offline
+reopen and explicitly rebound fresh replay. Five resealed mutations and five
+out-of-profile inputs must refuse. Missing bindings produce NOT_RUN/exit 2;
+failures produce FAIL/exit 1, with partial evidence retained. Evidence directories
+must be fresh. The CPU single-point gate remains unchanged.
+
+Trusted setup can record metadata using `scripts/prepare_atomic_nvalchemi.py`
+with explicit `--repository`, `--revision`, `--python`, `--device` and `--output`.
+That helper installs nothing and runs no prediction. Review its binding before
+using it. The [Linux CPU dependency closure](../runtimes/atomic-alchemi/README.md)
+and [execution evidence](INTEGRATION_COMPLETION_20261018.md) identify the tested
+native runtime. Local CPU software qualification does not qualify CUDA,
+stress/PBC/MLIP/dynamics or physical behavior.
 
 For trusted application setup, use `registry.register(adapter.operation())`.
 For offline-only reading, call `register_schema()` without constructing an
@@ -144,7 +153,7 @@ real worker subprocess refusal and offline input/model/runtime/record mutations.
 No toolkit or toolkit-ops distribution and no CUDA device are available in that
 execution environment. The historical increment reported a native-gate invocation
 without a binding as **NOT_RUN**, with exit code 2; that observation does not
-describe the current script's CLI or supply the missing atomic-profile gate.
+describe the separate atomic gate's current execution results.
 
 The [lifecycle tests](../tests/test_nvalchemi_lifecycle.py) deliberately use a
 transport double, not NVIDIA numerical code. The [workflow](../.github/workflows/net-nvalchemi.yml)

@@ -686,7 +686,7 @@
     {
       "id": "bevy",
       "name": "Bevy",
-      "declared_boundary": "Retained-render projector metadata is present, but its Rust application target is absent in the 2026-10-18 folder audit. The separate bounded projectile runtime does not supply that projector; see [current source inventory](VISUALIZATION_PROVIDERS.md). General ECS integration retains its own gates.",
+      "declared_boundary": "Optional retained-render projector over existing host JSON, with a native window, bounded summary and strict historical/fresh-verification display. Pinned Bevy source, Cargo.lock and Rust 1.97.1 are retained; this presentation provider supplies no scientific operation or authority. The bounded projectile runtime and general ECS integration keep separate contracts and gates.",
       "documentation": "docs/SYSTEMS_CATALOG.md"
     },
     {
@@ -734,7 +734,7 @@
     {
       "id": "nvidia-alchemi-toolkit",
       "name": "NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`)",
-      "declared_boundary": "Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding and native CPU/CUDA qualification remain required; MLIP, dynamics, training and polymer/physical qualification are not delivered.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md).",
+      "declared_boundary": "Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding is required. The separate atomic CPU Session gate has retained local execution evidence; CUDA, hosted, MLIP, dynamics, training and polymer/physical qualification remain separate.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md).",
       "documentation": "docs/SYSTEMS_CATALOG.md"
     },
     {

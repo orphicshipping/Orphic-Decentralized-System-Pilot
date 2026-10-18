@@ -1,5 +1,7 @@
 # Repository folder audit — 18 October 2026 UTC
 
+> Follow-up: the [integration completion](INTEGRATION_COMPLETION_20261018.md) implements and tests the Bevy projector, ten-family teaching input path and separate atomic native gate. This audit and its retained findings describe the original audited SHA.
+
 Audited immutable main **`5bde337174bdfb2add357042aceae2286bb7e56b`**, tree
 `de4f941486886bb4c94546118c93915c9928c4bb`, after merged PR #248. The research baseline remains
 `312a37ba613a0b57ea027b8d00df5b3b4fe08d69`; this audit does not waive its hosted,

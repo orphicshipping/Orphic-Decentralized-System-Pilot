@@ -1,5 +1,7 @@
 # proved-heat (operation + Proof presentation)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 Shared operation `ciw.proved-heat.v1` (no v2). See
 [`docs/PROVED_HEAT.md`](../../docs/PROVED_HEAT.md) for the exact computational
 claim, runtime pins, and fresh-verification contract.
