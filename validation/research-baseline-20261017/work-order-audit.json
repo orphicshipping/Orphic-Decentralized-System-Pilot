@@ -1,0 +1,56 @@
+{
+  "schema": "ncp.work-order-closeout-audit.v1",
+  "work_order": "tasks/work-orders/NCP_RESEARCH_BASELINE_WORK_ORDER_20261017.md",
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "all_acceptance_complete": false,
+  "tasks": [
+    {
+      "task": 1,
+      "status": "local_integration_and_history_checks_complete_remaining_gates_named",
+      "evidence": [
+        "candidate.json",
+        "consolidated-summary.json",
+        "pr-dispositions.json",
+        "reports/baseline-final-history.xml"
+      ]
+    },
+    {
+      "task": 2,
+      "status": "priority_increments_integrated_on_explicit_release_candidate",
+      "prs": [
+        240,
+        242,
+        232,
+        231
+      ]
+    },
+    {
+      "task": 3,
+      "status": "evidence_snapshot_complete_qualified_release_blocked",
+      "remaining": [
+        "Same-SHA required hosted CI and artifacts",
+        "Private/provider/platform gates",
+        "Independent-human and physical qualification where required"
+      ],
+      "owner": "Repository maintainer / runner administrator and provisioned-provider/platform operators"
+    },
+    {
+      "task": 4,
+      "status": "pr_cleanup_and_guides_complete_branch_count_reduction_pending_confirmation",
+      "closed_superseded_prs": 79,
+      "cleanup_entries": 235,
+      "other_heads_for_scope_review": 39,
+      "owner": "Repository owner / maintainer with authorized tag and branch controls",
+      "required_confirmation_source": "Task 4: archive or delete long-lived branches ... (after confirmation).",
+      "remaining_open_prs_at_refresh": [],
+      "integration_pr": "244 merged; evidence-only follow-up is published separately"
+    },
+    {
+      "task": 5,
+      "status": "optional_design_note_complete_no_runtime_implementation",
+      "evidence": "docs/CONNECTIVE_TISSUE_READINESS_20261018.md"
+    }
+  ],
+  "user_risk_and_related_repository_steering": "Audited and integrated as dated inventories, risk owners, provider boundaries and a shorter entry guide; no unqualified default activation.",
+  "repository_state_refresh": "repository-state-refresh.json"
+}

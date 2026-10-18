@@ -20,7 +20,7 @@ The application focus includes polymer processing, component development, instru
 
 This branch consolidates the open development work into one review candidate. The
 installed aliases are `ncp`, `net`, and `ciw`; package and retained record identities
-are unchanged. Review the [consolidation ledger](docs/PR_CONSOLIDATION_20261017.md)
+are unchanged. Review the [selected baseline ledger](docs/RESEARCH_BASELINE_20261017.md)
 for the exact source PRs, integration decisions, executed checks, and blocked
 qualification. This candidate is not a release or a claim of universal provider
 qualification.
@@ -90,6 +90,8 @@ Optional providers require the exact runtimes and dependencies specified by thei
 An optional [registered heat profile](docs/PROVED_HEAT.md) connects to the Scientific Computation Runtime and SP1 for a bounded integer calculation. Its proof concerns the registered computation and commitments, not physical calibration or the validity of an arbitrary heat model. Reading a saved proof report is not a fresh verifier execution. The retained profile makes no privacy claim.
 
 ## Local evaluation
+
+[Start with one installed investigation](docs/BASELINE_START_HERE.md) · [Related repositories and provider boundaries](docs/LATENT_PROVIDER_SURFACE_20261018.md) · [Risks and owners](docs/BASELINE_RISKS_20261018.md)
 
 <a id="quickstart"></a>
 

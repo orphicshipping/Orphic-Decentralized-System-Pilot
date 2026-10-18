@@ -1,0 +1,158 @@
+{
+  "schema": "ncp.research-baseline-candidate.v1",
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "tree": "862785f15628cb3d1c2ec0c620e357dbd1ddb876",
+  "base_main": "cb97dbbee70fc487d80b1311b107e150eec667d0",
+  "review_pr": 244,
+  "review_url": "https://github.com/notationsystems/Notations-Control-Protocol/pull/244",
+  "branch": "release/research-baseline-20261017",
+  "work_order_date": "2026-10-17",
+  "qualification_state": "local_software_verified_hosted_release_blocked",
+  "git_ancestry": {
+    "selected_commits": 1975,
+    "recovered_main": "c0409a8df2836eca9fafd8b29c08788f88a8a3ec",
+    "recovered_main_commits": 1951,
+    "complete_current_tree": true,
+    "selected_native_root_count": 29,
+    "native_modules": 21,
+    "unselected_historical_tree_closure": "not_materialized_locally",
+    "source_integrity_gates": "unchanged"
+  },
+  "wheel": {
+    "wheel": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+    "wheel_sha256": "40c6b0410fd6f28f03023cf292553c10fd293b767d66743310616b8b6306ca9e",
+    "package_files_matched": 722,
+    "source_wheel_installed_exact": true
+  },
+  "authority": {
+    "physical_validation": "not_performed",
+    "independent_human_study": "not_performed",
+    "hardware_actuation": "not_performed",
+    "remote_multiuser_qualification": "not_performed",
+    "private_provider_qualification": "not_performed",
+    "windows_qualification": "not_performed",
+    "SP1_beyond_registered_heat_profile": "not_qualified",
+    "SP1_registered_heat_profile": "registered_native_qualification_not_reexecuted_locally"
+  },
+  "gates": [
+    {
+      "id": "public-hosted-CI",
+      "status": "blocked_queued_pending",
+      "owner": "NCP repository maintainer / GitHub runner administrator",
+      "evidence": "hosted-ci-report.json"
+    },
+    {
+      "id": "branch-archive-delete",
+      "status": "requires_confirmation",
+      "owner": "repository owner",
+      "instruction": "Work order Task 4: archive or delete ... (after confirmation).",
+      "plan": "branch-cleanup-plan.json"
+    }
+  ],
+  "history_gate": {
+    "status": "PASS",
+    "tests": 176,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report": "reports/baseline-final-history.xml",
+    "modules": [
+      "test_monorepo.py",
+      "test_module_update.py"
+    ]
+  },
+  "completed_at": "2026-10-18T00:09:01.942093+00:00",
+  "consolidated_gate": {
+    "modules": 514,
+    "tests": 20325,
+    "passed_cases": 19155,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 1170,
+    "status": "PASS"
+  },
+  "installed_gates": {
+    "ncp_contract": {
+      "status": "PASS",
+      "tests": 531,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "priority_increments": {
+      "status": "PASS",
+      "tests": 209,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    },
+    "native_operational": {
+      "status": "PASS",
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0
+    }
+  },
+  "operator_journeys": {
+    "status": "PASS",
+    "count": 3,
+    "checks_per_journey": 22,
+    "origin": "scripted_synthetic",
+    "report": "operator-journeys.tar.xz"
+  },
+  "interactive_checks": {
+    "console_python": 6,
+    "DOM": 3,
+    "Chromium": 9,
+    "browser": "143.0.7499.0",
+    "status": "PASS"
+  },
+  "branch_hygiene": {
+    "original_open_prs": 82,
+    "closed_superseded_prs": 79,
+    "already_merged_priority_prs": [
+      240,
+      242
+    ],
+    "total_branches": 282,
+    "cleanup_after_confirmation": 235,
+    "individual_scope_review": 39,
+    "merged_original_prs_at_refresh": [
+      139,
+      240,
+      242
+    ],
+    "merged_integration_pr": 244,
+    "open_prs_at_refresh": [],
+    "total_branches_note": "282-head inventory precedes the new protected evidence follow-up branch; no original branch was deleted.",
+    "retained_active_release_deferred": 8,
+    "retained_note": "The merged transport head remains retained until native publication and source-retirement obligations are independently resolved."
+  },
+  "workflow_inventory": {
+    "tracked_workflow_files": 156,
+    "top_level_jobs": 192,
+    "release_required_workflows": 14,
+    "private_token_workflows": 13,
+    "exact_duplicates_ignoring_name": 0,
+    "overlapping_explicit_test_modules": 106
+  },
+  "provider_inventory": {
+    "imported_modules": 21,
+    "surrounding_catalog_systems": 26,
+    "source_audit": "PASS",
+    "default_optional_provider_activation": false,
+    "globally_qualified": false,
+    "evidence": "provider-status.json"
+  },
+  "work_order_audit": "work-order-audit.json",
+  "hosted_ci_latest_observation": "hosted-ci-latest-observation.json",
+  "integration_pr": {
+    "number": 244,
+    "state": "merged",
+    "merge_commit_sha": "f5269e1278e56772d400dc87ead3ae5bf461d7bd"
+  },
+  "evidence_review_branch": "work/research-baseline-closeout-20261018",
+  "observed_main": "484fea941999caeeca132fc33f622e00e7b8a24b",
+  "repository_state_refresh": "repository-state-refresh.json"
+}

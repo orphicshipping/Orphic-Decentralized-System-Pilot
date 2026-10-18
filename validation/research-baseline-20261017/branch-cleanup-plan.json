@@ -5,7 +5,8 @@
     "main",
     "release/research-baseline-20261017",
     "work/research-baseline-evidence-20261017",
-    "release/research-baseline-20261017-validation"
+    "release/research-baseline-20261017-validation",
+    "work/research-baseline-closeout-20261018"
   ],
   "entries": [
     {
@@ -78,7 +79,7 @@
       "expected_head": "70c515ba97b1b39693d9446626bf7879800efe03",
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
-      "reason": "Reconciled with hardened corpus and MCP integration in #223\u2013228. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+      "reason": "Reconciled with hardened corpus and MCP integration in #223–228. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
     },
     {
       "pr": 219,
@@ -639,6 +640,1422 @@
       "action": "eligible_after_confirmation",
       "archive_before_delete": true,
       "reason": "Current main README retained; stale default-branch acceptance claims replaced with this review scope. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force."
+    },
+    {
+      "pr": null,
+      "branch": "agent/project-graph-operation-v2",
+      "expected_head": "8b1f75fe3c90a44428f62263f6da506a3db71952",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "claude/modest-thompson-7bm177",
+      "expected_head": "64b645a2310a393ed754ccc72abb1b80b0705051",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/audit-gaugelink-and-ncp",
+      "expected_head": "e6af2d48bfe7511185f6ebefa8cce7380cbc5d54",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/builtin-numerical-library-20261017",
+      "expected_head": "b115a5ecce8fe3e9eb28003fbd83a12cbf11cd49",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/cantera-worker-ci-v1",
+      "expected_head": "c2f68e75d525c37c4af1e8fc041f7f9bb81eb308",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/cloud-development-setup-20261017",
+      "expected_head": "97c9fc72f068d68b2f8a3984ffca0fb845717964",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/consolidated-ncp-review-20261017",
+      "expected_head": "6fcd86bd6b331a5f1cd466a870dfa925dd1c7045",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/cps-contract-audit",
+      "expected_head": "034b5f320242fb184fa60c224a9baf7d080f4a51",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/curved-path-study-v1",
+      "expected_head": "ee726715245f891cdeba176b25295a0a5c3dc39e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/exchange-refusal-fixture-v1",
+      "expected_head": "11eea765c3b35cb452018e04fe9361160ba3e367",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/free-energy-demo-20260923",
+      "expected_head": "c6cee6c36e7720f7fbce1487fe7b0266e2ef4cf8",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/fsrt-retained-view-v1",
+      "expected_head": "ef4c55361b05740f6c58d1a2c065633481e4a1ad",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/geometry-implementations-20260923",
+      "expected_head": "4d82b6b459c6bd11c324001b3ebfcede228de367",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/integration-qualification-v1",
+      "expected_head": "1a64fda3b25c5c5f6fbd0f961623719218724510",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/interval-requirement-v1",
+      "expected_head": "6638e8f26363fcf4c7cbd89d460e2e21538d3d57",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/julia-oscillator-kernel-v1-20260928",
+      "expected_head": "7ee821d24724b5828bc89b7926db0faf3196da2d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/math-learning-v1",
+      "expected_head": "ff0a4de72dc3247296b2ae852ffa2c2b3046cc05",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/mcp-operator-console-20261017",
+      "expected_head": "756e0d9606642cb0a02e1095f110d6244e66f6eb",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/measured-thermal-mcp-pilot",
+      "expected_head": "569601b314ac4ae69a2614b162ae034c1596dee5",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/measurement-review-polish",
+      "expected_head": "a6a5970749d362f8e7e20682cc73cdff56042ece",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/metrology-numerics-ci-readiness",
+      "expected_head": "37f4635cf05dcac6e965a010cfd8d11fdf664bd4",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/metrology-quality-polish",
+      "expected_head": "24bdac88a5e2127b093053c46303cf09901088dc",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/model-validity-evidence",
+      "expected_head": "3ce27102dc23bfc27d99d0e36db0721daa4332bc",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/native-interop-v1",
+      "expected_head": "4f536fc04e6fc24b1b148a6ac809ed9792181ceb",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/native-references-verified-20260923",
+      "expected_head": "cb9a4b8cf6ebad8b73f652b1575ac7f814fccb5a",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/net-connectivity-observation-20261005",
+      "expected_head": "1517ef212be6f80092672d1ee6b05ad1df049bfb",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/operational-engineering-mcp-work-order-20261017",
+      "expected_head": "ee33170fbfca8022602468637073901d61ea5b22",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/pdt-ci-routing-v1",
+      "expected_head": "47754302451f47491b5ddcfbaa7383b2d6ec70fd",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/persistent-simulation-v1",
+      "expected_head": "834f632c6565f1dbd55e575e9ec0ae73b92b7816",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/platform-policy-closure-v1",
+      "expected_head": "5f8485d3e6a5a4427a824fe834ffe043cb6fe0c2",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/polyglot-linear-map-v1",
+      "expected_head": "8782bee2a83087cf66d325e0b4b42a4fe5b04cdb",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/polymer-fluid-material-leakage-20261003",
+      "expected_head": "559f6f87992ade8b73f5ee2020e8ecb312a2ee14",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/polymer-temperature-qualification",
+      "expected_head": "ff48ed5c36cb3c0dbb5abd84d0130e3703ae3e92",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/post-consolidation-repair-20261017",
+      "expected_head": "8faad1db2cb0fb382f0114c6b9a52dbba763f659",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/private-mcp-host-20261017",
+      "expected_head": "07c82b6105d8650922673023b5ddf703e4c39a49",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/qualified-release-baseline",
+      "expected_head": "d652b196b29e2ec2ca2cfaa2d53da9a232da24a4",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/reaction-kinetics-v1",
+      "expected_head": "9aef0494dd102785e7c804af07f6c80af98e340d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/scientific-core-20260923",
+      "expected_head": "9fbce989c1a76bb996fbf90299e95ac7760d15ab",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/scr-proof-verification-20260923",
+      "expected_head": "2883304086796ad3e0feb1bd8f07ed8c1c3478ed",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/shared-adapter-substrate",
+      "expected_head": "b50fde35929afa0dd3f9f5b777d26fed69f48d95",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/simulation-observation-fsrt-v1",
+      "expected_head": "297bf65cac98b28210c07972275c6adf715c497e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/temperature-numerical-verification",
+      "expected_head": "dddf487c807aa93acfd9dac04f7308ae89a35dab",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/workbench-integration-review-20260923",
+      "expected_head": "aca253164f11135c866d7f61ea0c3e8fac52521e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "codex/workflow-attempts-v1",
+      "expected_head": "b9d4dea8c8eee101969e60034f20e96e19c68bef",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "copilot/fix-code-for-review-comments",
+      "expected_head": "2ae0bb165602dcbf7f3398bc746d60c306bdf306",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "copilot/repository-analysis",
+      "expected_head": "e6af2d48bfe7511185f6ebefa8cce7380cbc5d54",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/cyber-physical-laboratory-mandate",
+      "expected_head": "f737139c1a255c6935c5a77e1fe09a0fda2d5ff3",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/interactive-simulation-targets-20260928",
+      "expected_head": "e6b8809b13988caa43c6df51d38230c365e7526d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/licensing-child-companies-20261003",
+      "expected_head": "1daafd291dcb79870dd6ceeac09fb3fe2bf17c7d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/licensing-name-reconciliation-20261003",
+      "expected_head": "05bbae18bf2ea28c9aba0df8acaf026fbb0d6db1",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/net-controller-boundary-20260927",
+      "expected_head": "2dcdfe1b793ec97bf034442c0195db41df8209f2",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/notations-design-terminal-readme",
+      "expected_head": "648864c52f90a9640f77a390f56fe2ca39fac9ec",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/notations-organization-20261003",
+      "expected_head": "74c0f66113fe550fee8c04175ba5e01ce33b5909",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/permission-only-licensing-review-20261002",
+      "expected_head": "0956c493bcae1e0aa8d4dd71200816c2cc60809c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/physical-virtual-systems-20261003",
+      "expected_head": "59e715ce07a062b932af2add492555e20b6d27dc",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/professional-readme-pitch",
+      "expected_head": "95af6b2d074217c99a60e7a9662fb34bbe5a499e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/rename-parametric-design-terminal",
+      "expected_head": "8fd473bfe7c4524b090e6b14ba7b0eaafca7198b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "docs/research-whitepaper-foundations-20260929",
+      "expected_head": "a826a742747737fdde3ccdf3b7903b4547b27d80",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "experiment/agrofood-cold-chain-v1-20260929",
+      "expected_head": "50a8a3def0beed5f3439bee297e3d668cff5eac8",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "experiment/oscillator-representation-reduction-v1-20260929",
+      "expected_head": "11dd1dc05f1c05cf92d23c426fe082d7a878a2ec",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "experiment/single-agent-workcell-20260929",
+      "expected_head": "6861862c9ea0e8280e3e0372d3d0a984b62cecb9",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/annotation-nise-loop-v1-20260929",
+      "expected_head": "8fd81a9f2345ff394da5a68410646733ed880a6c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/annotation-record-v1-20260929",
+      "expected_head": "2e6a96d7f8857657a8f4d81c19b8566f5ee55c3d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/artifact-provenance-v1-20260929",
+      "expected_head": "8c9207d0f6c15e913e46c08fe9a89e1041f53a55",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/bim-interop-runtime-bridge-v1-20261001",
+      "expected_head": "7e955060bcb9f336b207ab26dc2cf6245b557ea5",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/closed-pilot-scene",
+      "expected_head": "ccb28f17866d2fea2a5f4532855429f7c553dd9c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/columnar-interchange-v1-20260929",
+      "expected_head": "f072264d098512e76926195e2f29f108ca508912",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/computational-object-selection-v1-20260928",
+      "expected_head": "e2ee771fcb8c00422eb51e6fa83abbc5ecb9b8d5",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/container-experiment-calculus-v1-20260929",
+      "expected_head": "736c7702dafd11a59d9c9b627c43bfbbb63b5670",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/cse-preservation-verifier-v1-20261002",
+      "expected_head": "7170b19a205d7597744901aaaa7c242354fefa6d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/dsp-instrument-v1-20260929",
+      "expected_head": "6bb342f468220d4980141ecbc319ab46a6d0fd85",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/engineering-monorepo-wave1-audit-20261002",
+      "expected_head": "9c274f91f6a8f5efc82b2cb4c16b9b57502099d4",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/engineering-superrepo-20261003",
+      "expected_head": "bc6eb2707b283c7ed285ed9635a7170082bedb8a",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/evidence-bound-expansion-v1-20260929",
+      "expected_head": "1d55c6d6996ddbf7e457108eb78bda39dd54a6a0",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/executable-agent-workcells-v1-20260929",
+      "expected_head": "aaa7cc93b00b4475cd4b51387c3b29ad944baf6c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/executable-interoperability-ingress-v1-20261001",
+      "expected_head": "c61365a6e7919482cb8a0230d4aa51e3defc279e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/f2-proof-obligations",
+      "expected_head": "066ea5b823446fc45efea05d90b5c5c114e15d27",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/finite-representation-preservation-v1-20260929",
+      "expected_head": "d43a420a22af51231097dfbfed6d8d73595aeb5f",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/foundry-asset-worker-v1-20260929",
+      "expected_head": "9b0bc656312053723a5d5fa9cb6c1ad49ea5c958",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/foundry-production-queue-v1-20261002",
+      "expected_head": "6be0d89c208340ea7c48f4dcab935244bd0da3ef",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/game-foundry-1792-v1-20260929",
+      "expected_head": "17fe9fb75a717c6ecf21d6bde92262625f517c9e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/game-production-pipeline-v1-20260929",
+      "expected_head": "8c8cd46f34ab78dc52f597f31dcca702d8988f97",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/game-project-production-v1-20260929",
+      "expected_head": "a27c8baab174073facf20c29ad5581a63d59213d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/game-trace-workbench-v1",
+      "expected_head": "39f209c9e761f570a2a8c5940366bf57bd0bfd6d",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/godot-stateful-owner-v1-20260928",
+      "expected_head": "b7d3397d524d06e81ef3bbbc401d833eb000d641",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/historical-perspective-v1-20260929",
+      "expected_head": "e1fa85f89ff3f39db84ee9b157929133de49b72c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/industrial-semantic-transition-v1-20261001",
+      "expected_head": "7edb2b9ee06cd2e70d7afc218fb76ec5d38bb9df",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/interactive-projectile-v1",
+      "expected_head": "76075f9fa2235c109f800fd9d38a10cb6131c877",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/investigation-efficiency-v1-20260929",
+      "expected_head": "eeb5f978fa91b0b8bb25c5adeef5e75479e072c8",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/legibility-instrument-v1-20261003",
+      "expected_head": "8fc30aa134719323ea53e8d42b13d517538efbc9",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/legibility-version-comparison",
+      "expected_head": "1dac5a4822e9116fd5bbfa67d83d5b7d35401068",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/local-provider-qualification",
+      "expected_head": "53459ed27c1bf4063e7f3133af219ff5be487140",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/microfab-plan-envelope-v1-20261005",
+      "expected_head": "c75edbc5b7d11d9f7da39fb1d78d482e7e796a20",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/monorepo-continuation-20261003",
+      "expected_head": "aa4981b510c72eaedc91acaadf697f97f33238d4",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/monorepo-source-and-corrections-20261003",
+      "expected_head": "93e372a49667f35ee33f85cfdcd474c5c62aabd5",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/needle-v1-20260929",
+      "expected_head": "c123a1b8d5663d035cb055403de46a4b12ca0fc0",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-agent-mcp-v1-20260928",
+      "expected_head": "009144f6f951d5999df07294965db221d0817b05",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-agriculture-irrigation-20261003",
+      "expected_head": "2b900d1e4f2266172075c1db03642bcf32ab1bd3",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-control-primitives-v1-20260928",
+      "expected_head": "4b955e4c85a3fc6798da57ec01fe23fe890fd4ae",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-csr-microtools-v1-20260928",
+      "expected_head": "f063b021529a623f764a55af54389f4ed6e0e87b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-operator-ready-20261003",
+      "expected_head": "eaff0e4b6c07c68672915b10b6e68a32fb93c050",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/net-usable-readiness-20261003",
+      "expected_head": "59d1ac21a017535c0341866af9aa37af1252d9bc",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/nise-net-handoff-v1-20260929",
+      "expected_head": "7fa8f0bcd32b892b3e721dca9ea889e379d1abd9",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/oscillator-native-consumers-v1",
+      "expected_head": "6c46e077fa2f55e75ecf2afbc3ebda85577428f0",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/parameter-program-v1-20260929",
+      "expected_head": "b08ee6b3a67391efc33371ac6aabc1c94cfbb3a3",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/parameterized-system-board-v1-20260929",
+      "expected_head": "c17afd133b471f06d0228dd81e473cb0017b78c0",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/physics-backend-qualification-v1-20260929",
+      "expected_head": "f1b984a3aacfe148a1b558a4edfdbad0aa1db392",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/polymer-cycle-instrument-20261003",
+      "expected_head": "9cad1725b415e88cc0762581ad39a30fb87f51fd",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/polymer-operator-20261003",
+      "expected_head": "68f28b4f6250847b4e6b54af42b462cdd737e4d0",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/portable-instrument-contract-v1-20260929",
+      "expected_head": "4d8697439e865c8bf37066a6ea6ea3d75076e9a1",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/preservation-contracts-v1-20261001",
+      "expected_head": "40de4145ee72d1f4ede190e0336254bd5aefbc25",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/production-workorders-v1-20260929",
+      "expected_head": "258621f393c1f58486d3ad562c59a0de8df5364c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/qualified-fluid-dynamics-20261003",
+      "expected_head": "343caf2e3fe6409a991b7e886aecd538a48c67e8",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/real-ifc-transition-v1-20261001",
+      "expected_head": "b297964532f73e1dc82ca4fdebdfe12e8845872e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/representation-aware-needle-v1-20260929",
+      "expected_head": "9bfa40075625439545066447cab4074e0215f3d1",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/representation-morphism-registry-v1-20260929",
+      "expected_head": "8b1bbecff3f85db0120cfcadae6aaf01da4caca6",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/retained-correction-loop-20261003",
+      "expected_head": "a26c1c14d23710fc8e08a173cea8eee764671517",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/semantic-capability-plane-v1-20260929",
+      "expected_head": "1498d0aaf39aae168618e9054ea3c97ae831983b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/shared-preservation-experiments-v1-20261001",
+      "expected_head": "c101d5e4295e67dbf19befe4b455d1ebd817bd7b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/spatial-godot-consumer-v1-20260928",
+      "expected_head": "0f3eae90d7fef379572690d712ce4b6d7f16c819",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/spatial-provider-starter-v1-20260928",
+      "expected_head": "49b99bb2f2f9c06304a2140956205b27c25b0ea5",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/stateful-simulation-control-v1-20260928",
+      "expected_head": "4ee5f63ff811344e80100559c17a1d3aee50f967",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/stateful-simulation-studies-v1-20260928",
+      "expected_head": "3bd5faf8e9a7447383f6dc9e87b4216c2097ac32",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/superrepo-devtools-20261003",
+      "expected_head": "231a058f3bef00fd9b11db348979b889d5c81e90",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/synthetic-fsrt-gsc-v1",
+      "expected_head": "fd35fc091ea1d58be38e44cc5cf5c85249b541fa",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/system-board-visual-editor-v1-20260930",
+      "expected_head": "29e0d9f8de9f38b7c0d4deff3eec5fd808cdb039",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/system-composition-v2-20261003",
+      "expected_head": "6cbb4691a177f31fd18ffff4541b4cc0131f4904",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/title-smith-workcell-v1-20260929",
+      "expected_head": "8c33a1056f3d9b7abd69cbdb72162459b73fcd19",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/typed-hypergraph-rewrite-c6078eeb",
+      "expected_head": "c2bce815448fa5408c67f5213021a0d332e527d9",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/typed-workflow-algebra-v1-20260929",
+      "expected_head": "883532dcbf6023f9a3b798fda8100227902c6886",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/visual-evidence-projection-v1-20260930",
+      "expected_head": "40e92cc01c5158ce0ff370ffed3882dc277e26d4",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/visual-representation-gates-v1-20260930",
+      "expected_head": "fa123bcad6b613575e35845a9722b6f71dc309c1",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/visual-system-board-v1-20260929",
+      "expected_head": "f0ebe785e97d97de7077039e020edffaef451cc3",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feat/1792-reconstruction-production-v1",
+      "expected_head": "d7dd5b1437fec8f2a0d8bc67e0fc0df7edbe3b3a",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feature/open-problem-registry",
+      "expected_head": "389f5d67f59af409961199fca7b3341999d35cbe",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "feature/systems-visualizer-render",
+      "expected_head": "f65ab02ea0538a9e18355e0a5f155cd5fcadc518",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/audit-operation-failures-json-boundary",
+      "expected_head": "0a2a82decd592aecf66fb303b1e11e935e24bb91",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/audit-session-integrity-publication",
+      "expected_head": "bfee145efdefea377f969e11e37f91a7d213c46e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/github-ci-failures-20261003",
+      "expected_head": "a9d7c9b1c0ac97175b260d327bc42a6ef4a5c67b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/inbox-ci-repair",
+      "expected_head": "62bdc02794506106d0e99becb58dfb58bcbc0370",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/monorepo-source-audit-and-timezones-20261003",
+      "expected_head": "dc17c0d9846bcf586d163907af148c60ea939fea",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/monorepo-windows-clone-20261003",
+      "expected_head": "33c76fbb9a8c0c4a5bf2cdb62b6a5f8b280c115c",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/proof-statement-isolation-and-negative-gates",
+      "expected_head": "1256104db67fc433877c4701a68c36147722d004",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/review-evidence-and-examples-20261004",
+      "expected_head": "5504b628eda77517a85a905e349fbe155399d607",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "fix/windows-f2-test-identifiers",
+      "expected_head": "8cd20fda7b8cf739ee7f34cb2c66c7a0d79c9b9b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "import/native-superrepo-6989ffd2-20261003",
+      "expected_head": "6989ffd2fd97d54367d17a20fd51e9945d7ed18e",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "integrate/qualified-atmosphere-20261003",
+      "expected_head": "22ad657b0453f97242a2c686c5911427b0b8bc2b",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "integrate/qualified-net-work-20261003",
+      "expected_head": "30e31cec0f31b7ff6d467e43ad78539d5cacdfa2",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "integrate/qualified-public-modules-20261003",
+      "expected_head": "3082699027f560b93b90846cd1d5a9f2075dcb95",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "integration/identified-budgeted-observation",
+      "expected_head": "0788bf5bf5b92ef4b6ada6cb989e866e34d412fc",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "qualified/net-public-operator-20261003-7ca5a411",
+      "expected_head": "7ca5a411e1b15befc5caace490415ce4f673f930",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "qualify/net-integration-20260928",
+      "expected_head": "f11a5f96685f6965d878641f30066e58774660da",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "repair/capability-index-pyyaml",
+      "expected_head": "84d15ba81b90369d516e5d9595e4fa6426e510bd",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "repair/cli-duplicate-json",
+      "expected_head": "0a7332111e43dbbe9ede98bdd9678afb433d191f",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "repair/legacy-analysis-failure",
+      "expected_head": "c30835163a188c068b03e277731ceff8f83be288",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
+    },
+    {
+      "pr": null,
+      "branch": "work/operational-engineering-mcp-20261017",
+      "expected_head": "3c343bf9aae3c84a096671d553381c28d96f8108",
+      "action": "eligible_after_confirmation",
+      "archive_before_delete": true,
+      "reason": "Exact branch head is an ancestor of selected candidate 312a37ba613a0b57ea027b8d00df5b3b4fe08d69; no active PR uses this branch, and current/release branches are excluded. Recheck this head immediately before cleanup.",
+      "ancestry_proof": "verified_original_Git_commit_DAG"
     }
-  ]
+  ],
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "archive_tag_prefix": "archive/research-baseline-20261017/pr-",
+  "confirmation_instruction": "Archive/delete long-lived branches after confirmation (Task 4).",
+  "entry_count": 235,
+  "scope": {
+    "closed_reconciled_pr_heads": 79,
+    "additional_ancestor_heads": 156,
+    "total_after_confirmation": 235,
+    "retained_current_release_or_deferred": 8,
+    "other_heads_deferred_for_scope_review": 39
+  },
+  "post_inventory_observation": "PRs 139 and 244 were merged externally. Preserve the transport branch pending its independent publication/retirement obligations. The 235 cleanup entries and expected heads are unchanged."
 }

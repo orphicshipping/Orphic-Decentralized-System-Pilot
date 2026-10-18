@@ -1,5 +1,7 @@
 # One engineering workspace: Notations-Systems-Terminal
 
+> Current-main audit: this directory is native-history transport, merged through #139. The current import manifest still contains 21 modules. Merging these recovery bytes does not import or qualify the separate 23-module target, establish publication of native refs, or authorize source-repository retirement. Use the [selected baseline entry path](../../docs/BASELINE_START_HERE.md) for the current workbench; review [provider boundaries](../../docs/LATENT_PROVIDER_SURFACE_20261018.md) before any separate restoration/publication work. The dated instructions and receipts below remain historical.
+
 **Status: the complete workspace and backups are preserved; deletion awaits native publication and merge.** Keep the old repositories available until that final verification completes.
 
 ## Use NET now

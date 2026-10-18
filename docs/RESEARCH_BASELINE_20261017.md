@@ -1,80 +1,154 @@
-# Research baseline close-out — 2026-10-17
+# Research baseline candidate — close-out evidence
 
-The candidate builds on merged main `cb97dbbee70fc487d80b1311b107e150eec667d0`,
-which includes numerical #240 and operational #242. Bounded BIM #232 is
-reconciled through the existing Session/AgentHost/MCP contracts and its unchanged
-CSE source tree `f91c982b580ad4f16a27ea149eedf0e338f6d764`. The console and MCP
-share the existing operation implementation. No separate command authority is added.
+Selected immutable code: `312a37ba613a0b57ea027b8d00df5b3b4fe08d69`. Source tree:
+`862785f15628cb3d1c2ec0c620e357dbd1ddb876`. The candidate is retained on
+`release/research-baseline-20261017`; [PR #244](https://github.com/notationsystems/Notations-Control-Protocol/pull/244)
+merged that selected code into main. This follow-up retains the final evidence-only documentation. Evidence was
+collected on 2026-10-17/18 UTC for the 2026-10-17 work order.
 
-The immutable code revision and dated results are recorded by the candidate
-attestation on `work/research-baseline-evidence-20261017`;
-`release/research-baseline-20261017` is reserved for the frozen code candidate.
-This is a research baseline candidate. Full release qualification still requires
-the existing release policy, including current same-SHA public CI and native
-platform evidence. Historical counts below are never assigned to the new SHA.
+Main base `cb97dbbee70fc487d80b1311b107e150eec667d0` includes numerical #240
+and operational #242. Bounded BIM #232 is integrated into this candidate through
+existing Session/AgentHost/MCP operations, retaining CSE tree
+`f91c982b580ad4f16a27ea149eedf0e338f6d764`. #231's console is already in main.
+The console and MCP share the same operation implementation and evidence.
 
-## Scope and ownership
+This is a **research baseline candidate with verified local software checks**.
+The unchanged release-policy evaluation is **blocked**: required hosted jobs
+remain queued/pending and have no retained artifacts. It is not a qualified
+release, independent-human acceptance, physical validation or authorization to
+actuate equipment. The existing private and platform gates remain required.
 
-Codex owns integration, local software checks, the successor ledger and evidence
-collection. The repository maintainer owns main-branch approval and GitHub runner
-availability. Provisioned provider operators own trusted read credentials and
-private/native qualification. Hardware operators own later physical validation.
+## Executed evidence
 
-The existing seven numerical operations and operational investigations are retained
-from actual merged main. BIM is bounded one-element clearance with explicit
-frames, calibration/covariance, prior and requirement records. #232's historical
-task scratchpads are superseded by the attached work order; its executable code
-and examples are retained. Private-host code already merged by #240 remains
-implemented software, with remote multi-user service explicitly unqualified.
+| Gate | Selected-code result |
+|---|---|
+| Isolated regression sweep | **514 modules; 19,155 passed cases; 1,170 explicit skips; zero failures/errors** |
+| Original source-history and promotion suites | **176 passed; zero skips**; also 132 and 44 passed independently in the sweep |
+| Retained-source audit | All **21 modules** pass the unchanged integrity and ancestry verifier |
+| Installed NCP contract | **531 passed; zero skips** outside source imports |
+| Installed numerical/BIM/operational increments | **209 passed; zero skips** |
+| Installed native calibrated-window/residual operational checks | **2 passed; zero skips**, with exact original provider pins |
+| Wheel/source/installation identity | All **722 package files** byte-match selected Git source, wheel and installed copy |
+| Three original operator precursors | All three pass **22 checks each**, including correction, preserved history and fresh replay |
+| Operational transport | Installed stdio J1–J5, modern/legacy reconnect/retry, plus separate authenticated HTTP worker and interrupted-claim recovery pass |
+| Existing console | **6 Python, 3 DOM and 9 actual Chromium checks** pass; no browser page errors |
+| Installed quickstart | Existing operator gate passes 26 commands/750 checks; first-use core receipt completes with retained diagnostic comparison states |
+| Required public CI metadata | Collected at the exact SHA; **blocked queued/pending**, no artifacts; offline snapshot evaluation only |
 
-## Integration corrections
+These counts overlap and must not be added. Explicit skips are retained by
+reason in the evidence package and do not qualify optional providers. The
+first-use receipt preserves intentional FAIL/INDETERMINATE comparisons rather
+than relabelling them as successful scientific agreement.
 
-The first combined sweep found that #232's new CI matrix omitted the existing
-`fail-fast: false` requirement. Installed NCP coverage also found that the
-operational CLI was missing its read-only scientific review record. Both are
-corrected without weakening those gates. The original failed/interrupted
-attempt and corrected-candidate evidence are retained separately. Installed
-pytest runs use normal test-directory imports so existing sibling fixtures can
-load, with the project source path disabled and `ciw` verified in site-packages.
+Wheel SHA-256: `40c6b0410fd6f28f03023cf292553c10fd293b767d66743310616b8b6306ca9e`.
+The dated [candidate attestation](../validation/research-baseline-20261017/candidate.json),
+[full module summary](../validation/research-baseline-20261017/consolidated-summary.json),
+compressed logs/JUnit and all three operator journey outputs retain the checks.
+The downloadable evidence bundle additionally contains the exact wheel and
+full installed quickstart outputs. Browser screenshots and credentials are omitted.
 
-## Evidence requirements
+## Corrections and provenance
 
-Run the unchanged source-integrity verifier and both original history modules.
-The recovered local repository retains all exact main-ancestry commit objects,
-the complete current tree (including ten formerly missing historical artifacts),
-and exact trees/blobs for selected native runtime/history roots. Original commit
-IDs and source pins are checked, never replaced with synthetic history. Older
-unselected historical file trees are not represented as a complete object archive.
+The first combined sweep caught a missing `fail-fast: false` in #232's CI matrix.
+Installed NCP checks caught a missing operational command review record and its
+outdated command count. Both were fixed before selecting the SHA above; original
+failed/interrupted attempts are retained separately. Installed pytest runs
+allow existing sibling test fixtures while disabling project-source imports.
+The packaged `ciw` origin is verified under the installed environment.
 
-The isolated runner uses the active interpreter's isolated mode, pinned numerical
-and schema dependencies, and retains every module log/JUnit report and explicit
-skip. Timeouts and failures cannot qualify the candidate. The installed-wheel
-NCP contract and numerical/BIM/operational checks must run outside source imports,
-with byte identity checked. Run all three original operator precursors:
-encoder residual correction, synthetic thermal observer correction and typed
-project revision correction, each with fresh replay. These are scripted synthetic
-software checks, not independent-human or physical acceptance.
+The local repository retains all 1,975 exact selected-ancestry commit objects,
+the complete current tree including ten previously unavailable historical
+artifacts, and exact required trees/blobs for 29 selected native roots. Original
+SHA identities and pins are verified; source-integrity gates were not weakened.
+Unselected historical file-tree closure was not materialized locally. The hosted
+full-clone workflow remains queued; the actual original history modules have
+now passed locally using the exact required source closure.
 
-Private providers, SP1 beyond the registered heat profile, native Windows,
-container/hardware deployment, acquired-data campaigns, physical validation and
-remote multi-user operation require their original environments and evidence.
-Pending or cancelled hosted jobs do not pass the existing release policy.
+## PRs, branches and remaining owners
 
-## PR and branch disposition
+The original 82 PRs have all been dispositioned: **79 superseded PRs were
+closed**, #240 and #242 merged during close-out, and #139 subsequently merged
+outside this audit's deferred-transport disposition. Integration PR #244 also
+merged selected code `312a37b` at `f5269e1278e56772d400dc87ead3ae5bf461d7bd`.
+No PRs were open at the final pre-publication observation; this evidence-only
+follow-up is a new review. The
+[closure receipts](../validation/research-baseline-20261017/pr-closure-receipts.json)
+and [dispositions](../validation/research-baseline-20261017/pr-dispositions.json)
+record the actual mutations, without asserting that all scopes are qualified.
 
-The initial 82-PR inventory was refreshed after #240 and #242 merged. All 79
-remaining historic heads exactly match the earlier consolidation ledger; #232
-is the only other active increment. The machine-readable
-[dispositions](../validation/research-baseline-20261017/pr-dispositions.json)
-retain every head and rationale. Superseded PR closures follow candidate
-validation; #139 remains explicitly deferred under its original do-not-merge
-constraint. A subsequent evidence receipt records the actual closure results.
+The **282-head branch inventory** predates the protected evidence follow-up branch; no original branch has been deleted. The
+[cleanup plan](../validation/research-baseline-20261017/branch-cleanup-plan.json)
+pins 79 reconciled PR heads and 156 additional exact ancestors: **235 branches**
+eligible for archival/deletion **after confirmation**, as Task 4 expressly
+requires. Preserve archive tags and recheck each head before deletion; advanced
+heads must refuse cleanup. The eight inventoried current/release/transport branches remain retained, alongside the new evidence branch;
+39 other heads are explicitly preserved for individual scope review. No original
+branch has been archived or deleted. The available GitHub interface does not
+expose tag creation or branch deletion; the maintainer's authorized Git/branch
+controls are required for the approved cleanup.
 
-Branch deletion/archive waits for the confirmation expressly required by Task 4.
-The [cleanup plan](../validation/research-baseline-20261017/branch-cleanup-plan.json)
-pins each eligible head and requires archival before deletion. It does not
-authorize deleting a branch that has advanced. Main and candidate/evidence
-branches are protected by this plan. No branches are deleted in preparation.
+Codex owns the completed integration, local checks and evidence. The repository
+maintainer owns follow-up review, branch-cleanup confirmation and the 39-head scope
+review. The maintainer/runner administrator owns queued hosted jobs. Trusted
+provider operators own restricted credentials and missing private qualification.
+Native Windows, container/hardware environments, acquired-data campaigns,
+SP1 beyond the registered heat profile, physical validation and remote multi-user
+operation retain their original owners and evidence requirements.
+
+The selected tree has **156 workflow files and 192 top-level jobs**, including
+14 required release workflows and 13 referring to the private-provider token.
+There are no exact semantic duplicates ignoring display names. A total of 106
+test modules appear explicitly in multiple workflows; differing platforms,
+permissions, provider and installed-package purposes require review before
+consolidation. The approximate 183 registered workflows reported separately
+could not be verified through the available collection endpoint. See
+[risks and owners](BASELINE_RISKS_20261018.md), the workflow/branch inventories,
+and [the short first-use path](BASELINE_START_HERE.md).
+
+The optional [connective-tissue design note](CONNECTIVE_TISSUE_READINESS_20261018.md)
+adds no implementation or grants. Physical equipment, OpenUSD reload, learning
+interfaces, new kernel families and general sensor fusion remain later work.
+
+## Main changed during the audit
+
+The [final repository observation](../validation/research-baseline-20261017/repository-state-refresh.json)
+records main `484fea941999caeeca132fc33f622e00e7b8a24b`. Relative to the selected
+tested SHA it adds nine native-history transport files, including one guarded
+publication workflow and three bundle pieces. It changes no packaged source,
+existing tests, runtime pin or 21-module import manifest. Main therefore contains
+21 imported modules; the transport's separate 23-module target is not imported
+or qualified merely because the transport PR was merged.
+
+The selected workflow inventory remains **156 files / 192 jobs**. The observed
+main tree has **157 files / 193 jobs**, adding the transport publication job.
+That job retains historical repository/ref restrictions and a separately scoped
+publication credential. This audit neither provisions that credential nor runs
+the restore/publish scripts, changes native refs, or retires source repositories.
+Its guard and publication/retirement obligations remain a named maintainer gate.
+The follow-up evidence commit is based on the observed main and preserves these
+new files; all numerical/test results above still belong only to `312a37b`.
+
+## Work-order and related-repository audit
+
+The [task-by-task audit](../validation/research-baseline-20261017/work-order-audit.json)
+records completed integration, local checks, evidence and documentation. Overall
+acceptance remains open for required same-SHA hosted CI and confirmed branch
+count reduction. The required runner/provider/platform roles are named above.
+
+The supplied related-repository map matches all **21 imported paths, source
+repository declarations and licences**, plus the **26 surrounding-system catalog
+entries**. The [provider boundary audit](LATENT_PROVIDER_SURFACE_20261018.md)
+and [exact JSON inventory](../validation/research-baseline-20261017/provider-status.json)
+retain source/import/runtime identities independently. The core wheel does not
+activate all imported providers. The two npm modules retain null Python runtime
+pins, SCR retains its source-only build boundary, and profile-specific current
+and historical revisions remain distinct. No licence, native pin or permission
+has changed during this audit.
+
+## Original PR disposition ledger
+
+The historical integration/exclusion rationale is preserved below. Actual
+closure/merge state is in the receipts linked above.
 
 | PR | Pinned head | Disposition | Rationale |
 |---|---|---|---|
@@ -150,7 +224,7 @@ branches are protected by this plan. No branches are deleted in preparation.
 | [#143](https://github.com/notationsystems/Notations-Control-Protocol/pull/143) | `6915d10ce62e5a8da8385d3dac24c9986cb35389` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |
 | [#142](https://github.com/notationsystems/Notations-Control-Protocol/pull/142) | `ff146529146d8a0f31ac80f41ce592c6b9eed1d4` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |
 | [#141](https://github.com/notationsystems/Notations-Control-Protocol/pull/141) | `25e9a245a1a341f8c592f3257b787adcdf333bb2` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |
-| [#139](https://github.com/notationsystems/Notations-Control-Protocol/pull/139) | `7fd822bea1f62257f8e95ffbdb7139c923375310` | defer | Original PR explicitly prohibits merge. Native-history publication requires separately authorized workflow permissions; no branch or native ref rewrite in this leg. |
+| [#139](https://github.com/notationsystems/Notations-Control-Protocol/pull/139) | `7fd822bea1f62257f8e95ffbdb7139c923375310` | deferred by audit; subsequently merged externally | Original transport instructions prohibited merging. Remote merge `484fea941999caeeca132fc33f622e00e7b8a24b` is recorded in the refresh; native publication/retirement remains independently gated. No transport execution or native ref rewrite was performed by this audit. |
 | [#114](https://github.com/notationsystems/Notations-Control-Protocol/pull/114) | `2b4cc74a447660941ef072c55e57c1a8dceba5c2` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |
 | [#100](https://github.com/notationsystems/Notations-Control-Protocol/pull/100) | `2fd8d418d7c9604dc7eb731d1798a4826228f84c` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |
 | [#99](https://github.com/notationsystems/Notations-Control-Protocol/pull/99) | `74b2fcf3fc7c317ae5a1782ef5eef58bdbc9f451` | close superseded | Reconciled into the combined subsystem; qualification gates retained. Superseded by the merged consolidation and this baseline candidate; original qualification exclusions remain in force. |

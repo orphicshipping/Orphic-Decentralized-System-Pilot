@@ -1,5 +1,7 @@
 # Provider availability and private provisioning
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 CIW can run the adapter, retained-telemetry and calibrated-observable gates
 against explicitly provisioned local provider checkouts. This removes anonymous
 GitHub cloning from those gate invocations. It does not make the complete

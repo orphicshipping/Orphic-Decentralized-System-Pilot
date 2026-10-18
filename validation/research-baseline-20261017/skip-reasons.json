@@ -1,0 +1,358 @@
+{
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "skipped": 1170,
+  "reasons": [
+    {
+      "reason": "Optional attached-snapshot QC adapter is not installed",
+      "cases": 147
+    },
+    {
+      "reason": "set CIW_IDENTIFIED_DESIGN_STACK_ROOT to the eleven pinned role checkouts",
+      "cases": 52
+    },
+    {
+      "reason": "CIW_LEAKAGE_PROVIDER_CHECKOUT must name an existing FSRT checkout",
+      "cases": 43
+    },
+    {
+      "reason": "set CIW_CALIBRATED_STACK_ROOT to the eight pinned role checkouts",
+      "cases": 40
+    },
+    {
+      "reason": "Set CIW_CSG_REPO to the pinned curved-surface provider checkout",
+      "cases": 35
+    },
+    {
+      "reason": "Set CIW_CSG_REPO to the approved native checkout",
+      "cases": 34
+    },
+    {
+      "reason": "Native free-energy gate requires pinned CSG, GSIE and PLSR",
+      "cases": 33
+    },
+    {
+      "reason": "Set CIW_FTR_REPO to the approved native checkout",
+      "cases": 33
+    },
+    {
+      "reason": "set CIW_CSE_REPO for pinned native CSE integration",
+      "cases": 32
+    },
+    {
+      "reason": "set CIW_IDENTIFIED_STABILITY_UPSTREAM to an actual retained identified-design bundle",
+      "cases": 31
+    },
+    {
+      "reason": "set CIW_CSE_REPO for exact pinned native IFC execution",
+      "cases": 31
+    },
+    {
+      "reason": "could not import 'ciw.toolpoint_quality': No module named 'ciw.toolpoint_quality'",
+      "cases": 30
+    },
+    {
+      "reason": "Set CIW_SCHEMATIC_STACK_ROOT with pinned sra/jspt/plsr checkouts",
+      "cases": 30
+    },
+    {
+      "reason": "Set CIW_MEASUREMENT_VISUALIZER_EVIDENCE_DIR to the retained public evidence v2 package",
+      "cases": 28
+    },
+    {
+      "reason": "Optional SCR DSP library not bound; dedicated DSP CI requires it",
+      "cases": 28
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT to the exact role-named provider checkouts",
+      "cases": 24
+    },
+    {
+      "reason": "set CIW_TEST_JULIA and CIW_TEST_JULIA_DEPOT for genuine Julia gates",
+      "cases": 23
+    },
+    {
+      "reason": "Exact operator-provisioned FlowState checkout is unavailable",
+      "cases": 20
+    },
+    {
+      "reason": "set CIW_DECLARED_STACK_ROOT and CIW_SCR_ENGINE for native SRA/SCR integration",
+      "cases": 20
+    },
+    {
+      "reason": "Set CIW_GTE_REPO to exercise the real pinned GTE subprocess",
+      "cases": 19
+    },
+    {
+      "reason": "Set NET_HOOMD_PYTHON to the qualified HOOMD 7.2.0 CPU interpreter",
+      "cases": 19
+    },
+    {
+      "reason": "Native geometry gate requires exact CGGT, ISGT and TSDE checkouts",
+      "cases": 18
+    },
+    {
+      "reason": "Set CIW_TEST_REACTION_JULIA and CIW_TEST_REACTION_JULIA_DEPOT for genuine Catalyst tests",
+      "cases": 18
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT to exact initialized native providers",
+      "cases": 18
+    },
+    {
+      "reason": "Native Windows extended-path filesystem",
+      "cases": 18
+    },
+    {
+      "reason": "set CIW_TEST_INTERVAL_JULIA and CIW_TEST_INTERVAL_DEPOT for genuine interval tests",
+      "cases": 16
+    },
+    {
+      "reason": "could not import 'PyDynamic': No module named 'PyDynamic'",
+      "cases": 16
+    },
+    {
+      "reason": "Set CIW_GTE_REPO for the pinned native GTE catalog gate",
+      "cases": 16
+    },
+    {
+      "reason": "Real native stages require CIW_FREE_ENERGY_STACK_ROOT or all three per-provider paths",
+      "cases": 16
+    },
+    {
+      "reason": "set CIW_ESM_BUNDLE_FILE, CIW_ESM_RUNTIME_FILE and CIW_ESM_ROOT for actual ESM integration",
+      "cases": 15
+    },
+    {
+      "reason": "set CIW_TELEMETRY_STACK_ROOT to explicitly bound sibling checkouts",
+      "cases": 15
+    },
+    {
+      "reason": "Actual OpenUSD SDK is required for this test",
+      "cases": 14
+    },
+    {
+      "reason": "Set CIW_RCI_REPO and CIW_FSRT_REPO to exercise pinned domain subprocesses",
+      "cases": 14
+    },
+    {
+      "reason": "Set CIW_TEST_CUDA=1 to require actual CUDA execution",
+      "cases": 14
+    },
+    {
+      "reason": "set CIW_CALIBRATED_WINDOW_STACK_ROOT to exact role-named provider checkouts",
+      "cases": 13
+    },
+    {
+      "reason": "set CIW_TEST_REACTION_CANTERA to run the qualified Cantera worker",
+      "cases": 13
+    },
+    {
+      "reason": "Requires three clean pinned scientific checkouts",
+      "cases": 12
+    },
+    {
+      "reason": "Set CIW_SET_REPO to the pinned State Estimation Evaluation Testbed",
+      "cases": 12
+    },
+    {
+      "reason": "set CIW_PPDA_REPO with the exact initialized PPDA checkout",
+      "cases": 12
+    },
+    {
+      "reason": "could not import 'lyapunov': No module named 'lyapunov'",
+      "cases": 11
+    },
+    {
+      "reason": "set CIW_SHARED_TELEMETRY_STACK_ROOT to exact role-named telemetry checkouts",
+      "cases": 10
+    },
+    {
+      "reason": "requires genuine qualified interval provider via CIW_INTERVAL_BINDING",
+      "cases": 10
+    },
+    {
+      "reason": "Pinned academic acquisition absent; no synthetic substitution",
+      "cases": 9
+    },
+    {
+      "reason": "requires qualified catalyst binding",
+      "cases": 9
+    },
+    {
+      "reason": "requires qualified cantera binding",
+      "cases": 9
+    },
+    {
+      "reason": "Exact operator-provisioned FSRT checkout is unavailable",
+      "cases": 9
+    },
+    {
+      "reason": "Bind CIW_MEASUREMENT_CHAIN_STACK_ROOT for the native assembly gate",
+      "cases": 8
+    },
+    {
+      "reason": "set CIW_REMAINING_* exact native provider paths for the installed common bench gate",
+      "cases": 6
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT for exact native acquisition and monitoring",
+      "cases": 5
+    },
+    {
+      "reason": "Real SP1 gate requires SCR, native engine, CPU host and registered heat ELF",
+      "cases": 5
+    },
+    {
+      "reason": "set CIW_ACQUIRED_STREAM_STACK_ROOT for native residual view verification",
+      "cases": 5
+    },
+    {
+      "reason": "set CIW_INTEGRATED_STACK_ROOT for exact native integrated-module execution",
+      "cases": 4
+    },
+    {
+      "reason": "Provide GSC_LOCAL_FRAME_ROOT for native provider tests",
+      "cases": 3
+    },
+    {
+      "reason": "Original pinned academic files not supplied; no synthetic substitution",
+      "cases": 2
+    },
+    {
+      "reason": "Optional qualified Arrow/Parquet runtime is not installed",
+      "cases": 2
+    },
+    {
+      "reason": "Optional legacy evaluator is not installed",
+      "cases": 2
+    },
+    {
+      "reason": "Set CIW_ACQUISITION_REPO, CIW_RUNTIME_REPO and CIW_SET_REPO for actual producer integration",
+      "cases": 2
+    },
+    {
+      "reason": "Native geometry session requires exact CGGT, ISGT and TSDE checkouts",
+      "cases": 2
+    },
+    {
+      "reason": "Set CIW_FTR_REPO and CIW_CSG_REPO to exact native checkouts",
+      "cases": 2
+    },
+    {
+      "reason": "Windows implicit executable search semantics",
+      "cases": 2
+    },
+    {
+      "reason": "Windows implicit compiler lookup semantics",
+      "cases": 2
+    },
+    {
+      "reason": "set CIW_SET_REPO to the pinned State Estimation Evaluation Testbed checkout",
+      "cases": 2
+    },
+    {
+      "reason": "Requires exact native calibrated-window and FDIR/OIT checkouts",
+      "cases": 2
+    },
+    {
+      "reason": "Set CIW_RCI_REPO and CIW_FSRT_REPO to the pinned source checkouts",
+      "cases": 1
+    },
+    {
+      "reason": "Set CIW_GLTF_GODOT for explicit native import",
+      "cases": 1
+    },
+    {
+      "reason": "Set CIW_ISGT_REPO for pinned native mesh solve",
+      "cases": 1
+    },
+    {
+      "reason": "Requires explicitly bound ALCHEMI CPU environment and clean NET source revision",
+      "cases": 1
+    },
+    {
+      "reason": "Actual OpenUSD SDK required",
+      "cases": 1
+    },
+    {
+      "reason": "Independent Rust checker executable is not bound; no native claim",
+      "cases": 1
+    },
+    {
+      "reason": "Native Windows directory sharing",
+      "cases": 1
+    },
+    {
+      "reason": "Original Tclab prefix absent; no synthetic substitution",
+      "cases": 1
+    },
+    {
+      "reason": "Original TCLab bytes and native SCR DSP library are both required",
+      "cases": 1
+    },
+    {
+      "reason": "Original TCLab bytes and native library are required for the binding test",
+      "cases": 1
+    },
+    {
+      "reason": "Original pinned FAO56 worked reference is required",
+      "cases": 1
+    },
+    {
+      "reason": "set CIW_TEST_JULIA and CIW_TEST_JULIA_DEPOT for the genuine provider gate",
+      "cases": 1
+    },
+    {
+      "reason": "Explicit CIW_OPERATOR_MONOREPO native integration source is unavailable",
+      "cases": 1
+    },
+    {
+      "reason": "Original acquired CAREX bytes absent; no synthetic substitution",
+      "cases": 1
+    },
+    {
+      "reason": "collection skipped",
+      "cases": 1
+    },
+    {
+      "reason": "requires genuine qualified Cantera via CIW_REACTION_CANTERA_BINDING",
+      "cases": 1
+    },
+    {
+      "reason": "Windows PATHEXT and implicit lookup semantics",
+      "cases": 1
+    },
+    {
+      "reason": "Python 3.11 Windows PATHEXT compatibility",
+      "cases": 1
+    },
+    {
+      "reason": "Explicit real PyArrow gate not selected",
+      "cases": 1
+    },
+    {
+      "reason": "Windows SSL runtime needs its native SystemRoot",
+      "cases": 1
+    },
+    {
+      "reason": "Windows directory discovery is platform specific",
+      "cases": 1
+    },
+    {
+      "reason": "set CIW_SET_PINNED_REPO to an exact SET pin checkout",
+      "cases": 1
+    },
+    {
+      "reason": "Set CIW_NIST_DSC_SOURCE_PDF to the retained NIST publication for integration",
+      "cases": 1
+    },
+    {
+      "reason": "Original acquired Norris source absent; no data substitution",
+      "cases": 1
+    },
+    {
+      "reason": "Actual GPU energy probe requires CIW_ENERGY_GPU=1",
+      "cases": 1
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "observed_at": "2026-10-18T00:16:44.950Z",
+  "selected_code_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "observed_main": "484fea941999caeeca132fc33f622e00e7b8a24b",
+  "main_tree": "78f264ee9b804d96f34979e32ad30229df86ca26",
+  "integration_pr": {
+    "number": 244,
+    "state": "merged",
+    "head_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+    "merged_at": "2026-10-18T00:02:42Z",
+    "merge_commit_sha": "f5269e1278e56772d400dc87ead3ae5bf461d7bd"
+  },
+  "native_transport_pr": {
+    "number": 139,
+    "state": "merged_externally_during_audit",
+    "head_sha": "7fd822bea1f62257f8e95ffbdb7139c923375310",
+    "merged_at": "2026-10-18T00:03:50Z",
+    "merge_commit_sha": "484fea941999caeeca132fc33f622e00e7b8a24b",
+    "original_audit_disposition": "defer_do_not_merge_transport"
+  },
+  "open_prs": [],
+  "comparison": {
+    "status": "ahead",
+    "ahead_by": 6,
+    "behind_by": 0,
+    "files": [
+      {
+        "filename": ".github/workflows/publish-source-retirement.yml",
+        "status": "added",
+        "sha": "17ac35334dcf0cbc3734e046622a32ca8271f285",
+        "changes": 46
+      },
+      {
+        "filename": "delivery/source-retirement/README.md",
+        "status": "added",
+        "sha": "7bdfe7fe8eff5be44accce14a3b9cfdeb8073ae1",
+        "changes": 94
+      },
+      {
+        "filename": "delivery/source-retirement/backup-verification.json",
+        "status": "added",
+        "sha": "0d9a6f18df26a2cb52ca29c5de6f01b58ef2c949",
+        "changes": 522
+      },
+      {
+        "filename": "delivery/source-retirement/native-full-final.bundle.part01",
+        "status": "added",
+        "sha": "a6ef6f9d3a990a421e499d86cf745ce0a82adc9c",
+        "changes": 0
+      },
+      {
+        "filename": "delivery/source-retirement/native-full-final.bundle.part02",
+        "status": "added",
+        "sha": "4e5a810eaf270e90f7c1cda3fa2f501a63dac174",
+        "changes": 0
+      },
+      {
+        "filename": "delivery/source-retirement/native-full-final.bundle.part03",
+        "status": "added",
+        "sha": "6accf412a1fb769d3c1b8f933f14aab68d955253",
+        "changes": 0
+      },
+      {
+        "filename": "delivery/source-retirement/publish.py",
+        "status": "added",
+        "sha": "bf73f6b5e56b7917c44f295c92d1a585890dca28",
+        "changes": 110
+      },
+      {
+        "filename": "delivery/source-retirement/restore.py",
+        "status": "added",
+        "sha": "85ae794fc06f7aa92886dc8f7011df16c196c793",
+        "changes": 85
+      },
+      {
+        "filename": "delivery/source-retirement/sources.json",
+        "status": "added",
+        "sha": "d33c0b2f43e8f04ef2540d8568fe2cc0d6126c75",
+        "changes": 2687
+      }
+    ],
+    "packaged_sources_and_21_module_manifest": "unchanged_from_selected_code"
+  },
+  "transport_qualification": "Not executed by this audit; merging the transport does not import or qualify its separate 23-module target.",
+  "workflow_delta": {
+    "selected_code_workflow_files": 156,
+    "observed_main_workflow_files": 157,
+    "observed_main_top_level_jobs": 193,
+    "added_workflow": ".github/workflows/publish-source-retirement.yml",
+    "purpose": "Guarded native-history publication, not a scientific qualification lane.",
+    "credential": "NET_HISTORY_PUBLISH_TOKEN; not provisioned or used here",
+    "gate": "Historical repository/ref and pull_request guard; current main merge is not evidence of publication."
+  }
+}

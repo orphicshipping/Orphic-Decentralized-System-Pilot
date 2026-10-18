@@ -1,5 +1,7 @@
 # Consolidated PR review — 2026-10-17
 
+> Current selected code and final close-out evidence: [research baseline ledger](RESEARCH_BASELINE_20261017.md). The dated observations below remain historical.
+
 This candidate consolidates the 80 open pull requests inventoried on this date.
 It is a review candidate, not a declaration of release readiness or physical qualification.
 The reviewed main commit is `e6af2d48bfe7511185f6ebefa8cce7380cbc5d54`.

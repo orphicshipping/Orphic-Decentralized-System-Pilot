@@ -1,5 +1,7 @@
 # NET qualified research release
 
+> Current selected code and final close-out evidence: [research baseline ledger](RESEARCH_BASELINE_20261017.md). The dated observations below remain historical.
+
 The next milestone is a dependable public research baseline: one immutable
 candidate, completed software checks, retained evidence, and three usable
 operator journeys. This page makes the 2026-10-03 audit actionable. It does

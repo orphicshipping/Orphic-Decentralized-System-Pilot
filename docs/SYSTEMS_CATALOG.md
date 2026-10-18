@@ -1,5 +1,7 @@
 # Systems catalog
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 This page is the CIW-facing map of the surrounding Notation Systems tools. It
 is an integration index, not a replacement for an independent repository's
 README, license or scientific contract. Each linked repository remains

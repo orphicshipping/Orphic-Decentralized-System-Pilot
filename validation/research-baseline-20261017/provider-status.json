@@ -1,0 +1,1185 @@
+{
+  "schema": "ncp.provider-source-status-audit.v1",
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "purpose": "Dated review evidence, not a runtime registry, binding, grant or installer.",
+  "manifest": "instruments/manifest.json",
+  "manifest_sha256": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743",
+  "source_audit": "PASS_21_modules",
+  "default_core_install_activates_optional_providers": false,
+  "globally_qualified": false,
+  "build_boundaries": {
+    "python": 18,
+    "python-source": 1,
+    "npm": 2
+  },
+  "modules": [
+    {
+      "id": "calibration",
+      "role": "mcur",
+      "path": "instruments/measurement/calibration",
+      "repository": "giasonpooni/Notations-Calibration-Runtime",
+      "repository_id": 1378878940,
+      "visibility": "public",
+      "import_revision": "e41f61cf5909e58a1a2e60612308ccffe0bfe7de",
+      "import_tree": "07d51585dee49b2d9ad2f3a4d9a01e708d1411cf",
+      "runtime_revision": "49405ecd623474ddf601989b0a8195be401544e0",
+      "distribution": "metrological-calibration-and-uncertainty-runtime",
+      "version": "0.1.0",
+      "python_import": "mcur",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "status": "first-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "clocksync",
+      "role": "tbrt",
+      "path": "instruments/measurement/clocksync",
+      "repository": "giasonpooni/Notations-ClockSync",
+      "repository_id": 1378878553,
+      "visibility": "public",
+      "import_revision": "13c5fe75c7e829c24bae12fcf8386d4831224d4e",
+      "import_tree": "7d833657e7f838ac1b6ad6d0c3fb783151d1e85e",
+      "runtime_revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+      "additional_history_roots": [
+        "edb4e5b99ec0ce384437e1c0f1c820ef04598e33"
+      ],
+      "distribution": "time-base-reconciliation-runtime",
+      "version": "0.1.0",
+      "python_import": "tbrt",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "status": "first-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "observability",
+      "role": "oit",
+      "path": "instruments/mathematics/observability",
+      "repository": "giasonpooni/Notations-Observability-Testbed",
+      "repository_id": 1378878758,
+      "visibility": "public",
+      "import_revision": "9d22326c9e230f0d8d21b00ce210e10e72e968fd",
+      "import_tree": "e3dc03481e2e380c7d9e4b978c3f9dc7f7359b52",
+      "runtime_revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+      "distribution": "observability-identifiability-testbed",
+      "version": "0.1.0",
+      "python_import": "oit",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "status": "second-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "state-inference",
+      "role": "gsie",
+      "path": "instruments/inference/state-inference",
+      "repository": "giasonpooni/Notations-State-Inference-Engine",
+      "repository_id": 1276370996,
+      "visibility": "public",
+      "import_revision": "4ec062bb72caa76ce1405f2851766589cee9d160",
+      "import_tree": "33921b5f1ed0f5d03ba3fef6aa759becdde1e5ac",
+      "runtime_revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+      "distribution": "geometric-state-inference-engine",
+      "version": "0.1.0",
+      "python_import": "geometric_state_inference",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "status": "second-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "state-recompiler",
+      "role": "cbsr",
+      "path": "instruments/inference/state-recompiler",
+      "repository": "giasonpooni/Notations-State-Recompiler",
+      "repository_id": 1275681471,
+      "visibility": "public",
+      "import_revision": "fb01b4a702ba9314b211f933eda800a1e3e9efed",
+      "import_tree": "f7582f6fd1b0c965ef7dc0690628f49d57a67e80",
+      "runtime_revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+      "distribution": "constraint-based-state-reconciliation",
+      "version": "0.1.0",
+      "python_import": "cbsr",
+      "source_root": "src",
+      "license": "AGPL-3.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "status": "second-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "faultsense",
+      "role": "fdir",
+      "path": "instruments/inference/faultsense",
+      "repository": "giasonpooni/Notations-FaultSense-RunTime",
+      "repository_id": 1378879318,
+      "visibility": "public",
+      "import_revision": "00a3f3537964374efbf72d82e4188db002457cd8",
+      "import_tree": "de83e5df6448866a29e50f0e9d29cab019bba2d5",
+      "runtime_revision": "29e4b306492b793487d47a96b97a56548217aa12",
+      "distribution": "fault-detection-and-isolation-runtime",
+      "version": "0.1.0",
+      "python_import": "fdir",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "status": "second-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "estimator-bench",
+      "role": "set",
+      "path": "instruments/verification/estimator-bench",
+      "repository": "giasonpooni/Notations-Estimator-Bench",
+      "repository_id": 1275432227,
+      "visibility": "public",
+      "import_revision": "928ae6a76d4f853aa8306fef8207f81244b7066f",
+      "import_tree": "04d48ef9cf84a73a0cd029187263dca89d7c7e56",
+      "runtime_revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+      "additional_history_roots": [
+        "2f838f4e196f453efc3a59045b0b3ec4b5680296"
+      ],
+      "distribution": "state-estimation-testbed",
+      "version": "0.3.0",
+      "python_import": "state_estimation_testbed",
+      "source_root": ".",
+      "license": "Apache-2.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "status": "second-wave-import; independent package; source repository retained",
+      "build_kind": "python",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "sensor-design",
+      "role": "edspt",
+      "path": "instruments/mathematics/sensor-design",
+      "repository": "giasonpooni/Notations-SensorDesign-RunTime",
+      "repository_id": 1378879765,
+      "visibility": "public",
+      "import_revision": "01c84b6d2e60b58ad281735f5ff70eb5c6a3c87f",
+      "import_tree": "7aea75468e6bee6d1421b300627c058305cb9c5d",
+      "runtime_revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+      "distribution": "experiment-design-and-sensor-placement-testbed",
+      "version": "0.1.0",
+      "python_import": "edspt",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "01c84b6d2e60b58ad281735f5ff70eb5c6a3c87f",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "linear-dynamics",
+      "role": "sidt",
+      "path": "instruments/mathematics/linear-dynamics",
+      "repository": "giasonpooni/Notations-Linear-Dynamics-Testbed",
+      "repository_id": 1378879169,
+      "visibility": "public",
+      "import_revision": "bda30a8bd750c7034fa8db4760d74e35eacb8c66",
+      "import_tree": "8c18ebad8a998991fce6d460492ba65731b3694e",
+      "runtime_revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+      "distribution": "system-identification-and-dynamics-testbed",
+      "version": "0.1.0",
+      "python_import": "sidt",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": "NOTICE.md",
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "bda30a8bd750c7034fa8db4760d74e35eacb8c66",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "sensitivity",
+      "role": "jspt",
+      "path": "instruments/mathematics/sensitivity",
+      "repository": "giasonpooni/Notations-Sensitivity-Testbed",
+      "repository_id": 1372780016,
+      "visibility": "public",
+      "import_revision": "341e3586075d6e901cb5528414ef685a58cf4def",
+      "import_tree": "e1e72a0dbf0492c8cf7a03837a25f9ea83e02da8",
+      "runtime_revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+      "distribution": "jacobian-sensitivity-propagation-testbed",
+      "version": "0.1.0",
+      "python_import": "sensitivity",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "341e3586075d6e901cb5528414ef685a58cf4def",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "metrology",
+      "role": "rci",
+      "path": "instruments/measurement/metrology",
+      "repository": "giasonpooni/Notations-Metrology-Adapter",
+      "repository_id": 1372870718,
+      "visibility": "public",
+      "import_revision": "a67cfef9f132d2a756186f34dcc718404084126e",
+      "import_tree": "ea6f143188dd81aa8bff36973eb94d6e3693c7a2",
+      "runtime_revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+      "distribution": "retrofitted-computational-instrumentation",
+      "version": "0.2.0",
+      "python_import": "instrument_chain",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [
+        "f863bdd69d49224e0cdc871943bbb052e5b0a975"
+      ],
+      "upstream_default_revision": "a67cfef9f132d2a756186f34dcc718404084126e",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "signal-processing",
+      "role": "stfe",
+      "path": "instruments/measurement/signal-processing",
+      "repository": "giasonpooni/Notations-Signal-Processing-RunTime",
+      "repository_id": 1278227466,
+      "visibility": "public",
+      "import_revision": "749eb75e7300597da54f3e5ab8cfdc7d05e64878",
+      "import_tree": "eaa9f5f5be58b0cbac95002f6bdd0e826428fb44",
+      "runtime_revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+      "distribution": "streaming-telemetry-feature-extraction",
+      "version": "0.1.0",
+      "python_import": "stfe",
+      "source_root": ".",
+      "license": "MPL-2.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "749eb75e7300597da54f3e5ab8cfdc7d05e64878",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [
+        {
+          "profile": "operational calibrated-window / residual-monitor",
+          "runtime_revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "status": "executed_selected_linux_installed_wheel",
+          "evidence": "reports/baseline-final-native.xml",
+          "scope": "Two existing synthetic tests; no physical measurement or general provider qualification."
+        }
+      ],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "polygon-trajectories",
+      "role": "tsde",
+      "path": "instruments/mathematics/polygon-trajectories",
+      "repository": "giasonpooni/Polygon-Trajectory-Experiments",
+      "repository_id": 1377611090,
+      "visibility": "public",
+      "import_revision": "fb30ddf35d860835a2b0a633f735e922d86ea808",
+      "import_tree": "2ce81327e6cd7beefd89c60d68d9bbf9b1cfba51",
+      "runtime_revision": "5e72693e7e5722c47883ef1a68b2959afdf2e215",
+      "distribution": "translation-surface-dynamics",
+      "version": "0.1.0",
+      "python_import": "translation_surface_dynamics",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "fb30ddf35d860835a2b0a633f735e922d86ea808",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "surface",
+      "role": "csg",
+      "path": "instruments/mathematics/surface",
+      "repository": "giasonpooni/Notations-Surface-RunTime",
+      "repository_id": 1372809259,
+      "visibility": "public",
+      "import_revision": "1f7bbe380651e8df82db1760d880330aee3dc229",
+      "import_tree": "b715b302e698a4ae07a48de0a144f0aa73aa0639",
+      "runtime_revision": "bbc535af29c30997e56fd120320c570830676462",
+      "distribution": "curved-surface-geodesic-sensitivity",
+      "version": "0.3.0",
+      "python_import": "geodesic_testbed",
+      "source_root": "src",
+      "license": "MPL-2.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [
+        "e8f0938ab243a1905792ba2c43439cb4f40cd4be",
+        "0b00e837c2df3206a3d38b497799f85b72de80f7"
+      ],
+      "upstream_default_revision": "e8f0938ab243a1905792ba2c43439cb4f40cd4be",
+      "selected_import_reason": "last fully green unchanged release snapshot; current upstream documentation migration explicitly unqualified",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "retrieval-agent",
+      "role": "sra",
+      "path": "instruments/composition/retrieval-agent",
+      "repository": "giasonpooni/Notations-Retrieval-Agent",
+      "repository_id": 1373552271,
+      "visibility": "public",
+      "import_revision": "4dc4da256873b03d82b3355af65638254ad15b53",
+      "import_tree": "906aec5440d412490550b8c16e7260591a1a4a57",
+      "runtime_revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+      "distribution": "schematics-retrieval-agent",
+      "version": "0.7.0",
+      "python_import": "schematics",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "4dc4da256873b03d82b3355af65638254ad15b53",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "yield-weighted",
+      "role": "ywir",
+      "path": "instruments/resources/yield-weighted",
+      "repository": "giasonpooni/Notations-Yield-Weighted-Runtime",
+      "repository_id": 1376489536,
+      "visibility": "public",
+      "import_revision": "8ae062b3578b02516a34fcd55d62d68187b57caa",
+      "import_tree": "db5eebf6edd6909e50f4e106c955d2796966b384",
+      "runtime_revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+      "distribution": "yield-weighted-inference-runtime",
+      "version": "0.2.0",
+      "python_import": "ywir",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "8ae062b3578b02516a34fcd55d62d68187b57caa",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "bim-estimator",
+      "role": "cse",
+      "path": "instruments/domain/bim-estimator",
+      "repository": "giasonpooni/Notations-Estimator-for-BIM",
+      "repository_id": 1352920068,
+      "visibility": "public",
+      "import_revision": "f1ceeae28168de32ca9aea44f7b6d67d2090677e",
+      "import_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+      "runtime_revision": "4b74abda40bba3277de69bf61e9e09283ae2d5b3",
+      "distribution": "gat-bim",
+      "version": "0.1.0",
+      "python_import": "gat",
+      "source_root": ".",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [],
+      "upstream_default_revision": "1411f8dcc2d14a33fab4f58ca85d1f5089894ff4",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "real-time-globe",
+      "role": "gsv",
+      "path": "instruments/views/real-time-globe",
+      "repository": "giasonpooni/Notations-Real-Time-Globe",
+      "repository_id": 1352801283,
+      "visibility": "public",
+      "import_revision": "adfdf51f1196a14d4a0212b55e74fb0da2c12630",
+      "import_tree": "889575227b3afb2ba45a23ae799b942b16e7049d",
+      "runtime_revision": null,
+      "distribution": "payload-earth",
+      "version": "0.1.0",
+      "python_import": null,
+      "source_root": ".",
+      "license": "GPL-3.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "npm",
+      "additional_history_roots": [
+        "06c47bd851d8ea8b363a6bbe60a96c7448cbe12e"
+      ],
+      "upstream_default_revision": "6f1b339dfa103bc45b40f34170043bc23a010c57",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "frame-mapper",
+      "role": "framemapper",
+      "path": "instruments/representation/frame-mapper",
+      "repository": "giasonpooni/Notations-FrameMapper-RunTime",
+      "repository_id": 1347707016,
+      "visibility": "public",
+      "import_revision": "cd41a494b171a6df73bb3b763dd508632e360179",
+      "import_tree": "ce1808ec8f8d54fb051a93ae14f3c869ecfeeddf",
+      "runtime_revision": null,
+      "distribution": "payload-terminal",
+      "version": "0.1.0",
+      "python_import": null,
+      "source_root": ".",
+      "license": "GPL-3.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "npm",
+      "additional_history_roots": [
+        "bdfcb041836e86ab1ce93688b127f8960e8d08cf"
+      ],
+      "upstream_default_revision": "bdfcb041836e86ab1ce93688b127f8960e8d08cf",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "selection_reason": "Exact public snapshot passing the original route policy, 1249 tests, TypeScript check and production build; newer documentation-only default history is retained separately.",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "compute-runtime",
+      "role": "scr",
+      "path": "instruments/execution/compute-runtime",
+      "repository": "giasonpooni/Notations-Compute-Runtime",
+      "repository_id": 1340058242,
+      "visibility": "public",
+      "import_revision": "4cbbdd61074d8cf37eba9d560bb83d2865b8e93d",
+      "import_tree": "bfd617fd602502aefed02d8b0bac9bc41cf7ff3d",
+      "runtime_revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+      "distribution": "deterministic-state-architecture",
+      "version": "1.0.0",
+      "python_import": null,
+      "source_root": ".",
+      "license": "Apache-2.0",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python-source",
+      "additional_history_roots": [
+        "98ab2f312cb7f9f4dbb18b25f762593eba56653e",
+        "91a6d3b37f28623332acd485e9f8a12953acf71e"
+      ],
+      "upstream_default_revision": "98ab2f312cb7f9f4dbb18b25f762593eba56653e",
+      "selected_import_reason": "public provider-host branch preserving all existing NET native source pins; default retained separately",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    },
+    {
+      "id": "flowstate",
+      "role": "fsrt",
+      "path": "instruments/domain/flowstate",
+      "repository": "giasonpooni/Notations-FlowState",
+      "repository_id": 1366033244,
+      "visibility": "public",
+      "import_revision": "3144e3e694419b0c8579938e8d28523174e36abd",
+      "import_tree": "5a76aefab8974d46e4e8eac79371c553461bf491",
+      "runtime_revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+      "distribution": "fluid-state-reconstruction-testbed",
+      "version": "0.1.0",
+      "python_import": "set_lcm",
+      "source_root": "src",
+      "license": "MIT",
+      "notice": null,
+      "ownership": "giasonpooni",
+      "build_kind": "python",
+      "additional_history_roots": [
+        "e13e46facc125682776f165ce1b0460b4ff9410a"
+      ],
+      "upstream_default_revision": "e13e46facc125682776f165ce1b0460b4ff9410a",
+      "selected_import_reason": "current public default branch",
+      "status": "superrepo import; independent build and release boundary; source repository retained",
+      "selection_reason": "Immediate public parent passing original package/README identity; newer default differs only in README, retained separately. Numerical code, tests, locks and fixtures remain identical.",
+      "source_audit": "PASS",
+      "source_audit_evidence": "reports/baseline-final-source-audit.json",
+      "default_core_install_activates_provider": false,
+      "qualification": "profile_specific_only_not_globally_qualified",
+      "selected_native_execution_evidence": [],
+      "other_profile_execution": "Consult the exact per-module reports and runtime manifest; source audit is not execution evidence."
+    }
+  ],
+  "runtime_manifests": [
+    {
+      "path": "src/ciw/adapter-runtimes.json",
+      "sha256": "79098fa4fb0cb9dfe9269224c146c0874a058bf5191824609245389d2b9f80fc",
+      "data": {
+        "rci": {
+          "repository": "https://github.com/atomtrapping/Notations-Metrology-Adapter",
+          "revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+          "module": "instrument_chain.ciw_adapter",
+          "historical": [
+            {
+              "revision": "97fcc01a45985defd6a76532b1fefe90d66dd159",
+              "module": "instrument_chain.ciw_adapter"
+            }
+          ]
+        },
+        "fsrt": {
+          "repository": "https://github.com/atomtrapping/Notations-FlowState",
+          "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+          "module": "set_lcm.bridge.ciw",
+          "historical": [
+            {
+              "revision": "d34588819f657b6639c8e9a19450215844610007",
+              "module": "set_lcm.bridge.ciw"
+            }
+          ]
+        },
+        "jspt": {
+          "repository": "https://github.com/atomtrapping/Notations-Sensitivity-Testbed",
+          "revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+          "module": "sensitivity.ciw_adapter"
+        },
+        "gte": {
+          "repository": "https://github.com/atomtrapping/Notations-Telemetry-Engine",
+          "revision": "e55b8be2b3ba05f7e6c6a31807c77b3e42700f07",
+          "module": "geodesic_telemetry.ciw_adapter"
+        }
+      }
+    },
+    {
+      "path": "src/ciw/calibrated-observable-runtimes.json",
+      "sha256": "c9431c28e3bdcf2c2c15bdc42b83dceb799801dbcadf2cb3dbe802e8a093fa08",
+      "data": {
+        "fsrt": {
+          "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "module": "set_lcm.bridge.calibrated_observable",
+          "source_root": "src"
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "module": "oit.diagnostics",
+          "source_root": "src"
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "cbsr": {
+          "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "module": "cbsr",
+          "source_root": "src"
+        },
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "module": "fdir.diagnostics",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        }
+      }
+    },
+    {
+      "path": "src/ciw/calibrated-window-runtimes.json",
+      "sha256": "36849335cdc35070564fc6f790d2faf679fa7f6a906c29b455b236158b3ecdbd",
+      "data": {
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "module": "tbrt.clock",
+          "source_root": "src"
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "module": "mcur.core",
+          "source_root": "src"
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "module": "stfe",
+          "source_root": "."
+        },
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        }
+      }
+    },
+    {
+      "path": "src/ciw/esm-runtime.json",
+      "sha256": "1623a4e52d7580b6857eed07397bf12b50a8dd52b31130024f9b8d4f11c8fbae",
+      "data": {
+        "repository": "giasonpooni/Evidence-and-State-Management",
+        "revision": "7c0642ebbcd95c301470e4be556342ab73c819cb",
+        "artifact_sha256": "cade023bd22bd27bc3fca6459d03c1b3c83c21a13dda3e6c1ca737de6f813f26",
+        "helper_sha256": "4eec0b10c2bff065cc37c3b39d4bd58796acfe64c6254a79179a2567497fd185",
+        "replay_ciw_revision": "e0af0472d9731eff603c13568325f15d14d2de5b"
+      }
+    },
+    {
+      "path": "src/ciw/exchange-runtime.json",
+      "sha256": "2dbf31fcf8c40430f2ea91ada4ca7de7d18008210a6e4f4301ac811ed3262671",
+      "data": {
+        "repository": "https://github.com/giasonpooni/State-Estimation-Evaluation-Testbed",
+        "revision": "542e672be512bf43b61253f2b2a43cd967cb3062",
+        "path": "state_estimation_testbed/contracts.py",
+        "sha256": "2385537daa6147ef2475d17bd75c026fe187077b90841515a9e9378e0246ae54"
+      }
+    },
+    {
+      "path": "src/ciw/identified-design-runtimes.json",
+      "sha256": "84868db50a22533e8564fb34b2a09a03c5453c7fb72515a77a39c58397efc4cd",
+      "data": {
+        "sidt": {
+          "revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+          "module": "sidt.declared",
+          "source_root": "src"
+        },
+        "edspt": {
+          "revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+          "module": "edspt.budgeted",
+          "source_root": "src"
+        },
+        "ywir": {
+          "revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+          "module": "ywir.integration",
+          "source_root": "src"
+        }
+      }
+    },
+    {
+      "path": "src/ciw/native-interop-runtimes.json",
+      "sha256": "bab1be76e41a2dcf165b253e8d263822edd4e3ac76eecdac574f6138d782076a",
+      "data": {
+        "schema": "ciw.native-interop-pins.v1",
+        "scr_revisions": [
+          "75efd22340f7a9c8048a0f9b4f3e970b681a7cd8",
+          "fd61efb3e0e5868d0f95ba27706b64a9afca595f",
+          "7e41b5a104526929c531a069a9872cf92ab277cc",
+          "2a144e252607546ca6b20e6dd4613d3a4146758a"
+        ],
+        "julia_files": {
+          "runtimes/native-interop/Project.toml": "sha256:3259c13ab8a6d8285eaf2f92d6a1562378be4be55ed8ea328b3cf78740ace9c5",
+          "runtimes/native-interop/Manifest.toml": "sha256:f8ba6ebc3fdd3cda9ea7ba6a77f7d58dadbf31499702f1cd69bc17377753d7dd",
+          "runtimes/native-interop/worker.jl": "sha256:076935fb2828cf460afb72e20d17e434a465fe1a95700df397a636bc5a18c2fd",
+          "runtimes/julia-oscillator/oscillator_worker.jl": "sha256:7ef67c565c6f803faa75611aae2e48bcf41b6e843b7b144a34dfc26bb3ac03d9"
+        },
+        "historical_julia_files": [
+          {
+            "runtimes/native-interop/Project.toml": "sha256:3259c13ab8a6d8285eaf2f92d6a1562378be4be55ed8ea328b3cf78740ace9c5",
+            "runtimes/native-interop/Manifest.toml": "sha256:f8ba6ebc3fdd3cda9ea7ba6a77f7d58dadbf31499702f1cd69bc17377753d7dd",
+            "runtimes/native-interop/worker.jl": "sha256:e598eafae6dba8e9afddc74e16ee498123b7982d2d5b2858bc8f6b9f4fb61d16",
+            "runtimes/julia-oscillator/oscillator_worker.jl": "sha256:7ef67c565c6f803faa75611aae2e48bcf41b6e843b7b144a34dfc26bb3ac03d9"
+          }
+        ],
+        "reaction_families": {
+          "cantera": {
+            "files": {
+              "runtimes/cantera-reaction/requirements.txt": "sha256:9e39e2a0f34215e77fd19f1199315ab9a8676643bff138026164b2f2a6ef38e9",
+              "runtimes/cantera-reaction/worker.py": "sha256:02cb2a77b975e8d07253115685a35b9959a5c20e2eee749edeb8a6ec45013c14"
+            },
+            "executable_sha256": "sha256:9f91cee2e1b13d9779ab252507aeee120c379e2543ffe85f63cad129b58ba230",
+            "worker_identity": {
+              "extension_sha256": "sha256:00f00749cc90b76a7266656fd02e6a7d40be82e7d7e1389472ad285123064e9d",
+              "package_files_sha256": "sha256:23f637f3754623d070a1783b92cf6068164655c692450b3ffea0ceb926cd1113",
+              "packages": {
+                "cantera": "3.2.0",
+                "numpy": "2.5.3",
+                "ruamel.yaml": "0.19.1",
+                "typing-extensions": "4.16.0"
+              },
+              "platform": "win-amd64",
+              "python_version": "3.12.14",
+              "requirements_sha256": "sha256:9e39e2a0f34215e77fd19f1199315ab9a8676643bff138026164b2f2a6ef38e9",
+              "schema": "ciw.reaction-cantera-identity.v1",
+              "worker_sha256": "sha256:02cb2a77b975e8d07253115685a35b9959a5c20e2eee749edeb8a6ec45013c14"
+            },
+            "scr_revisions": [
+              "7e41b5a104526929c531a069a9872cf92ab277cc"
+            ],
+            "scr_trees": {
+              "7e41b5a104526929c531a069a9872cf92ab277cc": "87d395d65a4e3ac1a7501f6ba17e61f8aefded1b"
+            }
+          },
+          "catalyst": {
+            "files": {
+              "runtimes/reaction-kinetics/Project.toml": "sha256:4022397ae5104a018351acf83297a0f100380ba882a6c8fe1c75d18e5e18c195",
+              "runtimes/reaction-kinetics/Manifest.toml": "sha256:6e9212c6be2e65c92ad5b6985a38f1beeeb50c2b02cd10a4004058877f57281a",
+              "runtimes/reaction-kinetics/worker.jl": "sha256:9f38a2e740f92166d70d2c12b3cdabadb03f86e4d2fff33b963c38d7dd040355"
+            },
+            "executable_sha256": "sha256:29a5cb5bde6a3f4a151f6e714591ca9344638303d9ed2a893ab31ada3de5d103",
+            "worker_identity": {
+              "schema": "ciw.reaction-catalyst-identity.v1",
+              "julia_version": "1.10.12",
+              "platform": "x86_64-w64-mingw32",
+              "threads": 1,
+              "packages": {
+                "Catalyst": "16.4.3",
+                "OrdinaryDiffEqTsit5": "2.1.4",
+                "SciMLBase": "3.56.1",
+                "JSON3": "1.14.3",
+                "SymbolicIndexingInterface": "0.3.55"
+              },
+              "worker_sha256": "sha256:9f38a2e740f92166d70d2c12b3cdabadb03f86e4d2fff33b963c38d7dd040355",
+              "project_sha256": "sha256:4022397ae5104a018351acf83297a0f100380ba882a6c8fe1c75d18e5e18c195",
+              "manifest_sha256": "sha256:6e9212c6be2e65c92ad5b6985a38f1beeeb50c2b02cd10a4004058877f57281a"
+            },
+            "scr_revisions": [
+              "7e41b5a104526929c531a069a9872cf92ab277cc"
+            ],
+            "scr_trees": {
+              "7e41b5a104526929c531a069a9872cf92ab277cc": "87d395d65a4e3ac1a7501f6ba17e61f8aefded1b"
+            }
+          }
+        },
+        "interval_family": {
+          "files": {
+            "runtimes/interval-requirement/Project.toml": "sha256:2807b18661ea382d4bb82ba4f7f00431930b45c08ff7bcdfa3bb7877e20a2936",
+            "runtimes/interval-requirement/Manifest.toml": "sha256:f54471373c82d5b1ff993a3f13555c030fc5c90509fdd7cd16620fc84f2014e3",
+            "runtimes/interval-requirement/worker.jl": "sha256:10167228a6db63a2bdf51ae4637745f65561cffc29650592c101d1089f5f70c8"
+          },
+          "executable_sha256": "sha256:29a5cb5bde6a3f4a151f6e714591ca9344638303d9ed2a893ab31ada3de5d103",
+          "worker_identity": {
+            "worker_sha256": "sha256:10167228a6db63a2bdf51ae4637745f65561cffc29650592c101d1089f5f70c8",
+            "project_sha256": "sha256:2807b18661ea382d4bb82ba4f7f00431930b45c08ff7bcdfa3bb7877e20a2936",
+            "julia_version": "1.10.12",
+            "packages": {
+              "IntervalArithmetic": "1.0.12",
+              "JSON3": "1.14.3"
+            },
+            "threads": 1,
+            "platform": "x86_64-w64-mingw32",
+            "schema": "ciw.interval-julia-identity.v1",
+            "manifest_sha256": "sha256:f54471373c82d5b1ff993a3f13555c030fc5c90509fdd7cd16620fc84f2014e3"
+          },
+          "scr_revisions": [
+            "2a144e252607546ca6b20e6dd4613d3a4146758a"
+          ],
+          "scr_trees": {
+            "2a144e252607546ca6b20e6dd4613d3a4146758a": "e7c8751faec29c0e985d89df794c3a8374b704d5"
+          }
+        }
+      }
+    },
+    {
+      "path": "src/ciw/plsr-runtime.json",
+      "sha256": "bc40205c1c6227fb1ad23f78323514bf4224aca0c0949da808be7499112c9960",
+      "data": {
+        "repository": "https://github.com/giasonpooni/Parameterized-Lyapunov-Stability-Runtime",
+        "commit": "19ea6967060166ba09db6cd4563bd87bd6b3d196",
+        "package_version": "0.1.0rc1",
+        "files": {
+          "__init__.py": "c0d6030af61ea074abd3eca7a92bd96a7e69fbe50e4bf85c22ce593f9701c0ce",
+          "benchmarks.py": "5b11cb2aec0e9c2169572b79fe6426d7ca98cbd2a0d6801e270598627bc6caf5",
+          "certificates.py": "c92bdc3fe617b53bdf2c13e970f5aa3061c108961c1cd218e98b5b27085f4a40",
+          "charts.py": "589c33fb78eb0d00c2a90da40baee9a3718b6381f52978a6390d442fd3ff57de",
+          "checks.py": "eca0b6644e85b58d44bf13f95757d4b054f40173d1e0d1e65a443866dbded965",
+          "claims.py": "75975df703b6e7d8e1bb4011f4b9a3cb04e6e15747bd98b78ae45f9e5d041402",
+          "constitution.py": "b378b0c178d9c9681adbe03bb4efbe001d0973ace68de5689f3efa5a98029bb7",
+          "discrete_guest.py": "5161cb8131c891309edfdd7638525332c7e19d4c28710671f99d9d2e4fa6d9cc",
+          "equation.py": "b74aeaec74b810977328d0e090c06ba4c5ad0f3255b43c11855051326eb8a0a7",
+          "host_callback.py": "7aad9afb77debcd8fb0061a1b098cb6a5cae32187a5de99605f0c9779d2e5ef0",
+          "linalg.py": "485544b229daa1f63691f604a320297d170ae33199b7c337f2c811c4e791b814",
+          "model_artifact.py": "0c430e4cd0534029596679e3427491a63e0a2ba2ba32d9fcc78cf19fe669bc7c",
+          "plants.py": "0161f54d8b2cce386f90fc8b2ede008b19614659371510c1b4c973a6c72083cb",
+          "py.typed": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "record.py": "eee92a38b8e7277627db71d9d15547be069bae4b3f1762425ee1b6f5a9ac0f36",
+          "reference_plants.py": "f8bc457f6d27d731cf96d8dc7022e8c5550bbe87200255aba7da59958292bfdf",
+          "reports.py": "fcfc766c53c46707e5e37cb2c7515527454e0f5ff63fd977b6e8274efa72a0a2",
+          "runtime.py": "dfcd5de8b692ed0b9503825b9c065079bb5b94f44248e1e39e3a42db10f26ca5",
+          "schemas/model-artifact-v1.schema.json": "c430c7dd7848b1914f15a511469cfac09f6362b7df8a07c8508cd0bc7081142e",
+          "statuses.py": "908e4061f13707e44f636e167fcac5d8cad381b3e219fe3920790871c051960b"
+        }
+      }
+    },
+    {
+      "path": "src/ciw/telemetry-runtimes.json",
+      "sha256": "92a300341c16b3019b6f046b1d664968ca67c728beb6a313f8986b304a987013",
+      "data": {
+        "ppda": {
+          "revision": "209985a8c7482aba037021035c2f0b550c9b1ddc",
+          "module": "instrumentation",
+          "source_root": "bridge",
+          "source_sha256": "d624bcda528165c7692d11846df0bd8a8c1402868f86c1fce407d5e2946963a1"
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "module": "stfe",
+          "source_root": "."
+        },
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src"
+        },
+        "set": {
+          "revision": "1467ec5058b3e7ebd6ba4a45f2d9b49148a2560d",
+          "module": "state_estimation_testbed.replay",
+          "source_root": "."
+        },
+        "cbsr": {
+          "revision": "b543969cb80a69a5df1274eee10d22549bcea773",
+          "module": "cbsr",
+          "source_root": "src"
+        }
+      }
+    }
+  ],
+  "surrounding_catalog_sha256": "2fe776de37f8ec50cc987fcd26f4047f9571363da98e86798b10d142ebe827ab",
+  "surrounding_systems": [
+    {
+      "system": "Provenance-Preserving-Data-Acquisition",
+      "source_readme": "https://github.com/atomtrapping/Notations-Data-Intake#readme",
+      "ciw_role": "Retain source observations and acquisition lineage.",
+      "status_and_guide": "Pinned telemetry and calibrated paths; [TELEMETRY.md](TELEMETRY.md)"
+    },
+    {
+      "system": "Streaming-Telemetry-Feature-Extraction",
+      "source_readme": "https://github.com/atomtrapping/Notations-Signal-Processing-RunTime#readme",
+      "ciw_role": "Bounded causal window features.",
+      "status_and_guide": "Pinned telemetry path; [TELEMETRY.md](TELEMETRY.md)"
+    },
+    {
+      "system": "Geometric-State-Inference-Engine",
+      "source_readme": "https://github.com/atomtrapping/Notations-State-Inference-Engine#readme",
+      "ciw_role": "State prediction/update and covariance diagnostics.",
+      "status_and_guide": "Pinned telemetry and calibrated paths; [INTEGRATION_COVERAGE.md](INTEGRATION_COVERAGE.md)"
+    },
+    {
+      "system": "State-Estimation-Evaluation-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Notations-Estimator-Bench#readme",
+      "ciw_role": "Scoped exchange conformance and replay checks.",
+      "status_and_guide": "Read-only inspection; [EXCHANGE.md](EXCHANGE.md)"
+    },
+    {
+      "system": "Constraint-Based-State-Reconciliation",
+      "source_readme": "https://github.com/atomtrapping/Notations-State-Recompiler#readme",
+      "ciw_role": "Held/accepted conservation candidates.",
+      "status_and_guide": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)"
+    },
+    {
+      "system": "Time-Base-Reconciliation-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-ClockSync#readme",
+      "ciw_role": "Clock mapping and time uncertainty.",
+      "status_and_guide": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)"
+    },
+    {
+      "system": "Metrological-Calibration-Uncertainty-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-Calibration-Runtime#readme",
+      "ciw_role": "Time-applicable calibration and correlated uncertainty.",
+      "status_and_guide": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)"
+    },
+    {
+      "system": "Observability-Identifiability-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Notations-Observability-Testbed#readme",
+      "ciw_role": "Observability and local identifiability gates.",
+      "status_and_guide": "Pinned calibrated/design paths; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)"
+    },
+    {
+      "system": "Fault-Detection-Isolation-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-FaultSense-RunTime#readme",
+      "ciw_role": "Innovation and residual diagnostics.",
+      "status_and_guide": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)"
+    },
+    {
+      "system": "System-Identification-Dynamics-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Notations-Linear-Dynamics-Testbed#readme",
+      "ciw_role": "Bounded point-model identification.",
+      "status_and_guide": "Pinned identified-design path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)"
+    },
+    {
+      "system": "Experiment-Design-Sensor-Placement-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Notations-SensorDesign-RunTime#readme",
+      "ciw_role": "Candidate information and cost ranking.",
+      "status_and_guide": "Pinned advisory path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)"
+    },
+    {
+      "system": "Yield-Weighted-Inference-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-Yield-Weighted-Runtime#readme",
+      "ciw_role": "Separate advisory computation-token decision.",
+      "status_and_guide": "Pinned identified-design path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)"
+    },
+    {
+      "system": "Jacobian-Sensitivity-Propagation-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Notations-Sensitivity-Testbed#readme",
+      "ciw_role": "Explicit covariance transport through a declared map.",
+      "status_and_guide": "Pinned covariance path; [COVARIANCE.md](COVARIANCE.md)"
+    },
+    {
+      "system": "Parameterized-Lyapunov-Stability-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Parameterized-Lyapunov-Stability-Runtime#readme",
+      "ciw_role": "Supported certificate evaluation.",
+      "status_and_guide": "Pinned standalone operation; [PLSR.md](PLSR.md)"
+    },
+    {
+      "system": "Scientific-Computation-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-Compute-Runtime#readme",
+      "ciw_role": "Registered integer execution and optional proof backend.",
+      "status_and_guide": "Optional pinned native profiles and proof operation; [NATIVE_INTEROP.md](NATIVE_INTEROP.md), [PROVED_HEAT.md](PROVED_HEAT.md)"
+    },
+    {
+      "system": "Evidence-and-State-Management",
+      "source_readme": "https://github.com/atomtrapping/Notations-State-Ledger#readme",
+      "ciw_role": "Candidate evidence review and retention.",
+      "status_and_guide": "Optional pinned candidate inspection/capture; no state admission. [STATE_DIAGNOSTICS_EVIDENCE.md](STATE_DIAGNOSTICS_EVIDENCE.md)"
+    },
+    {
+      "system": "Geospatial-State-Visualization",
+      "source_readme": "https://github.com/atomtrapping/Notations-Real-Time-Globe#readme",
+      "ciw_role": "Read-only geographic and temporal projection.",
+      "status_and_guide": "Client integration: pinned read-only geographic projection; [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md)"
+    },
+    {
+      "system": "Schematics-Retrieval-Agent",
+      "source_readme": "https://github.com/atomtrapping/Notations-Retrieval-Agent#readme",
+      "ciw_role": "Evidence-backed asset and signal-binding proposals.",
+      "status_and_guide": "Optional pinned schematic assessment and selected companions; [DECLARED_WORKLOADS.md](DECLARED_WORKLOADS.md), [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md)"
+    },
+    {
+      "system": "Retrofitted-Computational-Instrumentation",
+      "source_readme": "https://github.com/atomtrapping/Notations-Metrology-Adapter#readme",
+      "ciw_role": "External sensing and retrofit observation modules.",
+      "status_and_guide": "Optional pinned calibration/measurement-chain adapter; [ADAPTERS.md](ADAPTERS.md), [measurement-chain example](../examples/measurement-chain/README.md)"
+    },
+    {
+      "system": "Construction-State-Estimator-for-BIM",
+      "source_readme": "https://github.com/atomtrapping/Notations-Estimator-for-BIM#readme",
+      "ciw_role": "Built-asset state estimation and model context.",
+      "status_and_guide": "Implemented quantity-only pinned adapter; surveyed-frame geometry remains pending. See [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md)."
+    },
+    {
+      "system": "Covariance-Geometry-and-Geodesic-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Covariance-Geometry-and-Geodesic-Testbed#readme",
+      "ciw_role": "Affine-invariant covariance geometry.",
+      "status_and_guide": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)"
+    },
+    {
+      "system": "Intrinsic-Surface-Geodesics-Testbed",
+      "source_readme": "https://github.com/atomtrapping/Intrinsic-Surface-Geodesics-Testbed#readme",
+      "ciw_role": "Bounded mesh-edge geodesic baseline.",
+      "status_and_guide": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)"
+    },
+    {
+      "system": "Translation-Surface-Dynamics-Explorer",
+      "source_readme": "https://github.com/atomtrapping/Polygon-Trajectory-Experiments#readme",
+      "ciw_role": "Exact rational square-tiled trajectory prefixes.",
+      "status_and_guide": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)"
+    },
+    {
+      "system": "Flat-Torus-Geodesic-Reference",
+      "source_readme": "https://github.com/atomtrapping/Notations-Periodic-Space#readme",
+      "ciw_role": "Exact area-one lattice/winding reference.",
+      "status_and_guide": "Pinned reference provider; [GEODESIC_REFERENCES.md](GEODESIC_REFERENCES.md)"
+    },
+    {
+      "system": "Curved-Surface-Geodesic-Sensitivity-Runtime",
+      "source_readme": "https://github.com/atomtrapping/Notations-Surface-RunTime#readme",
+      "ciw_role": "Constant-curvature Jacobi transfer reference.",
+      "status_and_guide": "Pinned reference provider; [GEODESIC_REFERENCES.md](GEODESIC_REFERENCES.md)"
+    },
+    {
+      "system": "Instrument-Conformance-and-Replay-Harness",
+      "source_readme": "https://github.com/atomtrapping/Conformance-and-Replay-Retainer#readme",
+      "ciw_role": "Versioned external profile conformance.",
+      "status_and_guide": "Pinned validator; [EXCHANGE.md](EXCHANGE.md)"
+    }
+  ],
+  "limits": [
+    "Import revision, import tree and runtime revision identify different boundaries.",
+    "Profiles may intentionally require different current or historical runtime revisions.",
+    "Null runtime pins for npm modules remain null; no Python execution pin is inferred.",
+    "Existing source repositories, licences, notices and independent contracts are retained.",
+    "Private access, platform, hardware, independent-human and physical qualification remain open where stated."
+  ]
+}

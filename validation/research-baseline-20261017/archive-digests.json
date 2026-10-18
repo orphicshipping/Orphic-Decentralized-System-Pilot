@@ -1,0 +1,27 @@
+[
+  {
+    "name": "operator-journeys.tar.xz",
+    "bytes": 188080,
+    "sha256": "64205616b132e7fdd8970b224f132c8291bc8a24de6a032336351a8558bcc913"
+  },
+  {
+    "name": "consolidated-reports.tar.xz",
+    "bytes": 317112,
+    "sha256": "5e0ef4576dcf1e89e1d3a1f9d07725c3597b38cc0794ebc9b74c2a2c404f6a27"
+  },
+  {
+    "name": "operator-quickstart.tar.xz",
+    "bytes": 13180624,
+    "sha256": "3e4eb4be4c1333f2c23c177dc6e39b5bce7cb99a19a2fce161bb1dae4fca9efd"
+  },
+  {
+    "name": "selected-reports.tar.xz",
+    "bytes": 58380,
+    "sha256": "af3b536080428f089fa1cccbefd8425188d8ac8281d3826a8712e911e381287b"
+  },
+  {
+    "name": "earlier-attempts.tar.xz",
+    "bytes": 20844,
+    "sha256": "7b4de1351a8fe67ac1f54195dc1633f0810a690cb2e75d8fbaa5083e1efcd8e2"
+  }
+]
