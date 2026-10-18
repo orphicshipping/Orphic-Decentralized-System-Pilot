@@ -1,0 +1,11 @@
+{
+  "observed_at": "2026-10-18T01:49:10.862Z",
+  "branch_count": 284,
+  "eligible_exact_unprotected_heads": 235,
+  "archive_refs": 0,
+  "remote_deletions_performed": 0,
+  "status": "authorized_but_blocked_by_unavailable_tag_delete_tools_and_authenticated_Git",
+  "plan_sha256": "9166b17b6062debaec3546c70850869209910e644fe2e3601c00af3593b20c8f",
+  "existing_command": "scripts/cleanup_reconciled_branches.py",
+  "next_action": "An authenticated maintainer executes the guarded exact-plan command from the existing operational hygiene ledger. No repeated user confirmation is requested."
+}
