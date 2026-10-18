@@ -1,0 +1,11 @@
+{
+  "wheel_sha256": "7220df28fdc6b0913d8ec3481567a911262bc9cdbddea6969bb2e16c1aa26de6",
+  "bytes": 2789899,
+  "package_files": 724,
+  "differences_from_qualified_atomic_host_package": [
+    "ciw/integration-sources.json"
+  ],
+  "python": "3.12.14 (main, Aug 25 2026, 14:00:49) [Clang 22.1.3 ]",
+  "numpy": "2.4.3",
+  "scope": "installed provider/catalog and atomic contract tests; MCP SDK not required by this test environment"
+}

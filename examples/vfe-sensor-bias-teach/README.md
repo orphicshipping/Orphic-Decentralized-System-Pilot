@@ -1,5 +1,7 @@
 # vfe-sensor-bias-teach (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST teaching of variational-free-energy sensor-bias / model-mismatch contrasts
 for the Godot **Free energy** tab. Reuses existing
 `ciw.variational-free-energy.v1` language — **does not mint a new CIW kind**.

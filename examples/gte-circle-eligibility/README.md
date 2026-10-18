@@ -1,5 +1,7 @@
 # gte-circle-eligibility (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST teaching split of GTE circle eligibility for the Godot **Circle geometry**
 tab. Reuses existing `ciw.geometric-circle.v1` — **does not mint a new CIW kind**.
 

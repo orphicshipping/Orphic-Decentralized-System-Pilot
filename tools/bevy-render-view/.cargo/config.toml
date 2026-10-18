@@ -1,7 +1,7 @@
 # Optional local engine checkout for offline cargo check.
-# Copy to config.toml.local (gitignored) if you clone giasonpooni/bevy at the pin.
+# Configure an explicit local Cargo override only if its checkout matches the pin.
 # Do not commit a path patch into the published tree.
 #
 # Example:
-# [patch."https://github.com/giasonpooni/bevy.git"]
+# [patch."https://github.com/bevyengine/bevy.git"]
 # bevy = { path = "../bevy" }

@@ -1,0 +1,119 @@
+{
+  "schema": "ncp.teaching-catalog.v1",
+  "scope": "Reviewed ten-family teaching input catalog. The historical 9074-scenario industry/verb inputs were never tracked at these paths and are not reconstructed or claimed here.",
+  "entries": [
+    {
+      "slug": "reservoir-disagreement",
+      "title": "reservoir disagreement",
+      "industry": "engineering teaching",
+      "sentence": "Published quickstart inputs and documented reconcile/hold decisions; no native FSRT execution or fault attribution.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "FSRT",
+      "generated": true,
+      "render_path": "examples/usecase-reservoir-disagreement/results/reservoir-disagreement_render.json"
+    },
+    {
+      "slug": "geodesic-input-review",
+      "title": "geodesic input review",
+      "industry": "engineering teaching",
+      "sentence": "Declared constant-curvature inputs; schematic arclength axis only. Native geodesic integration and surveyed geometry remain unestablished.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "CSG",
+      "generated": true,
+      "render_path": "examples/usecase-geodesic-input-review/results/geodesic-input-review_render.json"
+    },
+    {
+      "slug": "bim-quantity-review",
+      "title": "bim quantity review",
+      "industry": "engineering teaching",
+      "sentence": "Documented synthetic quantity outcomes. ACCEPT remains a recommendation; no construction approval, native CSE execution or surveyed geometry.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "CSE",
+      "generated": true,
+      "render_path": "examples/usecase-bim-quantity-review/results/bim-quantity-review_render.json"
+    },
+    {
+      "slug": "thermal-proof-gate",
+      "title": "thermal proof gate",
+      "industry": "engineering teaching",
+      "sentence": "Retained integer initial conditions. Proof and fresh verification are NOT_RUN; no proof bytes, guest ELF or verifier occurrence are synthesized.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "PROVED_HEAT",
+      "generated": true,
+      "render_path": "examples/usecase-thermal-proof-gate/results/thermal-proof-gate_render.json"
+    },
+    {
+      "slug": "residual-window-review",
+      "title": "residual window review",
+      "industry": "engineering teaching",
+      "sentence": "Synthetic ordered windows; diagnostic candidates only.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "RESIDUAL_CUSUM",
+      "generated": true,
+      "render_path": "examples/usecase-residual-window-review/results/residual-window-review_render.json"
+    },
+    {
+      "slug": "circle-eligibility",
+      "title": "circle eligibility",
+      "industry": "engineering teaching",
+      "sentence": "Declared circle fixtures; no physical geometry qualification.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "GTE_CIRCLE",
+      "generated": true,
+      "render_path": "examples/usecase-circle-eligibility/results/circle-eligibility_render.json"
+    },
+    {
+      "slug": "stability-verdict",
+      "title": "stability verdict",
+      "industry": "engineering teaching",
+      "sentence": "Documented PLSR outcomes; no live PLSR evaluation or physical stability claim.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "PLSR",
+      "generated": true,
+      "render_path": "examples/usecase-stability-verdict/results/stability-verdict_render.json"
+    },
+    {
+      "slug": "energy-accuracy-review",
+      "title": "energy accuracy review",
+      "industry": "engineering teaching",
+      "sentence": "Existing analyzer over synthetic NVML fixtures; nats, joules and elapsed time stay separate. No whole-machine energy or calibrated uncertainty claim.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "ENERGY_ACCURACY",
+      "generated": true,
+      "render_path": "examples/usecase-energy-accuracy-review/results/energy-accuracy-review_render.json"
+    },
+    {
+      "slug": "sensor-bias-review",
+      "title": "sensor bias review",
+      "industry": "engineering teaching",
+      "sentence": "Declared generator-versus-assumed contrasts only; no fresh solve, physical calibration or state admission.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "VFE",
+      "generated": true,
+      "render_path": "examples/usecase-sensor-bias-review/results/sensor-bias-review_render.json"
+    },
+    {
+      "slug": "measurement-chain-review",
+      "title": "measurement chain review",
+      "industry": "engineering teaching",
+      "sentence": "Declared synthetic measurement-chain inputs. No provider execution, GSIE fusion, calibration certificate or physical traceability.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "MEASUREMENT_CHAIN",
+      "generated": true,
+      "render_path": "examples/usecase-measurement-chain-review/results/measurement-chain-review_render.json"
+    }
+  ],
+  "counts": {
+    "CSE": 1,
+    "CSG": 1,
+    "ENERGY_ACCURACY": 1,
+    "FSRT": 1,
+    "GTE_CIRCLE": 1,
+    "MEASUREMENT_CHAIN": 1,
+    "PLSR": 1,
+    "PROVED_HEAT": 1,
+    "RESIDUAL_CUSUM": 1,
+    "VFE": 1
+  },
+  "historical_9074_corpus_restored": false
+}

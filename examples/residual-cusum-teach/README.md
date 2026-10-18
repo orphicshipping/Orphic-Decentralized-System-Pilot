@@ -1,5 +1,7 @@
 # residual-cusum-teach (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST teaching of residual-monitor / FDIR-OIT CUSUM concepts for the Godot
 **Residual strip** tab. Attaches to existing residual-monitor language from
 [`docs/EXPERIMENT_VIEW.md`](../../docs/EXPERIMENT_VIEW.md) — **does not invent

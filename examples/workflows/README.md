@@ -1,10 +1,21 @@
 # Laboratory teaching-sample workflow
 
-**Current source limits (18 October 2026):** these are authoring instructions,
-not a shipped tab/corpus inventory. The Bevy projector target, specialty Godot
-tabs, use-case index/generator and eight of ten named template emitters are
-absent. Start with the [current visualization source map](../../docs/VISUALIZATION_PROVIDERS.md).
-Batch and SP1 teaching commands below require the missing source before use.
+**Current source (18 October 2026):** the Bevy projector, ten owned emitters,
+reviewed inputs, catalog generator and Godot Teaching samples tab are implemented.
+The original 9,074-description corpus remains historical and unrecovered;
+specialty tab sketches below are not additional shipped tabs. Start with the
+[current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
+```sh
+python examples/workflows/generate_usecase_corpus.py --check
+python examples/workflows/emit_all_usecases.py --receipt /tmp/NEW-teaching-receipt.json
+python examples/workflows/emit_sp1_teaching_bundle.py
+```
+
+This emits ten input-backed teaching scenarios through all ten existing
+computational families. Godot Teaching samples and the optional Bevy projector
+read the same output records. Proof teaching remains UNAVAILABLE/NOT_CHECKED
+without a bound verifier; export never manufactures proofs or fresh verification.
 
 How to add a **HOST teaching sample** that emits one retained render JSON and
 is projected by stacked providers (Godot tab + optional Bevy). Science stays on

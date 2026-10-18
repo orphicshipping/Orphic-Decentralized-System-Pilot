@@ -1,5 +1,7 @@
 # csg-path-sensitivity (HOST synthetic from published boundary params)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST / synthetic Curved-Surface-Geodesic-Sensitivity presentation for the Godot
 **Geodesic path** tab. Conceptually attached to existing
 `ciw.curved-path-transfer.v1` — **does not mint a second curved-path operation**.

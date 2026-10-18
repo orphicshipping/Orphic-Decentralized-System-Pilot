@@ -7,12 +7,16 @@ license = "MIT OR Apache-2.0"
 publish = false
 
 [dependencies]
-# Pin: notationsystems/bevy @ 0f38358f573a7dc6ea961076f6151be662142010 (0.20.0-dev).
+# Pin: bevyengine/bevy @ 0f38358f573a7dc6ea961076f6151be662142010 (0.20.0-dev).
 # Prefer local checkout when present (see .cargo/config.toml patch). Do not vendor
 # the engine into this terminal repo. Do not patch the engine tree for instrument tabs.
-bevy = { git = "https://github.com/notationsystems/bevy.git", rev = "0f38358f573a7dc6ea961076f6151be662142010", default-features = false, features = ["3d", "ui"] }
+bevy = { git = "https://github.com/bevyengine/bevy.git", rev = "0f38358f573a7dc6ea961076f6151be662142010", optional = true, default-features = false, features = ["std", "bevy_winit", "x11", "default_font", "multi_threaded", "bevy_core_pipeline", "bevy_pbr", "bevy_gizmos_render", "ui_bevy_render"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
+
+[features]
+default = ["viewer"]
+viewer = ["dep:bevy"]
 
 [profile.dev]
 opt-level = 1

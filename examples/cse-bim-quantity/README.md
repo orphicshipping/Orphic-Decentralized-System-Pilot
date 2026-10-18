@@ -1,5 +1,7 @@
 # cse-bim-quantity (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST / synthetic Construction-State-Estimator presentation for the Godot
 **BIM quantity** tab. Reuses existing `ciw.bim-quantity.v1` — **does not mint
 a new CIW kind**.

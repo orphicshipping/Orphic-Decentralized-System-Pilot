@@ -1,5 +1,7 @@
 # energy-accuracy-teach (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST teaching split of energy-accuracy qualification for the Godot
 **Energy accuracy** tab. Reuses existing `ciw.energy-accuracy.v1` language —
 **does not mint a new CIW kind**.

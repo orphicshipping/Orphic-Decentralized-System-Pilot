@@ -1,5 +1,7 @@
 # measurement-chain-teach (presentation sample)
 
+> Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 HOST teaching of measurement-chain / RCI–FSRT–JSPT stage language for the Godot
 **Measurement chain** tab. Prefer existing ops language from
 [`examples/measurement-chain/`](../measurement-chain/) and

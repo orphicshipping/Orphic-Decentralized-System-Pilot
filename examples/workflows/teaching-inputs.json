@@ -1,0 +1,316 @@
+{
+  "schema": "ncp.teaching-inputs.v1",
+  "scope": "Reviewed ten-family teaching input catalog. The historical 9074-scenario industry/verb inputs were never tracked at these paths and are not reconstructed or claimed here.",
+  "families": {
+    "FSRT": {
+      "sources": [
+        "examples/fsrt-two-reservoir/README.md",
+        "examples/adapters/two-reservoir.json"
+      ],
+      "caption": "Published quickstart inputs and documented reconcile/hold decisions; no native FSRT execution or fault attribution.",
+      "cards": [
+        {
+          "title": "Small disagreement",
+          "status": "RECONCILED",
+          "basis": "documented outcome; not a fresh execution"
+        },
+        {
+          "title": "Large disagreement",
+          "status": "HELD",
+          "basis": "documented outcome"
+        }
+      ],
+      "cases": [
+        {
+          "input": [
+            52,
+            46
+          ],
+          "constraint_total": 100,
+          "documented_decision": "reconcile"
+        },
+        {
+          "input": [
+            60,
+            50
+          ],
+          "constraint_total": 100,
+          "documented_decision": "hold"
+        }
+      ]
+    },
+    "CSG": {
+      "sources": [
+        "examples/curved-path-study/baseline.json",
+        "examples/csg-path-sensitivity/upstream/replay_path_artefact.py"
+      ],
+      "caption": "Declared constant-curvature inputs; schematic arclength axis only. Native geodesic integration and surveyed geometry remain unestablished.",
+      "cards": [
+        {
+          "title": "Declared curvature",
+          "value": 0.25,
+          "unit": "m^-2",
+          "status": "HISTORICAL"
+        },
+        {
+          "title": "Geometry authority",
+          "value": "not established"
+        }
+      ]
+    },
+    "CSE": {
+      "sources": [
+        "examples/bim-quantity/README.md"
+      ],
+      "caption": "Documented synthetic quantity outcomes. ACCEPT remains a recommendation; no construction approval, native CSE execution or surveyed geometry.",
+      "cards": [
+        {
+          "title": "Posterior ClearHeight",
+          "value": 2.992,
+          "unit": "m",
+          "basis": "documented synthetic outcome"
+        },
+        {
+          "title": "Room volume",
+          "value": 59.84,
+          "unit": "m^3",
+          "basis": "documented synthetic outcome"
+        }
+      ],
+      "cases": [
+        {
+          "name": "conditioned",
+          "documented_status": "SATISFIED",
+          "geometry_authority": "QUANTITY_ONLY"
+        },
+        {
+          "name": "unknown cross-covariance",
+          "documented_status": "REQUEST_EVIDENCE",
+          "prior_unchanged": true
+        },
+        {
+          "name": "negative height",
+          "documented_status": "VIOLATED"
+        }
+      ]
+    },
+    "PROVED_HEAT": {
+      "sources": [
+        "examples/proved-heat/source.json"
+      ],
+      "caption": "Retained integer initial conditions. Proof and fresh verification are NOT_RUN; no proof bytes, guest ELF or verifier occurrence are synthesized.",
+      "cards": [
+        {
+          "title": "Proof provider",
+          "status": "UNAVAILABLE",
+          "proof_status": "NOT_CHECKED"
+        },
+        {
+          "title": "Release decision",
+          "status": "HELD",
+          "reason": "fresh verifier occurrence required"
+        }
+      ]
+    },
+    "RESIDUAL_CUSUM": {
+      "sources": [
+        "examples/residual-cusum-teach/emit_render.py"
+      ],
+      "caption": "Synthetic ordered windows; diagnostic candidates only.",
+      "cards": []
+    },
+    "GTE_CIRCLE": {
+      "sources": [
+        "examples/gte-circle-eligibility/run_or_emit.py"
+      ],
+      "caption": "Declared circle fixtures; no physical geometry qualification.",
+      "cards": []
+    },
+    "PLSR": {
+      "sources": [
+        "examples/identified-stability/README.md"
+      ],
+      "caption": "Documented PLSR outcomes; no live PLSR evaluation or physical stability claim.",
+      "cards": [
+        {
+          "title": "Identity certificate",
+          "status": "HISTORICAL",
+          "verdict": "NUMERICAL_INCONCLUSIVE",
+          "proof_status": "NOT_CHECKED"
+        },
+        {
+          "title": "level=0",
+          "status": "REFUSED",
+          "verdict": "OUTSIDE_LEVEL_SET",
+          "proof_status": "NOT_CHECKED"
+        }
+      ]
+    },
+    "ENERGY_ACCURACY": {
+      "sources": [
+        "examples/energy-accuracy/baseline.json",
+        "examples/energy-accuracy/under-target.json",
+        "examples/energy-accuracy/missing.json"
+      ],
+      "caption": "Existing analyzer over synthetic NVML fixtures; nats, joules and elapsed time stay separate. No whole-machine energy or calibrated uncertainty claim.",
+      "cards": [
+        {
+          "title": "Acquisition",
+          "value": "synthetic fixtures; no device capture"
+        }
+      ]
+    },
+    "VFE": {
+      "sources": [
+        "examples/variational-free-energy/sensor-bias.json",
+        "examples/variational-free-energy/ignored-correlation.json",
+        "examples/variational-free-energy/wrong-curvature.json"
+      ],
+      "caption": "Declared generator-versus-assumed contrasts only; no fresh solve, physical calibration or state admission.",
+      "cards": [
+        {
+          "title": "Sensor bias",
+          "status": "REQUEST_EVIDENCE"
+        },
+        {
+          "title": "Ignored correlation",
+          "status": "HELD"
+        },
+        {
+          "title": "Wrong curvature",
+          "status": "REFUSED"
+        }
+      ]
+    },
+    "MEASUREMENT_CHAIN": {
+      "sources": [
+        "examples/measurement-chain/source.json",
+        "examples/measurement-chain/README.md"
+      ],
+      "caption": "Declared synthetic measurement-chain inputs. No provider execution, GSIE fusion, calibration certificate or physical traceability.",
+      "cards": [
+        {
+          "title": "Raw",
+          "status": "HISTORICAL"
+        },
+        {
+          "title": "Calibrate",
+          "status": "UNAVAILABLE",
+          "native_execution": "NOT_RUN"
+        },
+        {
+          "title": "Estimate",
+          "status": "UNAVAILABLE",
+          "native_execution": "NOT_RUN"
+        },
+        {
+          "title": "Reconcile",
+          "status": "UNAVAILABLE",
+          "native_execution": "NOT_RUN"
+        }
+      ]
+    }
+  },
+  "entries": [
+    {
+      "slug": "reservoir-disagreement",
+      "title": "reservoir disagreement",
+      "industry": "engineering teaching",
+      "sentence": "Published quickstart inputs and documented reconcile/hold decisions; no native FSRT execution or fault attribution.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "FSRT",
+      "generated": true,
+      "render_path": "examples/usecase-reservoir-disagreement/results/reservoir-disagreement_render.json"
+    },
+    {
+      "slug": "geodesic-input-review",
+      "title": "geodesic input review",
+      "industry": "engineering teaching",
+      "sentence": "Declared constant-curvature inputs; schematic arclength axis only. Native geodesic integration and surveyed geometry remain unestablished.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "CSG",
+      "generated": true,
+      "render_path": "examples/usecase-geodesic-input-review/results/geodesic-input-review_render.json"
+    },
+    {
+      "slug": "bim-quantity-review",
+      "title": "bim quantity review",
+      "industry": "engineering teaching",
+      "sentence": "Documented synthetic quantity outcomes. ACCEPT remains a recommendation; no construction approval, native CSE execution or surveyed geometry.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "CSE",
+      "generated": true,
+      "render_path": "examples/usecase-bim-quantity-review/results/bim-quantity-review_render.json"
+    },
+    {
+      "slug": "thermal-proof-gate",
+      "title": "thermal proof gate",
+      "industry": "engineering teaching",
+      "sentence": "Retained integer initial conditions. Proof and fresh verification are NOT_RUN; no proof bytes, guest ELF or verifier occurrence are synthesized.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "PROVED_HEAT",
+      "generated": true,
+      "render_path": "examples/usecase-thermal-proof-gate/results/thermal-proof-gate_render.json"
+    },
+    {
+      "slug": "residual-window-review",
+      "title": "residual window review",
+      "industry": "engineering teaching",
+      "sentence": "Synthetic ordered windows; diagnostic candidates only.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "RESIDUAL_CUSUM",
+      "generated": true,
+      "render_path": "examples/usecase-residual-window-review/results/residual-window-review_render.json"
+    },
+    {
+      "slug": "circle-eligibility",
+      "title": "circle eligibility",
+      "industry": "engineering teaching",
+      "sentence": "Declared circle fixtures; no physical geometry qualification.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "GTE_CIRCLE",
+      "generated": true,
+      "render_path": "examples/usecase-circle-eligibility/results/circle-eligibility_render.json"
+    },
+    {
+      "slug": "stability-verdict",
+      "title": "stability verdict",
+      "industry": "engineering teaching",
+      "sentence": "Documented PLSR outcomes; no live PLSR evaluation or physical stability claim.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "PLSR",
+      "generated": true,
+      "render_path": "examples/usecase-stability-verdict/results/stability-verdict_render.json"
+    },
+    {
+      "slug": "energy-accuracy-review",
+      "title": "energy accuracy review",
+      "industry": "engineering teaching",
+      "sentence": "Existing analyzer over synthetic NVML fixtures; nats, joules and elapsed time stay separate. No whole-machine energy or calibrated uncertainty claim.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "ENERGY_ACCURACY",
+      "generated": true,
+      "render_path": "examples/usecase-energy-accuracy-review/results/energy-accuracy-review_render.json"
+    },
+    {
+      "slug": "sensor-bias-review",
+      "title": "sensor bias review",
+      "industry": "engineering teaching",
+      "sentence": "Declared generator-versus-assumed contrasts only; no fresh solve, physical calibration or state admission.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "VFE",
+      "generated": true,
+      "render_path": "examples/usecase-sensor-bias-review/results/sensor-bias-review_render.json"
+    },
+    {
+      "slug": "measurement-chain-review",
+      "title": "measurement chain review",
+      "industry": "engineering teaching",
+      "sentence": "Declared synthetic measurement-chain inputs. No provider execution, GSIE fusion, calibration certificate or physical traceability.",
+      "non_claim": "No physical qualification or automatic authorization",
+      "family": "MEASUREMENT_CHAIN",
+      "generated": true,
+      "render_path": "examples/usecase-measurement-chain-review/results/measurement-chain-review_render.json"
+    }
+  ]
+}

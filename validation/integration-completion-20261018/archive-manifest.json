@@ -1,0 +1,166 @@
+{
+  "archive_sha256": "5f5af6d8b6f6a40c52c7bd9b194a5b5996dcb783ba3c424b9d4b684bb99766ac",
+  "files": [
+    {
+      "path": "receipts/finish-execution-receipts.json",
+      "bytes": 871,
+      "sha256": "76fab8277f0d395b36fc218d7e743140d6e7544f2971736a88e66f99b66a2624"
+    },
+    {
+      "path": "receipts/finish-wheel-identity.json",
+      "bytes": 430,
+      "sha256": "e98c8a9c845eaea3109e666e38d5df202ab0cb36e02f4f044d4c99eb45081d8c"
+    },
+    {
+      "path": "receipts/finish-hosted-raw.json",
+      "bytes": 2041144,
+      "sha256": "0013b7adea7306c5e4ba8e31ab920c0a4cb2ce29ff98122d73124acafdfcbc23"
+    },
+    {
+      "path": "receipts/finish-hosted-observation.json",
+      "bytes": 4904,
+      "sha256": "876923dfebc5edd52faeae65103310ffab5e187d43e5db06fb18bdf18032fb98"
+    },
+    {
+      "path": "receipts/finish-teaching-final-receipt.json",
+      "bytes": 3173,
+      "sha256": "0ab38871313281561763e5a0aff7a5b83390647d8c04cb2b9b7a439872dd7035"
+    },
+    {
+      "path": "receipts/finish-checkpoint-source.log",
+      "bytes": 180,
+      "sha256": "f91860d2e42d1340087ca636b9da2be6cb775c158c0b831844868a9da8b15cb3"
+    },
+    {
+      "path": "receipts/finish-checkpoint-source.xml",
+      "bytes": 17404,
+      "sha256": "b250c7ce4ab68b4a5fac38861fb18b227c2418ffb4aa1d680d21255ef41018a6"
+    },
+    {
+      "path": "receipts/finish-installed-regression.log",
+      "bytes": 180,
+      "sha256": "16ec164be0d27ea5d7803d148a1caf24ed7b8922afa689efe4b15388e1315343"
+    },
+    {
+      "path": "receipts/finish-installed-regression.xml",
+      "bytes": 15598,
+      "sha256": "96c64f51beff7c4fd0859818931cbed576b04995b17d27173727cfea5da975e5"
+    },
+    {
+      "path": "receipts/finish-checkpoint-godot.log",
+      "bytes": 5553,
+      "sha256": "c5125cf6e6aa22c6ca113b8eb5dedae98f48b12be7253b3162d7189e9261141f"
+    },
+    {
+      "path": "receipts/finish-bevy-pbr-final-build.log",
+      "bytes": 232,
+      "sha256": "a36f74bc96a64c966c9a0a53bb428d49371185ea0ef3c4f5f2cb197cd3aec1e8"
+    },
+    {
+      "path": "receipts/finish-bevy-final-rust-tests.log",
+      "bytes": 1035,
+      "sha256": "cc349063e76a91acb7e7c4d71687477a5c8935b36acd5c239370a974b564d4c0"
+    },
+    {
+      "path": "receipts/finish-bevy-native-qualification.log",
+      "bytes": 712,
+      "sha256": "48e7db4e6cf232566a563a6253d875a580cd09b980562dac282f9d3c50ac6e62"
+    },
+    {
+      "path": "receipts/finish-ci-policy-final.log",
+      "bytes": 119,
+      "sha256": "bf84916f8232c165836a6f228f87cf6008645a3f1bd33697f515ae2d22644441"
+    },
+    {
+      "path": "receipts/finish-ci-policy-tests.log",
+      "bytes": 2479,
+      "sha256": "b45128b8382f78ab181f9bf4b2bcc23ad6b08352835c78e3f8d90366638fca83"
+    },
+    {
+      "path": "receipts/finish-actionlint-final.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "receipts/finish-atomic-runtime-recheck.json",
+      "bytes": 1400,
+      "sha256": "b8b09928b446493b5ec1f3dac17c7601034969823993a814c26b1da37fe5f48d"
+    },
+    {
+      "path": "bevy-native/gate.json",
+      "bytes": 477,
+      "sha256": "39dfa5126b68a484e35504fca1149a572f0ab312cd421da3c4b4dd59864e59fb"
+    },
+    {
+      "path": "bevy-native/projector.png",
+      "bytes": 50994,
+      "sha256": "384a6caa3c175923d347f8af17045fddb4bc791f8dee8de02bbf3e6daf291139"
+    },
+    {
+      "path": "bevy-native/render-input.json",
+      "bytes": 4854,
+      "sha256": "8fc865f2e49c2026d02b8e838190b5d8fdd9e4d1154dcc7696e32ec79e4b5b57"
+    },
+    {
+      "path": "bevy-native/summary.json",
+      "bytes": 1917,
+      "sha256": "688fc89f2f9c33d42b103fb2c2cfb45fa83e723fa576412efa59530762408df4"
+    },
+    {
+      "path": "bevy-native/window.log",
+      "bytes": 1593,
+      "sha256": "272563454e717a998f29ae3a5dca23a7d5b7eb541112643ed601e5e1831ac551"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-bim-quantity-review/results/bim-quantity-review_render.json",
+      "bytes": 2684,
+      "sha256": "14b2612239c009d9c5bc8c6ad0dce4a9fb21a0c3893b01ac135ad2ddfbccacd9"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-circle-eligibility/results/circle-eligibility_render.json",
+      "bytes": 7603,
+      "sha256": "ebbc70314e89c043c3d8a84a0f66a7946e5ed91a0f8fa9e3d8d92f8acd2a4c4b"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-energy-accuracy-review/results/energy-accuracy-review_render.json",
+      "bytes": 17631,
+      "sha256": "4f97aa0e167363eb1338852ca94e8316a9e0733623a0ade363c8391f2ecbf5d7"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-geodesic-input-review/results/geodesic-input-review_render.json",
+      "bytes": 4854,
+      "sha256": "8fc865f2e49c2026d02b8e838190b5d8fdd9e4d1154dcc7696e32ec79e4b5b57"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-measurement-chain-review/results/measurement-chain-review_render.json",
+      "bytes": 2705,
+      "sha256": "284ef05247b9feb0a358fbc606a66e3071b14089d90b09c102460de990b27ec5"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-reservoir-disagreement/results/reservoir-disagreement_render.json",
+      "bytes": 2731,
+      "sha256": "2c6baa9d49e326a407f1b87d09601e6a80d7623db62bc478eea48effa0bb2a83"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-residual-window-review/results/residual-window-review_render.json",
+      "bytes": 10618,
+      "sha256": "af387d84095b3fe29a47cea91b93283ce92cdf555027bf31b1afc9c949ec1b42"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-sensor-bias-review/results/sensor-bias-review_render.json",
+      "bytes": 7214,
+      "sha256": "923c410c766a66b64b95d02df0a09a7bbaecc7c93107493241031e675bcbc58a"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-stability-verdict/results/stability-verdict_render.json",
+      "bytes": 2249,
+      "sha256": "0da5edb5ad040fb58db691277043b3a4ebb06baba1b566f3d0cdf2ae52f4478a"
+    },
+    {
+      "path": "teaching-exports/examples/usecase-thermal-proof-gate/results/thermal-proof-gate_render.json",
+      "bytes": 3315,
+      "sha256": "861181ad7db578b98f42db6bffefcdf87686988b09990f5c0cc8de884a8fdc63"
+    }
+  ],
+  "diagnostics": "Early failed/incomplete render and build attempts are separate from the final qualification receipts."
+}

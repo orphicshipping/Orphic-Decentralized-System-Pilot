@@ -110,7 +110,7 @@ for source, retained validation records and open gates.
 | External tool | Inspected boundary / inventory status |
 | --- | --- |
 | Godot | Inspection-client source present; general simulation integration remains a separate qualification target. |
-| Bevy | Retained-render projector metadata is present, but its Rust application target is absent in the 2026-10-18 folder audit. The separate bounded projectile runtime does not supply that projector; see [current source inventory](VISUALIZATION_PROVIDERS.md). General ECS integration retains its own gates. |
+| Bevy | Optional retained-render projector over existing host JSON, with a native window, bounded summary and strict historical/fresh-verification display. Pinned Bevy source, Cargo.lock and Rust 1.97.1 are retained; this presentation provider supplies no scientific operation or authority. The bounded projectile runtime and general ECS integration keep separate contracts and gates. |
 | Blender | Optional authoring target; qualified authoring-job integration remains pending in the cited integration audit. |
 | SP1 | Selected registered computation-proof path, not blanket verification of every instrument. |
 | Catalyst / Cantera | Bounded reaction-provider families. |
@@ -118,7 +118,7 @@ for source, retained validation records and open gates.
 | OrdinaryDiffEqTsit5 | Bounded oscillator integration. |
 | JuMP / HiGHS | Bounded quadratic-design optimization. |
 | JuliaIntervals family | Bounded interval-enclosure profile. |
-| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding and native CPU/CUDA qualification remain required; MLIP, dynamics, training and polymer/physical qualification are not delivered.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md). |
+| NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`) | Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding is required. The separate atomic CPU Session gate has retained local execution evidence; CUDA, hosted, MLIP, dynamics, training and polymer/physical qualification remain separate.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md). |
 
 ALCHEMI extends the molecular/materials layer; it does not replace existing
 Julia/native providers, continuum solvers, NET evidence ownership or machine

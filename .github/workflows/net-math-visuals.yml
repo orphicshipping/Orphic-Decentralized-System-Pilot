@@ -5,6 +5,43 @@ on:
 permissions:
   contents: read
 jobs:
+  retained-bevy-projector:
+    name: Pinned Bevy retained-render projector
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12'
+      - name: Install the declared Rust toolchain and software display
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          sudo apt-get update
+          sudo apt-get install -y xvfb mesa-vulkan-drivers
+          python -m pip install Pillow==12.3.0
+          rustc +1.97.1 -Vv > bevy-toolchain.txt
+      - name: Test refusal/status boundaries and build the actual viewer
+        run: |
+          cargo +1.97.1 test --locked --manifest-path tools/bevy-render-view/Cargo.toml --no-default-features
+          cargo +1.97.1 build --locked --manifest-path tools/bevy-render-view/Cargo.toml
+          python examples/csg-path-sensitivity/emit_render.py --output bevy-source-render.json
+          tools/bevy-render-view/target/debug/bevy-render-view --summary bevy-source-render.json > bevy-summary.json
+          xvfb-run -a python scripts/check_bevy_projector.py --binary tools/bevy-render-view/target/debug/bevy-render-view --render bevy-source-render.json --output-dir bevy-window-evidence
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: retained-bevy-projector
+          path: |
+            bevy-toolchain.txt
+            bevy-source-render.json
+            bevy-summary.json
+            bevy-window-evidence
+            tools/bevy-render-view/Cargo.lock
+          if-no-files-found: error
   inspector:
     strategy:
       fail-fast: false
