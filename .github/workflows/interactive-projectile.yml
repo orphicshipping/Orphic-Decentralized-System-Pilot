@@ -20,12 +20,15 @@ concurrency:
   cancel-in-progress: true
 jobs:
   contracts:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((vars.NCP_NATIVE_LINUX_RUNNER == 'enabled' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && '["self-hosted","Linux","X64","ncp-native-linux"]' || '["ubuntu-24.04"]') }}
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
+      - name: Validate dedicated native runner
+        if: runner.environment == 'self-hosted'
+        run: python3 scripts/check_native_runner.py --output runner-preflight.json
       - run: |
           python3 -m venv .venv
           .venv/bin/python -m pip install -e ".[dev]"
@@ -35,16 +38,21 @@ jobs:
         if: always()
         with:
           name: interactive-contract-tests
-          path: interactive-tests.xml
+          path: |
+            interactive-tests.xml
+            runner-preflight.json
           if-no-files-found: error
   native:
     needs: contracts
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((vars.NCP_NATIVE_LINUX_RUNNER == 'enabled' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && '["self-hosted","Linux","X64","ncp-native-linux"]' || '["ubuntu-24.04"]') }}
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
         with:
           persist-credentials: false
+      - name: Validate dedicated native runner
+        if: runner.environment == 'self-hosted'
+        run: python3 scripts/check_native_runner.py --output runner-preflight.json
       - name: Provision exact engine versions and Rust toolchain
         shell: bash
         run: |
@@ -78,6 +86,7 @@ jobs:
         with:
           name: interactive-native-evidence
           path: |
+            runner-preflight.json
             results/interactive-native
             tools/interactive-simulation/bevy/Cargo.lock
             bevy-binary.sha256

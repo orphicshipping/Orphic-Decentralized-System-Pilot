@@ -47,6 +47,34 @@ DOCS_ONLY = (
 )
 GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || (github.event_name == 'push' && github.ref) || github.run_id }}"
 
+# Activation is an owner-managed variable; automatic PRs never use this pool.
+NATIVE_RUNNERS = {
+    "proved-heat.yml": {"native-proof": "ubuntu-24.04"},
+    "interactive-projectile.yml": {"contracts": "ubuntu-24.04", "native": "ubuntu-24.04"},
+    "consolidated-integration.yml": {"regression": "ubuntu-latest"},
+}
+
+
+def native_runner_expression(hosted: str) -> str:
+    return ("${{ fromJSON((vars.NCP_NATIVE_LINUX_RUNNER == 'enabled' && "
+            "(github.event_name == 'workflow_dispatch' || "
+            "(github.event_name == 'push' && github.ref == 'refs/heads/main'))) && "
+            "'[\"self-hosted\",\"Linux\",\"X64\",\"ncp-native-linux\"]' || "
+            "'[\"" + hosted + "\"]') }}")
+
+
+def check_native_routing(name: str, value: dict) -> list[str]:
+    errors = []
+    for job, hosted in NATIVE_RUNNERS[name].items():
+        actual = value.get("jobs", {}).get(job, {})
+        if actual.get("runs-on") != native_runner_expression(hosted):
+            errors.append(f"{name}/{job}: require opt-in native pool for main/manual only and the original hosted fallback")
+        checks = [step for step in actual.get("steps", [])
+                  if step.get("run") == "python3 scripts/check_native_runner.py --output runner-preflight.json"]
+        if len(checks) != 1 or checks[0].get("if") != "runner.environment == 'self-hosted'":
+            errors.append(f"{name}/{job}: require dedicated-runner preflight")
+    return errors
+
 
 def check_workflow(name: str, value: dict, *, qualification: bool) -> list[str]:
     errors = []
@@ -79,6 +107,12 @@ def check_release_push(name: str, value) -> list[str]:
 
 def main(root: Path) -> int:
     errors = []
+    for name in NATIVE_RUNNERS:
+        try:
+            value = yaml.load((root / ".github/workflows" / name).read_text(), Loader=yaml.BaseLoader)
+            errors.extend(check_native_routing(name, value))
+        except (OSError, AttributeError, TypeError, yaml.YAMLError) as exc:
+            errors.append(f"{name}: {exc}")
     for name in (*ALWAYS, *QUALIFICATION):
         path = root / ".github" / "workflows" / name
         try:
