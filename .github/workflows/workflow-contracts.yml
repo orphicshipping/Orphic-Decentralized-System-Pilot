@@ -27,7 +27,9 @@ jobs:
         run: |
           python -m pip install -e ".[dev]"
           python -m unittest discover -s scripts/tests -p test_ci_policy.py -v
+          python -m unittest discover -s scripts/tests -p test_branch_cleanup.py -v
           python scripts/check_ci_policy.py
+          python scripts/audit_workflow_inventory.py --output workflow-inventory.json
       - name: Audit scientific contract coverage and shared enforcement
         run: |
           python -m ciw.net catalog --audit --repository . --json
@@ -38,3 +40,10 @@ jobs:
           echo "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8  $RUNNER_TEMP/actionlint.tar.gz" | sha256sum --check --strict
           tar -xzf "$RUNNER_TEMP/actionlint.tar.gz" -C "$RUNNER_TEMP" actionlint
           "$RUNNER_TEMP/actionlint" -color -shellcheck= -pyflakes=
+      - name: Retain workflow inventory separately from qualification results
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: workflow-inventory
+          path: workflow-inventory.json
+          if-no-files-found: error

@@ -107,3 +107,5 @@ The selected candidate and current results are recorded in
 [the baseline ledger](RESEARCH_BASELINE_20261017.md); the onboarding counts above
 remain historical. Installed-wheel acceptance must run outside the source
 checkout with isolated imports.
+
+Current operational maintenance is recorded in the [18 October hygiene audit](OPERATIONAL_HYGIENE_20261018.md). Large feature work remains frozen pending hosted evidence. Use `python scripts/audit_workflow_inventory.py --output results/workflow-inventory.json` to retain workflow declarations and literal test overlap; the output is metadata, not qualification. The audit also provides the confirmed exact-head cleanup command for an authenticated maintainer.

@@ -1,0 +1,26 @@
+{
+  "archive": "raw-evidence.tar.xz",
+  "sha256": "1a1fd5529c862540d16b425f347921ceeb45b08136d39a7f3f41bfc9aab5b022",
+  "members": {
+    "ops-inventory.json": "b872639be7ae80e53fa6bfd3f9127a1e0455a18d319f85cf330308c85afa358e",
+    "ops-final-remote-snapshot.json": "3811ee760556387701b5d83a1c36306babec23fe47f7746e5e31e5a9463a84d5",
+    "ops-publication-snapshot.json": "c2d9bbaa26eb04b863e52949eefaed70ab57f9bdfb76df7fb7d1b9d811f2a48c",
+    "ops-required-snapshot.json": "de6677f3e5d7f5ad6ca233253aa9caac54e5ab7ed703ec6888c0e3a52da46e93",
+    "ops-hosted-evidence.json": "4d3e30a756085515671b27faca7f3cd2d3d8916b5670a8dc549e35fca19f14a3",
+    "ops-required-runs.json": "66c067f742ef8a80550d0648ec27d8ae44f68ff150cd5f8c711b4a1b11296c14",
+    "ops-fsrt-contracts.xml": "1cb99a8982966dc78317bcf9906eddffaa7c2883ed704b24a49389cb286917c9",
+    "ops-fsrt-contracts.log": "f8d88720a4982f0c2d356faf7dca17eff8825f83ce9a771e090400de6bb37c33",
+    "ops-original-fsrt-contracts.xml": "33a9c76c79fcfd56a61dc46208429507fe082a4adf1b8e30ddaaf00cde4acc7c",
+    "ops-original-fsrt-contracts.log": "8466757e16af19162a27b8b1860d74339ac1d20145ee9b946018b821320ecae7",
+    "ops-branch-tests.log": "0ea4c6d453f63397e05d7420a3bb168f0036e864eacb349760fa3eed33d9e735",
+    "ops-ci-policy-tests.log": "241290f89e772623f9cee479c7eae3ecc4e840a7ebc6998c34e59e257c340c22",
+    "ops-ci-policy.log": "bf84916f8232c165836a6f228f87cf6008645a3f1bd33697f515ae2d22644441",
+    "ops-release-evidence-tests.xml": "41d41b493588ffcdecd69b411359e97cb92e03e3340fba62b5d6bdb3a86c35f8",
+    "ops-release-evidence-tests.log": "3252d0d39b0ff0eb9c20bacfaa6f4e226b4715544fc09bed5d16d50784b176c9",
+    "ops-actionlint.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "ops-projection-check.log": "0aada3c423049de9cdc8ada8132c729b384d6222784529eae36df5283efe41b9",
+    "ops-branch-tests-v1.log": "43c5a902d59b4707eeddf3124a319861c0bcf2a60182bdb3dd9c071c9374fd3f"
+  },
+  "earlier_attempt": "ops-branch-tests-v1.log records an incorrect test expectation that an identical concurrent archive must refuse. Final tests distinguish matching archives (identity retained) from conflicting archives (whole batch refuses).",
+  "scope": "Original API snapshots, test output and retained metadata; no credentials or download capability URLs."
+}

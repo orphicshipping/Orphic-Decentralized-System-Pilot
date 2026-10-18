@@ -67,6 +67,12 @@ the actual Godot/FSRT providers and tests provider-free export. Missing provider
 fail, and JUnit counts/zero skips are required. The unchanged projectile workflow
 also runs its actual Blender/Godot/Bevy campaign on this combined branch.
 
+The shared `synthetic-fsrt-view.yml` job also retains the former simulation-only
+workflow's source contracts, count/zero-skip guard and original
+`simulated-fsrt-qualification` artifact. Both campaigns use one unchanged
+Godot/FSRT setup and one native simulation execution. The PR trigger preserves
+the former simulation workflow's unfiltered scope; manual dispatch remains.
+
 The private RCI-owning qualification can additionally regenerate the unchanged
 RCI/FSRT views, run both TypeScript readers, build GSC, and exercise all three
 browser regressions against the same combined NET/GSC revisions. This uses RCI's

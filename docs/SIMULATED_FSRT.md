@@ -113,12 +113,17 @@ a fluid solver, collision simulation or general Godot control adapter. The
 errors are deterministic challenge values and covariance is declared: this is
 not Monte Carlo coverage or a calibrated-noise experiment.
 
-The dedicated read-only workflow uses the existing Godot 4.5.2 version with a
+The shared `synthetic-fsrt-view.yml` workflow uses the existing Godot 4.5.2 version with a
 verified archive digest and the unchanged approved FSRT revision. It tests
 ordinary, held, missing, both-missing and singular-input cases; an independent
 rational posterior reference; reference-truth isolation; provider-free reopening;
 fresh estimator replay; coherently resealed corruption; and CLI non-overwrite.
 Both runtimes are required; absent dependencies fail rather than skip.
+The former `simulated-fsrt.yml` campaign is retained in that shared job as an
+ordered subsequence, including its original source XML, 14-case zero-skip guard
+and `simulated-fsrt-qualification` artifact. Native simulation executes once;
+the retained-view export consumes the same fresh observations. Existing source
+contracts run separately to preserve both original XML artifact contracts.
 
 ```sh
 python -m pytest -q tests/test_simulated_fsrt.py
