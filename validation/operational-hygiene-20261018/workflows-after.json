@@ -1,0 +1,4941 @@
+{
+  "schema": "ncp.workflow-inventory.v1",
+  "workflow_files": 156,
+  "top_level_jobs": 192,
+  "release_required_workflows": 14,
+  "exact_workflow_duplicates_ignoring_display_name": [],
+  "exact_job_duplicates_with_inherited_context": [],
+  "repeated_literal_pytest_commands": [],
+  "literal_test_overlap": [
+    {
+      "module_pattern": "tests/test_agent_experiment.py",
+      "jobs": [
+        ".github/workflows/metrology-clearance.yml:clearance",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_agent_protocol.py",
+      "jobs": [
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/metrology-clearance.yml:clearance",
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/polymer-processing.yml:reference-and-retention",
+        ".github/workflows/rs-provider.yml:integration",
+        ".github/workflows/semantic-capabilities.yml:contracts",
+        ".github/workflows/spatial-requests.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_agent_recovery.py",
+      "jobs": [
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/metrology-clearance.yml:clearance",
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/operational-engineering.yml:connected"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_agent_transcript.py",
+      "jobs": [
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_annotation_nise.py",
+      "jobs": [
+        ".github/workflows/annotation-nise-loop.yml:loop",
+        ".github/workflows/investigation-efficiency.yml:efficiency"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_annotations.py",
+      "jobs": [
+        ".github/workflows/annotation-nise-loop.yml:loop",
+        ".github/workflows/annotations.yml:annotation",
+        ".github/workflows/artifact-provenance.yml:provenance",
+        ".github/workflows/investigation-efficiency.yml:efficiency"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_bim_interop.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_bim_quantity.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_board_morphisms.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_capabilities.py",
+      "jobs": [
+        ".github/workflows/legibility.yml:boundary-and-installed-wheel",
+        ".github/workflows/system-composition.yml:reference-and-wheel"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_check_suite.py",
+      "jobs": [
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/simulation-study.yml:contracts",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_cli_json_boundary.py",
+      "jobs": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_computational_objects.py",
+      "jobs": [
+        ".github/workflows/net-computational-objects.yml:source-selection",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_computational_source.py",
+      "jobs": [
+        ".github/workflows/net-computational-objects.yml:source-selection",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_connectivity.py",
+      "jobs": [
+        ".github/workflows/connectivity.yml:connectivity",
+        ".github/workflows/device-link.yml:link",
+        ".github/workflows/link-scalar-study.yml:scalar"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_container_calculus.py",
+      "jobs": [
+        ".github/workflows/container-calculus.yml:calculus",
+        ".github/workflows/needle.yml:needle"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_control_plane.py",
+      "jobs": [
+        ".github/workflows/annotations.yml:annotation",
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/godot-observation-capture.yml:qualification",
+        ".github/workflows/godot-stateful.yml:qualification",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/hypergraph-rewrite.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/instrument-contract.yml:contract",
+        ".github/workflows/metrology-clearance.yml:clearance",
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/net-computational-objects.yml:source-selection",
+        ".github/workflows/net-control-plane.yml:control",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/polymer-processing.yml:reference-and-retention",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/rs-provider.yml:integration",
+        ".github/workflows/semantic-capabilities.yml:contracts",
+        ".github/workflows/simulation-study.yml:contracts",
+        ".github/workflows/simulation-timeline.yml:timeline",
+        ".github/workflows/spatial-requests.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge",
+        ".github/workflows/stateful-simulation.yml:reference",
+        ".github/workflows/temperature-processing.yml:software-contract",
+        ".github/workflows/workflow-contracts.yml:actionlint"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_corpus_retrieval.py",
+      "jobs": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_correction_session.py",
+      "jobs": [
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/system-composition.yml:reference-and-wheel"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_covariance_artifacts.py",
+      "jobs": [
+        ".github/workflows/domain-provider-boundary.yml:public-boundary",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_covariance_records.py",
+      "jobs": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source",
+        ".github/workflows/temperature-processing.yml:software-contract",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_evidence_history.py",
+      "jobs": [
+        ".github/workflows/calibration-history-inspection.yml:inspect",
+        ".github/workflows/operational-engineering.yml:connected"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_finite_preservation.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_foundry.py",
+      "jobs": [
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_foundry_asset.py",
+      "jobs": [
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_foundry_pipeline.py",
+      "jobs": [
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_fsrt_view.py",
+      "jobs": [
+        ".github/workflows/fsrt-view.yml:input-boundary",
+        ".github/workflows/integrated-workloads.yml:contracts",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_game_project.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-project-production.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_game_project_feedback.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-project-production.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_game_retention.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_game_session.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_game_trace.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_geometry_mesh_contract.py",
+      "jobs": [
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_godot_simulation.py",
+      "jobs": [
+        ".github/workflows/godot-observation-capture.yml:qualification",
+        ".github/workflows/godot-stateful.yml:qualification",
+        ".github/workflows/simulation-timeline.yml:timeline"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_industrial_transition.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_information_display.py",
+      "jobs": [
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/simulation-study.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_interactive_contract.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/integrated-workloads.yml:contracts",
+        ".github/workflows/interactive-projectile.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_interactive_session.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-development.yml:contracts",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/integrated-workloads.yml:contracts",
+        ".github/workflows/interactive-projectile.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_interop_ingress.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_investigation_efficiency.py",
+      "jobs": [
+        ".github/workflows/container-calculus.yml:calculus",
+        ".github/workflows/investigation-efficiency.yml:efficiency"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_json_numeric_boundary.py",
+      "jobs": [
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_julia_oscillator.py",
+      "jobs": [
+        ".github/workflows/native-interop.yml:linux-integration",
+        ".github/workflows/oscillator-consumers-native.yml:native",
+        ".github/workflows/oscillator-kernel-native.yml:native"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_link.py",
+      "jobs": [
+        ".github/workflows/device-link.yml:link",
+        ".github/workflows/link-scalar-study.yml:scalar"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_link_qualification_artifacts.py",
+      "jobs": [
+        ".github/workflows/link-scalar-study.yml:scalar",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_link_study_agent.py",
+      "jobs": [
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/metrology-clearance.yml:clearance"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_math_inspector.py",
+      "jobs": [
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/simulation-study.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_mcp_sdk.py",
+      "jobs": [
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/operational-engineering.yml:connected"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_measured_thermal_agent.py",
+      "jobs": [
+        ".github/workflows/metrology-clearance.yml:clearance",
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/operational-engineering.yml:connected"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_ncp_corpus_integration.py",
+      "jobs": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_ncp_corpus_link_workspace.py",
+      "jobs": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_ncp_evidence_assessment.py",
+      "jobs": [
+        ".github/workflows/link-scalar-study.yml:scalar",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_ncp_supporting_evidence.py",
+      "jobs": [
+        ".github/workflows/link-scalar-study.yml:scalar",
+        ".github/workflows/net-agent-mcp.yml:agent"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_needle.py",
+      "jobs": [
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/needle.yml:needle",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-aware-needle.yml:represented-needle",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/system-board.yml:board",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_nise_handoff.py",
+      "jobs": [
+        ".github/workflows/annotation-nise-loop.yml:loop",
+        ".github/workflows/nise-handoff.yml:handoff"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_operation_contract_enforcement.py",
+      "jobs": [
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/workflow-contracts.yml:actionlint"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_operation_failure_retention.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/polymer-processing.yml:reference-and-retention",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_operation_publication.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_operation_runner.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/domain-provider-boundary.yml:public-boundary",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/net-nvalchemi.yml:provider-free",
+        ".github/workflows/polymer-processing.yml:reference-and-retention",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_operator_catalog.py",
+      "jobs": [
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/operator-readiness.yml:installed-journey",
+        ".github/workflows/thermofluids.yml:reference-checks",
+        ".github/workflows/weather-science.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_oscillator_kernel.py",
+      "jobs": [
+        ".github/workflows/oscillator-consumers-native.yml:native",
+        ".github/workflows/oscillator-kernel-native.yml:native"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_parameter_program.py",
+      "jobs": [
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/parameter-program.yml:parameter",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-morphisms.yml:morphisms",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/system-board-visual.yml:board-visual",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_polymer_agent.py",
+      "jobs": [
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_polymer_metrology.py",
+      "jobs": [
+        ".github/workflows/temperature-processing.yml:software-contract",
+        ".github/workflows/thermal-identification.yml:bounded-identification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_preservation_contracts.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/workflow-contracts.yml:actionlint"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_production.py",
+      "jobs": [
+        ".github/workflows/dsp-instrument.yml:native",
+        ".github/workflows/game-project-production.yml:contracts",
+        ".github/workflows/historical-perspective.yml:contracts",
+        ".github/workflows/net-foundry-asset.yml:contracts",
+        ".github/workflows/net-foundry-physics.yml:contracts",
+        ".github/workflows/net-foundry-pipeline.yml:contracts",
+        ".github/workflows/net-foundry.yml:contracts",
+        ".github/workflows/net-production.yml:contracts",
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_protocol.py",
+      "jobs": [
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/irrigation.yml:qualification",
+        ".github/workflows/legibility.yml:boundary-and-installed-wheel",
+        ".github/workflows/polymer-processing.yml:reference-and-retention",
+        ".github/workflows/system-composition.yml:reference-and-wheel"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_reaction_cantera_worker.py",
+      "jobs": [
+        ".github/workflows/cantera-worker.yml:windows-worker",
+        ".github/workflows/reaction-benchmark.yml:windows-reaction"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_reference_comparison.py",
+      "jobs": [
+        ".github/workflows/operational-engineering.yml:connected",
+        ".github/workflows/operator-readiness.yml:installed-journey"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_representation_expansion.py",
+      "jobs": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_representation_interventions.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-aware-needle.yml:represented-needle",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_representation_morphisms.py",
+      "jobs": [
+        ".github/workflows/bim-interop-runtime.yml:qualification",
+        ".github/workflows/cse-preservation-tools.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-aware-needle.yml:represented-needle",
+        ".github/workflows/representation-morphisms.yml:morphisms",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_representation_realizations.py",
+      "jobs": [
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_scientific.py",
+      "jobs": [
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/simulation-study.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_scientific_audit.py",
+      "jobs": [
+        ".github/workflows/hardware.yml:qualification",
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/ncp-system.yml:knowledge-and-work",
+        ".github/workflows/workflow-contracts.yml:actionlint"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_scientific_observations.py",
+      "jobs": [
+        ".github/workflows/csr-microtools.yml:microtools",
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific",
+        ".github/workflows/simulation-study.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_semantic_capabilities.py",
+      "jobs": [
+        ".github/workflows/atmosphere-engine.yml:qualification",
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/fluid-dynamics.yml:qualification",
+        ".github/workflows/impact-contact.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/instrument-contract.yml:contract",
+        ".github/workflows/mcp-control.yml:journey",
+        ".github/workflows/nise-handoff.yml:handoff",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/procedural-graphics.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/semantic-capabilities.yml:contracts",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_sensor_project.py",
+      "jobs": [
+        ".github/workflows/manufacturing-analysis.yml:contracts",
+        ".github/workflows/sensor-project.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_simulation_campaign.py",
+      "jobs": [
+        ".github/workflows/godot-observation-capture.yml:qualification",
+        ".github/workflows/godot-stateful.yml:qualification",
+        ".github/workflows/rs-provider.yml:integration",
+        ".github/workflows/simulation-timeline.yml:timeline",
+        ".github/workflows/spatial-requests.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge",
+        ".github/workflows/stateful-simulation.yml:reference"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_simulation_capture.py",
+      "jobs": [
+        ".github/workflows/godot-observation-capture.yml:qualification",
+        ".github/workflows/simulation-timeline.yml:timeline",
+        ".github/workflows/stateful-agent.yml:bridge"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_simulation_control.py",
+      "jobs": [
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/godot-observation-capture.yml:qualification",
+        ".github/workflows/godot-stateful.yml:qualification",
+        ".github/workflows/rs-provider.yml:integration",
+        ".github/workflows/simulation-timeline.yml:timeline",
+        ".github/workflows/spatial-requests.yml:contracts",
+        ".github/workflows/stateful-agent.yml:bridge",
+        ".github/workflows/stateful-simulation.yml:reference"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_simulation_study.py",
+      "jobs": [
+        ".github/workflows/godot-motion.yml:contracts",
+        ".github/workflows/simulation-study.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_spatial_provider.py",
+      "jobs": [
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_spatial_requests.py",
+      "jobs": [
+        ".github/workflows/rs-provider.yml:integration",
+        ".github/workflows/spatial-requests.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_superrepo_doctor.py",
+      "jobs": [
+        ".github/workflows/monorepo.yml:source-history-and-migration-guards",
+        ".github/workflows/review-examples.yml:windows-python311-preflight"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_system_board.py",
+      "jobs": [
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/parameter-program.yml:parameter",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-morphisms.yml:morphisms",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/system-board-visual.yml:board-visual",
+        ".github/workflows/system-board.yml:board",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_temperature_agent.py",
+      "jobs": [
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_temperature_processing.py",
+      "jobs": [
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_temperature_verification.py",
+      "jobs": [
+        ".github/workflows/net-agent-mcp.yml:agent",
+        ".github/workflows/temperature-processing.yml:software-contract"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_thermal_contract.py",
+      "jobs": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification",
+        ".github/workflows/executable-interoperability.yml:qualification",
+        ".github/workflows/finite-representation-preservation.yml:qualification",
+        ".github/workflows/industrial-semantic-transition.yml:qualification",
+        ".github/workflows/preservation-contracts.yml:qualification",
+        ".github/workflows/real-ifc-transition.yml:qualification",
+        ".github/workflows/representation-realizations.yml:qualification",
+        ".github/workflows/shared-preservation.yml:qualification",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification",
+        ".github/workflows/thermofluids.yml:reference-checks",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_thermal_workflow.py",
+      "jobs": [
+        ".github/workflows/net-math-visuals.yml:inspector",
+        ".github/workflows/net-scientific.yml:scientific"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_thermochemical_benchmark.py",
+      "jobs": [
+        ".github/workflows/materials-session.yml:installed-materials",
+        ".github/workflows/polymer-science.yml:scientific-reference"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_usd_export.py",
+      "jobs": [
+        ".github/workflows/pilot-scope.yml:installed-pilot",
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_usda_export.py",
+      "jobs": [
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_visual_board.py",
+      "jobs": [
+        ".github/workflows/board-mcp-refit.yml:qualification",
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification",
+        ".github/workflows/visual-system-board.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_visual_representation_gate.py",
+      "jobs": [
+        ".github/workflows/visual-evidence-projection.yml:qualification",
+        ".github/workflows/visual-representation-gates.yml:qualification"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_workbench_session.py",
+      "jobs": [
+        ".github/workflows/spatial-godot.yml:godot-spatial",
+        ".github/workflows/spatial-provider.yml:local-frame"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_workcell.py",
+      "jobs": [
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_workcell_smith.py",
+      "jobs": [
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_workcell_snapshot.py",
+      "jobs": [
+        ".github/workflows/net-single-agent.yml:native",
+        ".github/workflows/net-smith-workcell.yml:native",
+        ".github/workflows/net-unattended-agent.yml:native",
+        ".github/workflows/net-workcell.yml:native",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    },
+    {
+      "module_pattern": "tests/test_workflow_algebra.py",
+      "jobs": [
+        ".github/workflows/hypergraph-rewrite.yml:qualification",
+        ".github/workflows/net-workflow-algebra.yml:contracts"
+      ]
+    }
+  ],
+  "overlap_scope": "Literal pytest module patterns only; source, installed, native and platform runs retain separate verification identities.",
+  "platform_policy": "Different runners/matrices remain distinct qualification lanes even when their commands match.",
+  "workflows": [
+    {
+      "path": ".github/workflows/acquired-stream.yml",
+      "name": "Acquired calibrated stream and residual monitor",
+      "sha256": "a79dcb25dfd8715fe320cd7cafece0875d448c8ade8c72adee353c265aae7dc9",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "acquired-stream",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/agrofood-cold-chain.yml",
+      "name": "Agro-food cold-chain thermal transfer",
+      "sha256": "d3729a0bbd949dd4a943ba485f9e6605abc7c950caced2656fe2fd406f5d0eb5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "cold-chain",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/annotation-nise-loop.yml",
+      "name": "Annotation to NISE to NET loop",
+      "sha256": "d0e5f93e7d03bc662ee9599084b85fa6861af956d522ac5714ce02f18165bad8",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "loop",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/annotations.yml",
+      "name": "First-class annotation records",
+      "sha256": "e1962b8eebb6f13726afb05c825777c3786cf6a7c2e249443c08685518a3dcc6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "annotation",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/artifact-provenance.yml",
+      "name": "Artifact provenance boundary",
+      "sha256": "ffc3babf4877c5788e7af5dc0e65c2dbc83e22577849027da24404e45fc370ab",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "provenance",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/atmosphere-engine.yml",
+      "name": "Atmospheric engine",
+      "sha256": "32c5fcb97e0c9ec0247fbcbdaee2abe958e0001c850c3f9179ba28130ad1b36b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/bim-interop-runtime.yml",
+      "name": "IFC CSE interoperability runtime bridge",
+      "sha256": "af3c97076468a066878d2bdf91f7dfcde56de756cf33a6cd56dcf7f93bde532b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/board-mcp-refit.yml",
+      "name": "Board MCP refit journey",
+      "sha256": "e99ef8f30c20c716535aa87034746fce33f078b5525d13b46a4d61c6b04a8fd2",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/calibrated-observable.yml",
+      "name": "Calibrated observable process replay",
+      "sha256": "c9e61e6f689a179e16cae0952accc70c8c598cbe7bc346b581fe66ee83248022",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "process-experiment",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/calibrated-window.yml",
+      "name": "Shared calibrated window replay",
+      "sha256": "513b69ed6b191b6b0daca89114cb045749ebcbe2f0fdb35ccfc8ab5cfde14e3e",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "calibrated-window",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/calibration-history-inspection.yml",
+      "name": "Calibration and retained history inspection",
+      "sha256": "3e14bea936d21f8f16a22be5d92d811c971633ff2f6ac31751f30469a58972d6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "inspect",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/cantera-worker.yml",
+      "name": "Cantera worker contracts",
+      "sha256": "708a893b5edd36960eb33f17d208ac7b321b1b76b343911fbf8d45fc6820e181",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "windows-worker",
+          "runs_on": "windows-2022",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "name": "Calibrated adapter integration",
+      "sha256": "66919132a6ba94c1e0eabaf05bf43f9ec9b65f120a1a72908d08d49620c8da47",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "calibrated-investigation",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/clocksync-instrument.yml",
+      "name": "ClockSync portable instrument integration",
+      "sha256": "3722f3d46a3ae8c2207a7df6acf34c070463cfda5f8fa79eaa4ba4d7dc40ddeb",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "clocksync",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/columnar-interchange.yml",
+      "name": "Arrow and Parquet observation interchange",
+      "sha256": "2a226e043c26a98f42a6067736c72dd4e62ba98e28ce8ca4d140690d8b53a459",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "columnar",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/connectivity.yml",
+      "name": "Connectivity retained observation boundary",
+      "sha256": "07e173f43df59be5cb52ffd8e1189c7658dbd3eea5644c610f652fa9d48367ff",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "connectivity",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/consolidated-integration.yml",
+      "name": "Consolidated integration",
+      "sha256": "0900fe647e1ec44e514954ac69ad23b334db480dfc1c7c988f0d35bbb30035c8",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "regression",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/container-calculus.yml",
+      "name": "Container experiment calculus",
+      "sha256": "94fb7f6c26a895abbe711064e13bab3f352c0fb1c23abfdc5b30d35e32772bb4",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "calculus",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/cse-preservation-tools.yml",
+      "name": "CSE preservation and transition tools",
+      "sha256": "eb8419e3f6eeb37f36d12f8b4a59c2f189d0cf61bd900275cd95cd6c5d59d9a1",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/csr-microtools.yml",
+      "name": "NET CSR micro-tool qualification",
+      "sha256": "e5555ac71bdd16f3d132d3b5e0bf26d779a962e7ca61a5a05371da3bc22a876e",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "microtools",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/data-integration.yml",
+      "name": "Retained data integration",
+      "sha256": "e350b90532d6a1b1569da3f45c1c43fb56447bbec44e408a648024f46c5ff68d",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "source-and-installed",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/declared-workloads.yml",
+      "name": "Shared schematic and numerical workloads",
+      "sha256": "28fe3dda58defcd9088922f2261bff6a26ca530ecbb4e3e401807d3d802cee73",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "declared-workloads",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/device-link.yml",
+      "name": "Device Link retained acquisition boundary",
+      "sha256": "09c559c4820b3a6ccf18aad5f21513774ca7480953f32851dc12409753ea54a3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "link",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/device-review.yml",
+      "name": "Retained device review",
+      "sha256": "5ece001a1e3e2be01c485f3c1cfca78f980521964721e794c0fe38718cb3aaae",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "retained-review",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/domain-provider-boundary.yml",
+      "name": "Optional domain provider boundary",
+      "sha256": "e52f54658bd52f1899b7e9660d3ad33c45150a7d436f949ee7821b0924f321d3",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "public-boundary",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/dsp-instrument.yml",
+      "name": "NET DSP instrument boundary",
+      "sha256": "04a170d5b7b8e7969da815b28dbf2532dfd8478b8ed5a6769dd9158d33d3fe2e",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/dsp-pipeline.yml",
+      "name": "DSP conditioning and synthetic pump qualification",
+      "sha256": "6f940c356394620810181f04f69cfb15698fe50eef940c6beea36f475babab05",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "numerical-and-installed",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/energy-accuracy.yml",
+      "name": "Retained energy-to-accuracy bench",
+      "sha256": "30233da41521bdbf32e91137157d5992b4aa40b86ef3415ae449f7786baadb0e",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "energy-accuracy",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/evidence-bound-expansion.yml",
+      "name": "Evidence-bound representation expansion",
+      "sha256": "28b6cb1c7ff0b478b85542729690977454dfe130b386822d57b6a8095e483a9f",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/exchange.yml",
+      "name": "Instrument exchange conformance",
+      "sha256": "9605e6bcccab84bc212b2894c27c09d0f37defe5aade5b814881acd68013b2c4",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "exchange",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/executable-interoperability.yml",
+      "name": "Executable interoperability ingress",
+      "sha256": "eabfddd6464504fc416365dad0e7d2ed69905308022efa51832b5a715234d36e",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/finite-representation-preservation.yml",
+      "name": "Finite representation preservation",
+      "sha256": "0c8e6a9cf27baf20bc27a22023702e1718a2ce4faffa90fdf805ab3c4d58c4e5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/fluid-dynamics.yml",
+      "name": "Qualified fluid dynamics",
+      "sha256": "2fed6c8fd5dd2e86092fb2f0fd6cb515e367fe02363ab1603807ebd417810ff8",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/free-energy.yml",
+      "name": "Native variational free-energy bench",
+      "sha256": "9ef2dd27df9fed24e6bb2f32d051d63790dce81a1ecb6701ce4586e04ab50af5",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "free-energy",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/fsrt-view.yml",
+      "name": "FSRT view public input boundary",
+      "sha256": "a3ca5261a37e8cc397c2ae3196fa90a5bd46451b2018404a482f4f46c91b70de",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "input-boundary",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/game-development.yml",
+      "name": "Game trace workbench qualification",
+      "sha256": "5a7c2c4375f0317af2d74f4151987f490a207f426f4e58b57b8113e6d5bac09a",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/game-project-production.yml",
+      "name": "Game project production",
+      "sha256": "b6c3b0df9948c46bc0b71cdb7e2c3e7bde94ab4dbf8ba4953535b14543c5a8a3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/geodesic-references.yml",
+      "name": "Native geodesic references",
+      "sha256": "8f5e039b6c9da2300997717cb2dc5348cd2aa3a08a3884096fa166114ffdc0b1",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "references",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/geomatics.yml",
+      "name": "Geomatics reference tools",
+      "sha256": "850183a3a70d6358781a403f7bc35dbfabb8592f27a6d91c306705ff5894a128",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "reference-tools",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/geometry-research.yml",
+      "name": "Native geometry providers",
+      "sha256": "d67c57c53d9f7fd37df09f03b6db11b22361a7773498bfed092a77096fd837ac",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "geometry",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/godot-motion.yml",
+      "name": "Native Godot stateful owner",
+      "sha256": "e42d3401adb16a744eb9ccde7dc205dc34c23df822d23309c0f5330e5d13f30a",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/godot-observation-capture.yml",
+      "name": "Godot observation image capture",
+      "sha256": "925446b80e895b0e02eadaabf958587fddd34cb1029fb2c8fb92b9d5096f9d85",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/godot-stateful.yml",
+      "name": "Godot stateful campaign qualification",
+      "sha256": "5c6b5dfcb76da37e4b150235b396274cb2d9b5872164247bbcb20f0cf9fe4055",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/hardware.yml",
+      "name": "Qualified hardware refurbishment workflow",
+      "sha256": "cec6cb05d7cc1f3b90002551b62042ce23d4361ce592b3e25f7d4274f4bd36b4",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/historical-perspective.yml",
+      "name": "Historical perspective contracts",
+      "sha256": "bbb0eb8ee700ced769e7436621ba681386bbdf430a7dd61fa177fd76b0e4c285",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/hoomd-cpu.yml",
+      "name": "HOOMD native CPU",
+      "sha256": "66dbd661c680925068211fd025a601b3ec84a3bbbd25f1daddb03b1772031359",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native-cpu-installed-wheel",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/hypergraph-rewrite.yml",
+      "name": "Typed hypergraph rewrite",
+      "sha256": "67ac6caf0d1c10d7fdf8200778bc2f5b977d65fce7af182b4d0db8d2e8f71755",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/identified-design.yml",
+      "name": "Identified model and budgeted observation replay",
+      "sha256": "21965f42fdc2fe922df6d7372456f931ab7fc7976d6670b9016cb9e4a87a3ebe",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "identified-design",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/impact-contact.yml",
+      "name": "Impact mechanics benchmarks",
+      "sha256": "dc6234076421d6e994d06ff149a377ebe2ded534cd388d1d3562b94416d6a66f",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/industrial-lab.yml",
+      "name": "Graph-first Industrial Lab",
+      "sha256": "7339d8723a568d68b9ccabbc6d269c0057a36d4c48a878ad55e291552a6d7229",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "source-and-installed",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "browser",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/industrial-semantic-transition.yml",
+      "name": "Industrial semantic transition envelope",
+      "sha256": "0c4732288977e18d3cb4632e647c81030c7caa819f7546ec214645016458670a",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/instrument-contract.yml",
+      "name": "Portable instrument contract",
+      "sha256": "1bdc8c848edd541b637bf5fbd54c1ae872e8d7f5a598bbbe0ad5c0b3dbdc5d89",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contract",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/integrated-modules.yml",
+      "name": "Shared native companions, BIM, acquisition and geographic views",
+      "sha256": "f243fb388a114e28d70fcd7fdc333af133d5c15f6618067291fc5845c3fb29ef",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "integrated-modules",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/integrated-workloads.yml",
+      "name": "Integrated workload contracts",
+      "sha256": "0b3ab0eafe08b5ed1ad612d2ea7d280a3258c6c9d9b102f1d2b85586a9946e12",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-2022"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "public-source-inventory",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/interactive-projectile.yml",
+      "name": "Interactive projectile qualification",
+      "sha256": "fca4af5e8495a2f84cae6d71f6f01b0241fd218bfb06796ef3f9212adcd0e215",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/interval-requirement.yml",
+      "name": "Interval requirement qualification",
+      "sha256": "b55617072d9af64943ba3bd8d113af537066a1e05717741b11438200e0b6de64",
+      "events": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "windows-interval",
+          "runs_on": "windows-2022",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/investigation-efficiency.yml",
+      "name": "Investigation efficiency contracts",
+      "sha256": "3ef5058230b2d8bd3869f4f600a549d609a14f579606d4d65e7c4f6ae1b283da",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "efficiency",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/irrigation.yml",
+      "name": "Qualified agricultural irrigation",
+      "sha256": "81d264e8d47e6dc3481e12f5cefc314c9eceece0abb6253090553b0d22922396",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/legibility.yml",
+      "name": "Legibility instrument",
+      "sha256": "1841185bba04312d687e16e4be1794f4dc0f3d715a18ea1ea40c89b38aa25a0c",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "boundary-and-installed-wheel",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/link-measurements.yml",
+      "name": "Link retained measurement views",
+      "sha256": "efec5876e0f018ac4579167934b78945b9a308abaed305bb825f10a44ee6abfd",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/link-pinwheel.yml",
+      "name": "Link covariance improvement review",
+      "sha256": "acee54afd07f1b37363be1bd52e97d5759f821aaf0a367ebcde25befecdf8a30",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/link-provider-profiles.yml",
+      "name": "Provisioned Link and provider profiles",
+      "sha256": "459801a91bb16beddc9f27c20986f765acf9e233fffa44349cabf3d5692f6351",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed-profiles",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/link-references.yml",
+      "name": "Link institutional reference data",
+      "sha256": "70896c108ede30acd316f2d2e35ea53d082575a0b753b8c611b05701bff21762",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/link-scalar-study.yml",
+      "name": "Link scalar Linux developer-kit software",
+      "sha256": "87c6d2eeb19899a38f582d3d50a1ec7e89f4d8875bfc8d354ac43a0fdefb1bef",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "scalar",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/manufacturing-analysis.yml",
+      "name": "Manufacturing planning search and co-design",
+      "sha256": "057e9d32898ec580a4f62dba7180a0a0512513519a5ad41904c236f44a0619b6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/manufacturing-data-bridge.yml",
+      "name": "Installed retained manufacturing data bridge",
+      "sha256": "5ceca5f955124aefaa26700cfc3df7b335a9e9c9228160822772e71b9c18ae43",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualify",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/materials-session.yml",
+      "name": "Materials Session execution",
+      "sha256": "f10ebeea4c95a102207693ebdd0184048eeef42f512da7aae207d5782637140d",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed-materials",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/mcp-control.yml",
+      "name": "MCP control journey",
+      "sha256": "8b92e42f65d363d4da2d038c744a1a12e4159ab5b09ed737263ff0145aa05ca5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "numerical-builtins",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "journey",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/mcp-operator-console.yml",
+      "name": "Local MCP operator console",
+      "sha256": "89595f6827ea92fb075fe778e0744c4e31ce890389f16ed8c8bcf4597ad9ed61",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "private-host",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "console",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "browser",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/metrology-clearance.yml",
+      "name": "Bounded metrology clearance",
+      "sha256": "5c25043ed179bca923df7557ba559f07db27ec300bc972d6ff4766ad1cfc1f45",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "clearance",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/metrology-contract.yml",
+      "name": "Bounded metrology contract",
+      "sha256": "334345773ec064a9f6f34a46414b1317914f21585d632264972c7cf2f573a325",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contract",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/microfab.yml",
+      "name": "Microfab declaration contracts",
+      "sha256": "08c5c525bb88faaf18df24be9b93e9187a46fd0765395b1fb3bcbd2a6b8f9ce3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "microfab",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/monorepo.yml",
+      "name": "Public engineering superrepo qualification",
+      "sha256": "a8d1d2573c73bd73648dc8c1660182a28419e559f91660306008a79b3b893c32",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "source-history-and-migration-guards",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "independent-wheels-and-composition",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "inference-and-public-process-replay",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "mathematics-and-measurement-chain",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "flowstate-wheel-and-original-default-suite",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "flowstate-public-slow-reproduction",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "surface-science-lock-and-replay",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "operations-resources-and-bounded-cpu",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.12",
+              "3.13"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "independent-locked-web-packages",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/native-interop.yml",
+      "name": "Native interoperability integration",
+      "sha256": "e44008039b44bf2a47d068f2a762d846266dce5342660b513597df87fa313eb7",
+      "events": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "linux-integration",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/ncp-system.yml",
+      "name": "NCP knowledge and shared work system",
+      "sha256": "cd046fd3fe3f1b3467d28eb4837dfb467b1bd6334d601ca1d405d6fed3042e4a",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "knowledge-and-work",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/needle.yml",
+      "name": "Needle selective recomputation",
+      "sha256": "6f71dce32069575fec8a09ea787f7320c6c42043132ff55157abf321a7f7db86",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "needle",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-agent-mcp.yml",
+      "name": "NET agent MCP boundary",
+      "sha256": "34a6f4a1e8361e50886d2fae286db5850769ccf3845ad9f0703504e95e9c85a1",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "agent",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-computational-objects.yml",
+      "name": "NET computational object selection",
+      "sha256": "037f5cbbca82d3061f090a4c39edae25b103c3b6d9b67c55028c61bc56f6b1df",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "source-selection",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-control-plane.yml",
+      "name": "NET control primitives",
+      "sha256": "62145f6776aed230a0df1dc88135a56d09f1024ffc8b32faad4d32c2cad385c4",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "control",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-asset.yml",
+      "name": "NET Foundry asset worker",
+      "sha256": "7ea92c217d7a047736be2076886729a752383f2dd64a6723b76b6121de8c285e",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-physics.yml",
+      "name": "NET Godot physics backend comparison",
+      "sha256": "2977df3354d84221b717a1309f8d692f0ffc2022a21f29e743884b704d018185",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-pipeline.yml",
+      "name": "NET Foundry production pipeline",
+      "sha256": "8018df3ffa15e0bb28045b530de9e9e307bb00e3f1fbc33b46d0259025357836",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-foundry.yml",
+      "name": "NET Foundry 1792",
+      "sha256": "5d864d0ee35ac88aacddcaccfef0bf12572b728236a7cabffe6629eedce7c1b5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-gromacs-boundary.yml",
+      "name": "NET GROMACS boundary contracts",
+      "sha256": "9863045aa86989d3152ffa59204060c84695e4fc7fe7741e75a611f9f43ef4e8",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "provider-free",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-lammps.yml",
+      "name": "NET LAMMPS bounded external tooling",
+      "sha256": "4b8d46a3912eb78453e15371744d92c09fcd93a2ec1d582d30f9706e44027bde",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native-cpu",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-math-visuals.yml",
+      "name": "NET mathematical and visual inspection",
+      "sha256": "b1db51ed1d148e34661dd7bc0bc1e9b25c5828b330f4f34a14e2efccd0c1b415",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "inspector",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-network-lifecycle.yml",
+      "name": "NET device and network lifecycle",
+      "sha256": "27bc6b957f8d3247fa100bc3142225982247b255127a4f4ece0f735a78356a19",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-nvalchemi.yml",
+      "name": "NET ALCHEMI bounded adapter",
+      "sha256": "c77866f97dbb872731eab6aabcee9d38d55fc51fd72f184e96b81c4f72684da8",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "provider-free",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-production.yml",
+      "name": "NET production work orders",
+      "sha256": "17f88ea06bf81ba14459f7252d66ca8e7e2ed6eed58490c0364d6ea7635c145c",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "reconstruction",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-scientific.yml",
+      "name": "NET scientific workflow connections",
+      "sha256": "75219d81aa0915d10cecbe0f7d0e276f0fdc6cc0cde341f451f6a858f5960e28",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "scientific",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-single-agent.yml",
+      "name": "Single-agent smith revision measurement",
+      "sha256": "7ac8ecc5667b608ee8ef703b471d7183d084409c086647059bd868ae6d6318d1",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-smith-workcell.yml",
+      "name": "Title-owned smith MCP workcell",
+      "sha256": "5025dcf5cf2869751401de76beef52db30b1bdd9b4cae48ee4f43b77f831acd6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-unattended-agent.yml",
+      "name": "Unattended local vision-agent workcell",
+      "sha256": "1abd1f9a37f2919dfb1c81760e59826990c478be4986c5b0c2cd88fa6e01cd8b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-workcell.yml",
+      "name": "Executable MCP production workcell",
+      "sha256": "3742045cef108ddc03aba1d388bac65899a45de05ea5c68b34445d5bd368f0a5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/net-workflow-algebra.yml",
+      "name": "Typed workflow algebra compiler",
+      "sha256": "aef1f88af2ce7cbdb8b89379210ad57831696404c56355d23b421d345e5e90c3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/nise-handoff.yml",
+      "name": "NISE to NET semantic handoff",
+      "sha256": "377d9d3b24f9dbe72930616e9e9164c071aaccdcea00f1340652023bd378674b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "handoff",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/nvalchemi-cpu.yml",
+      "name": "ALCHEMI CPU single-point qualification",
+      "sha256": "711d1bd66386ded41db72bf941e59a2336b089d08cbcbcc24f7e4dffe4439d6d",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "cpu-lj",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/operational-engineering.yml",
+      "name": "Operational engineering MCP",
+      "sha256": "f032e3d61fa2576de2679827ea58a2c96a8b3198b4a636fafebefc834000ad6a",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "connected",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/operator-readiness.yml",
+      "name": "Installed operator readiness",
+      "sha256": "532aad498fbf7bd545168bb6ff6bf89b4f213cdca2651b324e7d96306db4b5a2",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "candidate-wheel",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "installed-journey",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "operator-acceptance",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/oscillator-consumers-native.yml",
+      "name": "Native oscillator C++ and Godot consumers",
+      "sha256": "617eda164c5a37fd9b8acee5ddf9ddc15a4e147334bfb47b6930571c019debd1",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/oscillator-kernel-native.yml",
+      "name": "Julia oscillator native kernel",
+      "sha256": "ab2bb961f70f80bc1d5592db28c5bb116aa73bde89790c980e7c7ccf96ea8380",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/oscillator-reduction.yml",
+      "name": "Oscillator representation reduction experiment",
+      "sha256": "5f92c1afbbef9206156c6ebe6706a18711607cd2062d280b8232ab0e442e27e6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "experiment",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/parameter-program.yml",
+      "name": "Deterministic parameter programs",
+      "sha256": "b35d8f13e207edde56bd16858dafd49acf0135f468f7eca9e33a0029a67bc083",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "parameter",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/persistent-simulation.yml",
+      "name": "Persistent simulation contracts and Godot client",
+      "sha256": "cc9f343b5111fad3a4837b8d317207e0d4a8ffa9a447fa214ad6038371a34fc5",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/pilot-scope.yml",
+      "name": "Closed pilot and OpenUSD roundtrip",
+      "sha256": "ce47648c5c6a8fbd92f5781c9a8afebdb6d0ec9f343ddb6627bff61af24df06a",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed-pilot",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/polyglot-contracts.yml",
+      "name": "Polyglot linear-map contracts",
+      "sha256": "2bb91dc7725f91d971eaff0b9c7e3dbd891050a080f77498425de88ad095c71b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/polymer-manufacturing.yml",
+      "name": "Installed polymer manufacturing and tool-point QC",
+      "sha256": "b09cd331d67a7df8a6cb5cc57474178d3df10d2c03bde3c92278aa943a05ace9",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualify",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/polymer-microfab.yml",
+      "name": "Polymer production dossiers and namespace coexistence",
+      "sha256": "37025c7e27fcd3d15083735215e1bd99a0f1c82ea570c6c9261fc99d183af75b",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "retained-production",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/polymer-processing.yml",
+      "name": "Polymer processing instrument",
+      "sha256": "c73d217b4f2ba5b8a8e8cd9afe1801a83430ff0ac50ca212f81fbcdcfa8a8676",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "reference-and-retention",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python-version": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/polymer-science.yml",
+      "name": "Polymer rheology and thermochemical audits",
+      "sha256": "c76a08dbc7b6b3e162cde4a00e59681babceb6a70b130a7d3f3e67cfe63635c9",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "scientific-reference",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/preservation-contracts.yml",
+      "name": "Typed preservation contracts",
+      "sha256": "00aee32dac73741a86ac8d63971eeac0b509e33e1f9351a54b6cc241fdad2620",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/preserve-foundry-delivery.yml",
+      "name": "Preserve Foundry delivery",
+      "sha256": "1303f69535af534c20dc6e97a4ba0d366a7f7cfd354d50f4eea67957fde271c9",
+      "events": [
+        "pull_request"
+      ],
+      "jobs": [
+        {
+          "id": "preserve",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/procedural-graphics.yml",
+      "name": "Computational graphics workbench",
+      "sha256": "5b6ea71c8a70262fad19dc65e9d9e3a6a9ed475f037861764bab9ee129f5a971",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "browser",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/proved-heat.yml",
+      "name": "Proved heat with real SP1",
+      "sha256": "505843d8551272b7abada005e21a37ae8a6d5835c2810e6c6ee6e2d97193656f",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "native-proof",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/publish-source-retirement.yml",
+      "name": "Publish preserved native instrument histories",
+      "sha256": "81cfe23222d8791d07f31262ba505f53b44f0fa5f087c72efad009373882e5b5",
+      "events": [
+        "pull_request"
+      ],
+      "jobs": [
+        {
+          "id": "publish",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/reaction-benchmark.yml",
+      "name": "Reaction benchmark qualification",
+      "sha256": "36a9db94521e57c447a20cf948ddb20d43500a9ed7c019420990309e6f3fd413",
+      "events": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "windows-reaction",
+          "runs_on": "windows-2022",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/real-ifc-transition.yml",
+      "name": "Real IFC execution and transition",
+      "sha256": "ee958ffe4baff1585c0f960b9c101b1d9d32a7a149ae9dde960321c66b41cb87",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/refurbishment.yml",
+      "name": "Installed refurbishment and recorded bench qualification",
+      "sha256": "ecbedc91a391c7e67f394922dbeda84b9236d2535992b0f10b109a9bd82de967",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "candidate-wheel",
+          "runs_on": "ubuntu-24.04",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "installed-journey",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/release-evidence.yml",
+      "name": "NET release evidence",
+      "sha256": "c5a2e4c0552deb1f820134517e90bbbb33b76ced1d39ee961875030bd92319e0",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "gate-tests",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "collect-candidate",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/release-operator.yml",
+      "name": "Installed release operator journeys",
+      "sha256": "4d9cc14dd12390e0d93a0f86dc74c1f47c3322763eb5013153891d2f38410481",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed-journeys",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/remaining-modules.yml",
+      "name": "Remaining native modules in one bench",
+      "sha256": "29bc2163f7297f5dd30e2816404450f267d3520542f2d4eed274cbbafc2afe98",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "remaining-modules",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/representation-aware-needle.yml",
+      "name": "Representation-aware Needle",
+      "sha256": "553935bc6d00134948422929a5afa8f4b2b801120212126ccddef7eb0df30f3f",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "represented-needle",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/representation-morphisms.yml",
+      "name": "Representation and morphism registry",
+      "sha256": "740c7cfe3a3f6555d3fb584951bc7af893373315ba8c78a411299b7b20baf0de",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "morphisms",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/representation-realizations.yml",
+      "name": "Representation realization adapters",
+      "sha256": "026d1e028dc150f5a1122a65ae85efe5fa34b071be2fffda42950842e360b2c3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/review-examples.yml",
+      "name": "Review examples",
+      "sha256": "74679e825bc0a73c45ddc07b158a8d8a633c281eef4226ace8bba39d95794201",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "installed-examples",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "windows-python311-preflight",
+          "runs_on": "windows-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/rs-provider.yml",
+      "name": "GSC raster operations through NET",
+      "sha256": "5409ab9fe14193fbec1557d16e201699c92913443ebaab516a5317f2749c08a3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "integration",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/semantic-capabilities.yml",
+      "name": "Semantic capability compiler",
+      "sha256": "b0b7afb150890a89832723e9f86047e0c6d60ca80ecb41a90d864fad229ecd7f",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/sensor-project.yml",
+      "name": "Retained sensor project contracts",
+      "sha256": "0cdc9b5956831ea9a6be2d7087e05f9b378a0ac26450a38dc26e14166b447f8e",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/sequence-kinetics.yml",
+      "name": "Sequence kinetics reference integration",
+      "sha256": "4e9b35a9dbe347cd69e0eedc7b77569396467679526c2d39481c85f913b4fd16",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "sequence",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/shared-preservation.yml",
+      "name": "Shared preservation instruments",
+      "sha256": "db66bb4014b0bd98e52685f5e1099927e9a5422bfab7c42ff8bd0c59d345009a",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/simulation-study.yml",
+      "name": "Stateful simulation study contracts",
+      "sha256": "996792d67510aed40664e6d55f099ec028fb16b906aaa7ee29e145caa9f76216",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/simulation-timeline.yml",
+      "name": "Simulation evidence timeline",
+      "sha256": "c833672c453ec72ab0a568278f050007775a906d6148298c42a27a85edcc7ea4",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "timeline",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/spatial-godot.yml",
+      "name": "Retained spatial Godot consumer",
+      "sha256": "9e9d0dca7dc14b148e2de61cdd5b03d2518d453403cc1636687a45e5d052812b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "godot-spatial",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/spatial-mesh-realizations.yml",
+      "name": "Spatial and mesh realization adapters",
+      "sha256": "304063cc1b6d7a9a04f1fd08494a56eadc00eb32374220d177eae5ffd2a30e4b",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/spatial-provider.yml",
+      "name": "NET spatial provider and scene starter",
+      "sha256": "ce6820d0cb251696e2bf6e01c69d948fd06c6a866f0a5e73ece976b2db07ed45",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "local-frame",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/spatial-requests.yml",
+      "name": "GIS RS workbench request contracts",
+      "sha256": "2a40c89494c527f5f3ff5214aeade0acdb1145393995df17c4ccd3a7fbe35c93",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "contracts",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/stateful-agent.yml",
+      "name": "Stateful agent bridge",
+      "sha256": "7e3bce20ffc900c1f0d3a946f153d6fa7c7718bbba6fcc917c2fa4ee114df1d4",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "bridge",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/stateful-simulation.yml",
+      "name": "Stateful simulation reference contracts",
+      "sha256": "3cc1930f54d8018ef71ddfeb1cf5d146e7bd911b29d6d95786f40c1f8a889f54",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "reference",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/study-manufacturing.yml",
+      "name": "Study manufacturing genealogy",
+      "sha256": "bfc5088c88a7f2257fbd395d009ee0a18a349a08ce872bd6c7a869c7180d7a07",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualify",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/synthetic-fsrt-view.yml",
+      "name": "Synthetic FSRT retained view",
+      "sha256": "ffa0115b5cf46151cd402975cb95f6f181e372026d81173b20a54015ca5cde98",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "combined-source",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/system-board-visual.yml",
+      "name": "System Board visual editor",
+      "sha256": "a92f688b86e2386e0b705d8dbcfcbe1130d5245503433e4a8513f877108fecc4",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "board-visual",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/system-board.yml",
+      "name": "Parameterized System Board",
+      "sha256": "034d7ec1490758bb9851e76d4fced35d08a9eab2c5474dc0a4bba45c85155b33",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "board",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/system-composition.yml",
+      "name": "Scientific system composition",
+      "sha256": "df5f8c5375917376383e71e3f44550eb15346532351a3736e34586d350a094f0",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "reference-and-wheel",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "oci-reference",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/telemetry.yml",
+      "name": "Pinned telemetry replay",
+      "sha256": "880bf248afc8a123878b62e3f2ffdb65ba476388d83f3e5d91af4b88bc7813ef",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "telemetry",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/temperature-processing.yml",
+      "name": "Temperature measurement processing",
+      "sha256": "20ef76aac92d9a6958b13c00a974b581a46bbb33b9fe0622ac7f43b08c180534",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "software-contract",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "name": "Prototype checks",
+      "sha256": "342792244d246e498af78ca55dbf2c8ec2569a120f6f1265dda5e7bca9193855",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "python",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "plsr-terminal",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-latest",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        },
+        {
+          "id": "installed-package",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "container-deployment",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "native-windows-deployment",
+          "runs_on": "windows-latest",
+          "matrix": null,
+          "uses": null
+        },
+        {
+          "id": "godot-bridge",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    },
+    {
+      "path": ".github/workflows/thermal-identification.yml",
+      "name": "Thermal identification and Model-Reality contracts",
+      "sha256": "89b338b2b475836fbd718adbb55b79e4f80e0414ceabc1a454b270abd06bcc46",
+      "events": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "bounded-identification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ],
+            "python": [
+              "3.11",
+              "3.12"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/thermofluids.yml",
+      "name": "Thermofluids reference tools",
+      "sha256": "4dabf3b364eeb951e0b8ced390069d9df684ae4a982468ff24c127f0164c7bdb",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "reference-checks",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/toolpoint-upgrades.yml",
+      "name": "Installed native QC stream, store and studies",
+      "sha256": "80498d0d7dc4e5330566b3368652cda667b620551444b2b74cf2ef4856779314",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualify",
+          "runs_on": "ubuntu-latest",
+          "matrix": {
+            "python": [
+              "3.11",
+              "3.13"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/uncertainty-providers.yml",
+      "name": "Optional uncertainty providers",
+      "sha256": "a19dec1628e5dc857d7d7c9abbb4f69b89251d1bf08fd710f61dee177941fc83",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualify-installed",
+          "runs_on": "windows-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/visual-evidence-projection.yml",
+      "name": "Visual evidence projection",
+      "sha256": "2ec1451a7efa7f0215445394bf11e7a992d5b1d54b2337a4874a10ed992ebb43",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/visual-representation-gates.yml",
+      "name": "Visual representation gates",
+      "sha256": "6c6593044e3126f51cd1702b82cf45343970b71ba2b4e9a3e40f8b2c0e870ea3",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/visual-system-board.yml",
+      "name": "Visual System Board",
+      "sha256": "1af2fd8ba9fa6322e0d035b42d41fe0628e972e31582fb2c56a895244de8c5d6",
+      "events": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/weather-science.yml",
+      "name": "Weather science",
+      "sha256": "b11a0145b4cfffcf86e6ef20c3ef9931caaede6793dabcd150496a19878226a1",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "qualification",
+          "runs_on": "${{ matrix.os }}",
+          "matrix": {
+            "os": [
+              "ubuntu-24.04",
+              "windows-latest"
+            ]
+          },
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/workbench-candidates.yml",
+      "name": "Shared workbench candidate evidence",
+      "sha256": "8382fce951fde0e77ee3ceca8fa4da2148f6caba7270cea1eb8e742eeec246a6",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "candidate-workbench",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": false
+    },
+    {
+      "path": ".github/workflows/workflow-contracts.yml",
+      "name": "Workflow contracts",
+      "sha256": "dc22c444b3a3736f30bc1f314479aaf28da9ff26b5267a8b3daf88104929f67f",
+      "events": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        {
+          "id": "actionlint",
+          "runs_on": "ubuntu-latest",
+          "matrix": null,
+          "uses": null
+        }
+      ],
+      "release_required": true
+    }
+  ]
+}

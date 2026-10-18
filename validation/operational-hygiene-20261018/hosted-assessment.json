@@ -1,0 +1,240 @@
+{
+  "schema_version": 1,
+  "repository": "notationsystems/Notations-Control-Protocol",
+  "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "policy_sha256": "134a4840c41884fbec10456a688aeae787126a8d1da8795572f0932db1e27a8f",
+  "status": "blocked",
+  "scope": "CI metadata and retained artifact presence only; not scientific qualification or artifact authentication.",
+  "workflows": [
+    {
+      "path": ".github/workflows/monorepo.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: mathematics-and-measurement-chain (3.12) (queued/None)",
+        "job is not successful: inference-and-public-process-replay (3.13) (queued/None)",
+        "job is not successful: source-history-and-migration-guards (ubuntu-latest) (queued/None)",
+        "job is not successful: mathematics-and-measurement-chain (3.13) (queued/None)",
+        "job is not successful: source-history-and-migration-guards (windows-latest) (queued/None)",
+        "job is not successful: flowstate-wheel-and-original-default-suite (3.12) (queued/None)",
+        "job is not successful: independent-wheels-and-composition (3.12) (queued/None)",
+        "job is not successful: surface-science-lock-and-replay (3.13) (queued/None)",
+        "job is not successful: flowstate-wheel-and-original-default-suite (3.13) (queued/None)",
+        "job is not successful: independent-wheels-and-composition (3.11) (queued/None)",
+        "job is not successful: surface-science-lock-and-replay (3.12) (queued/None)",
+        "job is not successful: independent-locked-web-packages (ubuntu-latest) (queued/None)",
+        "job is not successful: inference-and-public-process-replay (3.12) (queued/None)",
+        "job is not successful: independent-locked-web-packages (windows-latest) (queued/None)",
+        "job is not successful: operations-resources-and-bounded-cpu (3.12) (queued/None)",
+        "job is not successful: operations-resources-and-bounded-cpu (3.13) (queued/None)",
+        "missing or ambiguous required artifact: monorepo-source-audit-ubuntu-latest",
+        "missing or ambiguous required artifact: monorepo-source-audit-windows-latest",
+        "missing or ambiguous required artifact: monorepo-qualification-python-3.11",
+        "missing or ambiguous required artifact: monorepo-qualification-python-3.12",
+        "missing or ambiguous required artifact: monorepo-inference-python-3.12",
+        "missing or ambiguous required artifact: monorepo-inference-python-3.13",
+        "missing or ambiguous required artifact: monorepo-math-python-3.12",
+        "missing or ambiguous required artifact: monorepo-math-python-3.13",
+        "missing or ambiguous required artifact: monorepo-flowstate-python-3.12",
+        "missing or ambiguous required artifact: monorepo-flowstate-python-3.13",
+        "missing or ambiguous required artifact: monorepo-surface-python-3.12",
+        "missing or ambiguous required artifact: monorepo-surface-python-3.13",
+        "missing or ambiguous required artifact: monorepo-operations-python-3.12-rust-1.90.0",
+        "missing or ambiguous required artifact: monorepo-operations-python-3.13-rust-1.90.0",
+        "missing or ambiguous required artifact: monorepo-web-node-24-ubuntu-latest",
+        "missing or ambiguous required artifact: monorepo-web-node-24-windows-latest"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520370"
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: godot-bridge (queued/None)",
+        "job is not successful: installed-package (queued/None)",
+        "job is not successful: python (ubuntu-latest, 3.12) (queued/None)",
+        "job is not successful: native-windows-deployment (queued/None)",
+        "job is not successful: python (ubuntu-latest, 3.11) (queued/None)",
+        "job is not successful: python (windows-latest, 3.12) (queued/None)",
+        "job is not successful: container-deployment (queued/None)",
+        "job is not successful: python (windows-latest, 3.11) (queued/None)",
+        "missing or ambiguous required artifact: ciw-python-wheel"
+      ],
+      "excluded_jobs": {
+        "plsr-terminal (ubuntu-latest)": "Private PLSR provider is outside the initial public baseline; no qualification claimed.",
+        "plsr-terminal (windows-latest)": "Private PLSR provider is outside the initial public baseline; no qualification claimed."
+      },
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520408"
+    },
+    {
+      "path": ".github/workflows/workflow-contracts.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "job is not successful: actionlint (queued/None)"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520381"
+    },
+    {
+      "path": ".github/workflows/declared-workloads.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "job is not successful: declared-workloads (queued/None)",
+        "missing or ambiguous required artifact: declared-workload-native-replay"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520368"
+    },
+    {
+      "path": ".github/workflows/calibrated-observable.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "job is not successful: process-experiment (3.13) (queued/None)",
+        "job is not successful: process-experiment (3.12) (queued/None)"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520448"
+    },
+    {
+      "path": ".github/workflows/identified-design.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "job is not successful: identified-design (queued/None)"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520424"
+    },
+    {
+      "path": ".github/workflows/calibrated-window.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: calibrated-window (3.11) (queued/None)",
+        "job is not successful: calibrated-window (3.12) (queued/None)",
+        "missing or ambiguous required artifact: calibrated-window-3.11",
+        "missing or ambiguous required artifact: calibrated-window-3.12"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520444"
+    },
+    {
+      "path": ".github/workflows/proved-heat.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "job is not successful: native-proof (queued/None)",
+        "missing or ambiguous required artifact: proved-heat-native-evidence"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520456"
+    },
+    {
+      "path": ".github/workflows/system-composition.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: reference-and-wheel (ubuntu-latest, 3.12) (queued/None)",
+        "job is not successful: reference-and-wheel (ubuntu-latest, 3.11) (queued/None)",
+        "job is not successful: oci-reference (queued/None)",
+        "job is not successful: reference-and-wheel (windows-latest, 3.11) (queued/None)",
+        "job is not successful: reference-and-wheel (windows-latest, 3.12) (queued/None)",
+        "missing or ambiguous required artifact: scientific-system-oci-qualification",
+        "missing or ambiguous required artifact: system-reference-ubuntu-latest-3.11",
+        "missing or ambiguous required artifact: system-reference-ubuntu-latest-3.12",
+        "missing or ambiguous required artifact: system-reference-windows-latest-3.11",
+        "missing or ambiguous required artifact: system-reference-windows-latest-3.12"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520390"
+    },
+    {
+      "path": ".github/workflows/legibility.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: boundary-and-installed-wheel (ubuntu-latest, 3.11) (queued/None)",
+        "job is not successful: boundary-and-installed-wheel (windows-latest, 3.12) (queued/None)",
+        "job is not successful: boundary-and-installed-wheel (ubuntu-latest, 3.12) (queued/None)",
+        "job is not successful: boundary-and-installed-wheel (windows-latest, 3.11) (queued/None)",
+        "missing or ambiguous required artifact: legibility-operator-ubuntu-latest-3.11",
+        "missing or ambiguous required artifact: legibility-operator-ubuntu-latest-3.12",
+        "missing or ambiguous required artifact: legibility-operator-windows-latest-3.11",
+        "missing or ambiguous required artifact: legibility-operator-windows-latest-3.12"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520428"
+    },
+    {
+      "path": ".github/workflows/release-operator.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: installed-journeys (windows-latest) (queued/None)",
+        "job is not successful: installed-journeys (ubuntu-latest) (queued/None)",
+        "missing or ambiguous required artifact: release-operator-ubuntu-latest",
+        "missing or ambiguous required artifact: release-operator-windows-latest"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520379"
+    },
+    {
+      "path": ".github/workflows/operator-readiness.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is pending/None",
+        "missing required job: candidate-wheel",
+        "missing required job: installed-journey (ubuntu-24.04)",
+        "missing required job: installed-journey (windows-latest)",
+        "missing required job: operator-acceptance",
+        "missing or ambiguous required artifact: operator-candidate-wheel",
+        "missing or ambiguous required artifact: operator-artifact-tests",
+        "missing or ambiguous required artifact: operator-readiness-ubuntu-24.04",
+        "missing or ambiguous required artifact: operator-readiness-windows-latest"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520376"
+    },
+    {
+      "path": ".github/workflows/hardware.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "job is not successful: qualification (ubuntu-24.04, 3.11) (queued/None)",
+        "job is not successful: qualification (windows-latest, 3.11) (queued/None)",
+        "job is not successful: qualification (windows-latest, 3.12) (queued/None)",
+        "job is not successful: qualification (ubuntu-24.04, 3.12) (queued/None)",
+        "missing or ambiguous required artifact: hardware-ubuntu-24.04-3.11",
+        "missing or ambiguous required artifact: hardware-ubuntu-24.04-3.12",
+        "missing or ambiguous required artifact: hardware-windows-latest-3.11",
+        "missing or ambiguous required artifact: hardware-windows-latest-3.12"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520465"
+    },
+    {
+      "path": ".github/workflows/refurbishment.yml",
+      "status": "blocked",
+      "reasons": [
+        "run is queued/None",
+        "missing required job: installed-journey (ubuntu-24.04, 3.11)",
+        "missing required job: installed-journey (ubuntu-24.04, 3.12)",
+        "missing required job: installed-journey (windows-latest, 3.11)",
+        "missing required job: installed-journey (windows-latest, 3.12)",
+        "job is not successful: candidate-wheel (queued/None)",
+        "missing or ambiguous required artifact: refurbishment-candidate-wheel",
+        "missing or ambiguous required artifact: refurbishment-ubuntu-24.04-3.11",
+        "missing or ambiguous required artifact: refurbishment-ubuntu-24.04-3.12",
+        "missing or ambiguous required artifact: refurbishment-windows-latest-3.11",
+        "missing or ambiguous required artifact: refurbishment-windows-latest-3.12"
+      ],
+      "excluded_jobs": {},
+      "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080520430"
+    }
+  ]
+}

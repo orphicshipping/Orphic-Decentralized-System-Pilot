@@ -1,0 +1,20 @@
+{
+  "run_id": 39080524889,
+  "artifact_id": 12119465312,
+  "run_url": "https://github.com/notationsystems/Notations-Control-Protocol/actions/runs/39080524889",
+  "api_head_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "event": "pull_request",
+  "payload_source_sha": "1142dd33d80ae3e6742c705f38f817f5ffef0251",
+  "file": "cantera-worker-contracts-312a37b.zip",
+  "sha256": "fa826e2949f09e511b45b0633065958bccde0051af92727989ce62059c53aa72",
+  "tests": {
+    "tests": 13,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "recorded_platform": "Windows CPython 3.12.14 x64",
+  "qualification": "not_accepted_for_frozen_baseline",
+  "reason": "PR merge checkout differs from the candidate head; workflow is not a required release gate. Existing release policy accepts push/workflow_dispatch only. Raw payload is retained without relabelling its identity.",
+  "full_runtime_qualification": "not_performed"
+}

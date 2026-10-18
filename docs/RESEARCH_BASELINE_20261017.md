@@ -1,5 +1,7 @@
 # Research baseline candidate — close-out evidence
 
+Current hosted and branch-cleanup disposition: [operational hygiene audit](OPERATIONAL_HYGIENE_20261018.md). The later user follow-up authorized cleanup; live execution remains blocked by unavailable tag/delete transport.
+
 This historical ledger records the earlier frozen candidate. The subsequent [provider integration audit](PROVIDER_INTEGRATION_20261018.md) records the implementation merged through PR #245 and its separate validation.
 
 Selected immutable code: `312a37ba613a0b57ea027b8d00df5b3b4fe08d69`. Source tree:

@@ -1,15 +1,12 @@
 name: Synthetic FSRT retained view
 on:
   pull_request:
-    paths:
-      - 'src/ciw/**'
-      - 'tests/test*fsrt*'
-      - 'tests/test_interactive*'
-      - 'validation/*fsrt*'
-      - '.github/workflows/synthetic-fsrt-view.yml'
   workflow_dispatch:
 permissions:
   contents: read
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || (github.event_name == 'push' && github.ref) || github.run_id }}
+  cancel-in-progress: true
 jobs:
   combined-source:
     runs-on: ubuntu-latest
@@ -48,6 +45,10 @@ jobs:
           chmod +x "$RUNNER_TEMP/godot/Godot_v4.5.2-stable_linux.x86_64"
           echo "GODOT_BIN=$RUNNER_TEMP/godot/Godot_v4.5.2-stable_linux.x86_64" >> "$GITHUB_ENV"
           echo "CIW_FSRT_REPO=$RUNNER_TEMP/fsrt" >> "$GITHUB_ENV"
+      # Retain the original source XML and artifact contract while sharing the
+      # expensive provider/engine setup and native campaign with retained views.
+      - name: Existing reader regressions and synthetic source contracts
+        run: python -m pytest -q tests/test_covariance_records.py tests/test_covariance_artifacts.py tests/test_simulated_fsrt.py -o addopts= --junitxml=source-contracts.xml
       - name: Combined unchanged contracts and new public input checks
         run: >-
           python -m pytest -q tests/test_interactive_contract.py tests/test_interactive_session.py
@@ -57,6 +58,14 @@ jobs:
         env:
           CIW_SIMULATED_FSRT_OUT: ${{ runner.temp }}/simulated-fsrt-evidence
         run: python -m pytest -q validation/simulated_fsrt_integration.py -o addopts= --junitxml=simulated-fsrt.xml
+      - name: Require complete original simulation qualification
+        run: |
+          python - <<'PY'
+          import xml.etree.ElementTree as ET
+          suites=list(ET.parse('simulated-fsrt.xml').getroot().iter('testsuite'))
+          assert sum(int(s.attrib['tests']) for s in suites)==14
+          assert all(int(s.attrib[k])==0 for s in suites for k in ('errors','failures','skipped'))
+          PY
       - name: Provider-free synthetic export and exact retained views
         env:
           CIW_SYNTHETIC_VIEW_FIXTURES: ${{ runner.temp }}/simulated-fsrt-evidence
@@ -89,6 +98,16 @@ jobs:
               with worktree_mutation_lock(root):
                   git(root, 'worktree', 'remove', '--force', str(target))
           PY
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: simulated-fsrt-qualification
+          if-no-files-found: error
+          path: |
+            ${{ runner.temp }}/simulated-fsrt-evidence
+            source-contracts.xml
+            simulated-fsrt.xml
+            dist/*.whl
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         if: always()
         with:

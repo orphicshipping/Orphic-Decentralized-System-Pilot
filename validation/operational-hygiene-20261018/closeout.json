@@ -1,0 +1,86 @@
+{
+  "schema": "ncp.operational-hygiene.v1",
+  "recorded_at": "2026-10-18T01:30:02.715751+00:00",
+  "source_base": "9e04140ff07b6699042153e80e45e8513dcafe08",
+  "frozen_research_candidate": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "maintenance_patch_sha256": {
+    ".github/workflows/synthetic-fsrt-view.yml": "ffa0115b5cf46151cd402975cb95f6f181e372026d81173b20a54015ca5cde98",
+    ".github/workflows/workflow-contracts.yml": "dc22c444b3a3736f30bc1f314479aaf28da9ff26b5267a8b3daf88104929f67f",
+    "scripts/cleanup_reconciled_branches.py": "94a2bcaee9a261b8d7f736a9df70e347fefde9916b413d21878672d43f3dedec",
+    "scripts/audit_workflow_inventory.py": "35e8f5339bdc48bf5eb4d0a8518e23339b366364d46d4459b6d8763afa4bd88b",
+    "scripts/tests/test_branch_cleanup.py": "48c2d4edaf9a45f36d45e845ba83327e984f7b290ff3afd29c401a5b3a22ebd6"
+  },
+  "feature_work": "frozen; operational hygiene only",
+  "waivers": [],
+  "hosted": {
+    "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+    "status": "blocked",
+    "required_workflows": 14,
+    "run_statuses": {
+      "queued": 8,
+      "pending": 6
+    },
+    "jobs": 51,
+    "job_statuses": [
+      {
+        "status": "queued",
+        "conclusion": null,
+        "count": 50
+      },
+      {
+        "status": "completed",
+        "conclusion": "skipped",
+        "count": 1
+      }
+    ],
+    "required_artifacts": 0,
+    "policy_modified": false,
+    "latest_status_recheck": "2026-10-18T01:27:45.459Z"
+  },
+  "branch_cleanup": {
+    "status": "blocked_by_unavailable_remote_tag_and_branch_delete_capabilities",
+    "inventory_count": 284,
+    "exact_unprotected_heads": 235,
+    "ancestral_heads": 169,
+    "prior_PR_reconciled_heads": 66,
+    "archive_tags_found": 0,
+    "remote_archives_created": 0,
+    "remote_branches_deleted": 0,
+    "plan_sha256": "9166b17b6062debaec3546c70850869209910e644fe2e3601c00af3593b20c8f"
+  },
+  "workflow_reduction": {
+    "files_before": 157,
+    "files_after": 156,
+    "jobs_before": 193,
+    "jobs_after": 192,
+    "exact_duplicate_workflows_before": 0,
+    "exact_duplicate_jobs_before": 0,
+    "method": "Retire strict simulation subset into the existing retained-view superset; both original ordered step sequences and artifacts survive; native campaign runs once.",
+    "release_required_workflows": 14,
+    "release_requirements_modified": false,
+    "platform_lanes_removed": 0
+  },
+  "executed_local_checks": {
+    "fsrt_combined_source_tests": 180,
+    "fsrt_original_source_tests": 119,
+    "atomic_git_cleanup_tests": 10,
+    "existing_ci_policy_tests": 18,
+    "release_evidence_tests": 54,
+    "release_evidence_subtests": 186,
+    "actionlint": {
+      "version": "1.7.12",
+      "status": "PASS",
+      "workflow_files": 156,
+      "download_sha256": "8aca8db96f1b94770f1b0d72b6dddcb1ebb8123cb3712530b08cc387b349a3d8"
+    },
+    "ordered_subsequence_proof": "PASS",
+    "installed_projection_check": "PASS"
+  },
+  "verification_limits": [
+    "Local test gates overlap; counts are not additive.",
+    "No fresh Godot 14-case or retained-view 21-case native execution in this hygiene pass; their commands, pins, output contracts and zero-skip guards are unchanged.",
+    "No remote branch deletion/tag creation was possible.",
+    "No required hosted gate completed and no waiver was made.",
+    "No production source, native runtime, provider pin, physical equipment, kernel family or design-only connective tissue implementation changed."
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "status": "PASS",
+  "base_revision": "9e04140ff07b6699042153e80e45e8513dcafe08",
+  "target": ".github/workflows/synthetic-fsrt-view.yml",
+  "retired_workflow": ".github/workflows/simulated-fsrt.yml",
+  "sequences": [
+    {
+      "source": "retired_simulation",
+      "steps": 10,
+      "matched_indices": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        10,
+        11,
+        12
+      ]
+    },
+    {
+      "source": "retained_views",
+      "steps": 11,
+      "matched_indices": [
+        0,
+        1,
+        2,
+        3,
+        5,
+        6,
+        8,
+        9,
+        10,
+        11,
+        13
+      ]
+    }
+  ],
+  "native_campaign_invocations": 1,
+  "original_event_scope_preserved": true,
+  "original_permissions_preserved": true,
+  "scope": "Declaration-preservation proof; no native Godot or hosted execution is asserted.",
+  "source_sha256": {
+    "retired_before": "dbab19c0e3169d5bb36132011c68525d95973ae22ff69edb2ea332cf6577f9bc",
+    "retained_before": "d0665383268c6b3f0afcba56ae03a9b656c9b65d27a4602f6ef94836a7f0c259",
+    "retained_after": "ffa0115b5cf46151cd402975cb95f6f181e372026d81173b20a54015ca5cde98"
+  }
+}
