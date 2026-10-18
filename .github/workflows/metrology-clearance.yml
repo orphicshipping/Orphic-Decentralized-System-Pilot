@@ -1,0 +1,33 @@
+name: Bounded metrology clearance
+on:
+  pull_request:
+    paths:
+      - 'src/ciw/metrology_clearance*.py'
+      - 'src/ciw/agent_mcp.py'
+      - 'tests/test_metrology_clearance.py'
+      - 'examples/metrology-clearance/**'
+      - 'instruments/domain/bim-estimator/**'
+      - '.github/workflows/metrology-clearance.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  clearance:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        python: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '${{ matrix.python }}'
+      - run: python -m pip install '.[dev]'
+      - run: python -m pytest -q tests/test_metrology_clearance.py tests/test_agent_protocol.py tests/test_agent_experiment.py tests/test_agent_recovery.py tests/test_measured_thermal_agent.py tests/test_link_study_agent.py tests/test_control_plane.py --junitxml=clearance-results.xml
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: clearance-results-${{ matrix.python }}
+          path: clearance-results.xml

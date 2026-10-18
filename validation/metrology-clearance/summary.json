@@ -1,0 +1,43 @@
+{
+  "schema": "ncp.metrology-candidate-validation.v1",
+  "date": "2026-10-17",
+  "base_commit": "8a6beb844a4a3c3944637b1e3f386d48d28507d0",
+  "base_tree": "20216c9ac601d5c79960756ff7b3af17fd6e9121",
+  "native_source_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+  "python": "3.12.14",
+  "numpy": "2.4.3",
+  "platform": "Linux",
+  "installed_tests": 323,
+  "failures": 0,
+  "skips": 0,
+  "native_tests": 21,
+  "native_subtests": 3,
+  "source_adjacent_tests_before_final_four_analytic_cases": 319,
+  "counts_are_not_additive": true,
+  "installed_package_files_byte_matched": 693,
+  "wheel_sha256": "62b25a747f481fcbaaf0e93657abd431d6af3e1d31c790db5797f3e85ac03e81",
+  "installed_cli": [
+    "prepare",
+    "run",
+    "offline_inspect"
+  ],
+  "installed_mcp": [
+    "initialize",
+    "tools/list",
+    "tools/call net_execute",
+    "identical_attempt_retry"
+  ],
+  "physical_qualification": "not_established",
+  "independent_geometry_reference": "not_performed",
+  "hosted_ci": "pending",
+  "source_sha256": {
+    "src/ciw/agent_mcp.py": "610881e2cd2f1f71625ee17d371a1b2b510b3b93775767018c39bd67937bfbc2",
+    "src/ciw/metrology_clearance.py": "6be2d2eef106eb197947d0a9f4647a6e743fb22864f8df8d766c837cd92e8cec",
+    "src/ciw/metrology_clearance_worker.py": "726489a839c0e2ab4117d218cf9a4b861bc8b25988ad1d8980c179318357ae2d",
+    "tests/test_metrology_clearance.py": "cc903fbbc8654a5d23c1268f7bcfafd2d52f19489bdea095981c1b2c7d46d817",
+    "examples/metrology-clearance/uncertain-inspection.json": "4e626cafbd200dbdc61b3e4a37f922e93ea92d9feb3091bc4670e429f811e2a5",
+    "examples/metrology-clearance/inspection.json": "2cd2ac1b0bdf5f098b5a7afc7c4f791c04ede00c6fc4c1eb5df0ce74b0048001"
+  },
+  "source_scope": "All package and CSE source recovered against Git blob identities. Ten unrelated binary/data/vendor artifacts were unavailable or stale; no full-monorepo regression claimed. Later main console-only changes do not change package/CSE/test bytes.",
+  "installation": "Fresh noneditable venv; explicitly shared host third-party dependencies; pytest pythonpath override empty; imported CIW outside source."
+}
