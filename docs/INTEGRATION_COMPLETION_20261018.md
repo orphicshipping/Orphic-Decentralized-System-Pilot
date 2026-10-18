@@ -6,7 +6,7 @@ and its evidence remain attributed to their original source revisions.
 
 | Seam | Implemented path | Executed evidence |
 | --- | --- | --- |
-| Bevy retained-render projector | Rust application, existing host JSON, bounded parser, readable cards, supplied path gizmos, `--summary`, missing-input STALE and strict fresh-verifier flag | Pinned engine build; four Rust tests; actual 240-frame X11 window with Mesa lavapipe, screenshot and zero render errors |
+| Bevy retained-render projector | Rust application, existing host JSON, bounded parser, readable cards, supplied path gizmos, binary64-preserving `--summary`, missing-input STALE and strict fresh-verifier flag | Pinned engine build; five Rust tests; actual 240-frame X11 window with Mesa lavapipe, visible-path pixels, screenshot and zero render errors |
 | Teaching inputs and clients | Reviewed inputs, reproducible ten-entry index, all ten owned emitters, validated batch export and hashes, proof-teaching wrappers, Godot Teaching samples tab | All ten scenarios exported; Godot catalog smoke passed 33 checks; existing import, presentation, protocol, channel, adapter and retained experiment gates passed |
 | Atomic Session native gate | Separate `check_atomic_nvalchemi.py`, explicit metadata binding, isolated CPU environment, existing Session/operation/result contracts | Twelve real NVIDIA CPU cases and 58 checks passed, including 32 atoms, finite differences, transforms, offline reopen, fresh replay, five resealed tamper rejections and five invalid-input refusals |
 

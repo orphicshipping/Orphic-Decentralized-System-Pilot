@@ -143,7 +143,7 @@ For offline-only reading, call `register_schema()` without constructing an
 adapter, then use the existing Session/workspace APIs. Reopening saved files
 cannot recreate executable bindings. Explicit replay must bind a provider anew.
 
-## Validation evidence for this increment
+## Historical provider-free increment
 
 Executed locally against the new provider-free contract and worker modules:
 **75 passed** with Python 3.13.5 / pytest 9.0.2 on Linux. Coverage includes scalar

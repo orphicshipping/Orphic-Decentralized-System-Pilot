@@ -51,14 +51,15 @@ mod viewer {
             TextColor(Color::srgb_u8(220,230,241)),Node{position_type:PositionType::Absolute,left:px(18),top:px(18),width:percent(39),..default()}));
     }
     fn draw(mut gizmos:Gizmos,view:Res<View>) {
-        let points:Vec<Vec3>=view.data.paths.iter().flat_map(|p|p.points.iter().map(|v|Vec3::from_array(*v))).collect();
+        let point=|v:&[f64;3]|Vec3::new(v[0] as f32,v[1] as f32,v[2] as f32);
+        let points:Vec<Vec3>=view.data.paths.iter().flat_map(|p|p.points.iter().map(point)).collect();
         let low=points.iter().copied().reduce(Vec3::min).unwrap_or(Vec3::ZERO);
         let high=points.iter().copied().reduce(Vec3::max).unwrap_or(Vec3::ONE);
         let center=(low+high)*0.5;
         let scale=3.0/(high-low).length().max(1.);
         for (index,path) in view.data.paths.iter().enumerate() {
             let color=if index%2==0 {Color::srgb_u8(96,223,205)} else {Color::srgb_u8(127,155,184)};
-            gizmos.linestrip(path.points.iter().map(|v|(Vec3::from_array(*v)-center)*scale+Vec3::X*1.2),color);
+            gizmos.linestrip(path.points.iter().map(|v|(point(v)-center)*scale+Vec3::X*1.2),color);
         }
     }
     fn finish(mut view:ResMut<View>,keys:Res<ButtonInput<KeyCode>>,mut exit:MessageWriter<AppExit>) {

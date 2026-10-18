@@ -10,7 +10,7 @@ const MAX_POINTS: usize = 100_000;
 #[derive(Clone, Debug, Serialize)]
 pub struct PathLine {
     pub name: String,
-    pub points: Vec<[f32; 3]>,
+    pub points: Vec<[f64; 3]>,
 }
 
 #[derive(Clone, Debug, Serialize)]
@@ -142,7 +142,7 @@ impl Presentation {
                 let number = number.as_f64().ok_or("path coordinate must be a finite number")?;
                 // Leave headroom for camera arithmetic; no solver or unit conversion.
                 if !number.is_finite() || number.abs() > 1e15 { return Err("path coordinate outside display range".into()); }
-                out[axis] = number as f32;
+                out[axis] = number;
             }
             points.push(out);
         }
@@ -185,5 +185,12 @@ mod tests {
     fn missing_input_is_stale() {
         let p=Presentation::load(&std::env::temp_dir().join(format!("absent-ncp-render-{}",std::process::id()))).unwrap();
         assert!(!p.source_available); assert_eq!(p.status,"STALE"); assert!(!p.may_authorize);
+    }
+    #[test]
+    fn summary_preserves_retained_binary64_coordinates() {
+        let value=1.2345678901234567_f64;
+        let p=Presentation::from_value(&json!({"points":[[value,0,0],[2,0,0]]})).unwrap();
+        let summary=serde_json::to_value(p).unwrap();
+        assert_eq!(summary["paths"][0]["points"][0][0].as_f64().unwrap(),value);
     }
 }
