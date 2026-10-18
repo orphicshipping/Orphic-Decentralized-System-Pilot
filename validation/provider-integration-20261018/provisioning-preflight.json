@@ -1,0 +1,1551 @@
+{
+  "candidate_sha": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+  "observed_at": "2026-10-18T01:08:18.678379+00:00",
+  "scope": "read-only local provisioning preflight after exact FSRT legacy source recovery; no dependency installation, binding, provider execution or qualification",
+  "counts": {
+    "ready_to_provision": 15,
+    "blocked": 14
+  },
+  "plans": [
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "acquired-calibrated-window",
+      "operation_id": "ciw.acquired-calibrated-window.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "source_tree": "dc364802cf846329e48eaaf0832fa4d47c2abd35",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "source_tree": "3bbd80f364dea3adc35dd762a1fc2847faddab73",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Calibration-Runtime",
+          "module": "mcur.core",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "set": {
+          "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "source_tree": "54440032b98e24685cc500fd26abaa7ad7700a45",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Estimator-Bench",
+          "module": "state_estimation_testbed.replay",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "source_tree": "152816aca45290c81d770570851541edae69a706",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Signal-Processing-RunTime",
+          "module": "stfe",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "source_tree": "a797aaea6e7cb0aa6252333f3b14615bfed2840f",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-ClockSync",
+          "module": "tbrt.clock",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": true,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "acquired-dataset",
+      "operation_id": "ciw.acquired-dataset.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "ppda",
+          "revision": "477d6cb454423a27543b16961d3b169709c40c31",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "bim-quantity",
+      "operation_id": "ciw.bim-quantity.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "cse": {
+          "revision": "4b74abda40bba3277de69bf61e9e09283ae2d5b3",
+          "source_tree": "d1bea6737380b1cdd8f42f9962e282f1047dceec",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Estimator-for-BIM",
+          "module": "gat.session",
+          "source_root": ".",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "calibrated-observable",
+      "operation_id": "ciw.calibrated-observable.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "cbsr": {
+          "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "source_tree": "9cff1003014265906c6057e31593cc5217085e7a",
+          "license": "AGPL-3.0",
+          "repository": "giasonpooni/Notations-State-Recompiler",
+          "module": "cbsr",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "source_tree": "c7dc21c64377368341a2029ecd4f3e2a70d31646",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-FaultSense-RunTime",
+          "module": "fdir.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "fsrt": {
+          "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "source_tree": "91b9c2b68f6a539f17774bdccf2c71d8b42698a2",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-FlowState",
+          "module": "set_lcm.bridge.calibrated_observable",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "source_tree": "375c031c07592d5bcb1d224780f18ceb886df4a1",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "source_tree": "3bbd80f364dea3adc35dd762a1fc2847faddab73",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Calibration-Runtime",
+          "module": "mcur.core",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "source_tree": "3ba42834535b396a13395e5053c6fd5b4f1302c9",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Observability-Testbed",
+          "module": "oit.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "set": {
+          "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "source_tree": "710f8a91e369fc6be7f80b33d29d275629b25f72",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Estimator-Bench",
+          "module": "state_estimation_testbed.replay",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "source_tree": "a797aaea6e7cb0aa6252333f3b14615bfed2840f",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-ClockSync",
+          "module": "tbrt.clock",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "calibrated-window",
+      "operation_id": "ciw.calibrated-window.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "source_tree": "dc364802cf846329e48eaaf0832fa4d47c2abd35",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "source_tree": "3bbd80f364dea3adc35dd762a1fc2847faddab73",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Calibration-Runtime",
+          "module": "mcur.core",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "set": {
+          "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+          "source_tree": "54440032b98e24685cc500fd26abaa7ad7700a45",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Estimator-Bench",
+          "module": "state_estimation_testbed.replay",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "source_tree": "152816aca45290c81d770570851541edae69a706",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Signal-Processing-RunTime",
+          "module": "stfe",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "source_tree": "a797aaea6e7cb0aa6252333f3b14615bfed2840f",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-ClockSync",
+          "module": "tbrt.clock",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "covariance-geometry",
+      "operation_id": "ciw.covariance-geometry.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "cggt",
+          "revision": "510ad2bd0fb96faf77824b72e70ae1b4090646a0",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "curved-path-transfer",
+      "operation_id": "ciw.curved-path-transfer.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "csg": {
+          "revision": "bbc535af29c30997e56fd120320c570830676462",
+          "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Surface-RunTime",
+          "module": "geodesic_testbed.jacobi",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "energy-accuracy",
+      "operation_id": "ciw.energy-accuracy.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "flat-torus-reference",
+      "operation_id": "ciw.flat-torus-reference.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "ftr",
+          "revision": "dc918562cd9e351a65475d29f46963c9f2fd7db8",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "geometric-circle",
+      "operation_id": "ciw.geometric-circle.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "gte",
+          "revision": "e55b8be2b3ba05f7e6c6a31807c77b3e42700f07",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "identified-design",
+      "operation_id": "ciw.identified-design.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "cbsr": {
+          "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "source_tree": "9cff1003014265906c6057e31593cc5217085e7a",
+          "license": "AGPL-3.0",
+          "repository": "giasonpooni/Notations-State-Recompiler",
+          "module": "cbsr",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "edspt": {
+          "revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+          "source_tree": "611b94be8572a15a2c2db9cf8a3527151764ddbd",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-SensorDesign-RunTime",
+          "module": "edspt.budgeted",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "source_tree": "c7dc21c64377368341a2029ecd4f3e2a70d31646",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-FaultSense-RunTime",
+          "module": "fdir.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "fsrt": {
+          "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "source_tree": "91b9c2b68f6a539f17774bdccf2c71d8b42698a2",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-FlowState",
+          "module": "set_lcm.bridge.calibrated_observable",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "source_tree": "375c031c07592d5bcb1d224780f18ceb886df4a1",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "mcur": {
+          "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "source_tree": "3bbd80f364dea3adc35dd762a1fc2847faddab73",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Calibration-Runtime",
+          "module": "mcur.core",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "source_tree": "3ba42834535b396a13395e5053c6fd5b4f1302c9",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Observability-Testbed",
+          "module": "oit.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "set": {
+          "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "source_tree": "710f8a91e369fc6be7f80b33d29d275629b25f72",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Estimator-Bench",
+          "module": "state_estimation_testbed.replay",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "sidt": {
+          "revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+          "source_tree": "b4d8506c83122d4ad782cd6c73dede6b1142d033",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Linear-Dynamics-Testbed",
+          "module": "sidt.declared",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "tbrt": {
+          "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "source_tree": "a797aaea6e7cb0aa6252333f3b14615bfed2840f",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-ClockSync",
+          "module": "tbrt.clock",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "ywir": {
+          "revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+          "source_tree": "7f51b39cffd658d7a9714cc34316549962605352",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Yield-Weighted-Runtime",
+          "module": "ywir.integration",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": true,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "identified-stability",
+      "operation_id": "ciw.identified-stability.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "plsr",
+          "revision": "19ea6967060166ba09db6cd4563bd87bd6b3d196",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": true,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "instrument-exchange",
+      "operation_id": "ciw.instrument-exchange.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "set",
+          "revision": "542e672be512bf43b61253f2b2a43cd967cb3062",
+          "reason": "Command '['git', '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.autocrlf=false', '-c', 'core.hooksPath=/dev/null', '-C', '/workspace/scratch/983c4968e2d6/latent-preflight-source', 'rev-parse', '542e672be512bf43b61253f2b2a43cd967cb3062^{tree}']' returned non-zero exit status 128."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "julia-oscillator",
+      "operation_id": "ciw.julia-oscillator.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "julia",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "executable_file",
+          "prerequisite": "Supply --binding julia=/absolute/approved/path; provider tools remain separately qualified."
+        },
+        {
+          "role": "julia_runtime",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "runtime_directory",
+          "prerequisite": "Supply --binding julia_runtime=/absolute/approved/path; provider tools remain separately qualified."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "machine-manifest",
+      "operation_id": "ciw.encoder-position.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "measured-thermal",
+      "operation_id": "ciw.measured-thermal.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "measurement-chain",
+      "operation_id": "ciw.measurement-chain.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "fsrt": {
+          "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+          "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-FlowState",
+          "module": "set_lcm.bridge.ciw",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        },
+        "jspt": {
+          "revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+          "source_tree": "5643cc8204b7aa6cbb73df6bf8984abdcec47d3b",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Sensitivity-Testbed",
+          "module": "sensitivity.ciw_adapter",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        },
+        "rci": {
+          "revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+          "source_tree": "038522430744d4a7027f9a48669834c46bd94987",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Metrology-Adapter",
+          "module": "instrument_chain.ciw_adapter",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "mesh-path",
+      "operation_id": "ciw.mesh-path.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "isgt",
+          "revision": "ef4e64f3b73c83f9cb0e748dd029410fa0dbe76d",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "native-interop",
+      "operation_id": "ciw.native-interop.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "runtime",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "binding_json",
+          "prerequisite": "Supply --binding runtime=/absolute/approved/path; provider tools remain separately qualified."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "numerical-heat",
+      "operation_id": "ciw.numerical-heat.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "scr": {
+          "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "source_tree": "4068a711534932e8d89bb0d87d373376dafdf6cd",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Compute-Runtime",
+          "module": "execution.engine",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.10",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": null
+        }
+      },
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "engine",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "executable_file",
+          "prerequisite": "Supply --binding engine=/absolute/approved/path; provider tools remain separately qualified."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "project-graph",
+      "operation_id": "ciw.project-graph.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "proved-heat",
+      "operation_id": "ciw.proved-heat.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "scr": {
+          "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "source_tree": "4068a711534932e8d89bb0d87d373376dafdf6cd",
+          "license": "Apache-2.0",
+          "repository": "giasonpooni/Notations-Compute-Runtime",
+          "module": "execution.proving",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.10",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": null
+        }
+      },
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "engine",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "executable_file",
+          "prerequisite": "Supply --binding engine=/absolute/approved/path; provider tools remain separately qualified."
+        },
+        {
+          "role": "guest",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "artifact_file",
+          "prerequisite": "Supply --binding guest=/absolute/approved/path; provider tools remain separately qualified."
+        },
+        {
+          "role": "prover",
+          "reason": "explicit_external_binding_required",
+          "binding_type": "executable_file",
+          "prerequisite": "Supply --binding prover=/absolute/approved/path; provider tools remain separately qualified."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "residual-monitor",
+      "operation_id": "ciw.residual-monitor.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "fdir": {
+          "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "source_tree": "c7dc21c64377368341a2029ecd4f3e2a70d31646",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-FaultSense-RunTime",
+          "module": "fdir.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "oit": {
+          "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "source_tree": "3ba42834535b396a13395e5053c6fd5b4f1302c9",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Observability-Testbed",
+          "module": "oit.diagnostics",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.24"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "schematic-assessment",
+      "operation_id": "ciw.schematic-assessment.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "sra": {
+          "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+          "source_tree": "88def0f08e249af14fbfb0ccf01d4466b11c6c80",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Retrieval-Agent",
+          "module": "schematics.eligibility",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "schematic-companions",
+      "operation_id": "ciw.schematic-companions.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "sra": {
+          "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+          "source_tree": "88def0f08e249af14fbfb0ccf01d4466b11c6c80",
+          "license": "MIT",
+          "repository": "giasonpooni/Notations-Retrieval-Agent",
+          "module": "schematics.eligibility",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.12",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "jspt",
+          "revision": "7399ab03087b27683620b4c57f97b2ac14546c7f",
+          "reason": "Command '['git', '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.autocrlf=false', '-c', 'core.hooksPath=/dev/null', '-C', '/workspace/scratch/983c4968e2d6/latent-preflight-source', 'rev-parse', '7399ab03087b27683620b4c57f97b2ac14546c7f^{tree}']' returned non-zero exit status 128."
+        },
+        {
+          "role": "plsr",
+          "revision": "9d0e7b4a1162e038150a71c63d986945d78135d4",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": true,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "telemetry",
+      "operation_id": "ciw.telemetry.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "gsie": {
+          "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+          "source_tree": "dc364802cf846329e48eaaf0832fa4d47c2abd35",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        },
+        "stfe": {
+          "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "source_tree": "152816aca45290c81d770570851541edae69a706",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Signal-Processing-RunTime",
+          "module": "stfe",
+          "source_root": ".",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=68"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "cbsr",
+          "revision": "b543969cb80a69a5df1274eee10d22549bcea773",
+          "reason": "Command '['git', '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.autocrlf=false', '-c', 'core.hooksPath=/dev/null', '-C', '/workspace/scratch/983c4968e2d6/latent-preflight-source', 'rev-parse', 'b543969cb80a69a5df1274eee10d22549bcea773^{tree}']' returned non-zero exit status 128."
+        },
+        {
+          "role": "ppda",
+          "revision": "209985a8c7482aba037021035c2f0b550c9b1ddc",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        },
+        {
+          "role": "set",
+          "revision": "1467ec5058b3e7ebd6ba4a45f2d9b49148a2560d",
+          "reason": "Command '['git', '--no-replace-objects', '-c', 'core.fsmonitor=false', '-c', 'core.autocrlf=false', '-c', 'core.hooksPath=/dev/null', '-C', '/workspace/scratch/983c4968e2d6/latent-preflight-source', 'rev-parse', '1467ec5058b3e7ebd6ba4a45f2d9b49148a2560d^{tree}']' returned non-zero exit status 128."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "thermal-observer",
+      "operation_id": "ciw.thermal-observer.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {},
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "translation-flow",
+      "operation_id": "ciw.translation-flow.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "tsde": {
+          "revision": "5e72693e7e5722c47883ef1a68b2959afdf2e215",
+          "source_tree": "6f2ecbb21617d87c3a1e8b60fa722b109dd7ccc8",
+          "license": "MIT",
+          "repository": "giasonpooni/Polygon-Trajectory-Experiments",
+          "module": "translation_surface_dynamics",
+          "source_root": "src",
+          "dependencies": [],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "ready_to_provision"
+    },
+    {
+      "schema": "ciw.operator-provision-plan.v1",
+      "workflow": "variational-free-energy",
+      "operation_id": "ciw.variational-free-energy.v1",
+      "source": {
+        "root": "/workspace/scratch/983c4968e2d6/latent-preflight-source",
+        "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+        "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a"
+      },
+      "providers": {
+        "csg": {
+          "revision": "bbc535af29c30997e56fd120320c570830676462",
+          "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-Surface-RunTime",
+          "module": "geodesic_testbed.jacobi",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=2.0"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "hatchling>=1.27"
+            ],
+            "build-backend": "hatchling.build"
+          }
+        },
+        "gsie": {
+          "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "source_tree": "375c031c07592d5bcb1d224780f18ceb886df4a1",
+          "license": "MPL-2.0",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "module": "geometric_state_inference.contracts",
+          "source_root": "src",
+          "dependencies": [
+            "numpy>=1.26,<3"
+          ],
+          "requires_python": ">=3.11",
+          "dependency_identity": "declared_in_original_source_not_installed_or_verified",
+          "build_system": {
+            "requires": [
+              "setuptools>=77"
+            ],
+            "build-backend": "setuptools.build_meta"
+          }
+        }
+      },
+      "external_bindings": {},
+      "blockers": [
+        {
+          "role": "plsr",
+          "revision": "19ea6967060166ba09db6cd4563bd87bd6b3d196",
+          "reason": "provider_history_not_retained",
+          "prerequisite": "Use an explicitly authorized exact provider checkout with the existing --binding CLI; no source is fetched here."
+        }
+      ],
+      "requires_upstream_bundle": false,
+      "source_preflight": "tracked_index_types_modes_and_working_bytes",
+      "full_monorepo_import_audit": "not_performed",
+      "qualification": "not_performed",
+      "authorizes_execution": false,
+      "read_only": true,
+      "status": "blocked"
+    }
+  ]
+}

@@ -1,0 +1,1727 @@
+{
+  "summary": {
+    "schema": "ciw.integration-catalog.v1",
+    "catalog_ref": "sha256:be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079",
+    "counts": {
+      "imports": 21,
+      "systems": 26,
+      "external": 19
+    },
+    "source_files": {
+      "instruments/manifest.json": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743",
+      "docs/SYSTEMS_CATALOG.md": "ab7639368f14feecba322e15555cf48cf475cbfa28ae3c47438173cbabfddcb9",
+      "src/ciw/adapter-runtimes.json": "79098fa4fb0cb9dfe9269224c146c0874a058bf5191824609245389d2b9f80fc",
+      "src/ciw/calibrated-observable-runtimes.json": "c9431c28e3bdcf2c2c15bdc42b83dceb799801dbcadf2cb3dbe802e8a093fa08",
+      "src/ciw/calibrated-window-runtimes.json": "36849335cdc35070564fc6f790d2faf679fa7f6a906c29b455b236158b3ecdbd",
+      "src/ciw/esm-runtime.json": "1623a4e52d7580b6857eed07397bf12b50a8dd52b31130024f9b8d4f11c8fbae",
+      "src/ciw/exchange-runtime.json": "2dbf31fcf8c40430f2ea91ada4ca7de7d18008210a6e4f4301ac811ed3262671",
+      "src/ciw/identified-design-runtimes.json": "84868db50a22533e8564fb34b2a09a03c5453c7fb72515a77a39c58397efc4cd",
+      "src/ciw/native-interop-runtimes.json": "bab1be76e41a2dcf165b253e8d263822edd4e3ac76eecdac574f6138d782076a",
+      "src/ciw/plsr-runtime.json": "bc40205c1c6227fb1ad23f78323514bf4224aca0c0949da808be7499112c9960",
+      "src/ciw/telemetry-runtimes.json": "92a300341c16b3019b6f046b1d664968ca67c728beb6a313f8986b304a987013"
+    },
+    "authorizes_execution": false,
+    "qualification": "not_established_by_discovery",
+    "binding_source": "explicit_host_configuration_only"
+  },
+  "sections": {
+    "imports": {
+      "section": "imports",
+      "catalog_ref": "sha256:be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079",
+      "items": [
+        {
+          "id": "bim-estimator",
+          "role": "cse",
+          "path": "instruments/domain/bim-estimator",
+          "repository": "giasonpooni/Notations-Estimator-for-BIM",
+          "repository_id": 1352920068,
+          "visibility": "public",
+          "import_revision": "f1ceeae28168de32ca9aea44f7b6d67d2090677e",
+          "import_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+          "runtime_revision": "4b74abda40bba3277de69bf61e9e09283ae2d5b3",
+          "distribution": "gat-bim",
+          "version": "0.1.0",
+          "python_import": "gat",
+          "source_root": ".",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "1411f8dcc2d14a33fab4f58ca85d1f5089894ff4",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "bim-quantity",
+              "operation_id": "ciw.bim-quantity.v1",
+              "runtime_pin": {
+                "role": "cse",
+                "revision": "4b74abda40bba3277de69bf61e9e09283ae2d5b3",
+                "source_root": ".",
+                "module": "gat.session"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow bim-quantity --plan"
+            }
+          ],
+          "instrument_connections": [
+            {
+              "instrument": "bim-clearance",
+              "operation_id": "metrology.bim-clearance.v1",
+              "source_revision": "f1ceeae28168de32ca9aea44f7b6d67d2090677e",
+              "required_source_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+              "revision_selection": "explicit_host_revision_and_registered_tree_check",
+              "execution_entry": "ncp control serve --instrument bim-clearance --profile PROFILE --provider-checkout ABSOLUTE --provider-revision FULL_SHA",
+              "qualification": "not_established_by_discovery"
+            }
+          ],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "calibration",
+          "role": "mcur",
+          "path": "instruments/measurement/calibration",
+          "repository": "giasonpooni/Notations-Calibration-Runtime",
+          "repository_id": 1378878940,
+          "visibility": "public",
+          "import_revision": "e41f61cf5909e58a1a2e60612308ccffe0bfe7de",
+          "import_tree": "07d51585dee49b2d9ad2f3a4d9a01e708d1411cf",
+          "runtime_revision": "49405ecd623474ddf601989b0a8195be401544e0",
+          "distribution": "metrological-calibration-and-uncertainty-runtime",
+          "version": "0.1.0",
+          "python_import": "mcur",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "status": "first-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "acquired-calibrated-window",
+              "operation_id": "ciw.acquired-calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+                "module": "mcur.core",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan"
+            },
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+                "module": "mcur.core",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "calibrated-window",
+              "operation_id": "ciw.calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+                "module": "mcur.core",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "49405ecd623474ddf601989b0a8195be401544e0",
+                "module": "mcur.core",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "clocksync",
+          "role": "tbrt",
+          "path": "instruments/measurement/clocksync",
+          "repository": "giasonpooni/Notations-ClockSync",
+          "repository_id": 1378878553,
+          "visibility": "public",
+          "import_revision": "13c5fe75c7e829c24bae12fcf8386d4831224d4e",
+          "import_tree": "7d833657e7f838ac1b6ad6d0c3fb783151d1e85e",
+          "runtime_revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+          "additional_history_roots": [
+            "edb4e5b99ec0ce384437e1c0f1c820ef04598e33"
+          ],
+          "distribution": "time-base-reconciliation-runtime",
+          "version": "0.1.0",
+          "python_import": "tbrt",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "status": "first-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "acquired-calibrated-window",
+              "operation_id": "ciw.acquired-calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+                "module": "tbrt.clock",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan"
+            },
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+                "module": "tbrt.clock",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "calibrated-window",
+              "operation_id": "ciw.calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+                "module": "tbrt.clock",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "40507060ca7a9126a9d641999b994a757eef3bfd",
+                "module": "tbrt.clock",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "compute-runtime",
+          "role": "scr",
+          "path": "instruments/execution/compute-runtime",
+          "repository": "giasonpooni/Notations-Compute-Runtime",
+          "repository_id": 1340058242,
+          "visibility": "public",
+          "import_revision": "4cbbdd61074d8cf37eba9d560bb83d2865b8e93d",
+          "import_tree": "bfd617fd602502aefed02d8b0bac9bc41cf7ff3d",
+          "runtime_revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+          "distribution": "deterministic-state-architecture",
+          "version": "1.0.0",
+          "python_import": null,
+          "source_root": ".",
+          "license": "Apache-2.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python-source",
+          "additional_history_roots": [
+            "98ab2f312cb7f9f4dbb18b25f762593eba56653e",
+            "91a6d3b37f28623332acd485e9f8a12953acf71e"
+          ],
+          "upstream_default_revision": "98ab2f312cb7f9f4dbb18b25f762593eba56653e",
+          "selected_import_reason": "public provider-host branch preserving all existing NET native source pins; default retained separately",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "numerical-heat",
+              "operation_id": "ciw.numerical-heat.v1",
+              "runtime_pin": {
+                "role": "scr",
+                "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+                "source_root": ".",
+                "module": "execution.engine"
+              },
+              "external_bindings": {
+                "engine": {
+                  "binding_type": "executable_file",
+                  "identity": "operator_supplied_not_attested"
+                }
+              },
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow numerical-heat --plan"
+            },
+            {
+              "workflow": "proved-heat",
+              "operation_id": "ciw.proved-heat.v1",
+              "runtime_pin": {
+                "revision": "a59aba283b0304faeeb3e5d305087e7709e171ca",
+                "source_tree": "4068a711534932e8d89bb0d87d373376dafdf6cd",
+                "module": "execution.proving",
+                "source_root": "."
+              },
+              "external_bindings": {
+                "engine": {
+                  "binding_type": "executable_file",
+                  "identity": "operator_supplied_not_attested"
+                },
+                "guest": {
+                  "binding_type": "artifact_file",
+                  "identity": "operator_supplied_not_attested"
+                },
+                "prover": {
+                  "binding_type": "executable_file",
+                  "identity": "operator_supplied_not_attested"
+                }
+              },
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow proved-heat --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "estimator-bench",
+          "role": "set",
+          "path": "instruments/verification/estimator-bench",
+          "repository": "giasonpooni/Notations-Estimator-Bench",
+          "repository_id": 1275432227,
+          "visibility": "public",
+          "import_revision": "928ae6a76d4f853aa8306fef8207f81244b7066f",
+          "import_tree": "04d48ef9cf84a73a0cd029187263dca89d7c7e56",
+          "runtime_revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+          "additional_history_roots": [
+            "2f838f4e196f453efc3a59045b0b3ec4b5680296"
+          ],
+          "distribution": "state-estimation-testbed",
+          "version": "0.3.0",
+          "python_import": "state_estimation_testbed",
+          "source_root": ".",
+          "license": "Apache-2.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "status": "second-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "acquired-calibrated-window",
+              "operation_id": "ciw.acquired-calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+                "module": "state_estimation_testbed.replay",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan"
+            },
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+                "module": "state_estimation_testbed.replay",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "calibrated-window",
+              "operation_id": "ciw.calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "2f838f4e196f453efc3a59045b0b3ec4b5680296",
+                "module": "state_estimation_testbed.replay",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "5e7bda36f521a5c1b0082b512f35e29803bffafc",
+                "module": "state_estimation_testbed.replay",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "instrument-exchange",
+              "operation_id": "ciw.instrument-exchange.v1",
+              "runtime_pin": {
+                "repository": "https://github.com/giasonpooni/State-Estimation-Evaluation-Testbed",
+                "revision": "542e672be512bf43b61253f2b2a43cd967cb3062",
+                "path": "state_estimation_testbed/contracts.py",
+                "sha256": "2385537daa6147ef2475d17bd75c026fe187077b90841515a9e9378e0246ae54"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow instrument-exchange --plan"
+            },
+            {
+              "workflow": "telemetry",
+              "operation_id": "ciw.telemetry.v1",
+              "runtime_pin": {
+                "revision": "1467ec5058b3e7ebd6ba4a45f2d9b49148a2560d",
+                "module": "state_estimation_testbed.replay",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow telemetry --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "faultsense",
+          "role": "fdir",
+          "path": "instruments/inference/faultsense",
+          "repository": "giasonpooni/Notations-FaultSense-RunTime",
+          "repository_id": 1378879318,
+          "visibility": "public",
+          "import_revision": "00a3f3537964374efbf72d82e4188db002457cd8",
+          "import_tree": "de83e5df6448866a29e50f0e9d29cab019bba2d5",
+          "runtime_revision": "29e4b306492b793487d47a96b97a56548217aa12",
+          "distribution": "fault-detection-and-isolation-runtime",
+          "version": "0.1.0",
+          "python_import": "fdir",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "status": "second-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+                "module": "fdir.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+                "module": "fdir.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "residual-monitor",
+              "operation_id": "ciw.residual-monitor.v1",
+              "runtime_pin": {
+                "revision": "29e4b306492b793487d47a96b97a56548217aa12",
+                "module": "fdir.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow residual-monitor --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "flowstate",
+          "role": "fsrt",
+          "path": "instruments/domain/flowstate",
+          "repository": "giasonpooni/Notations-FlowState",
+          "repository_id": 1366033244,
+          "visibility": "public",
+          "import_revision": "3144e3e694419b0c8579938e8d28523174e36abd",
+          "import_tree": "5a76aefab8974d46e4e8eac79371c553461bf491",
+          "runtime_revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+          "distribution": "fluid-state-reconstruction-testbed",
+          "version": "0.1.0",
+          "python_import": "set_lcm",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [
+            "e13e46facc125682776f165ce1b0460b4ff9410a"
+          ],
+          "upstream_default_revision": "e13e46facc125682776f165ce1b0460b4ff9410a",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "selection_reason": "Immediate public parent passing original package/README identity; newer default differs only in README, retained separately. Numerical code, tests, locks and fixtures remain identical.",
+          "workflow_connections": [
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+                "module": "set_lcm.bridge.calibrated_observable",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "d7c181fb9967883e085b3728d38096f59e54efbd",
+                "module": "set_lcm.bridge.calibrated_observable",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "measurement-chain",
+              "operation_id": "ciw.measurement-chain.v1",
+              "runtime_pin": {
+                "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+                "module": "set_lcm.bridge.ciw",
+                "source_root": "src",
+                "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow measurement-chain --plan"
+            }
+          ],
+          "instrument_connections": [
+            {
+              "instrument": "leakage",
+              "source_revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+              "required_source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3",
+              "revision_selection": "fixed_registered_profile_pin",
+              "execution_entry": "ncp control serve --instrument leakage --profile PROFILE --provider-checkout ABSOLUTE",
+              "qualification": "not_established_by_discovery"
+            }
+          ],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "frame-mapper",
+          "role": "framemapper",
+          "path": "instruments/representation/frame-mapper",
+          "repository": "giasonpooni/Notations-FrameMapper-RunTime",
+          "repository_id": 1347707016,
+          "visibility": "public",
+          "import_revision": "cd41a494b171a6df73bb3b763dd508632e360179",
+          "import_tree": "ce1808ec8f8d54fb051a93ae14f3c869ecfeeddf",
+          "runtime_revision": null,
+          "distribution": "payload-terminal",
+          "version": "0.1.0",
+          "python_import": null,
+          "source_root": ".",
+          "license": "GPL-3.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "npm",
+          "additional_history_roots": [
+            "bdfcb041836e86ab1ce93688b127f8960e8d08cf"
+          ],
+          "upstream_default_revision": "bdfcb041836e86ab1ce93688b127f8960e8d08cf",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "selection_reason": "Exact public snapshot passing the original route policy, 1249 tests, TypeScript check and production build; newer documentation-only default history is retained separately.",
+          "workflow_connections": [],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "independent_client_or_source_boundary",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "linear-dynamics",
+          "role": "sidt",
+          "path": "instruments/mathematics/linear-dynamics",
+          "repository": "giasonpooni/Notations-Linear-Dynamics-Testbed",
+          "repository_id": 1378879169,
+          "visibility": "public",
+          "import_revision": "bda30a8bd750c7034fa8db4760d74e35eacb8c66",
+          "import_tree": "8c18ebad8a998991fce6d460492ba65731b3694e",
+          "runtime_revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+          "distribution": "system-identification-and-dynamics-testbed",
+          "version": "0.1.0",
+          "python_import": "sidt",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "bda30a8bd750c7034fa8db4760d74e35eacb8c66",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "b7e81402d5f4e854b3c8bb0d0354afe4de9269c6",
+                "module": "sidt.declared",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "metrology",
+          "role": "rci",
+          "path": "instruments/measurement/metrology",
+          "repository": "giasonpooni/Notations-Metrology-Adapter",
+          "repository_id": 1372870718,
+          "visibility": "public",
+          "import_revision": "a67cfef9f132d2a756186f34dcc718404084126e",
+          "import_tree": "ea6f143188dd81aa8bff36973eb94d6e3693c7a2",
+          "runtime_revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+          "distribution": "retrofitted-computational-instrumentation",
+          "version": "0.2.0",
+          "python_import": "instrument_chain",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [
+            "f863bdd69d49224e0cdc871943bbb052e5b0a975"
+          ],
+          "upstream_default_revision": "a67cfef9f132d2a756186f34dcc718404084126e",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "measurement-chain",
+              "operation_id": "ciw.measurement-chain.v1",
+              "runtime_pin": {
+                "revision": "f863bdd69d49224e0cdc871943bbb052e5b0a975",
+                "module": "instrument_chain.ciw_adapter",
+                "source_root": "src",
+                "source_tree": "038522430744d4a7027f9a48669834c46bd94987"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow measurement-chain --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "observability",
+          "role": "oit",
+          "path": "instruments/mathematics/observability",
+          "repository": "giasonpooni/Notations-Observability-Testbed",
+          "repository_id": 1378878758,
+          "visibility": "public",
+          "import_revision": "9d22326c9e230f0d8d21b00ce210e10e72e968fd",
+          "import_tree": "e3dc03481e2e380c7d9e4b978c3f9dc7f7359b52",
+          "runtime_revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+          "distribution": "observability-identifiability-testbed",
+          "version": "0.1.0",
+          "python_import": "oit",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "status": "second-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+                "module": "oit.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+                "module": "oit.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "residual-monitor",
+              "operation_id": "ciw.residual-monitor.v1",
+              "runtime_pin": {
+                "revision": "db4c564bddbe1911f96585bd18f58659a0026fb7",
+                "module": "oit.diagnostics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow residual-monitor --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "polygon-trajectories",
+          "role": "tsde",
+          "path": "instruments/mathematics/polygon-trajectories",
+          "repository": "giasonpooni/Polygon-Trajectory-Experiments",
+          "repository_id": 1377611090,
+          "visibility": "public",
+          "import_revision": "fb30ddf35d860835a2b0a633f735e922d86ea808",
+          "import_tree": "2ce81327e6cd7beefd89c60d68d9bbf9b1cfba51",
+          "runtime_revision": "5e72693e7e5722c47883ef1a68b2959afdf2e215",
+          "distribution": "translation-surface-dynamics",
+          "version": "0.1.0",
+          "python_import": "translation_surface_dynamics",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "fb30ddf35d860835a2b0a633f735e922d86ea808",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "translation-flow",
+              "operation_id": "ciw.translation-flow.v1",
+              "runtime_pin": {
+                "role": "tsde",
+                "revision": "5e72693e7e5722c47883ef1a68b2959afdf2e215",
+                "source_tree": "6f2ecbb21617d87c3a1e8b60fa722b109dd7ccc8",
+                "module": "translation_surface_dynamics",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow translation-flow --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "real-time-globe",
+          "role": "gsv",
+          "path": "instruments/views/real-time-globe",
+          "repository": "giasonpooni/Notations-Real-Time-Globe",
+          "repository_id": 1352801283,
+          "visibility": "public",
+          "import_revision": "adfdf51f1196a14d4a0212b55e74fb0da2c12630",
+          "import_tree": "889575227b3afb2ba45a23ae799b942b16e7049d",
+          "runtime_revision": null,
+          "distribution": "payload-earth",
+          "version": "0.1.0",
+          "python_import": null,
+          "source_root": ".",
+          "license": "GPL-3.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "npm",
+          "additional_history_roots": [
+            "06c47bd851d8ea8b363a6bbe60a96c7448cbe12e"
+          ],
+          "upstream_default_revision": "6f1b339dfa103bc45b40f34170043bc23a010c57",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "independent_client_or_source_boundary",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "retrieval-agent",
+          "role": "sra",
+          "path": "instruments/composition/retrieval-agent",
+          "repository": "giasonpooni/Notations-Retrieval-Agent",
+          "repository_id": 1373552271,
+          "visibility": "public",
+          "import_revision": "4dc4da256873b03d82b3355af65638254ad15b53",
+          "import_tree": "906aec5440d412490550b8c16e7260591a1a4a57",
+          "runtime_revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+          "distribution": "schematics-retrieval-agent",
+          "version": "0.7.0",
+          "python_import": "schematics",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "4dc4da256873b03d82b3355af65638254ad15b53",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "schematic-assessment",
+              "operation_id": "ciw.schematic-assessment.v1",
+              "runtime_pin": {
+                "role": "sra",
+                "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+                "source_root": "src",
+                "module": "schematics.eligibility"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow schematic-assessment --plan"
+            },
+            {
+              "workflow": "schematic-companions",
+              "operation_id": "ciw.schematic-companions.v1",
+              "runtime_pin": {
+                "revision": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+                "source_root": "src",
+                "module": "schematics.eligibility"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow schematic-companions --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "sensitivity",
+          "role": "jspt",
+          "path": "instruments/mathematics/sensitivity",
+          "repository": "giasonpooni/Notations-Sensitivity-Testbed",
+          "repository_id": 1372780016,
+          "visibility": "public",
+          "import_revision": "341e3586075d6e901cb5528414ef685a58cf4def",
+          "import_tree": "e1e72a0dbf0492c8cf7a03837a25f9ea83e02da8",
+          "runtime_revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+          "distribution": "jacobian-sensitivity-propagation-testbed",
+          "version": "0.1.0",
+          "python_import": "sensitivity",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "341e3586075d6e901cb5528414ef685a58cf4def",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "measurement-chain",
+              "operation_id": "ciw.measurement-chain.v1",
+              "runtime_pin": {
+                "revision": "d910f5a1d7f6dd5f2dd87dfca66990f714f97b18",
+                "module": "sensitivity.ciw_adapter",
+                "source_root": "src",
+                "source_tree": "5643cc8204b7aa6cbb73df6bf8984abdcec47d3b"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow measurement-chain --plan"
+            },
+            {
+              "workflow": "schematic-companions",
+              "operation_id": "ciw.schematic-companions.v1",
+              "runtime_pin": {
+                "revision": "7399ab03087b27683620b4c57f97b2ac14546c7f",
+                "source_root": "src",
+                "module": "sensitivity.jacobian"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow schematic-companions --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "sensor-design",
+          "role": "edspt",
+          "path": "instruments/mathematics/sensor-design",
+          "repository": "giasonpooni/Notations-SensorDesign-RunTime",
+          "repository_id": 1378879765,
+          "visibility": "public",
+          "import_revision": "01c84b6d2e60b58ad281735f5ff70eb5c6a3c87f",
+          "import_tree": "7aea75468e6bee6d1421b300627c058305cb9c5d",
+          "runtime_revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+          "distribution": "experiment-design-and-sensor-placement-testbed",
+          "version": "0.1.0",
+          "python_import": "edspt",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "01c84b6d2e60b58ad281735f5ff70eb5c6a3c87f",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "89d5ea52f46676eabf13e906166e3ab701451680",
+                "module": "edspt.budgeted",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "signal-processing",
+          "role": "stfe",
+          "path": "instruments/measurement/signal-processing",
+          "repository": "giasonpooni/Notations-Signal-Processing-RunTime",
+          "repository_id": 1278227466,
+          "visibility": "public",
+          "import_revision": "749eb75e7300597da54f3e5ab8cfdc7d05e64878",
+          "import_tree": "eaa9f5f5be58b0cbac95002f6bdd0e826428fb44",
+          "runtime_revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+          "distribution": "streaming-telemetry-feature-extraction",
+          "version": "0.1.0",
+          "python_import": "stfe",
+          "source_root": ".",
+          "license": "MPL-2.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "749eb75e7300597da54f3e5ab8cfdc7d05e64878",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "acquired-calibrated-window",
+              "operation_id": "ciw.acquired-calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+                "module": "stfe",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan"
+            },
+            {
+              "workflow": "calibrated-window",
+              "operation_id": "ciw.calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+                "module": "stfe",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan"
+            },
+            {
+              "workflow": "telemetry",
+              "operation_id": "ciw.telemetry.v1",
+              "runtime_pin": {
+                "revision": "54dd43b657b92d87c2fc263dfd99437c664be353",
+                "module": "stfe",
+                "source_root": "."
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow telemetry --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "state-inference",
+          "role": "gsie",
+          "path": "instruments/inference/state-inference",
+          "repository": "giasonpooni/Notations-State-Inference-Engine",
+          "repository_id": 1276370996,
+          "visibility": "public",
+          "import_revision": "4ec062bb72caa76ce1405f2851766589cee9d160",
+          "import_tree": "33921b5f1ed0f5d03ba3fef6aa759becdde1e5ac",
+          "runtime_revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+          "distribution": "geometric-state-inference-engine",
+          "version": "0.1.0",
+          "python_import": "geometric_state_inference",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": "NOTICE.md",
+          "ownership": "giasonpooni",
+          "status": "second-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "acquired-calibrated-window",
+              "operation_id": "ciw.acquired-calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow acquired-calibrated-window --plan"
+            },
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "calibrated-window",
+              "operation_id": "ciw.calibrated-window.v1",
+              "runtime_pin": {
+                "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-window --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "telemetry",
+              "operation_id": "ciw.telemetry.v1",
+              "runtime_pin": {
+                "revision": "de38873db1ba98744d395dfa7df1d3b5b7bb3059",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow telemetry --plan"
+            },
+            {
+              "workflow": "variational-free-energy",
+              "operation_id": "ciw.variational-free-energy.v1",
+              "runtime_pin": {
+                "revision": "5241eee6dab434533bdf0cf0e824bc43b4a79831",
+                "source_tree": "375c031c07592d5bcb1d224780f18ceb886df4a1",
+                "module": "geometric_state_inference.contracts",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow variational-free-energy --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "state-recompiler",
+          "role": "cbsr",
+          "path": "instruments/inference/state-recompiler",
+          "repository": "giasonpooni/Notations-State-Recompiler",
+          "repository_id": 1275681471,
+          "visibility": "public",
+          "import_revision": "fb01b4a702ba9314b211f933eda800a1e3e9efed",
+          "import_tree": "f7582f6fd1b0c965ef7dc0690628f49d57a67e80",
+          "runtime_revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+          "distribution": "constraint-based-state-reconciliation",
+          "version": "0.1.0",
+          "python_import": "cbsr",
+          "source_root": "src",
+          "license": "AGPL-3.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "status": "second-wave-import; independent package; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "calibrated-observable",
+              "operation_id": "ciw.calibrated-observable.v1",
+              "runtime_pin": {
+                "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+                "module": "cbsr",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow calibrated-observable --plan"
+            },
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "daf43fc870ba926289c3bc4908db784691c7addd",
+                "module": "cbsr",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            },
+            {
+              "workflow": "telemetry",
+              "operation_id": "ciw.telemetry.v1",
+              "runtime_pin": {
+                "revision": "b543969cb80a69a5df1274eee10d22549bcea773",
+                "module": "cbsr",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow telemetry --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "surface",
+          "role": "csg",
+          "path": "instruments/mathematics/surface",
+          "repository": "giasonpooni/Notations-Surface-RunTime",
+          "repository_id": 1372809259,
+          "visibility": "public",
+          "import_revision": "1f7bbe380651e8df82db1760d880330aee3dc229",
+          "import_tree": "b715b302e698a4ae07a48de0a144f0aa73aa0639",
+          "runtime_revision": "bbc535af29c30997e56fd120320c570830676462",
+          "distribution": "curved-surface-geodesic-sensitivity",
+          "version": "0.3.0",
+          "python_import": "geodesic_testbed",
+          "source_root": "src",
+          "license": "MPL-2.0",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [
+            "e8f0938ab243a1905792ba2c43439cb4f40cd4be",
+            "0b00e837c2df3206a3d38b497799f85b72de80f7"
+          ],
+          "upstream_default_revision": "e8f0938ab243a1905792ba2c43439cb4f40cd4be",
+          "selected_import_reason": "last fully green unchanged release snapshot; current upstream documentation migration explicitly unqualified",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "curved-path-transfer",
+              "operation_id": "ciw.curved-path-transfer.v1",
+              "runtime_pin": {
+                "role": "csg",
+                "revision": "bbc535af29c30997e56fd120320c570830676462",
+                "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+                "module": "geodesic_testbed.jacobi",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow curved-path-transfer --plan"
+            },
+            {
+              "workflow": "variational-free-energy",
+              "operation_id": "ciw.variational-free-energy.v1",
+              "runtime_pin": {
+                "revision": "bbc535af29c30997e56fd120320c570830676462",
+                "source_tree": "181b6eb73288d001f45c39bb149b1a80a431f34b",
+                "module": "geodesic_testbed.jacobi",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": false,
+              "setup_command": "net provision --monorepo ROOT --workflow variational-free-energy --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "yield-weighted",
+          "role": "ywir",
+          "path": "instruments/resources/yield-weighted",
+          "repository": "giasonpooni/Notations-Yield-Weighted-Runtime",
+          "repository_id": 1376489536,
+          "visibility": "public",
+          "import_revision": "8ae062b3578b02516a34fcd55d62d68187b57caa",
+          "import_tree": "db5eebf6edd6909e50f4e106c955d2796966b384",
+          "runtime_revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+          "distribution": "yield-weighted-inference-runtime",
+          "version": "0.2.0",
+          "python_import": "ywir",
+          "source_root": "src",
+          "license": "MIT",
+          "notice": null,
+          "ownership": "giasonpooni",
+          "build_kind": "python",
+          "additional_history_roots": [],
+          "upstream_default_revision": "8ae062b3578b02516a34fcd55d62d68187b57caa",
+          "selected_import_reason": "current public default branch",
+          "status": "superrepo import; independent build and release boundary; source repository retained",
+          "workflow_connections": [
+            {
+              "workflow": "identified-design",
+              "operation_id": "ciw.identified-design.v1",
+              "runtime_pin": {
+                "revision": "e1f4a8c128a9c14e5b82acad76696219a5b5b6a9",
+                "module": "ywir.integration",
+                "source_root": "src"
+              },
+              "external_bindings": {},
+              "requires_upstream_bundle": true,
+              "setup_command": "net provision --monorepo ROOT --workflow identified-design --plan"
+            }
+          ],
+          "instrument_connections": [],
+          "default_activation": false,
+          "binding_status": "explicit_host_binding_required",
+          "runtime_revision_scope": "module_default_declaration; workflow pins may differ",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        }
+      ],
+      "total": 21,
+      "next_offset": null,
+      "authorizes_execution": false,
+      "qualification": "not_established_by_discovery"
+    },
+    "systems": {
+      "section": "systems",
+      "catalog_ref": "sha256:be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079",
+      "items": [
+        {
+          "id": "constraint-based-state-reconciliation",
+          "name": "Constraint-Based-State-Reconciliation",
+          "source_readme": "https://github.com/atomtrapping/Notations-State-Recompiler#readme",
+          "role": "Held/accepted conservation candidates.",
+          "declared_boundary": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "construction-state-estimator-for-bim",
+          "name": "Construction-State-Estimator-for-BIM",
+          "source_readme": "https://github.com/atomtrapping/Notations-Estimator-for-BIM#readme",
+          "role": "Built-asset state estimation and model context.",
+          "declared_boundary": "Implemented quantity-only pinned adapter; surveyed-frame geometry remains pending. See [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md).",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "covariance-geometry-and-geodesic-testbed",
+          "name": "Covariance-Geometry-and-Geodesic-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Covariance-Geometry-and-Geodesic-Testbed#readme",
+          "role": "Affine-invariant covariance geometry.",
+          "declared_boundary": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "curved-surface-geodesic-sensitivity-runtime",
+          "name": "Curved-Surface-Geodesic-Sensitivity-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-Surface-RunTime#readme",
+          "role": "Constant-curvature Jacobi transfer reference.",
+          "declared_boundary": "Pinned reference provider; [GEODESIC_REFERENCES.md](GEODESIC_REFERENCES.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "evidence-and-state-management",
+          "name": "Evidence-and-State-Management",
+          "source_readme": "https://github.com/atomtrapping/Notations-State-Ledger#readme",
+          "role": "Candidate evidence review and retention.",
+          "declared_boundary": "Optional pinned candidate inspection/capture; no state admission. [STATE_DIAGNOSTICS_EVIDENCE.md](STATE_DIAGNOSTICS_EVIDENCE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "experiment-design-sensor-placement-testbed",
+          "name": "Experiment-Design-Sensor-Placement-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Notations-SensorDesign-RunTime#readme",
+          "role": "Candidate information and cost ranking.",
+          "declared_boundary": "Pinned advisory path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "fault-detection-isolation-runtime",
+          "name": "Fault-Detection-Isolation-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-FaultSense-RunTime#readme",
+          "role": "Innovation and residual diagnostics.",
+          "declared_boundary": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "flat-torus-geodesic-reference",
+          "name": "Flat-Torus-Geodesic-Reference",
+          "source_readme": "https://github.com/atomtrapping/Notations-Periodic-Space#readme",
+          "role": "Exact area-one lattice/winding reference.",
+          "declared_boundary": "Pinned reference provider; [GEODESIC_REFERENCES.md](GEODESIC_REFERENCES.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "geometric-state-inference-engine",
+          "name": "Geometric-State-Inference-Engine",
+          "source_readme": "https://github.com/atomtrapping/Notations-State-Inference-Engine#readme",
+          "role": "State prediction/update and covariance diagnostics.",
+          "declared_boundary": "Pinned telemetry and calibrated paths; [INTEGRATION_COVERAGE.md](INTEGRATION_COVERAGE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "geospatial-state-visualization",
+          "name": "Geospatial-State-Visualization",
+          "source_readme": "https://github.com/atomtrapping/Notations-Real-Time-Globe#readme",
+          "role": "Read-only geographic and temporal projection.",
+          "declared_boundary": "Client integration: pinned read-only geographic projection; [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "instrument-conformance-and-replay-harness",
+          "name": "Instrument-Conformance-and-Replay-Harness",
+          "source_readme": "https://github.com/atomtrapping/Conformance-and-Replay-Retainer#readme",
+          "role": "Versioned external profile conformance.",
+          "declared_boundary": "Pinned validator; [EXCHANGE.md](EXCHANGE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "intrinsic-surface-geodesics-testbed",
+          "name": "Intrinsic-Surface-Geodesics-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Intrinsic-Surface-Geodesics-Testbed#readme",
+          "role": "Bounded mesh-edge geodesic baseline.",
+          "declared_boundary": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "jacobian-sensitivity-propagation-testbed",
+          "name": "Jacobian-Sensitivity-Propagation-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Notations-Sensitivity-Testbed#readme",
+          "role": "Explicit covariance transport through a declared map.",
+          "declared_boundary": "Pinned covariance path; [COVARIANCE.md](COVARIANCE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "metrological-calibration-uncertainty-runtime",
+          "name": "Metrological-Calibration-Uncertainty-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-Calibration-Runtime#readme",
+          "role": "Time-applicable calibration and correlated uncertainty.",
+          "declared_boundary": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "observability-identifiability-testbed",
+          "name": "Observability-Identifiability-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Notations-Observability-Testbed#readme",
+          "role": "Observability and local identifiability gates.",
+          "declared_boundary": "Pinned calibrated/design paths; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "parameterized-lyapunov-stability-runtime",
+          "name": "Parameterized-Lyapunov-Stability-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Parameterized-Lyapunov-Stability-Runtime#readme",
+          "role": "Supported certificate evaluation.",
+          "declared_boundary": "Pinned standalone operation; [PLSR.md](PLSR.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "provenance-preserving-data-acquisition",
+          "name": "Provenance-Preserving-Data-Acquisition",
+          "source_readme": "https://github.com/atomtrapping/Notations-Data-Intake#readme",
+          "role": "Retain source observations and acquisition lineage.",
+          "declared_boundary": "Pinned telemetry and calibrated paths; [TELEMETRY.md](TELEMETRY.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "retrofitted-computational-instrumentation",
+          "name": "Retrofitted-Computational-Instrumentation",
+          "source_readme": "https://github.com/atomtrapping/Notations-Metrology-Adapter#readme",
+          "role": "External sensing and retrofit observation modules.",
+          "declared_boundary": "Optional pinned calibration/measurement-chain adapter; [ADAPTERS.md](ADAPTERS.md), [measurement-chain example](../examples/measurement-chain/README.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "schematics-retrieval-agent",
+          "name": "Schematics-Retrieval-Agent",
+          "source_readme": "https://github.com/atomtrapping/Notations-Retrieval-Agent#readme",
+          "role": "Evidence-backed asset and signal-binding proposals.",
+          "declared_boundary": "Optional pinned schematic assessment and selected companions; [DECLARED_WORKLOADS.md](DECLARED_WORKLOADS.md), [INTEGRATED_MODULES.md](INTEGRATED_MODULES.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "scientific-computation-runtime",
+          "name": "Scientific-Computation-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-Compute-Runtime#readme",
+          "role": "Registered integer execution and optional proof backend.",
+          "declared_boundary": "Optional pinned native profiles and proof operation; [NATIVE_INTEROP.md](NATIVE_INTEROP.md), [PROVED_HEAT.md](PROVED_HEAT.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "state-estimation-evaluation-testbed",
+          "name": "State-Estimation-Evaluation-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Notations-Estimator-Bench#readme",
+          "role": "Scoped exchange conformance and replay checks.",
+          "declared_boundary": "Read-only inspection; [EXCHANGE.md](EXCHANGE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "streaming-telemetry-feature-extraction",
+          "name": "Streaming-Telemetry-Feature-Extraction",
+          "source_readme": "https://github.com/atomtrapping/Notations-Signal-Processing-RunTime#readme",
+          "role": "Bounded causal window features.",
+          "declared_boundary": "Pinned telemetry path; [TELEMETRY.md](TELEMETRY.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "system-identification-dynamics-testbed",
+          "name": "System-Identification-Dynamics-Testbed",
+          "source_readme": "https://github.com/atomtrapping/Notations-Linear-Dynamics-Testbed#readme",
+          "role": "Bounded point-model identification.",
+          "declared_boundary": "Pinned identified-design path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "time-base-reconciliation-runtime",
+          "name": "Time-Base-Reconciliation-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-ClockSync#readme",
+          "role": "Clock mapping and time uncertainty.",
+          "declared_boundary": "Pinned calibrated path; [CALIBRATED_OBSERVABLE.md](CALIBRATED_OBSERVABLE.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "translation-surface-dynamics-explorer",
+          "name": "Translation-Surface-Dynamics-Explorer",
+          "source_readme": "https://github.com/atomtrapping/Polygon-Trajectory-Experiments#readme",
+          "role": "Exact rational square-tiled trajectory prefixes.",
+          "declared_boundary": "Optional pinned external provider; [GEOMETRY_RESEARCH.md](GEOMETRY_RESEARCH.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "yield-weighted-inference-runtime",
+          "name": "Yield-Weighted-Inference-Runtime",
+          "source_readme": "https://github.com/atomtrapping/Notations-Yield-Weighted-Runtime#readme",
+          "role": "Separate advisory computation-token decision.",
+          "declared_boundary": "Pinned identified-design path; [IDENTIFIED_DESIGN.md](IDENTIFIED_DESIGN.md)",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        }
+      ],
+      "total": 26,
+      "next_offset": null,
+      "authorizes_execution": false,
+      "qualification": "not_established_by_discovery"
+    },
+    "external": {
+      "section": "external",
+      "catalog_ref": "sha256:be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079",
+      "items": [
+        {
+          "id": "bevy",
+          "name": "Bevy",
+          "declared_boundary": "Retained-render projector source present; general ECS simulation integration remains separate.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "blender",
+          "name": "Blender",
+          "declared_boundary": "Optional authoring target; qualified authoring-job integration remains pending in the cited integration audit.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "catalyst-cantera",
+          "name": "Catalyst / Cantera",
+          "declared_boundary": "Bounded reaction-provider families.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "controlsystemsbase",
+          "name": "ControlSystemsBase",
+          "declared_boundary": "Bounded control-oscillator profile.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "fpga-toolchains",
+          "name": "FPGA toolchains",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "freecad",
+          "name": "FreeCAD",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "gaugelink",
+          "name": "Notations GaugeLink",
+          "declared_boundary": "independent_acquisition_contract; no implicit physical qualification or command grant",
+          "documentation": "README.md#instruments-and-gaugelink",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "godot",
+          "name": "Godot",
+          "declared_boundary": "Inspection-client source present; general simulation integration remains a separate qualification target.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "juliaintervals-family",
+          "name": "JuliaIntervals family",
+          "declared_boundary": "Bounded interval-enclosure profile.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "jump-highs",
+          "name": "JuMP / HiGHS",
+          "declared_boundary": "Bounded quadratic-design optimization.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "modelingtoolkit",
+          "name": "ModelingToolkit",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "nvidia-alchemi-toolkit",
+          "name": "NVIDIA ALCHEMI Toolkit (`nvalchemi-toolkit`)",
+          "declared_boundary": "Optional `atomic.lj-energy-forces.v1` adapter source: bounded synthetic non-periodic Lennard-Jones energy/forces, scalar checks and retained records. **Explicit environment binding and native CPU/CUDA qualification remain required; MLIP, dynamics, training and polymer/physical qualification are not delivered.** See [pilot guide](NVALCHEMI_PILOT.md) and [broader target](NVALCHEMI.md).",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "openfoam",
+          "name": "OpenFOAM",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "openobserve",
+          "name": "OpenObserve",
+          "declared_boundary": "planning_contract_only",
+          "documentation": "docs/OPERATIONAL_OBSERVABILITY.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "opentelemetry",
+          "name": "OpenTelemetry",
+          "declared_boundary": "planning_contract_only",
+          "documentation": "docs/OPERATIONAL_OBSERVABILITY.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "ordinarydiffeqtsit5",
+          "name": "OrdinaryDiffEqTsit5",
+          "declared_boundary": "Bounded oscillator integration.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "rxinfer",
+          "name": "RxInfer",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "sp1",
+          "name": "SP1",
+          "declared_boundary": "Selected registered computation-proof path, not blanket verification of every instrument.",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        },
+        {
+          "id": "tensorflow-lattice",
+          "name": "TensorFlow Lattice",
+          "declared_boundary": "candidate_provider",
+          "documentation": "docs/SYSTEMS_CATALOG.md",
+          "authorizes_execution": false,
+          "qualification": "not_established_by_discovery"
+        }
+      ],
+      "total": 19,
+      "next_offset": null,
+      "authorizes_execution": false,
+      "qualification": "not_established_by_discovery"
+    }
+  }
+}

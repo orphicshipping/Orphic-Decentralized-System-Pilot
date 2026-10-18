@@ -99,3 +99,5 @@ The [latent-surface audit](LATENT_PROVIDER_SURFACE_20261018.md),
 [integration coverage](INTEGRATION_COVERAGE.md) retain the other boundaries.
 OpenTelemetry/OpenObserve and the candidate external solvers remain planning
 or optional profiles as declared; this interface change does not implement them.
+
+Executed results: [18 October 2026 integration audit](PROVIDER_INTEGRATION_20261018.md).

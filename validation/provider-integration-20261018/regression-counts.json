@@ -1,0 +1,9 @@
+{
+  "tests": 20342,
+  "failures": 0,
+  "errors": 0,
+  "skipped": 1170,
+  "passed_cases": 19172,
+  "modules": 516,
+  "all_passed": true
+}

@@ -1,0 +1,51 @@
+{
+  "scope": "Earlier working or harness attempts; not qualifying evidence for the selected candidate.",
+  "attempts": [
+    {
+      "files": [
+        "latent-focused-v1.xml",
+        "latent-focused-v1.log"
+      ],
+      "result": "3 failures",
+      "resolution": "New section field schema needed type:string; corrected before selected code SHA."
+    },
+    {
+      "files": [
+        "latent-focused-v2.xml",
+        "latent-focused-v2.log"
+      ],
+      "result": "47 passed",
+      "resolution": "Working draft check; superseded by full selected-code and installed suites."
+    },
+    {
+      "files": [
+        "latent-source-contracts.xml",
+        "latent-source-contracts.log"
+      ],
+      "result": "285 passed, 1 explicit skip",
+      "resolution": "Draft source check; missing explicit native source flag. Final installed suite is 394 passed, no skips."
+    },
+    {
+      "files": [
+        "latent-installed-contracts.xml",
+        "latent-installed-contracts.log"
+      ],
+      "result": "392 passed, 1 failed, 1 skipped",
+      "resolution": "External installed harness lacked CI text fixture and native monorepo flag. Copied original fixture and set explicit source flag; unchanged production and test code passed final 394."
+    },
+    {
+      "files": [
+        "latent-extra-console.log"
+      ],
+      "result": "Scientific job completed; whole-graph read refused by existing byte budget",
+      "resolution": "Harness reads bounded status selector. Real final console journeys passed without changing product budget."
+    },
+    {
+      "files": [
+        "latent-provision-plans.json"
+      ],
+      "result": "14 ready, 15 blocked",
+      "resolution": "Exact original FSRT legacy tree was subsequently recovered; final preflight is 15 ready, 14 blocked."
+    }
+  ]
+}

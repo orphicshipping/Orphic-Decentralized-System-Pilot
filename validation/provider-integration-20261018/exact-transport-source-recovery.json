@@ -1,0 +1,44 @@
+[
+  {
+    "file": "backup-verification.json",
+    "bytes": 12438,
+    "sha": "0d9a6f18df26a2cb52ca29c5de6f01b58ef2c949",
+    "status": "verified"
+  },
+  {
+    "file": "native-full-final.bundle.part01",
+    "bytes": 5242880,
+    "sha": "a6ef6f9d3a990a421e499d86cf745ce0a82adc9c",
+    "status": "verified"
+  },
+  {
+    "file": "native-full-final.bundle.part02",
+    "bytes": 5242880,
+    "sha": "4e5a810eaf270e90f7c1cda3fa2f501a63dac174",
+    "status": "verified"
+  },
+  {
+    "file": "native-full-final.bundle.part03",
+    "bytes": 4245116,
+    "sha": "6accf412a1fb769d3c1b8f933f14aab68d955253",
+    "status": "verified"
+  },
+  {
+    "file": "publish.py",
+    "bytes": 5704,
+    "sha": "bf73f6b5e56b7917c44f295c92d1a585890dca28",
+    "status": "verified"
+  },
+  {
+    "file": "restore.py",
+    "bytes": 4757,
+    "sha": "85ae794fc06f7aa92886dc8f7011df16c196c793",
+    "status": "verified"
+  },
+  {
+    "file": "sources.json",
+    "bytes": 125195,
+    "sha": "d33c0b2f43e8f04ef2540d8568fe2cc0d6126c75",
+    "status": "verified"
+  }
+]

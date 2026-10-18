@@ -1,0 +1,232 @@
+{
+  "schema": "ncp.provider-integration-audit.v1",
+  "recorded_at": "2026-10-18T01:10:31.372999+00:00",
+  "selected_code": {
+    "revision": "0e4aeafd44fcf3ae3e25808550903b32260eeaa1",
+    "source_tree": "e4a277693b63dde7d53cb319efdc490edde58c0a",
+    "merged_pr": 245,
+    "merge_commit": "6c7c46231757b7ce79f95e07c35840268140a4e5",
+    "merge_tree_identical": true
+  },
+  "wheel": {
+    "filename": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+    "sha256": "71cc7c881705b7e22cae2b6f5e9b0fb058deaefa986059d11220f6699c540d09",
+    "source_wheel_installed_files_matching": 724
+  },
+  "source_map": {
+    "imports": 21,
+    "surrounding_systems": 26,
+    "external_boundaries": 19,
+    "imported_roles_with_existing_workbench_connections": 19,
+    "independent_npm_client_roles": [
+      "framemapper",
+      "gsv"
+    ],
+    "runtime_files_hashed": 9,
+    "authorizes_execution": false,
+    "default_provider_activation": false
+  },
+  "executed": {
+    "isolated_regression": {
+      "tests": 20342,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 1170,
+      "passed_cases": 19172,
+      "modules": 516,
+      "all_passed": true
+    },
+    "installed_contracts": {
+      "tests": 394,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 394
+    },
+    "installed_original_operational_native": {
+      "tests": 2,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 2
+    },
+    "real_eight_provider_provisioning": {
+      "tests": 1,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 1
+    },
+    "agent_bim": {
+      "status": "PASS",
+      "protocols": [
+        "2026-07-28",
+        "2025-11-25"
+      ],
+      "calls": 7,
+      "provider_revision": "f1ceeae28168de32ca9aea44f7b6d67d2090677e",
+      "source_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+      "original_execution_ids": [
+        "execution-c1f7ff21499542bdb2dbf815fe152c89"
+      ],
+      "fresh_execution_ids": [
+        "execution-279b4380de0c48fcb13e2b047bdb7398"
+      ],
+      "resume_retry_reused_execution": true,
+      "inspection_sha256": "4e626cafbd200dbdc61b3e4a37f922e93ea92d9feb3091bc4670e429f811e2a5",
+      "scope": "installed CLI preparation and native agent SDK modern/legacy; synthetic geometry; no physical qualification"
+    },
+    "control_bim": {
+      "status": "PASS",
+      "instrument": "bim-clearance",
+      "sdk": "2.3.0",
+      "protocols": [
+        "2026-07-28",
+        "2025-11-25"
+      ],
+      "calls": 32,
+      "execution_ids": [
+        "execution-12db8cc4e4d94323a55f3ce8ee769481"
+      ],
+      "source_files_unchanged": {
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-bim-installed/profile/source.json": "c6b96e53e5e3c125efda88d24c85b858a383296f57493d47cd2596668944ace5",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-bim-installed/profile/profile.json": "8c693039ca5321fa27aaae02c5c96ee9d51ba3970ecfd2a9ced419381ebbb7e3",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-bim-installed/profile/experiment.json": "65792a170476b14560454b3b0b2726f37bf24447e069b94040331bedd66d76f9",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-bim-installed/profile/inspection.json": "4e626cafbd200dbdc61b3e4a37f922e93ea92d9feb3091bc4670e429f811e2a5",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/examples/metrology-clearance/uncertain-inspection.json": "4e626cafbd200dbdc61b3e4a37f922e93ea92d9feb3091bc4670e429f811e2a5"
+      },
+      "resume_and_retry_preserved_run": true,
+      "scope": "synthetic fixture or explicitly retained request; actual installed MCP and registered computation; no physical qualification",
+      "retained_request": "/workspace/scratch/983c4968e2d6/ncp-baseline/examples/metrology-clearance/uncertain-inspection.json",
+      "transcript_sha256": "95666da15b4c06e6609817156c5c60ae1313fbbe52e5d06793dfb677b32916c9"
+    },
+    "control_leakage": {
+      "status": "PASS",
+      "instrument": "leakage",
+      "sdk": "2.3.0",
+      "protocols": [
+        "2026-07-28",
+        "2025-11-25"
+      ],
+      "calls": 25,
+      "execution_ids": [
+        "execution-def19830b1564dbda6f40860854af570",
+        "execution-6ab1f6e3f7674a348aa0a3083e2a2a4e"
+      ],
+      "source_files_unchanged": {
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-leakage-installed/profile/source.json": "8d8b808377234b70bf6a5d96732c0f73fcf154b55f22373d38238ef421256249",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-leakage-installed/profile/profile.json": "1c086d03084b81b2ec5c63a9a9a844c67fa0afb9b32496a008eb8c21b8ce74c4",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-leakage-installed/profile/experiment.json": "97a84a191b3d9073bb196f7c442717efeaf0ded663087c677fe0a2cffbe86879",
+        "/workspace/scratch/983c4968e2d6/ncp-baseline/../latent-control-leakage-installed/profile/request.json": "b5439ae1facd87ce200e79a1969161a5cdfc1b286b4ebc43ac02d65a3936db8c"
+      },
+      "resume_and_retry_preserved_run": true,
+      "scope": "synthetic fixture or explicitly retained request; actual installed MCP and registered computation; no physical qualification",
+      "retained_request": null,
+      "transcript_sha256": "2b399f283a2b95e73be5132101291be3e6803fe148e19a23a67badbba5de3c17"
+    },
+    "browser_core": {
+      "status": "PASS",
+      "browser_version": "143.0.7499.0",
+      "instrument": "builtin",
+      "checks": [
+        "authenticated_browser_discovers_16_real_MCP_tools",
+        "read_only_catalog_exposes_21_imports_without_execution_grants",
+        "plan_creation_requires_fresh_confirmation_and_remains_unadmitted",
+        "explicit_admission_submission_and_retained_execution_inspection",
+        "browser_reads_the_same_retained_plan_resource"
+      ],
+      "page_errors": [],
+      "scope": "local synthetic browser/HTTP/MCP integration",
+      "remote_transport": "not_qualified",
+      "physical_qualification": "not_performed"
+    },
+    "browser_bim": {
+      "status": "PASS",
+      "browser_version": "143.0.7499.0",
+      "instrument": "bim-clearance",
+      "checks": [
+        "authenticated_browser_discovers_16_real_MCP_tools",
+        "read_only_catalog_exposes_21_imports_without_execution_grants",
+        "plan_creation_requires_fresh_confirmation_and_remains_unadmitted",
+        "explicit_admission_submission_and_retained_execution_inspection",
+        "pinned_native_CSE_result_preserves_held_or_unresolved_scientific_outcome",
+        "browser_reads_the_same_retained_plan_resource"
+      ],
+      "page_errors": [],
+      "scope": "local synthetic browser/HTTP/MCP integration",
+      "remote_transport": "not_qualified",
+      "physical_qualification": "not_performed"
+    },
+    "console_leakage": {
+      "status": "PASS",
+      "instrument": "leakage",
+      "calls": 47,
+      "execution_ids": [
+        "execution-5fe33cf05f954c3f9e5015a0c8274e47",
+        "execution-e11134b8aac249329fa9f6fc478f802f"
+      ],
+      "retry_reused_run": true,
+      "operation_ids": [
+        "leakage.assess-balance.v1",
+        "leakage.verify-balance.v1"
+      ],
+      "scope": "installed CLI/console SDK/native or reference computation over synthetic declared input; no physical qualification"
+    },
+    "console_measured_thermal": {
+      "status": "PASS",
+      "instrument": "measured-thermal",
+      "calls": 12,
+      "execution_ids": [
+        "execution-e7fe2a647b67404f8e2810807f61650a"
+      ],
+      "retry_reused_run": true,
+      "operation_ids": [
+        "measured-thermal.assess.v1"
+      ],
+      "scope": "installed CLI/console SDK/native or reference computation over synthetic declared input; no physical qualification"
+    },
+    "console_unittest": 7,
+    "dom_tests": 3,
+    "private_adapter_unittest": 4
+  },
+  "case_count_rule": "These are overlapping gates, not additive independent case totals.",
+  "provisioning_preflight": {
+    "total": 29,
+    "ready_to_provision": 15,
+    "blocked": 14,
+    "authorizes_execution": false,
+    "qualification": "not_performed",
+    "meaning": "Local source availability and explicit prerequisites only."
+  },
+  "post_selected_code_change": {
+    "file": "tools/mcp-operator-console/tests/test_console.py",
+    "change": "Replace POSIX-rooted trusted fixture paths with absolute tempfile paths for Windows portability.",
+    "verification": "All seven console tests rerun and pass after correction.",
+    "attribution": "Full regression and wheel evidence apply to selected code, not the later evidence/test-fixture commit."
+  },
+  "hosted_ci_observation": {
+    "observed_at": "2026-10-18T01:07:00.389Z",
+    "runs": 106,
+    "states": {
+      "queued/None": 96,
+      "completed/success": 1,
+      "pending/None": 8,
+      "completed/skipped": 1
+    },
+    "qualification": "not_established_by_status_snapshot"
+  },
+  "open_gates": [
+    "Hosted required job artifacts and release-policy evaluation",
+    "Windows/platform qualification",
+    "Private or unretained exact providers and explicit external bindings",
+    "Physical/continuous acquisition and equipment qualification",
+    "Independent human acceptance",
+    "Explicit Task 4 confirmation and maintainer controls for branch archival/deletion"
+  ],
+  "preserved": [
+    "Original provider pins, source trees, licences and notices",
+    "Existing execution grants, fixed native validation, bounded reads, retry/resume evidence",
+    "Separate frozen 312a37b research baseline and its evidence",
+    "No branch deletion, source retirement, provider repin, private deployment or equipment actuation"
+  ]
+}
