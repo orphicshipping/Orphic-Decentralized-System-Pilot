@@ -1,0 +1,170 @@
+{
+  "schema": "ncp.repository-folder-review.v1",
+  "source_commit": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "source_tree": "de4f941486886bb4c94546118c93915c9928c4bb",
+  "frozen_research_baseline": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "all_tracked_files": 5355,
+  "all_tracked_folders_excluding_root": 788,
+  "folder_rows_including_root": 789,
+  "text_files": 5291,
+  "python_files_statically_parsed": 2409,
+  "syntax_errors": 0,
+  "package_modules": 666,
+  "command_navigation_entries": 79,
+  "missing_navigation_modules": 0,
+  "sparse_import_modules_reviewed": 103,
+  "imported_modules_checked": 21,
+  "upstream_nested_workflows": 27,
+  "root_workflows": 156,
+  "root_jobs": 192,
+  "frame_mapper_tracked_dependency_files": 589,
+  "frame_mapper_tracked_bytecode_files": 15,
+  "duplicate_byte_groups": 52,
+  "base_missing_ncp_markdown_targets": 13,
+  "findings": 33,
+  "finding_status_counts": {
+    "repaired": 4,
+    "eligible_after_baseline_hygiene": 2,
+    "conditional_source_required": 2,
+    "eligible_with_explicit_prerequisites": 1,
+    "conditional_implementation_required": 1,
+    "existing_connection_preserved": 4,
+    "eligible_with_explicit_host_binding": 1,
+    "existing_optional_surface_preserved": 4,
+    "conditional_qualification_required": 2,
+    "conditional_upstream_hygiene_review": 1,
+    "intentional_boundary": 3,
+    "intentional_retention": 3,
+    "design_only": 3,
+    "operational_gate_open": 2
+  },
+  "top_level_folders": [
+    {
+      "path": ".github",
+      "files": 157,
+      "folders": 3,
+      "bytes": 629146
+    },
+    {
+      "path": "containers",
+      "files": 2,
+      "folders": 2,
+      "bytes": 6131
+    },
+    {
+      "path": "delivery",
+      "files": 13,
+      "folders": 4,
+      "bytes": 17860989
+    },
+    {
+      "path": "deploy",
+      "files": 2,
+      "folders": 1,
+      "bytes": 11007
+    },
+    {
+      "path": "docs",
+      "files": 338,
+      "folders": 7,
+      "bytes": 3323710
+    },
+    {
+      "path": "examples",
+      "files": 284,
+      "folders": 104,
+      "bytes": 2352434
+    },
+    {
+      "path": "experiments",
+      "files": 4,
+      "folders": 1,
+      "bytes": 30098
+    },
+    {
+      "path": "godot",
+      "files": 36,
+      "folders": 3,
+      "bytes": 170598
+    },
+    {
+      "path": "instruments",
+      "files": 2779,
+      "folders": 565,
+      "bytes": 74908220
+    },
+    {
+      "path": "qualification",
+      "files": 2,
+      "folders": 1,
+      "bytes": 10884
+    },
+    {
+      "path": "release",
+      "files": 5,
+      "folders": 1,
+      "bytes": 42660
+    },
+    {
+      "path": "requirements",
+      "files": 1,
+      "folders": 1,
+      "bytes": 4131
+    },
+    {
+      "path": "runtimes",
+      "files": 35,
+      "folders": 14,
+      "bytes": 290994
+    },
+    {
+      "path": "scripts",
+      "files": 160,
+      "folders": 2,
+      "bytes": 1670883
+    },
+    {
+      "path": "src",
+      "files": 724,
+      "folders": 14,
+      "bytes": 9021550
+    },
+    {
+      "path": "tasks",
+      "files": 2,
+      "folders": 2,
+      "bytes": 42969
+    },
+    {
+      "path": "tests",
+      "files": 524,
+      "folders": 5,
+      "bytes": 6586215
+    },
+    {
+      "path": "third_party",
+      "files": 5,
+      "folders": 3,
+      "bytes": 48864
+    },
+    {
+      "path": "tools",
+      "files": 62,
+      "folders": 20,
+      "bytes": 530097
+    },
+    {
+      "path": "validation",
+      "files": 204,
+      "folders": 35,
+      "bytes": 5460281
+    }
+  ],
+  "scope_limit": "Every committed folder/file was inventoried and classified. Static cross-reference and targeted semantic review are not a line-by-line proof, dynamic reachability proof, full test execution or universal provider qualification.",
+  "provider_pins_algorithms_runtime_grants_changed": false,
+  "packaged_metadata_changed": [
+    "src/ciw/integration-sources.json"
+  ],
+  "folder_auditor_sha256": "b253ed8e773b44c1258d8f6d9e24249b0f27153238a9e537830b6307c7d359ec",
+  "snapshot_json_sha256": "5351e35b5a668299270744b9bbe21dd0f1bcb6b75ba7c4c953886f974c645626"
+}

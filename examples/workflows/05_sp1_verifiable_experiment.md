@@ -269,6 +269,6 @@ Acceptance checklist: [`checklist_sp1.md`](checklist_sp1.md).
 | [`docs/PROVED_HEAT.md`](../../docs/PROVED_HEAT.md) | Claim, pins, verify contract |
 | [`docs/JULIA_SP1.md`](../../docs/JULIA_SP1.md) | Development contract (increment 1) |
 | [`examples/proved-heat/`](../proved-heat/) | Live session + Proof emit |
-| [`examples/usecase-thermal-proof-gate/`](../usecase-thermal-proof-gate/) | Use-case proof gate emit |
+| `examples/usecase-thermal-proof-gate/` (absent in this snapshot) | Intended use-case proof gate emit; source integration required |
 | [`checklist_sp1.md`](checklist_sp1.md) | Acceptance checklist |
 | [`emit_sp1_teaching_bundle.py`](emit_sp1_teaching_bundle.py) | Orchestrate teaching emits only |

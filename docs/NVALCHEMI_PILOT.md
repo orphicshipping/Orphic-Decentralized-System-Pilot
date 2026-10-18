@@ -113,21 +113,21 @@ than resolving its symlink to a system interpreter. Put reports and environments
 outside the clean source checkout (the existing adapter permits named venv/cache
 directories, but arbitrary untracked source/output files are refused).
 
-Run the required native gate:
+**Native gate gap (18 October 2026 source audit):** the earlier command
+`scripts/check_nvalchemi.py --binding ...` does not match the current script.
+That script now qualifies the separate CPU `nvalchemi.lj-single-point.v1`
+binding under `ciw.adapters`, using `--python`, `--revision`, `--repository`
+and `--output`. It does not qualify this page's
+`atomic.lj-energy-forces.v1` Session operation. Both contracts remain present;
+their records, bindings and qualification claims are not interchangeable.
 
-```sh
-python scripts/check_nvalchemi.py \
-  --binding /absolute/reviewed-alchemi-binding.json \
-  --output /absolute/outside-checkout/alchemi-evidence
-```
-
-The gate retains a Session workspace and JSON report. It exercises known pair
-limits, an asymmetric cluster, transformed/permuted configurations, native force
-versus native energy finite differences, fresh execution identities and offline
-reopen. Exit 0 means the declared native checks passed; exit 1 means failure;
-exit 2 means missing binding / NOT_RUN. No missing-runtime skip can close the
-required gate successfully. Stress/PBC/MLIP/dynamics/physical gates remain open
-even after a native LJ pass.
+An atomic-profile native gate must still retain a Session workspace/report and
+exercise known pair limits, an asymmetric cluster, transformed/permuted inputs,
+native force/energy finite differences, fresh execution identities, offline
+reopen and explicit missing-runtime refusal. Those are acceptance requirements,
+not current execution results. Do not rename the CPU profile or promote its
+historical evidence to close this gate. Stress/PBC/MLIP/dynamics/physical gates
+remain separate.
 
 For trusted application setup, use `registry.register(adapter.operation())`.
 For offline-only reading, call `register_schema()` without constructing an
@@ -142,8 +142,9 @@ energy/force identities, finite differences, translation/rotation/permutation,
 Newton balance, bounds/types/units, malformed JSON, local installed-file drift,
 real worker subprocess refusal and offline input/model/runtime/record mutations.
 No toolkit or toolkit-ops distribution and no CUDA device are available in that
-execution environment. The native gate was invoked without a binding and
-correctly reported **NOT_RUN**, with exit code 2.
+execution environment. The historical increment reported a native-gate invocation
+without a binding as **NOT_RUN**, with exit code 2; that observation does not
+describe the current script's CLI or supply the missing atomic-profile gate.
 
 The [lifecycle tests](../tests/test_nvalchemi_lifecycle.py) deliberately use a
 transport double, not NVIDIA numerical code. The [workflow](../.github/workflows/net-nvalchemi.yml)

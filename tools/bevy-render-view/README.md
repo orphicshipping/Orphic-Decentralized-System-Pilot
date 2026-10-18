@@ -2,6 +2,14 @@
 
 Thin **Bevy** projector over the same host `*_render.json` records that Godot tabs read.
 
+**Source gap — audited 18 October 2026:** this folder contains metadata and
+instructions, but no Rust application target (`src/main.rs`, `src/lib.rs` or an
+explicit target in `Cargo.toml`). The commands below describe the intended
+interface and cannot run from this snapshot. The separate projectile runtime
+in `tools/interactive-simulation/bevy` does not supply this projector. Completing
+the source and qualifying its pinned engine/toolchain is a future integration
+candidate; no source or engine pin has been substituted.
+
 | Item | Value |
 | --- | --- |
 | Bevy pin | `0f38358f573a7dc6ea961076f6151be662142010` (`giasonpooni/bevy`, `0.20.0-dev`) |

@@ -120,7 +120,7 @@ with the current value; a conflict means another client changed the selection.
 Use `net catalog --json` for machine-readable discovery and the
 [operator readiness guide](OPERATOR_READINESS.md) for explicit provider setup.
 The [atmospheric engine](ATMOSPHERIC_ENGINE.md) and
-[elastic contact benchmark](IMPACT_TESTBED.md) have bounded example/run/inspect/
+[elastic contact benchmark](IMPACT_CONTACT_BENCHMARK.md) have bounded example/run/inspect/
 verify/export commands. The [shared workbench guide](WORKBENCH_ASSEMBLY.md)
 covers calibrated observations and specialist provider operations.
 

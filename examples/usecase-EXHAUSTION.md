@@ -1,5 +1,12 @@
 # Use-case catalog exhaustion (catalog layer only)
 
+**Historical local report:** the 18 October 2026 folder audit found no tracked
+use-case scenario directories, corpus generator or use-case index at
+`5bde337174bdfb2add357042aceae2286bb7e56b`. The counts and regeneration
+commands below describe earlier local material, not this checkout. See the
+[current source map](../docs/VISUALIZATION_PROVIDERS.md). No scenario corpus was
+restored, regenerated or qualified during that audit.
+
 **Defensible completion statement:** all combinations in this version of the
 declared industry–verb catalog have been generated.
 

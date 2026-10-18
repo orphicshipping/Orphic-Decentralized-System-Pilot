@@ -1,5 +1,10 @@
 # 04 — Real-world use-case sample (owned configs → scenario)
 
+**Design/reference instructions:** the source snapshot audited on 18 October
+2026 lacks the use-case index, scenario folders, generator and Godot catalog
+tab described below. These instructions require a separately scoped source
+integration; consult the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).
+
 Turn an **owned** adapter / fixture / teaching emit into a use-case presentation
 sample without minting a new CIW kind.
 
@@ -57,7 +62,7 @@ sample without minting a new CIW kind.
 ## Exhaustive catalog
 
 The complete indexed list of slugs, owned config sources, catalog entries, and
-non-claim one-liners is [`examples/usecase-catalog.md`](../usecase-catalog.md).
+non-claim one-liners was reported in `examples/usecase-catalog.md` (absent here).
 The catalog is presentation-only and does not mint CIW kinds.
 
 ## Checklist delta

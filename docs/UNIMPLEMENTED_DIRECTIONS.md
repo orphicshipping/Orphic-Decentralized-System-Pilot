@@ -12,7 +12,7 @@ The root README no longer treats these as product features:
 | Direction | Status on the product page |
 | --- | --- |
 | Oscillator demo | Implemented built-in example; not a curriculum |
-| OpenUSD scene interchange | ASCII write and source compare exist. OpenUSD runtime reload is not implemented |
+| OpenUSD scene interchange | ASCII inspect copies and bounded SDK export/reload profiles exist. General scene import and binary/package paths remain open |
 | Julia / C++ / Rust as a required chain | Inspect bindings exist; execute still needs pinned runtimes |
 | GPU energy measurement | `ciw energy status` is a host gate, not a laboratory gateway |
 | Category-theoretic design manifolds | Identity and scale charts exist; not a category runtime |
@@ -131,14 +131,14 @@ Bounded ControlSystemsBase and JuMP/HiGHS profiles are implemented through
 `ciw.native-interop.v1`; general control/design coverage and shared plant/sensor
 interoperability remain research extensions. SP1 applies only to selected
 registered computations, not automatically to Julia output or physical truth.
-See [Julia/SP1 contracts](docs/JULIA_SP1.md) and [integration coverage](docs/INTEGRATION_COVERAGE.md).
+See [Julia/SP1 contracts](JULIA_SP1.md) and [integration coverage](INTEGRATION_COVERAGE.md).
 
 The next numerical extension starts with an actual bounded linear-response or
 oscillator request, an independent reference comparison and retained results.
 A subsequent two-sensor case must preserve clock/frame mappings, shared errors,
 full required covariance, pre-update predictions and innovations. Duplicate
 observations must not add information twice; missing and late data need explicit
-handling. The [covariance guide](docs/COVARIANCE.md) records current limits.
+handling. The [covariance guide](COVARIANCE.md) records current limits.
 
 <a id="kernel-contracts"></a>
 <details>
@@ -183,16 +183,20 @@ Changing coordinates, reducing a model, losing information in an encoding and
 coupling two physical models are different operations. A change of domain is not
 automatically a new chart on the same manifold. Required calculation inputs must
 survive a representation change; preserving one invariant alone is insufficient.
-The existing [research context](docs/RESEARCH_CONTEXT.md) and
-[state transformation contract](docs/STATE_TRANSFORMATIONS.md) describe this work.
+The existing [research context](RESEARCH_CONTEXT.md) and
+[state transformation contract](STATE_TRANSFORMATIONS.md) describe this work.
 
 ## OpenUSD scene interchange
 
-**First slice implemented: ASCII write only.** `ciw export usda <recording-or-view.json> --output out.usda`
-copies retained oscillator samples or a detached inspect canvas. The file is
-an inspection copy. Reloading it with a pinned OpenUSD runtime and comparing
-geometry is still pending. Binary `.usdc`, packaged `.usdz` and scene import
-are not implemented.
+`ciw export usda <recording-or-view.json> --output out.usda` writes an ASCII
+inspection copy without loading OpenUSD. Separate bounded SDK paths already
+exist: [oscillator displacement export/reload](../src/ciw/usd_export.py) through
+`python -m ciw.pilot --with-usd`, and [local-frame spatial export](SPATIAL_PROVIDER_STARTER.md)
+through its explicit `--with-usd` option. They require the existing pinned
+`openusd` extra and their own native gates; missing SDKs refuse rather than
+falling back to the ASCII writer. Their source presence is not fresh native
+qualification. Reuse those profiles before adding another reload path.
+General scene import, binary `.usdc` and packaged `.usdz` remain unimplemented.
 
 <details>
 <summary>Scene-export requirements</summary>

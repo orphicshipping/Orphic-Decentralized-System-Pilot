@@ -1,5 +1,11 @@
 # Laboratory teaching-sample workflow
 
+**Current source limits (18 October 2026):** these are authoring instructions,
+not a shipped tab/corpus inventory. The Bevy projector target, specialty Godot
+tabs, use-case index/generator and eight of ten named template emitters are
+absent. Start with the [current visualization source map](../../docs/VISUALIZATION_PROVIDERS.md).
+Batch and SP1 teaching commands below require the missing source before use.
+
 How to add a **HOST teaching sample** that emits one retained render JSON and
 is projected by stacked providers (Godot tab + optional Bevy). Science stays on
 the host; engines only present.

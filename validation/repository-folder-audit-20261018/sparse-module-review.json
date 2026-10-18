@@ -1,0 +1,1307 @@
+{
+  "source_commit": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "note": "No direct product import is a triage signal; every listed module is reviewed here. Dynamic dispatch and explicit module CLIs are not orphans.",
+  "modules": [
+    {
+      "module": "ciw.__main__",
+      "path": "src/ciw/__main__.py",
+      "disposition": "standard_package_entrypoint",
+      "basis": "src/ciw/__main__.py",
+      "navigation_commands": [],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.adapters.nvalchemi",
+      "path": "src/ciw/adapters/nvalchemi.py",
+      "disposition": "optional_cpu_binding_distinct_contract",
+      "basis": "F13",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_nvalchemi.py",
+        "tests/test_nvalchemi.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.adapters.nvalchemi_worker",
+      "path": "src/ciw/adapters/nvalchemi_worker.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [],
+      "declared_string_sources": [
+        "src/ciw/adapters/nvalchemi.py",
+        "tests/test_nvalchemi.py"
+      ]
+    },
+    {
+      "module": "ciw.agent_unattended",
+      "path": "src/ciw/agent_unattended.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_unattended_agent.py",
+        "tests/test_agent_unattended.py"
+      ],
+      "declared_string_sources": [
+        "scripts/check_unattended_agent.py"
+      ]
+    },
+    {
+      "module": "ciw.annotation_cli",
+      "path": "src/ciw/annotation_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "annotation"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.bim_interop_cli",
+      "path": "src/ciw/bim_interop_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "interop-bim"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.board_cli",
+      "path": "src/ciw/board_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "board"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.columnar_cli",
+      "path": "src/ciw/columnar_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "columnar"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.computational_cli",
+      "path": "src/ciw/computational_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "object"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.connectivity_cli",
+      "path": "src/ciw/connectivity_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "connectivity"
+      ],
+      "other_import_sources": [
+        "tests/test_connectivity.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.container_cli",
+      "path": "src/ciw/container_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "container"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.control_cli",
+      "path": "src/ciw/control_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "control"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.corpus_coverage",
+      "path": "src/ciw/corpus_coverage.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_corpus_coverage.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.csr_microtools",
+      "path": "src/ciw/csr_microtools.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "tools"
+      ],
+      "other_import_sources": [
+        "scripts/check_csr_microtools_native.py",
+        "tests/test_csr_microtools.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.device_boundary_cli",
+      "path": "src/ciw/device_boundary_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "boundary"
+      ],
+      "other_import_sources": [
+        "tests/test_device_boundary.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.device_review_cli",
+      "path": "src/ciw/device_review_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "device-review"
+      ],
+      "other_import_sources": [
+        "tests/test_device_review.py",
+        "tests/test_device_review_hardening.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_device_review.py",
+        "tests/test_device_review_hardening.py"
+      ]
+    },
+    {
+      "module": "ciw.domain_cli",
+      "path": "src/ciw/domain_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "domains"
+      ],
+      "other_import_sources": [
+        "tests/test_extension_dependencies.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.dsp_workflow",
+      "path": "src/ciw/dsp_workflow.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "dsp"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.efficiency_cli",
+      "path": "src/ciw/efficiency_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "efficiency"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.electronics_repair_demo",
+      "path": "src/ciw/electronics_repair_demo.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_electronics_repair.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.evidence_cli",
+      "path": "src/ciw/evidence_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "evidence"
+      ],
+      "other_import_sources": [
+        "tests/test_evidence_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.evidence_history",
+      "path": "src/ciw/evidence_history.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_evidence_history.py",
+        "tests/test_operational_engineering.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.external_work_cli",
+      "path": "src/ciw/external_work_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "work"
+      ],
+      "other_import_sources": [
+        "tests/test_knowledge_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.external_work_corpus",
+      "path": "src/ciw/external_work_corpus.py",
+      "disposition": "trusted_host_library",
+      "basis": "F19",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_external_work_http.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.external_work_preflight",
+      "path": "src/ciw/external_work_preflight.py",
+      "disposition": "trusted_deployment_preflight",
+      "basis": "F19",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "examples/external-work/start_cloudflare.py",
+        "tests/test_external_work_preflight.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_external_work_preflight.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_cli",
+      "path": "src/ciw/fluid_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "fluid"
+      ],
+      "other_import_sources": [
+        "tests/test_fluid_cli.py",
+        "tests/test_fluid_experiment.py",
+        "tests/test_fluid_extended_workflow.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.fluid_fsi_solver",
+      "path": "src/ciw/fluid_fsi_solver.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_fsi.py",
+        "tests/test_fluid_multiscale_audit.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_fluid_fsi.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_fsi_verification",
+      "path": "src/ciw/fluid_fsi_verification.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_fsi.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_fluid_fsi.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_molecular_solver",
+      "path": "src/ciw/fluid_molecular_solver.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_molecular.py",
+        "tests/test_fluid_multiscale_audit.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.fluid_reservoir_solver",
+      "path": "src/ciw/fluid_reservoir_solver.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_external_numerics.py",
+        "tests/test_external_numerics.py",
+        "tests/test_fluid_independent_audit.py",
+        "tests/test_fluid_reservoir.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_fluid_experiment.py",
+        "tests/test_fluid_reservoir.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_sph_solver",
+      "path": "src/ciw/fluid_sph_solver.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_multiscale_audit.py",
+        "tests/test_fluid_sph.py",
+        "tests/test_fluid_sph_independent.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_fluid_sph.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_thermal_measurements",
+      "path": "src/ciw/fluid_thermal_measurements.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_thermal_measurements.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.fluid_wave_solver",
+      "path": "src/ciw/fluid_wave_solver.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_data_integration_matrix.py",
+        "tests/test_fluid_independent_audit.py",
+        "tests/test_fluid_wave.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_data_integration_matrix.py",
+        "tests/test_fluid_wave.py"
+      ]
+    },
+    {
+      "module": "ciw.fluid_wave_verification",
+      "path": "src/ciw/fluid_wave_verification.py",
+      "disposition": "fixed_profile_dynamic_dispatch",
+      "basis": "src/ciw/fluid_contract.py:_MODULES/provider_module",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_fluid_independent_audit.py",
+        "tests/test_fluid_wave.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_data_integration_matrix.py",
+        "tests/test_fluid_wave.py"
+      ]
+    },
+    {
+      "module": "ciw.foundry_asset_blender",
+      "path": "src/ciw/foundry_asset_blender.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_foundry_asset.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.foundry_physics_launch",
+      "path": "src/ciw/foundry_physics_launch.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.geomatics_cli",
+      "path": "src/ciw/geomatics_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "geomatics"
+      ],
+      "other_import_sources": [
+        "tests/test_geomatics_workflow.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.hardware_bench_cli",
+      "path": "src/ciw/hardware_bench_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "bench"
+      ],
+      "other_import_sources": [
+        "tests/test_hardware_bench_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.hardware_cli",
+      "path": "src/ciw/hardware_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "hardware"
+      ],
+      "other_import_sources": [
+        "tests/test_hardware_bench_cli.py",
+        "tests/test_hardware_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.hoomd_cli",
+      "path": "src/ciw/hoomd_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "hoomd"
+      ],
+      "other_import_sources": [
+        "scripts/check_hoomd.py",
+        "tests/test_hoomd.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.hoomd_worker",
+      "path": "src/ciw/hoomd_worker.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.impact_cli",
+      "path": "src/ciw/impact_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "impact"
+      ],
+      "other_import_sources": [
+        "tests/test_impact_crush_workflow.py",
+        "tests/test_impact_plate_workflow.py",
+        "tests/test_impact_workflow.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.instrument_cli",
+      "path": "src/ciw/instrument_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "instrument"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.interop_cli",
+      "path": "src/ciw/interop_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "interop"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.irrigation_cli",
+      "path": "src/ciw/irrigation_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "irrigation"
+      ],
+      "other_import_sources": [
+        "tests/test_irrigation_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.jump_design",
+      "path": "src/ciw/jump_design.py",
+      "disposition": "standalone_worker_unregistered_operation",
+      "basis": "F20",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_design_adjustment.py",
+        "scripts/check_design_adjustment_native.py",
+        "tests/test_jump_design.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.laboratory_measurements",
+      "path": "src/ciw/laboratory_measurements.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_laboratory_measurements.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.link_capture_model",
+      "path": "src/ciw/link_capture_model.py",
+      "disposition": "synthetic_reference_not_hardware",
+      "basis": "F19",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_link.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.link_device_cli",
+      "path": "src/ciw/link_device_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "device"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.link_observation_cli",
+      "path": "src/ciw/link_observation_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "observation"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.link_refit_cli",
+      "path": "src/ciw/link_refit_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "gaugelink-refit"
+      ],
+      "other_import_sources": [
+        "tests/test_link_refit_cli.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_link_refit_cli.py"
+      ]
+    },
+    {
+      "module": "ciw.materials_cli",
+      "path": "src/ciw/materials_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "materials"
+      ],
+      "other_import_sources": [
+        "tests/test_materials_uncertainty.py",
+        "tests/test_materials_workflow.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.math_visual",
+      "path": "src/ciw/math_visual.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "view"
+      ],
+      "other_import_sources": [
+        "scripts/run_information_visual_demo.py",
+        "scripts/run_math_visual_demo.py",
+        "tests/test_information_display.py",
+        "tests/test_math_inspector.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.measurement_visualizer",
+      "path": "src/ciw/measurement_visualizer.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_measurement_visualizer.py",
+        "validation/measurement_visualizer_browser.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.metrology_clearance_worker",
+      "path": "src/ciw/metrology_clearance_worker.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.metrology_ingress",
+      "path": "src/ciw/metrology_ingress.py",
+      "disposition": "tested_helper_unmounted_host_seam",
+      "basis": "F11",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_metrology_contract.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.morphism_cli",
+      "path": "src/ciw/morphism_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "morphism"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.needle_cli",
+      "path": "src/ciw/needle_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "needle"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.network_cli",
+      "path": "src/ciw/network_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "network"
+      ],
+      "other_import_sources": [
+        "tests/test_network_lifecycle.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.nise_cli",
+      "path": "src/ciw/nise_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "nise"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.nvalchemi_adapter",
+      "path": "src/ciw/nvalchemi_adapter.py",
+      "disposition": "optional_atomic_binding_open_native_gate",
+      "basis": "F09",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_nvalchemi_lifecycle.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.nvalchemi_worker",
+      "path": "src/ciw/nvalchemi_worker.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_nvalchemi_worker.py"
+      ],
+      "declared_string_sources": [
+        "src/ciw/nvalchemi_adapter.py",
+        "src/ciw/nvalchemi_contract.py",
+        "tests/test_nvalchemi_contract.py",
+        "tests/test_nvalchemi_worker.py"
+      ]
+    },
+    {
+      "module": "ciw.operator_doctor",
+      "path": "src/ciw/operator_doctor.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "doctor"
+      ],
+      "other_import_sources": [
+        "tests/test_operator_doctor.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_operator_doctor.py"
+      ]
+    },
+    {
+      "module": "ciw.operator_start",
+      "path": "src/ciw/operator_start.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "start"
+      ],
+      "other_import_sources": [
+        "tests/test_operator_start.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_operator_start.py"
+      ]
+    },
+    {
+      "module": "ciw.operator_workbench",
+      "path": "src/ciw/operator_workbench.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "workbench"
+      ],
+      "other_import_sources": [
+        "tests/test_operator_workbench.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.parameter_cli",
+      "path": "src/ciw/parameter_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "parameter"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.perspective_workflow",
+      "path": "src/ciw/perspective_workflow.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "history"
+      ],
+      "other_import_sources": [
+        "tests/test_historical_perspective.py",
+        "tests/test_operation_contract_enforcement.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.physical_measurements",
+      "path": "src/ciw/physical_measurements.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_physical_measurements.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.pilot",
+      "path": "src/ciw/pilot.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_pilot_scope.py",
+        "tests/test_usd_export.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.polyglot_uncertainty",
+      "path": "src/ciw/polyglot_uncertainty.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_polyglot_uncertainty_native.py",
+        "tests/test_polyglot_uncertainty.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.polymer_cli",
+      "path": "src/ciw/polymer_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "polymer"
+      ],
+      "other_import_sources": [
+        "tests/test_polymer_manufacturing.py",
+        "tests/test_polymer_production_dossier.py",
+        "tests/test_polymer_rheology.py",
+        "tests/test_polymer_rheology_identification.py",
+        "tests/test_polymer_toolpoint_qc.py",
+        "tests/test_toolpoint_native_integration.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.preservation_cli",
+      "path": "src/ciw/preservation_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "preservation"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.preservation_experiments",
+      "path": "src/ciw/preservation_experiments.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "lab"
+      ],
+      "other_import_sources": [
+        "scripts/qualify_shared_preservation.py",
+        "tests/test_preservation_experiments.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.procedural_cli",
+      "path": "src/ciw/procedural_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "graphics"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.product_study_cli",
+      "path": "src/ciw/product_study_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "product-study"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.proof_f2",
+      "path": "src/ciw/proof_f2.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/qualify_graph_atlas_consumer.py",
+        "tests/test_proof_f2.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.provenance_cli",
+      "path": "src/ciw/provenance_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "provenance"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.published_dsc_measurements",
+      "path": "src/ciw/published_dsc_measurements.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_published_dsc_measurements.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.published_thermal_differences",
+      "path": "src/ciw/published_thermal_differences.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_published_thermal_differences.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.realization_cli",
+      "path": "src/ciw/realization_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "realization"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.refurbishment_cli",
+      "path": "src/ciw/refurbishment_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "refurb"
+      ],
+      "other_import_sources": [
+        "tests/test_refurbishment_cli.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.rewrite_cli",
+      "path": "src/ciw/rewrite_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "rewrite"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.routine_wakeup",
+      "path": "src/ciw/routine_wakeup.py",
+      "disposition": "explicitly_configured_egress_adapter",
+      "basis": "F19",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_external_work.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_external_work.py"
+      ]
+    },
+    {
+      "module": "ciw.scientific_cli",
+      "path": "src/ciw/scientific_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "science"
+      ],
+      "other_import_sources": [
+        "tests/test_operator_provision.py",
+        "tests/test_temperature_recording_session.py",
+        "validation/scientific_native.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.semantic_cli",
+      "path": "src/ciw/semantic_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "semantic"
+      ],
+      "other_import_sources": [
+        "tests/test_semantic_capabilities.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.sensor_manufacturing_cli",
+      "path": "src/ciw/sensor_manufacturing_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "manufacturing"
+      ],
+      "other_import_sources": [
+        "tests/test_sensor_manufacturing.py",
+        "tests/test_sensor_manufacturing_analysis.py",
+        "tests/test_sensor_manufacturing_timing.py",
+        "tests/test_sensor_manufacturing_uncertainty.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_sensor_manufacturing.py",
+        "tests/test_sensor_manufacturing_analysis.py",
+        "tests/test_sensor_manufacturing_timing.py",
+        "tests/test_sensor_manufacturing_uncertainty.py"
+      ]
+    },
+    {
+      "module": "ciw.sensor_project_blender",
+      "path": "src/ciw/sensor_project_blender.py",
+      "disposition": "explicit_optional_process_worker",
+      "basis": "F30",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_sensor_project.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.sensor_project_cli",
+      "path": "src/ciw/sensor_project_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "sensor-project"
+      ],
+      "other_import_sources": [
+        "tests/test_sensor_project.py"
+      ],
+      "declared_string_sources": [
+        "tests/test_sensor_project.py"
+      ]
+    },
+    {
+      "module": "ciw.simulated_fsrt_view",
+      "path": "src/ciw/simulated_fsrt_view.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_simulated_fsrt_view.py",
+        "validation/simulated_fsrt_view_integration.py"
+      ],
+      "declared_string_sources": [
+        "validation/simulated_fsrt_view_integration.py"
+      ]
+    },
+    {
+      "module": "ciw.simulation_cli",
+      "path": "src/ciw/simulation_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "simulation"
+      ],
+      "other_import_sources": [
+        "tests/test_simulation_campaign.py",
+        "tests/test_simulation_control.py",
+        "tests/test_simulation_timeline.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.spatial_cli",
+      "path": "src/ciw/spatial_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "spatial"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.spatial_workflow",
+      "path": "src/ciw/spatial_workflow.py",
+      "disposition": "documented_module_cli_and_installed_gate",
+      "basis": "F12",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_spatial_godot_installed.py",
+        "scripts/check_spatial_installed.py",
+        "tests/test_spatial_godot.py",
+        "tests/test_spatial_provider.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.state_transformation",
+      "path": "src/ciw/state_transformation.py",
+      "disposition": "provider_free_contract_only",
+      "basis": "F19",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_state_transformation.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.temperature_readiness",
+      "path": "src/ciw/temperature_readiness.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_temperature_readiness.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.temperature_recording_bridge",
+      "path": "src/ciw/temperature_recording_bridge.py",
+      "disposition": "fixed_declared_data_consumer",
+      "basis": "F10",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "tests/test_temperature_recording_bridge.py"
+      ],
+      "declared_string_sources": [
+        "src/ciw/data_inventory.py"
+      ]
+    },
+    {
+      "module": "ciw.thermofluids_cli",
+      "path": "src/ciw/thermofluids_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "thermofluids"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.tooling_visualizer",
+      "path": "src/ciw/tooling_visualizer.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "visualize"
+      ],
+      "other_import_sources": [
+        "tests/test_tooling_visualizer.py",
+        "validation/tooling_visual_browser.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.transition_cli",
+      "path": "src/ciw/transition_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "transition"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.transport_timing",
+      "path": "src/ciw/transport_timing.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "timing"
+      ],
+      "other_import_sources": [
+        "scripts/check_qualification_commands.py",
+        "tests/test_transport_timing.py"
+      ],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.uncertainty_providers",
+      "path": "src/ciw/uncertainty_providers.py",
+      "disposition": "standalone_module_cli_or_demo",
+      "basis": "Explicit main entry plus existing test/qualification references; no new default binding.",
+      "navigation_commands": [],
+      "other_import_sources": [
+        "scripts/check_uncertainty_providers.py",
+        "tests/test_uncertainty_providers.py"
+      ],
+      "declared_string_sources": [
+        "scripts/check_uncertainty_providers.py",
+        "tests/test_uncertainty_providers.py"
+      ]
+    },
+    {
+      "module": "ciw.weather_cli",
+      "path": "src/ciw/weather_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "weather"
+      ],
+      "other_import_sources": [],
+      "declared_string_sources": []
+    },
+    {
+      "module": "ciw.workcell_cli",
+      "path": "src/ciw/workcell_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "workcell"
+      ],
+      "other_import_sources": [
+        "scripts/check_smith_workcell.py"
+      ],
+      "declared_string_sources": [
+        "scripts/check_smith_workcell.py",
+        "scripts/check_workcell.py",
+        "scripts/run_agent_workcell_experiment.py",
+        "src/ciw/agent_unattended.py"
+      ]
+    },
+    {
+      "module": "ciw.workflow_cli",
+      "path": "src/ciw/workflow_cli.py",
+      "disposition": "registered_lazy_cli",
+      "basis": "src/ciw/operator_commands.py",
+      "navigation_commands": [
+        "compose"
+      ],
+      "other_import_sources": [
+        "tests/test_workflow_cli.py"
+      ],
+      "declared_string_sources": []
+    }
+  ]
+}

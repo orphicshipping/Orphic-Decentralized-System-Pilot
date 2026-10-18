@@ -1,0 +1,60 @@
+{
+  "audited_source": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "candidate_scope": "Metadata/documentation/CI/test/packaging repairs; numerical/provider/authority source unchanged.",
+  "folder_tool_regressions": {
+    "tests": 8,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "atmospheric_existing_lane_source": {
+    "tests": 1617,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "source_catalog_and_optional_atomic_contracts": {
+    "tests": 107,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "isolated_installed_catalog_and_grants": {
+    "tests": 25,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed_atmospheric_reference": {
+    "status": "PASS",
+    "wheel_sha256": "71cc7c881705b7e22cae2b6f5e9b0fb058deaefa986059d11220f6699c540d09",
+    "scope": "Existing selected numerical code; intentionally tight-policy disagreement is preserved, not counted as failure.",
+    "retained_artifacts": "raw-evidence.tar.xz"
+  },
+  "native_godot": {
+    "version": "4.5.2.stable.official.6ce3de25a",
+    "archive_sha256": "87f6e6be292929e363d15ed9052f277b2ba4e95ed994e1e099048097be2dfd03",
+    "executable_sha256": "5803746bbe055bee0f07a3c5b0dd347719bd45599f3d34519a8a0beaf83014ae",
+    "presentation_assertions": 9,
+    "existing_client_import_protocol_generality_adapter_experiment_checks": "PASS",
+    "scope": "Inspection client/components and software protocol; no physical or scientific-model qualification."
+  },
+  "import_tree_ancestry_and_clean_bytes": {
+    "modules": 21,
+    "source_commit": "5bde337174bdfb2add357042aceae2286bb7e56b",
+    "status": "PASS"
+  },
+  "all_156_workflows_actionlint": "PASS",
+  "ci_event_policy": "PASS",
+  "ci_policy_regressions": 18,
+  "workflow_inventory_regressions": 10,
+  "installed_pip_check": "PASS",
+  "docker_licence_context": {
+    "allowlist_includes_LICENSE": true,
+    "copy_includes_LICENSE": true,
+    "wheel_licence_bytes": "PASS",
+    "container_execution": "NOT_RUN"
+  },
+  "fresh_sdk_alchemi_gltf_native_hardware_windows_hosted_execution": "NOT_RUN",
+  "waivers": []
+}

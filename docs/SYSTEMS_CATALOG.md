@@ -110,7 +110,7 @@ for source, retained validation records and open gates.
 | External tool | Inspected boundary / inventory status |
 | --- | --- |
 | Godot | Inspection-client source present; general simulation integration remains a separate qualification target. |
-| Bevy | Retained-render projector source present; general ECS simulation integration remains separate. |
+| Bevy | Retained-render projector metadata is present, but its Rust application target is absent in the 2026-10-18 folder audit. The separate bounded projectile runtime does not supply that projector; see [current source inventory](VISUALIZATION_PROVIDERS.md). General ECS integration retains its own gates. |
 | Blender | Optional authoring target; qualified authoring-job integration remains pending in the cited integration audit. |
 | SP1 | Selected registered computation-proof path, not blanket verification of every instrument. |
 | Catalyst / Cantera | Bounded reaction-provider families. |

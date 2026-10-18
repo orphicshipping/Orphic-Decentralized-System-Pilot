@@ -1,0 +1,104 @@
+module,path,disposition,basis,navigation_commands,other_import_sources
+ciw.__main__,src/ciw/__main__.py,standard_package_entrypoint,src/ciw/__main__.py,,
+ciw.adapters.nvalchemi,src/ciw/adapters/nvalchemi.py,optional_cpu_binding_distinct_contract,F13,,scripts/check_nvalchemi.py; tests/test_nvalchemi.py
+ciw.adapters.nvalchemi_worker,src/ciw/adapters/nvalchemi_worker.py,explicit_optional_process_worker,F30,,
+ciw.agent_unattended,src/ciw/agent_unattended.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,scripts/check_unattended_agent.py; tests/test_agent_unattended.py
+ciw.annotation_cli,src/ciw/annotation_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,annotation,
+ciw.bim_interop_cli,src/ciw/bim_interop_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,interop-bim,
+ciw.board_cli,src/ciw/board_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,board,
+ciw.columnar_cli,src/ciw/columnar_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,columnar,
+ciw.computational_cli,src/ciw/computational_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,object,
+ciw.connectivity_cli,src/ciw/connectivity_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,connectivity,tests/test_connectivity.py
+ciw.container_cli,src/ciw/container_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,container,
+ciw.control_cli,src/ciw/control_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,control,
+ciw.corpus_coverage,src/ciw/corpus_coverage.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_corpus_coverage.py
+ciw.csr_microtools,src/ciw/csr_microtools.py,registered_lazy_cli,src/ciw/operator_commands.py,tools,scripts/check_csr_microtools_native.py; tests/test_csr_microtools.py
+ciw.device_boundary_cli,src/ciw/device_boundary_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,boundary,tests/test_device_boundary.py
+ciw.device_review_cli,src/ciw/device_review_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,device-review,tests/test_device_review.py; tests/test_device_review_hardening.py
+ciw.domain_cli,src/ciw/domain_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,domains,tests/test_extension_dependencies.py
+ciw.dsp_workflow,src/ciw/dsp_workflow.py,registered_lazy_cli,src/ciw/operator_commands.py,dsp,
+ciw.efficiency_cli,src/ciw/efficiency_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,efficiency,
+ciw.electronics_repair_demo,src/ciw/electronics_repair_demo.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_electronics_repair.py
+ciw.evidence_cli,src/ciw/evidence_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,evidence,tests/test_evidence_cli.py
+ciw.evidence_history,src/ciw/evidence_history.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_evidence_history.py; tests/test_operational_engineering.py
+ciw.external_work_cli,src/ciw/external_work_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,work,tests/test_knowledge_cli.py
+ciw.external_work_corpus,src/ciw/external_work_corpus.py,trusted_host_library,F19,,tests/test_external_work_http.py
+ciw.external_work_preflight,src/ciw/external_work_preflight.py,trusted_deployment_preflight,F19,,examples/external-work/start_cloudflare.py; tests/test_external_work_preflight.py
+ciw.fluid_cli,src/ciw/fluid_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,fluid,tests/test_fluid_cli.py; tests/test_fluid_experiment.py; tests/test_fluid_extended_workflow.py
+ciw.fluid_fsi_solver,src/ciw/fluid_fsi_solver.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_fluid_fsi.py; tests/test_fluid_multiscale_audit.py
+ciw.fluid_fsi_verification,src/ciw/fluid_fsi_verification.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_fluid_fsi.py
+ciw.fluid_molecular_solver,src/ciw/fluid_molecular_solver.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_fluid_molecular.py; tests/test_fluid_multiscale_audit.py
+ciw.fluid_reservoir_solver,src/ciw/fluid_reservoir_solver.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,scripts/check_external_numerics.py; tests/test_external_numerics.py; tests/test_fluid_independent_audit.py; tests/test_fluid_reservoir.py
+ciw.fluid_sph_solver,src/ciw/fluid_sph_solver.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_fluid_multiscale_audit.py; tests/test_fluid_sph.py; tests/test_fluid_sph_independent.py
+ciw.fluid_thermal_measurements,src/ciw/fluid_thermal_measurements.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_fluid_thermal_measurements.py
+ciw.fluid_wave_solver,src/ciw/fluid_wave_solver.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_data_integration_matrix.py; tests/test_fluid_independent_audit.py; tests/test_fluid_wave.py
+ciw.fluid_wave_verification,src/ciw/fluid_wave_verification.py,fixed_profile_dynamic_dispatch,src/ciw/fluid_contract.py:_MODULES/provider_module,,tests/test_fluid_independent_audit.py; tests/test_fluid_wave.py
+ciw.foundry_asset_blender,src/ciw/foundry_asset_blender.py,explicit_optional_process_worker,F30,,tests/test_foundry_asset.py
+ciw.foundry_physics_launch,src/ciw/foundry_physics_launch.py,explicit_optional_process_worker,F30,,
+ciw.geomatics_cli,src/ciw/geomatics_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,geomatics,tests/test_geomatics_workflow.py
+ciw.hardware_bench_cli,src/ciw/hardware_bench_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,bench,tests/test_hardware_bench_cli.py
+ciw.hardware_cli,src/ciw/hardware_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,hardware,tests/test_hardware_bench_cli.py; tests/test_hardware_cli.py
+ciw.hoomd_cli,src/ciw/hoomd_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,hoomd,scripts/check_hoomd.py; tests/test_hoomd.py
+ciw.hoomd_worker,src/ciw/hoomd_worker.py,explicit_optional_process_worker,F30,,
+ciw.impact_cli,src/ciw/impact_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,impact,tests/test_impact_crush_workflow.py; tests/test_impact_plate_workflow.py; tests/test_impact_workflow.py
+ciw.instrument_cli,src/ciw/instrument_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,instrument,
+ciw.interop_cli,src/ciw/interop_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,interop,
+ciw.irrigation_cli,src/ciw/irrigation_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,irrigation,tests/test_irrigation_cli.py
+ciw.jump_design,src/ciw/jump_design.py,standalone_worker_unregistered_operation,F20,,scripts/check_design_adjustment.py; scripts/check_design_adjustment_native.py; tests/test_jump_design.py
+ciw.laboratory_measurements,src/ciw/laboratory_measurements.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_laboratory_measurements.py
+ciw.link_capture_model,src/ciw/link_capture_model.py,synthetic_reference_not_hardware,F19,,tests/test_link.py
+ciw.link_device_cli,src/ciw/link_device_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,device,
+ciw.link_observation_cli,src/ciw/link_observation_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,observation,
+ciw.link_refit_cli,src/ciw/link_refit_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,gaugelink-refit,tests/test_link_refit_cli.py
+ciw.materials_cli,src/ciw/materials_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,materials,tests/test_materials_uncertainty.py; tests/test_materials_workflow.py
+ciw.math_visual,src/ciw/math_visual.py,registered_lazy_cli,src/ciw/operator_commands.py,view,scripts/run_information_visual_demo.py; scripts/run_math_visual_demo.py; tests/test_information_display.py; tests/test_math_inspector.py
+ciw.measurement_visualizer,src/ciw/measurement_visualizer.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_measurement_visualizer.py; validation/measurement_visualizer_browser.py
+ciw.metrology_clearance_worker,src/ciw/metrology_clearance_worker.py,explicit_optional_process_worker,F30,,
+ciw.metrology_ingress,src/ciw/metrology_ingress.py,tested_helper_unmounted_host_seam,F11,,tests/test_metrology_contract.py
+ciw.morphism_cli,src/ciw/morphism_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,morphism,
+ciw.needle_cli,src/ciw/needle_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,needle,
+ciw.network_cli,src/ciw/network_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,network,tests/test_network_lifecycle.py
+ciw.nise_cli,src/ciw/nise_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,nise,
+ciw.nvalchemi_adapter,src/ciw/nvalchemi_adapter.py,optional_atomic_binding_open_native_gate,F09,,tests/test_nvalchemi_lifecycle.py
+ciw.nvalchemi_worker,src/ciw/nvalchemi_worker.py,explicit_optional_process_worker,F30,,tests/test_nvalchemi_worker.py
+ciw.operator_doctor,src/ciw/operator_doctor.py,registered_lazy_cli,src/ciw/operator_commands.py,doctor,tests/test_operator_doctor.py
+ciw.operator_start,src/ciw/operator_start.py,registered_lazy_cli,src/ciw/operator_commands.py,start,tests/test_operator_start.py
+ciw.operator_workbench,src/ciw/operator_workbench.py,registered_lazy_cli,src/ciw/operator_commands.py,workbench,tests/test_operator_workbench.py
+ciw.parameter_cli,src/ciw/parameter_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,parameter,
+ciw.perspective_workflow,src/ciw/perspective_workflow.py,registered_lazy_cli,src/ciw/operator_commands.py,history,tests/test_historical_perspective.py; tests/test_operation_contract_enforcement.py
+ciw.physical_measurements,src/ciw/physical_measurements.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_physical_measurements.py
+ciw.pilot,src/ciw/pilot.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_pilot_scope.py; tests/test_usd_export.py
+ciw.polyglot_uncertainty,src/ciw/polyglot_uncertainty.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,scripts/check_polyglot_uncertainty_native.py; tests/test_polyglot_uncertainty.py
+ciw.polymer_cli,src/ciw/polymer_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,polymer,tests/test_polymer_manufacturing.py; tests/test_polymer_production_dossier.py; tests/test_polymer_rheology.py; tests/test_polymer_rheology_identification.py; tests/test_polymer_toolpoint_qc.py; tests/test_toolpoint_native_integration.py
+ciw.preservation_cli,src/ciw/preservation_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,preservation,
+ciw.preservation_experiments,src/ciw/preservation_experiments.py,registered_lazy_cli,src/ciw/operator_commands.py,lab,scripts/qualify_shared_preservation.py; tests/test_preservation_experiments.py
+ciw.procedural_cli,src/ciw/procedural_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,graphics,
+ciw.product_study_cli,src/ciw/product_study_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,product-study,
+ciw.proof_f2,src/ciw/proof_f2.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,scripts/qualify_graph_atlas_consumer.py; tests/test_proof_f2.py
+ciw.provenance_cli,src/ciw/provenance_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,provenance,
+ciw.published_dsc_measurements,src/ciw/published_dsc_measurements.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_published_dsc_measurements.py
+ciw.published_thermal_differences,src/ciw/published_thermal_differences.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_published_thermal_differences.py
+ciw.realization_cli,src/ciw/realization_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,realization,
+ciw.refurbishment_cli,src/ciw/refurbishment_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,refurb,tests/test_refurbishment_cli.py
+ciw.rewrite_cli,src/ciw/rewrite_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,rewrite,
+ciw.routine_wakeup,src/ciw/routine_wakeup.py,explicitly_configured_egress_adapter,F19,,tests/test_external_work.py
+ciw.scientific_cli,src/ciw/scientific_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,science,tests/test_operator_provision.py; tests/test_temperature_recording_session.py; validation/scientific_native.py
+ciw.semantic_cli,src/ciw/semantic_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,semantic,tests/test_semantic_capabilities.py
+ciw.sensor_manufacturing_cli,src/ciw/sensor_manufacturing_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,manufacturing,tests/test_sensor_manufacturing.py; tests/test_sensor_manufacturing_analysis.py; tests/test_sensor_manufacturing_timing.py; tests/test_sensor_manufacturing_uncertainty.py
+ciw.sensor_project_blender,src/ciw/sensor_project_blender.py,explicit_optional_process_worker,F30,,tests/test_sensor_project.py
+ciw.sensor_project_cli,src/ciw/sensor_project_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,sensor-project,tests/test_sensor_project.py
+ciw.simulated_fsrt_view,src/ciw/simulated_fsrt_view.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_simulated_fsrt_view.py; validation/simulated_fsrt_view_integration.py
+ciw.simulation_cli,src/ciw/simulation_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,simulation,tests/test_simulation_campaign.py; tests/test_simulation_control.py; tests/test_simulation_timeline.py
+ciw.spatial_cli,src/ciw/spatial_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,spatial,
+ciw.spatial_workflow,src/ciw/spatial_workflow.py,documented_module_cli_and_installed_gate,F12,,scripts/check_spatial_godot_installed.py; scripts/check_spatial_installed.py; tests/test_spatial_godot.py; tests/test_spatial_provider.py
+ciw.state_transformation,src/ciw/state_transformation.py,provider_free_contract_only,F19,,tests/test_state_transformation.py
+ciw.temperature_readiness,src/ciw/temperature_readiness.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,tests/test_temperature_readiness.py
+ciw.temperature_recording_bridge,src/ciw/temperature_recording_bridge.py,fixed_declared_data_consumer,F10,,tests/test_temperature_recording_bridge.py
+ciw.thermofluids_cli,src/ciw/thermofluids_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,thermofluids,
+ciw.tooling_visualizer,src/ciw/tooling_visualizer.py,registered_lazy_cli,src/ciw/operator_commands.py,visualize,tests/test_tooling_visualizer.py; validation/tooling_visual_browser.py
+ciw.transition_cli,src/ciw/transition_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,transition,
+ciw.transport_timing,src/ciw/transport_timing.py,registered_lazy_cli,src/ciw/operator_commands.py,timing,scripts/check_qualification_commands.py; tests/test_transport_timing.py
+ciw.uncertainty_providers,src/ciw/uncertainty_providers.py,standalone_module_cli_or_demo,Explicit main entry plus existing test/qualification references; no new default binding.,,scripts/check_uncertainty_providers.py; tests/test_uncertainty_providers.py
+ciw.weather_cli,src/ciw/weather_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,weather,
+ciw.workcell_cli,src/ciw/workcell_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,workcell,scripts/check_smith_workcell.py
+ciw.workflow_cli,src/ciw/workflow_cli.py,registered_lazy_cli,src/ciw/operator_commands.py,compose,tests/test_workflow_cli.py

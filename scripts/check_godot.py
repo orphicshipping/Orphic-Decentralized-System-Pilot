@@ -155,6 +155,10 @@ def check(executable: str) -> None:
                 wait_for_service(process, log_path)
                 print(f"Temporary CIW service ready on {HOST}:{PORT} (pid {process.pid}).", flush=True)
                 run_godot(executable, "Godot import", ["--editor", "--import", "--quit"], timeout=60)
+                presentation = run_godot(executable, "retained presentation components",
+                    ["--script", "res://tests/presentation_smoke.gd"], timeout=30)
+                if "PASS: presentation smoke" not in presentation:
+                    raise CheckError("Presentation smoke exited without its PASS sentinel")
                 if process.poll() is not None:
                     raise CheckError("Temporary CIW service stopped during Godot import")
                 output = run_godot(
@@ -187,7 +191,7 @@ def check(executable: str) -> None:
                     show_output("temporary service diagnostics", log_path.read_text(encoding="utf-8", errors="replace"))
     finally:
         cleanup_temporary(temporary)
-    print("PASS: Godot import, live protocol, channel generality, adapter and experiment view checks; temporary service stopped.",
+    print("PASS: Godot import, presentation, live protocol, channel generality, adapter and experiment view checks; temporary service stopped.",
           flush=True)
 
 

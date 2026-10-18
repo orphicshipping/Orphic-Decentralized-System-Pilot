@@ -1,0 +1,32 @@
+{
+  "audited_parent": "5bde337174bdfb2add357042aceae2286bb7e56b",
+  "scope": "Review candidate bytes before publication; immutable commit identity is retained in the final publication receipt.",
+  "files": {
+    ".dockerignore": "764cd58f19f86a127142e6c3cd11a188b124084ba5a9b4dd151721b8a091f78e",
+    ".github/workflows/atmosphere-engine.yml": "b2235aee67fe2df8707095082be2847e50b4fc9773e7b9b344bff18d20435f5b",
+    ".github/workflows/workflow-contracts.yml": "f2045d84cf154891d2af6f3bea03cee32903c4bf097bac7db932a0d0b9873ac7",
+    "Dockerfile": "a20f0aab7b71c585c599ea38279d74e292885bd7d0fb10f6a3d03c17933e151e",
+    "docs/INTERACTIVE_SIMULATION.md": "64d00e2b104e23d6ae982e3204d0b7f143cf2ddd5000d83f9c7edad3dd399651",
+    "docs/NVALCHEMI_PILOT.md": "949b886cf9d26ae10d93363e850bcd69a377ceb20f7b65761c0e42941755e1ab",
+    "docs/README.md": "6052ab268d24e7879ceaa3b2570dfa49c546b1edfe853e52c2d4eeb160994ddd",
+    "docs/REPOSITORY_FOLDER_AUDIT_20261018.md": "9395ef45e2eccfa42c7d16bf96dd594d9e396f3883009c96b3a6829d01c3df46",
+    "docs/SYSTEMS_CATALOG.md": "1bbad3f400df316ee284ae74cfa0e0f80c1b5a4e3d8759bca7050c62741609e8",
+    "docs/UNIMPLEMENTED_DIRECTIONS.md": "b53bf41d51d50c56402e6c60aac65705a084cdd4f707ddca450fd8d98fa53a2e",
+    "docs/VISUALIZATION_PROVIDERS.md": "6a3d9ff0044fc14933224f394651a6ab86af7fd461025b38d35d073f4eca2eb2",
+    "docs/quickstart.md": "2072cbde684f46e917cb14dcdbc53a1a036601d37d8123919f823ed0728c428f",
+    "examples/usecase-EXHAUSTION.md": "589ccf6ab7b5b28de774bc045d708c86ff6b5d45cc05683f6c03227d96b2e636",
+    "examples/workflows/04_real_world_usecase.md": "c782f3f7b7fffea872ca3bc2564542583a6851a84b30c539050a3080ad9cb875",
+    "examples/workflows/05_sp1_verifiable_experiment.md": "1196ade72ff6d9f74d7f0300084fadb8113e437e7b62abbff19083af9a0f8389",
+    "examples/workflows/README.md": "c525c62403b4502c3f6d17f019dd75e7df1be91b82a0aaf85e802869a01b25a4",
+    "examples/workflows/checklist_sp1.md": "39883d59a0075fd465a675edaeefee62451a2764e60841d81fb00c007ccaede3",
+    "examples/workflows/coverage_report.md": "44ca301c6c050095755b1ad92ef65d06338b72704b29f0ebcbf75680a98052c1",
+    "experiments/AGROFOOD_COLD_CHAIN.md": "2c62aab35a5827251ca455a472f7b98f38eeadd7a6814593fb4d5f678de7b993",
+    "godot/README.md": "5ed29c35fff1170a0980256c36304d90b97741432421b89b67933e057458ac56",
+    "godot/tests/presentation_smoke.gd": "5e5e2940d893bfc49760f98a6e74c7f2af868b87876845e381f61d24876d6ac7",
+    "scripts/audit_repository_folders.py": "b253ed8e773b44c1258d8f6d9e24249b0f27153238a9e537830b6307c7d359ec",
+    "scripts/check_godot.py": "cef7e8dd527ad34ee627bfab4b77fddcfc923c081c0e98eba9089080a46a4209",
+    "scripts/tests/test_repository_folders.py": "aef0714b4767b379514717203234b2e78ffc498f80cdcc2559a9949ffa262b82",
+    "src/ciw/integration-sources.json": "14bac9c60fb0f652971692cadc1d45452dd14e8c8c1b208e810b12bf16e3b0cb",
+    "tools/bevy-render-view/README.md": "5a7aeb926f4f9720dde29809755d55d847ffa32f268743de215797cf4247e917"
+  }
+}

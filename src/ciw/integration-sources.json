@@ -2,7 +2,7 @@
   "schema": "ciw.integration-sources.v1",
   "source_files": {
     "instruments/manifest.json": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743",
-    "docs/SYSTEMS_CATALOG.md": "ab7639368f14feecba322e15555cf48cf475cbfa28ae3c47438173cbabfddcb9",
+    "docs/SYSTEMS_CATALOG.md": "1bbad3f400df316ee284ae74cfa0e0f80c1b5a4e3d8759bca7050c62741609e8",
     "src/ciw/adapter-runtimes.json": "79098fa4fb0cb9dfe9269224c146c0874a058bf5191824609245389d2b9f80fc",
     "src/ciw/calibrated-observable-runtimes.json": "c9431c28e3bdcf2c2c15bdc42b83dceb799801dbcadf2cb3dbe802e8a093fa08",
     "src/ciw/calibrated-window-runtimes.json": "36849335cdc35070564fc6f790d2faf679fa7f6a906c29b455b236158b3ecdbd",
@@ -686,7 +686,7 @@
     {
       "id": "bevy",
       "name": "Bevy",
-      "declared_boundary": "Retained-render projector source present; general ECS simulation integration remains separate.",
+      "declared_boundary": "Retained-render projector metadata is present, but its Rust application target is absent in the 2026-10-18 folder audit. The separate bounded projectile runtime does not supply that projector; see [current source inventory](VISUALIZATION_PROVIDERS.md). General ECS integration retains its own gates.",
       "documentation": "docs/SYSTEMS_CATALOG.md"
     },
     {
