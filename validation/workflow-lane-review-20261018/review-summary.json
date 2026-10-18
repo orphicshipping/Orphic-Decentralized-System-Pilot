@@ -1,0 +1,48 @@
+{
+  "schema": "ncp.workflow-lane-review.v1",
+  "source_base": "c1c9baf51adf7c0c16c54c1e015cbc57b82e9c28",
+  "frozen_candidate": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "workflow_files": 156,
+  "jobs": 192,
+  "legacy_repeated_lexical_patterns_across_jobs": 100,
+  "declared_pytest_invocations": 180,
+  "shared_top_level_test_file_correlations_across_workflows": 121,
+  "literal_argument_invocations": 146,
+  "partly_computed_argument_invocations": 34,
+  "default_or_computed_collection_invocations": 17,
+  "dispositions": {
+    "retain_distinct_declared_contexts": 101,
+    "retain_incomplete_selection_requires_review": 20
+  },
+  "modules_with_differing_dimensions": {
+    "platform_matrix": 69,
+    "routing": 120,
+    "defaults_shell_cwd": 59,
+    "provider_and_package_setup": 106,
+    "pytest_collection_and_flags": 116,
+    "step_commands_and_import_checks": 121,
+    "evidence_contracts": 116,
+    "environment": 49
+  },
+  "automatic_removals": [],
+  "tests": {
+    "inventory_regressions": 10,
+    "ci_policy": "PASS",
+    "actionlint_all_156": "PASS"
+  },
+  "full_report_sha256": "6261dbe7b031549be6c311c7283869e6f85dc9a8a51437461a256b8608dc2751",
+  "patch_sha256": {
+    "scripts/audit_workflow_inventory.py": "6473913b84615c71e60c3a09073cf31a21e8527ad8bddb2ac6a7817b390d1f40",
+    "scripts/tests/test_workflow_inventory.py": "e29fe82ef316d3ff7978ce8ca29db59cde2887529f5dc67122bfedd4c6b97919",
+    ".github/workflows/workflow-contracts.yml": "1d1a5459adb5046d4fe9d8e6caa507b2f10705d4f435cc1fd2b940c3e1d2beee"
+  },
+  "limits": [
+    "Static declarations are not executed CI or semantic-equivalence proof.",
+    "Basename/computed-path correlation is not installed-copy content identity.",
+    "Computed/default collections are not silently expanded into a complete test universe.",
+    "The earlier 106 count and lexical counts use different counting scopes; none is a count of removable jobs."
+  ],
+  "hosted_status": "blocked; no waiver",
+  "feature_work": "frozen",
+  "source_provider_release_policy_changes": false
+}

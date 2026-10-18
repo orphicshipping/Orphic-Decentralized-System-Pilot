@@ -1,0 +1,63 @@
+{
+  "frozen_candidate": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "feature_freeze": true,
+  "waivers": [],
+  "items": [
+    {
+      "id": 1,
+      "work": "Hosted qualification",
+      "status": "required_and_incomplete",
+      "next": "Complete linked existing same-SHA push/dispatch jobs and retain artifacts; re-evaluate unchanged policy."
+    },
+    {
+      "id": 2,
+      "work": "Confirmed branch cleanup",
+      "status": "authorized_capability_blocker",
+      "next": "Run the existing atomic exact-plan transaction with authenticated Git; preserve all retained branches."
+    },
+    {
+      "id": 3,
+      "work": "Workflow overlap review",
+      "status": "completed_for_declared_scope",
+      "next": "Preserve distinct/partly computed contexts. Future shared execution requires scoped equivalence and artifact-contract proof."
+    },
+    {
+      "id": 4,
+      "work": "Capability/profile projection and typed composition",
+      "status": "gated_by_baseline_hygiene",
+      "reuse": "Existing operation catalog, source projection, admitted control plans, workflow algebra and retained record contracts; no parallel registry/execution store."
+    },
+    {
+      "id": 5,
+      "work": "GaugeLink acquisition depth",
+      "status": "gated_by_baseline_hygiene",
+      "acceptance": "Choose an exact provider pin; retain acquisition, save/reopen/replay and occurrence identities through existing owners."
+    },
+    {
+      "id": 6,
+      "work": "Numerical/MCP investigation journeys",
+      "status": "gated_by_baseline_hygiene",
+      "acceptance": "Reuse current numerical operations, MCP grants and retained investigations; qualify a bounded journey without new domain tools."
+    },
+    {
+      "id": 7,
+      "work": "Physical temperature pilot",
+      "status": "deferred_until_clean_software_baseline_and_explicit_hardware_qualification"
+    },
+    {
+      "id": 8,
+      "work": "OpenUSD runtime reload/binary path",
+      "status": "deferred; existing ASCII path retained"
+    },
+    {
+      "id": 9,
+      "work": "Learning/reasoning history/explore layer",
+      "status": "deferred_until_retention_identity_is_stable_under_real_use"
+    },
+    {
+      "id": 10,
+      "work": "Independent instrument qualification/external release",
+      "status": "deferred_until_selected_exact_pins_and_independent_gates_are_closed"
+    }
+  ]
+}

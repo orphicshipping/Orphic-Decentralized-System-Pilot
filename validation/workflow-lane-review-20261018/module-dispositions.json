@@ -1,0 +1,2956 @@
+{
+  "scope": "Direct shell and literal Python-subprocess pytest declarations. Broad/default collections and opaque computed arrays are not expanded or silently treated as duplicates. This is declaration analysis, not proof that a lane is necessary or executed.",
+  "modules": [
+    {
+      "module": "tests/test_agent_experiment.py",
+      "workflow_count": 4,
+      "module_source_sha256": "ef8b286e212a8d42b77417ae6723f773550fa83362439340e971f8d8bcf4fb27",
+      "invocation_ids": [
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-7:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_agent_protocol.py",
+      "workflow_count": 15,
+      "module_source_sha256": "b8f7a852f5e20cfc8b5e1c9807135f6a4d0abdc16a33029ae9b1d64b52a296af",
+      "invocation_ids": [
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0",
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/rs-provider.yml:integration:step-5:pytest-0",
+        ".github/workflows/semantic-capabilities.yml:contracts:step-3:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-5:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_agent_recovery.py",
+      "workflow_count": 4,
+      "module_source_sha256": "6b7b799170cea2a187d3cc070848d4c9f61990a383ec40fe28d811ed70dcf2a2",
+      "invocation_ids": [
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_agent_transcript.py",
+      "workflow_count": 3,
+      "module_source_sha256": "eb606b990523c9e4c3200734fe4fea20c544f26368f10d5c7077cb9669454389",
+      "invocation_ids": [
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-7:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_annotation_nise.py",
+      "workflow_count": 2,
+      "module_source_sha256": "15d56ea53f6c3cae428082110dcee37efa5f51a1ae30374369cdf30aa9954297",
+      "invocation_ids": [
+        ".github/workflows/annotation-nise-loop.yml:loop:step-5:pytest-0",
+        ".github/workflows/investigation-efficiency.yml:efficiency:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_annotations.py",
+      "workflow_count": 4,
+      "module_source_sha256": "95ed038e06cbc65eaf10e9cf39d4e0ab58fd8cab69e086363dce0bb6d82e4b34",
+      "invocation_ids": [
+        ".github/workflows/annotation-nise-loop.yml:loop:step-5:pytest-0",
+        ".github/workflows/annotations.yml:annotation:step-3:pytest-0",
+        ".github/workflows/artifact-provenance.yml:provenance:step-3:pytest-0",
+        ".github/workflows/investigation-efficiency.yml:efficiency:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_core.py",
+      "workflow_count": 2,
+      "module_source_sha256": "7959f2ee78f8a3212248ca1bb9cdd34c4dd6f2b2f811fea6a98eeb226e9b215e",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_handoff.py",
+      "workflow_count": 2,
+      "module_source_sha256": "891da21d567ce50e5f65a71f234d5491873826d4b4fae31ccdd33d211cbb4801",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_integration_audit.py",
+      "workflow_count": 2,
+      "module_source_sha256": "990d0bc2aee29e46db61ba3ab8e997135101886adebfce01bcb7b26fac24811c",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_preservation.py",
+      "workflow_count": 2,
+      "module_source_sha256": "07163956d91e9e490b3f66b5e5070dc092460f6fee4207034ade97a189fee56e",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_verification.py",
+      "workflow_count": 2,
+      "module_source_sha256": "ef4bf7000a13ac3ad8f8f4369e6bb76455516f89c8f1ff548af57517dbcf7045",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_atmosphere_workflow.py",
+      "workflow_count": 2,
+      "module_source_sha256": "ebcc644ab923726e02990fe477407a183147233673154b89e485831047e6dfb3",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_bim_interop.py",
+      "workflow_count": 2,
+      "module_source_sha256": "21fa52a293ec869f1e2e815ee25d71a8b82d2d13e1b6acd369d831dce4ea3e46",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "step_commands_and_import_checks"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_bim_quantity.py",
+      "workflow_count": 3,
+      "module_source_sha256": "50fd0215b1681ccd10c34de364003fde3de3871069df7ddf25ae44872ef16089",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_board_morphisms.py",
+      "workflow_count": 15,
+      "module_source_sha256": "b77bfb40527e5dc6285f9b7d0f4b11ca6525c4ae26e37bd9e7d2f82d96a4a825",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_check_suite.py",
+      "workflow_count": 6,
+      "module_source_sha256": "66fa8eb8e78c23d6379c04de8e2010479bbf0e058f46ccdf579290430fe62bd0",
+      "invocation_ids": [
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/net-agent-mcp.yml:agent:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_cli_json_boundary.py",
+      "workflow_count": 3,
+      "module_source_sha256": "b80cffd4e8c388c39853004876b5f96c58afd4bfdf85b41377c5e89aaa095941",
+      "invocation_ids": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_computational_objects.py",
+      "workflow_count": 7,
+      "module_source_sha256": "e6946006e0d64a02b2f7b142f9285c63de382fe0ceb6d1765fe4b27245345f9b",
+      "invocation_ids": [
+        ".github/workflows/net-computational-objects.yml:source-selection:step-3:pytest-0",
+        ".github/workflows/net-computational-objects.yml:source-selection:step-5:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_computational_source.py",
+      "workflow_count": 7,
+      "module_source_sha256": "a8106f9b168f6e095487a1e293a9eba07f43ade93c1855c21f644ef28038ff15",
+      "invocation_ids": [
+        ".github/workflows/net-computational-objects.yml:source-selection:step-3:pytest-0",
+        ".github/workflows/net-computational-objects.yml:source-selection:step-5:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_connectivity.py",
+      "workflow_count": 3,
+      "module_source_sha256": "eb57c543ef1e6412b66af1f0dfee5e53f7619d343a44ec96b59e808cede14ffa",
+      "invocation_ids": [
+        ".github/workflows/connectivity.yml:connectivity:step-3:pytest-0",
+        ".github/workflows/device-link.yml:link:step-4:pytest-0",
+        ".github/workflows/link-scalar-study.yml:scalar:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_container_calculus.py",
+      "workflow_count": 2,
+      "module_source_sha256": "1c1b62fd20b3207a98e95deb1c3e9c0b1ddcf2d73088bbbbaab6c32e8f438a68",
+      "invocation_ids": [
+        ".github/workflows/container-calculus.yml:calculus:step-3:pytest-0",
+        ".github/workflows/needle.yml:needle:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_control_plane.py",
+      "workflow_count": 39,
+      "module_source_sha256": "a6f6c60913d6d54fb25555d5d64ab5448c5c9a86b48f9c409b8ecf6f04d799bc",
+      "invocation_ids": [
+        ".github/workflows/annotations.yml:annotation:step-3:pytest-0",
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/godot-observation-capture.yml:qualification:step-3:pytest-0",
+        ".github/workflows/godot-stateful.yml:qualification:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/hypergraph-rewrite.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/instrument-contract.yml:contract:step-3:pytest-0",
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-3:pytest-0",
+        ".github/workflows/net-computational-objects.yml:source-selection:step-3:pytest-0",
+        ".github/workflows/net-control-plane.yml:control:step-3:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/rs-provider.yml:integration:step-5:pytest-0",
+        ".github/workflows/semantic-capabilities.yml:contracts:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1",
+        ".github/workflows/simulation-timeline.yml:timeline:step-3:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0",
+        ".github/workflows/stateful-simulation.yml:reference:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/workflow-contracts.yml:actionlint:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_corpus_retrieval.py",
+      "workflow_count": 2,
+      "module_source_sha256": "ed3ea3bef9edd3d99a8d732b74e0923f29787f4ba372a5730191c2155991be00",
+      "invocation_ids": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-1"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_correction_session.py",
+      "workflow_count": 2,
+      "module_source_sha256": "7a28ba4bf0353f84653198084b14ed4218d9c463450626521a168cdee83f7ecc",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_covariance_artifacts.py",
+      "workflow_count": 15,
+      "module_source_sha256": "c9f128f571784ec914f72cd0ce57cc0fbd2e98662c4b643536567ed933a6fff8",
+      "invocation_ids": [
+        ".github/workflows/domain-provider-boundary.yml:public-boundary:step-4:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-4:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-5:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_covariance_records.py",
+      "workflow_count": 15,
+      "module_source_sha256": "712b2a01acd8bcce0986ecedd2b1c9dbbf74d5300b7d7386e3738595395458b7",
+      "invocation_ids": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-4:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-5:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_evidence_history.py",
+      "workflow_count": 2,
+      "module_source_sha256": "9901132bceb7ca65073fcfc9e6f03b90e3bf8c81fbf2f8a22bd3d99d4727069e",
+      "invocation_ids": [
+        ".github/workflows/calibration-history-inspection.yml:inspect:step-4:pytest-0",
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_finite_preservation.py",
+      "workflow_count": 17,
+      "module_source_sha256": "5ff64fed2241e81507748391393f45075ca86f38a895db6d38cd14c7a51f170a",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_foundry.py",
+      "workflow_count": 9,
+      "module_source_sha256": "660d7b65bf921c5655d7d1c46b0558ae0cef3df153fd40b3c6cbe8fcb4a2baab",
+      "invocation_ids": [
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_foundry_asset.py",
+      "workflow_count": 2,
+      "module_source_sha256": "c4cb4c76335cfbd85123eb5300a3f8e84867d1731857befaecbeb9d02dd14da8",
+      "invocation_ids": [
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_foundry_pipeline.py",
+      "workflow_count": 8,
+      "module_source_sha256": "eae1431cd8cbbedf01f51027685e0e2fa738d243628bc4dae808427bbde158ff",
+      "invocation_ids": [
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_fsrt_view.py",
+      "workflow_count": 3,
+      "module_source_sha256": "a8ef778e594e1cc98b3142176c28f013306f0edecba6516ceb17b69fa07d7177",
+      "invocation_ids": [
+        ".github/workflows/fsrt-view.yml:input-boundary:step-3:pytest-0",
+        ".github/workflows/integrated-workloads.yml:contracts:step-3:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_game_project.py",
+      "workflow_count": 2,
+      "module_source_sha256": "1ac69d0806f35be0998772eead0959c0877a427d7f6553c12b8a2604f66a9c8a",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_game_project_feedback.py",
+      "workflow_count": 2,
+      "module_source_sha256": "18f328ba78aa02229f09be34a535858c09b9a99f19164b289f5b06dba591b250",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_game_retention.py",
+      "workflow_count": 14,
+      "module_source_sha256": "ef60cfed2c511a22825bdb2f02b4b363ec1f9a996e277b5d9ecac992b6277655",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_game_session.py",
+      "workflow_count": 14,
+      "module_source_sha256": "c379e7fbf261fb957606d1ab07bcab6f0a3509533cb618dbb51dec867baf4b34",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_game_trace.py",
+      "workflow_count": 14,
+      "module_source_sha256": "9849b9801e7021aabfcb859b74013390955a3325e53668e6d65328aa9a8e13e0",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_geometry_mesh_contract.py",
+      "workflow_count": 2,
+      "module_source_sha256": "bef103f98b2a624f281232fde9f9387ee054bdeb6d90ea6fd676ea6b107f163c",
+      "invocation_ids": [
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_godot_simulation.py",
+      "workflow_count": 3,
+      "module_source_sha256": "3f94f1d27f5c0e8321565a2d4e39be74c013b51989107469f14c2cde0abb6946",
+      "invocation_ids": [
+        ".github/workflows/godot-observation-capture.yml:qualification:step-3:pytest-0",
+        ".github/workflows/godot-stateful.yml:qualification:step-3:pytest-0",
+        ".github/workflows/simulation-timeline.yml:timeline:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_hardware_bench.py",
+      "workflow_count": 2,
+      "module_source_sha256": "534c90d727ac0dd05a00184f2b98dc9c532bd452b9d3389bde4f049d11e143d2",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/refurbishment.yml:installed-journey:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_hardware_bench_cli.py",
+      "workflow_count": 2,
+      "module_source_sha256": "3716e6fdc7a6e21dfb5c91ab325923c0d540ff610a336c73dfd8447bf1bdb913",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/refurbishment.yml:installed-journey:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_industrial_transition.py",
+      "workflow_count": 6,
+      "module_source_sha256": "c44f4faa5dfcee3846c37f9d1bc700deee83de1cd77475fe33f2b0123de19c24",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_information_display.py",
+      "workflow_count": 4,
+      "module_source_sha256": "c46b6cdcb6172e5071ab83c6619257e2fb7980eacb12c554a04fa5fef54125a9",
+      "invocation_ids": [
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-6:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_interactive_contract.py",
+      "workflow_count": 17,
+      "module_source_sha256": "261c3906f775dd749dc25a5857c5c462457817c40a7f7a991fb0c1e7b027c3c9",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/integrated-workloads.yml:contracts:step-3:pytest-0",
+        ".github/workflows/interactive-projectile.yml:contracts:step-1:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_interactive_session.py",
+      "workflow_count": 17,
+      "module_source_sha256": "6ae41541c2745dbfb941c4ef7911998205d07fdde76a76fa059de1ce596bc919",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-development.yml:contracts:step-3:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/integrated-workloads.yml:contracts:step-3:pytest-0",
+        ".github/workflows/interactive-projectile.yml:contracts:step-1:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/synthetic-fsrt-view.yml:combined-source:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_interop_ingress.py",
+      "workflow_count": 5,
+      "module_source_sha256": "3f1ef3aa648aec746b516caf3461fd2fc2afa9cf086abc338743900cbe3fc651",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_investigation_efficiency.py",
+      "workflow_count": 2,
+      "module_source_sha256": "8fa2c5cdc3f6726e812bbf1f2e5f7e858b9d40ef4f6863617710d5c1b284b882",
+      "invocation_ids": [
+        ".github/workflows/container-calculus.yml:calculus:step-3:pytest-0",
+        ".github/workflows/investigation-efficiency.yml:efficiency:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_json_numeric_boundary.py",
+      "workflow_count": 2,
+      "module_source_sha256": "8c5d0c24a5f9d1ae57258b9acb0d97cc4806cc7301b3a90837230d202deb921f",
+      "invocation_ids": [
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_link.py",
+      "workflow_count": 2,
+      "module_source_sha256": "64b57e46380de1e0bed895cfd8180fd20d85258d51bb46e1cb38a6dc66961ed3",
+      "invocation_ids": [
+        ".github/workflows/device-link.yml:link:step-4:pytest-0",
+        ".github/workflows/device-link.yml:link:step-7:pytest-0",
+        ".github/workflows/link-scalar-study.yml:scalar:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_link_qualification_artifacts.py",
+      "workflow_count": 2,
+      "module_source_sha256": "cd912645ab822e9e6cc20162ad66c4cb6c990c26d03ee12028868a9b13905b77",
+      "invocation_ids": [
+        ".github/workflows/link-scalar-study.yml:scalar:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-7:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_link_study_agent.py",
+      "workflow_count": 2,
+      "module_source_sha256": "1ad292f648405e3af388efc49fca5de3e3aa4b7cfa210a9bb8fda463b7d8f192",
+      "invocation_ids": [
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_math_inspector.py",
+      "workflow_count": 4,
+      "module_source_sha256": "8e23719cf5ac41c13a21545750ce3c600fc9c15831e685f9780c08dfb2fb27a4",
+      "invocation_ids": [
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/net-math-visuals.yml:inspector:step-6:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_mcp_sdk.py",
+      "workflow_count": 2,
+      "module_source_sha256": "639edcabdaeb9915bf0d733a1d9f32d0770c446cd35a5e6467b801cfe53c7193",
+      "invocation_ids": [
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_measured_thermal_agent.py",
+      "workflow_count": 3,
+      "module_source_sha256": "4064bc609aecde05fb4669fc51f1582fd3447229ecc6b4038827956126f3d3b2",
+      "invocation_ids": [
+        ".github/workflows/metrology-clearance.yml:clearance:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_ncp_corpus_integration.py",
+      "workflow_count": 2,
+      "module_source_sha256": "03fa974ab7caac157e727492ca621446836ab910e52395b0d2e930c44c152b19",
+      "invocation_ids": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-1"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_ncp_corpus_link_workspace.py",
+      "workflow_count": 2,
+      "module_source_sha256": "60d863d5c9ba23c0463f06ba94ab0592d093edd52212d3d908f2fae4ccda865e",
+      "invocation_ids": [
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-4:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-1"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_ncp_evidence_assessment.py",
+      "workflow_count": 2,
+      "module_source_sha256": "a5fd70c228f50662dbaf446e2409fa2e0f572999ba5fc1faf9a8b4a5744a1be0",
+      "invocation_ids": [
+        ".github/workflows/link-scalar-study.yml:scalar:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-7:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_ncp_supporting_evidence.py",
+      "workflow_count": 2,
+      "module_source_sha256": "8860c1b2ad294107b8a6f4f924d3dd952eb2f5afe61977be9c38cbb073258829",
+      "invocation_ids": [
+        ".github/workflows/link-scalar-study.yml:scalar:step-3:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-7:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_needle.py",
+      "workflow_count": 16,
+      "module_source_sha256": "3c570ea8ba8e07f4c5f3af7292d1e33b435442a293ff89ef38be7f0f46e56b8e",
+      "invocation_ids": [
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/needle.yml:needle:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-aware-needle.yml:represented-needle:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/system-board.yml:board:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_nise_handoff.py",
+      "workflow_count": 2,
+      "module_source_sha256": "61ba3c772743a22bafa31fbb99ca8dc2ddbe1e2f5e2bd404b3485d5693aa230e",
+      "invocation_ids": [
+        ".github/workflows/annotation-nise-loop.yml:loop:step-5:pytest-0",
+        ".github/workflows/nise-handoff.yml:handoff:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operation_contract_enforcement.py",
+      "workflow_count": 3,
+      "module_source_sha256": "7fa3b411e20453737406733c1039c2942dbb442ed8157d5553d8176c1fdebe9f",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0",
+        ".github/workflows/workflow-contracts.yml:actionlint:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operation_failure_retention.py",
+      "workflow_count": 10,
+      "module_source_sha256": "580a2f46a7fcf9f91fecb44091efd2bb0f6995b9abca0d2a43e64f3c4a0e6208",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operation_publication.py",
+      "workflow_count": 9,
+      "module_source_sha256": "e7c6d88b88e7cc43b4f1b3986a0216c63ab3b7b01066e5d8793a021da04fa7ee",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operation_runner.py",
+      "workflow_count": 12,
+      "module_source_sha256": "929407ed1e195c64b59bbd6582f360d6e7573f5f020f20496e13e4d41f0bbf3a",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/domain-provider-boundary.yml:public-boundary:step-4:pytest-0",
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/net-nvalchemi.yml:provider-free:step-3:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operational_audit.py",
+      "workflow_count": 2,
+      "module_source_sha256": "3f7db1ba99aaa57ca8d86f293f00794807d9761e562b3ff7dcfa6d2d613ce0a6",
+      "invocation_ids": [
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operational_completion.py",
+      "workflow_count": 2,
+      "module_source_sha256": "e52a0f4b7377fe07190ec4bee98f478c6c225e9700dc81a72220873e91e18afe",
+      "invocation_ids": [
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operational_engineering.py",
+      "workflow_count": 2,
+      "module_source_sha256": "cef6a665c4ff73ad80780a4c23855352f37b66137c4b0e01c0ca87092fbf8061",
+      "invocation_ids": [
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operational_mcp.py",
+      "workflow_count": 2,
+      "module_source_sha256": "c0cfed5608fdd732d529f4797cbb4d505d0214796e302526e8e694abce491229",
+      "invocation_ids": [
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operator_catalog.py",
+      "workflow_count": 9,
+      "module_source_sha256": "0b7915ba29d7dde63264f274142f04d7a6cb26ba6e3071f4087615dfea44dd03",
+      "invocation_ids": [
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/thermofluids.yml:reference-checks:step-3:pytest-0",
+        ".github/workflows/weather-science.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operator_doctor.py",
+      "workflow_count": 2,
+      "module_source_sha256": "396814c72d469262371c618f00bdaff0e9ea553166c3951ed3200c3a364727d3",
+      "invocation_ids": [
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operator_provision.py",
+      "workflow_count": 2,
+      "module_source_sha256": "a39fcf07135321e56af301a77263979e7c4a75f3a3d65d70f13881a119b6521f",
+      "invocation_ids": [
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operator_start.py",
+      "workflow_count": 2,
+      "module_source_sha256": "ed7925fcc5320f0a888aea4fa515712efb899bef23a7006206d128b3d6043c4e",
+      "invocation_ids": [
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_operator_workbench.py",
+      "workflow_count": 2,
+      "module_source_sha256": "b54d55ea2b5c7ac254d202f3f0705a3ae630fc32034300cc3158f83a159e1ba8",
+      "invocation_ids": [
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_parameter_program.py",
+      "workflow_count": 16,
+      "module_source_sha256": "fd4645607ed8341d9008280e86272971567f6543d97f4fb2dfa2eaf29f609244",
+      "invocation_ids": [
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/parameter-program.yml:parameter:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-morphisms.yml:morphisms:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/system-board-visual.yml:board-visual:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_agent.py",
+      "workflow_count": 3,
+      "module_source_sha256": "6c503d60ec1f0256abae27d889490e4225d9d9e29852858d9309b211fe9b19a7",
+      "invocation_ids": [
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_cooling_precision.py",
+      "workflow_count": 2,
+      "module_source_sha256": "2efd10af8536df3817a9bfbc2760c2c9d8c893791ac64b6681d9c2689742c28b",
+      "invocation_ids": [
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/polymer-science.yml:scientific-reference:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_manufacturing.py",
+      "workflow_count": 2,
+      "module_source_sha256": "117faef75ded518de138ab4dc87d6f841c86a70220ac7ca313aaad5fc3c17e12",
+      "invocation_ids": [
+        ".github/workflows/polymer-microfab.yml:retained-production:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_metrology.py",
+      "workflow_count": 3,
+      "module_source_sha256": "7c9e518cff298824853e1f32b968640ea6b3b8f639b32afb308c4d930f33006a",
+      "invocation_ids": [
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/thermal-identification.yml:bounded-identification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_namespace_coexistence.py",
+      "workflow_count": 2,
+      "module_source_sha256": "5cd5b69b3ff710472f4ea87618eccc3043a8f89537575bb63adddc028f4cd847",
+      "invocation_ids": [
+        ".github/workflows/polymer-microfab.yml:retained-production:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_population.py",
+      "workflow_count": 2,
+      "module_source_sha256": "b1e86e143493bb370eab034d06d48c706f1c23740407aca42ef943ba6c801e4b",
+      "invocation_ids": [
+        ".github/workflows/materials-session.yml:installed-materials:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_production_dossier.py",
+      "workflow_count": 2,
+      "module_source_sha256": "04ea03be7bf1c039514935ce7f206a6cb0e13c125b319b44f0d5d5646c135447",
+      "invocation_ids": [
+        ".github/workflows/polymer-microfab.yml:retained-production:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_rheology.py",
+      "workflow_count": 2,
+      "module_source_sha256": "8fa2df9cb1d40ddbd5d1ea2c679394e525cd1e1522bc64dd7feadbfcec3f34df",
+      "invocation_ids": [
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/polymer-science.yml:scientific-reference:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_rheology_identification.py",
+      "workflow_count": 2,
+      "module_source_sha256": "4b9b2f0e4b3b6acf942d84e2cc55ec92861b1f40d0b73dbff881d1cdc93d18ec",
+      "invocation_ids": [
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/polymer-science.yml:scientific-reference:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_toolpoint_qc.py",
+      "workflow_count": 2,
+      "module_source_sha256": "1505149074af978e4f18408a5e19590e2f28e7393fef0c93629e0eac131eaccc",
+      "invocation_ids": [
+        ".github/workflows/polymer-microfab.yml:retained-production:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_viscoelastic.py",
+      "workflow_count": 2,
+      "module_source_sha256": "2bc3ec90b6ab12a1c3bbe60916a8228c4f423942f38f50690f958a9d00702d05",
+      "invocation_ids": [
+        ".github/workflows/materials-session.yml:installed-materials:step-4:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_polymer_workflow.py",
+      "workflow_count": 2,
+      "module_source_sha256": "3af91ad598848bbe25588cb4b918e629890b312fbd5dd78ea79e018d10b67006",
+      "invocation_ids": [
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0",
+        ".github/workflows/thermal-identification.yml:bounded-identification:step-4:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_preservation_contracts.py",
+      "workflow_count": 11,
+      "module_source_sha256": "46af5e456fd42cc7804df700d874072d2dafcdc6ce5ff3d1e2f111deedfe70ee",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/workflow-contracts.yml:actionlint:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_production.py",
+      "workflow_count": 13,
+      "module_source_sha256": "91f011146de860e58045e303038909e8462c441f1f391862d11034f0274e4a89",
+      "invocation_ids": [
+        ".github/workflows/dsp-instrument.yml:native:step-5:pytest-0",
+        ".github/workflows/game-project-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/historical-perspective.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-asset.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-physics.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry-pipeline.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-foundry.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-production.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_protocol.py",
+      "workflow_count": 3,
+      "module_source_sha256": "cf55b33ba12760ac69b577ff5652046054275d9567cabec00641c4977b57fd8c",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/irrigation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/polymer-processing.yml:reference-and-retention:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_reference_comparison.py",
+      "workflow_count": 2,
+      "module_source_sha256": "07067777f9845dcce1ccb0f0dde088ca4a01452eacdb5df217c75a154a749244",
+      "invocation_ids": [
+        ".github/workflows/operational-engineering.yml:connected:step-4:pytest-0",
+        ".github/workflows/operator-readiness.yml:installed-journey:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_representation_expansion.py",
+      "workflow_count": 6,
+      "module_source_sha256": "9a965bee3e1e9e79114881e69f0ece5beda6dd6636c5ee7bd0f50ff71d14f4da",
+      "invocation_ids": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_representation_interventions.py",
+      "workflow_count": 15,
+      "module_source_sha256": "b1f5136d24ea6716aacdbd6c02f1c401bbddf343198c122d08e8ca0d0a105aef",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-aware-needle.yml:represented-needle:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_representation_morphisms.py",
+      "workflow_count": 17,
+      "module_source_sha256": "1871a5570cd964fe9033d0a6ec273163c09212e0de8f2970cda38fb04c7bc84a",
+      "invocation_ids": [
+        ".github/workflows/bim-interop-runtime.yml:qualification:step-6:pytest-0",
+        ".github/workflows/cse-preservation-tools.yml:qualification:step-6:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-aware-needle.yml:represented-needle:step-3:pytest-0",
+        ".github/workflows/representation-morphisms.yml:morphisms:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_representation_realizations.py",
+      "workflow_count": 2,
+      "module_source_sha256": "ace3ac69a014778d726bef2353faafe4be1fb09894b7c104896ff2cd432709f9",
+      "invocation_ids": [
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_scientific.py",
+      "workflow_count": 4,
+      "module_source_sha256": "75dbfdf425e16a12ba81ec1bd6b7c83f4264bfa7684f1e905f5d494efe5446f0",
+      "invocation_ids": [
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_scientific_audit.py",
+      "workflow_count": 4,
+      "module_source_sha256": "19ea33cedd2f9985720ce84783a1d2d7312d2f23746a8a7f0ef7615d1568c0e7",
+      "invocation_ids": [
+        ".github/workflows/hardware.yml:qualification:step-3:pytest-0",
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/ncp-system.yml:knowledge-and-work:step-4:pytest-0",
+        ".github/workflows/workflow-contracts.yml:actionlint:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_scientific_observations.py",
+      "workflow_count": 4,
+      "module_source_sha256": "bf6d46efab0fc782521328ba0698d74ffc967f8ffe4a7297f08d12793791cc47",
+      "invocation_ids": [
+        ".github/workflows/csr-microtools.yml:microtools:step-4:pytest-1",
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-1",
+        ".github/workflows/net-math-visuals.yml:inspector:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-1"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_semantic_capabilities.py",
+      "workflow_count": 20,
+      "module_source_sha256": "e4b07a84aacd96fe2365df766cd66869fadf806c32822e0f66a7f37eb1ec361c",
+      "invocation_ids": [
+        ".github/workflows/atmosphere-engine.yml:qualification:step-3:pytest-0",
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/impact-contact.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/instrument-contract.yml:contract:step-3:pytest-0",
+        ".github/workflows/mcp-control.yml:journey:step-4:pytest-0",
+        ".github/workflows/nise-handoff.yml:handoff:step-5:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/procedural-graphics.yml:qualification:step-4:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/semantic-capabilities.yml:contracts:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_sensor_project.py",
+      "workflow_count": 2,
+      "module_source_sha256": "73652007a8f6fb5b34e59ff180514ce286ce148ca2acef164d37d49e6e360463",
+      "invocation_ids": [
+        ".github/workflows/manufacturing-analysis.yml:contracts:step-3:pytest-0",
+        ".github/workflows/sensor-project.yml:contracts:step-3:pytest-0",
+        ".github/workflows/sensor-project.yml:contracts:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_simulation_campaign.py",
+      "workflow_count": 7,
+      "module_source_sha256": "424572fbea80fac0abe2ef62d178823ff1bf2b7758659bbca3ec4c4ace909956",
+      "invocation_ids": [
+        ".github/workflows/godot-observation-capture.yml:qualification:step-3:pytest-0",
+        ".github/workflows/godot-stateful.yml:qualification:step-3:pytest-0",
+        ".github/workflows/rs-provider.yml:integration:step-5:pytest-0",
+        ".github/workflows/simulation-timeline.yml:timeline:step-3:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0",
+        ".github/workflows/stateful-simulation.yml:reference:step-3:pytest-0",
+        ".github/workflows/stateful-simulation.yml:reference:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_simulation_capture.py",
+      "workflow_count": 3,
+      "module_source_sha256": "abffdce02c2d5a7c08db513f0064495806b462080e50437b829bd16f6800be1a",
+      "invocation_ids": [
+        ".github/workflows/godot-observation-capture.yml:qualification:step-3:pytest-0",
+        ".github/workflows/simulation-timeline.yml:timeline:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_simulation_control.py",
+      "workflow_count": 8,
+      "module_source_sha256": "85f536d5073b1046c506d3e4108b0eb8ba7444b8cdd5d599196e78df9c0a0fda",
+      "invocation_ids": [
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-0",
+        ".github/workflows/godot-observation-capture.yml:qualification:step-3:pytest-0",
+        ".github/workflows/godot-stateful.yml:qualification:step-3:pytest-0",
+        ".github/workflows/rs-provider.yml:integration:step-5:pytest-0",
+        ".github/workflows/simulation-timeline.yml:timeline:step-3:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-3:pytest-0",
+        ".github/workflows/stateful-agent.yml:bridge:step-3:pytest-0",
+        ".github/workflows/stateful-simulation.yml:reference:step-3:pytest-0",
+        ".github/workflows/stateful-simulation.yml:reference:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_simulation_study.py",
+      "workflow_count": 2,
+      "module_source_sha256": "76b0e2fb50089ce9f90f13ce7a21d12be6f79f5839dbdf49b1ca393ac9412764",
+      "invocation_ids": [
+        ".github/workflows/godot-motion.yml:contracts:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-3:pytest-0",
+        ".github/workflows/simulation-study.yml:contracts:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_spatial_provider.py",
+      "workflow_count": 2,
+      "module_source_sha256": "74cd1625e58447efdb437b3b3e93607183203765510e10417af79685ba9153c8",
+      "invocation_ids": [
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-0",
+        ".github/workflows/spatial-provider.yml:local-frame:step-5:pytest-1"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_spatial_requests.py",
+      "workflow_count": 2,
+      "module_source_sha256": "a03db74b246d25079179c85861ed3feed422b292b5eeb33da098b28f25659b4e",
+      "invocation_ids": [
+        ".github/workflows/rs-provider.yml:integration:step-5:pytest-0",
+        ".github/workflows/rs-provider.yml:integration:step-8:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-3:pytest-0",
+        ".github/workflows/spatial-requests.yml:contracts:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_superrepo_doctor.py",
+      "workflow_count": 2,
+      "module_source_sha256": "d13679f68a97aafff16e44d96548a5faf6addda1914579d5841bfc879df99f1e",
+      "invocation_ids": [
+        ".github/workflows/monorepo.yml:source-history-and-migration-guards:step-4:pytest-0",
+        ".github/workflows/review-examples.yml:windows-python311-preflight:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_system_board.py",
+      "workflow_count": 17,
+      "module_source_sha256": "d34c8ab78e88bec5a05ff878a0ab660756947042e9f0a35f8b6defe853ccb51e",
+      "invocation_ids": [
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/parameter-program.yml:parameter:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-morphisms.yml:morphisms:step-3:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/system-board-visual.yml:board-visual:step-3:pytest-0",
+        ".github/workflows/system-board.yml:board:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_temperature_agent.py",
+      "workflow_count": 2,
+      "module_source_sha256": "2a93f8dce11131cf2f9bc1d2fff4805c0be29099f5256872f3ce6ca09fce30f3",
+      "invocation_ids": [
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_temperature_processing.py",
+      "workflow_count": 2,
+      "module_source_sha256": "d2d52ac6cf2124383f225e0811309697bfac861a6287afa050fbe4cf9102d5c8",
+      "invocation_ids": [
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_temperature_verification.py",
+      "workflow_count": 2,
+      "module_source_sha256": "347dbfc78aece85766c1cc77834c17bf3e3e68ada5acd747a6f310104f796091",
+      "invocation_ids": [
+        ".github/workflows/net-agent-mcp.yml:agent:step-6:pytest-0",
+        ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+        ".github/workflows/temperature-processing.yml:software-contract:step-3:pytest-0",
+        ".github/workflows/temperature-processing.yml:software-contract:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_thermal_contract.py",
+      "workflow_count": 13,
+      "module_source_sha256": "61280fa356ecc03b7588aa6f5319def239cb8bad92715f15eab2e8b2e7dd5136",
+      "invocation_ids": [
+        ".github/workflows/evidence-bound-expansion.yml:qualification:step-3:pytest-0",
+        ".github/workflows/executable-interoperability.yml:qualification:step-3:pytest-0",
+        ".github/workflows/finite-representation-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/industrial-semantic-transition.yml:qualification:step-3:pytest-0",
+        ".github/workflows/preservation-contracts.yml:qualification:step-3:pytest-0",
+        ".github/workflows/real-ifc-transition.yml:qualification:step-5:pytest-0",
+        ".github/workflows/representation-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/shared-preservation.yml:qualification:step-3:pytest-0",
+        ".github/workflows/spatial-mesh-realizations.yml:qualification:step-3:pytest-0",
+        ".github/workflows/thermofluids.yml:reference-checks:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "environment",
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_thermochemical_benchmark.py",
+      "workflow_count": 2,
+      "module_source_sha256": "151e91daa10ae02e9e351d9aeacafc84529b837b4604b7658ff361fd04e37e01",
+      "invocation_ids": [
+        ".github/workflows/materials-session.yml:installed-materials:step-4:pytest-0",
+        ".github/workflows/polymer-science.yml:scientific-reference:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "environment",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": false,
+      "disposition": "retain_incomplete_selection_requires_review",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_usd_export.py",
+      "workflow_count": 2,
+      "module_source_sha256": "1a52c312b761a86d621f6542c3831898847facc28c58b39b1e215d5114643573",
+      "invocation_ids": [
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_usda_export.py",
+      "workflow_count": 2,
+      "module_source_sha256": "29ae670a9598c6b582ec316473d82f7e5dc84b103e1a3cd49bae9983d118690a",
+      "invocation_ids": [
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_visual_board.py",
+      "workflow_count": 4,
+      "module_source_sha256": "98d06798db1b57506a25deb8601c6a962f5551fc5e2bd62c30acc8d32ad1105b",
+      "invocation_ids": [
+        ".github/workflows/board-mcp-refit.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-system-board.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_visual_representation_gate.py",
+      "workflow_count": 2,
+      "module_source_sha256": "47d6ff5b2c614185c2652528312347ef7bbe4c54271195e37f8fb0c6fdffcec4",
+      "invocation_ids": [
+        ".github/workflows/visual-evidence-projection.yml:qualification:step-3:pytest-0",
+        ".github/workflows/visual-representation-gates.yml:qualification:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_workbench_session.py",
+      "workflow_count": 2,
+      "module_source_sha256": "bf0dd6c83d77408762d1c9d3b0408240221ff37a2e2b5f7118abc6f04500ea03",
+      "invocation_ids": [
+        ".github/workflows/spatial-godot.yml:godot-spatial:step-5:pytest-1",
+        ".github/workflows/spatial-provider.yml:local-frame:step-6:pytest-0"
+      ],
+      "differing_dimensions": [
+        "routing",
+        "provider_and_package_setup",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_workcell.py",
+      "workflow_count": 5,
+      "module_source_sha256": "e6ffa6adcbac72c51b361f3218786125550f998164138c9d1bf05a273e23c5a1",
+      "invocation_ids": [
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-7:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-6:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_workcell_smith.py",
+      "workflow_count": 4,
+      "module_source_sha256": "9834d404a6718366b00ab7dc499a58d6af8b8c8cdbdfdebd94839c1a4bd5a375",
+      "invocation_ids": [
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-7:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_workcell_snapshot.py",
+      "workflow_count": 5,
+      "module_source_sha256": "883b41c1acaedb9092bde2c700cc8aaeb94baccdd6c5978046539691dcfbec50",
+      "invocation_ids": [
+        ".github/workflows/net-single-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-4:pytest-0",
+        ".github/workflows/net-smith-workcell.yml:native:step-7:pytest-0",
+        ".github/workflows/net-unattended-agent.yml:native:step-4:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-3:pytest-0",
+        ".github/workflows/net-workcell.yml:native:step-6:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    },
+    {
+      "module": "tests/test_workflow_algebra.py",
+      "workflow_count": 2,
+      "module_source_sha256": "5df8c8113c047d27c8f9654be0ef5c49563a199bd0c02d747c769797a3917c78",
+      "invocation_ids": [
+        ".github/workflows/hypergraph-rewrite.yml:qualification:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-3:pytest-0",
+        ".github/workflows/net-workflow-algebra.yml:contracts:step-5:pytest-0"
+      ],
+      "differing_dimensions": [
+        "platform_matrix",
+        "routing",
+        "defaults_shell_cwd",
+        "provider_and_package_setup",
+        "pytest_collection_and_flags",
+        "step_commands_and_import_checks",
+        "evidence_contracts"
+      ],
+      "selection_complete": true,
+      "disposition": "retain_distinct_declared_contexts",
+      "reason": "A repeated module name does not equate its collection, provider, import, platform or evidence context. No execution is removed by this report."
+    }
+  ],
+  "incomplete_invocation_ids": [
+    ".github/workflows/calibration-history-inspection.yml:inspect:step-6:pytest-0",
+    ".github/workflows/dsp-instrument.yml:native:step-7:pytest-0",
+    ".github/workflows/fluid-dynamics.yml:qualification:step-3:pytest-0",
+    ".github/workflows/game-development.yml:contracts:step-6:pytest-0",
+    ".github/workflows/game-project-production.yml:contracts:step-5:pytest-0",
+    ".github/workflows/godot-observation-capture.yml:qualification:step-5:pytest-0",
+    ".github/workflows/godot-stateful.yml:qualification:step-5:pytest-0",
+    ".github/workflows/historical-perspective.yml:contracts:step-5:pytest-0",
+    ".github/workflows/materials-session.yml:installed-materials:step-4:pytest-0",
+    ".github/workflows/ncp-system.yml:knowledge-and-work:step-8:pytest-0",
+    ".github/workflows/ncp-system.yml:knowledge-and-work:step-8:pytest-1",
+    ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-0",
+    ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-1",
+    ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-2",
+    ".github/workflows/net-agent-mcp.yml:agent:step-9:pytest-3",
+    ".github/workflows/net-computational-objects.yml:source-selection:step-5:pytest-0",
+    ".github/workflows/net-foundry-asset.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry-physics.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry-pipeline.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-math-visuals.yml:inspector:step-6:pytest-0",
+    ".github/workflows/net-production.yml:contracts:step-6:pytest-0",
+    ".github/workflows/net-scientific.yml:scientific:step-8:pytest-0",
+    ".github/workflows/oscillator-consumers-native.yml:native:step-4:pytest-0",
+    ".github/workflows/oscillator-kernel-native.yml:native:step-4:pytest-0",
+    ".github/workflows/oscillator-kernel-native.yml:native:step-7:pytest-0",
+    ".github/workflows/review-examples.yml:installed-examples:step-3:pytest-0",
+    ".github/workflows/rs-provider.yml:integration:step-8:pytest-0",
+    ".github/workflows/simulation-timeline.yml:timeline:step-5:pytest-0",
+    ".github/workflows/spatial-requests.yml:contracts:step-5:pytest-0",
+    ".github/workflows/stateful-agent.yml:bridge:step-5:pytest-0",
+    ".github/workflows/stateful-simulation.yml:reference:step-5:pytest-0",
+    ".github/workflows/study-manufacturing.yml:qualify:step-3:pytest-0",
+    ".github/workflows/temperature-processing.yml:software-contract:step-5:pytest-0"
+  ],
+  "default_or_computed_invocation_ids": [
+    ".github/workflows/calibration-history-inspection.yml:inspect:step-6:pytest-0",
+    ".github/workflows/dsp-instrument.yml:native:step-7:pytest-0",
+    ".github/workflows/fluid-dynamics.yml:qualification:step-3:pytest-0",
+    ".github/workflows/game-development.yml:contracts:step-6:pytest-0",
+    ".github/workflows/game-project-production.yml:contracts:step-5:pytest-0",
+    ".github/workflows/godot-observation-capture.yml:qualification:step-5:pytest-0",
+    ".github/workflows/godot-stateful.yml:qualification:step-5:pytest-0",
+    ".github/workflows/historical-perspective.yml:contracts:step-5:pytest-0",
+    ".github/workflows/ncp-system.yml:knowledge-and-work:step-8:pytest-0",
+    ".github/workflows/net-foundry-asset.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry-physics.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry-pipeline.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-foundry.yml:contracts:step-5:pytest-0",
+    ".github/workflows/net-production.yml:contracts:step-6:pytest-0",
+    ".github/workflows/simulation-timeline.yml:timeline:step-5:pytest-0",
+    ".github/workflows/study-manufacturing.yml:qualify:step-3:pytest-0",
+    ".github/workflows/test.yml:python:step-4:pytest-0"
+  ],
+  "automatic_removals": [],
+  "qualification": "not_established_by_static_review"
+}
