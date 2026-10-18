@@ -39,6 +39,7 @@ jobs:
           python -m pytest -q tests/test_scientific_audit.py tests/test_operation_contract_enforcement.py tests/test_saved_result_discriminator.py tests/test_observation_origin_enforcement.py tests/test_control_plane.py tests/test_preservation_contracts.py
       - name: Validate and emit the complete input-backed teaching catalog
         run: |
+          python -m pip install '.[bench-models]'
           python examples/workflows/generate_usecase_corpus.py --check
           python -m pytest -q tests/test_teaching_corpus.py
           python examples/workflows/emit_all_usecases.py --output-root teaching-export --receipt teaching-receipt.json

@@ -17,6 +17,11 @@ computational families. Godot Teaching samples and the optional Bevy projector
 read the same output records. Proof teaching remains UNAVAILABLE/NOT_CHECKED
 without a bound verifier; export never manufactures proofs or fresh verification.
 
+For one scenario, use `emit_all_usecases.py --scenario SLUG`. Add
+`--client godot|bevy --binary /absolute/path/to/projector` to open that exact
+output using the same host command. Godot's retained mode displays the teaching
+view without contacting Session. See the [contract and receipts](../../docs/RETAINED_RENDER_CONTRACT.md).
+
 How to add a **HOST teaching sample** that emits one retained render JSON and
 is projected by stacked providers (Godot tab + optional Bevy). Science stays on
 the host; engines only present.

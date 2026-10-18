@@ -256,7 +256,10 @@ def _claims(record):
         claim(value["verification_id"], "verification", value)
         if value.get("schema") == "ciw.proved-heat-verification.v1":
             claim(value["verification_operation_id"], "verification_execution", value)
-        if value.get("schema") == "ciw.declared-workload-verification.v1":
+        # Every validated reproduction carries its own occurrence identities,
+        # including machine, thermal, project and native-provider verifiers.
+        # Public result catalogs intentionally show only selected steps.
+        if "reproduction" in value:
             step = value["reproduction"]
             claim(step["execution_id"], "execution", {"step": step})
             claim(step["result_id"], "result", {"result": step["result"]})
@@ -832,6 +835,15 @@ class Workbench:
                      "candidate_id": record["candidate_id"], "status": "completed",
                      "outcome": _json(base64.b64decode(record["response_bytes_b64"]))["state"],
                      "state_admission": "not_performed"} for record in self._candidates.values()]
+
+    def retained_identities(self):
+        """All validated identity claims, including uncatalogued reproductions.
+
+        Catalog views intentionally expose selected steps. Collision checks
+        must use the complete existing claim set instead of those projections.
+        """
+        with self._lock:
+            return frozenset(self._identities)
 
     def _check_claims(self, claims):
         for identity, claim in claims.items():

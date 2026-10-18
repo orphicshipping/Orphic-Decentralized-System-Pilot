@@ -10,10 +10,10 @@ const MUTED := Color("899cb2")
 const TEAL := Color("60dfcd")
 const AMBER := Color("ffcc80")
 
-var _client = Client.new()
-var _phase = PhasePlot.new()
-var _energy = EnergyView.new()
-var _experiments = ExperimentView.new()
+var _client
+var _phase
+var _energy
+var _experiments
 var _tabs: TabContainer
 var _status: Label
 var _detail: Label
@@ -39,12 +39,20 @@ var _duration := 0.0
 var _synchronizing := false
 var _identity_run := ""
 var _view_supported := true
+var _retained_only := false
+var _retained_frames := -1
 const UNSUPPORTED_VIEW := "This adapter uses the generic run contract. Inspect raw, calibrated, estimated and refusal states in the terminal; this viewport supports the legacy recording contract only."
 
 
 func _ready() -> void:
 	get_window().min_size = Vector2i(1080, 850)
 	_build_theme()
+	if _open_retained_view():
+		return
+	_client = Client.new()
+	_phase = PhasePlot.new()
+	_energy = EnergyView.new()
+	_experiments = ExperimentView.new()
 	_build_ui()
 	add_child(_client)
 	_experiments.attach(_client)
@@ -56,6 +64,46 @@ func _ready() -> void:
 	_client.request_failed.connect(_on_error)
 	_phase.time_picked.connect(_pick_time)
 	_client.connect_service()
+
+
+func _open_retained_view() -> bool:
+	var args := OS.get_cmdline_user_args()
+	if not args.has("--retained-render"):
+		return false
+	_retained_only = true
+	var path := ""
+	var index := 0
+	while index < args.size():
+		var option := args[index]
+		index += 1
+		if index >= args.size() or not option in ["--retained-render", "--frames"]:
+			push_error("REFUSED: retained view requires --retained-render PATH [--frames 1..10000]")
+			get_tree().quit(2)
+			return true
+		var value := args[index]
+		index += 1
+		if option == "--retained-render" and path.is_empty():
+			path = value
+		elif option == "--frames" and _retained_frames == -1 and value.is_valid_int() and int(value) > 0 and int(value) <= 10000:
+			_retained_frames = int(value)
+		else:
+			push_error("REFUSED: invalid or duplicate retained view argument")
+			get_tree().quit(2)
+			return true
+	if path.is_empty():
+		push_error("REFUSED: retained render path is empty")
+		get_tree().quit(2)
+		return true
+	var margin := MarginContainer.new()
+	margin.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	for edge in ["left", "right", "top", "bottom"]:
+		margin.add_theme_constant_override("margin_" + edge, 18)
+	add_child(margin)
+	var view := UsecaseCatalogView.new()
+	view.render_path = path
+	margin.add_child(view)
+	print("NCP_RETAINED_PROJECTOR_READY status=", view.current_status)
+	return true
 
 
 func _build_theme() -> void:
@@ -430,6 +478,13 @@ func _stop_playback() -> void:
 
 
 func _process(delta: float) -> void:
+	if _retained_only:
+		if _retained_frames > 0:
+			_retained_frames -= 1
+			if _retained_frames == 0:
+				print("NCP_PROJECTOR_FRAMES_COMPLETE")
+				get_tree().quit()
+		return
 	if _playing and _client.online:
 		_play_time = minf(_play_time + delta, _duration)
 		_client.update_selection({"cursor_s": _play_time})

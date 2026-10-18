@@ -805,10 +805,7 @@ class Session:
                 if (execution is None or execution["status"] != "completed"
                         or execution["result_id"] != result["result_id"]):
                     raise ValueError("Operation result is missing its completed execution")
-        native_occurrences = {entry["execution_id"] for entry in retained_workbench.native_executions()}
-        native_occurrences.update(entry["execution_id"] for entry in retained_workbench.candidate_executions())
-        native_results = {entry["result_id"] for entry in retained_workbench.native_result_summaries()}
-        if (execution_ids | set(execution_map) | set(result_map)) & (native_occurrences | native_results):
+        if (execution_ids | set(execution_map) | set(result_map)) & retained_workbench.retained_identities():
             raise ValueError("Identity collision between recording operations and retained workflows")
         from .correction_journal import CorrectionJournal
         from .dependency_graph import artifact_graph

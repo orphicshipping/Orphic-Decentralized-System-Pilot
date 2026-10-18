@@ -60,6 +60,28 @@ pub fn status_label(status: &str, fresh: bool) -> String {
 }
 
 impl Presentation {
+    /// Fit retained binary64 coordinates before the final GPU precision conversion.
+    /// Only display coordinates change; summaries retain the original values.
+    pub fn fitted_paths(&self) -> Vec<Vec<[f32; 3]>> {
+        let mut low = [f64::INFINITY; 3];
+        let mut high = [f64::NEG_INFINITY; 3];
+        for point in self.paths.iter().flat_map(|path| &path.points) {
+            for axis in 0..3 {
+                low[axis] = low[axis].min(point[axis]);
+                high[axis] = high[axis].max(point[axis]);
+            }
+        }
+        if !low[0].is_finite() {
+            return self.paths.iter().map(|_| Vec::new()).collect();
+        }
+        let span = [high[0] - low[0], high[1] - low[1], high[2] - low[2]];
+        let center = [low[0] + span[0] * 0.5, low[1] + span[1] * 0.5, low[2] + span[2] * 0.5];
+        let scale = 3.0 / span[0].hypot(span[1]).hypot(span[2]).max(1.0);
+        self.paths.iter().map(|path| path.points.iter().map(|point| {
+            std::array::from_fn(|axis| ((point[axis] - center[axis]) * scale) as f32)
+        }).collect()).collect()
+    }
+
     pub fn load(path: &Path) -> Result<Self, String> {
         let file = match File::open(path) {
             Ok(file) => file,
@@ -192,5 +214,24 @@ mod tests {
         let p=Presentation::from_value(&json!({"points":[[value,0,0],[2,0,0]]})).unwrap();
         let summary=serde_json::to_value(p).unwrap();
         assert_eq!(summary["paths"][0]["points"][0][0].as_f64().unwrap(),value);
+    }
+    #[test]
+    fn display_fit_preserves_paths_under_large_common_translation() {
+        let make = |offset: f64| Presentation::from_value(&json!({"trajectories": {
+            "a": {"points": [[offset, offset, offset], [offset+1., offset+2., offset+3.]]},
+            "b": {"points": [[offset+4., offset+5., offset+6.]]}
+        }})).unwrap();
+        let original = make(0.);
+        let translated = make(1e12);
+        assert_eq!(original.fitted_paths(), translated.fitted_paths());
+        assert_ne!(translated.fitted_paths()[0][0], translated.fitted_paths()[0][1]);
+        assert_eq!(translated.paths[0].points[0], [1e12; 3]);
+    }
+    #[test]
+    fn display_fit_handles_empty_and_degenerate_paths() {
+        let empty = Presentation::from_value(&json!({"points": []})).unwrap();
+        assert_eq!(empty.fitted_paths(), vec![Vec::<[f32; 3]>::new()]);
+        let point = Presentation::from_value(&json!({"points": [[1e12, 1e12, 1e12]]})).unwrap();
+        assert_eq!(point.fitted_paths(), vec![vec![[0.; 3]]]);
     }
 }

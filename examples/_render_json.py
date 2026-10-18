@@ -23,7 +23,7 @@ def normalize_render(payload: Mapping[str, Any]) -> dict:
     data: dict[str, Any] = dict(payload)
     data["may_authorize"] = False
     data.setdefault("claim_scope", REQUIRED_DEFAULTS["claim_scope"])
-    data.setdefault("presentation_only", True)
+    data["presentation_only"] = True
     if "status" not in data and "upstream_status" in data:
         data["status"] = data["upstream_status"]
     data.setdefault("status", data.get("upstream_status", "HOST"))
@@ -33,15 +33,15 @@ def normalize_render(payload: Mapping[str, Any]) -> dict:
         # Dict-shaped cards (CSG) are preserved as-is when already present.
         data["cards"] = []
     # Never invent a fresh verifier occurrence.
-    if "fresh_verifier_occurrence" not in data:
-        data["fresh_verifier_occurrence"] = False
+    data["fresh_verifier_occurrence"] = data.get("fresh_verifier_occurrence") is True
     return data
 
 
 def write_render(path: Path | str, payload: Mapping[str, Any], *, indent: int = 2) -> Path:
     """Write normalized render JSON to path (parents created)."""
     out = Path(path)
-    out.parent.mkdir(parents=True, exist_ok=True)
     data = normalize_render(payload)
-    out.write_text(json.dumps(data, indent=indent) + "\n", encoding="utf-8")
+    raw = json.dumps(data, indent=indent, allow_nan=False) + "\n"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(raw, encoding="utf-8")
     return out

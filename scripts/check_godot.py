@@ -159,6 +159,10 @@ def check(executable: str) -> None:
                     ["--script", "res://tests/presentation_smoke.gd"], timeout=30)
                 if "PASS: presentation smoke" not in presentation:
                     raise CheckError("Presentation smoke exited without its PASS sentinel")
+                status = run_godot(executable, "strict retained status labels",
+                    ["--script", "res://tests/retained_status_smoke.gd"], timeout=30)
+                if "NCP_RETAINED_STATUS_SMOKE_PASS" not in status:
+                    raise CheckError("Retained status smoke exited without its PASS sentinel")
                 subprocess.run([sys.executable, str(ROOT / "examples/workflows/emit_all_usecases.py")],
                                cwd=ROOT, env=environment, check=True, timeout=60)
                 teaching = run_godot(executable, "retained teaching catalog",
