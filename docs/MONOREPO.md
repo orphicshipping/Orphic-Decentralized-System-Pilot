@@ -1,5 +1,7 @@
 # Engineering superrepo
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 The default branch contains 21 public engineering modules alongside the
 existing Terminal package, merged through pull request #126. Development
 and review share a repository; packages, release identities, deployment choices

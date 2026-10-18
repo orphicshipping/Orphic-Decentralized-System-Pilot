@@ -7,15 +7,30 @@ import subprocess
 import secrets
 import time
 import socket
+from dataclasses import replace
 import unittest
 import urllib.request
 import urllib.error
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
-from console import ConsoleConfig, MCPBridge, ConsoleError, security_error, create_app
+from console import ConsoleConfig, MCPBridge, ConsoleError, security_error, create_app, launch_arguments
 
 
 class SecurityTests(unittest.TestCase):
+    def test_native_launch_is_explicit_and_incompatible_flags_refuse(self):
+        base = ConsoleConfig(Path(sys.executable), Path('/trusted/profile.json'))
+        valid = replace(base, instrument='bim-clearance', provider_checkout=Path('/trusted/cse'),
+                        provider_revision='a' * 40, provider_python=Path(sys.executable), resume=True)
+        args = launch_arguments(valid)
+        self.assertIn('--provider-checkout', args)
+        self.assertIn('--provider-revision', args)
+        self.assertIn('--resume', args)
+        for invalid in [replace(base, provider_checkout=Path('/trusted/cse')),
+                        replace(valid, provider_revision='main'), replace(valid, provider_checkout=Path('relative')),
+                        replace(valid, surface='operational'), replace(valid, instrument='leakage')]:
+            with self.assertRaises(ConsoleError):
+                launch_arguments(invalid)
+
     def test_rejects_foreign_origin_even_with_token(self):
         self.assertEqual(security_error('127.0.0.1:8765', 'https://evil.example', 'Bearer secret', 'secret', 8765), 403)
 
@@ -39,6 +54,8 @@ class RealMCPTests(unittest.TestCase):
                 self.assertEqual(status['protocol'], '2026-07-28')
                 tools = await bridge.request('tools')
                 self.assertIn('ncp_plan_create', [tool['name'] for tool in tools])
+                catalog = await bridge.request('call', {'name': 'ncp_integrations_list', 'arguments': {'section': 'imports', 'limit': 32}})
+                self.assertEqual(catalog['structuredContent']['data']['total'], 21)
                 with self.assertRaises(ConsoleError) as invalid:
                     await bridge.request('call', {'name': 'ncp_run_get', 'arguments': {}})
                 self.assertEqual(invalid.exception.code, 'invalid_arguments')
@@ -157,7 +174,7 @@ class RealMCPTests(unittest.TestCase):
                     self.assertEqual(unauthorized.exception.code, 401)
                     headers = {'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json'}
                     with opener.open(urllib.request.Request(base + '/api/tools', headers=headers)) as tools_response:
-                        self.assertEqual(len(json.load(tools_response)['data']), 14)
+                        self.assertEqual(len(json.load(tools_response)['data']), 16)
                     request = urllib.request.Request(base + '/api/calls',
                         data=json.dumps({'name': 'ncp_capabilities_list', 'arguments': {}}).encode(), headers=headers)
                     with opener.open(request) as tool_response:

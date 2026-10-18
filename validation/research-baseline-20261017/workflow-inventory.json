@@ -1,0 +1,3294 @@
+{
+  "tracked_workflow_files": 156,
+  "release_required_workflows": 14,
+  "top_level_jobs": 192,
+  "private_token_workflows": 13,
+  "exact_semantic_duplicates_ignoring_name": [],
+  "workflows": [
+    {
+      "path": ".github/workflows/acquired-stream.yml",
+      "name": "Acquired calibrated stream and residual monitor",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "acquired-stream"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/agrofood-cold-chain.yml",
+      "name": "Agro-food cold-chain thermal transfer",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "cold-chain"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/annotation-nise-loop.yml",
+      "name": "Annotation to NISE to NET loop",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "loop"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/annotations.yml",
+      "name": "First-class annotation records",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "annotation"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/artifact-provenance.yml",
+      "name": "Artifact provenance boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "provenance"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/atmosphere-engine.yml",
+      "name": "Atmospheric engine",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/bim-interop-runtime.yml",
+      "name": "IFC CSE interoperability runtime bridge",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/board-mcp-refit.yml",
+      "name": "Board MCP refit journey",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/calibrated-observable.yml",
+      "name": "Calibrated observable process replay",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "process-experiment"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/calibrated-window.yml",
+      "name": "Shared calibrated window replay",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "calibrated-window"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/calibration-history-inspection.yml",
+      "name": "Calibration and retained history inspection",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "inspect"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/cantera-worker.yml",
+      "name": "Cantera worker contracts",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "windows-worker"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/ci.yml",
+      "name": "Calibrated adapter integration",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "calibrated-investigation"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/clocksync-instrument.yml",
+      "name": "ClockSync portable instrument integration",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "clocksync"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/columnar-interchange.yml",
+      "name": "Arrow and Parquet observation interchange",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "columnar"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/connectivity.yml",
+      "name": "Connectivity retained observation boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "connectivity"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/consolidated-integration.yml",
+      "name": "Consolidated integration",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "regression"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/container-calculus.yml",
+      "name": "Container experiment calculus",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "calculus"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/cse-preservation-tools.yml",
+      "name": "CSE preservation and transition tools",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/csr-microtools.yml",
+      "name": "NET CSR micro-tool qualification",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "microtools"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/data-integration.yml",
+      "name": "Retained data integration",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "source-and-installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/declared-workloads.yml",
+      "name": "Shared schematic and numerical workloads",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "declared-workloads"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/device-link.yml",
+      "name": "Device Link retained acquisition boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "link"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/device-review.yml",
+      "name": "Retained device review",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "retained-review"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/domain-provider-boundary.yml",
+      "name": "Optional domain provider boundary",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "public-boundary"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/dsp-instrument.yml",
+      "name": "NET DSP instrument boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/dsp-pipeline.yml",
+      "name": "DSP conditioning and synthetic pump qualification",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "numerical-and-installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/energy-accuracy.yml",
+      "name": "Retained energy-to-accuracy bench",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "energy-accuracy"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/evidence-bound-expansion.yml",
+      "name": "Evidence-bound representation expansion",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/exchange.yml",
+      "name": "Instrument exchange conformance",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "exchange"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/executable-interoperability.yml",
+      "name": "Executable interoperability ingress",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/finite-representation-preservation.yml",
+      "name": "Finite representation preservation",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/fluid-dynamics.yml",
+      "name": "Qualified fluid dynamics",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/free-energy.yml",
+      "name": "Native variational free-energy bench",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "free-energy"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/fsrt-view.yml",
+      "name": "FSRT view public input boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "input-boundary"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/game-development.yml",
+      "name": "Game trace workbench qualification",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/game-project-production.yml",
+      "name": "Game project production",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/geodesic-references.yml",
+      "name": "Native geodesic references",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "references"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/geomatics.yml",
+      "name": "Geomatics reference tools",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "reference-tools"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/geometry-research.yml",
+      "name": "Native geometry providers",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "geometry"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/godot-motion.yml",
+      "name": "Native Godot stateful owner",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/godot-observation-capture.yml",
+      "name": "Godot observation image capture",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/godot-stateful.yml",
+      "name": "Godot stateful campaign qualification",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/hardware.yml",
+      "name": "Qualified hardware refurbishment workflow",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/historical-perspective.yml",
+      "name": "Historical perspective contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/hoomd-cpu.yml",
+      "name": "HOOMD native CPU",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native-cpu-installed-wheel"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/hypergraph-rewrite.yml",
+      "name": "Typed hypergraph rewrite",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/identified-design.yml",
+      "name": "Identified model and budgeted observation replay",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "identified-design"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/impact-contact.yml",
+      "name": "Impact mechanics benchmarks",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/industrial-lab.yml",
+      "name": "Graph-first Industrial Lab",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "source-and-installed",
+        "browser"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/industrial-semantic-transition.yml",
+      "name": "Industrial semantic transition envelope",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/instrument-contract.yml",
+      "name": "Portable instrument contract",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contract"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/integrated-modules.yml",
+      "name": "Shared native companions, BIM, acquisition and geographic views",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "integrated-modules"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/integrated-workloads.yml",
+      "name": "Integrated workload contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "public-source-inventory"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/interactive-projectile.yml",
+      "name": "Interactive projectile qualification",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/interval-requirement.yml",
+      "name": "Interval requirement qualification",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "windows-interval"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/investigation-efficiency.yml",
+      "name": "Investigation efficiency contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "efficiency"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/irrigation.yml",
+      "name": "Qualified agricultural irrigation",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/legibility.yml",
+      "name": "Legibility instrument",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "boundary-and-installed-wheel"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/link-measurements.yml",
+      "name": "Link retained measurement views",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/link-pinwheel.yml",
+      "name": "Link covariance improvement review",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/link-provider-profiles.yml",
+      "name": "Provisioned Link and provider profiles",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed-profiles"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/link-references.yml",
+      "name": "Link institutional reference data",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/link-scalar-study.yml",
+      "name": "Link scalar Linux developer-kit software",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "scalar"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/manufacturing-analysis.yml",
+      "name": "Manufacturing planning search and co-design",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/manufacturing-data-bridge.yml",
+      "name": "Installed retained manufacturing data bridge",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualify"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/materials-session.yml",
+      "name": "Materials Session execution",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed-materials"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/mcp-control.yml",
+      "name": "MCP control journey",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "numerical-builtins",
+        "journey"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/mcp-operator-console.yml",
+      "name": "Local MCP operator console",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "private-host",
+        "console",
+        "browser"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/metrology-clearance.yml",
+      "name": "Bounded metrology clearance",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "clearance"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/metrology-contract.yml",
+      "name": "Bounded metrology contract",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contract"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/microfab.yml",
+      "name": "Microfab declaration contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "microfab"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/monorepo.yml",
+      "name": "Public engineering superrepo qualification",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "source-history-and-migration-guards",
+        "independent-wheels-and-composition",
+        "inference-and-public-process-replay",
+        "mathematics-and-measurement-chain",
+        "flowstate-wheel-and-original-default-suite",
+        "flowstate-public-slow-reproduction",
+        "surface-science-lock-and-replay",
+        "operations-resources-and-bounded-cpu",
+        "independent-locked-web-packages"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/native-interop.yml",
+      "name": "Native interoperability integration",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "linux-integration"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/ncp-system.yml",
+      "name": "NCP knowledge and shared work system",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "knowledge-and-work"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/needle.yml",
+      "name": "Needle selective recomputation",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "needle"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-agent-mcp.yml",
+      "name": "NET agent MCP boundary",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "agent"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-computational-objects.yml",
+      "name": "NET computational object selection",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "source-selection"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-control-plane.yml",
+      "name": "NET control primitives",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "control"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-asset.yml",
+      "name": "NET Foundry asset worker",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-physics.yml",
+      "name": "NET Godot physics backend comparison",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-foundry-pipeline.yml",
+      "name": "NET Foundry production pipeline",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-foundry.yml",
+      "name": "NET Foundry 1792",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-gromacs-boundary.yml",
+      "name": "NET GROMACS boundary contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "provider-free"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-lammps.yml",
+      "name": "NET LAMMPS bounded external tooling",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native-cpu"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-math-visuals.yml",
+      "name": "NET mathematical and visual inspection",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "inspector"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-network-lifecycle.yml",
+      "name": "NET device and network lifecycle",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-nvalchemi.yml",
+      "name": "NET ALCHEMI bounded adapter",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "provider-free"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-production.yml",
+      "name": "NET production work orders",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts",
+        "native",
+        "reconstruction"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-scientific.yml",
+      "name": "NET scientific workflow connections",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "scientific"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-single-agent.yml",
+      "name": "Single-agent smith revision measurement",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-smith-workcell.yml",
+      "name": "Title-owned smith MCP workcell",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-unattended-agent.yml",
+      "name": "Unattended local vision-agent workcell",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-workcell.yml",
+      "name": "Executable MCP production workcell",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/net-workflow-algebra.yml",
+      "name": "Typed workflow algebra compiler",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/nise-handoff.yml",
+      "name": "NISE to NET semantic handoff",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "handoff"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/nvalchemi-cpu.yml",
+      "name": "ALCHEMI CPU single-point qualification",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "cpu-lj"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/operational-engineering.yml",
+      "name": "Operational engineering MCP",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "connected"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/operator-readiness.yml",
+      "name": "Installed operator readiness",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "candidate-wheel",
+        "installed-journey",
+        "operator-acceptance"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/oscillator-consumers-native.yml",
+      "name": "Native oscillator C++ and Godot consumers",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/oscillator-kernel-native.yml",
+      "name": "Julia oscillator native kernel",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/oscillator-reduction.yml",
+      "name": "Oscillator representation reduction experiment",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "experiment"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/parameter-program.yml",
+      "name": "Deterministic parameter programs",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "parameter"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/persistent-simulation.yml",
+      "name": "Persistent simulation contracts and Godot client",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/pilot-scope.yml",
+      "name": "Closed pilot and OpenUSD roundtrip",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed-pilot"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/polyglot-contracts.yml",
+      "name": "Polyglot linear-map contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/polymer-manufacturing.yml",
+      "name": "Installed polymer manufacturing and tool-point QC",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualify"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/polymer-microfab.yml",
+      "name": "Polymer production dossiers and namespace coexistence",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "retained-production"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/polymer-processing.yml",
+      "name": "Polymer processing instrument",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "reference-and-retention"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/polymer-science.yml",
+      "name": "Polymer rheology and thermochemical audits",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "scientific-reference"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/preservation-contracts.yml",
+      "name": "Typed preservation contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/preserve-foundry-delivery.yml",
+      "name": "Preserve Foundry delivery",
+      "triggers": [
+        "pull_request"
+      ],
+      "jobs": [
+        "preserve"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/procedural-graphics.yml",
+      "name": "Computational graphics workbench",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification",
+        "browser"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/proved-heat.yml",
+      "name": "Proved heat with real SP1",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "native-proof"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/reaction-benchmark.yml",
+      "name": "Reaction benchmark qualification",
+      "triggers": [
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "windows-reaction"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/real-ifc-transition.yml",
+      "name": "Real IFC execution and transition",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/refurbishment.yml",
+      "name": "Installed refurbishment and recorded bench qualification",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "candidate-wheel",
+        "installed-journey"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/release-evidence.yml",
+      "name": "NET release evidence",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "gate-tests",
+        "collect-candidate"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/release-operator.yml",
+      "name": "Installed release operator journeys",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed-journeys"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/remaining-modules.yml",
+      "name": "Remaining native modules in one bench",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "remaining-modules"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/representation-aware-needle.yml",
+      "name": "Representation-aware Needle",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "represented-needle"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/representation-morphisms.yml",
+      "name": "Representation and morphism registry",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "morphisms"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/representation-realizations.yml",
+      "name": "Representation realization adapters",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/review-examples.yml",
+      "name": "Review examples",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "installed-examples",
+        "windows-python311-preflight"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/rs-provider.yml",
+      "name": "GSC raster operations through NET",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "integration"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/semantic-capabilities.yml",
+      "name": "Semantic capability compiler",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/sensor-project.yml",
+      "name": "Retained sensor project contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/sequence-kinetics.yml",
+      "name": "Sequence kinetics reference integration",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "sequence"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/shared-preservation.yml",
+      "name": "Shared preservation instruments",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/simulated-fsrt.yml",
+      "name": "Simulated observation to FSRT",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "godot-fsrt"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/simulation-study.yml",
+      "name": "Stateful simulation study contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/simulation-timeline.yml",
+      "name": "Simulation evidence timeline",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "timeline"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/spatial-godot.yml",
+      "name": "Retained spatial Godot consumer",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "godot-spatial"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/spatial-mesh-realizations.yml",
+      "name": "Spatial and mesh realization adapters",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/spatial-provider.yml",
+      "name": "NET spatial provider and scene starter",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "local-frame"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/spatial-requests.yml",
+      "name": "GIS RS workbench request contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "contracts"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/stateful-agent.yml",
+      "name": "Stateful agent bridge",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "bridge"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/stateful-simulation.yml",
+      "name": "Stateful simulation reference contracts",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "reference"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/study-manufacturing.yml",
+      "name": "Study manufacturing genealogy",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualify"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/synthetic-fsrt-view.yml",
+      "name": "Synthetic FSRT retained view",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "combined-source"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/system-board-visual.yml",
+      "name": "System Board visual editor",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "board-visual"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/system-board.yml",
+      "name": "Parameterized System Board",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "board"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/system-composition.yml",
+      "name": "Scientific system composition",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "reference-and-wheel",
+        "oci-reference"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/telemetry.yml",
+      "name": "Pinned telemetry replay",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "telemetry"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/temperature-processing.yml",
+      "name": "Temperature measurement processing",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "software-contract"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/test.yml",
+      "name": "Prototype checks",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "python",
+        "plsr-terminal",
+        "installed-package",
+        "container-deployment",
+        "native-windows-deployment",
+        "godot-bridge"
+      ],
+      "release_required": true,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/thermal-identification.yml",
+      "name": "Thermal identification and Model-Reality contracts",
+      "triggers": [
+        "pull_request",
+        "push",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "bounded-identification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/thermofluids.yml",
+      "name": "Thermofluids reference tools",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "reference-checks"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/toolpoint-upgrades.yml",
+      "name": "Installed native QC stream, store and studies",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualify"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/uncertainty-providers.yml",
+      "name": "Optional uncertainty providers",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualify-installed"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/visual-evidence-projection.yml",
+      "name": "Visual evidence projection",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/visual-representation-gates.yml",
+      "name": "Visual representation gates",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/visual-system-board.yml",
+      "name": "Visual System Board",
+      "triggers": [
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/weather-science.yml",
+      "name": "Weather science",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "qualification"
+      ],
+      "release_required": false,
+      "uses_private_token": false
+    },
+    {
+      "path": ".github/workflows/workbench-candidates.yml",
+      "name": "Shared workbench candidate evidence",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "candidate-workbench"
+      ],
+      "release_required": false,
+      "uses_private_token": true
+    },
+    {
+      "path": ".github/workflows/workflow-contracts.yml",
+      "name": "Workflow contracts",
+      "triggers": [
+        "push",
+        "pull_request",
+        "workflow_dispatch"
+      ],
+      "jobs": [
+        "actionlint"
+      ],
+      "release_required": true,
+      "uses_private_token": false
+    }
+  ],
+  "github_registered_workflows": null,
+  "github_registered_states": null,
+  "registered_paths_absent_from_selected_tree": null,
+  "registered_inventory_status": "not_available: GitHub connector rejects the workflow-collection endpoint; tracked-file inventory is verified from the selected commit.",
+  "overlapping_explicit_test_modules": [
+    {
+      "module": "tests/test_control_plane.py",
+      "workflows": [
+        ".github/workflows/annotations.yml",
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/godot-observation-capture.yml",
+        ".github/workflows/godot-stateful.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/hypergraph-rewrite.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/instrument-contract.yml",
+        ".github/workflows/metrology-clearance.yml",
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/net-computational-objects.yml",
+        ".github/workflows/net-control-plane.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/polymer-processing.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/rs-provider.yml",
+        ".github/workflows/semantic-capabilities.yml",
+        ".github/workflows/simulation-study.yml",
+        ".github/workflows/simulation-timeline.yml",
+        ".github/workflows/spatial-requests.yml",
+        ".github/workflows/stateful-agent.yml",
+        ".github/workflows/stateful-simulation.yml",
+        ".github/workflows/temperature-processing.yml",
+        ".github/workflows/workflow-contracts.yml"
+      ]
+    },
+    {
+      "module": "tests/test_semantic_capabilities.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/instrument-contract.yml",
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/nise-handoff.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/semantic-capabilities.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_finite_preservation.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_covariance_artifacts.py",
+      "workflows": [
+        ".github/workflows/domain-provider-boundary.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/simulated-fsrt.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/synthetic-fsrt-view.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_covariance_records.py",
+      "workflows": [
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/simulated-fsrt.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/synthetic-fsrt-view.yml",
+        ".github/workflows/temperature-processing.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_interactive_contract.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/integrated-workloads.yml",
+        ".github/workflows/interactive-projectile.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/synthetic-fsrt-view.yml"
+      ]
+    },
+    {
+      "module": "tests/test_interactive_session.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/integrated-workloads.yml",
+        ".github/workflows/interactive-projectile.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/synthetic-fsrt-view.yml"
+      ]
+    },
+    {
+      "module": "tests/test_representation_morphisms.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-aware-needle.yml",
+        ".github/workflows/representation-morphisms.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_system_board.py",
+      "workflows": [
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/parameter-program.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-morphisms.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/system-board-visual.yml",
+        ".github/workflows/system-board.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_needle.py",
+      "workflows": [
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/needle.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-aware-needle.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/system-board.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_parameter_program.py",
+      "workflows": [
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/parameter-program.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-morphisms.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/system-board-visual.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_agent_protocol.py",
+      "workflows": [
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/metrology-clearance.yml",
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/polymer-processing.yml",
+        ".github/workflows/rs-provider.yml",
+        ".github/workflows/semantic-capabilities.yml",
+        ".github/workflows/spatial-requests.yml",
+        ".github/workflows/stateful-agent.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_board_morphisms.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_representation_interventions.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-aware-needle.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_game_retention.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_game_session.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_game_trace.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-development.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_production.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-project-production.yml",
+        ".github/workflows/historical-perspective.yml",
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-production.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_thermal_contract.py",
+      "workflows": [
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/finite-representation-preservation.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/thermofluids.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_operation_runner.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/domain-provider-boundary.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/hardware.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/net-nvalchemi.yml",
+        ".github/workflows/polymer-processing.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_preservation_contracts.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/preservation-contracts.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/shared-preservation.yml",
+        ".github/workflows/workflow-contracts.yml"
+      ]
+    },
+    {
+      "module": "tests/test_operation_failure_retention.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/hardware.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/polymer-processing.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_foundry.py",
+      "workflows": [
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-foundry.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_operation_publication.py",
+      "workflows": [
+        ".github/workflows/atmosphere-engine.yml",
+        ".github/workflows/fluid-dynamics.yml",
+        ".github/workflows/hardware.yml",
+        ".github/workflows/impact-contact.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_operator_catalog.py",
+      "workflows": [
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/hardware.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/operator-readiness.yml",
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/thermofluids.yml",
+        ".github/workflows/weather-science.yml"
+      ]
+    },
+    {
+      "module": "tests/test_foundry_pipeline.py",
+      "workflows": [
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml",
+        ".github/workflows/net-foundry-pipeline.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_simulation_control.py",
+      "workflows": [
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/godot-observation-capture.yml",
+        ".github/workflows/godot-stateful.yml",
+        ".github/workflows/rs-provider.yml",
+        ".github/workflows/simulation-timeline.yml",
+        ".github/workflows/spatial-requests.yml",
+        ".github/workflows/stateful-agent.yml",
+        ".github/workflows/stateful-simulation.yml"
+      ]
+    },
+    {
+      "module": "tests/test_check_suite.py",
+      "workflows": [
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/simulation-study.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_computational_objects.py",
+      "workflows": [
+        ".github/workflows/net-computational-objects.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/stateful-agent.yml"
+      ]
+    },
+    {
+      "module": "tests/test_computational_source.py",
+      "workflows": [
+        ".github/workflows/net-computational-objects.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml",
+        ".github/workflows/stateful-agent.yml"
+      ]
+    },
+    {
+      "module": "tests/test_simulation_campaign.py",
+      "workflows": [
+        ".github/workflows/godot-observation-capture.yml",
+        ".github/workflows/godot-stateful.yml",
+        ".github/workflows/rs-provider.yml",
+        ".github/workflows/simulation-timeline.yml",
+        ".github/workflows/spatial-requests.yml",
+        ".github/workflows/stateful-agent.yml",
+        ".github/workflows/stateful-simulation.yml"
+      ]
+    },
+    {
+      "module": "tests/test_industrial_transition.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/industrial-semantic-transition.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/shared-preservation.yml"
+      ]
+    },
+    {
+      "module": "tests/test_representation_expansion.py",
+      "workflows": [
+        ".github/workflows/evidence-bound-expansion.yml",
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/spatial-mesh-realizations.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_interop_ingress.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/executable-interoperability.yml",
+        ".github/workflows/real-ifc-transition.yml",
+        ".github/workflows/shared-preservation.yml"
+      ]
+    },
+    {
+      "module": "tests/test_protocol.py",
+      "workflows": [
+        ".github/workflows/hardware.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/legibility.yml",
+        ".github/workflows/polymer-processing.yml",
+        ".github/workflows/system-composition.yml"
+      ]
+    },
+    {
+      "module": "tests/test_scientific.py",
+      "workflows": [
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/simulation-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_scientific_observations.py",
+      "workflows": [
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml",
+        ".github/workflows/simulation-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_workcell.py",
+      "workflows": [
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_workcell_snapshot.py",
+      "workflows": [
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workcell.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_agent_experiment.py",
+      "workflows": [
+        ".github/workflows/metrology-clearance.yml",
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_agent_recovery.py",
+      "workflows": [
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/metrology-clearance.yml",
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/operational-engineering.yml"
+      ]
+    },
+    {
+      "module": "tests/test_annotations.py",
+      "workflows": [
+        ".github/workflows/annotation-nise-loop.yml",
+        ".github/workflows/annotations.yml",
+        ".github/workflows/artifact-provenance.yml",
+        ".github/workflows/investigation-efficiency.yml"
+      ]
+    },
+    {
+      "module": "tests/test_connectivity.py",
+      "workflows": [
+        ".github/workflows/connectivity.yml",
+        ".github/workflows/device-link.yml",
+        ".github/workflows/link-measurements.yml",
+        ".github/workflows/link-scalar-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_information_display.py",
+      "workflows": [
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/simulation-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_math_inspector.py",
+      "workflows": [
+        ".github/workflows/csr-microtools.yml",
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/simulation-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_polymer_manufacturing.py",
+      "workflows": [
+        ".github/workflows/polymer-manufacturing.yml",
+        ".github/workflows/polymer-microfab.yml",
+        ".github/workflows/study-manufacturing.yml",
+        ".github/workflows/toolpoint-upgrades.yml"
+      ]
+    },
+    {
+      "module": "tests/test_scientific_audit.py",
+      "workflows": [
+        ".github/workflows/hardware.yml",
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/workflow-contracts.yml"
+      ]
+    },
+    {
+      "module": "tests/test_visual_board.py",
+      "workflows": [
+        ".github/workflows/board-mcp-refit.yml",
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml",
+        ".github/workflows/visual-system-board.yml"
+      ]
+    },
+    {
+      "module": "tests/test_workcell_smith.py",
+      "workflows": [
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-smith-workcell.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_agent_transcript.py",
+      "workflows": [
+        ".github/workflows/net-single-agent.yml",
+        ".github/workflows/net-unattended-agent.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    },
+    {
+      "module": "tests/test_bim_quantity.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml",
+        ".github/workflows/real-ifc-transition.yml"
+      ]
+    },
+    {
+      "module": "tests/test_cli_json_boundary.py",
+      "workflows": [
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_correction_session.py",
+      "workflows": [
+        ".github/workflows/hardware.yml",
+        ".github/workflows/irrigation.yml",
+        ".github/workflows/system-composition.yml"
+      ]
+    },
+    {
+      "module": "tests/test_fsrt_view.py",
+      "workflows": [
+        ".github/workflows/fsrt-view.yml",
+        ".github/workflows/integrated-workloads.yml",
+        ".github/workflows/synthetic-fsrt-view.yml"
+      ]
+    },
+    {
+      "module": "tests/test_godot_simulation.py",
+      "workflows": [
+        ".github/workflows/godot-observation-capture.yml",
+        ".github/workflows/godot-stateful.yml",
+        ".github/workflows/simulation-timeline.yml"
+      ]
+    },
+    {
+      "module": "tests/test_installed_command.py",
+      "workflows": [
+        ".github/workflows/manufacturing-data-bridge.yml",
+        ".github/workflows/polymer-manufacturing.yml",
+        ".github/workflows/toolpoint-upgrades.yml"
+      ]
+    },
+    {
+      "module": "tests/test_julia_oscillator.py",
+      "workflows": [
+        ".github/workflows/native-interop.yml",
+        ".github/workflows/oscillator-consumers-native.yml",
+        ".github/workflows/oscillator-kernel-native.yml"
+      ]
+    },
+    {
+      "module": "tests/test_measured_thermal_agent.py",
+      "workflows": [
+        ".github/workflows/metrology-clearance.yml",
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/operational-engineering.yml"
+      ]
+    },
+    {
+      "module": "tests/test_polymer_toolpoint_qc.py",
+      "workflows": [
+        ".github/workflows/polymer-manufacturing.yml",
+        ".github/workflows/polymer-microfab.yml",
+        ".github/workflows/toolpoint-upgrades.yml"
+      ]
+    },
+    {
+      "module": "tests/test_simulation_capture.py",
+      "workflows": [
+        ".github/workflows/godot-observation-capture.yml",
+        ".github/workflows/simulation-timeline.yml",
+        ".github/workflows/stateful-agent.yml"
+      ]
+    },
+    {
+      "module": "tests/test_usd_export.py",
+      "workflows": [
+        ".github/workflows/pilot-scope.yml",
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_annotation_nise.py",
+      "workflows": [
+        ".github/workflows/annotation-nise-loop.yml",
+        ".github/workflows/investigation-efficiency.yml"
+      ]
+    },
+    {
+      "module": "tests/test_bim_interop.py",
+      "workflows": [
+        ".github/workflows/bim-interop-runtime.yml",
+        ".github/workflows/cse-preservation-tools.yml"
+      ]
+    },
+    {
+      "module": "tests/test_capabilities.py",
+      "workflows": [
+        ".github/workflows/legibility.yml",
+        ".github/workflows/system-composition.yml"
+      ]
+    },
+    {
+      "module": "tests/test_container_calculus.py",
+      "workflows": [
+        ".github/workflows/container-calculus.yml",
+        ".github/workflows/needle.yml"
+      ]
+    },
+    {
+      "module": "tests/test_corpus_retrieval.py",
+      "workflows": [
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_evidence_history.py",
+      "workflows": [
+        ".github/workflows/calibration-history-inspection.yml",
+        ".github/workflows/operational-engineering.yml"
+      ]
+    },
+    {
+      "module": "tests/test_foundry_asset.py",
+      "workflows": [
+        ".github/workflows/net-foundry-asset.yml",
+        ".github/workflows/net-foundry-physics.yml"
+      ]
+    },
+    {
+      "module": "tests/test_game_project.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-project-production.yml"
+      ]
+    },
+    {
+      "module": "tests/test_game_project_feedback.py",
+      "workflows": [
+        ".github/workflows/dsp-instrument.yml",
+        ".github/workflows/game-project-production.yml"
+      ]
+    },
+    {
+      "module": "tests/test_geometry_mesh_contract.py",
+      "workflows": [
+        ".github/workflows/procedural-graphics.yml",
+        ".github/workflows/spatial-mesh-realizations.yml"
+      ]
+    },
+    {
+      "module": "tests/test_investigation_efficiency.py",
+      "workflows": [
+        ".github/workflows/container-calculus.yml",
+        ".github/workflows/investigation-efficiency.yml"
+      ]
+    },
+    {
+      "module": "tests/test_json_numeric_boundary.py",
+      "workflows": [
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_link.py",
+      "workflows": [
+        ".github/workflows/device-link.yml",
+        ".github/workflows/link-scalar-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_link_qualification_artifacts.py",
+      "workflows": [
+        ".github/workflows/link-scalar-study.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_link_study_agent.py",
+      "workflows": [
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/metrology-clearance.yml"
+      ]
+    },
+    {
+      "module": "tests/test_mcp_sdk.py",
+      "workflows": [
+        ".github/workflows/mcp-control.yml",
+        ".github/workflows/operational-engineering.yml"
+      ]
+    },
+    {
+      "module": "tests/test_microfab.py",
+      "workflows": [
+        ".github/workflows/microfab.yml",
+        ".github/workflows/polymer-microfab.yml"
+      ]
+    },
+    {
+      "module": "tests/test_ncp_corpus_integration.py",
+      "workflows": [
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_ncp_corpus_link_workspace.py",
+      "workflows": [
+        ".github/workflows/ncp-system.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_ncp_evidence_assessment.py",
+      "workflows": [
+        ".github/workflows/link-scalar-study.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_ncp_supporting_evidence.py",
+      "workflows": [
+        ".github/workflows/link-scalar-study.yml",
+        ".github/workflows/net-agent-mcp.yml"
+      ]
+    },
+    {
+      "module": "tests/test_nise_handoff.py",
+      "workflows": [
+        ".github/workflows/annotation-nise-loop.yml",
+        ".github/workflows/nise-handoff.yml"
+      ]
+    },
+    {
+      "module": "tests/test_operation_contract_enforcement.py",
+      "workflows": [
+        ".github/workflows/hardware.yml",
+        ".github/workflows/workflow-contracts.yml"
+      ]
+    },
+    {
+      "module": "tests/test_oscillator_kernel.py",
+      "workflows": [
+        ".github/workflows/oscillator-consumers-native.yml",
+        ".github/workflows/oscillator-kernel-native.yml"
+      ]
+    },
+    {
+      "module": "tests/test_polymer_agent.py",
+      "workflows": [
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_polymer_metrology.py",
+      "workflows": [
+        ".github/workflows/temperature-processing.yml",
+        ".github/workflows/thermal-identification.yml"
+      ]
+    },
+    {
+      "module": "tests/test_polymer_namespace_coexistence.py",
+      "workflows": [
+        ".github/workflows/manufacturing-data-bridge.yml",
+        ".github/workflows/polymer-microfab.yml"
+      ]
+    },
+    {
+      "module": "tests/test_reaction_cantera_worker.py",
+      "workflows": [
+        ".github/workflows/cantera-worker.yml",
+        ".github/workflows/reaction-benchmark.yml"
+      ]
+    },
+    {
+      "module": "tests/test_reference_comparison.py",
+      "workflows": [
+        ".github/workflows/operational-engineering.yml",
+        ".github/workflows/operator-readiness.yml"
+      ]
+    },
+    {
+      "module": "tests/test_representation_realizations.py",
+      "workflows": [
+        ".github/workflows/representation-realizations.yml",
+        ".github/workflows/spatial-mesh-realizations.yml"
+      ]
+    },
+    {
+      "module": "tests/test_sensor_project.py",
+      "workflows": [
+        ".github/workflows/manufacturing-analysis.yml",
+        ".github/workflows/sensor-project.yml"
+      ]
+    },
+    {
+      "module": "tests/test_simulated_fsrt.py",
+      "workflows": [
+        ".github/workflows/simulated-fsrt.yml",
+        ".github/workflows/synthetic-fsrt-view.yml"
+      ]
+    },
+    {
+      "module": "tests/test_simulation_study.py",
+      "workflows": [
+        ".github/workflows/godot-motion.yml",
+        ".github/workflows/simulation-study.yml"
+      ]
+    },
+    {
+      "module": "tests/test_spatial_provider.py",
+      "workflows": [
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_spatial_requests.py",
+      "workflows": [
+        ".github/workflows/rs-provider.yml",
+        ".github/workflows/spatial-requests.yml"
+      ]
+    },
+    {
+      "module": "tests/test_superrepo_doctor.py",
+      "workflows": [
+        ".github/workflows/monorepo.yml",
+        ".github/workflows/review-examples.yml"
+      ]
+    },
+    {
+      "module": "tests/test_temperature_agent.py",
+      "workflows": [
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_temperature_processing.py",
+      "workflows": [
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_temperature_verification.py",
+      "workflows": [
+        ".github/workflows/net-agent-mcp.yml",
+        ".github/workflows/temperature-processing.yml"
+      ]
+    },
+    {
+      "module": "tests/test_thermal_workflow.py",
+      "workflows": [
+        ".github/workflows/net-math-visuals.yml",
+        ".github/workflows/net-scientific.yml"
+      ]
+    },
+    {
+      "module": "tests/test_thermochemical_benchmark.py",
+      "workflows": [
+        ".github/workflows/materials-session.yml",
+        ".github/workflows/polymer-science.yml"
+      ]
+    },
+    {
+      "module": "tests/test_usda_export.py",
+      "workflows": [
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_visual_representation_gate.py",
+      "workflows": [
+        ".github/workflows/visual-evidence-projection.yml",
+        ".github/workflows/visual-representation-gates.yml"
+      ]
+    },
+    {
+      "module": "tests/test_workbench_session.py",
+      "workflows": [
+        ".github/workflows/spatial-godot.yml",
+        ".github/workflows/spatial-provider.yml"
+      ]
+    },
+    {
+      "module": "tests/test_workflow_algebra.py",
+      "workflows": [
+        ".github/workflows/hypergraph-rewrite.yml",
+        ".github/workflows/net-workflow-algebra.yml"
+      ]
+    }
+  ],
+  "overlap_warning": "Shared test paths are review candidates, not proof of redundant qualification: OS/runtime matrices, installed wheels, permissions and evidence contracts can differ."
+}

@@ -70,6 +70,10 @@ WORKFLOW = _object({"workflow": TEXT, "operation_id": TEXT, "role": TEXT,
     "authorizes_execution": {"const": False}})
 
 TOOLS = {
+    "ncp_integrations_list": _tool("integrations", "Page imported modules, surrounding systems or external boundaries with source/licence and existing profile-specific workflow declarations. This does not probe, install, bind, execute or qualify a provider.",
+        {"section": {"type": "string", "enum": ["imports", "systems", "external"]}, "offset": OFFSET, "limit": LIMIT}, JSON_OBJECT, required=[]),
+    "ncp_integration_describe": _tool("integration", "Inspect one exact integration source and its existing runtime-pin connections. A module default pin does not replace workflow-specific current or historical pins. Discovery grants no authority.",
+        {"section": {"type": "string", "enum": ["imports", "systems", "external"]}, "source_id": {"type": "string", "minLength": 1, "maxLength": 160}}, JSON_OBJECT),
     "ncp_workflows_list": _tool("workflows", "Page the wider operator workflow catalog and explicit provisioning prerequisites. These are navigation declarations, not grants or host-bound executable capabilities.",
         {"offset": OFFSET, "limit": LIMIT}, _object({"items": {"type": "array", "items": WORKFLOW},
         "total": {"type": "integer"}, "next_offset": {"anyOf": [{"type": "integer"}, {"type": "null"}]},
@@ -260,6 +264,14 @@ class ControlHost:
         end = offset + len(items)
         return {"items": items, "total": len(rows),
                 "next_offset": end if end < len(rows) else None, "authorizes_execution": False}
+
+    def integrations(self, section='imports', offset=0, limit=16):
+        from .integration_catalog import listing
+        return listing(section, offset=offset, limit=limit)
+
+    def integration(self, section, source_id):
+        from .integration_catalog import describe
+        return describe(section, source_id)
 
     def capabilities(self):
         with self._lock:

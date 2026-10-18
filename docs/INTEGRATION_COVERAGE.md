@@ -1,5 +1,7 @@
 # Integration coverage and evidence boundaries
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 Source audit refreshed: **2026-10-04**, inspected baseline
 `554bb1540ef1b621af9e08f2d632095ca958150d`. This is a selected inventory of
 implemented source surfaces and their tests, not an exhaustive operation list

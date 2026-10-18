@@ -1,5 +1,7 @@
 # Notation Systems computational instrumentation stack
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 The concise provider and loose-tool map is [SYSTEMS_CATALOG.md](SYSTEMS_CATALOG.md).
 This page remains the detailed responsibility, boundary and numerical-foundation
 reference.

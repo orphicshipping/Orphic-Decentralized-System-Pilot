@@ -20,7 +20,7 @@ The application focus includes polymer processing, component development, instru
 
 This branch consolidates the open development work into one review candidate. The
 installed aliases are `ncp`, `net`, and `ciw`; package and retained record identities
-are unchanged. Review the [consolidation ledger](docs/PR_CONSOLIDATION_20261017.md)
+are unchanged. Review the [selected baseline ledger](docs/RESEARCH_BASELINE_20261017.md)
 for the exact source PRs, integration decisions, executed checks, and blocked
 qualification. This candidate is not a release or a claim of universal provider
 qualification.
@@ -90,6 +90,8 @@ Optional providers require the exact runtimes and dependencies specified by thei
 An optional [registered heat profile](docs/PROVED_HEAT.md) connects to the Scientific Computation Runtime and SP1 for a bounded integer calculation. Its proof concerns the registered computation and commitments, not physical calibration or the validity of an arbitrary heat model. Reading a saved proof report is not a fresh verifier execution. The retained profile makes no privacy claim.
 
 ## Local evaluation
+
+[Start with one installed investigation](docs/BASELINE_START_HERE.md) · [Related repositories and provider boundaries](docs/LATENT_PROVIDER_SURFACE_20261018.md) · [Risks and owners](docs/BASELINE_RISKS_20261018.md)
 
 <a id="quickstart"></a>
 
@@ -176,6 +178,10 @@ Use the [model-validity guide](docs/MODEL_VALIDITY_AND_EVIDENCE.md), [operator-r
 Adapters must preserve original source records and their declared semantics. Unit/frame changes, correction, filtering, and inference belong to explicit operations with their own inputs and results. Transport identity, measurement identity, and computation occurrences must not be conflated. Use the existing contracts instead of introducing a parallel measurement store or execution engine.
 
 ### Agent and application access
+
+[Provider discovery and native console bindings](docs/PROVIDER_INTEGRATION.md)
+connect the source/license inventory to existing workflow pins and expose the
+bounded BIM clearance profile through the common admitted-plan interface.
 
 MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
 

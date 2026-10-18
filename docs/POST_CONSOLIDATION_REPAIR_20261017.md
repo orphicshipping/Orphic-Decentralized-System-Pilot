@@ -1,5 +1,7 @@
 # Post-consolidation repair and qualification record
 
+> Current selected code and final close-out evidence: [research baseline ledger](RESEARCH_BASELINE_20261017.md). The dated observations below remain historical.
+
 Reviewed main: `8a6beb844a4a3c3944637b1e3f386d48d28507d0`.
 PRs #229, #230 and #231 are merged. All 79 remaining open PR heads at this
 snapshot match the earlier 80-entry consolidation ledger. Open PR state is not

@@ -1,5 +1,7 @@
 # Provider availability and private provisioning
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 CIW can run the adapter, retained-telemetry and calibrated-observable gates
 against explicitly provisioned local provider checkouts. This removes anonymous
 GitHub cloning from those gate invocations. It does not make the complete
@@ -8,6 +10,10 @@ package dependencies and nested provider helpers still require access review.
 No credential configuration or repository visibility is changed by these gates.
 
 ## Existing-checkout gates
+
+Use [installed source-to-workflow discovery](PROVIDER_INTEGRATION.md) to inspect
+module and profile-specific pins before selecting a checkout. The existing
+native BIM and leakage profiles also have explicit control/console launch paths.
 
 Provision the exact commits from the relevant runtime manifest before starting
 the gate. A branch name or a newer compatible-looking revision is insufficient.

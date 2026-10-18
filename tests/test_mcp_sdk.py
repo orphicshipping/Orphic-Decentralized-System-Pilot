@@ -54,6 +54,11 @@ def test_live_modern_and_legacy_clients(tmp_path, surface, modern):
                     refused = await client.call_tool("arbitrary_shell", {"command": "anything"})
                     assert refused.is_error
                     if surface == "control":
+                        integrations = await client.call_tool('ncp_integrations_list', {'section': 'imports', 'limit': 32})
+                        assert not integrations.is_error and integrations.structured_content['data']['total'] == 21
+                        module = await client.call_tool('ncp_integration_describe', {'section': 'imports', 'source_id': 'estimator-bench'})
+                        assert not module.is_error and module.structured_content['data']['item']['license'] == 'Apache-2.0'
+                        assert len({c['runtime_pin']['revision'] for c in module.structured_content['data']['item']['workflow_connections']}) > 1
                         templates = await client.list_resource_templates()
                         assert len(templates.resource_templates) == 3
                         with pytest.raises(MCPError): await client.read_resource("file:///secret")

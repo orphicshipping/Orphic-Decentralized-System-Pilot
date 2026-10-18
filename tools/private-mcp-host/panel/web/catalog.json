@@ -1603,5 +1603,30 @@
     "command": "python scripts/superrepo.py list",
     "qualification_command": "python scripts/superrepo.py check --output-dir NEW",
     "scope": "source_checkout_only; imports_do_not_install_or_bind_providers"
+  },
+  "integration_sources": {
+    "schema": "ciw.integration-catalog.v1",
+    "catalog_ref": "sha256:be55e3f2846b882f8eea65a9c2365173cd24fc1aaba45a2cf6a86350722e8079",
+    "counts": {
+      "imports": 21,
+      "systems": 26,
+      "external": 19
+    },
+    "source_files": {
+      "instruments/manifest.json": "831e2a82ec8edb790b72e611ef1cff4de3a2eb37c2710d2499658fea5782a743",
+      "docs/SYSTEMS_CATALOG.md": "ab7639368f14feecba322e15555cf48cf475cbfa28ae3c47438173cbabfddcb9",
+      "src/ciw/adapter-runtimes.json": "79098fa4fb0cb9dfe9269224c146c0874a058bf5191824609245389d2b9f80fc",
+      "src/ciw/calibrated-observable-runtimes.json": "c9431c28e3bdcf2c2c15bdc42b83dceb799801dbcadf2cb3dbe802e8a093fa08",
+      "src/ciw/calibrated-window-runtimes.json": "36849335cdc35070564fc6f790d2faf679fa7f6a906c29b455b236158b3ecdbd",
+      "src/ciw/esm-runtime.json": "1623a4e52d7580b6857eed07397bf12b50a8dd52b31130024f9b8d4f11c8fbae",
+      "src/ciw/exchange-runtime.json": "2dbf31fcf8c40430f2ea91ada4ca7de7d18008210a6e4f4301ac811ed3262671",
+      "src/ciw/identified-design-runtimes.json": "84868db50a22533e8564fb34b2a09a03c5453c7fb72515a77a39c58397efc4cd",
+      "src/ciw/native-interop-runtimes.json": "bab1be76e41a2dcf165b253e8d263822edd4e3ac76eecdac574f6138d782076a",
+      "src/ciw/plsr-runtime.json": "bc40205c1c6227fb1ad23f78323514bf4224aca0c0949da808be7499112c9960",
+      "src/ciw/telemetry-runtimes.json": "92a300341c16b3019b6f046b1d664968ca67c728beb6a313f8986b304a987013"
+    },
+    "authorizes_execution": false,
+    "qualification": "not_established_by_discovery",
+    "binding_source": "explicit_host_configuration_only"
   }
 }

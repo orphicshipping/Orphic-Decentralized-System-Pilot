@@ -14,6 +14,7 @@ def catalog() -> dict:
     from .operator_provision import catalog as provision_catalog
     from .scientific import catalog as scientific_catalog
     from .workbench import Workbench
+    from .integration_catalog import summary as integration_summary
 
     navigation = scientific_catalog()
     routes = {row["source_kind"]: row for row in navigation["operations"]}
@@ -52,7 +53,8 @@ def catalog() -> dict:
             "boundaries": navigation["other_boundaries"],
             "source_inventory": {"command": "python scripts/superrepo.py list",
                 "qualification_command": "python scripts/superrepo.py check --output-dir NEW",
-                "scope": "source_checkout_only; imports_do_not_install_or_bind_providers"}}
+                "scope": "source_checkout_only; imports_do_not_install_or_bind_providers"},
+            "integration_sources": integration_summary()}
 
 
 def main(argv=None) -> int:
@@ -60,9 +62,23 @@ def main(argv=None) -> int:
     parser.add_argument("--json", action="store_true")
     parser.add_argument("--audit", action="store_true", help="Audit scientific review coverage; does not run qualification")
     parser.add_argument("--repository", type=Path, help="With --audit, check referenced source/test files in an explicit checkout")
+    parser.add_argument("--integrations", choices=('imports', 'systems', 'external'), help="Read installed source-to-workflow declarations")
+    parser.add_argument("--source", help="With --integrations, describe one exact catalog source ID")
     args = parser.parse_args(argv)
     if args.repository is not None and not args.audit:
         parser.error("--repository requires --audit")
+    if args.source is not None and args.integrations is None:
+        parser.error("--source requires --integrations")
+    if args.integrations is not None:
+        if args.audit or args.repository:
+            parser.error("Integration discovery and scientific review audit are separate requests")
+        from .integration_catalog import describe, listing
+        try:
+            value = describe(args.integrations, args.source) if args.source else listing(args.integrations, limit=32)
+        except ValueError as error:
+            parser.error(str(error))
+        print(json.dumps(value, indent=2, allow_nan=False))
+        return 0
     if args.audit:
         from .scientific_audit import audit
         value = audit(repository=args.repository)

@@ -1,5 +1,7 @@
 # Systems catalog
 
+> Selected-baseline source/pin audit: [related repositories and latent provider boundaries](LATENT_PROVIDER_SURFACE_20261018.md). It preserves the manifest and profile-specific qualification limits.
+
 This page is the CIW-facing map of the surrounding Notation Systems tools. It
 is an integration index, not a replacement for an independent repository's
 README, license or scientific contract. Each linked repository remains
@@ -7,6 +9,10 @@ responsible for its own implementation and should be read at the exact
 revision named by the applicable CIW manifest.
 
 ## Status vocabulary
+
+The installed [provider discovery interface](PROVIDER_INTEGRATION.md) projects
+these declarations through CLI, MCP and the local console, retaining each
+profile's separate pins and explicit launch/grant requirements.
 
 | Status | Meaning |
 | --- | --- |

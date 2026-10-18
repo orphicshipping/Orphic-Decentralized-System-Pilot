@@ -23,6 +23,30 @@ from .control_plane import builtin_registry, experiment, plan_graph, ParameterSp
 
 VERSIONS = ("2025-11-25", "2025-06-18")
 INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance")
+
+
+def native_bindings(instrument, *, checkout=None, revision=None, python=None):
+    """Fixed trusted launchers only; evidence and MCP arguments cannot select code."""
+    if type(instrument) is not str or instrument not in INSTRUMENTS:
+        raise ValueError('Select an existing fixed instrument profile')
+    if instrument not in {'leakage', 'bim-clearance'}:
+        if any(value is not None for value in (checkout, revision, python)):
+            raise ValueError('Native provider flags require leakage or bim-clearance')
+        return {}
+    if checkout is None or not Path(checkout).is_absolute():
+        raise ValueError('Native provider requires an absolute host-selected checkout')
+    if python is not None and not Path(python).is_absolute():
+        raise ValueError('Native interpreter must be an absolute host-selected executable')
+    if instrument == 'leakage':
+        if revision is not None:
+            raise ValueError('Leakage retains its fixed source pin; no revision override')
+        from .leakage_native import NativeLeakageBackend
+        return {'leakage_backend': NativeLeakageBackend(checkout, python=python)}
+    import re
+    if type(revision) is not str or re.fullmatch(r'[0-9a-f]{40}', revision) is None:
+        raise ValueError('BIM clearance requires a full host-selected provider revision')
+    from .metrology_clearance import Provider
+    return {'clearance_provider': Provider(checkout, revision, python=sys.executable if python is None else python)}
 MAX_MESSAGE = 1024 * 1024
 MAX_REQUESTS = 4096
 INSTRUCTIONS = (
@@ -446,9 +470,10 @@ def main(argv: list[str] | None = None) -> int:
     command.add_argument("--instrument", choices=INSTRUMENTS, default="builtin",
                          help="Explicit trusted instrument binding; profile data cannot select providers")
     command.add_argument("--provider-checkout", type=Path,
-                         help="Absolute operator-selected pinned FlowState checkout; leakage only")
+                         help="Absolute operator-selected pinned FlowState or CSE checkout")
+    command.add_argument("--provider-revision", help="Full original CSE revision; BIM clearance only")
     command.add_argument("--python", type=Path,
-                         help="Absolute operator-selected native interpreter; leakage only")
+                         help="Absolute operator-selected native interpreter")
     command = subs.add_parser("demo-config", help="Create an explicitly synthetic builtin-only operator profile")
     command.add_argument("--output-dir", type=Path, required=True)
     command.add_argument("--stateful", action="store_true", help="Also create an optional bounded reference-simulation profile")
@@ -512,33 +537,23 @@ def main(argv: list[str] | None = None) -> int:
             if args.corpus_bundle is None or args.corpus_ref is None:
                 raise ValueError("Corpus launch requires both --corpus-bundle and --corpus-ref")
             if (args.instrument != "builtin" or args.resume or args.provider_checkout is not None
-                    or args.python is not None):
+                    or args.python is not None or args.provider_revision is not None):
                 raise ValueError("Corpus launch requires builtin inspection without native flags or resume")
         if args.simulation_profile is not None and (combined_corpus or args.sdk or args.instrument != "builtin" or args.resume):
             raise ValueError("Simulation launch requires the builtin stdio host without corpus, SDK or resume")
-        leakage_backend = None
-        if args.instrument == "leakage":
-            if args.provider_checkout is None or not args.provider_checkout.is_absolute():
-                raise ValueError("Leakage launch requires an absolute --provider-checkout")
-            if args.python is not None and not args.python.is_absolute():
-                raise ValueError("Native --python must be an absolute operator-selected interpreter")
-        elif args.provider_checkout is not None or args.python is not None:
-            raise ValueError("Native provider flags require --instrument leakage")
-        if args.instrument == "leakage":
+        if args.instrument in {"leakage", "bim-clearance"}:
             _profile(args.profile)
         # Reserve the original stdout solely for protocol; redirect even C/native stdout
         # diagnostics to stderr. This protects framing, not provider sandboxing.
         with os.fdopen(os.dup(sys.stdout.fileno()), "wb", buffering=0) as wire:
             os.dup2(sys.stderr.fileno(), sys.stdout.fileno())
-            if args.instrument == "leakage":
-                from .leakage_native import NativeLeakageBackend
-                leakage_backend = NativeLeakageBackend(args.provider_checkout, python=args.python)
+            bindings = native_bindings(args.instrument, checkout=args.provider_checkout,
+                                       revision=args.provider_revision, python=args.python)
             if combined_corpus:
                 from .corpus_agent import combined_from_profile
                 host = combined_from_profile(args.profile, args.corpus_bundle, expected_ref=args.corpus_ref)
             else:
-                host = from_profile(args.profile, instrument=args.instrument, leakage_backend=leakage_backend,
-                                    resume=args.resume)
+                host = from_profile(args.profile, instrument=args.instrument, resume=args.resume, **bindings)
             try:
                 if args.simulation_profile is not None:
                     from .simulation_agent import from_profile as bind_simulation

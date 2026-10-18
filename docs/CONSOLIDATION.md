@@ -1,5 +1,7 @@
 # Cross-system consolidation
 
+> Baseline close-out: [selected evidence](RESEARCH_BASELINE_20261017.md). Optional next-leg preparation is recorded in the [design-only readiness note](CONNECTIVE_TISSUE_READINESS_20261018.md); it adds no runtime implementation.
+
 > Current implementation status (2026-10-17): PRs #229, #230 and #231 have
 > merged. The earlier roadmap below retains its original scope and evidence
 > dates; open source PRs alone do not identify unimplemented functionality.

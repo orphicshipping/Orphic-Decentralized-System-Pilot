@@ -1,0 +1,646 @@
+{
+  "schema": "ciw.operator-readiness.v1",
+  "status": "completed",
+  "output_dir": "/workspace/scratch/983c4968e2d6/baseline-final-first-use",
+  "authority": {
+    "scope": "bounded_synthetic_core_workflows",
+    "external_provider_qualification": "not_performed",
+    "physical_validation": "not_established",
+    "state_admission": "not_performed",
+    "hardware_actuation": "not_performed"
+  },
+  "checks": [
+    {
+      "check": "core_preflight",
+      "status": "passed",
+      "observed": {
+        "status": "preflight_passed",
+        "qualification": "not_performed",
+        "checks": [
+          "ciw_distribution",
+          "python_version",
+          "core_dependency:numpy",
+          "core_dependency:websockets"
+        ]
+      }
+    },
+    {
+      "check": "oscillator",
+      "status": "passed",
+      "observed": {
+        "status": "completed",
+        "session_id": "session-778d62295967454188e2809b8da247a3",
+        "source_evidence_id": "sha256:824a01978910ebcf738dffb75370c931e7fffc0eef6ee97bc11ec3223f1323c2",
+        "operations": [
+          {
+            "operation_id": "statistics.v1",
+            "execution_id": "execution-a085dc3387b24db5a40eb19ecf8fe2e9",
+            "result_id": "result-1d4677684ca048ff8192614558a4dac0",
+            "verification_status": "not_verified",
+            "verification_id": null
+          },
+          {
+            "operation_id": "spectrum.periodogram.v1",
+            "execution_id": "execution-2c7bf3b1bacc49a1b8dc3860b53fb887",
+            "result_id": "result-23bd0be11bce470da686e65746ebd693",
+            "verification_status": "not_verified",
+            "verification_id": null
+          }
+        ],
+        "reopen": "retained_identities_preserved_without_reexecution",
+        "workspace_sha256": "sha256:59e456d6f7ed8382f72221968f8eec76985049fcd031c285e92ffcdb7e95a169"
+      }
+    },
+    {
+      "check": "thermal",
+      "status": "passed",
+      "observed": {
+        "status": "completed",
+        "scope": "synthetic_python_reference_and_retained_projection_only",
+        "source_sha256": "sha256:417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82",
+        "source_evidence_id": "sha256:417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82",
+        "workspace_sha256": "sha256:abcd5f57fada54514136045419fcaa093161c8515c78bc8a478caf41f2d0c89d",
+        "replay_workspace_sha256": "sha256:91dcb64258dee3d4b05c4284747f27d0baef8f424a354bcacf992aae23a46a9e",
+        "source_bundle_id": "sha256:c337c3182c98bc2bdabea14457e2edbd0e8a1a35f8e1858dc692ef776d326c5d",
+        "replayed_bundle_id": "sha256:d60e7e2a3eb01bc077aaa50711aae1443d048698b64becee88b32bbd64a01793",
+        "original_execution_id": "execution-67a08a30cdd04961931669c15128458b",
+        "replay_execution_id": "execution-b449ba8e3f2d453999df05b5250818d5",
+        "original_result_id": "sha256:938001f5e0a11a2779b78cddc9b33e9cf007ed53cf2111875608d6d5b680ad46",
+        "replay_result_id": "sha256:30f03a11283d896252b67fb852ff30dec5a9f837e7bb235059ab67d925f85898",
+        "verification": {
+          "verification_id": "sha256:a62e080084882439c0f1f13a091e4971bf044fdac7cc6022e6b74c72604e4daa",
+          "outcome": "passed",
+          "method": "same_python_reference_fresh_occurrence_reproduction",
+          "independent": false
+        },
+        "replay_verification_id": "sha256:d93ea29a8ce843eb6960d863b3441b930fb2db4ce3d310162f3dc7d8fb300162",
+        "replay_receipt_id": "sha256:29912a343a4c9ef065efde4a1ed13a96184d94bed5d4c6330eaaca825095fab9",
+        "samples": 3,
+        "checks": {
+          "replay-comparison": {
+            "status": "PASS",
+            "sample_count": 3,
+            "component_count": 6,
+            "unit": "K",
+            "metrics": {
+              "rmse": 0.0,
+              "max_abs_error": 0.0,
+              "max_tolerance_excess": 0.0
+            },
+            "reason": "within_tolerance"
+          },
+          "measurement-comparison": {
+            "status": "INDETERMINATE",
+            "sample_count": 0,
+            "component_count": 0,
+            "metrics": null,
+            "unit": null,
+            "reason": "missing_sample"
+          },
+          "prediction-comparison": {
+            "status": "FAIL",
+            "sample_count": 3,
+            "component_count": 6,
+            "unit": "K",
+            "metrics": {
+              "rmse": 0.2947009039147308,
+              "max_abs_error": 0.5182304369313897,
+              "max_tolerance_excess": 0.5182304369313897
+            },
+            "reason": "tolerance_exceeded"
+          }
+        },
+        "physical_validation": "not_established",
+        "state_admission": "not_performed"
+      }
+    },
+    {
+      "check": "atmosphere",
+      "status": "passed",
+      "observed": {
+        "status": "LOCAL",
+        "source_evidence_id": "sha256:8924fac8ec43317fcda417210e7784d5c08462a61190aa5753f2e66183d2fd20",
+        "execution_id": "execution-aaa4cab387414cb4b431a63b9e110c56",
+        "result_id": "result-0374066730644aa6a6871af91c0297bc",
+        "verification_execution_id": "execution-e23f09d20e9649b2864f753d7ef221fa",
+        "verification_result_id": "result-0557805c67c44d1f9ca2a9ee4a259418",
+        "verification_id": "verification-3cc6870c67f04bd8b5a89ca88225fe79",
+        "verification_method": "independent_dry_hydrostatic_numerical_audit",
+        "recheck": "fresh_numerical_diagnostics_preserve_retained_verification_identity",
+        "recomputed_report_digest": "sha256:b01cef7441f50d680a551e72820af30ced61ce0c3919a49f8848d99a6e3c580f",
+        "checks": [
+          {
+            "name": "boundary_pressure",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "boundary_temperature",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "cumulative_pressure_profile",
+            "value": 7.692687284349965e-14,
+            "tolerance": 1e-08,
+            "status": "PASS"
+          },
+          {
+            "name": "declared_temperature_domain",
+            "value": 0.0,
+            "tolerance": 0.0,
+            "status": "PASS"
+          },
+          {
+            "name": "dynamic_viscosity",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "equation_of_state",
+            "value": 1.8125908702265847e-16,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "kinematic_viscosity",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "positive_properties",
+            "value": 0.0,
+            "tolerance": 0.0,
+            "status": "PASS"
+          },
+          {
+            "name": "potential_temperature",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "potential_temperature_stability",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "prescribed_temperature",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "prescribed_wind",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "pressure_monotonicity",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          },
+          {
+            "name": "quadrature_budget",
+            "value": 0.0,
+            "tolerance": 0.0,
+            "status": "PASS"
+          },
+          {
+            "name": "quadrature_refinement",
+            "value": 1.1551416290667907e-12,
+            "tolerance": 1e-08,
+            "status": "PASS"
+          },
+          {
+            "name": "segment_hydrostatic_balance",
+            "value": 1.2628786905111236e-14,
+            "tolerance": 1e-08,
+            "status": "PASS"
+          },
+          {
+            "name": "sound_speed",
+            "value": 0.0,
+            "tolerance": 1e-10,
+            "status": "PASS"
+          }
+        ],
+        "authority": {
+          "physical_validation": "not_established",
+          "weather_prediction": "not_established",
+          "scale_preservation": "not_established",
+          "state_admission": "not_performed",
+          "hardware_actuation": "not_performed"
+        }
+      }
+    }
+  ],
+  "workflows": {
+    "oscillator": {
+      "status": "completed",
+      "session_id": "session-778d62295967454188e2809b8da247a3",
+      "source_evidence_id": "sha256:824a01978910ebcf738dffb75370c931e7fffc0eef6ee97bc11ec3223f1323c2",
+      "operations": [
+        {
+          "operation_id": "statistics.v1",
+          "execution_id": "execution-a085dc3387b24db5a40eb19ecf8fe2e9",
+          "result_id": "result-1d4677684ca048ff8192614558a4dac0",
+          "verification_status": "not_verified",
+          "verification_id": null
+        },
+        {
+          "operation_id": "spectrum.periodogram.v1",
+          "execution_id": "execution-2c7bf3b1bacc49a1b8dc3860b53fb887",
+          "result_id": "result-23bd0be11bce470da686e65746ebd693",
+          "verification_status": "not_verified",
+          "verification_id": null
+        }
+      ],
+      "reopen": "retained_identities_preserved_without_reexecution",
+      "workspace_sha256": "sha256:59e456d6f7ed8382f72221968f8eec76985049fcd031c285e92ffcdb7e95a169"
+    },
+    "thermal": {
+      "status": "completed",
+      "scope": "synthetic_python_reference_and_retained_projection_only",
+      "source_sha256": "sha256:417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82",
+      "source_evidence_id": "sha256:417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82",
+      "workspace_sha256": "sha256:abcd5f57fada54514136045419fcaa093161c8515c78bc8a478caf41f2d0c89d",
+      "replay_workspace_sha256": "sha256:91dcb64258dee3d4b05c4284747f27d0baef8f424a354bcacf992aae23a46a9e",
+      "source_bundle_id": "sha256:c337c3182c98bc2bdabea14457e2edbd0e8a1a35f8e1858dc692ef776d326c5d",
+      "replayed_bundle_id": "sha256:d60e7e2a3eb01bc077aaa50711aae1443d048698b64becee88b32bbd64a01793",
+      "original_execution_id": "execution-67a08a30cdd04961931669c15128458b",
+      "replay_execution_id": "execution-b449ba8e3f2d453999df05b5250818d5",
+      "original_result_id": "sha256:938001f5e0a11a2779b78cddc9b33e9cf007ed53cf2111875608d6d5b680ad46",
+      "replay_result_id": "sha256:30f03a11283d896252b67fb852ff30dec5a9f837e7bb235059ab67d925f85898",
+      "verification": {
+        "verification_id": "sha256:a62e080084882439c0f1f13a091e4971bf044fdac7cc6022e6b74c72604e4daa",
+        "outcome": "passed",
+        "method": "same_python_reference_fresh_occurrence_reproduction",
+        "independent": false
+      },
+      "replay_verification_id": "sha256:d93ea29a8ce843eb6960d863b3441b930fb2db4ce3d310162f3dc7d8fb300162",
+      "replay_receipt_id": "sha256:29912a343a4c9ef065efde4a1ed13a96184d94bed5d4c6330eaaca825095fab9",
+      "samples": 3,
+      "checks": {
+        "replay-comparison": {
+          "status": "PASS",
+          "sample_count": 3,
+          "component_count": 6,
+          "unit": "K",
+          "metrics": {
+            "rmse": 0.0,
+            "max_abs_error": 0.0,
+            "max_tolerance_excess": 0.0
+          },
+          "reason": "within_tolerance"
+        },
+        "measurement-comparison": {
+          "status": "INDETERMINATE",
+          "sample_count": 0,
+          "component_count": 0,
+          "metrics": null,
+          "unit": null,
+          "reason": "missing_sample"
+        },
+        "prediction-comparison": {
+          "status": "FAIL",
+          "sample_count": 3,
+          "component_count": 6,
+          "unit": "K",
+          "metrics": {
+            "rmse": 0.2947009039147308,
+            "max_abs_error": 0.5182304369313897,
+            "max_tolerance_excess": 0.5182304369313897
+          },
+          "reason": "tolerance_exceeded"
+        }
+      },
+      "physical_validation": "not_established",
+      "state_admission": "not_performed"
+    },
+    "atmosphere": {
+      "status": "LOCAL",
+      "source_evidence_id": "sha256:8924fac8ec43317fcda417210e7784d5c08462a61190aa5753f2e66183d2fd20",
+      "execution_id": "execution-aaa4cab387414cb4b431a63b9e110c56",
+      "result_id": "result-0374066730644aa6a6871af91c0297bc",
+      "verification_execution_id": "execution-e23f09d20e9649b2864f753d7ef221fa",
+      "verification_result_id": "result-0557805c67c44d1f9ca2a9ee4a259418",
+      "verification_id": "verification-3cc6870c67f04bd8b5a89ca88225fe79",
+      "verification_method": "independent_dry_hydrostatic_numerical_audit",
+      "recheck": "fresh_numerical_diagnostics_preserve_retained_verification_identity",
+      "recomputed_report_digest": "sha256:b01cef7441f50d680a551e72820af30ced61ce0c3919a49f8848d99a6e3c580f",
+      "checks": [
+        {
+          "name": "boundary_pressure",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "boundary_temperature",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "cumulative_pressure_profile",
+          "value": 7.692687284349965e-14,
+          "tolerance": 1e-08,
+          "status": "PASS"
+        },
+        {
+          "name": "declared_temperature_domain",
+          "value": 0.0,
+          "tolerance": 0.0,
+          "status": "PASS"
+        },
+        {
+          "name": "dynamic_viscosity",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "equation_of_state",
+          "value": 1.8125908702265847e-16,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "kinematic_viscosity",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "positive_properties",
+          "value": 0.0,
+          "tolerance": 0.0,
+          "status": "PASS"
+        },
+        {
+          "name": "potential_temperature",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "potential_temperature_stability",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "prescribed_temperature",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "prescribed_wind",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "pressure_monotonicity",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        },
+        {
+          "name": "quadrature_budget",
+          "value": 0.0,
+          "tolerance": 0.0,
+          "status": "PASS"
+        },
+        {
+          "name": "quadrature_refinement",
+          "value": 1.1551416290667907e-12,
+          "tolerance": 1e-08,
+          "status": "PASS"
+        },
+        {
+          "name": "segment_hydrostatic_balance",
+          "value": 1.2628786905111236e-14,
+          "tolerance": 1e-08,
+          "status": "PASS"
+        },
+        {
+          "name": "sound_speed",
+          "value": 0.0,
+          "tolerance": 1e-10,
+          "status": "PASS"
+        }
+      ],
+      "authority": {
+        "physical_validation": "not_established",
+        "weather_prediction": "not_established",
+        "scale_preservation": "not_established",
+        "state_admission": "not_performed",
+        "hardware_actuation": "not_performed"
+      }
+    }
+  },
+  "started_at": "2026-10-17T23:59:10.171792+00:00",
+  "finished_at": "2026-10-17T23:59:13.277905+00:00",
+  "artifacts": [
+    {
+      "path": "atmosphere/column/execution-aaa4cab387414cb4b431a63b9e110c56.json",
+      "byte_count": 999,
+      "sha256": "sha256:549a65bafe6e9fac78994d6e224e54c3a434a9e5e35fe7371d0ba6a61d2d2ed9"
+    },
+    {
+      "path": "atmosphere/column/execution-e23f09d20e9649b2864f753d7ef221fa.json",
+      "byte_count": 7583,
+      "sha256": "sha256:eef06c61fa8782650335e30a991891106ea94e1c7b46c1fe2ada276d87caf9c9"
+    },
+    {
+      "path": "atmosphere/column/preservation.json",
+      "byte_count": 36331,
+      "sha256": "sha256:384c127b5fe974730abb413924b9cf71dc4cb1a938e801560db1087b25632c6f"
+    },
+    {
+      "path": "atmosphere/column/recording-cdf22582bfbd63823f5b7f6d77449c49100de65d0674827c12cfe42033874466.json",
+      "byte_count": 3634,
+      "sha256": "sha256:b81221c11e7a45e2de994824012e721936c6423f610524a0ae091277c6e75262"
+    },
+    {
+      "path": "atmosphere/column/request.json",
+      "byte_count": 1119,
+      "sha256": "sha256:f177eb596969fe10ef39f1a0347397af018506497f61e0132b9833fc63b6552a"
+    },
+    {
+      "path": "atmosphere/column/result-0374066730644aa6a6871af91c0297bc.json",
+      "byte_count": 5677,
+      "sha256": "sha256:0966a0bb3e7f83039d6953bf235ea9c93658dac9d4fce504896044c95a0c78e8"
+    },
+    {
+      "path": "atmosphere/column/result-0557805c67c44d1f9ca2a9ee4a259418.json",
+      "byte_count": 17467,
+      "sha256": "sha256:703a5afd5360dffc1083563b47c2beef72d41469cffd75db7eed2a660127a606"
+    },
+    {
+      "path": "atmosphere/column/verification.json",
+      "byte_count": 9124,
+      "sha256": "sha256:08234058d62c782b134960d3fec6d19f8b4714490a128e80a01fb6dd0eda3dda"
+    },
+    {
+      "path": "atmosphere/column/workspace.json",
+      "byte_count": 40251,
+      "sha256": "sha256:e65791c793fdbdfda659caf5b68f2aba1837e71854f39d66dbf380fbbffeed19"
+    },
+    {
+      "path": "atmosphere/column.csv",
+      "byte_count": 1868,
+      "sha256": "sha256:0a272fb07f265ca5e78d81f63c60ec56bd91134beebb609d0463c23eb1d008d9"
+    },
+    {
+      "path": "atmosphere/export-report.json",
+      "byte_count": 870,
+      "sha256": "sha256:53059fd224c2761559a23842058c1e021ce8bf4981a2df7433a7042ddf465f19"
+    },
+    {
+      "path": "atmosphere/inspection.json",
+      "byte_count": 5819,
+      "sha256": "sha256:89efb2fe5f23345631bc7fa5f4a71a005df8009ac178800ff7469362b2406c54"
+    },
+    {
+      "path": "atmosphere/request.json",
+      "byte_count": 1119,
+      "sha256": "sha256:f177eb596969fe10ef39f1a0347397af018506497f61e0132b9833fc63b6552a"
+    },
+    {
+      "path": "atmosphere/run-report.json",
+      "byte_count": 5819,
+      "sha256": "sha256:89efb2fe5f23345631bc7fa5f4a71a005df8009ac178800ff7469362b2406c54"
+    },
+    {
+      "path": "atmosphere/verification-report.json",
+      "byte_count": 6304,
+      "sha256": "sha256:2637ac729eb9d0d01abb1035ed23d15bf30ae8c1b75d8767f1ff6884d8a0a79a"
+    },
+    {
+      "path": "oscillator/execution-2c7bf3b1bacc49a1b8dc3860b53fb887.json",
+      "byte_count": 760,
+      "sha256": "sha256:423356efaad7ea2f04a7b6163829b717a846ac124393b941b19e953cb3024b39"
+    },
+    {
+      "path": "oscillator/execution-a085dc3387b24db5a40eb19ecf8fe2e9.json",
+      "byte_count": 750,
+      "sha256": "sha256:2db86ca4651b3a32a6cd10af2b7a1c1f317bfde00fa78cf04c84af4eb3b4e483"
+    },
+    {
+      "path": "oscillator/experiment.json",
+      "byte_count": 685,
+      "sha256": "sha256:89d5ed57187d88b66bc32da8e55ca53d806fdcfee27e945b3245b953bc2582fe"
+    },
+    {
+      "path": "oscillator/graph-run.json",
+      "byte_count": 31044,
+      "sha256": "sha256:cf71efca70e8f48682830480b8b1f89f5f22549249005e66efe4ff9c047954f7"
+    },
+    {
+      "path": "oscillator/observations.json",
+      "byte_count": 585559,
+      "sha256": "sha256:9f7cb0cb6c5e5019caf378ca74077ff9c6f6444ae95040d39629af4e55a6abcb"
+    },
+    {
+      "path": "oscillator/recording-13973f4027d9ff40d37105d22301c1d07e99281ff498ec0fdd349a13c1ef6083.json",
+      "byte_count": 273782,
+      "sha256": "sha256:6e9c2cbd131f0052d8c0f69546b418e1c4a567edf6837e9fa0b042cc0b1d7add"
+    },
+    {
+      "path": "oscillator/result-1d4677684ca048ff8192614558a4dac0.json",
+      "byte_count": 1106,
+      "sha256": "sha256:49edf87a7cd49466c657c067a76135950f94b66304a3e92bb62497c948a002cf"
+    },
+    {
+      "path": "oscillator/result-23bd0be11bce470da686e65746ebd693.json",
+      "byte_count": 20690,
+      "sha256": "sha256:d2ee8732b0a4f783c0e92d2fcfee8a93198a22ae9eee2313f6a89126c72d2b13"
+    },
+    {
+      "path": "oscillator/workspace.json",
+      "byte_count": 329782,
+      "sha256": "sha256:59e456d6f7ed8382f72221968f8eec76985049fcd031c285e92ffcdb7e95a169"
+    },
+    {
+      "path": "preflight.json",
+      "byte_count": 2667,
+      "sha256": "sha256:2d7238b754b8aa790929ac92461a7334d113fc323f3924574b7d69089fac9242"
+    },
+    {
+      "path": "thermal/demo-report.json",
+      "byte_count": 2399,
+      "sha256": "sha256:8c8fe8df6cd319b17e349cac64f731e779a86400fe42b1a583c876c8b2c4aeed"
+    },
+    {
+      "path": "thermal/measurement-comparison.json",
+      "byte_count": 16521,
+      "sha256": "sha256:64b8322c0c3513b2550ca9cd47d013b615658b6c4103332ddf455b3b0c860988"
+    },
+    {
+      "path": "thermal/measurement.json",
+      "byte_count": 39763,
+      "sha256": "sha256:0eff0b44cb251e178b33d3614d120ef78e390dae1cf962a43c5f2da92809598d"
+    },
+    {
+      "path": "thermal/original/recording-13973f4027d9ff40d37105d22301c1d07e99281ff498ec0fdd349a13c1ef6083.json",
+      "byte_count": 273782,
+      "sha256": "sha256:6e9c2cbd131f0052d8c0f69546b418e1c4a567edf6837e9fa0b042cc0b1d7add"
+    },
+    {
+      "path": "thermal/original/workspace.json",
+      "byte_count": 402197,
+      "sha256": "sha256:abcd5f57fada54514136045419fcaa093161c8515c78bc8a478caf41f2d0c89d"
+    },
+    {
+      "path": "thermal/posterior.json",
+      "byte_count": 41972,
+      "sha256": "sha256:d365d9702c7c6bc499ee9979b806a29ff733c90ea045607112a89c8651194912"
+    },
+    {
+      "path": "thermal/predicted.json",
+      "byte_count": 41960,
+      "sha256": "sha256:79f46a6b21c4a78c9cf16d31d037793313f8cd38a8ca633cb57978f575386c8b"
+    },
+    {
+      "path": "thermal/prediction-comparison.json",
+      "byte_count": 18722,
+      "sha256": "sha256:19a0d710ff978d896317f0e1119e185a58d06c00b50b247a168a2f4c0450dd9b"
+    },
+    {
+      "path": "thermal/replay/recording-13973f4027d9ff40d37105d22301c1d07e99281ff498ec0fdd349a13c1ef6083.json",
+      "byte_count": 273782,
+      "sha256": "sha256:6e9c2cbd131f0052d8c0f69546b418e1c4a567edf6837e9fa0b042cc0b1d7add"
+    },
+    {
+      "path": "thermal/replay/workspace.json",
+      "byte_count": 543563,
+      "sha256": "sha256:91dcb64258dee3d4b05c4284747f27d0baef8f424a354bcacf992aae23a46a9e"
+    },
+    {
+      "path": "thermal/replay-comparison.json",
+      "byte_count": 18687,
+      "sha256": "sha256:ce4069ea666c2f6718c28136e5322570603617bb6ed8872121f03e934672a05e"
+    },
+    {
+      "path": "thermal/replayed-posterior.json",
+      "byte_count": 41972,
+      "sha256": "sha256:d06ec85f0b605852a3c6a081e86e53c472cfa13857a7034fb244eaf33bab0ef9"
+    },
+    {
+      "path": "thermal/source.json",
+      "byte_count": 4259,
+      "sha256": "sha256:417336de056e77f8b755227f3cba854e358ae34bc4135e1452d0a998fc79ea82"
+    }
+  ]
+}

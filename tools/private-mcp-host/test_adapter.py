@@ -38,7 +38,7 @@ class AdapterJourney(unittest.IsolatedAsyncioTestCase):
             first = await client.post('/transaction', json={'state': None, 'action': 'tools', 'payload': {}})
             self.assertEqual(first.status_code, 200, first.text)
             data = first.json()
-            self.assertEqual(len(data['result']['data']), 14)
+            self.assertEqual(len(data['result']['data']), 16)
             self.assertTrue(data['state'])
             resumed = await client.post('/transaction', json={'state': data['state'], 'action': 'call',
                 'payload': {'name': 'ncp_capabilities_list', 'arguments': {}}})
