@@ -303,3 +303,73 @@ def test_atmosphere_accepts_a_caller_request_and_refuses_a_bad_one():
         assert "contract" in str(exc).lower() or "schema" in str(exc).lower()
     else:
         raise AssertionError("bad atmosphere request")
+
+
+def test_hosts_do_not_evict_each_other_and_a_shared_catalog_restores(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    from ciw.agent_mcp import demo_config, from_profile
+    from ciw.control_gateway import ControlHost
+    from ciw.retention import Store
+    from ciw.workbench import Workbench
+    from ciw.workbench_surface import compose_catalogs
+    left = ControlHost(from_profile(demo_config(tmp_path / "left")))
+    right = ControlHost(from_profile(demo_config(tmp_path / "right")))
+    try:
+        body = left.workbench_run("project-graph")
+        try:
+            right.retained.native(body["artifact_id"])
+        except ValueError as exc:
+            assert "another host session" in str(exc)
+        else:
+            raise AssertionError("cross host read")
+        catalog = {"schema": "ciw.retained-workbench.v1", "revision": 0, "sources": [], "bundles": []}
+        for index in range(40):
+            right.retained.keep({"n": index, "bundle_digest": str(index)}, kind="project-graph", catalog=catalog)
+        assert left.retained.native(body["artifact_id"])["bundle_digest"] == body["bundle_digest"]
+        saved = left.retained.catalog(body["artifact_id"])
+        restored = Workbench.restore(compose_catalogs([saved, saved]))
+        assert len(restored.list_bundles()) == 1
+    finally:
+        left.close()
+        right.close()
+        left.owner.close()
+        right.owner.close()
+
+
+def test_remaining_domains_accept_a_caller_request():
+    from copy import deepcopy
+    from ciw.geomatics_workflow import example as geomatics_example
+    from ciw.sequence_kinetics import example_request as sequence_example
+    from ciw.services import invoke
+    from ciw.thermofluids_models import example_request as thermo_example
+    geo = invoke("ncp_domain_run", {"domain": "geomatics", "name": "geomatics.atmosphere.transmission.v1",
+                                    "request": geomatics_example("geomatics.atmosphere.transmission.v1")})
+    assert geo["example"] is False and geo["field_retained"] is True
+    thermo = deepcopy(thermo_example("convection"))
+    thermo["parameters"]["bulk_temperature_k"] = 309.0
+    body = invoke("ncp_domain_run", {"domain": "thermofluids", "name": "convection", "request": thermo})
+    assert body["example"] is False and body["data_retained"] is True
+    sequence = invoke("ncp_domain_run", {"domain": "sequence", "request": sequence_example()})
+    assert sequence["example"] is False and sequence["artifact_id"].startswith("retained-")
+
+
+def test_installed_package_answers_outside_the_checkout(tmp_path):
+    import os
+    import subprocess
+    import sys
+    target = tmp_path / "site"
+    env = os.environ.copy()
+    subprocess.check_call(
+        [sys.executable, "-m", "pip", "install", str(ROOT), "--target", str(target), "--no-deps", "--no-build-isolation", "--ignore-requires-python"],
+        cwd="/tmp",
+        env=env,
+        stdout=subprocess.DEVNULL,
+    )
+    env["PYTHONPATH"] = str(target)
+    env.pop("PYTHONSAFEPATH", None)
+    out = subprocess.check_output(
+        [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
+        cwd="/tmp",
+        env=env,
+    )
+    assert out.strip() == b"ncp.mcp-plug-in.v1"

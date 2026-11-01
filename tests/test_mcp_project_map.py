@@ -119,7 +119,7 @@ def test_a_domain_set_does_not_opt_for_the_easiest_name():
 
     for domain in ("weather", "impact", "geomatics", "thermofluids"):
         try:
-            run(domain)
+            run(domain, example=True)
         except ValueError as exc:
             assert "does not opt for the easiest" in str(exc)
         else:

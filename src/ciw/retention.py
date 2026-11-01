@@ -33,7 +33,7 @@ def _root() -> Path:
 
 
 def _owner_dir(owner: str) -> Path:
-    if type(owner) is not str or not owner or len(owner) > 200 or "/" in owner or ".." in owner:
+    if type(owner) is not str or not owner or len(owner) > 4096:
         raise ValueError("Host owner is not a usable identity")
     directory = _root() / sha256(owner.encode()).hexdigest()[:32]
     directory.mkdir(parents=True, exist_ok=True)

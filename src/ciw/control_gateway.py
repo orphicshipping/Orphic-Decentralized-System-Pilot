@@ -209,6 +209,8 @@ class ControlHost:
         self._executor = None
         self._plans, self._jobs = {}, {}
         self._semantic, self._names = semantic_registry(owner)
+        from .retention import Store
+        self.retained = Store("output:" + str(owner._check_output().resolve()))
         root = owner._check_output() / "control-state"
         try:
             if not resume:
@@ -660,7 +662,7 @@ class ControlHost:
 
     def domain_run(self, domain, name=None, example=False, request=None):
         from .services import domain_run
-        return domain_run(domain, name=name, example=example, request=request)
+        return domain_run(domain, name=name, example=example, request=request, store=self.retained)
 
     def workbench_list(self):
         from .services import workbench_list
@@ -669,15 +671,15 @@ class ControlHost:
     def workbench_run(self, workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None):
         from .services import workbench_run
         return workbench_run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
-                             upstream_artifacts=upstream_artifacts)
+                             upstream_artifacts=upstream_artifacts, store=self.retained)
 
     def retained_read(self, artifact_id, offset=None, limit=None):
         from .services import retained_read
-        return retained_read(artifact_id, offset=offset, limit=limit)
+        return retained_read(artifact_id, offset=offset, limit=limit, store=self.retained)
 
     def retained_release(self, artifact_id):
         from .services import retained_release
-        return retained_release(artifact_id)
+        return retained_release(artifact_id, store=self.retained)
 
     def host_preflight(self):
         from .services import host_preflight

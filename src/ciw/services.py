@@ -17,9 +17,9 @@ def domain_list():
     return listing()
 
 
-def domain_run(domain, name=None, example=False, request=None):
+def domain_run(domain, name=None, example=False, request=None, store=None):
     from .domain_surface import run
-    return run(domain, name=name, example=example, request=request)
+    return run(domain, name=name, example=example, request=request, store=store)
 
 
 def workbench_list():
@@ -27,22 +27,24 @@ def workbench_list():
     return listing()
 
 
-def workbench_run(workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None):
+def workbench_run(workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None, store=None):
     from .workbench_surface import run
     return run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
-               upstream_artifacts=upstream_artifacts)
+               upstream_artifacts=upstream_artifacts, store=store)
 
 
-def retained_read(artifact_id, offset=None, limit=None):
-    from .retention import bounded, page
+def retained_read(artifact_id, offset=None, limit=None, store=None):
+    from .retention import _store, page
+    target = store if store is not None else _store()
     if offset is None and limit is None:
-        return bounded(artifact_id)
-    return page(artifact_id, 0 if offset is None else offset, 32768 if limit is None else limit)
+        return target.bounded(artifact_id)
+    return target.page(artifact_id, 0 if offset is None else offset, 32768 if limit is None else limit)
 
 
-def retained_release(artifact_id):
-    from .retention import release
-    return release(artifact_id)
+def retained_release(artifact_id, store=None):
+    from .retention import _store
+    target = store if store is not None else _store()
+    return target.release(artifact_id)
 
 
 def host_preflight():

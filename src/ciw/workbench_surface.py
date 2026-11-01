@@ -301,23 +301,22 @@ def compose_catalogs(catalogs: list[dict]) -> dict:
     return document
 
 
-def _adopt(session, artifact_ids: list[str]) -> None:
-    from .retention import catalog as retained_catalog
+def _adopt(session, artifact_ids: list[str], store) -> None:
     from .workbench import Workbench
 
-    restored = Workbench.restore(compose_catalogs([retained_catalog(item) for item in artifact_ids]))
+    restored = Workbench.restore(compose_catalogs([store.catalog(item) for item in artifact_ids]))
     restored._bindings = dict(session.workbench._bindings)
     session.workbench = restored
 
 
 def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | None = None,
-         upstream_artifacts: list | None = None) -> dict:
+         upstream_artifacts: list | None = None, store=None) -> dict:
     if not isinstance(workflow, str) or not workflow:
         raise ValueError("Name the workflow. This fold does not opt for the easiest task in the set.")
     from .adapters.protocol import AdapterRefusal
     from .host_context import bindings_for, configuration_for
     from .instruments import make_demo_run
-    from .retention import keep, native
+    from .retention import _store
     from .scientific import bind
     from .session import Session
     from .workbench import OPERATIONS, UPSTREAM_KINDS
@@ -334,6 +333,7 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
                 workflow + " remains documentation and evidence until the host selects its binding. "
                 "This call does not pick a different workflow and does not invent a provider."
             )
+    holder = store if store is not None else _store()
     parent = Path(tempfile.mkdtemp(prefix="ncp-workbench-"))
     try:
         session = Session(make_demo_run(), parent)
@@ -345,12 +345,12 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
         if workflow in UPSTREAM_KINDS:
             if not isinstance(upstream_artifact, str) or not upstream_artifact:
                 raise ValueError("Name the upstream artifact. This call does not pick one.")
-            _adopt(session, [upstream_artifact])
-            upstream_id = native(upstream_artifact)["bundle_digest"]
+            _adopt(session, [upstream_artifact], holder)
+            upstream_id = holder.native(upstream_artifact)["bundle_digest"]
         elif workflow == "residual-monitor":
             if type(upstream_artifacts) is not list or not upstream_artifacts or any(type(item) is not str for item in upstream_artifacts):
                 raise ValueError("Name the retained window artifacts. This call does not pick them.")
-            _adopt(session, list(upstream_artifacts))
+            _adopt(session, list(upstream_artifacts), holder)
             upstream_id = None
         elif upstream_artifact is not None or upstream_artifacts is not None:
             raise ValueError("This workflow does not accept an upstream bundle")
@@ -375,10 +375,9 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
             "parameters": parameters,
         })
         bundle = _call(session, "bundle.get", {"bundle_id": completed["bundle_id"]})
-        artifact_id = keep(bundle, kind=workflow, catalog=session.workbench.serialize())
+        artifact_id = holder.keep(bundle, kind=workflow, catalog=session.workbench.serialize())
     except ValueError as exc:
-        from .retention import keep_failure
-        keep_failure({"workflow": workflow, "error": str(exc)[:500]})
+        holder.keep_failure({"workflow": workflow, "error": str(exc)[:500]})
         raise
     finally:
         shutil.rmtree(parent, ignore_errors=True)
