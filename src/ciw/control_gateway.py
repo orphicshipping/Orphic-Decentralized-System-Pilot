@@ -722,24 +722,24 @@ class ControlHost:
         }
 
     def domain_list(self):
-        from .domain_surface import listing
-        return listing()
+        from .services import domain_list
+        return domain_list()
 
     def domain_run(self, domain, name=None):
-        from .domain_surface import run
-        return run(domain, name)
+        from .services import domain_run
+        return domain_run(domain, name)
 
     def workbench_list(self):
-        from .workbench_surface import listing
-        return listing()
+        from .services import workbench_list
+        return workbench_list()
 
     def workbench_run(self, workflow):
-        from .workbench_surface import run
-        return run(workflow)
+        from .services import workbench_run
+        return workbench_run(workflow)
 
     def plug_in(self):
-        from .plug_in import document
-        return document()
+        from .services import plug_in
+        return plug_in()
 
     def polymer_cycle(self):
         import base64
@@ -788,13 +788,8 @@ class ControlHost:
                 "authorizes_execution": False}
 
     def ledger(self, capability_id):
-        ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
-        rows = json.loads(ledger_path.read_text(encoding="utf-8"))["capabilities"]
-        for item in rows:
-            if item["id"] == capability_id:
-                return {"record": item, "authorizes_execution": False,
-                        "note": "Release-ledger row. Reading it does not execute or qualify the capability."}
-        raise ValueError("Unknown release-ledger id")
+        from .services import ledger_read
+        return ledger_read(capability_id)
 
     def descriptions(self):
         return [{"name": name, **deepcopy({k: v for k, v in spec.items() if k != "method"})}

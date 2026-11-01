@@ -19,10 +19,14 @@
   "bind": {
     "first_call": "ncp_plug_in",
     "then": ["ncp_index_list", "ncp_workbench_list", "ncp_domain_list"],
+    "sdk": "ciw.services.invoke",
     "tool_index": "mcp/model-catalog.json",
+    "capability_map": "mcp/capability-map.json",
+    "transformation_ledger": "mcp/transformation-ledger.json",
     "folder_index": "mcp/folder-index.json",
     "project_map": "mcp/project-map.json",
-    "call_contract": "docs/MCP_MODEL.md"
+    "call_contract": "docs/MCP_MODEL.md",
+    "agent_guide": "docs/AGENT_OPERATIONS.md"
   },
   "rules": [
     "Advertised, bound, and granted stay different. authorizes_execution stays false on index rows.",
