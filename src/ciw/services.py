@@ -47,6 +47,12 @@ def retained_release(artifact_id, store=None):
     return target.release(artifact_id)
 
 
+def coordinate(action, idempotency_key=None, operation=None, arguments=None, exclusive=None, store=None):
+    from .coordinator import coordinate as run
+    return run(action, store=store, idempotency_key=idempotency_key, operation=operation,
+               arguments=arguments, exclusive=exclusive)
+
+
 def host_preflight():
     from .host_context import preflight
     return preflight()
@@ -276,6 +282,7 @@ OPERATIONS = {
     "ncp_workbench_run": workbench_run,
     "ncp_retained_read": retained_read,
     "ncp_retained_release": retained_release,
+    "ncp_coordinate": coordinate,
     "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,
@@ -337,7 +344,7 @@ def invoke(name, arguments=None, host=None):
         store = getattr(host, "retained", None)
         if store is None:
             raise ValueError("This host has no retained store")
-    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release"}:
+    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate"}:
         return OPERATIONS[name](**arguments, store=store)
     if host is not None:
         raise ValueError("This operation does not take a session")

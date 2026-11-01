@@ -239,16 +239,11 @@ def _moist(_name, request=None, example=False, store=None):
 def _weather(name, request=None, example=False, store=None):
     from . import weather_workflow as workflow
     from .weather_contract import example_request, validate_request
-    from .retention import RetainedFailure
     if request is not None and request.get("profile") != name:
-        artifact_id = _retain_failure(
-            "weather", "Weather request profile does not match the named task", {"request": request}, store)
-        raise RetainedFailure("Weather request profile does not match the named task", artifact_id)
+        raise ValueError("weather_profile_mismatch: named task was not executed")
     prepared, used_example = _prepared(request, example, lambda: example_request(name), validate_request)
     if prepared.get("profile") != name:
-        artifact_id = _retain_failure(
-            "weather", "Weather request profile does not match the named task", {"request": prepared}, store)
-        raise RetainedFailure("Weather request profile does not match the named task", artifact_id)
+        raise ValueError("weather_profile_mismatch: named task was not executed")
     return _complete("weather", workflow, prepared, store, used_example)
 
 

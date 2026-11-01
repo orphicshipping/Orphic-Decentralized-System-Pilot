@@ -44,6 +44,16 @@
       "authorizes_execution": false
     },
     {
+      "name": "ncp_coordinate",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "action"
+      ],
+      "description": "Admit one local job on this host. A payload cannot name another principal. Replay of the same idempotency key does not run the job again.",
+      "authorizes_execution": false
+    },
+    {
       "name": "ncp_demo",
       "service": "ciw.services.invoke",
       "read_only": true,

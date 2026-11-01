@@ -12,6 +12,24 @@ from pathlib import Path
 
 SCHEMA = "ncp.host-bindings.v1"
 ENV = "NCP_HOST_MANIFEST"
+_MANIFEST_LIMIT = 65536
+
+
+def _read_bounded(path: Path, limit: int) -> bytes:
+    if path.is_symlink():
+        raise ValueError("Host file must be a regular file")
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(path, flags)
+    except OSError as exc:
+        raise ValueError("Host file is not readable") from exc
+    try:
+        raw = os.read(fd, limit + 1)
+    finally:
+        os.close(fd)
+    if len(raw) > limit:
+        raise ValueError("Host file exceeds the byte budget")
+    return raw
 
 
 def manifest_path() -> Path | None:
@@ -28,7 +46,8 @@ def load() -> dict:
     path = manifest_path()
     if path is None:
         return {"schema": SCHEMA, "authorization": "absent", "workflows": {}}
-    value = json.loads(path.read_text(encoding="utf-8"))
+    raw = _read_bounded(path, _MANIFEST_LIMIT)
+    value = json.loads(raw.decode("utf-8"))
     if type(value) is not dict or value.get("schema") != SCHEMA:
         raise ValueError("Host manifest schema refused")
     if value.get("authorization") != "operator":

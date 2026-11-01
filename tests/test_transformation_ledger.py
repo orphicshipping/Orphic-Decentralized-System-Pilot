@@ -407,9 +407,9 @@ def test_public_calls_keep_the_native_bundle_on_the_calling_host(tmp_path, monke
         mismatched["profile"] = "thermodynamics"
         try:
             invoke("ncp_domain_run", {"domain": "weather", "name": "radiation", "request": mismatched}, host=left)
-        except RetainedFailure as exc:
-            assert "does not match" in str(exc)
-            assert left.retained.native(exc.artifact_id)["error"]
+        except ValueError as exc:
+            assert "weather_profile_mismatch" in str(exc)
+            assert "not executed" in str(exc)
         else:
             raise AssertionError("weather name")
         refused = left.call("ncp_workbench_run", {"workflow": "julia-oscillator"})
@@ -418,6 +418,66 @@ def test_public_calls_keep_the_native_bundle_on_the_calling_host(tmp_path, monke
         failure = left.retained.native(failure_id)
         assert failure["workflow"] == "julia-oscillator"
         assert "workspace" in failure
+    finally:
+        left.close()
+        right.close()
+        left.owner.close()
+        right.owner.close()
+
+
+def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    import os
+    from ciw.agent_mcp import demo_config, from_profile
+    from ciw.control_gateway import ControlHost
+    from ciw.coordinator import _exclusive_path, handoff
+    from ciw.retention import SUPPORTED_PLATFORMS
+    from ciw.sequence_kinetics import example_request
+    from ciw.services import invoke
+    from ciw.workbench_surface import _read_bounded
+    assert os.name in SUPPORTED_PLATFORMS
+    oversized = tmp_path / "wide.bin"
+    oversized.write_bytes(b"x" * 70000)
+    try:
+        _read_bounded(oversized, 65536)
+    except ValueError as exc:
+        assert "budget" in str(exc)
+    else:
+        raise AssertionError("bounded read")
+    left = ControlHost(from_profile(demo_config(tmp_path / "left")))
+    right = ControlHost(from_profile(demo_config(tmp_path / "right")))
+    try:
+        payload = {"action": "submit", "idempotency_key": "job-1", "operation": "ncp_domain_run",
+                   "arguments": {"domain": "sequence", "request": example_request()}}
+        first = invoke("ncp_coordinate", payload, host=left)
+        second = invoke("ncp_coordinate", payload, host=left)
+        assert first["replayed"] is False and second["replayed"] is True
+        assert second["executions"] == 1 and second["artifact_id"] == first["artifact_id"]
+        copied = handoff(left.retained, first["artifact_id"], right.retained)
+        assert right.retained.native(copied["artifact_id"])["schema"]
+        try:
+            right.retained.native(first["artifact_id"])
+        except ValueError as exc:
+            assert "another host session" in str(exc)
+        else:
+            raise AssertionError("handoff bypass")
+        held = _exclusive_path("oven")
+        fd = os.open(held, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+        os.close(fd)
+        try:
+            invoke("ncp_coordinate", {**payload, "idempotency_key": "job-2", "exclusive": "oven"}, host=left)
+        except Exception as exc:
+            assert "exclusive_resource_busy" in str(exc)
+            assert left.retained.native(exc.artifact_id)["error"] == "exclusive_resource_busy"
+        finally:
+            held.unlink(missing_ok=True)
+        try:
+            invoke("ncp_coordinate", {"action": "submit", "idempotency_key": "job-3", "operation": "ncp_domain_run",
+                                      "arguments": {"domain": "sequence", "agent_id": "other"}}, host=left)
+        except ValueError as exc:
+            assert "impersonation" in str(exc)
+        else:
+            raise AssertionError("impersonation")
     finally:
         left.close()
         right.close()

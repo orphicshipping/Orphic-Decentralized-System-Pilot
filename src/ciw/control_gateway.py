@@ -122,6 +122,12 @@ TOOLS = {
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
+    "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. A payload cannot name another principal. Replay of the same idempotency key does not run the job again.",
+        {"action": {"type": "string", "enum": ["submit", "recall"]},
+         "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 200},
+         "operation": {"type": "string", "enum": ["ncp_domain_run"]},
+         "arguments": {"type": "object"},
+         "exclusive": {"type": "string", "minLength": 1, "maxLength": 40}}, JSON_OBJECT, required=["action"], read=False),
     "ncp_plug_in": _tool("plug_in", "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
         {}, JSON_OBJECT, required=[]),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
@@ -684,6 +690,11 @@ class ControlHost:
     def host_preflight(self):
         from .services import host_preflight
         return host_preflight()
+
+    def coordinate(self, action, idempotency_key=None, operation=None, arguments=None, exclusive=None):
+        from .services import coordinate
+        return coordinate(action, idempotency_key=idempotency_key, operation=operation,
+                          arguments=arguments, exclusive=exclusive, store=self.retained)
 
     def plug_in(self):
         from .services import plug_in

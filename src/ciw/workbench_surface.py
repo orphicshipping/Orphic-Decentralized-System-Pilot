@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import base64
 from copy import deepcopy
+import os
 import shutil
 import tempfile
 from pathlib import Path
@@ -218,24 +219,40 @@ def _stamp(body: dict) -> dict:
     return body
 
 
+def _read_bounded(path: Path, limit: int) -> bytes:
+    if path.is_symlink():
+        raise ValueError("Operator input must be a regular file")
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    fd = os.open(path, flags)
+    try:
+        raw = os.read(fd, limit + 1)
+    finally:
+        os.close(fd)
+    if len(raw) > limit:
+        raise ValueError("Operator input exceeds the byte budget")
+    return raw
+
+
 def _source_bytes(workflow: str, source_b64: str | None) -> tuple[bytes, bool]:
     from .host_context import input_path
 
     if source_b64 is not None:
         if not isinstance(source_b64, str) or not source_b64:
             raise ValueError("source_b64 must be the scientific source, not a path")
+        if len(source_b64) > 40000:
+            raise ValueError("source_b64 exceeds the byte budget")
         try:
             raw = base64.b64decode(source_b64.encode("ascii"), validate=True)
         except Exception as exc:
             raise ValueError("source_b64 is not valid base64") from exc
-        if not raw:
-            raise ValueError("Scientific source is empty")
+        if not raw or len(raw) > 40000:
+            raise ValueError("Scientific source exceeds the byte budget")
         return raw, False
     operator = input_path(workflow)
     if operator is not None:
         if not operator.is_file():
             raise ValueError("Operator input file is missing")
-        raw = operator.read_bytes()
+        raw = _read_bounded(operator, 65536)
         if not raw:
             raise ValueError("Operator input file is empty")
         return raw, False

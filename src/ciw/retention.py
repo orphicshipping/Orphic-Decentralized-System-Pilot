@@ -16,13 +16,14 @@ from hmac import compare_digest
 from pathlib import Path
 from threading import RLock
 
-import fcntl
-
 _LOCK = RLock()
 _LIMIT = 32
 _BYTE_LIMIT = 4_000_000
 _PAGE = 32768
 _OWNER = os.environ.get("NCP_RETAIN_OWNER") or secrets.token_hex(16)
+# Linux flock is what this sandbox executes. Windows uses msvcrt when that
+# module exists. Any other platform refuses instead of skipping the lock.
+SUPPORTED_PLATFORMS = ("posix", "nt")
 
 
 class RetainedFailure(ValueError):
@@ -95,18 +96,9 @@ class Store:
             raise ValueError("Retained artifact exceeds the byte budget")
         prefix = "failure-" if envelope["schema"] == "ncp.retained-failure.v1" else "retained-"
         artifact_id = prefix + sha256(raw).hexdigest()[:32]
-        target = self._path(artifact_id)
-        directory = target.parent
-        flags = os.O_WRONLY | os.O_CREAT | os.O_TRUNC | os.O_NOFOLLOW
-        try:
-            fd = os.open(target, flags, 0o600)
-        except OSError as exc:
-            raise ValueError("Unknown retained artifact") from exc
-        try:
-            os.write(fd, raw)
-        finally:
-            os.close(fd)
-        self._evict(directory, prefix, target)
+        directory = _owner_dir(self.owner)
+        _publish(directory, artifact_id + ".json", raw)
+        self._evict(directory, prefix, directory / (artifact_id + ".json"))
         return artifact_id
 
     def _evict(self, directory: Path, prefix: str, target: Path) -> None:
@@ -137,27 +129,31 @@ class Store:
 
     def keep(self, bundle: dict, *, kind: str, catalog: dict) -> str:
         with _LOCK:
-            sequence = _allocate(_owner_dir(self.owner))
-            return self._write({
-                "schema": "ncp.retained-bundle.v1",
-                "owner": self.owner,
-                "kind": kind,
-                "sequence": sequence,
-                "native": bundle,
-                "catalog": catalog,
-            })
+            directory = _owner_dir(self.owner)
+            with _transaction(directory):
+                sequence = _allocate(directory)
+                return self._write({
+                    "schema": "ncp.retained-bundle.v1",
+                    "owner": self.owner,
+                    "kind": kind,
+                    "sequence": sequence,
+                    "native": bundle,
+                    "catalog": catalog,
+                })
 
     def keep_failure(self, record: dict) -> str:
         with _LOCK:
-            sequence = _allocate(_owner_dir(self.owner))
-            return self._write({
-                "schema": "ncp.retained-failure.v1",
-                "owner": self.owner,
-                "kind": "failure",
-                "sequence": sequence,
-                "native": record,
-                "catalog": {"schema": "ncp.failure-record.v1"},
-            })
+            directory = _owner_dir(self.owner)
+            with _transaction(directory):
+                sequence = _allocate(directory)
+                return self._write({
+                    "schema": "ncp.retained-failure.v1",
+                    "owner": self.owner,
+                    "kind": "failure",
+                    "sequence": sequence,
+                    "native": record,
+                    "catalog": {"schema": "ncp.failure-record.v1"},
+                })
 
     def native(self, artifact_id: str) -> dict:
         return self._read(artifact_id)["native"]
@@ -216,24 +212,65 @@ def _canonical(value: dict) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
 
 
-def _allocate(directory: Path) -> int:
-    lock_path = directory / "sequence.lock"
-    sequence_path = directory / "sequence"
-    fd = os.open(lock_path, os.O_CREAT | os.O_RDWR, 0o600)
-    try:
+def _lock_exclusive(fd) -> str:
+    if os.name == "posix":
+        import fcntl
         fcntl.flock(fd, fcntl.LOCK_EX)
-        current = 0
-        if sequence_path.is_file() and not sequence_path.is_symlink():
-            text = sequence_path.read_text(encoding="utf-8").strip()
-            current = int(text) if text.isdigit() else 0
-        nxt = current + 1
-        temporary = directory / "sequence.tmp"
-        temporary.write_text(str(nxt), encoding="utf-8")
-        os.replace(temporary, sequence_path)
-        return nxt
-    finally:
+        return "posix-flock"
+    if os.name == "nt":
+        import msvcrt
+        msvcrt.locking(fd, msvcrt.LK_LOCK, 1)
+        return "nt-msvcrt"
+    raise ValueError("Retention locking is unsupported on this platform")
+
+
+def _lock_release(fd) -> None:
+    if os.name == "posix":
+        import fcntl
         fcntl.flock(fd, fcntl.LOCK_UN)
+        return
+    if os.name == "nt":
+        import msvcrt
+        msvcrt.locking(fd, msvcrt.LK_UNLCK, 1)
+
+
+def _transaction(directory: Path):
+    """Hold the owner lock across sequence, publish and eviction."""
+    class _Guard:
+        def __enter__(self):
+            self.fd = os.open(directory / "sequence.lock", os.O_CREAT | os.O_RDWR, 0o600)
+            self.kind = _lock_exclusive(self.fd)
+            for partial in directory.glob("*.partial"):
+                partial.unlink(missing_ok=True)
+            return self.kind
+
+        def __exit__(self, *exc):
+            _lock_release(self.fd)
+            os.close(self.fd)
+    return _Guard()
+
+
+def _publish(directory: Path, name: str, raw: bytes) -> None:
+    partial = directory / (name + ".partial")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+    fd = os.open(partial, flags, 0o600)
+    try:
+        os.write(fd, raw)
+        os.fsync(fd)
+    finally:
         os.close(fd)
+    os.replace(partial, directory / name)
+
+
+def _allocate(directory: Path) -> int:
+    sequence_path = directory / "sequence"
+    current = 0
+    if sequence_path.is_file() and not sequence_path.is_symlink():
+        text = sequence_path.read_text(encoding="utf-8").strip()
+        current = int(text) if text.isdigit() else 0
+    nxt = current + 1
+    _publish(directory, "sequence", str(nxt).encode("utf-8"))
+    return nxt
 
 
 def _held_by_other(owner: str, artifact_id: str) -> bool:
