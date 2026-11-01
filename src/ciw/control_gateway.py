@@ -106,7 +106,7 @@ TOOLS = {
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_ledger_read": _tool("ledger", "Read one release-ledger row. qualified stays not_assessed. This does not execute the named capability.",
         {"capability_id": {"type": "string", "minLength": 1, "maxLength": 160}}, JSON_OBJECT),
-    "ncp_capability_describe": _tool("describe", "Read one exact semantic capability, typed ports, runtime identity and host authorization.",
+    "ncp_capability_describe": _tool("describe", "Read one id from the selected profile or from ncp_index_list. An index row is not authorization on this profile.",
         {"capability_id": {"type": "string", "maxLength": 160}}, JSON_OBJECT),
     "ncp_plan_template": _tool("template", "Read a semantic graph template and parameter domains from a frozen host baseline. No execution or admission.",
         {"baseline": STRING}, _object({"graph": JSON_OBJECT, "candidate_domains": JSON_OBJECT, "baseline": JSON_OBJECT})),
@@ -326,6 +326,9 @@ class ControlHost:
         grants.update({name: ("system",) for name in SYSTEM_OPS})
         grants[LEGIBILITY] = ("legibility",)
         grants.update(fluid_profile_grants())
+        grants["leakage.assess-balance.v1"] = ("leakage",)
+        grants["leakage.verify-balance.v1"] = ("leakage",)
+        grants["metrology.bim-clearance.v1"] = ("bim-clearance",)
         for name in (COMPARE, PRODUCT, PROJECT):
             grants[name] = ("data",)
         direct = {
@@ -381,8 +384,21 @@ class ControlHost:
 
     def describe(self, capability_id):
         for item in self.capabilities()["items"]:
-            if item["capability_id"] == capability_id:
+            if capability_id in (item["capability_id"], item["operation_id"]):
                 return item
+        offset = 0
+        while True:
+            page = self.index(offset=offset, limit=64)
+            for row in page["items"]:
+                if row["capability_id"] == capability_id:
+                    return {
+                        **row,
+                        "host_bound": False,
+                        "note": "Index record on this call. It is not authorization on the selected profile.",
+                    }
+            if page["next_offset"] is None:
+                break
+            offset = page["next_offset"]
         raise ValueError("Unknown capability")
 
     def _baseline(self, baseline):

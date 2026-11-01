@@ -30,7 +30,7 @@
         {"name": "ncp_fluid_field", "read_only": false, "required": ["solver"], "note": "solver is wave or sph. Returns verifier checks. The field is not retained. Not a measurement."},
         {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
         {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
-        {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
+        {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"], "note": "Reads a profile-bound id or an index row. An index row is not authorization on the selected profile."},
         {"name": "ncp_workflows_list", "read_only": true, "required": [], "authorizes_execution": false},
         {"name": "ncp_integrations_list", "read_only": true, "required": []},
         {"name": "ncp_integration_describe", "read_only": true, "required": ["section", "source_id"]},
@@ -68,6 +68,7 @@
   },
   "profiles": [
     {
+      "profile": "builtin",
       "instrument": "builtin",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "builtin", "--output-dir", "DIR"],
       "granted_operations": ["statistics.v1"],
@@ -110,6 +111,7 @@
       "note": "Separate directory. Spectrum stays unauthorized on the builtin demo profile."
     },
     {
+      "profile": "polymer",
       "instrument": "polymer",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "polymer", "--output-dir", "DIR"],
       "granted_operations": [
@@ -122,6 +124,7 @@
       "physical_qualification": "not_established"
     },
     {
+      "profile": "temperature",
       "instrument": "temperature",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "temperature", "--output-dir", "DIR"],
       "granted_operations": ["metrology.temperature.process.v1", "metrology.temperature.verify.v1"],
@@ -129,6 +132,7 @@
       "physical_qualification": "not_established"
     },
     {
+      "profile": "link-scalar",
       "instrument": "link-scalar",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "link-scalar", "--output-dir", "DIR"],
       "granted_operations": ["link.decode-scalar.v1", "link.apply-affine.v1", "link.mean-model.v1", "link.audit-scalar.v1"],
@@ -136,6 +140,7 @@
       "inspection_qualification": "HELD"
     },
     {
+      "profile": "measured-thermal",
       "instrument": "measured-thermal",
       "prepare": ["python", "-m", "ciw.agent_mcp", "measured-thermal-config", "--source", "FILE", "--output-dir", "DIR"],
       "granted_operations": ["measured-thermal.assess.v1"],
@@ -143,6 +148,7 @@
       "physical_validation": "not_established"
     },
     {
+      "profile": "leakage",
       "instrument": "leakage",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "leakage", "--output-dir", "DIR"],
       "granted_operations": ["leakage.assess-balance.v1", "leakage.verify-balance.v1"],
@@ -153,6 +159,7 @@
       "note": "The host selects that FlowState commit. The vendored instruments/domain/flowstate tree is a different pin and is not substituted."
     },
     {
+      "profile": "bim-clearance",
       "instrument": "bim-clearance",
       "prepare": ["python", "-m", "ciw.net", "control", "prepare-bim", "--inspection", "FILE", "--output-dir", "DIR"],
       "granted_operations": ["metrology.bim-clearance.v1"],

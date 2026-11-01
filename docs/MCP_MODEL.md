@@ -38,7 +38,7 @@ Every tool argument is one object. Additional properties are refused.
 | `ncp_fluid_field` | `solver` (`wave` or `sph`) | Runs that solver and its independent verifier, and returns the check rows | Does not retain the field. The field exceeds the control document budget. Not a measurement |
 | `ncp_toolpoint` | none | Reviews the synthetic manufacturing and toolpoint reports | Journals do not fit a plan graph. Not a hold release |
 | `ncp_ledger_read` | `capability_id` | Reads one release-ledger row | `qualified` stays `not_assessed`. `proved_heat` is a read, not a proof |
-| `ncp_capability_describe` | `capability_id` | Reads one of those ids | Does not bind a new provider |
+| `ncp_capability_describe` | `capability_id` | Reads one id from the selected profile, or an index or ledger row | An index row is not authorization on this profile. It does not bind a provider |
 | `ncp_workflows_list` | none (`offset`, `limit` optional) | Pages the wider catalog | `authorizes_execution` stays false |
 | `ncp_integrations_list` | none (`section`, `offset`, `limit` optional) | Pages imports, systems, or external records | Does not install or probe |
 | `ncp_integration_describe` | `section`, `source_id` | Reads one integration pin | A pin is not a grant |
@@ -113,8 +113,10 @@ analysis graph is not physical qualification.
 `ncp_index_list` pages every id in `ciw.capabilities` and every id in
 `release/capability-ledger.json`. `callable` is true when `mcp_profiles` names a profile
 above or `mcp_tool` names a direct call. `authorizes_execution` stays false on every row.
-The system, legibility, data, and fluid profiles are plan-graph grants. Molecular sites and
-linear wall coupling are `fluid-molecular` and `fluid-fsi` on the same fluid instrument.
+The system, legibility, data, fluid, leakage, and BIM profiles are plan-graph grants.
+Leakage and BIM stay on the retained pins named above. A completed balance is not a
+leak finding. A completed inspection can stay held and is not a physical clearance.
+Molecular sites and linear wall coupling are `fluid-molecular` and `fluid-fsi` on the same fluid instrument.
 Wave and SPH are `ncp_fluid_field` because their fields do not fit a control document.
 `ncp_polymer_cycle` and `ncp_toolpoint` are direct calls because those documents do not fit
 a plan graph. `ncp_ledger_read` reads a ledger row and does not execute it. `proved_heat`

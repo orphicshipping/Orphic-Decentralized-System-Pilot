@@ -221,6 +221,11 @@ def test_index_pages_every_capability_without_authorizing(configured):
     for name in ("fluid.wave.simulate.v1", "fluid.wave.verify.v1", "fluid.sph.simulate.v1", "fluid.sph.verify.v1"):
         assert by_id[name]["mcp_tool"] == "ncp_fluid_field" and by_id[name]["mcp_profile"] is None
         assert by_id[name]["callable"] is True and by_id[name]["authorizes_execution"] is False
+    for name in ("leakage.assess-balance.v1", "leakage.verify-balance.v1"):
+        assert by_id[name]["mcp_profile"] == "leakage" and by_id[name]["callable"] is True
+        assert by_id[name]["mcp_tool"] is None and by_id[name]["authorizes_execution"] is False
+    assert by_id["metrology.bim-clearance.v1"]["mcp_profile"] == "bim-clearance"
+    assert by_id["metrology.bim-clearance.v1"]["callable"] is True
     assert by_id["hypergraph_rewriting"]["mcp_tool"] == "ncp_hypergraph" and by_id["hypergraph_rewriting"]["mcp_profile"] is None
     assert by_id["proved_heat"]["mcp_profile"] is None and by_id["proved_heat"]["mcp_tool"] == "ncp_ledger_read"
     assert by_id["proved_heat"]["callable"] is True and by_id["proved_heat"]["authorizes_execution"] is False
@@ -232,6 +237,24 @@ def test_index_pages_every_capability_without_authorizing(configured):
     assert "ncp_index_list" in names
     for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle", "ncp_fluid_field"):
         assert name in names
+
+
+def test_describe_reads_index_rows_without_granting_them(configured):
+    _, _, host = configured
+    bound = call(host, "ncp_capability_describe", capability_id="statistics.v1")
+    assert bound["authorized"] is True
+    assert "host_bound" not in bound
+    leaked = call(host, "ncp_capability_describe", capability_id="leakage.assess-balance.v1")
+    assert leaked["host_bound"] is False
+    assert leaked["mcp_profile"] == "leakage"
+    assert leaked["callable"] is True
+    assert leaked["authorizes_execution"] is False
+    heat = call(host, "ncp_capability_describe", capability_id="proved_heat")
+    assert heat["mcp_tool"] == "ncp_ledger_read"
+    assert heat["host_bound"] is False
+    assert heat["authorizes_execution"] is False
+    refused = host.call("ncp_capability_describe", {"capability_id": "not-a-capability"})
+    assert refused["status"] == "refused"
 
 
 @pytest.mark.parametrize("family", ["reservoir", "molecular", "fsi"])
