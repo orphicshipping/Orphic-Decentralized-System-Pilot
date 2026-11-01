@@ -95,7 +95,7 @@ That is the same function `ncp_domain_run` calls. It is a synthetic column, not 
 
 ## Limits and recovery
 
-Argument budget is 65536 bytes. A control response that exceeds the response budget is refused. Plan runs are polled with `ncp_run_get`. Cancel records intent; intent is not proof the work stopped. Temporary workbench bundles are deleted after the call (`bundle_retained` false). The example files stay.
+Argument budget is 65536 bytes. A control response that exceeds the response budget is refused. Plan runs are polled with `ncp_run_get`. Cancel records intent; intent is not proof the work stopped. A workbench result is kept under the returned `artifact_id` until `ncp_retained_release`. The example files stay. An operator manifest is `NCP_HOST_MANIFEST` or `ncp control serve --host-manifest`. A tool argument cannot set it.
 
 ## Testing
 

@@ -10,6 +10,8 @@ SCHEMA = "ncp.transformation-ledger.v1"
 _REWRITTEN = {
     "README.md",
     "src/ciw/services.py",
+    "src/ciw/host_context.py",
+    "src/ciw/retention.py",
     "src/ciw/plug_in.py",
     "src/ciw/domain_surface.py",
     "src/ciw/workbench_surface.py",

@@ -107,8 +107,15 @@ TOOLS = {
          "name": {"type": "string", "minLength": 1, "maxLength": 80}}, JSON_OBJECT, required=["domain"], read=False),
     "ncp_workbench_list": _tool("workbench_list", "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
         {}, JSON_OBJECT, required=[]),
-    "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. The five unbound workflows use their retained fixtures. Any other name refuses until the host selects that binding. Not a measurement or a release. Does not pick the easiest workflow.",
-        {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]}}, JSON_OBJECT, required=["workflow"], read=False),
+    "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
+        {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]},
+         "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000}}, JSON_OBJECT, required=["workflow"], read=False),
+    "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
+        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT),
+    "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
+        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
+    "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
+        {}, JSON_OBJECT, required=[]),
     "ncp_plug_in": _tool("plug_in", "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
         {}, JSON_OBJECT, required=[]),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
@@ -653,9 +660,21 @@ class ControlHost:
         from .services import workbench_list
         return workbench_list()
 
-    def workbench_run(self, workflow):
+    def workbench_run(self, workflow, source_b64=None):
         from .services import workbench_run
-        return workbench_run(workflow)
+        return workbench_run(workflow, source_b64=source_b64)
+
+    def retained_read(self, artifact_id):
+        from .services import retained_read
+        return retained_read(artifact_id)
+
+    def retained_release(self, artifact_id):
+        from .services import retained_release
+        return retained_release(artifact_id)
+
+    def host_preflight(self):
+        from .services import host_preflight
+        return host_preflight()
 
     def plug_in(self):
         from .services import plug_in

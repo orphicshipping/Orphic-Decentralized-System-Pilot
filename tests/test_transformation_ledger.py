@@ -83,7 +83,16 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
         project = invoke("ncp_workbench_run", {"workflow": "project-graph"})
         assert project["authorizes_execution"] is False
         assert project["physical_qualification"] == "not_established"
-        assert project["bundle_retained"] is False
+        assert project["bundle_retained"] is True
+        saved = invoke("ncp_retained_read", {"artifact_id": project["artifact_id"]})
+        assert saved["authorizes_execution"] is False
+        invoke("ncp_retained_release", {"artifact_id": project["artifact_id"]})
+        try:
+            invoke("ncp_retained_read", {"artifact_id": project["artifact_id"]})
+        except ValueError as exc:
+            assert "Unknown retained" in str(exc)
+        else:
+            raise AssertionError("released artifact")
         assert set(OPERATIONS) | set(SESSION) == set(TOOLS)
         doctor = invoke("ncp_doctor")
         via_doctor = host.call("ncp_doctor", {})
@@ -115,7 +124,45 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
         session._service_owner.close()
 
 
-def test_capability_map_matches_advertised_tools_and_the_report_stays_incomplete():
+def test_a_bad_host_checkout_is_refused_and_not_replaced(tmp_path, monkeypatch):
+    root = tmp_path / "not-julia"
+    root.mkdir()
+    executable = tmp_path / "julia"
+    executable.write_text("not julia\n", encoding="utf-8")
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(json.dumps({
+        "schema": "ncp.host-bindings.v1",
+        "authorization": "operator",
+        "workflows": {"julia-oscillator": {"roles": {
+            "julia_runtime": str(root),
+            "julia": str(executable),
+        }}},
+    }), encoding="utf-8")
+    monkeypatch.setenv("NCP_HOST_MANIFEST", str(manifest))
+    page = invoke("ncp_host_preflight")
+    assert page["authorizes_execution"] is False
+    assert page["workflows"][0]["workflow"] == "julia-oscillator"
+    try:
+        invoke("ncp_workbench_run", {"workflow": "julia-oscillator"})
+    except ValueError as exc:
+        text = str(exc)
+        assert "does not invent" not in text
+        assert "Julia" in text or "julia" in text or "checkout" in text or "revision" in text
+    else:
+        raise AssertionError("bad checkout ran")
+    relative = tmp_path / "relative.json"
+    relative.write_text(json.dumps({
+        "schema": "ncp.host-bindings.v1",
+        "authorization": "operator",
+        "workflows": {"julia-oscillator": {"roles": {"julia_runtime": "runtimes/julia-oscillator", "julia": "julia"}}},
+    }), encoding="utf-8")
+    monkeypatch.setenv("NCP_HOST_MANIFEST", str(relative))
+    try:
+        invoke("ncp_workbench_run", {"workflow": "julia-oscillator"})
+    except ValueError as exc:
+        assert "absolute" in str(exc)
+    else:
+        raise AssertionError("relative checkout")
     mapped = json.loads(CAPABILITIES.read_text(encoding="utf-8"))
     assert mapped["authorizes_execution"] is False
     assert {row["name"] for row in mapped["tools"]} == set(TOOLS)

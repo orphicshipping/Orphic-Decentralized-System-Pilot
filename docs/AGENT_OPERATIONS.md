@@ -18,6 +18,9 @@ A granted plan is `ncp_plan_template`, then `ncp_plan_create` with that graph, t
 
 Use `tools/call` or `ciw.services.invoke` with the same operation name. They call the same domain functions. An unknown name refuses. There is no shell tool.
 
+`ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
+
+
 ## Verify
 
 Read the returned authority and `physical_qualification`. A PASS, a LOCAL check, a retained digest, or a completed graph is not a measurement, a booking, or a release. `proved_heat` is `ncp_ledger_read`, not an SP1 proof. Julia, Godot, Bevy, and Blender stay unbound. Leakage and BIM stay on the host-selected pins.

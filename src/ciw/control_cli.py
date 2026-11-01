@@ -1,6 +1,7 @@
 """NCP MCP control: discover, compile, admit, submit, inspect and compare."""
 from __future__ import annotations
 import argparse
+import os
 from pathlib import Path
 import sys
 from .agent_mcp import INSTRUMENTS, from_profile, native_bindings, demo_config, polymer_config, temperature_config, leakage_config
@@ -24,6 +25,7 @@ def main(argv=None):
     serve.add_argument("--provider-checkout", type=Path)
     serve.add_argument("--provider-revision", help="Full original CSE revision; BIM clearance only")
     serve.add_argument("--python", type=Path)
+    serve.add_argument("--host-manifest", type=Path, help="Operator binding manifest. Not a tool argument.")
     serve.add_argument("--resume", action="store_true")
     args = parser.parse_args(argv)
     try:
@@ -48,6 +50,8 @@ def main(argv=None):
         import mcp  # Fail before creating a host if the optional SDK is absent.
         from .mcp_server import serve_sdk
         from .control_gateway import ControlHost
+        if args.host_manifest is not None:
+            os.environ["NCP_HOST_MANIFEST"] = str(args.host_manifest.resolve())
         bindings = native_bindings(args.instrument, checkout=args.provider_checkout,
                                    revision=args.provider_revision, python=args.python)
         with from_profile(args.profile, instrument=args.instrument, resume=args.resume, **bindings) as owner:

@@ -96,21 +96,30 @@ def listing() -> dict:
         for row in Workbench().describe_operations()
         if "source_kind" in row
     }
+    from .host_context import declared
+
     operations = []
     for kind in WORKFLOWS:
         row = described[kind]
         unbound = kind in UNBOUND
         if unbound != bool(row["available"]):
             raise RuntimeError("Workbench availability drifted for " + kind)
+        if unbound:
+            status = "available_in_unbound_session"
+            evidence = _FIXTURES.get(kind) if kind != "project-graph" else "built_from_the_retained_project_model"
+        elif declared(kind):
+            status = "host_manifest_declared"
+            evidence = "operator_manifest"
+        else:
+            status = "explicit_bindings_required"
+            evidence = "host_selected_pin_required"
         operations.append({
             "workflow": kind,
             "operation_id": OPERATIONS[kind],
             "role": row["role"],
-            "binding_status": "available_in_unbound_session" if unbound else "explicit_bindings_required",
+            "binding_status": status,
             "documentation": _doc(kind),
-            "evidence": _FIXTURES.get(kind) if unbound and kind != "project-graph" else (
-                "built_from_the_retained_project_model" if kind == "project-graph" else "host_selected_pin_required"
-            ),
+            "evidence": evidence,
             "authorizes_execution": False,
         })
     return {
@@ -203,32 +212,68 @@ def _call(session, kind: str, payload: dict) -> dict:
 def _stamp(body: dict) -> dict:
     body["physical_qualification"] = "not_established"
     body["authorizes_execution"] = False
-    body["bundle_retained"] = False
+    body["bundle_retained"] = True
     return body
 
 
-def run(workflow: str) -> dict:
+def _source_bytes(workflow: str, source_b64: str | None) -> tuple[bytes, bool]:
+    from .host_context import input_path
+
+    if source_b64 is not None:
+        if not isinstance(source_b64, str) or not source_b64:
+            raise ValueError("source_b64 must be the scientific source, not a path")
+        try:
+            raw = base64.b64decode(source_b64.encode("ascii"), validate=True)
+        except Exception as exc:
+            raise ValueError("source_b64 is not valid base64") from exc
+        if not raw:
+            raise ValueError("Scientific source is empty")
+        return raw, False
+    operator = input_path(workflow)
+    if operator is not None:
+        if not operator.is_file():
+            raise ValueError("Operator input file is missing")
+        raw = operator.read_bytes()
+        if not raw:
+            raise ValueError("Operator input file is empty")
+        return raw, False
+    if workflow not in _FIXTURES and workflow != "project-graph":
+        raise ValueError(
+            "This workflow needs a validated source from the operator manifest. "
+            "A tool argument cannot name a checkout."
+        )
+    return _fixture_bytes(workflow), True
+
+
+def run(workflow: str, source_b64: str | None = None) -> dict:
     if not isinstance(workflow, str) or not workflow:
         raise ValueError("Name the workflow. This fold does not opt for the easiest task in the set.")
+    from .host_context import bindings_for
+    from .instruments import make_demo_run
+    from .retention import keep
+    from .scientific import bind
+    from .session import Session
     from .workbench import OPERATIONS
 
     if workflow not in OPERATIONS:
         raise ValueError("Unknown workbench workflow. Call ncp_workbench_list.")
+    repositories = None
     if workflow not in UNBOUND:
-        raise ValueError(
-            workflow + " remains documentation and evidence until the host selects its binding. "
-            "This call does not pick a different workflow and does not invent a provider."
-        )
-    from .instruments import make_demo_run
-    from .session import Session
-
-    raw = _fixture_bytes(workflow)
+        repositories = bindings_for(workflow)
+        if repositories is None:
+            raise ValueError(
+                workflow + " remains documentation and evidence until the host selects its binding. "
+                "This call does not pick a different workflow and does not invent a provider."
+            )
+    raw, synthetic = _source_bytes(workflow, source_b64)
     parent = Path(tempfile.mkdtemp(prefix="ncp-workbench-"))
     try:
         session = Session(make_demo_run(), parent)
+        if repositories is not None:
+            bind(session, workflow, repositories)
         source = _call(session, "source.add", {
             "kind": workflow,
-            "label": "folded workbench fixture",
+            "label": "folded workbench source",
             "bytes_b64": base64.b64encode(raw).decode("ascii"),
         })
         completed = _call(session, "operation.execute", {
@@ -236,6 +281,7 @@ def run(workflow: str) -> dict:
             "parameters": {"source_id": source["source_id"]},
         })
         bundle = _call(session, "bundle.get", {"bundle_id": completed["bundle_id"]})
+        artifact_id = keep(bundle)
     finally:
         shutil.rmtree(parent, ignore_errors=True)
     step = bundle["steps"][0]
@@ -247,9 +293,11 @@ def run(workflow: str) -> dict:
         "workflow": workflow,
         "operation_id": OPERATIONS[workflow],
         "status": "retained",
+        "artifact_id": artifact_id,
         "bundle_digest": bundle.get("bundle_digest"),
         "result_id": step.get("result_id"),
         "authority": authority,
         "documentation": _doc(workflow),
-        "evidence": _FIXTURES.get(workflow, "built_from_the_retained_project_model"),
+        "evidence": _FIXTURES.get(workflow, "operator_or_caller_source"),
+        "synthetic_fixture": synthetic,
     })

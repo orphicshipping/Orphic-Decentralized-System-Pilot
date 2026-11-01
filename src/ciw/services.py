@@ -27,9 +27,24 @@ def workbench_list():
     return listing()
 
 
-def workbench_run(workflow):
+def workbench_run(workflow, source_b64=None):
     from .workbench_surface import run
-    return run(workflow)
+    return run(workflow, source_b64=source_b64)
+
+
+def retained_read(artifact_id):
+    from .retention import bounded
+    return bounded(artifact_id)
+
+
+def retained_release(artifact_id):
+    from .retention import release
+    return release(artifact_id)
+
+
+def host_preflight():
+    from .host_context import preflight
+    return preflight()
 
 
 def ledger_read(capability_id):
@@ -254,6 +269,9 @@ OPERATIONS = {
     "ncp_domain_run": domain_run,
     "ncp_workbench_list": workbench_list,
     "ncp_workbench_run": workbench_run,
+    "ncp_retained_read": retained_read,
+    "ncp_retained_release": retained_release,
+    "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,
     "ncp_demo": demo,
