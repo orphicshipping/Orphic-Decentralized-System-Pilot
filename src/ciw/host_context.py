@@ -107,11 +107,15 @@ def preflight() -> dict:
             "roles": roles,
             "input_declared": source is not None,
             "input_exists": bool(source and source.is_file()),
+            "runtime_ready": False,
+            "pin_checked": False,
+            "source_checked": False,
+            "readiness": "declared_only",
         })
     return {
         "schema": "ncp.host-preflight.v1",
         "authorization": document["authorization"],
         "workflows": rows,
         "authorizes_execution": False,
-        "note": "Declaration is not approval of a different engine and not a qualification.",
+        "note": "exists is a declaration. runtime_ready, pin_checked and source_checked stay false here. Preflight does not run the provider.",
     }

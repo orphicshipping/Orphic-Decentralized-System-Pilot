@@ -19,6 +19,7 @@ _LOCK = RLock()
 _LIMIT = 32
 _OWNER = secrets.token_hex(16)
 _PAGE = 32768
+_SEQUENCE = 0
 
 
 def _directory() -> Path:
@@ -31,8 +32,15 @@ def _directory() -> Path:
 def _path(artifact_id: str) -> Path:
     if type(artifact_id) is not str or not artifact_id.startswith("retained-") or "/" in artifact_id or ".." in artifact_id:
         raise ValueError("Unknown retained artifact")
-    candidate = _directory() / (artifact_id + ".json")
-    if candidate.parent != _directory():
+    root = _directory().resolve()
+    candidate = root / (artifact_id + ".json")
+    if candidate.is_symlink():
+        raise ValueError("Unknown retained artifact")
+    if candidate.exists():
+        resolved = candidate.resolve()
+        if resolved.parent != root:
+            raise ValueError("Unknown retained artifact")
+    elif candidate.parent != root:
         raise ValueError("Unknown retained artifact")
     return candidate
 
@@ -57,20 +65,33 @@ def _load(artifact_id: str) -> dict:
 
 
 def keep(bundle: dict, *, kind: str, catalog: dict) -> str:
-    envelope = {
-        "schema": "ncp.retained-bundle.v1",
-        "owner": _OWNER,
-        "kind": kind,
-        "native": bundle,
-        "catalog": catalog,
-    }
-    raw = json.dumps(envelope, sort_keys=True, separators=(",", ":")).encode()
-    artifact_id = "retained-" + sha256(raw).hexdigest()[:32]
-    target = _path(artifact_id)
+    global _SEQUENCE
     with _LOCK:
+        _SEQUENCE += 1
+        envelope = {
+            "schema": "ncp.retained-bundle.v1",
+            "owner": _OWNER,
+            "kind": kind,
+            "sequence": _SEQUENCE,
+            "native": bundle,
+            "catalog": catalog,
+        }
+        raw = json.dumps(envelope, sort_keys=True, separators=(",", ":")).encode()
+        artifact_id = "retained-" + sha256(raw).hexdigest()[:32]
+        target = _path(artifact_id)
         target.write_bytes(raw)
-        files = sorted(_directory().glob("retained-*.json"), key=lambda item: item.stat().st_mtime)
-        for old in files[:-_LIMIT]:
+        ranked = []
+        for old in _directory().resolve().glob("retained-*.json"):
+            if old.is_symlink():
+                old.unlink()
+                continue
+            try:
+                sequence = json.loads(old.read_text(encoding="utf-8")).get("sequence", 0)
+            except (OSError, ValueError):
+                sequence = 0
+            ranked.append((sequence if type(sequence) is int else 0, old))
+        ranked.sort(key=lambda item: item[0])
+        for _sequence, old in ranked[:-_LIMIT]:
             if old != target:
                 old.unlink(missing_ok=True)
     return artifact_id

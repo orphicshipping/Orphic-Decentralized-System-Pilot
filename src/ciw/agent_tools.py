@@ -63,6 +63,10 @@ def _shape(value, spec):
     types = {"string": str, "object": dict, "integer": int, "array": list}
     if type(value) is not types[spec["type"]]:
         raise ValueError("Argument has incorrect type")
+    if "enum" in spec and value not in spec["enum"]:
+        raise ValueError("Argument is outside the declared set")
+    if "const" in spec and value != spec["const"]:
+        raise ValueError("Argument is outside the declared set")
     if type(value) is str and not spec.get("minLength", 0) <= len(value) <= spec.get("maxLength", 65536):
         raise ValueError("Argument text exceeds bounds")
     if type(value) is int and not spec.get("minimum", -2**53) <= value <= spec.get("maximum", 2**53):

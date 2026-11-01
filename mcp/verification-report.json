@@ -21,7 +21,7 @@
     "A host manifest with a non-Julia checkout is refused by the Julia runtime check and is not replaced with another engine.",
     "The fake checkout includes a worker and a manifest, so the refusal is the Git revision check rather than a missing source.",
     "proved-heat and variational-free-energy are in the scientific route table.",
-    "A retained result can be paged back in full, and another host session cannot read it."
+    "A retained result can be paged back in full, and another host session cannot read it.",
     "A relative path in the host manifest is refused.",
     "Every advertised tool is either ciw.services.invoke or ciw.services.open_demo.",
     "ncp_doctor agrees across the SDK and ControlHost and does not qualify.",

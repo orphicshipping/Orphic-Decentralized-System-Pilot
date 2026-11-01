@@ -115,7 +115,7 @@ TOOLS = {
     "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
          "offset": {"type": "integer", "minimum": 0},
-         "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT),
+         "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT, required=["artifact_id"]),
     "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",

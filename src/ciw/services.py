@@ -317,6 +317,12 @@ def invoke(name, arguments=None, host=None):
     forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository", "configuration"}
     if forbidden & set(arguments):
         raise ValueError("Service arguments cannot select a checkout or a pin")
+    from .agent_api import encode
+    from .agent_tools import _shape
+    from .control_gateway import TOOLS
+    if name not in TOOLS or len(encode(arguments)) > 65536:
+        raise ValueError("Request exceeds the argument budget")
+    _shape(arguments, TOOLS[name]["inputSchema"])
     if name in SESSION:
         if host is None:
             raise ValueError("This operation needs open_demo. A folder is not a session.")

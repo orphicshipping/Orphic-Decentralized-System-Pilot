@@ -188,6 +188,21 @@ def test_a_bad_host_checkout_is_refused_and_not_replaced(tmp_path, monkeypatch):
         assert "absolute" in str(exc)
     else:
         raise AssertionError("relative checkout")
+    assert page["workflows"][0]["runtime_ready"] is False
+    assert page["workflows"][0]["pin_checked"] is False
+    assert page["workflows"][0]["readiness"] == "declared_only"
+    try:
+        invoke("ncp_workbench_run", {"workflow": "not-a-workflow"})
+    except ValueError as exc:
+        assert "declared set" in str(exc)
+    else:
+        raise AssertionError("enum")
+    try:
+        invoke("ncp_workbench_run", {"workflow": "project-graph", "source_b64": "a" * 40001})
+    except ValueError as exc:
+        assert "bounds" in str(exc)
+    else:
+        raise AssertionError("bounds")
     mapped = json.loads(CAPABILITIES.read_text(encoding="utf-8"))
     assert mapped["authorizes_execution"] is False
     assert {row["name"] for row in mapped["tools"]} == set(TOOLS)
@@ -197,3 +212,28 @@ def test_a_bad_host_checkout_is_refused_and_not_replaced(tmp_path, monkeypatch):
     assert report["authorizes_execution"] is False
     assert {item["id"] for item in report["blocked"]} >= {"julia", "godot", "sp1-proof", "leakage-without-host-pin", "bim-without-host-pin"}
     assert "not an SP1 proof" in (ROOT / "README.md").read_text(encoding="utf-8")
+
+
+def test_retention_evicts_the_oldest_and_refuses_a_symlink(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path))
+    from ciw import retention
+    catalog = {"schema": "ciw.retained-workbench.v1", "revision": 0, "sources": [], "bundles": []}
+    ids = [retention.keep({"n": index, "bundle_digest": str(index)}, kind="project-graph", catalog=catalog)
+           for index in range(33)]
+    try:
+        retention.native(ids[0])
+    except ValueError as exc:
+        assert "Unknown" in str(exc)
+    else:
+        raise AssertionError("oldest retained")
+    assert retention.native(ids[-1])["n"] == 32
+    outside = tmp_path / "secret.json"
+    outside.write_text("{}\n", encoding="utf-8")
+    link_id = "retained-" + ("ab" * 16)
+    (tmp_path / (link_id + ".json")).symlink_to(outside)
+    try:
+        retention.native(link_id)
+    except ValueError as exc:
+        assert "Unknown" in str(exc)
+    else:
+        raise AssertionError("symlink")
