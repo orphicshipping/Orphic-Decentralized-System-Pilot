@@ -36,7 +36,15 @@ def test_project_map_matches_the_tree_and_does_not_grant():
     assert "MCP.md" in readme
     assert "does not opt for the easiest" in readme
     assert "folder-index.json" in readme
-    assert "Operator reference" in readme
+    assert "mcp/plug-in.json" in readme
+    assert "not a human console" in readme
+    assert document["plug_in"] == "mcp/plug-in.json"
+    plug = json.loads((ROOT / "mcp" / "plug-in.json").read_text(encoding="utf-8"))
+    assert plug["schema"] == "ncp.mcp-plug-in.v1"
+    assert plug["authorizes_execution"] is False
+    assert plug["not_a_human_console"] is True
+    from ciw.plug_in import document as plug_document
+    assert plug_document()["bind"]["first_call"] == "ncp_plug_in"
     index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
     assert index["schema"] == "ncp.mcp-folder-index.v1"
     assert index["authorizes_execution"] is False
@@ -66,6 +74,7 @@ def test_every_tracked_folder_has_a_contract_that_does_not_grant():
         assert f"- path: `{rel}`" in text
         assert "authorizes_execution: false" in text
         assert "not a tool call" in text
+        assert "not a human console" in text
         assert "does not opt for the easiest" in text
         if "node_modules" not in rel.split("/") and not (
             subprocess.run(

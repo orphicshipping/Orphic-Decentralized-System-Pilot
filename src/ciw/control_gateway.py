@@ -109,6 +109,8 @@ TOOLS = {
         {}, JSON_OBJECT, required=[]),
     "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. The five unbound workflows use their retained fixtures. Any other name refuses until the host selects that binding. Not a measurement or a release. Does not pick the easiest workflow.",
         {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]}}, JSON_OBJECT, required=["workflow"], read=False),
+    "ncp_plug_in": _tool("plug_in", "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
+        {}, JSON_OBJECT, required=[]),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
@@ -352,6 +354,7 @@ class ControlHost:
         from .domain_surface import tool_grants
         direct.update(tool_grants())
         direct["workbench.fold.v1"] = "ncp_workbench_run"
+        direct["mcp.plug-in.v1"] = "ncp_plug_in"
         rows = []
         for item in catalog()["capabilities"]:
             profiles = grants.get(item["capability_id"], ())
@@ -733,6 +736,10 @@ class ControlHost:
     def workbench_run(self, workflow):
         from .workbench_surface import run
         return run(workflow)
+
+    def plug_in(self):
+        from .plug_in import document
+        return document()
 
     def polymer_cycle(self):
         import base64
