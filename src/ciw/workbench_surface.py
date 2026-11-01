@@ -118,6 +118,8 @@ def listing() -> dict:
             "operation_id": OPERATIONS[kind],
             "role": row["role"],
             "binding_status": status,
+            "requires_upstream_bundle": bool(row.get("requires_upstream_bundle")),
+            "requires_configuration": kind == "telemetry",
             "documentation": _doc(kind),
             "evidence": evidence,
             "authorizes_execution": False,
@@ -245,18 +247,49 @@ def _source_bytes(workflow: str, source_b64: str | None) -> tuple[bytes, bool]:
     return _fixture_bytes(workflow), True
 
 
-def run(workflow: str, source_b64: str | None = None) -> dict:
+def _adopt(session, artifact_ids: list[str]) -> None:
+    from .retention import catalog as retained_catalog
+    from .workbench import Workbench
+
+    sources = []
+    bundles = []
+    schema = None
+    for artifact_id in artifact_ids:
+        saved = retained_catalog(artifact_id)
+        if schema is None:
+            schema = saved.get("schema")
+        elif saved.get("schema") != schema:
+            raise ValueError("Upstream artifacts do not share a catalog schema")
+        sources.extend(saved.get("sources") or [])
+        bundles.extend(saved.get("bundles") or [])
+    if schema is None or not bundles:
+        raise ValueError("Upstream artifact has no retained bundle")
+    restored = Workbench.restore({
+        "schema": schema,
+        "revision": len(sources) + len(bundles),
+        "sources": sources,
+        "bundles": bundles,
+    })
+    restored._bindings = dict(session.workbench._bindings)
+    session.workbench = restored
+
+
+def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | None = None,
+         upstream_artifacts: list | None = None) -> dict:
     if not isinstance(workflow, str) or not workflow:
         raise ValueError("Name the workflow. This fold does not opt for the easiest task in the set.")
-    from .host_context import bindings_for
+    from .adapters.protocol import AdapterRefusal
+    from .host_context import bindings_for, configuration_for
     from .instruments import make_demo_run
-    from .retention import keep
+    from .retention import keep, native
     from .scientific import bind
     from .session import Session
-    from .workbench import OPERATIONS
+    from .workbench import OPERATIONS, UPSTREAM_KINDS
 
     if workflow not in OPERATIONS:
         raise ValueError("Unknown workbench workflow. Call ncp_workbench_list.")
+    if upstream_artifact is not None and upstream_artifacts is not None:
+        raise ValueError("Name one upstream form. This call does not opt for either.")
     repositories = None
     if workflow not in UNBOUND:
         repositories = bindings_for(workflow)
@@ -265,23 +298,48 @@ def run(workflow: str, source_b64: str | None = None) -> dict:
                 workflow + " remains documentation and evidence until the host selects its binding. "
                 "This call does not pick a different workflow and does not invent a provider."
             )
-    raw, synthetic = _source_bytes(workflow, source_b64)
     parent = Path(tempfile.mkdtemp(prefix="ncp-workbench-"))
     try:
         session = Session(make_demo_run(), parent)
         if repositories is not None:
-            bind(session, workflow, repositories)
+            try:
+                bind(session, workflow, repositories)
+            except AdapterRefusal as exc:
+                raise ValueError(getattr(exc, "message", None) or str(exc)) from exc
+        if workflow in UPSTREAM_KINDS:
+            if not isinstance(upstream_artifact, str) or not upstream_artifact:
+                raise ValueError("Name the upstream artifact. This call does not pick one.")
+            _adopt(session, [upstream_artifact])
+            upstream_id = native(upstream_artifact)["bundle_digest"]
+        elif workflow == "residual-monitor":
+            if type(upstream_artifacts) is not list or not upstream_artifacts or any(type(item) is not str for item in upstream_artifacts):
+                raise ValueError("Name the retained window artifacts. This call does not pick them.")
+            _adopt(session, list(upstream_artifacts))
+            upstream_id = None
+        elif upstream_artifact is not None or upstream_artifacts is not None:
+            raise ValueError("This workflow does not accept an upstream bundle")
+        else:
+            upstream_id = None
+        raw, synthetic = _source_bytes(workflow, source_b64)
         source = _call(session, "source.add", {
             "kind": workflow,
             "label": "folded workbench source",
             "bytes_b64": base64.b64encode(raw).decode("ascii"),
         })
+        parameters = {"source_id": source["source_id"]}
+        if workflow == "telemetry":
+            configuration = configuration_for(workflow)
+            if type(configuration) is not dict:
+                raise ValueError("Telemetry requires an operator configuration. A tool argument cannot supply it.")
+            parameters["configuration"] = configuration
+        if upstream_id is not None:
+            parameters["upstream_bundle_id"] = upstream_id
         completed = _call(session, "operation.execute", {
             "operation_id": OPERATIONS[workflow],
-            "parameters": {"source_id": source["source_id"]},
+            "parameters": parameters,
         })
         bundle = _call(session, "bundle.get", {"bundle_id": completed["bundle_id"]})
-        artifact_id = keep(bundle)
+        artifact_id = keep(bundle, kind=workflow, catalog=session.workbench.serialize())
     finally:
         shutil.rmtree(parent, ignore_errors=True)
     step = bundle["steps"][0]

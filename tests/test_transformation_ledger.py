@@ -1,4 +1,5 @@
 """The ledger accounts for every tracked path and the services match the MCP tools."""
+import base64
 import json
 import subprocess
 from pathlib import Path
@@ -86,6 +87,26 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
         assert project["bundle_retained"] is True
         saved = invoke("ncp_retained_read", {"artifact_id": project["artifact_id"]})
         assert saved["authorizes_execution"] is False
+        raw = b""
+        offset = 0
+        while True:
+            part = invoke("ncp_retained_read", {"artifact_id": project["artifact_id"], "offset": offset, "limit": 1024})
+            raw += base64.b64decode(part["chunk_b64"])
+            if part["next_offset"] is None:
+                break
+            offset = part["next_offset"]
+        assert json.loads(raw)["bundle_digest"] == project["bundle_digest"]
+        from ciw import retention
+        previous = retention._OWNER
+        retention._OWNER = "other-session"
+        try:
+            invoke("ncp_retained_read", {"artifact_id": project["artifact_id"]})
+        except ValueError as exc:
+            assert "another host session" in str(exc)
+        else:
+            raise AssertionError("cross-session read")
+        finally:
+            retention._OWNER = previous
         invoke("ncp_retained_release", {"artifact_id": project["artifact_id"]})
         try:
             invoke("ncp_retained_read", {"artifact_id": project["artifact_id"]})
@@ -127,6 +148,9 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
 def test_a_bad_host_checkout_is_refused_and_not_replaced(tmp_path, monkeypatch):
     root = tmp_path / "not-julia"
     root.mkdir()
+    (root / "oscillator_worker.jl").write_text("not a worker\n", encoding="utf-8")
+    (root / "Project.toml").write_text("name = \"not-julia\"\n", encoding="utf-8")
+    (root / "Manifest.toml").write_text("not a manifest\n", encoding="utf-8")
     executable = tmp_path / "julia"
     executable.write_text("not julia\n", encoding="utf-8")
     manifest = tmp_path / "manifest.json"
@@ -147,7 +171,8 @@ def test_a_bad_host_checkout_is_refused_and_not_replaced(tmp_path, monkeypatch):
     except ValueError as exc:
         text = str(exc)
         assert "does not invent" not in text
-        assert "Julia" in text or "julia" in text or "checkout" in text or "revision" in text
+        assert "validated source" not in text
+        assert "pinned Git checkout" in text
     else:
         raise AssertionError("bad checkout ran")
     relative = tmp_path / "relative.json"

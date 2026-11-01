@@ -109,9 +109,13 @@ TOOLS = {
         {}, JSON_OBJECT, required=[]),
     "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
         {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]},
-         "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000}}, JSON_OBJECT, required=["workflow"], read=False),
-    "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
-        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT),
+         "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000},
+         "upstream_artifact": {"type": "string", "minLength": 10, "maxLength": 80},
+         "upstream_artifacts": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "minLength": 10, "maxLength": 80}}}, JSON_OBJECT, required=["workflow"], read=False),
+    "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
+        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
+         "offset": {"type": "integer", "minimum": 0},
+         "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT),
     "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
@@ -660,13 +664,14 @@ class ControlHost:
         from .services import workbench_list
         return workbench_list()
 
-    def workbench_run(self, workflow, source_b64=None):
+    def workbench_run(self, workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None):
         from .services import workbench_run
-        return workbench_run(workflow, source_b64=source_b64)
+        return workbench_run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
+                             upstream_artifacts=upstream_artifacts)
 
-    def retained_read(self, artifact_id):
+    def retained_read(self, artifact_id, offset=None, limit=None):
         from .services import retained_read
-        return retained_read(artifact_id)
+        return retained_read(artifact_id, offset=offset, limit=limit)
 
     def retained_release(self, artifact_id):
         from .services import retained_release

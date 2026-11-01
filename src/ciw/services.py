@@ -27,14 +27,17 @@ def workbench_list():
     return listing()
 
 
-def workbench_run(workflow, source_b64=None):
+def workbench_run(workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None):
     from .workbench_surface import run
-    return run(workflow, source_b64=source_b64)
+    return run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
+               upstream_artifacts=upstream_artifacts)
 
 
-def retained_read(artifact_id):
-    from .retention import bounded
-    return bounded(artifact_id)
+def retained_read(artifact_id, offset=None, limit=None):
+    from .retention import bounded, page
+    if offset is None and limit is None:
+        return bounded(artifact_id)
+    return page(artifact_id, 0 if offset is None else offset, 32768 if limit is None else limit)
 
 
 def retained_release(artifact_id):
@@ -311,7 +314,7 @@ def invoke(name, arguments=None, host=None):
     arguments = {} if arguments is None else arguments
     if type(arguments) is not dict:
         raise ValueError("Service arguments must be an object")
-    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository"}
+    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository", "configuration"}
     if forbidden & set(arguments):
         raise ValueError("Service arguments cannot select a checkout or a pin")
     if name in SESSION:

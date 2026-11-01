@@ -57,6 +57,10 @@ def load() -> dict:
             if type(inputs) is not str or not Path(inputs).is_absolute():
                 raise ValueError("Host manifest input must be an absolute path")
             cleaned[name]["inputs"] = Path(inputs)
+        if "configuration" in item:
+            if type(item["configuration"]) is not dict:
+                raise ValueError("Host manifest configuration must be an object")
+            cleaned[name]["configuration"] = item["configuration"]
     return {"schema": SCHEMA, "authorization": "operator", "workflows": cleaned}
 
 
@@ -76,6 +80,13 @@ def input_path(workflow: str) -> Path | None:
     if item is None:
         return None
     return item.get("inputs")
+
+
+def configuration_for(workflow: str):
+    item = load()["workflows"].get(workflow)
+    if item is None:
+        return None
+    return item.get("configuration")
 
 
 def preflight() -> dict:
