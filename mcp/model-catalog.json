@@ -1,0 +1,174 @@
+{
+  "schema": "ncp.mcp-model-catalog.v1",
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_this_file",
+  "note": "Names the MCP tools and profile grants implemented in this tree. Launch still needs an operator-selected profile and instrument. This file does not run a provider.",
+  "preferred_surface": "control",
+  "protocol_versions": ["2025-11-25", "2025-06-18"],
+  "methods": ["initialize", "ping", "tools/list", "tools/call"],
+  "surfaces": {
+    "control": {
+      "command": ["python", "-m", "ciw.net", "control", "serve", "--profile", "<abs-profile.json>", "--instrument", "<instrument>"],
+      "requires_optional_package": "mcp",
+      "call_order": [
+        "ncp_capabilities_list",
+        "ncp_plan_template",
+        "ncp_plan_create",
+        "ncp_plan_admit",
+        "ncp_run_submit",
+        "ncp_run_get"
+      ],
+      "tools": [
+        {"name": "ncp_capabilities_list", "read_only": true, "required": []},
+        {"name": "ncp_index_list", "read_only": true, "required": [], "authorizes_execution": false},
+        {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
+        {"name": "ncp_workflows_list", "read_only": true, "required": [], "authorizes_execution": false},
+        {"name": "ncp_integrations_list", "read_only": true, "required": []},
+        {"name": "ncp_integration_describe", "read_only": true, "required": ["section", "source_id"]},
+        {"name": "ncp_plan_template", "read_only": true, "required": ["baseline"]},
+        {"name": "ncp_plan_create", "read_only": false, "required": ["source", "baseline", "graph"]},
+        {"name": "ncp_plan_get", "read_only": true, "required": ["plan_id"]},
+        {"name": "ncp_plan_admit", "read_only": false, "required": ["plan_id", "expected_digest"]},
+        {"name": "ncp_run_submit", "read_only": false, "required": ["plan_id", "expected_digest", "attempt"]},
+        {"name": "ncp_run_get", "read_only": true, "required": ["run_id"]},
+        {"name": "ncp_run_cancel", "read_only": false, "required": ["run_id"]},
+        {"name": "ncp_artifact_read", "read_only": true, "required": ["artifact"]},
+        {"name": "ncp_observe", "read_only": true, "required": ["artifact"]},
+        {"name": "ncp_compare", "read_only": false, "required": ["left", "right", "policy"]},
+        {"name": "ncp_qualify", "read_only": false, "required": ["suite", "inputs"]}
+      ]
+    },
+    "agent": {
+      "command": ["python", "-m", "ciw.agent_mcp", "serve", "--profile", "<abs-profile.json>", "--instrument", "<instrument>"],
+      "call_order": ["net_capabilities", "net_execute"],
+      "execute_arguments": ["source", "graph", "attempt"],
+      "tools": [
+        "net_capabilities",
+        "net_inspect",
+        "net_extract",
+        "net_source_context",
+        "net_check_edit",
+        "net_candidate",
+        "net_execute",
+        "net_replay",
+        "net_observe",
+        "net_compare",
+        "net_qualify"
+      ]
+    }
+  },
+  "profiles": [
+    {
+      "instrument": "builtin",
+      "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "builtin", "--output-dir", "DIR"],
+      "granted_operations": ["statistics.v1"],
+      "bound_not_granted": [
+        "uncertainty.propagate.v1",
+        "uncertainty.budget.v1",
+        "calibration.fit.v1",
+        "calibration.residuals.v1",
+        "sensitivity.local.v1",
+        "observability.rank.v1",
+        "model.discrepancy.v1",
+        "spectrum.periodogram.v1"
+      ],
+      "native_checkout": false
+    },
+    {
+      "profile": "numerical",
+      "instrument": "builtin",
+      "prepare": ["python", "examples/numerical_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": [
+        "uncertainty.propagate.v1",
+        "uncertainty.budget.v1",
+        "calibration.fit.v1",
+        "calibration.residuals.v1",
+        "sensitivity.local.v1",
+        "observability.rank.v1",
+        "model.discrepancy.v1"
+      ],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Separate directory. Does not change the builtin demo allow-list."
+    },
+    {
+      "profile": "analysis",
+      "instrument": "builtin",
+      "prepare": ["python", "examples/analysis_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["statistics.v1", "spectrum.periodogram.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Separate directory. Spectrum stays unauthorized on the builtin demo profile."
+    },
+    {
+      "instrument": "polymer",
+      "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "polymer", "--output-dir", "DIR"],
+      "granted_operations": [
+        "polymer.assess-cycle.v1",
+        "polymer.copilot-context.v1",
+        "polymer.control-simulate.v1",
+        "polymer.verify-cycle.v1"
+      ],
+      "native_checkout": false,
+      "physical_qualification": "not_established"
+    },
+    {
+      "instrument": "temperature",
+      "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "temperature", "--output-dir", "DIR"],
+      "granted_operations": ["metrology.temperature.process.v1", "metrology.temperature.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established"
+    },
+    {
+      "instrument": "link-scalar",
+      "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "link-scalar", "--output-dir", "DIR"],
+      "granted_operations": ["link.decode-scalar.v1", "link.apply-affine.v1", "link.mean-model.v1", "link.audit-scalar.v1"],
+      "native_checkout": false,
+      "inspection_qualification": "HELD"
+    },
+    {
+      "instrument": "measured-thermal",
+      "prepare": ["python", "-m", "ciw.agent_mcp", "measured-thermal-config", "--source", "FILE", "--output-dir", "DIR"],
+      "granted_operations": ["measured-thermal.assess.v1"],
+      "native_checkout": false,
+      "physical_validation": "not_established"
+    },
+    {
+      "instrument": "leakage",
+      "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "leakage", "--output-dir", "DIR"],
+      "granted_operations": ["leakage.assess-balance.v1", "leakage.verify-balance.v1"],
+      "native_checkout": true,
+      "startup_without_checkout": "refused"
+    },
+    {
+      "instrument": "bim-clearance",
+      "prepare": ["python", "-m", "ciw.net", "control", "prepare-bim", "--inspection", "FILE", "--output-dir", "DIR"],
+      "granted_operations": ["metrology.bim-clearance.v1"],
+      "native_checkout": true,
+      "startup_without_checkout": "refused"
+    }
+  ],
+  "not_mcp_grants": [
+    "system.compile.v1",
+    "system.simulate.v1",
+    "system.verify.v1",
+    "system.compare.v1",
+    "system.study.v1",
+    "legibility.compile.v1",
+    "data.project-gltf-mesh.v1",
+    "data.compare-observations.v1",
+    "data.review-product-study.v1",
+    "data.assess-polymer-cycle.v1",
+    "data.review-toolpoint-containment.v1",
+    "learning.oscillator-rms",
+    "doctor.preflight",
+    "linear-response.library",
+    "synthetic-oscillator-demo",
+    "release ledger ids, including fluid, hypergraph, and proved heat"
+  ],
+  "separate_hosts": [
+    "external work: python -m ciw.external_work_mcp, host-owned database and principal",
+    "board refit: ciw.board_refit_mcp, official SDK, no acceptance tool",
+    "knowledge: ciw.knowledge_mcp, pinned corpus"
+  ]
+}

@@ -4,7 +4,7 @@ Scientific computing, measurement context, and reproducible engineering investig
 
 Developed by **Notation Systems Inc.**
 
-[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Documentation](#documentation-and-development)
+[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Models and MCP](docs/MCP_MODEL.md) · [Documentation](#documentation-and-development)
 
 <a id="from-a-calculation-to-an-engineering-record"></a>
 
@@ -183,7 +183,7 @@ Adapters must preserve original source records and their declared semantics. Uni
 connect the source/license inventory to existing workflow pins and expose the
 bounded BIM clearance profile through the common admitted-plan interface.
 
-MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) identifies supported profiles, transport limits, grants, and verification procedures.
+MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. Models should follow the [model MCP contract](docs/MCP_MODEL.md) and use [mcp/model-catalog.json](mcp/model-catalog.json) as the tool index. `ncp_index_list` pages the provider-free capability index and the release ledger without authorizing them. That index does not grant execution. Prefer the control tools (`ncp_*`: list capabilities, template, create, admit, submit, poll) on one explicit instrument. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) keeps the older `net_*` transport, its limits, and its verification notes.
 
 An agent request does not grant permission to execute a provider, contact a device, change a calibration, approve a part, or disclose evidence. Tool descriptions and model responses do not replace enforcement at the owning runtime boundary. Test the actual client, transport, and installed implementation used by the integration; a handler test does not establish compatibility with every host.
 
