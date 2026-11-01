@@ -359,17 +359,67 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
     import sys
     target = tmp_path / "site"
     env = os.environ.copy()
-    subprocess.check_call(
-        [sys.executable, "-m", "pip", "install", str(ROOT), "--target", str(target), "--no-deps", "--no-build-isolation", "--ignore-requires-python"],
-        cwd="/tmp",
-        env=env,
-        stdout=subprocess.DEVNULL,
-    )
-    env["PYTHONPATH"] = str(target)
-    env.pop("PYTHONSAFEPATH", None)
-    out = subprocess.check_output(
-        [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
-        cwd="/tmp",
-        env=env,
-    )
-    assert out.strip() == b"ncp.mcp-plug-in.v1"
+    try:
+        subprocess.check_call(
+            [sys.executable, "-m", "pip", "install", str(ROOT), "--target", str(target), "--no-deps", "--no-build-isolation", "--ignore-requires-python"],
+            cwd="/tmp",
+            env=env,
+            stdout=subprocess.DEVNULL,
+        )
+        env["PYTHONPATH"] = str(target)
+        env.pop("PYTHONSAFEPATH", None)
+        out = subprocess.check_output(
+            [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
+            cwd="/tmp",
+            env=env,
+        )
+        assert out.strip() == b"ncp.mcp-plug-in.v1"
+    finally:
+        import shutil
+        shutil.rmtree(ROOT / "build", ignore_errors=True)
+        shutil.rmtree(ROOT / "src" / "computational_instrumentation_workbench.egg-info", ignore_errors=True)
+        shutil.rmtree(ROOT / "computational_instrumentation_workbench.egg-info", ignore_errors=True)
+
+
+def test_public_calls_keep_the_native_bundle_on_the_calling_host(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    from copy import deepcopy
+    from ciw.agent_mcp import demo_config, from_profile
+    from ciw.control_gateway import ControlHost
+    from ciw.retention import RetainedFailure
+    from ciw.services import invoke
+    from ciw.weather_contract import example_request
+    left = ControlHost(from_profile(demo_config(tmp_path / "left")))
+    right = ControlHost(from_profile(demo_config(tmp_path / "right")))
+    try:
+        atmosphere = invoke("ncp_domain_run", {"domain": "atmosphere", "example": True}, host=left)
+        saved = left.retained.native(atmosphere["artifact_id"])
+        assert "height_m" in saved["profile"]
+        assert saved["request"]["sampling"]["height_m"] == saved["profile"]["height_m"]
+        assert "request.json" in saved["files"]
+        try:
+            invoke("ncp_retained_read", {"artifact_id": atmosphere["artifact_id"]}, host=right)
+        except ValueError as exc:
+            assert "another host session" in str(exc)
+        else:
+            raise AssertionError("shared owner")
+        mismatched = deepcopy(example_request("radiation"))
+        mismatched["profile"] = "thermodynamics"
+        try:
+            invoke("ncp_domain_run", {"domain": "weather", "name": "radiation", "request": mismatched}, host=left)
+        except RetainedFailure as exc:
+            assert "does not match" in str(exc)
+            assert left.retained.native(exc.artifact_id)["error"]
+        else:
+            raise AssertionError("weather name")
+        refused = left.call("ncp_workbench_run", {"workflow": "julia-oscillator"})
+        assert refused["status"] == "refused"
+        failure_id = refused["error"]["artifact_id"]
+        failure = left.retained.native(failure_id)
+        assert failure["workflow"] == "julia-oscillator"
+        assert "workspace" in failure
+    finally:
+        left.close()
+        right.close()
+        left.owner.close()
+        right.owner.close()

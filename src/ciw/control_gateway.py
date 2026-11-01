@@ -706,6 +706,7 @@ class ControlHost:
                 for name, spec in sorted(TOOLS.items())]
 
     def call(self, name, arguments):
+        from .retention import RetainedFailure
         try:
             if self._closed or name not in TOOLS or len(encode(arguments)) > 65536:
                 raise ValueError("Unsupported request")
@@ -715,6 +716,10 @@ class ControlHost:
             if len(encode(value)) > MAX_RESPONSE:
                 raise ValueError("Response exceeds budget")
             return {"schema": "ncp.control-response.v1", "status": "ok", "data": value, "error": None}
+        except RetainedFailure as exc:
+            return {"schema": "ncp.control-response.v1", "status": "refused", "data": {
+                "artifact_id": exc.artifact_id, "failure_retained": True, "authorizes_execution": False},
+                "error": {"code": "request_refused", "artifact_id": exc.artifact_id}}
         except (ValueError, KeyError, TypeError, OSError, RecursionError):
             return self.refusal()
 

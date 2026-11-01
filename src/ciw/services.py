@@ -332,6 +332,13 @@ def invoke(name, arguments=None, host=None):
         if response["status"] != "ok":
             raise ValueError("request_refused")
         return response["data"]
+    store = None
+    if host is not None:
+        store = getattr(host, "retained", None)
+        if store is None:
+            raise ValueError("This host has no retained store")
+    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release"}:
+        return OPERATIONS[name](**arguments, store=store)
     if host is not None:
         raise ValueError("This operation does not take a session")
     return OPERATIONS[name](**arguments)

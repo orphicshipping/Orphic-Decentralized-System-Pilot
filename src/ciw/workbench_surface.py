@@ -325,17 +325,17 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
         raise ValueError("Unknown workbench workflow. Call ncp_workbench_list.")
     if upstream_artifact is not None and upstream_artifacts is not None:
         raise ValueError("Name one upstream form. This call does not opt for either.")
-    repositories = None
-    if workflow not in UNBOUND:
-        repositories = bindings_for(workflow)
-        if repositories is None:
-            raise ValueError(
-                workflow + " remains documentation and evidence until the host selects its binding. "
-                "This call does not pick a different workflow and does not invent a provider."
-            )
     holder = store if store is not None else _store()
     parent = Path(tempfile.mkdtemp(prefix="ncp-workbench-"))
     try:
+        repositories = None
+        if workflow not in UNBOUND:
+            repositories = bindings_for(workflow)
+            if repositories is None:
+                raise ValueError(
+                    workflow + " remains documentation and evidence until the host selects its binding. "
+                    "This call does not pick a different workflow and does not invent a provider."
+                )
         session = Session(make_demo_run(), parent)
         if repositories is not None:
             try:
@@ -377,8 +377,19 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
         bundle = _call(session, "bundle.get", {"bundle_id": completed["bundle_id"]})
         artifact_id = holder.keep(bundle, kind=workflow, catalog=session.workbench.serialize())
     except ValueError as exc:
-        holder.keep_failure({"workflow": workflow, "error": str(exc)[:500]})
-        raise
+        from .retention import RetainedFailure
+        files = {}
+        if parent.is_dir():
+            for path in sorted(parent.rglob("*.json")):
+                if path.is_symlink() or not path.is_file() or path.stat().st_size > 500_000:
+                    continue
+                files[str(path.relative_to(parent))] = path.read_text(encoding="utf-8")[:20000]
+        failure_id = holder.keep_failure({
+            "workflow": workflow,
+            "error": str(exc)[:500],
+            "workspace": files,
+        })
+        raise RetainedFailure(str(exc), failure_id) from exc
     finally:
         shutil.rmtree(parent, ignore_errors=True)
     step = bundle["steps"][0]

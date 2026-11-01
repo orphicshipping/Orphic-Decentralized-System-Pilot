@@ -36585,13 +36585,6 @@
       "authorizes_execution": false
     },
     {
-      "path": "src/ciw/data/plug-in.json",
-      "disposition": "retained_and_verified",
-      "component": "domain",
-      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
-      "authorizes_execution": false
-    },
-    {
       "path": "src/ciw/data_cli.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -39183,6 +39176,13 @@
     },
     {
       "path": "src/ciw/plsr_engine.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/plug-in.json",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",

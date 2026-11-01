@@ -136,12 +136,65 @@ def _checks(report):
     })
 
 
-def _bundle(run, request):
+def _json_files(directory: Path) -> dict:
+    found = {}
+    if not directory.is_dir():
+        return found
+    for path in sorted(directory.glob("*.json")):
+        if path.is_symlink() or not path.is_file() or path.stat().st_size > 2_000_000:
+            continue
+        found[path.name] = json.loads(path.read_text(encoding="utf-8"))
+    return found
+
+
+def _column(workflow, destination: Path):
+    session, candidate, _verification = workflow._read(destination)
+    request = workflow.source_request(session.run)
+    profile = None
+    if candidate is not None and type(candidate.get("data")) is dict:
+        profile = candidate["data"].get("profile")
+    return request, profile
+
+
+def _retain_failure(kind, message, files, store):
+    from .retention import RetainedFailure, _store
+    holder = store if store is not None else _store()
+    artifact_id = holder.keep_failure({
+        "kind": kind,
+        "error": message[:500],
+        "files": files,
+    })
+    return artifact_id
+
+
+def _complete(kind, workflow, prepared, store, used_example, *, require_profile=False):
+    from .retention import RetainedFailure
     parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    destination = parent / "out"
     try:
-        return _checks(run(request, parent / "out"))
+        report = workflow.run(prepared, destination)
+        request, profile = _column(workflow, destination)
+        files = _json_files(destination)
+        if type(request) is not dict or (require_profile and type(profile) is not dict):
+            raise ValueError("Native bundle was deleted before it was retained")
+        record = {"request": request, "files": files, "inspection": report}
+        if profile is not None:
+            record["profile"] = profile
+        artifact_id = _retain(kind, record, store)
+    except RetainedFailure:
+        raise
+    except ValueError as exc:
+        files = _json_files(destination)
+        artifact_id = _retain_failure(kind, str(exc), files, store)
+        raise RetainedFailure(str(exc), artifact_id) from exc
     finally:
         shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = artifact_id
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    body["retained_fields"] = ["request", "profile", "files"] if require_profile else ["request", "files"]
+    return body
 
 
 def _retain(kind, value, store=None):
@@ -170,55 +223,37 @@ def _prepared(request, example, factory, validate):
 
 
 def _atmosphere(_name, request=None, example=False, store=None):
+    from . import atmosphere_workflow as workflow
     from .atmosphere_contract import example_request, validate_request
-    from .atmosphere_workflow import run
     prepared, used_example = _prepared(request, example, example_request, validate_request)
-    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
-    try:
-        report = run(prepared, parent / "out")
-    finally:
-        shutil.rmtree(parent, ignore_errors=True)
-    body = _checks(report)
-    body["artifact_id"] = _retain("atmosphere", report, store)
-    body["bundle_retained"] = True
-    body["example"] = used_example
-    return body
+    return _complete("atmosphere", workflow, prepared, store, used_example, require_profile=True)
 
 
 def _moist(_name, request=None, example=False, store=None):
+    from . import atmosphere_workflow as workflow
     from .atmosphere_moist_contract import example_request, validate_request
-    from .atmosphere_workflow import run
     prepared, used_example = _prepared(request, example, example_request, validate_request)
-    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
-    try:
-        report = run(prepared, parent / "out")
-    finally:
-        shutil.rmtree(parent, ignore_errors=True)
-    body = _checks(report)
-    body["artifact_id"] = _retain("atmosphere-moist", report, store)
-    body["bundle_retained"] = True
-    body["example"] = used_example
-    return body
+    return _complete("atmosphere-moist", workflow, prepared, store, used_example, require_profile=True)
 
 
 def _weather(name, request=None, example=False, store=None):
+    from . import weather_workflow as workflow
     from .weather_contract import example_request, validate_request
-    from .weather_workflow import run
+    from .retention import RetainedFailure
+    if request is not None and request.get("profile") != name:
+        artifact_id = _retain_failure(
+            "weather", "Weather request profile does not match the named task", {"request": request}, store)
+        raise RetainedFailure("Weather request profile does not match the named task", artifact_id)
     prepared, used_example = _prepared(request, example, lambda: example_request(name), validate_request)
-    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
-    try:
-        report = run(prepared, parent / "out")
-    finally:
-        shutil.rmtree(parent, ignore_errors=True)
-    body = _checks(report)
-    body["artifact_id"] = _retain("weather", report, store)
-    body["bundle_retained"] = True
-    body["example"] = used_example
-    return body
+    if prepared.get("profile") != name:
+        artifact_id = _retain_failure(
+            "weather", "Weather request profile does not match the named task", {"request": prepared}, store)
+        raise RetainedFailure("Weather request profile does not match the named task", artifact_id)
+    return _complete("weather", workflow, prepared, store, used_example)
 
 
 def _impact(name, request=None, example=False, store=None):
-    from .impact_workflow import run
+    from . import impact_workflow as workflow
     if name == "contact":
         from .impact_contract import example_request, validate_request
     elif name == "plate":
@@ -228,32 +263,14 @@ def _impact(name, request=None, example=False, store=None):
     else:
         raise ValueError("Impact name must be contact, plate, or crush")
     prepared, used_example = _prepared(request, example, example_request, validate_request)
-    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
-    try:
-        report = run(prepared, parent / "out")
-    finally:
-        shutil.rmtree(parent, ignore_errors=True)
-    body = _checks(report)
-    body["artifact_id"] = _retain("impact", report, store)
-    body["bundle_retained"] = True
-    body["example"] = used_example
-    return body
+    return _complete("impact", workflow, prepared, store, used_example)
 
 
 def _irrigation(_name, request=None, example=False, store=None):
+    from . import irrigation_workflow as workflow
     from .irrigation_contract import example_request, validate_request
-    from .irrigation_workflow import run
     prepared, used_example = _prepared(request, example, example_request, validate_request)
-    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
-    try:
-        report = run(prepared, parent / "out")
-    finally:
-        shutil.rmtree(parent, ignore_errors=True)
-    body = _checks(report)
-    body["artifact_id"] = _retain("irrigation", report, store)
-    body["bundle_retained"] = True
-    body["example"] = used_example
-    return body
+    return _complete("irrigation", workflow, prepared, store, used_example)
 
 
 def _geomatics(name, request=None, example=False, store=None):

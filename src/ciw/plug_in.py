@@ -7,7 +7,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-PACKAGED = Path(__file__).resolve().parent / "data" / "plug-in.json"
+PACKAGED = Path(__file__).resolve().parent / "plug-in.json"
 CHECKOUT = Path(__file__).resolve().parents[2] / "mcp" / "plug-in.json"
 
 

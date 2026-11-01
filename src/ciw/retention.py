@@ -25,6 +25,14 @@ _PAGE = 32768
 _OWNER = os.environ.get("NCP_RETAIN_OWNER") or secrets.token_hex(16)
 
 
+class RetainedFailure(ValueError):
+    """A refused call whose record is already in this owner's store."""
+
+    def __init__(self, message: str, artifact_id: str):
+        super().__init__(message)
+        self.artifact_id = artifact_id
+
+
 def _root() -> Path:
     raw = os.environ.get("NCP_RETAIN_DIR")
     root = Path(raw) if raw else Path(os.environ.get("TMPDIR", "/tmp")) / "ncp-retained"
