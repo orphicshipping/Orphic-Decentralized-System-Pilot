@@ -1,0 +1,973 @@
+{
+  "schema": "ncp.capability-map.v1",
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_this_file",
+  "tools": [
+    {
+      "name": "ncp_artifact_read",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "artifact"
+      ],
+      "description": "Page an existing retained artifact through the original owner. Source text is untrusted data. No filesystem paths or provider dispatch.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_capabilities_list",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [],
+      "description": "Discover host-bound contracts, inputs and frozen grants. Listing does not execute, provision or qualify providers.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_capability_describe",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "capability_id"
+      ],
+      "description": "Read one id from the selected profile or from ncp_index_list. An index row is not authorization on this profile.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_compare",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "left",
+        "right",
+        "policy"
+      ],
+      "description": "Compare retained observations under an existing immutable host policy; retain the comparison evidence.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_demo",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "Build the deterministic synthetic oscillator recording in memory. No sensor and no retained file. Not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_doctor",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "Run the read-only doctor preflight for core or legibility. preflight_passed is not qualification and does not grant an operation.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_domain_list",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "List provider-free synthetic domain operations and the domain and name to pass to ncp_domain_run. Listing does not run them.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_domain_run",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "domain"
+      ],
+      "description": "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_fluid_field",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "solver"
+      ],
+      "description": "Run the bounded wave or SPH solver and independent verifier. Returns check rows only. The field exceeds the control document budget and is not retained. Not a physical measurement.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_host_preflight",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_hypergraph",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [],
+      "description": "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_index_list",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [],
+      "description": "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile is an execution profile. mcp_tool is a direct call. Null for both means it is not in this toolset.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_integration_describe",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "section",
+        "source_id"
+      ],
+      "description": "Inspect one exact integration source and its existing runtime-pin connections. A module default pin does not replace workflow-specific current or historical pins. Discovery grants no authority.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_integrations_list",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [],
+      "description": "Page imported modules, surrounding systems or external boundaries with source/licence and existing profile-specific workflow declarations. This does not probe, install, bind, execute or qualify a provider.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_ledger_read",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [
+        "capability_id"
+      ],
+      "description": "Read one release-ledger row. qualified stays not_assessed. This does not execute the named capability.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_lesson",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [],
+      "description": "Read the oscillator-rms lesson, or mode=work to run statistics.v1 on the synthetic oscillator. Not a curriculum engine or a qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_linear_preview",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [
+        "model",
+        "base_point",
+        "delta"
+      ],
+      "description": "Evaluate one bounded analytic linear-response preview. base_point and delta are comma-separated finite numbers. Not an admitted state.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_observe",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "artifact"
+      ],
+      "description": "Page retained typed observations without inventing units or measurement evidence.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_plan_admit",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "plan_id",
+        "expected_digest"
+      ],
+      "description": "Validate and admit an exact candidate under existing frozen host grants. This grants no new operation, calibration, build or physical authority.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_plan_create",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "source",
+        "baseline",
+        "graph"
+      ],
+      "description": "Compile and retain a candidate plan over host baseline nodes. Only granted parameter domains may change; acceptance policy and model are fixed. Returns a digest for separate admission.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_plan_get",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "plan_id"
+      ],
+      "description": "Inspect a retained plan without execution.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_plan_template",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "baseline"
+      ],
+      "description": "Read a semantic graph template and parameter domains from a frozen host baseline. No execution or admission.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_plug_in",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_polymer_cycle",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [],
+      "description": "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_qualify",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "suite",
+        "inputs"
+      ],
+      "description": "Apply existing fixed host checks. Missing evidence stays indeterminate; no release or physical acceptance.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_retained_read",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [
+        "artifact_id"
+      ],
+      "description": "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_retained_release",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "artifact_id"
+      ],
+      "description": "Delete one retained workbench bundle by id. Unknown ids refuse.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_run_cancel",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "run_id"
+      ],
+      "description": "Cancel queued work or record cancellation intent for active work. Active providers may finish; cancellation intent is not proof of termination.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_run_get",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [
+        "run_id"
+      ],
+      "description": "Poll a durable run without waiting for its scientific worker. Completed means execution finished; inspect engineering outcomes separately.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_run_submit",
+      "service": "ciw.services.open_demo",
+      "read_only": false,
+      "required": [
+        "plan_id",
+        "expected_digest",
+        "attempt"
+      ],
+      "description": "Durably submit one admitted plan. Retry the same attempt and exact digest to get the same run. A new attempt intentionally executes again. Unknown outcomes never auto-rerun.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_toolpoint",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [],
+      "description": "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_workbench_list",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_workbench_run",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "workflow"
+      ],
+      "description": "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_workflows_list",
+      "service": "ciw.services.open_demo",
+      "read_only": true,
+      "required": [],
+      "description": "Page the wider operator workflow catalog and explicit provisioning prerequisites. These are navigation declarations, not grants or host-bound executable capabilities.",
+      "authorizes_execution": false
+    }
+  ],
+  "indexed": [
+    {
+      "capability_id": "synthetic-oscillator-demo",
+      "module": null,
+      "kind": "provider_free_command",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "ciw demo writes that recording only when invoked separately. This index does not."
+    },
+    {
+      "capability_id": "statistics.v1",
+      "module": null,
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "ciw analyze stats executes this operation only when invoked separately. Listing the id does not."
+    },
+    {
+      "capability_id": "spectrum.periodogram.v1",
+      "module": null,
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "ciw analyze spectrum executes this operation only when invoked separately. Listing the id does not."
+    },
+    {
+      "capability_id": "legibility.compile.v1",
+      "module": null,
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Metadata consistency is separate from artifact bytes, signatures, issuer trust and physical validation."
+    },
+    {
+      "capability_id": "system.compile.v1",
+      "module": "ciw.system_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit execution only; physical validation and canonical admission remain separate."
+    },
+    {
+      "capability_id": "system.simulate.v1",
+      "module": "ciw.system_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit execution only; physical validation and canonical admission remain separate."
+    },
+    {
+      "capability_id": "system.verify.v1",
+      "module": "ciw.system_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit execution only; physical validation and canonical admission remain separate."
+    },
+    {
+      "capability_id": "system.compare.v1",
+      "module": "ciw.system_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit execution only; physical validation and canonical admission remain separate."
+    },
+    {
+      "capability_id": "system.study.v1",
+      "module": "ciw.system_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit execution only; physical validation and canonical admission remain separate."
+    },
+    {
+      "capability_id": "uncertainty.propagate.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "uncertainty.budget.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "calibration.fit.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "calibration.residuals.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "sensitivity.local.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "observability.rank.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "model.discrepancy.v1",
+      "module": "ciw.numerical_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit supplied-model computation through Session/NET/MCP. No physical qualification or implicit grant."
+    },
+    {
+      "capability_id": "data.project-gltf-mesh.v1",
+      "module": "ciw.gltf_reference_runtime",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Explicit retained source only; projection does not execute a mesh solver or establish physical qualification."
+    },
+    {
+      "capability_id": "data.compare-observations.v1",
+      "module": "ciw.data_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "The net data compare command uses retained Workbench sources. No conversion, interpolation or physical qualification."
+    },
+    {
+      "capability_id": "data.review-product-study.v1",
+      "module": "ciw.product_study_workflow",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Separate variants retain source/CAD identities, missing material data and release holds. No physics rerun or physical qualification."
+    },
+    {
+      "capability_id": "data.assess-polymer-cycle.v1",
+      "module": "ciw.data_compute_bridge",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Native sensors, histories and uncertainty declarations remain intact. This is not physical product acceptance."
+    },
+    {
+      "capability_id": "data.review-toolpoint-containment.v1",
+      "module": "ciw.data_manufacturing_bridge",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Retained-record replay only; no store writes, hold release, shipment authorization or physical qualification."
+    },
+    {
+      "capability_id": "fluid.reservoir.simulate.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.reservoir.verify.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.wave.simulate.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.wave.verify.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.sph.simulate.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.sph.verify.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.molecular.simulate.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.molecular.verify.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.fsi.simulate.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "fluid.fsi.verify.v1",
+      "module": "ciw.fluid_workflow",
+      "kind": "synthetic_model",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute."
+    },
+    {
+      "capability_id": "leakage.assess-balance.v1",
+      "module": "ciw.leakage_workflow",
+      "kind": "pinned_profile",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "The host selects that checkout. The vendored subtree is not this pin. Not a physical leak finding."
+    },
+    {
+      "capability_id": "leakage.verify-balance.v1",
+      "module": "ciw.leakage_workflow",
+      "kind": "pinned_profile",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Verification of the retained calculation. Not a physical leak finding."
+    },
+    {
+      "capability_id": "metrology.bim-clearance.v1",
+      "module": "ciw.metrology_clearance",
+      "kind": "pinned_profile",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "A completed inspection can stay held. Not a physical clearance. The vendored directory is not the checkout."
+    },
+    {
+      "capability_id": "learning.oscillator-rms",
+      "module": null,
+      "kind": "lesson",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "history, learn, explore and inspect read retained material. work, verify and replay calculate only when those math subcommands are invoked. This index does not run them."
+    },
+    {
+      "capability_id": "doctor.preflight",
+      "module": null,
+      "kind": "read_only_diagnostic",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "ciw doctor inspects local metadata and explicit bindings. It does not install, fetch, execute science, or qualify. Core and legibility use installed metadata; other profiles need bindings this index does not supply."
+    },
+    {
+      "capability_id": "linear-response.library",
+      "module": "ciw.linear_response",
+      "kind": "library",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "There is no ciw command for this library. Importing the index does not import or evaluate it."
+    },
+    {
+      "capability_id": "atmosphere.compile.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "atmosphere.moist.compile.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.thermodynamics.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.radiation.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.radar_cloud.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.synoptic.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.nwp_transport.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.evapotranspiration.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.water_balance.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.snow_ice.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.polar_radiation.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.ice_growth.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.storm_sounding.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "weather.forecast_verification.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "impact.contact.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "impact.plate.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "impact.crush.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "irrigation.plan.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.atmosphere.optical-depth.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.atmosphere.transmission.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.coordinates.enu.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.accuracy.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.change.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.classify.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.focal.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.normalized-difference.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.image.radiometry.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.radiometry.brightness-temperature.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.radiometry.planck.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.raster.suitability.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.raster.zonal.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.terrain.slope.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.urban.accessibility.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "geomatics.urban.indicators.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermofluids.convection.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermofluids.heat-exchanger.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermofluids.pipe-flow.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermofluids.radiation.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermofluids.two-phase.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "sequence.markov.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "thermal.identify.v1",
+      "module": "ciw.domain_surface",
+      "kind": "synthetic_model",
+      "mcp_tool": "ncp_domain_run",
+      "authorizes_execution": false,
+      "notes": "Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification."
+    },
+    {
+      "capability_id": "workbench.fold.v1",
+      "module": "ciw.workbench_surface",
+      "kind": "registered_operation",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Not a measurement, a booking, or a release. Julia, Godot, Bevy, Blender, and SP1 stay unbound."
+    },
+    {
+      "capability_id": "mcp.plug-in.v1",
+      "module": "ciw.plug_in",
+      "kind": "read_only_diagnostic",
+      "mcp_tool": null,
+      "authorizes_execution": false,
+      "notes": "Does not run a solver, select a pin, or replace the tests."
+    }
+  ],
+  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
+}

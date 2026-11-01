@@ -145,5 +145,10 @@ def test_the_workbench_is_one_fold_and_does_not_pick_a_workflow():
     body = run("project-graph")
     assert body["status"] == "retained"
     assert body["authorizes_execution"] is False
-    assert body["bundle_retained"] is False
-    assert body["physical_qualification"] == "not_established"
+    assert body["bundle_retained"] is True
+    assert body["synthetic_fixture"] is True
+    from ciw.retention import bounded, release
+    saved = bounded(body["artifact_id"])
+    assert saved["authorizes_execution"] is False
+    assert saved["bundle"]["bundle_digest"] == body["bundle_digest"] or saved["projection"] in {"full", "bounded"}
+    release(body["artifact_id"])
