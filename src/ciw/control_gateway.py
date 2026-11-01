@@ -105,6 +105,10 @@ TOOLS = {
     "ncp_domain_run": _tool("domain_run", "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
         {"domain": {"type": "string", "enum": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]},
          "name": {"type": "string", "minLength": 1, "maxLength": 80}}, JSON_OBJECT, required=["domain"], read=False),
+    "ncp_workbench_list": _tool("workbench_list", "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
+        {}, JSON_OBJECT, required=[]),
+    "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. The five unbound workflows use their retained fixtures. Any other name refuses until the host selects that binding. Not a measurement or a release. Does not pick the easiest workflow.",
+        {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]}}, JSON_OBJECT, required=["workflow"], read=False),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
@@ -347,6 +351,7 @@ class ControlHost:
         direct.update(fluid_direct_tools())
         from .domain_surface import tool_grants
         direct.update(tool_grants())
+        direct["workbench.fold.v1"] = "ncp_workbench_run"
         rows = []
         for item in catalog()["capabilities"]:
             profiles = grants.get(item["capability_id"], ())
@@ -720,6 +725,14 @@ class ControlHost:
     def domain_run(self, domain, name=None):
         from .domain_surface import run
         return run(domain, name)
+
+    def workbench_list(self):
+        from .workbench_surface import listing
+        return listing()
+
+    def workbench_run(self, workflow):
+        from .workbench_surface import run
+        return run(workflow)
 
     def polymer_cycle(self):
         import base64

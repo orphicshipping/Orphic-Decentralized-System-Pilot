@@ -25,7 +25,7 @@ def test_project_map_matches_the_tree_and_does_not_grant():
     assert document["callable"]["synthetic_domains"]["domains"] == list(DOMAINS)
     indexed = {item["capability_id"] for item in catalog()["capabilities"]}
     assert {row[0] for row in OPERATIONS} <= indexed
-    assert "ncp_domain_run" in document["callable"]["direct_tools"]
+    assert "ncp_workbench_run" in document["callable"]["direct_tools"]
     assert "SP1 proved heat as a proof" in document["not_grants"]
     narrative = (ROOT / document["narrative"]).read_text(encoding="utf-8")
     assert "not a grant" in narrative
@@ -115,3 +115,26 @@ def test_a_domain_set_does_not_opt_for_the_easiest_name():
             assert "does not opt for the easiest" in str(exc)
         else:
             raise AssertionError(domain)
+
+
+def test_the_workbench_is_one_fold_and_does_not_pick_a_workflow():
+    from ciw.workbench_surface import listing, run
+
+    page = listing()
+    assert page["schema"] == "ncp.workbench-fold.v1"
+    assert page["authorizes_execution"] is False
+    assert page["not_selected_by_default"] is True
+    assert len(page["operations"]) == 29
+    assert sum(row["binding_status"] == "available_in_unbound_session" for row in page["operations"]) == 5
+    try:
+        run("julia-oscillator")
+    except ValueError as exc:
+        assert "does not pick" in str(exc)
+        assert "documentation and evidence" in str(exc)
+    else:
+        raise AssertionError("julia")
+    body = run("project-graph")
+    assert body["status"] == "retained"
+    assert body["authorizes_execution"] is False
+    assert body["bundle_retained"] is False
+    assert body["physical_qualification"] == "not_established"

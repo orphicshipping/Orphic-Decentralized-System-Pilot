@@ -286,6 +286,16 @@ _CAPABILITIES = (
         summary=summary, operation_id=capability_id, role="backend", module="ciw.domain_surface",
         notes="Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification.",
     ) for capability_id, _domain, _name, summary in _DOMAIN_OPERATIONS),
+    _record(
+        capability_id="workbench.fold.v1",
+        disposition="implemented",
+        kind="registered_operation",
+        summary="One fold of the workbench. Call ncp_workbench_list, then ncp_workbench_run with the workflow name. The call does not opt for the easiest task. Pinned workflows refuse until the host selects that binding. Documentation and evidence stay.",
+        operation_id="workbench.fold.v1",
+        role="state_estimator",
+        module="ciw.workbench_surface",
+        notes="Not a measurement, a booking, or a release. Julia, Godot, Bevy, Blender, and SP1 stay unbound.",
+    ),
 )
 
 _IDS = [item["capability_id"] for item in _CAPABILITIES]

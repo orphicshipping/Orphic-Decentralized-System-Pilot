@@ -48,7 +48,9 @@ Root files that matter first: [README.md](../README.md), [AGENTS.md](../AGENTS.m
 
 Plan profiles: builtin, numerical, analysis, polymer, temperature, measured thermal, link scalar, leakage, BIM clearance, system, legibility, data, fluid, fluid-molecular, fluid-fsi.
 
-Direct tools: doctor, demo, linear preview, lesson, hypergraph, polymer cycle, toolpoint, wave/SPH field, domain list, domain run, ledger read.
+Direct tools: doctor, demo, linear preview, lesson, hypergraph, polymer cycle, toolpoint, wave/SPH field, domain list, domain run, workbench list, workbench run, ledger read.
+
+`ncp_workbench_list` is the workbench, folded. It names every session workflow, the document that owns it, and the evidence that remains. `ncp_workbench_run` requires the workflow name. Energy accuracy, machine manifest, measured thermal, project graph, and thermal observer run from retained fixtures and return a digest, not a release. Every other workflow refuses until the host selects its binding. The call does not substitute an easier workflow. The pages and the example files stay.
 
 `ncp_domain_run` covers dry and moist atmosphere columns, twelve weather profiles, impact contact, plate, and crush, irrigation, sixteen geomatics references, five thermofluids balances, a Markov sequence, and thermal identification. The ids live in `src/ciw/domain_surface.py` and are indexed. A LOCAL or PASS check is not a measurement, a forecast, or a calibration. The plate field and geomatics outputs are not retained.
 

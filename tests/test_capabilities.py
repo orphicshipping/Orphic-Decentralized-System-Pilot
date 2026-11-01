@@ -89,6 +89,7 @@ INDEXED = (
     "thermofluids.two-phase.v1",
     "sequence.markov.v1",
     "thermal.identify.v1",
+    "workbench.fold.v1",
 )
 
 
