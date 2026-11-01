@@ -42,6 +42,7 @@ Every tool argument is one object. Additional properties are refused.
 | `ncp_domain_run` | `domain` (`name` when the list row has one) | Runs that one synthetic solver and its check | Not a measurement, forecast, calibration, or physical qualification. The bundle or field is not retained. A domain with several names does not pick the easiest |
 | `ncp_workbench_list` | none | Lists every workbench workflow, its document, and its evidence | Does not run one and does not pick the easiest |
 | `ncp_workbench_run` | `workflow` | Runs that named workflow when it needs no host pin, using the retained fixture | Any other workflow refuses until the host selects its binding. Documentation and evidence stay. Not a release |
+| `ncp_plug_in` | none | Returns the bind contract for a model or another program | Does not run a solver. A folder and a line of code are not tools |
 | `ncp_toolpoint` | none | Reviews the synthetic manufacturing and toolpoint reports | Journals do not fit a plan graph. Not a hold release |
 | `ncp_ledger_read` | `capability_id` | Reads one release-ledger row | `qualified` stays `not_assessed`. `proved_heat` is a read, not a proof |
 | `ncp_capability_describe` | `capability_id` | Reads one id from the selected profile, or an index or ledger row | An index row is not authorization on this profile. It does not bind a provider |

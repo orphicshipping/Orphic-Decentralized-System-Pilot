@@ -90,6 +90,7 @@ INDEXED = (
     "sequence.markov.v1",
     "thermal.identify.v1",
     "workbench.fold.v1",
+    "mcp.plug-in.v1",
 )
 
 

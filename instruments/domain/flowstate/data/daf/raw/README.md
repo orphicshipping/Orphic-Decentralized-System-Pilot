@@ -10,4 +10,4 @@ This folder does not opt for the easiest task in a set. Name the task.
 
 Tasks in this folder, none of them the default: `noaa_8454000_202401_mllw`, `usgs_ridgway_wy2023_2025`, `usgs_taylor_park_wy2023_2025`.
 
-The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. This folder is not a human console. Reading this page does not run a solver, bind a provider, or qualify a result.

@@ -296,6 +296,16 @@ _CAPABILITIES = (
         module="ciw.workbench_surface",
         notes="Not a measurement, a booking, or a release. Julia, Godot, Bevy, Blender, and SP1 stay unbound.",
     ),
+    _record(
+        capability_id="mcp.plug-in.v1",
+        disposition="implemented",
+        kind="read_only_diagnostic",
+        summary="Bind contract for a model or another program. Call ncp_plug_in. A folder and a line of code are not tools.",
+        operation_id="mcp.plug-in.v1",
+        role="backend",
+        module="ciw.plug_in",
+        notes="Does not run a solver, select a pin, or replace the tests.",
+    ),
 )
 
 _IDS = [item["capability_id"] for item in _CAPABILITIES]

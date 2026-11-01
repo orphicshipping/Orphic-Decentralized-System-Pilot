@@ -307,7 +307,7 @@ def contract(rel: str, kind: str, call: str, sentence: str, names: list[str]) ->
         f"{extra}\n"
         f"{SET_RULE}\n"
         "\n"
-        "A file in this folder is not a tool call. "
+        "A file in this folder is not a tool call. This folder is not a human console. "
         f"Use `ncp_index_list` and the [project map]({target_map}). "
         f"The [folder index]({target_index}) lists every tracked folder. "
         "Reading this contract does not run a solver, bind a provider, or qualify a result. "
@@ -346,7 +346,7 @@ def readme_entry(rel: str, kind: str, call: str, children: list[str]) -> str:
         "\n"
         f"{tasks}"
         f"The contract is {readme}. "
-        "A file in this folder is not a tool call. "
+        "A file in this folder is not a tool call. This folder is not a human console. "
         "Reading this page does not run a solver, bind a provider, or qualify a result.\n"
     )
 

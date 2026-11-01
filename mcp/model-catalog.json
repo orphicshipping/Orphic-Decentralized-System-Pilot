@@ -34,6 +34,7 @@
         {"name": "ncp_domain_run", "read_only": false, "required": ["domain"], "optional": ["name"], "note": "One synthetic solver from ncp_domain_list. Not a measurement, forecast, or qualification."},
         {"name": "ncp_workbench_list", "read_only": true, "required": [], "note": "Every workbench workflow in one fold. Does not pick the easiest. Documentation and evidence stay."},
         {"name": "ncp_workbench_run", "read_only": false, "required": ["workflow"], "note": "Name one workflow. Five unbound fixtures run. Pinned workflows refuse. Not a release."},
+        {"name": "ncp_plug_in", "read_only": true, "required": [], "note": "Bind contract for a model or another program. Does not execute."},
         {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
         {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
         {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"], "note": "Reads a profile-bound id or an index row. An index row is not authorization on the selected profile."},

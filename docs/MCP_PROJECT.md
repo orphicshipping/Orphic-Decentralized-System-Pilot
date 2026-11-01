@@ -4,6 +4,7 @@ This page is how a model walks the repository. It adds no solver. Reading it is 
 not a test run, and not a qualification.
 
 Machine copy: [mcp/project-map.json](../mcp/project-map.json).
+Plug-in for other software: [mcp/plug-in.json](../mcp/plug-in.json). Call `ncp_plug_in`. A folder is not a human console.
 Every tracked folder: [mcp/folder-index.json](../mcp/folder-index.json).
 Call contract: [MCP_MODEL.md](MCP_MODEL.md).
 Tool index: [mcp/model-catalog.json](../mcp/model-catalog.json).
