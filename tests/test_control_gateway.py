@@ -175,9 +175,12 @@ def test_index_pages_every_capability_without_authorizing(configured):
     used = owner.capabilities()["execution_budget"]["used"]
     first = call(host, "ncp_index_list", limit=32)
     assert first["next_offset"] == 32
-    second = call(host, "ncp_index_list", offset=first["next_offset"], limit=32)
-    rows = first["items"] + second["items"]
-    assert second["next_offset"] is None
+    rows = list(first["items"])
+    offset = first["next_offset"]
+    while offset is not None:
+        page = call(host, "ncp_index_list", offset=offset, limit=32)
+        rows.extend(page["items"])
+        offset = page["next_offset"]
     assert len(rows) == first["total"] == first["index_total"] + first["ledger_total"]
     assert first["authorizes_execution"] is False
     assert all(row["authorizes_execution"] is False for row in rows)
@@ -235,8 +238,47 @@ def test_index_pages_every_capability_without_authorizing(configured):
     assert owner.capabilities()["execution_budget"]["used"] == used
     names = {tool["name"] for tool in host.descriptions()}
     assert "ncp_index_list" in names
-    for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle", "ncp_fluid_field"):
+    for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle", "ncp_fluid_field", "ncp_domain_list", "ncp_domain_run"):
         assert name in names
+
+
+def test_domain_run_executes_synthetic_solvers_without_qualifying(configured):
+    from net_geomatics.catalog import OPERATIONS as GEOMATICS
+    from ciw.domain_surface import OPERATIONS
+    from ciw.thermofluids_models import PROFILES
+    from ciw.weather_contract import catalog as weather_catalog
+    _, owner, host = configured
+    used = owner.capabilities()["execution_budget"]["used"]
+    listed = call(host, "ncp_domain_list")
+    assert listed["authorizes_execution"] is False
+    ids = [row["capability_id"] for row in listed["operations"]]
+    assert ids == [row[0] for row in OPERATIONS]
+    assert {f"weather.{name}.v1" for name in weather_catalog()["profiles"]} == {item for item in ids if item.startswith("weather.")}
+    assert set(GEOMATICS) == {item for item in ids if item.startswith("geomatics.")}
+    assert {f"thermofluids.{name}.v1" for name in PROFILES} == {item for item in ids if item.startswith("thermofluids.")}
+    atmosphere = call(host, "ncp_domain_run", domain="atmosphere")
+    assert atmosphere["status"] == "LOCAL" and atmosphere["synthetic"] is True
+    assert atmosphere["authorizes_execution"] is False and atmosphere["bundle_retained"] is False
+    transmission = host.call("ncp_domain_run", {"domain": "geomatics", "name": "geomatics.atmosphere.transmission.v1"})
+    assert transmission["status"] == "ok"
+    transmission = transmission["data"]
+    assert transmission["status"] == "PASS" and transmission["field_retained"] is False
+    assert transmission["physical_qualification"] == "not_established"
+    weather = host.call("ncp_domain_run", {"domain": "weather", "name": "thermodynamics"})
+    assert weather["status"] == "ok"
+    weather = weather["data"]
+    assert weather["authorizes_execution"] is False and weather["bundle_retained"] is False
+    thermo = host.call("ncp_domain_run", {"domain": "thermofluids", "name": "convection"})
+    assert thermo["status"] == "ok"
+    thermo = thermo["data"]
+    assert thermo["status"] == "PASS" and thermo["data_retained"] is False
+    sequence = call(host, "ncp_domain_run", domain="sequence")
+    assert sequence["status"] == "PASS" and sequence["synthetic"] is True
+    identified = call(host, "ncp_domain_run", domain="thermal-identification")
+    assert identified["status"] == "candidate" and identified["residuals_retained"] is False
+    refused = host.call("ncp_domain_run", {"domain": "julia"})
+    assert refused["status"] == "refused"
+    assert owner.capabilities()["execution_budget"]["used"] == used
 
 
 def test_describe_reads_index_rows_without_granting_them(configured):

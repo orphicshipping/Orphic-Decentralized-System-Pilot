@@ -28,6 +28,8 @@
         {"name": "ncp_hypergraph", "read_only": false, "required": [], "note": "Synthetic thermal rewrite. Not physical qualification."},
         {"name": "ncp_polymer_cycle", "read_only": false, "required": [], "note": "Does not fit a plan graph. Not a part release."},
         {"name": "ncp_fluid_field", "read_only": false, "required": ["solver"], "note": "solver is wave or sph. Returns verifier checks. The field is not retained. Not a measurement."},
+        {"name": "ncp_domain_list", "read_only": true, "required": [], "note": "Synthetic domain operations. Listing does not run them."},
+        {"name": "ncp_domain_run", "read_only": false, "required": ["domain"], "optional": ["name"], "note": "One synthetic solver from ncp_domain_list. Not a measurement, forecast, or qualification."},
         {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
         {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
         {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"], "note": "Reads a profile-bound id or an index row. An index row is not authorization on the selected profile."},
@@ -242,7 +244,7 @@
     "note": "Every other release-ledger id, including proved_heat and bounded_fluid_models, is readable. bounded_fluid_models also names the fluid profile. Reading a row does not execute it."
   },
   "not_mcp_grants": [
-    "atmosphere, SP1, Julia, Godot, Bevy, Blender, and any module with neither mcp_profile nor mcp_tool",
+    "SP1, Julia, Godot, Bevy, Blender, and any module with neither mcp_profile nor mcp_tool",
     "a leakage or BIM launch that does not select the retained pin; the vendored subtree is not that pin",
     "a ledger read treated as execution of that capability",
     "an SP1 proof: proved_heat remains ncp_ledger_read until a host binds the registered guest"

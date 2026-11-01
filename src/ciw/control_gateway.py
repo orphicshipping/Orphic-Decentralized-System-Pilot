@@ -100,6 +100,11 @@ TOOLS = {
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_fluid_field": _tool("fluid_field", "Run the bounded wave or SPH solver and independent verifier. Returns check rows only. The field exceeds the control document budget and is not retained. Not a physical measurement.",
         {"solver": {"type": "string", "enum": ["wave", "sph"]}}, JSON_OBJECT, read=False),
+    "ncp_domain_list": _tool("domain_list", "List provider-free synthetic domain operations and the domain and name to pass to ncp_domain_run. Listing does not run them.",
+        {}, JSON_OBJECT, required=[]),
+    "ncp_domain_run": _tool("domain_run", "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
+        {"domain": {"type": "string", "enum": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]},
+         "name": {"type": "string", "minLength": 1, "maxLength": 80}}, JSON_OBJECT, required=["domain"], read=False),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
@@ -340,6 +345,8 @@ class ControlHost:
             "linear-response.library": "ncp_linear_preview",
         }
         direct.update(fluid_direct_tools())
+        from .domain_surface import tool_grants
+        direct.update(tool_grants())
         rows = []
         for item in catalog()["capabilities"]:
             profiles = grants.get(item["capability_id"], ())
@@ -705,6 +712,14 @@ class ControlHost:
             "physical_validation": "not_established",
             "authorizes_execution": False,
         }
+
+    def domain_list(self):
+        from .domain_surface import listing
+        return listing()
+
+    def domain_run(self, domain, name=None):
+        from .domain_surface import run
+        return run(domain, name)
 
     def polymer_cycle(self):
         import base64
