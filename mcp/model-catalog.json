@@ -20,6 +20,7 @@
       ],
       "tools": [
         {"name": "ncp_capabilities_list", "read_only": true, "required": []},
+        {"name": "ncp_index_list", "read_only": true, "required": [], "authorizes_execution": false},
         {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
         {"name": "ncp_workflows_list", "read_only": true, "required": [], "authorizes_execution": false},
         {"name": "ncp_integrations_list", "read_only": true, "required": []},
@@ -74,6 +75,32 @@
       "native_checkout": false
     },
     {
+      "profile": "numerical",
+      "instrument": "builtin",
+      "prepare": ["python", "examples/numerical_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": [
+        "uncertainty.propagate.v1",
+        "uncertainty.budget.v1",
+        "calibration.fit.v1",
+        "calibration.residuals.v1",
+        "sensitivity.local.v1",
+        "observability.rank.v1",
+        "model.discrepancy.v1"
+      ],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Separate directory. Does not change the builtin demo allow-list."
+    },
+    {
+      "profile": "analysis",
+      "instrument": "builtin",
+      "prepare": ["python", "examples/analysis_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["statistics.v1", "spectrum.periodogram.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Separate directory. Spectrum stays unauthorized on the builtin demo profile."
+    },
+    {
       "instrument": "polymer",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "polymer", "--output-dir", "DIR"],
       "granted_operations": [
@@ -121,10 +148,27 @@
       "startup_without_checkout": "refused"
     }
   ],
-  "not_mcp_tools": [
-    "provider-free capability index",
-    "release capability ledger",
-    "fluid, atmosphere, hypergraph, proved heat, SP1, Julia, Godot, Bevy, Blender",
-    "external work, board refit, and knowledge hosts"
+  "not_mcp_grants": [
+    "system.compile.v1",
+    "system.simulate.v1",
+    "system.verify.v1",
+    "system.compare.v1",
+    "system.study.v1",
+    "legibility.compile.v1",
+    "data.project-gltf-mesh.v1",
+    "data.compare-observations.v1",
+    "data.review-product-study.v1",
+    "data.assess-polymer-cycle.v1",
+    "data.review-toolpoint-containment.v1",
+    "learning.oscillator-rms",
+    "doctor.preflight",
+    "linear-response.library",
+    "synthetic-oscillator-demo",
+    "release ledger ids, including fluid, hypergraph, and proved heat"
+  ],
+  "separate_hosts": [
+    "external work: python -m ciw.external_work_mcp, host-owned database and principal",
+    "board refit: ciw.board_refit_mcp, official SDK, no acceptance tool",
+    "knowledge: ciw.knowledge_mcp, pinned corpus"
   ]
 }

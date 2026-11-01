@@ -32,7 +32,7 @@ from starlette.routing import Route
 
 READ_TOOLS = frozenset({
     'ncp_integrations_list', 'ncp_integration_describe',
-    'ncp_workflows_list', 'ncp_capabilities_list', 'ncp_capability_describe',
+    'ncp_workflows_list', 'ncp_capabilities_list', 'ncp_capability_describe', 'ncp_index_list',
     'ncp_plan_template', 'ncp_plan_get', 'ncp_run_get', 'ncp_artifact_read', 'ncp_observe',
 })
 WRITE_TOOLS = frozenset({

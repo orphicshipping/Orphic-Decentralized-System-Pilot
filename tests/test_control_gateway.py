@@ -166,6 +166,45 @@ def test_wider_catalog_is_navigation_not_execution(configured):
     assert owner.capabilities()["execution_budget"]["used"] == 0
 
 
+def test_index_pages_every_capability_without_authorizing(configured):
+    import json
+    from pathlib import Path
+    from ciw.capabilities import catalog
+    from ciw.numerical_contracts import OPERATIONS
+    _, owner, host = configured
+    used = owner.capabilities()["execution_budget"]["used"]
+    first = call(host, "ncp_index_list", limit=32)
+    assert first["next_offset"] == 32
+    second = call(host, "ncp_index_list", offset=first["next_offset"], limit=32)
+    rows = first["items"] + second["items"]
+    assert second["next_offset"] is None
+    assert len(rows) == first["total"] == first["index_total"] + first["ledger_total"]
+    assert first["authorizes_execution"] is False
+    assert all(row["authorizes_execution"] is False for row in rows)
+    ids = [row["capability_id"] for row in rows]
+    assert len(ids) == len(set(ids))
+    index_ids = [item["capability_id"] for item in catalog()["capabilities"]]
+    ledger = json.loads((Path(__file__).resolve().parents[1] / "release" / "capability-ledger.json").read_text())
+    ledger_ids = [item["id"] for item in ledger["capabilities"]]
+    assert first["index_total"] == len(index_ids)
+    assert first["ledger_total"] == len(ledger_ids)
+    assert set(index_ids + ledger_ids) == set(ids)
+    by_id = {row["capability_id"]: row for row in rows}
+    assert by_id["statistics.v1"]["mcp_profiles"] == ["analysis", "builtin"]
+    assert by_id["statistics.v1"]["mcp_profile"] == "analysis"
+    assert by_id["spectrum.periodogram.v1"]["mcp_profile"] == "analysis"
+    for name in OPERATIONS:
+        assert by_id[name]["mcp_profile"] == "numerical" and by_id[name]["callable"] is True
+    for name in ("system.compile.v1", "legibility.compile.v1", "data.compare-observations.v1",
+                 "learning.oscillator-rms", "doctor.preflight", "linear-response.library",
+                 "synthetic-oscillator-demo", "bounded_fluid_models", "proved_heat"):
+        assert by_id[name]["mcp_profile"] is None and by_id[name]["callable"] is False
+    granted = [item["operation_id"] for item in call(host, "ncp_capabilities_list")["items"] if item["authorized"]]
+    assert granted == ["statistics.v1"]
+    assert owner.capabilities()["execution_budget"]["used"] == used
+    assert "ncp_index_list" in {tool["name"] for tool in host.descriptions()}
+
+
 def test_preserves_baseline_global_context(tmp_path):
     import json
     from ciw.control_plane import experiment

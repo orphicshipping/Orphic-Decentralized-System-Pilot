@@ -9,6 +9,8 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 from copy import deepcopy
 from hashlib import sha256
+import json
+from pathlib import Path
 import threading
 import uuid
 
@@ -81,6 +83,8 @@ TOOLS = {
     "ncp_capabilities_list": _tool("capabilities", "Discover host-bound contracts, inputs and frozen grants. Listing does not execute, provision or qualify providers.", {},
         _object({"items": {"type": "array", "items": JSON_OBJECT}, "inputs": JSON_OBJECT,
                  "host_policy_sha256": DIGEST, "authorizes_execution": {"const": False}})),
+    "ncp_index_list": _tool("index", "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile names one profile that can run that id; null means it is not an MCP grant.",
+        {"offset": OFFSET, "limit": LIMIT}, JSON_OBJECT, required=[]),
     "ncp_capability_describe": _tool("describe", "Read one exact semantic capability, typed ports, runtime identity and host authorization.",
         {"capability_id": {"type": "string", "maxLength": 160}}, JSON_OBJECT),
     "ncp_plan_template": _tool("template", "Read a semantic graph template and parameter domains from a frozen host baseline. No execution or admission.",
@@ -283,6 +287,52 @@ class ControlHost:
                 "contract": contract} for op, contract in sorted(contracts.items())]
             return {"items": items, "inputs": {k: self.owner._binding(k) for k in self.owner._aliases},
                     "host_policy_sha256": self.owner._host_policy, "authorizes_execution": False}
+
+    def index(self, offset=0, limit=32):
+        """Page implemented ids. A profile name is navigation, not a grant on this call."""
+        from .capabilities import catalog
+        from .numerical_contracts import OPERATIONS
+        grants = {
+            "statistics.v1": ("analysis", "builtin"),
+            "spectrum.periodogram.v1": ("analysis",),
+        }
+        grants.update({name: ("numerical",) for name in OPERATIONS})
+        rows = []
+        for item in catalog()["capabilities"]:
+            profiles = grants.get(item["capability_id"], ())
+            rows.append({
+                "surface": "index",
+                "capability_id": item["capability_id"],
+                "kind": item["kind"],
+                "operation_id": item["operation_id"],
+                "summary": item["summary"],
+                "qualified": "not_performed",
+                "authorizes_execution": False,
+                "mcp_profile": profiles[0] if profiles else None,
+                "mcp_profiles": list(profiles),
+                "callable": bool(profiles),
+            })
+        ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
+        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        for item in ledger["capabilities"]:
+            rows.append({
+                "surface": "ledger",
+                "capability_id": item["id"],
+                "kind": "release_ledger",
+                "operation_id": None,
+                "summary": item.get("implemented"),
+                "qualified": item.get("qualified"),
+                "authorizes_execution": False,
+                "mcp_profile": None,
+                "mcp_profiles": [],
+                "callable": False,
+            })
+        items = rows[offset:offset + limit]
+        end = offset + len(items)
+        return {"items": items, "total": len(rows), "next_offset": end if end < len(rows) else None,
+                "index_total": sum(row["surface"] == "index" for row in rows),
+                "ledger_total": sum(row["surface"] == "ledger" for row in rows),
+                "authorizes_execution": False}
 
     def describe(self, capability_id):
         for item in self.capabilities()["items"]:

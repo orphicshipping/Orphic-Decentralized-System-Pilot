@@ -28,6 +28,7 @@ Every tool argument is one object. Additional properties are refused.
 | Tool | Required arguments | What it does | What it does not do |
 | --- | --- | --- | --- |
 | `ncp_capabilities_list` | none | Lists host-bound operations and which are granted | Does not execute |
+| `ncp_index_list` | none (`offset`, `limit` optional) | Pages the provider-free index and the release ledger | `authorizes_execution` stays false. `mcp_profile` null is not a grant |
 | `ncp_capability_describe` | `capability_id` | Reads one of those ids | Does not bind a new provider |
 | `ncp_workflows_list` | none (`offset`, `limit` optional) | Pages the wider catalog | `authorizes_execution` stays false |
 | `ncp_integrations_list` | none (`section`, `offset`, `limit` optional) | Pages imports, systems, or external records | Does not install or probe |
@@ -78,6 +79,8 @@ with the control tools.
 | Instrument | Prepare | Serve flag | Baseline grant |
 | --- | --- | --- | --- |
 | `builtin` | `python -m ciw.net control demo-config --instrument builtin --output-dir DIR` | `--instrument builtin` | `statistics.v1` |
+| `numerical` | `python examples/numerical_operations/prepare.py --output-dir DIR` | `--instrument builtin` on that profile | The seven supplied-model operations. Not the builtin demo allow-list |
+| `analysis` | `python examples/analysis_operations/prepare.py --output-dir DIR` | `--instrument builtin` on that profile | `statistics.v1`, `spectrum.periodogram.v1` |
 | `polymer` | `--instrument polymer` | `--instrument polymer` | `polymer.assess-cycle.v1`, `polymer.copilot-context.v1`, `polymer.control-simulate.v1`, `polymer.verify-cycle.v1` |
 | `temperature` | `--instrument temperature` | `--instrument temperature` | `metrology.temperature.process.v1`, `metrology.temperature.verify.v1` |
 | `link-scalar` | `--instrument link-scalar` | `--instrument link-scalar` | `link.decode-scalar.v1`, `link.apply-affine.v1`, `link.mean-model.v1`, `link.audit-scalar.v1` |
@@ -85,10 +88,18 @@ with the control tools.
 | `leakage` | `--instrument leakage` | `--instrument leakage` | Refuses without `--provider-checkout` as an absolute path |
 | `bim-clearance` | `python -m ciw.net control prepare-bim --inspection FILE --output-dir DIR` | `--instrument bim-clearance` | Refuses without absolute `--provider-checkout` and a 40-hex `--provider-revision` |
 
-On `builtin`, these stay bound and not granted unless that profile's allow-list says
-otherwise: `uncertainty.propagate.v1`, `uncertainty.budget.v1`, `calibration.fit.v1`,
-`calibration.residuals.v1`, `sensitivity.local.v1`, `observability.rank.v1`,
-`model.discrepancy.v1`, `spectrum.periodogram.v1`.
+On the `builtin` demo profile, these stay bound and not granted: `uncertainty.propagate.v1`,
+`uncertainty.budget.v1`, `calibration.fit.v1`, `calibration.residuals.v1`, `sensitivity.local.v1`,
+`observability.rank.v1`, `model.discrepancy.v1`, `spectrum.periodogram.v1`. The `numerical` profile
+grants the seven supplied-model operations. The `analysis` profile grants `statistics.v1` and
+`spectrum.periodogram.v1`. Neither profile changes the demo allow-list. A finished numerical or
+analysis graph is not physical qualification.
+
+`ncp_index_list` pages every id in `ciw.capabilities` and every id in
+`release/capability-ledger.json`. `callable` is true only when `mcp_profiles` names a profile
+above. System, data, legibility, learning, doctor, linear-response, the oscillator demo command,
+fluid, hypergraph, and proved heat stay in that list with `mcp_profile` null. The ledger rows
+stay `qualified: not_assessed`. Listing them does not run them.
 
 Temperature's default request is synthetic and its uncertainty budget is incomplete,
 so a finished graph can still fail acceptance. Measured thermal's repository example
@@ -100,7 +111,7 @@ Polymer verification is not a conformity decision.
 - Native leakage or BIM clearance without a host-selected checkout.
 - A plan submitted before admission.
 - A digest that does not match the retained plan.
-- An operation that is only in `ncp_workflows_list`.
+- An operation that is only in `ncp_workflows_list` or `ncp_index_list`.
 - Any module under `src/ciw` that is not in the profile grant: fluid, atmosphere,
   hypergraph rewriting, proved heat, SP1, Julia, Godot, Bevy, Blender, and the rest
   of the tree.
@@ -111,5 +122,5 @@ Separate hosts, not extra arguments on `ncp_run_submit`:
 - Board refit: `ciw.board_refit_mcp`, official SDK, no acceptance tool.
 - Knowledge: `ciw.knowledge_mcp`, pinned corpus. Search is not scientific acceptance.
 
-The provider-free index (`ciw capabilities`) and `release/capability-ledger.json`
-are evidence inventories. Their qualification status is not an MCP result.
+The provider-free index and `release/capability-ledger.json` are paged by `ncp_index_list`.
+Their qualification status is not an MCP execution result.
