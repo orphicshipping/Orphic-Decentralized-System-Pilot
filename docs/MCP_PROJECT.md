@@ -20,7 +20,7 @@ The same attempt returns the same run. A different request under that attempt re
 
 ## Folders
 
-Do not move these trees to “make them MCP.” Imports, pins, and tests use the paths below. Every tracked folder has an `MCP.md` contract. Open that file for the class, the call to use instead of the files, and the tracked names in that directory. `authorizes_execution` in that file is false. A nested folder does not inherit a grant: `src/ciw` holds the gateway, and a module path is still not a tool. `instruments/domain/flowstate` is not the leakage pin. `instruments/domain/bim-estimator` is not the clearance pin. Ignored local trees, such as dependency checkouts under `tools/`, are not contracts. `scripts/write_mcp_folder_contracts.py` rewrites the contracts. Running it is not a tool call.
+Do not move these trees to “make them MCP.” Imports, pins, and tests use the paths below. Every tracked folder has an `MCP.md` contract. Open that file, or the folder `README.md` where GitHub renders one, for the class and the call to use instead of the files. `authorizes_execution` is false. A folder that holds a set of tasks does not opt for the easiest one. Name the task. A nested folder does not inherit a grant: `src/ciw` holds the gateway, and a module path is still not a tool. `instruments/domain/flowstate` is not the leakage pin. `instruments/domain/bim-estimator` is not the clearance pin. Ignored local trees, such as dependency checkouts under `tools/`, are not contracts. Dependency pages under `node_modules/` stay as they are. `scripts/write_mcp_folder_contracts.py` rewrites the contracts. Running it is not a tool call.
 
 | Folder | What a model should do with it |
 | --- | --- |

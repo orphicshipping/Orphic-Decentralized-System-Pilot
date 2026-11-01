@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `deploy`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+This folder is not a menu. It still does not select a task for the caller.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # Deploy the workbench
 
 Two supported prototype deployment paths share the same Python service and protocol: a native Windows backend and a Linux container backend. Godot remains an optional native client. Both preserve recorded evidence and result identities when restoring a saved workspace.

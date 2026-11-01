@@ -4,7 +4,7 @@
   "qualification": "not_performed_by_this_file",
   "contract": "MCP.md",
   "project_map": "mcp/project-map.json",
-  "note": "One row per tracked folder. A row is not a tool call and does not authorize execution. Source paths stay where tests and pins import them.",
+  "note": "One row per tracked folder. A row is not a tool call and does not authorize execution. A folder does not opt for the easiest task in a set. Source paths stay where tests and pins import them.",
   "folders": [
     {
       "path": ".",

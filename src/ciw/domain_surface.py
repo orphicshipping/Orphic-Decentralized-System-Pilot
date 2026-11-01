@@ -254,6 +254,11 @@ def run(domain, name=None):
     if None in allowed:
         if name is not None:
             raise ValueError("This domain does not take a name")
+    elif name is None:
+        choices = ", ".join(sorted(item for item in allowed if item is not None))
+        raise ValueError(
+            "This domain is a set of tasks. It does not opt for the easiest one. Name one of: " + choices
+        )
     elif name not in allowed:
         choices = ", ".join(sorted(item for item in allowed if item is not None))
         raise ValueError("Unknown name for " + domain + ". Use one of: " + choices)

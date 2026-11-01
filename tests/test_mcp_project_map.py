@@ -34,6 +34,7 @@ def test_project_map_matches_the_tree_and_does_not_grant():
     assert "docs/MCP_PROJECT.md" in readme
     assert "not an SP1 proof" in readme
     assert "MCP.md" in readme
+    assert "does not opt for the easiest" in readme
     assert "folder-index.json" in readme
     assert "Operator reference" in readme
     index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
@@ -65,7 +66,16 @@ def test_every_tracked_folder_has_a_contract_that_does_not_grant():
         assert f"- path: `{rel}`" in text
         assert "authorizes_execution: false" in text
         assert "not a tool call" in text
-        assert f"- class: `" in text
+        assert "does not opt for the easiest" in text
+        if "node_modules" not in rel.split("/") and not (
+            subprocess.run(
+                ["git", "check-ignore", "-q", "--", "README.md" if directory == Path(".") else (directory / "README.md").as_posix()],
+                cwd=ROOT,
+            ).returncode
+            == 0
+        ):
+            page = (ROOT / directory / "README.md").read_text(encoding="utf-8")
+            assert "does not opt for the easiest" in page
         checked += 1
     assert checked > 700
     index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
@@ -93,3 +103,15 @@ def test_every_tracked_folder_has_a_contract_that_does_not_grant():
     heat = (ROOT / "examples" / "proved-heat" / "MCP.md").read_text(encoding="utf-8")
     assert "not an SP1 proof" in heat
     assert by_path["examples/proved-heat"]["call"] == "ncp_ledger_read"
+
+
+def test_a_domain_set_does_not_opt_for_the_easiest_name():
+    from ciw.domain_surface import run
+
+    for domain in ("weather", "impact", "geomatics", "thermofluids"):
+        try:
+            run(domain)
+        except ValueError as exc:
+            assert "does not opt for the easiest" in str(exc)
+        else:
+            raise AssertionError(domain)

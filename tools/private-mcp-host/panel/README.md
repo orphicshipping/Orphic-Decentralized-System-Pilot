@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `tools/private-mcp-host/panel`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `.openai`, `scripts`, `web`, `worker`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # NCP private live workbench
 
 The home page is an operator client of the genuine Python NCP control MCP server.

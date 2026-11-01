@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `docs`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `data`, `evidence`, `licensing`, `qualification`, `work-orders`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # Notations Control Protocol documentation
 
 Models start at the [MCP project map](MCP_PROJECT.md), the [call contract](MCP_MODEL.md), and the [folder index](../mcp/folder-index.json). Every tracked folder has an `MCP.md` contract. Those files classify the folder. They do not authorize execution.

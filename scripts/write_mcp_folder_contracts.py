@@ -197,6 +197,10 @@ def ignored(probe: str) -> bool:
     return subprocess.run(["git", "check-ignore", "-q", "--", probe], cwd=ROOT).returncode == 0
 
 
+SET_RULE = "This folder does not opt for the easiest task in a set. Name the task."
+ENTRY_MARK = "<!-- ncp-folder-entry -->\n"
+
+
 def tracked_directories() -> tuple[set[Path], dict[Path, list[str]]]:
     directories = {Path(".")}
     files: dict[Path, list[str]] = {Path("."): []}
@@ -301,12 +305,76 @@ def contract(rel: str, kind: str, call: str, sentence: str, names: list[str]) ->
         "\n"
         f"{sentence}\n"
         f"{extra}\n"
+        f"{SET_RULE}\n"
+        "\n"
         "A file in this folder is not a tool call. "
         f"Use `ncp_index_list` and the [project map]({target_map}). "
         f"The [folder index]({target_index}) lists every tracked folder. "
         "Reading this contract does not run a solver, bind a provider, or qualify a result. "
         "A PASS, a LOCAL check, or a completed graph is not a physical release.\n"
     )
+
+
+def child_names(rel: str, directories: set[Path]) -> list[str]:
+    parent = Path(".") if rel == "." else Path(rel)
+    names = []
+    for directory in directories:
+        if directory != Path(".") and directory.parent == parent:
+            names.append(directory.name)
+    return sorted(names)
+
+
+def readme_entry(rel: str, kind: str, call: str, children: list[str]) -> str:
+    shown = ", ".join(f"`{name}`" for name in children[:12])
+    more = f" ({len(children) - 12} more)" if len(children) > 12 else ""
+    tasks = (
+        f"Tasks in this folder, none of them the default: {shown}{more}.\n\n"
+        if children
+        else "This folder is not a menu. It still does not select a task for the caller.\n\n"
+    )
+    readme = "the [README](README.md)" if rel == "." else "[MCP.md](MCP.md)"
+    return (
+        f"{ENTRY_MARK}"
+        "# MCP entry\n"
+        "\n"
+        f"- path: `{rel}`\n"
+        f"- class: `{kind}`\n"
+        "- authorizes_execution: false\n"
+        f"- call: `{call}`\n"
+        "\n"
+        f"{SET_RULE}\n"
+        "\n"
+        f"{tasks}"
+        f"The contract is {readme}. "
+        "A file in this folder is not a tool call. "
+        "Reading this page does not run a solver, bind a provider, or qualify a result.\n"
+    )
+
+
+def write_readme(rel: str, directory: Path, kind: str, call: str, directories: set[Path]) -> None:
+    if rel == "." or "node_modules" in rel.split("/"):
+        return
+    probe = f"{rel}/README.md"
+    if ignored(probe):
+        return
+    path = ROOT / directory / "README.md"
+    entry = readme_entry(rel, kind, call, child_names(rel, directories))
+    if path.is_file():
+        current = path.read_text(encoding="utf-8")
+        if current.startswith(ENTRY_MARK):
+            rest = current.split("\n---\n\n", 1)
+            tail = rest[1] if len(rest) == 2 else ""
+        else:
+            tail = current
+        if tail and not tail.startswith("\n"):
+            body = entry + "\n---\n\n" + tail
+        elif tail:
+            body = entry + "\n---\n\n" + tail.lstrip("\n")
+        else:
+            body = entry
+    else:
+        body = entry
+    path.write_text(body if body.endswith("\n") else body + "\n", encoding="utf-8")
 
 
 def main() -> None:
@@ -325,6 +393,7 @@ def main() -> None:
         text = contract(rel, kind, call, sentence, files.get(directory, []))
         path = ROOT / directory / "MCP.md"
         path.write_text(text, encoding="utf-8")
+        write_readme(rel, directory, kind, call, directories)
         rows.append({"path": rel, "class": kind, "call": call})
         written += 1
     document = {
@@ -333,7 +402,7 @@ def main() -> None:
         "qualification": "not_performed_by_this_file",
         "contract": "MCP.md",
         "project_map": "mcp/project-map.json",
-        "note": "One row per tracked folder. A row is not a tool call and does not authorize execution. Source paths stay where tests and pins import them.",
+        "note": "One row per tracked folder. A row is not a tool call and does not authorize execution. A folder does not opt for the easiest task in a set. Source paths stay where tests and pins import them.",
         "folders": rows,
     }
     INDEX_PATH.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")

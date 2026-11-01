@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `validation/provider-integration-20261018`
+- class: `evidence`
+- authorizes_execution: false
+- call: `none`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+This folder is not a menu. It still does not select a task for the caller.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # Provider integration evidence — 2026-10-18
 
 Selected code `0e4aeafd44fcf3ae3e25808550903b32260eeaa1`; tree `e4a277693b63dde7d53cb319efdc490edde58c0a`. PR #245 merge `6c7c46231757b7ce79f95e07c35840268140a4e5` has the same tree.
