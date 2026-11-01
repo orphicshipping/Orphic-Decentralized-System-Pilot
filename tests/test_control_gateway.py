@@ -195,14 +195,32 @@ def test_index_pages_every_capability_without_authorizing(configured):
     assert by_id["spectrum.periodogram.v1"]["mcp_profile"] == "analysis"
     for name in OPERATIONS:
         assert by_id[name]["mcp_profile"] == "numerical" and by_id[name]["callable"] is True
-    for name in ("system.compile.v1", "legibility.compile.v1", "data.compare-observations.v1",
-                 "learning.oscillator-rms", "doctor.preflight", "linear-response.library",
-                 "synthetic-oscillator-demo", "bounded_fluid_models", "proved_heat"):
-        assert by_id[name]["mcp_profile"] is None and by_id[name]["callable"] is False
+    for name in ("system.compile.v1", "system.simulate.v1", "system.verify.v1", "system.compare.v1", "system.study.v1"):
+        assert by_id[name]["mcp_profile"] == "system" and by_id[name]["callable"] is True and by_id[name]["mcp_tool"] is None
+    assert by_id["legibility.compile.v1"]["mcp_profile"] == "legibility"
+    for name in ("data.compare-observations.v1", "data.project-gltf-mesh.v1", "data.review-product-study.v1"):
+        assert by_id[name]["mcp_profile"] == "data" and by_id[name]["callable"] is True
+    assert by_id["data.assess-polymer-cycle.v1"]["mcp_tool"] == "ncp_polymer_cycle"
+    assert by_id["data.assess-polymer-cycle.v1"]["mcp_profile"] is None
+    assert by_id["data.review-toolpoint-containment.v1"]["mcp_profile"] is None
+    assert by_id["data.review-toolpoint-containment.v1"]["mcp_tool"] == "ncp_toolpoint"
+    assert by_id["data.review-toolpoint-containment.v1"]["callable"] is True
+    assert by_id["learning.oscillator-rms"]["mcp_tool"] == "ncp_lesson" and by_id["learning.oscillator-rms"]["mcp_profile"] is None
+    assert by_id["doctor.preflight"]["mcp_tool"] == "ncp_doctor"
+    assert by_id["linear-response.library"]["mcp_tool"] == "ncp_linear_preview"
+    assert by_id["synthetic-oscillator-demo"]["mcp_tool"] == "ncp_demo"
+    assert by_id["bounded_fluid_models"]["mcp_profile"] == "fluid" and by_id["bounded_fluid_models"]["callable"] is True
+    assert by_id["hypergraph_rewriting"]["mcp_tool"] == "ncp_hypergraph" and by_id["hypergraph_rewriting"]["mcp_profile"] is None
+    assert by_id["proved_heat"]["mcp_profile"] is None and by_id["proved_heat"]["mcp_tool"] == "ncp_ledger_read"
+    assert by_id["proved_heat"]["callable"] is True and by_id["proved_heat"]["authorizes_execution"] is False
+    assert all(row["callable"] is True for row in rows)
     granted = [item["operation_id"] for item in call(host, "ncp_capabilities_list")["items"] if item["authorized"]]
     assert granted == ["statistics.v1"]
     assert owner.capabilities()["execution_budget"]["used"] == used
-    assert "ncp_index_list" in {tool["name"] for tool in host.descriptions()}
+    names = {tool["name"] for tool in host.descriptions()}
+    assert "ncp_index_list" in names
+    for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle"):
+        assert name in names
 
 
 def test_preserves_baseline_global_context(tmp_path):

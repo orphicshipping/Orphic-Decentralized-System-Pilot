@@ -83,8 +83,27 @@ TOOLS = {
     "ncp_capabilities_list": _tool("capabilities", "Discover host-bound contracts, inputs and frozen grants. Listing does not execute, provision or qualify providers.", {},
         _object({"items": {"type": "array", "items": JSON_OBJECT}, "inputs": JSON_OBJECT,
                  "host_policy_sha256": DIGEST, "authorizes_execution": {"const": False}})),
-    "ncp_index_list": _tool("index", "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile names one profile that can run that id; null means it is not an MCP grant.",
+    "ncp_index_list": _tool("index", "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile is an execution profile. mcp_tool is a direct call. Null for both means it is not in this toolset.",
         {"offset": OFFSET, "limit": LIMIT}, JSON_OBJECT, required=[]),
+    "ncp_doctor": _tool("doctor", "Run the read-only doctor preflight for core or legibility. preflight_passed is not qualification and does not grant an operation.",
+        {"diagnostic": {"type": "string", "enum": ["core", "legibility"]}}, JSON_OBJECT, required=[]),
+    "ncp_demo": _tool("demo", "Build the deterministic synthetic oscillator recording in memory. No sensor and no retained file. Not physical qualification.",
+        {}, JSON_OBJECT, required=[]),
+    "ncp_linear_preview": _tool("linear_preview", "Evaluate one bounded analytic linear-response preview. base_point and delta are comma-separated finite numbers. Not an admitted state.",
+        {"model": {"type": "string", "minLength": 1, "maxLength": 80},
+         "base_point": {"type": "string", "minLength": 1, "maxLength": 200},
+         "delta": {"type": "string", "minLength": 1, "maxLength": 200}}, JSON_OBJECT),
+    "ncp_lesson": _tool("lesson", "Read the oscillator-rms lesson, or mode=work to run statistics.v1 on the synthetic oscillator. Not a curriculum engine or a qualification.",
+        {"mode": {"type": "string", "enum": ["learn", "work"]},
+         "level": {"type": "string", "enum": ["concrete", "structural", "formal", "computational"]}}, JSON_OBJECT, required=[], read=False),
+    "ncp_hypergraph": _tool("hypergraph", "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
+        {}, JSON_OBJECT, required=[], read=False),
+    "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
+        {}, JSON_OBJECT, required=[], read=False),
+    "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
+        {}, JSON_OBJECT, required=[], read=False),
+    "ncp_ledger_read": _tool("ledger", "Read one release-ledger row. qualified stays not_assessed. This does not execute the named capability.",
+        {"capability_id": {"type": "string", "minLength": 1, "maxLength": 160}}, JSON_OBJECT),
     "ncp_capability_describe": _tool("describe", "Read one exact semantic capability, typed ports, runtime identity and host authorization.",
         {"capability_id": {"type": "string", "maxLength": 160}}, JSON_OBJECT),
     "ncp_plan_template": _tool("template", "Read a semantic graph template and parameter domains from a frozen host baseline. No execution or admission.",
@@ -291,15 +310,33 @@ class ControlHost:
     def index(self, offset=0, limit=32):
         """Page implemented ids. A profile name is navigation, not a grant on this call."""
         from .capabilities import catalog
+        from .data_workflow import COMPARE
+        from .gltf_reference_runtime import PROJECT
+        from .legibility_workflow import OPERATION as LEGIBILITY
         from .numerical_contracts import OPERATIONS
+        from .product_study_workflow import REVIEW as PRODUCT
+        from .system_workflow import OPERATION_IDS as SYSTEM_OPS
         grants = {
             "statistics.v1": ("analysis", "builtin"),
             "spectrum.periodogram.v1": ("analysis",),
         }
         grants.update({name: ("numerical",) for name in OPERATIONS})
+        grants.update({name: ("system",) for name in SYSTEM_OPS})
+        grants[LEGIBILITY] = ("legibility",)
+        for name in (COMPARE, PRODUCT, PROJECT):
+            grants[name] = ("data",)
+        direct = {
+            "data.assess-polymer-cycle.v1": "ncp_polymer_cycle",
+            "data.review-toolpoint-containment.v1": "ncp_toolpoint",
+            "synthetic-oscillator-demo": "ncp_demo",
+            "learning.oscillator-rms": "ncp_lesson",
+            "doctor.preflight": "ncp_doctor",
+            "linear-response.library": "ncp_linear_preview",
+        }
         rows = []
         for item in catalog()["capabilities"]:
             profiles = grants.get(item["capability_id"], ())
+            tool_name = direct.get(item["capability_id"])
             rows.append({
                 "surface": "index",
                 "capability_id": item["capability_id"],
@@ -310,11 +347,14 @@ class ControlHost:
                 "authorizes_execution": False,
                 "mcp_profile": profiles[0] if profiles else None,
                 "mcp_profiles": list(profiles),
-                "callable": bool(profiles),
+                "mcp_tool": tool_name,
+                "callable": bool(profiles or tool_name),
             })
         ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
         ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
         for item in ledger["capabilities"]:
+            profile = "fluid" if item["id"] == "bounded_fluid_models" else None
+            tool_name = "ncp_hypergraph" if item["id"] == "hypergraph_rewriting" else "ncp_ledger_read"
             rows.append({
                 "surface": "ledger",
                 "capability_id": item["id"],
@@ -323,9 +363,10 @@ class ControlHost:
                 "summary": item.get("implemented"),
                 "qualified": item.get("qualified"),
                 "authorizes_execution": False,
-                "mcp_profile": None,
-                "mcp_profiles": [],
-                "callable": False,
+                "mcp_profile": profile,
+                "mcp_profiles": [profile] if profile else [],
+                "mcp_tool": tool_name,
+                "callable": True,
             })
         items = rows[offset:offset + limit]
         end = offset + len(items)
@@ -540,6 +581,136 @@ class ControlHost:
 
     def qualify(self, **arguments):
         return self.owner.call("net_qualify", arguments)
+
+    def doctor(self, diagnostic="core"):
+        from .doctor import diagnose
+        if diagnostic not in {"core", "legibility"}:
+            raise ValueError("Doctor on this host accepts core or legibility only")
+        report = diagnose(diagnostic)
+        report["qualification"] = "not_performed"
+        report["authorizes_execution"] = False
+        return report
+
+    def demo(self):
+        from .adapters.oscillator import make_demo_run
+        run = make_demo_run()
+        return {"schema": "ciw.synthetic-oscillator-demo.v1", "run_id": run["run_id"],
+                "evidence_id": run["evidence_id"], "instrument": run["instrument"],
+                "samples": len(run["time_s"]), "channels": sorted(run["channels"]),
+                "provenance": deepcopy(run["metadata"].get("provenance")),
+                "sensor": False, "physical_qualification": "not_established",
+                "authorizes_execution": False}
+
+    def linear_preview(self, model, base_point, delta):
+        from .linear_response import PROFILES, make_request, preview
+        if model not in PROFILES:
+            raise ValueError("Unknown linear-response model")
+        def numbers(text):
+            values = []
+            for part in text.split(","):
+                part = part.strip()
+                if not part:
+                    raise ValueError("Linear-response coordinate is empty")
+                value = float(part)
+                if value != value or value in {float("inf"), float("-inf")}:
+                    raise ValueError("Linear-response coordinate must be finite")
+                values.append(value)
+            return values
+        source = None
+        if model.startswith("oscillator-"):
+            source = {"schema": "ciw.julia-oscillator-source.v1",
+                      "experiment_id": "linear-response-oscillator-v1",
+                      "operation_id": "ciw.julia-oscillator.v1",
+                      "model": {"omega_0_rad_s": 2.0, "gamma_s_inv": 0.1, "mass_kg": 2.0},
+                      "initial_state": {"q0_m": numbers(base_point)[0], "v0_m_s": numbers(base_point)[1]},
+                      "time_s": [0.0, 0.1, 0.2],
+                      "solver": {"abstol": 1e-10, "reltol": 1e-10, "maxiters": 100000},
+                      "claim_scope": "simulated_numerical_trajectory_against_independent_analytic_oracle"}
+        record = preview(make_request(model, numbers(base_point), numbers(delta), source=source))
+        record["authorizes_execution"] = False
+        return record
+
+    def lesson(self, mode="learn", level="structural"):
+        from .learning import TOPIC, lesson as load, work
+        if mode not in {"learn", "work"}:
+            raise ValueError("Lesson mode must be learn or work")
+        body = load(TOPIC, level)
+        if mode == "learn":
+            return {"mode": "learn", "lesson": body, "physical_qualification": "not_established",
+                    "authorizes_execution": False}
+        import shutil
+        import tempfile
+        parent = Path(tempfile.mkdtemp(prefix="ncp-lesson-"))
+        try:
+            reply = work(parent / "work", TOPIC)
+        finally:
+            shutil.rmtree(parent, ignore_errors=True)
+        public = {key: value for key, value in reply.items() if key != "workspace_file"}
+        return {"mode": "work", "topic": TOPIC, "level": level, "result": public,
+                "physical_qualification": "not_established", "authorizes_execution": False}
+
+    def hypergraph(self):
+        from .hypergraph_rewrite import example_request, run
+        record = run(example_request("thermal"))
+        return {"schema": record["schema"], "status": record["status"], "mode": record["mode"],
+                "attempt_count": record["attempt_count"], "record_digest": record["record_digest"],
+                "authority": record["authority"], "physical_qualification": "not_established",
+                "authorizes_execution": False}
+
+    def polymer_cycle(self):
+        import base64
+        import json
+        from .data_compute_bridge import _polymer
+        from .data_sources import retain_record
+        from .polymer_contract import example_request
+        from .workbench import Workbench
+        request = example_request()
+        workbench = Workbench()
+        raw = json.dumps(retain_record(
+            request, dataset_id="cycle", revision=1, parent_source_id=None,
+            recorded_at="2026-10-05T21:00:00+00:00", data_family="polymer-cycle-request"), indent=2).encode()
+        descriptor = workbench.add_source({"kind": "data-record", "label": "cycle",
+                                            "bytes_b64": base64.b64encode(raw).decode()})
+        result = _polymer({"source": workbench.get_source(descriptor["source_id"])})
+        assessment = result["assessment"]
+        return {"schema": result["schema"], "source_id": result["source_id"],
+                "conservation": result["conservation"],
+                "authority": assessment.get("authority"),
+                "physical_qualification": "not_established", "authorizes_execution": False}
+
+    def toolpoint(self):
+        import tempfile
+        from .data_manufacturing_bridge import review
+        from pathlib import Path
+        destination = Path(tempfile.mkdtemp(prefix="ncp-toolpoint-"))
+        try:
+            import importlib.util
+            spec = importlib.util.spec_from_file_location(
+                "ncp_data_prepare",
+                Path(__file__).resolve().parents[2] / "examples" / "data_operations" / "prepare.py",
+            )
+            module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(module)
+            from .workbench import Workbench
+            parameters = module._toolpoint(Workbench(), destination)
+            result = review(parameters)
+        finally:
+            import shutil
+            shutil.rmtree(destination, ignore_errors=True)
+        return {"schema": result["schema"], "scope": result["scope"],
+                "storage_write": result["storage_write"], "hold_release": result["hold_release"],
+                "authority": result["authority"], "containment_result_ref": result["containment_result_ref"],
+                "containment": result["containment"], "physical_qualification": "not_established",
+                "authorizes_execution": False}
+
+    def ledger(self, capability_id):
+        ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
+        rows = json.loads(ledger_path.read_text(encoding="utf-8"))["capabilities"]
+        for item in rows:
+            if item["id"] == capability_id:
+                return {"record": item, "authorizes_execution": False,
+                        "note": "Release-ledger row. Reading it does not execute or qualify the capability."}
+        raise ValueError("Unknown release-ledger id")
 
     def descriptions(self):
         return [{"name": name, **deepcopy({k: v for k, v in spec.items() if k != "method"})}

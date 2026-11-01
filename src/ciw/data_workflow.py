@@ -152,3 +152,76 @@ def project_observations(workbench, *, source_id, selector, dataset_id, revision
     return workbench.add_source({"kind": "data-record", "label": label,
         "bytes_b64": base64.b64encode(json.dumps(derived, separators=(",", ":"), allow_nan=False).encode()).decode(),
         "input_source_ids": [source_id]})
+
+
+def capability_registry(*, bind: bool = False):
+    """Advertise retained data consumers. Binding does not qualify a product or a mesh."""
+    from .adapters.protocol import InstrumentManifest
+    from .control_plane import CapabilityRegistry
+    from .gltf_reference_runtime import projection_operation
+    from .product_study_workflow import operation as product_operation
+    registry = CapabilityRegistry()
+    items = [operation(), product_operation(), projection_operation()]
+    for item in items:
+        registry.advertise(
+            InstrumentManifest(
+                instrument_id=item.operation_id,
+                role=item.role,
+                units={},
+                frames=(),
+                sampling={"kind": "retained_data_record"},
+                supported_operations=(item.operation_id,),
+            ),
+            runtime=item.runtime_identity(),
+            capabilities={item.operation_id: [item.operation_id]},
+            inputs={item.operation_id: {}},
+        )
+        if bind:
+            registry.bind(item)
+    return registry
+
+
+class DataHost:
+    """Placeholder replaced after AgentHost is imported, so this module stays importable early."""
+
+
+def _install_data_host():
+    from .agent_api import AgentHost
+
+    class _Host(AgentHost):
+        def prepare_session(self, session):
+            graph = self._get(self._aliases["baseline"])
+            found = {}
+
+            def take(value):
+                if isinstance(value, dict) and value.get("kind") == "data-record" and isinstance(value.get("source_id"), str):
+                    payload = {"kind": value["kind"], "label": value["label"], "bytes_b64": value["bytes_b64"]}
+                    if value.get("input_source_ids"):
+                        payload["input_source_ids"] = list(value["input_source_ids"])
+                    found[value["source_id"]] = payload
+                elif isinstance(value, list):
+                    for entry in value:
+                        take(entry)
+
+            for node in graph.get("nodes", []):
+                for value in node.get("parameters", {}).values():
+                    take(value)
+            pending = dict(found)
+            ordered = []
+            for _ in range(len(pending) + 1):
+                if not pending:
+                    break
+                ready = [key for key, payload in pending.items()
+                         if all(dep not in pending for dep in payload.get("input_source_ids", []))]
+                if not ready:
+                    ready = list(pending)
+                for key in ready:
+                    ordered.append(pending.pop(key))
+            for payload in ordered:
+                session.workbench.add_source(payload)
+
+    global DataHost
+    DataHost = _Host
+
+
+_install_data_host()

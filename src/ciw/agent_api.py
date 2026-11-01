@@ -465,6 +465,10 @@ class AgentHost:
             raise ValueError("Registry changed after host policy was frozen")
         return order
 
+    def prepare_session(self, session) -> None:
+        """Host-owned source admission before a granted graph. The default admits nothing."""
+        return None
+
     def execute(self, source: str, graph: str, attempt: str) -> dict:
         root = self._check_output()
         identifier(attempt)
@@ -496,6 +500,7 @@ class AgentHost:
             save_new(directory / "request.json", request)
             save_new(directory / "experiment.json", value)
             session = Session(run, directory, operations=self._registry.operations)
+            self.prepare_session(session)
             report = run_graph(session, value, self._registry)
             save_new(directory / "graph-run.json", report)
             session.save_workspace(directory / "workspace.json")

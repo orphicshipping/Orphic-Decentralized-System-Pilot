@@ -21,6 +21,14 @@
       "tools": [
         {"name": "ncp_capabilities_list", "read_only": true, "required": []},
         {"name": "ncp_index_list", "read_only": true, "required": [], "authorizes_execution": false},
+        {"name": "ncp_doctor", "read_only": true, "required": [], "optional": ["diagnostic"], "note": "core or legibility. A blocked check stays blocked."},
+        {"name": "ncp_demo", "read_only": true, "required": [], "note": "In-memory synthetic oscillator. No sensor."},
+        {"name": "ncp_linear_preview", "read_only": true, "required": ["model", "base_point", "delta"]},
+        {"name": "ncp_lesson", "read_only": false, "required": [], "optional": ["mode", "level"], "note": "mode=work runs statistics.v1. Not a qualification."},
+        {"name": "ncp_hypergraph", "read_only": false, "required": [], "note": "Synthetic thermal rewrite. Not physical qualification."},
+        {"name": "ncp_polymer_cycle", "read_only": false, "required": [], "note": "Does not fit a plan graph. Not a part release."},
+        {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
+        {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
         {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
         {"name": "ncp_workflows_list", "read_only": true, "required": [], "authorizes_execution": false},
         {"name": "ncp_integrations_list", "read_only": true, "required": []},
@@ -146,25 +154,62 @@
       "granted_operations": ["metrology.bim-clearance.v1"],
       "native_checkout": true,
       "startup_without_checkout": "refused"
+    },
+    {
+      "profile": "system",
+      "instrument": "system",
+      "prepare": ["python", "examples/system_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["system.compile.v1", "system.simulate.v1", "system.verify.v1", "system.compare.v1", "system.study.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "A FAIL study or reduction report is a numerical outcome, not physical qualification."
+    },
+    {
+      "profile": "legibility",
+      "instrument": "legibility",
+      "prepare": ["python", "examples/legibility_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["legibility.compile.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established"
+    },
+    {
+      "profile": "data",
+      "instrument": "data",
+      "prepare": ["python", "examples/data_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["data.compare-observations.v1", "data.review-product-study.v1", "data.project-gltf-mesh.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Polymer cycle and toolpoint containment are direct tools, not nodes in this graph."
+    },
+    {
+      "profile": "fluid",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.reservoir.simulate.v1", "fluid.reservoir.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Shortened reservoir clock so the trajectory fits the control document budget. Not a physical measurement. Wave, SPH, molecular, and FSI stay unbound."
     }
   ],
+  "direct_tools": {
+    "data.assess-polymer-cycle.v1": "ncp_polymer_cycle",
+    "data.review-toolpoint-containment.v1": "ncp_toolpoint",
+    "learning.oscillator-rms": "ncp_lesson",
+    "doctor.preflight": "ncp_doctor",
+    "linear-response.library": "ncp_linear_preview",
+    "synthetic-oscillator-demo": "ncp_demo",
+    "hypergraph_rewriting": "ncp_hypergraph"
+  },
+  "ledger_read": {
+    "tool": "ncp_ledger_read",
+    "qualified": "not_assessed",
+    "note": "Every other release-ledger id, including proved_heat and bounded_fluid_models, is readable. bounded_fluid_models also names the fluid profile. Reading a row does not execute it."
+  },
   "not_mcp_grants": [
-    "system.compile.v1",
-    "system.simulate.v1",
-    "system.verify.v1",
-    "system.compare.v1",
-    "system.study.v1",
-    "legibility.compile.v1",
-    "data.project-gltf-mesh.v1",
-    "data.compare-observations.v1",
-    "data.review-product-study.v1",
-    "data.assess-polymer-cycle.v1",
-    "data.review-toolpoint-containment.v1",
-    "learning.oscillator-rms",
-    "doctor.preflight",
-    "linear-response.library",
-    "synthetic-oscillator-demo",
-    "release ledger ids, including fluid, hypergraph, and proved heat"
+    "wave, SPH, molecular, and FSI fluid solvers",
+    "atmosphere, SP1, Julia, Godot, Bevy, Blender, and any module with neither mcp_profile nor mcp_tool",
+    "leakage and BIM clearance without a host-selected checkout",
+    "a ledger read treated as execution of that capability"
   ],
   "separate_hosts": [
     "external work: python -m ciw.external_work_mcp, host-owned database and principal",
