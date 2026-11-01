@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `tools/mcp-operator-console`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `tests`, `web`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # NCP operator console — connected local increment
 
 A separate operator interface for the existing NCP **control** MCP server. No existing NCP core source files are changed. All scientific actions travel through the official MCP client over stdio; the console never calls `Session`, `ControlHost`, or an instrument implementation directly.

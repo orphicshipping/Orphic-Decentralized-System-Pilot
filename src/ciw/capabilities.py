@@ -14,6 +14,7 @@ import platform
 from .legibility_runtime import runtime_identity as legibility_runtime_identity
 from .system_runtime import runtime_identity as system_runtime_identity
 from .data_runtime import comparison_identity, polymer_identity, product_study_identity
+from .domain_surface import OPERATIONS as _DOMAIN_OPERATIONS
 from .numerical_contracts import OPERATIONS as NUMERICAL_OPERATIONS
 from .numerical_runtime import runtime_identity as numerical_runtime_identity
 
@@ -280,6 +281,11 @@ _CAPABILITIES = (
                   "absolute.v1", "oscillator-rate.v1", "oscillator-energy.v1"],
         notes="There is no ciw command for this library. Importing the index does not import or evaluate it.",
     ),
+    *(_record(
+        capability_id=capability_id, disposition="implemented", kind="synthetic_model",
+        summary=summary, operation_id=capability_id, role="backend", module="ciw.domain_surface",
+        notes="Bounded synthetic call. Not a physical measurement, forecast, calibration, or qualification.",
+    ) for capability_id, _domain, _name, summary in _DOMAIN_OPERATIONS),
 )
 
 _IDS = [item["capability_id"] for item in _CAPABILITIES]

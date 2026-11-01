@@ -4,6 +4,8 @@ This is the call contract for a tool-using model. It adds no solver. Enforcement
 in the owning Session and the operator's launch command. Reading this page is not a grant.
 
 Machine-readable copy: [mcp/model-catalog.json](../mcp/model-catalog.json).
+Folder map: [MCP_PROJECT.md](MCP_PROJECT.md), [mcp/project-map.json](../mcp/project-map.json), and [mcp/folder-index.json](../mcp/folder-index.json).
+Every tracked folder has `MCP.md`. That file is not a grant.
 Older transport notes: [NET_AGENT_PROTOCOL.md](NET_AGENT_PROTOCOL.md).
 
 ## Transport
@@ -36,6 +38,8 @@ Every tool argument is one object. Additional properties are refused.
 | `ncp_hypergraph` | none | Applies the synthetic thermal hypergraph rewrite | New occurrence ids. Not physical qualification |
 | `ncp_polymer_cycle` | none | Assesses the synthetic polymer cycle | Does not fit a plan graph. Not a part release |
 | `ncp_fluid_field` | `solver` (`wave` or `sph`) | Runs that solver and its independent verifier, and returns the check rows | Does not retain the field. The field exceeds the control document budget. Not a measurement |
+| `ncp_domain_list` | none | Lists the provider-free synthetic domain operations and the `domain` and `name` for `ncp_domain_run` | Does not run them |
+| `ncp_domain_run` | `domain` (`name` when the list row has one) | Runs that one synthetic solver and its check | Not a measurement, forecast, calibration, or physical qualification. The bundle or field is not retained. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool |
 | `ncp_toolpoint` | none | Reviews the synthetic manufacturing and toolpoint reports | Journals do not fit a plan graph. Not a hold release |
 | `ncp_ledger_read` | `capability_id` | Reads one release-ledger row | `qualified` stays `not_assessed`. `proved_heat` is a read, not a proof |
 | `ncp_capability_describe` | `capability_id` | Reads one id from the selected profile, or an index or ledger row | An index row is not authorization on this profile. It does not bind a provider |
@@ -117,6 +121,7 @@ The system, legibility, data, fluid, leakage, and BIM profiles are plan-graph gr
 Leakage and BIM stay on the retained pins named above. A completed balance is not a
 leak finding. A completed inspection can stay held and is not a physical clearance.
 Molecular sites and linear wall coupling are `fluid-molecular` and `fluid-fsi` on the same fluid instrument.
+`ncp_domain_list` names the provider-free synthetic solvers: dry and moist atmosphere columns, weather profiles, impact contact, plate, and crush, irrigation, geomatics references, thermofluids, a Markov sequence, and thermal identification. `ncp_domain_run` executes one of them. A LOCAL or PASS check is not a measurement or a release. The plate field and geomatics outputs are not retained.
 Wave and SPH are `ncp_fluid_field` because their fields do not fit a control document.
 `ncp_polymer_cycle` and `ncp_toolpoint` are direct calls because those documents do not fit
 a plan graph. `ncp_ledger_read` reads a ledger row and does not execute it. `proved_heat`
@@ -141,7 +146,8 @@ Polymer verification is not a conformity decision.
 - An id whose `mcp_profile` and `mcp_tool` are both null.
 - `ncp_ledger_read` treated as an execution of that capability, including proved heat.
 - Wave or SPH submitted as a reservoir plan. Call `ncp_fluid_field` with `solver` `wave` or `sph`.
-- Atmosphere, SP1, Julia, Godot, Bevy, Blender, and any other module that is not in the selected profile grant and not named by `mcp_tool`.
+- Atmosphere, weather, impact, irrigation, geomatics, and thermofluids submitted as a plan graph. Call `ncp_domain_run` with the domain from `ncp_domain_list`.
+- SP1, Julia, Godot, Bevy, Blender, and any other module that is not in the selected profile grant and not named by `mcp_tool`.
 
 Separate hosts, not extra arguments on `ncp_run_submit`:
 

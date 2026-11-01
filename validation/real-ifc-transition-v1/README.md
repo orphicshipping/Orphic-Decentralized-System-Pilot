@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `validation/real-ifc-transition-v1`
+- class: `evidence`
+- authorizes_execution: false
+- call: `none`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `declarations`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # Retained IFC transition qualification
 
 This directory retains the final development execution of both IFC cases and

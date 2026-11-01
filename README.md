@@ -1,12 +1,40 @@
 # Notations Control Protocol
 
-Scientific computing, measurement context, and reproducible engineering investigations.
+One control protocol for models. Call a tool. A folder, a file, or a PASS is not a run.
 
 Developed by **Notation Systems Inc.**
 
-[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Models and MCP](docs/MCP_MODEL.md) · [Documentation](#documentation-and-development)
+[Model entry](#model-entry) · [Layout](#layout) · [Scientific scope](#purpose-and-scope) · [Operator reference](#operator-reference) · [Documentation](#documentation-and-development)
 
-<a id="from-a-calculation-to-an-engineering-record"></a>
+## Model entry
+
+Models call this repository through MCP. The folder map is [docs/MCP_PROJECT.md](docs/MCP_PROJECT.md), [mcp/project-map.json](mcp/project-map.json), and [mcp/folder-index.json](mcp/folder-index.json). The call contract is [docs/MCP_MODEL.md](docs/MCP_MODEL.md). The tool index is [mcp/model-catalog.json](mcp/model-catalog.json). None of those files authorizes execution.
+
+Start with `ncp_index_list`. A row is callable when it names `mcp_profile` or `mcp_tool`. `authorizes_execution` stays false. Then `ncp_capabilities_list` on the selected profile, or a direct tool. Provider-free synthetic solvers are `ncp_domain_list` then `ncp_domain_run`. A domain that holds a set of names does not opt for the easiest one: weather, impact, geomatics, and thermofluids refuse until the caller names the task. Wave and SPH are `ncp_fluid_field`. `proved_heat` is `ncp_ledger_read`, not an SP1 proof.
+
+Every tracked folder has an `MCP.md` contract and, where GitHub renders a folder, a `README.md` entry. The contract names the path, the class, and the call to use instead of the files. It does not grant anything inside the folder, and it does not opt for the easiest task in a set. Source paths stay where the tests and pins already import them. Nested folders do not inherit a grant: `src` is the implementation, and a module under it is still not a tool. Operator guides below are reference, not the model entry.
+
+A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release. Leakage and BIM stay on the retained pins in the model contract. The vendored trees under `instruments/` are not those pins. Julia, Godot, Bevy, and Blender stay unbound. Tests under `tests/` stay; do not drop a verification workflow to widen a grant. The rest of this file is the scientific scope those calls must not overclaim.
+
+## Layout
+
+Do not rearrange these trees to make them look like tools. Imports, pins, and tests use the paths. The MCP layout is the contract on each tracked folder and the folder index a model can page.
+
+| Path | Class | What to call |
+| --- | --- | --- |
+| `src/` | callable | `ncp_index_list`. A module path is not a grant. |
+| `mcp/` | navigation | Read the catalogs. They do not execute. |
+| `docs/` | navigation | Read the page that owns the claim. |
+| `tests/` | evidence | Keep the suite. A passing test is not physical qualification. |
+| `examples/` | navigation | Fixtures. Not measurements. |
+| `release/` | callable | `ncp_ledger_read`. `qualified` stays `not_assessed`. |
+| `instruments/` | unbound | Not the leakage or BIM pin. |
+| `runtimes/`, `godot/`, `experiments/` | unbound | Julia, Godot, and research workers stay unbound. |
+| `validation/`, `qualification/`, `delivery/` | evidence | Retained records. Not a new result and not a release. |
+| `scripts/`, `tools/`, `deploy/`, `containers/` | navigation | Consoles and packaging. Not a grant. |
+| `tasks/`, `requirements/`, `third_party/` | navigation | Orders, locks, and notices. |
+
+Ignored local checkouts, including most of `tools/`, have no contract. `scripts/write_mcp_folder_contracts.py` rewrites the contracts from this map. Running that script is not a tool call.
 
 ## Purpose and scope
 
@@ -88,6 +116,12 @@ The mathematical structure includes typed serial/parallel composition, covarianc
 Optional providers require the exact runtimes and dependencies specified by their guides. The core installation does not qualify every provider or supply every device interface. For example, the recorded-thermal estimator retains input uncertainty but does not propagate it through that kernel; uncertainty handling must be checked at the operation level.
 
 An optional [registered heat profile](docs/PROVED_HEAT.md) connects to the Scientific Computation Runtime and SP1 for a bounded integer calculation. Its proof concerns the registered computation and commitments, not physical calibration or the validity of an arbitrary heat model. Reading a saved proof report is not a fresh verifier execution. The retained profile makes no privacy claim.
+
+<a id="operator-reference"></a>
+
+## Operator reference
+
+The commands below are for a person at a shell. They are not MCP tools and they do not add a grant. Models use the call contract, not `net start`.
 
 ## Local evaluation
 
@@ -183,7 +217,7 @@ Adapters must preserve original source records and their declared semantics. Uni
 connect the source/license inventory to existing workflow pins and expose the
 bounded BIM clearance profile through the common admitted-plan interface.
 
-MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. Models should follow the [model MCP contract](docs/MCP_MODEL.md) and use [mcp/model-catalog.json](mcp/model-catalog.json) as the tool index. `ncp_index_list` pages the provider-free capability index and the release ledger without authorizing them. A row is callable when it names an `mcp_profile` or an `mcp_tool`. That is navigation plus the named call, not a new authority. Plan-graph profiles include numerical, analysis, polymer, temperature, measured thermal, link scalar, leakage, BIM clearance, system, legibility, data, and the fluid reservoir, molecular, and FSI profiles. Wave and SPH are `ncp_fluid_field`. Leakage and BIM stay on the retained pins in the model contract. A completed balance is not a leak finding. A held inspection is not a clearance. Polymer-cycle assessment, toolpoint review, the thermal hypergraph rewrite, doctor, the synthetic oscillator demo, linear-response preview, and the oscillator-rms lesson are direct tools. `ncp_ledger_read` reads a ledger row, including proved heat, and does not execute it. `ncp_capability_describe` can read an index id without granting it on the selected profile. Prefer the control tools (`ncp_*`) on one explicit instrument. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) keeps the older `net_*` transport, its limits, and its verification notes.
+MCP is the **Model Context Protocol** client interface; it is distinct from NCP's project name and from the physical instrument protocol. The candidate includes bounded MCP profiles over the existing agent API, with operator-bound inputs and permitted operations. Read-only inspection and authorized computation are different capabilities; the whole MCP surface should not be described as read-only. Models should follow the [model MCP contract](docs/MCP_MODEL.md) and use [mcp/model-catalog.json](mcp/model-catalog.json) as the tool index. `ncp_index_list` pages the provider-free capability index and the release ledger without authorizing them. A row is callable when it names an `mcp_profile` or an `mcp_tool`. That is navigation plus the named call, not a new authority. Plan-graph profiles include numerical, analysis, polymer, temperature, measured thermal, link scalar, leakage, BIM clearance, system, legibility, data, and the fluid reservoir, molecular, and FSI profiles. Wave and SPH are `ncp_fluid_field`. `ncp_domain_run` executes the provider-free synthetic solvers named by `ncp_domain_list`: atmosphere columns, weather profiles, impact, irrigation, geomatics, thermofluids, a Markov sequence, and thermal identification. Those results are not measurements. Julia, Godot, Bevy, Blender, and an SP1 proof stay unbound. Leakage and BIM stay on the retained pins in the model contract. A completed balance is not a leak finding. A held inspection is not a clearance. Polymer-cycle assessment, toolpoint review, the thermal hypergraph rewrite, doctor, the synthetic oscillator demo, linear-response preview, and the oscillator-rms lesson are direct tools. `ncp_ledger_read` reads a ledger row, including proved heat, and does not execute it. `ncp_capability_describe` can read an index id without granting it on the selected profile. Prefer the control tools (`ncp_*`) on one explicit instrument. The [agent protocol](docs/NET_AGENT_PROTOCOL.md) keeps the older `net_*` transport, its limits, and its verification notes.
 
 An agent request does not grant permission to execute a provider, contact a device, change a calibration, approve a part, or disclose evidence. Tool descriptions and model responses do not replace enforcement at the owning runtime boundary. Test the actual client, transport, and installed implementation used by the integration; a handler test does not establish compatibility with every host.
 

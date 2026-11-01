@@ -1,3 +1,19 @@
+<!-- ncp-folder-entry -->
+# MCP entry
+
+- path: `examples/fsrt-two-reservoir`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `upstream`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
 # fsrt-two-reservoir (HOST replay of published quickstart)
 
 > Current client: use **Teaching samples** in Godot or the optional Bevy retained-render viewer. Specialty-tab descriptions below are historical authoring notes; see the [current source map](../../docs/VISUALIZATION_PROVIDERS.md).

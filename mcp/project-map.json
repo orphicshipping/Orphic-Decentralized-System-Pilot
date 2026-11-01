@@ -1,0 +1,84 @@
+{
+  "schema": "ncp.mcp-project-map.v1",
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_this_file",
+  "note": "Folder navigation for a tool-using model. Reading this file does not run a solver, bind a provider, or qualify a result. Every tracked folder has MCP.md. mcp/folder-index.json lists those contracts. Neither authorizes execution.",
+  "folder_contract": "MCP.md",
+  "folder_index": "mcp/folder-index.json",
+  "call_contract": "docs/MCP_MODEL.md",
+  "tool_index": "mcp/model-catalog.json",
+  "narrative": "docs/MCP_PROJECT.md",
+  "entry_tools": ["ncp_index_list", "ncp_domain_list", "ncp_capabilities_list"],
+  "folders": [
+    {"path": "src", "role": "implementation", "mcp": "callable", "mandate": "The ciw package owns contracts, sessions, and the ncp_* gateway. A module path is not a grant."},
+    {"path": "mcp", "role": "model_index", "mcp": "navigation", "mandate": "Machine catalogs. They name tools and folders. They do not authorize execution."},
+    {"path": "docs", "role": "contracts", "mcp": "navigation", "mandate": "Scientific pages and mandates. Reading a page is not a run and not a qualification."},
+    {"path": "tests", "role": "verification", "mcp": "evidence", "mandate": "Keep the suite. Do not delete or weaken a test to make a call look successful. A passing handler test is not physical qualification."},
+    {"path": "examples", "role": "fixtures", "mcp": "navigation", "mandate": "Frozen inputs for profile preparation and synthetic examples. An example file is not a measurement."},
+    {"path": "release", "role": "ledger", "mcp": "callable", "mandate": "ncp_ledger_read. qualified stays not_assessed. proved_heat is a read, not an SP1 proof."},
+    {"path": "instruments", "role": "vendored_providers", "mcp": "unbound", "mandate": "Imported subtrees. Not a substitute for a host-selected pin. Leakage and BIM refuse the vendored directory."},
+    {"path": "runtimes", "role": "optional_workers", "mcp": "unbound", "mandate": "Julia, native interop, and proof workers. Unbound until a host selects the real executable. Do not invent one."},
+    {"path": "godot", "role": "engine_project", "mcp": "unbound", "mandate": "Godot scenes and scripts. Not an MCP grant and not a physical simulation result."},
+    {"path": "validation", "role": "retained_audit", "mcp": "evidence", "mandate": "Historical inventories and findings. Not a new execution and not a waiver of open gates."},
+    {"path": "qualification", "role": "local_records", "mcp": "evidence", "mandate": "Local check records. Not physical qualification and not a release."},
+    {"path": "scripts", "role": "operator_checks", "mcp": "navigation", "mandate": "Check and prepare scripts. A model does not pass a script path as authority."},
+    {"path": "tools", "role": "operator_consoles", "mcp": "navigation", "mandate": "Operator consoles. They do not add a grant the control tools lack."},
+    {"path": "deploy", "role": "packaging", "mcp": "navigation", "mandate": "Deployment notes. Packaging is not execution."},
+    {"path": "containers", "role": "packaging", "mcp": "navigation", "mandate": "Container definitions. A built image is not a qualified installation."},
+    {"path": "delivery", "role": "retained_delivery", "mcp": "evidence", "mandate": "Retained delivery artifacts. Not a new scientific result."},
+    {"path": "experiments", "role": "research", "mcp": "unbound", "mandate": "Research scripts. Not profile grants."},
+    {"path": "tasks", "role": "work_orders", "mcp": "navigation", "mandate": "Work orders. Not execution."},
+    {"path": "requirements", "role": "locks", "mcp": "navigation", "mandate": "Dependency locks. A lock file does not bind a provider."},
+    {"path": "third_party", "role": "notices", "mcp": "navigation", "mandate": "Third-party notices. Not scientific authority."}
+  ],
+  "root_files": [
+    {"path": "README.md", "role": "entrypoint"},
+    {"path": "AGENTS.md", "role": "model_entry"},
+    {"path": "CONTRIBUTING.md", "role": "contribution_rules"},
+    {"path": "TECHNICAL_REFERENCE.md", "role": "historical_reference"},
+    {"path": "DEVELOPMENT_REFERENCE.md", "role": "development"},
+    {"path": "RESEARCH_PROGRAMME.md", "role": "research_scope"},
+    {"path": "pyproject.toml", "role": "package"},
+    {"path": "LICENSE", "role": "licence"}
+  ],
+  "mandates": [
+    {"id": "advertised-bound-granted", "rule": "Advertised, bound, and granted are different. authorizes_execution stays false on every index row."},
+    {"id": "attempt", "rule": "The same attempt returns the same run. A different request under that attempt refuses. Replay writes a new occurrence."},
+    {"id": "missing-fields", "rule": "Partial fields stay missing. Do not fill them."},
+    {"id": "not-a-release", "rule": "A completed graph, a PASS, a LOCAL check, a spread, or a held inspection does not book freight, verify physics, or release a part."},
+    {"id": "pins", "rule": "Leakage and BIM keep their retained pins. The vendored subtree is not that checkout, and the pin is not overridden."},
+    {"id": "proved-heat", "rule": "proved_heat is ncp_ledger_read. It is not an SP1 proof."},
+    {"id": "synthetic", "rule": "ncp_domain_run and ncp_fluid_field are bounded synthetic calculations. They are not measurements or forecasts."},
+    {"id": "tests", "rule": "Tests, independent checks, and retained refusals stay. Do not drop a verification workflow to widen a grant."},
+    {"id": "host-selects-code", "rule": "Only the host launch selects a checkout or interpreter. Tool arguments and evidence cannot."},
+    {"id": "separate-hosts", "rule": "External work, board refit, and knowledge are separate hosts. Do not fold them into ncp_run_submit."}
+  ],
+  "callable": {
+    "plan_profiles": ["builtin", "numerical", "analysis", "polymer", "temperature", "measured-thermal", "link-scalar", "leakage", "bim-clearance", "system", "legibility", "data", "fluid", "fluid-molecular", "fluid-fsi"],
+    "direct_tools": ["ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_polymer_cycle", "ncp_toolpoint", "ncp_fluid_field", "ncp_domain_list", "ncp_domain_run", "ncp_ledger_read"],
+    "synthetic_domains": {
+      "list_tool": "ncp_domain_list",
+      "run_tool": "ncp_domain_run",
+      "source": "src/ciw/domain_surface.py",
+      "domains": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]
+    },
+    "plan_order": ["ncp_capabilities_list", "ncp_plan_template", "ncp_plan_create", "ncp_plan_admit", "ncp_run_submit", "ncp_run_get"]
+  },
+  "not_grants": [
+    "SP1 proved heat as a proof",
+    "Julia",
+    "Godot",
+    "Bevy",
+    "Blender",
+    "a session workflow whose binding_status is explicit_bindings_required, unless the host has already selected that pin",
+    "shared discovery, typed composition, frame transformations, device gateway, and private provider discovery"
+  ],
+  "verification": {
+    "mcp_contract_tests": [
+      "tests/test_control_gateway.py",
+      "tests/test_capabilities.py",
+      "tests/test_mcp_project_map.py"
+    ],
+    "note": "Run the suite that owns the claim. This map does not run it."
+  }
+}

@@ -1,17 +1,36 @@
-# Notations Systems Terminal documentation
+<!-- ncp-folder-entry -->
+# MCP entry
 
-The root [README](../README.md) is the macro entrypoint. This index points to
-the page that owns each kind of detail so status and contracts do not drift
-across several copies.
+- path: `docs`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+Tasks in this folder, none of them the default: `data`, `evidence`, `licensing`, `qualification`, `work-orders`.
+
+The contract is [MCP.md](MCP.md). A file in this folder is not a tool call. Reading this page does not run a solver, bind a provider, or qualify a result.
+
+---
+
+# Notations Control Protocol documentation
+
+Models start at the [MCP project map](MCP_PROJECT.md), the [call contract](MCP_MODEL.md), and the [folder index](../mcp/folder-index.json). Every tracked folder has an `MCP.md` contract. Those files classify the folder. They do not authorize execution.
+
+This index still points at the page that owns each scientific claim. Pages below the model entry are reference for operators and reviewers. The [2026-10-18 folder audit](REPOSITORY_FOLDER_AUDIT_20261018.md) is a frozen inventory, not the current map and not a waiver.
 
 The technical name is **Computational Instrumentation Workbench (CIW)**. The
 Python distribution is `computational-instrumentation-workbench`; Python code
-imports `ciw`. The command-line entry points are `net` and `ciw`.
+imports `ciw`. The command-line entry points are `net` and `ciw`. Shell commands
+are not the model surface.
 
 ## Start here
 
 | Need | Page |
 | --- | --- |
+| Model entry: folders, call order, mandates, and what is not a grant | [MCP project map](MCP_PROJECT.md) |
+| Tool arguments, profile grants, and refusals a model must repeat | [MCP contract](MCP_MODEL.md) |
 | Every tracked folder, loose/latent candidates and explicit integration gates | [Complete repository folder audit, 2026-10-18](REPOSITORY_FOLDER_AUDIT_20261018.md) |
 | DC electronics repair, refurbishment and retrofit cases | [Electronics repair](ELECTRONICS_REPAIR.md) |
 | Install and check the public Terminal/Legibility workflows together | [Run NET](RUN_NET.md) |
