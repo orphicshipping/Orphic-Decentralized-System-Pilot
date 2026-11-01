@@ -4,6 +4,7 @@ This page is how a model walks the repository. It adds no solver. Reading it is 
 not a test run, and not a qualification.
 
 Machine copy: [mcp/project-map.json](../mcp/project-map.json).
+Every tracked folder: [mcp/folder-index.json](../mcp/folder-index.json).
 Call contract: [MCP_MODEL.md](MCP_MODEL.md).
 Tool index: [mcp/model-catalog.json](../mcp/model-catalog.json).
 
@@ -19,7 +20,7 @@ The same attempt returns the same run. A different request under that attempt re
 
 ## Folders
 
-Do not move these trees to “make them MCP.” Imports, pins, and tests use the paths below.
+Do not move these trees to “make them MCP.” Imports, pins, and tests use the paths below. Every tracked folder has an `MCP.md` contract. Open that file for the class, the call to use instead of the files, and the tracked names in that directory. `authorizes_execution` in that file is false. A nested folder does not inherit a grant: `src/ciw` holds the gateway, and a module path is still not a tool. `instruments/domain/flowstate` is not the leakage pin. `instruments/domain/bim-estimator` is not the clearance pin. Ignored local trees, such as dependency checkouts under `tools/`, are not contracts. `scripts/write_mcp_folder_contracts.py` rewrites the contracts. Running it is not a tool call.
 
 | Folder | What a model should do with it |
 | --- | --- |

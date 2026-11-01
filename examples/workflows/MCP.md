@@ -1,0 +1,12 @@
+# MCP contract
+
+- path: `examples/workflows`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+`workflows` is inside `examples` (navigation). Frozen inputs for profile preparation and synthetic examples. An example file is not a measurement.
+
+Tracked files here, none of them a tool call: `01_emit_render_json.md`, `02_godot_presentation_tab.md`, `03_bevy_projector.md`, `04_real_world_usecase.md`, `05_sp1_verifiable_experiment.md`, `README.md`, `checklist.md`, `checklist_sp1.md` (8 more).
+
+A file in this folder is not a tool call. Use `ncp_index_list` and the [project map](../../mcp/project-map.json). The [folder index](../../mcp/folder-index.json) lists every tracked folder. Reading this contract does not run a solver, bind a provider, or qualify a result. A PASS, a LOCAL check, or a completed graph is not a physical release.

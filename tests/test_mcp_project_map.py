@@ -33,3 +33,63 @@ def test_project_map_matches_the_tree_and_does_not_grant():
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     assert "docs/MCP_PROJECT.md" in readme
     assert "not an SP1 proof" in readme
+    assert "MCP.md" in readme
+    assert "folder-index.json" in readme
+    assert "Operator reference" in readme
+    index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
+    assert index["schema"] == "ncp.mcp-folder-index.v1"
+    assert index["authorizes_execution"] is False
+    assert document["folder_index"] == "mcp/folder-index.json"
+
+
+def test_every_tracked_folder_has_a_contract_that_does_not_grant():
+    import subprocess
+    tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
+    directories = {Path(".")}
+    for raw in tracked.split(b"\0"):
+        if not raw:
+            continue
+        parent = Path(raw.decode()).parent
+        while parent != Path("."):
+            directories.add(parent)
+            parent = parent.parent
+    checked = 0
+    for directory in directories:
+        contract = ROOT / directory / "MCP.md"
+        probe = "MCP.md" if directory == Path(".") else (directory / "MCP.md").as_posix()
+        ignored = subprocess.run(["git", "check-ignore", "-q", "--", probe], cwd=ROOT).returncode == 0
+        if ignored:
+            continue
+        text = contract.read_text(encoding="utf-8")
+        rel = "." if directory == Path(".") else directory.as_posix()
+        assert f"- path: `{rel}`" in text
+        assert "authorizes_execution: false" in text
+        assert "not a tool call" in text
+        assert f"- class: `" in text
+        checked += 1
+    assert checked > 700
+    index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
+    assert {row["path"] for row in index["folders"]} == {
+        "." if directory == Path(".") else directory.as_posix()
+        for directory in directories
+        if subprocess.run(
+            ["git", "check-ignore", "-q", "--", "MCP.md" if directory == Path(".") else (directory / "MCP.md").as_posix()],
+            cwd=ROOT,
+        ).returncode != 0
+    }
+    by_path = {row["path"]: row for row in index["folders"]}
+    assert by_path["src/ciw/adapters"]["class"] == "navigation"
+    assert "not a grant" in (ROOT / "src" / "ciw" / "adapters" / "MCP.md").read_text(encoding="utf-8")
+    assert "control_gateway.py" in (ROOT / "src" / "ciw" / "MCP.md").read_text(encoding="utf-8")
+    flow = (ROOT / "instruments" / "domain" / "flowstate" / "MCP.md").read_text(encoding="utf-8")
+    bim = (ROOT / "instruments" / "domain" / "bim-estimator" / "MCP.md").read_text(encoding="utf-8")
+    assert "Not the leakage pin" in flow
+    assert "Not the clearance pin" in bim
+    assert "not an SP1 proof" in bim
+    julia = (ROOT / "examples" / "julia" / "MCP.md").read_text(encoding="utf-8")
+    assert "Unbound" in julia
+    assert by_path["examples/julia"]["class"] == "unbound"
+    assert by_path["examples/julia"]["call"] == "none"
+    heat = (ROOT / "examples" / "proved-heat" / "MCP.md").read_text(encoding="utf-8")
+    assert "not an SP1 proof" in heat
+    assert by_path["examples/proved-heat"]["call"] == "ncp_ledger_read"

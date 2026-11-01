@@ -1,12 +1,13 @@
-# Notations Systems Terminal documentation
+# Notations Control Protocol documentation
 
-The root [README](../README.md) is the macro entrypoint. This index points to
-the page that owns each kind of detail so status and contracts do not drift
-across several copies.
+Models start at the [MCP project map](MCP_PROJECT.md), the [call contract](MCP_MODEL.md), and the [folder index](../mcp/folder-index.json). Every tracked folder has an `MCP.md` contract. Those files classify the folder. They do not authorize execution.
+
+This index still points at the page that owns each scientific claim. Pages below the model entry are reference for operators and reviewers. The [2026-10-18 folder audit](REPOSITORY_FOLDER_AUDIT_20261018.md) is a frozen inventory, not the current map and not a waiver.
 
 The technical name is **Computational Instrumentation Workbench (CIW)**. The
 Python distribution is `computational-instrumentation-workbench`; Python code
-imports `ciw`. The command-line entry points are `net` and `ciw`.
+imports `ciw`. The command-line entry points are `net` and `ciw`. Shell commands
+are not the model surface.
 
 ## Start here
 
