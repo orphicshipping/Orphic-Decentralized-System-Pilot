@@ -20,6 +20,32 @@ from .numerical_runtime import runtime_identity as numerical_runtime_identity
 
 SCHEMA = "ciw.capability-catalog.v1"
 
+_FLUID_PROFILES = (
+    ("fluid.reservoir.simulate.v1", "fluid", "Simulate the shortened two-reservoir synthetic trajectory."),
+    ("fluid.reservoir.verify.v1", "fluid", "Independently verify that reservoir trajectory."),
+    ("fluid.wave.simulate.v1", "fluid-wave", "Simulate the bounded linear shallow-water wave."),
+    ("fluid.wave.verify.v1", "fluid-wave", "Independently verify that wave trajectory."),
+    ("fluid.sph.simulate.v1", "fluid-sph", "Simulate the bounded one-dimensional SPH parcel trajectory."),
+    ("fluid.sph.verify.v1", "fluid-sph", "Independently verify that SPH trajectory."),
+    ("fluid.molecular.simulate.v1", "fluid-molecular", "Simulate the bounded structureless Lennard-Jones sites."),
+    ("fluid.molecular.verify.v1", "fluid-molecular", "Independently verify that molecular trajectory."),
+    ("fluid.fsi.simulate.v1", "fluid-fsi", "Simulate the bounded linear shallow-water wall coupling."),
+    ("fluid.fsi.verify.v1", "fluid-fsi", "Independently verify that coupled trajectory."),
+)
+
+
+def fluid_profile_grants():
+    """Plan-graph profiles whose retained trajectory fits the control document."""
+    retained = {"fluid", "fluid-molecular", "fluid-fsi"}
+    return {name: (profile,) for name, profile, _summary in _FLUID_PROFILES if profile in retained}
+
+
+def fluid_direct_tools():
+    """Wave and SPH fields exceed the control document, so they are direct calls."""
+    direct = {"fluid-wave", "fluid-sph"}
+    return {name: "ncp_fluid_field" for name, profile, _summary in _FLUID_PROFILES if profile in direct}
+
+
 _FIELDS = (
     "capability_id",
     "disposition",
@@ -171,6 +197,12 @@ _CAPABILITIES = (
         runtime_identity=_toolpoint_containment_identity(), module="ciw.data_manufacturing_bridge",
         notes="Retained-record replay only; no store writes, hold release, shipment authorization or physical qualification.",
     ),
+    *(_record(
+        capability_id=name, disposition="implemented", kind="synthetic_model",
+        summary=summary, operation_id=name, role="backend",
+        module="ciw.fluid_workflow", profiles=[profile],
+        notes="Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute.",
+    ) for name, profile, summary in _FLUID_PROFILES),
     _record(
         capability_id="learning.oscillator-rms",
         disposition="implemented",

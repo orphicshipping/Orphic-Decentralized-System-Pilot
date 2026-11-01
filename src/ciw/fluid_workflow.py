@@ -163,9 +163,9 @@ def capability_registry(*, bind: bool = False, profile: str = "reservoir"):
     """Advertise one synthetic fluid profile. A trajectory is not a physical measurement."""
     from .adapters.protocol import InstrumentManifest
     from .control_plane import CapabilityRegistry, Port
-    if profile not in ("reservoir", "wave"):
-        raise ValueError("Fluid MCP profile is limited to the bounded synthetic reservoir or wave request")
-    selected = {name for name in contract.OPERATIONS[profile]}
+    if profile not in contract.ALL_PROFILES:
+        raise ValueError("Fluid MCP profile must be one bounded synthetic request: " + ", ".join(contract.ALL_PROFILES))
+    selected = {name for name in OPERATIONS[profile]}
     registry = CapabilityRegistry()
     result = Port("ciw.operation-result.v1").to_dict()
     for item in operations():

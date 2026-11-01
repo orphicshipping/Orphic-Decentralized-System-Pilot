@@ -27,6 +27,7 @@
         {"name": "ncp_lesson", "read_only": false, "required": [], "optional": ["mode", "level"], "note": "mode=work runs statistics.v1. Not a qualification."},
         {"name": "ncp_hypergraph", "read_only": false, "required": [], "note": "Synthetic thermal rewrite. Not physical qualification."},
         {"name": "ncp_polymer_cycle", "read_only": false, "required": [], "note": "Does not fit a plan graph. Not a part release."},
+        {"name": "ncp_fluid_field", "read_only": false, "required": ["solver"], "note": "solver is wave or sph. Returns verifier checks. The field is not retained. Not a measurement."},
         {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
         {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
         {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
@@ -188,7 +189,25 @@
       "granted_operations": ["fluid.reservoir.simulate.v1", "fluid.reservoir.verify.v1"],
       "native_checkout": false,
       "physical_qualification": "not_established",
-      "note": "Shortened reservoir clock so the trajectory fits the control document budget. Not a physical measurement. Wave, SPH, molecular, and FSI stay unbound."
+      "note": "Shortened reservoir clock so the trajectory fits the control document budget. Not a physical measurement. Wave and SPH are ncp_fluid_field, not this profile."
+    },
+    {
+      "profile": "fluid-molecular",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--profile", "molecular", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.molecular.simulate.v1", "fluid.molecular.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Eight structureless Lennard-Jones sites, 32 steps. Not water, not a measurement."
+    },
+    {
+      "profile": "fluid-fsi",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--profile", "fsi", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.fsi.simulate.v1", "fluid.fsi.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "16 cells and 16 steps of linear wall coupling. Not a general FSI measurement."
     }
   ],
   "direct_tools": {
@@ -198,7 +217,11 @@
     "doctor.preflight": "ncp_doctor",
     "linear-response.library": "ncp_linear_preview",
     "synthetic-oscillator-demo": "ncp_demo",
-    "hypergraph_rewriting": "ncp_hypergraph"
+    "hypergraph_rewriting": "ncp_hypergraph",
+    "fluid.wave.simulate.v1": "ncp_fluid_field",
+    "fluid.wave.verify.v1": "ncp_fluid_field",
+    "fluid.sph.simulate.v1": "ncp_fluid_field",
+    "fluid.sph.verify.v1": "ncp_fluid_field"
   },
   "ledger_read": {
     "tool": "ncp_ledger_read",
@@ -206,10 +229,10 @@
     "note": "Every other release-ledger id, including proved_heat and bounded_fluid_models, is readable. bounded_fluid_models also names the fluid profile. Reading a row does not execute it."
   },
   "not_mcp_grants": [
-    "wave, SPH, molecular, and FSI fluid solvers",
     "atmosphere, SP1, Julia, Godot, Bevy, Blender, and any module with neither mcp_profile nor mcp_tool",
     "leakage and BIM clearance without a host-selected checkout",
-    "a ledger read treated as execution of that capability"
+    "a ledger read treated as execution of that capability",
+    "an SP1 proof: proved_heat remains ncp_ledger_read until a host binds the registered guest"
   ],
   "separate_hosts": [
     "external work: python -m ciw.external_work_mcp, host-owned database and principal",

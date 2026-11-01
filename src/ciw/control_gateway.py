@@ -98,6 +98,8 @@ TOOLS = {
          "level": {"type": "string", "enum": ["concrete", "structural", "formal", "computational"]}}, JSON_OBJECT, required=[], read=False),
     "ncp_hypergraph": _tool("hypergraph", "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
         {}, JSON_OBJECT, required=[], read=False),
+    "ncp_fluid_field": _tool("fluid_field", "Run the bounded wave or SPH solver and independent verifier. Returns check rows only. The field exceeds the control document budget and is not retained. Not a physical measurement.",
+        {"solver": {"type": "string", "enum": ["wave", "sph"]}}, JSON_OBJECT, read=False),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
         {}, JSON_OBJECT, required=[], read=False),
     "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
@@ -309,7 +311,7 @@ class ControlHost:
 
     def index(self, offset=0, limit=32):
         """Page implemented ids. A profile name is navigation, not a grant on this call."""
-        from .capabilities import catalog
+        from .capabilities import catalog, fluid_direct_tools, fluid_profile_grants
         from .data_workflow import COMPARE
         from .gltf_reference_runtime import PROJECT
         from .legibility_workflow import OPERATION as LEGIBILITY
@@ -323,6 +325,7 @@ class ControlHost:
         grants.update({name: ("numerical",) for name in OPERATIONS})
         grants.update({name: ("system",) for name in SYSTEM_OPS})
         grants[LEGIBILITY] = ("legibility",)
+        grants.update(fluid_profile_grants())
         for name in (COMPARE, PRODUCT, PROJECT):
             grants[name] = ("data",)
         direct = {
@@ -333,6 +336,7 @@ class ControlHost:
             "doctor.preflight": "ncp_doctor",
             "linear-response.library": "ncp_linear_preview",
         }
+        direct.update(fluid_direct_tools())
         rows = []
         for item in catalog()["capabilities"]:
             profiles = grants.get(item["capability_id"], ())
@@ -353,7 +357,7 @@ class ControlHost:
         ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
         ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
         for item in ledger["capabilities"]:
-            profile = "fluid" if item["id"] == "bounded_fluid_models" else None
+            profiles = ["fluid", "fluid-molecular", "fluid-fsi"] if item["id"] == "bounded_fluid_models" else []
             tool_name = "ncp_hypergraph" if item["id"] == "hypergraph_rewriting" else "ncp_ledger_read"
             rows.append({
                 "surface": "ledger",
@@ -363,8 +367,8 @@ class ControlHost:
                 "summary": item.get("implemented"),
                 "qualified": item.get("qualified"),
                 "authorizes_execution": False,
-                "mcp_profile": profile,
-                "mcp_profiles": [profile] if profile else [],
+                "mcp_profile": profiles[0] if profiles else None,
+                "mcp_profiles": profiles,
                 "mcp_tool": tool_name,
                 "callable": True,
             })
@@ -656,6 +660,35 @@ class ControlHost:
                 "attempt_count": record["attempt_count"], "record_digest": record["record_digest"],
                 "authority": record["authority"], "physical_qualification": "not_established",
                 "authorizes_execution": False}
+
+    def fluid_field(self, solver):
+        """Execute wave or SPH. The retained field does not fit a control document."""
+        if solver not in {"wave", "sph"}:
+            raise ValueError("ncp_fluid_field accepts wave or sph. Reservoir, molecular, and FSI are plan profiles.")
+        import importlib.util
+        from .fluid_contract import simulate, verify
+        path = Path(__file__).resolve().parents[2] / "examples" / "fluid_operations" / "prepare.py"
+        spec = importlib.util.spec_from_file_location("fluid_operations_prepare", path)
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        request = module.bounded_request(solver)
+        result = simulate(request)
+        report = verify(request, result)
+        qualification = report["qualification"]
+        return {
+            "profile": solver,
+            "status": report["status"],
+            "checks": report["checks"],
+            "qualification_action": qualification.get("action"),
+            "qualification_reason": qualification.get("reason"),
+            "request_digest": report["request_digest"],
+            "result_digest": report["result_digest"],
+            "report_digest": report["record_digest"],
+            "field_retained": False,
+            "retention": "The field exceeds the control document budget and is not retained.",
+            "physical_validation": "not_established",
+            "authorizes_execution": False,
+        }
 
     def polymer_cycle(self):
         import base64

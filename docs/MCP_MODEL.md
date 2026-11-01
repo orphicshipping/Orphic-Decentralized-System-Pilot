@@ -35,6 +35,7 @@ Every tool argument is one object. Additional properties are refused.
 | `ncp_lesson` | none (`mode` is `learn` or `work`; `level` optional) | Reads the oscillator-rms lesson, or runs `statistics.v1` when `mode` is `work` | Not a curriculum or a qualification |
 | `ncp_hypergraph` | none | Applies the synthetic thermal hypergraph rewrite | New occurrence ids. Not physical qualification |
 | `ncp_polymer_cycle` | none | Assesses the synthetic polymer cycle | Does not fit a plan graph. Not a part release |
+| `ncp_fluid_field` | `solver` (`wave` or `sph`) | Runs that solver and its independent verifier, and returns the check rows | Does not retain the field. The field exceeds the control document budget. Not a measurement |
 | `ncp_toolpoint` | none | Reviews the synthetic manufacturing and toolpoint reports | Journals do not fit a plan graph. Not a hold release |
 | `ncp_ledger_read` | `capability_id` | Reads one release-ledger row | `qualified` stays `not_assessed`. `proved_heat` is a read, not a proof |
 | `ncp_capability_describe` | `capability_id` | Reads one of those ids | Does not bind a new provider |
@@ -99,6 +100,8 @@ with the control tools.
 | `legibility` | `python examples/legibility_operations/prepare.py --output-dir DIR` | `--instrument legibility` | `legibility.compile.v1` |
 | `data` | `python examples/data_operations/prepare.py --output-dir DIR` | `--instrument data` | `data.compare-observations.v1`, `data.review-product-study.v1`, `data.project-gltf-mesh.v1` |
 | `fluid` | `python examples/fluid_operations/prepare.py --output-dir DIR` | `--instrument fluid` | `fluid.reservoir.simulate.v1`, `fluid.reservoir.verify.v1` on a shortened clock |
+| `fluid-molecular` | `python examples/fluid_operations/prepare.py --profile molecular --output-dir DIR` | `--instrument fluid` | `fluid.molecular.simulate.v1`, `fluid.molecular.verify.v1` |
+| `fluid-fsi` | `python examples/fluid_operations/prepare.py --profile fsi --output-dir DIR` | `--instrument fluid` | `fluid.fsi.simulate.v1`, `fluid.fsi.verify.v1` |
 
 On the `builtin` demo profile, these stay bound and not granted: `uncertainty.propagate.v1`,
 `uncertainty.budget.v1`, `calibration.fit.v1`, `calibration.residuals.v1`, `sensitivity.local.v1`,
@@ -110,16 +113,19 @@ analysis graph is not physical qualification.
 `ncp_index_list` pages every id in `ciw.capabilities` and every id in
 `release/capability-ledger.json`. `callable` is true when `mcp_profiles` names a profile
 above or `mcp_tool` names a direct call. `authorizes_execution` stays false on every row.
-The system, legibility, data, and shortened fluid-reservoir profiles are plan-graph grants.
+The system, legibility, data, and fluid profiles are plan-graph grants. Molecular sites and
+linear wall coupling are `fluid-molecular` and `fluid-fsi` on the same fluid instrument.
+Wave and SPH are `ncp_fluid_field` because their fields do not fit a control document.
 `ncp_polymer_cycle` and `ncp_toolpoint` are direct calls because those documents do not fit
 a plan graph. `ncp_ledger_read` reads a ledger row and does not execute it. `proved_heat`
-is that read, not an SP1 proof. Wave, SPH, molecular, and FSI fluid solvers stay unbound.
-The ledger rows stay `qualified: not_assessed`.
+is that read, not an SP1 proof. The ledger rows stay `qualified: not_assessed`.
 
 A finished system graph can still report FAIL on the study or the reduction comparison.
 That is a numerical outcome. It is not physical qualification. The fluid profile shortens
 the published reservoir clock so the trajectory fits the control document budget. It is
-not a physical measurement. Temperature's default request is synthetic and its uncertainty
+not a physical measurement. Molecular and FSI use the smallest contract-legal grids for the
+same reason. Wave and SPH run through `ncp_fluid_field` and return verifier checks without
+retaining the field. None of them is a physical measurement. Temperature's default request is synthetic and its uncertainty
 budget is incomplete, so a finished graph can still fail acceptance. Measured thermal's
 repository example is a simulated fixture. Link scalar inspection qualification stays held.
 Polymer verification is not a conformity decision.
@@ -131,8 +137,8 @@ Polymer verification is not a conformity decision.
 - A digest that does not match the retained plan.
 - An id whose `mcp_profile` and `mcp_tool` are both null.
 - `ncp_ledger_read` treated as an execution of that capability, including proved heat.
-- Wave, SPH, molecular, FSI, atmosphere, SP1, Julia, Godot, Bevy, Blender, and any other
-  module that is not in the selected profile grant and not named by `mcp_tool`.
+- Wave or SPH submitted as a reservoir plan. Call `ncp_fluid_field` with `solver` `wave` or `sph`.
+- Atmosphere, SP1, Julia, Godot, Bevy, Blender, and any other module that is not in the selected profile grant and not named by `mcp_tool`.
 
 Separate hosts, not extra arguments on `ncp_run_submit`:
 

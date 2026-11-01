@@ -209,7 +209,18 @@ def test_index_pages_every_capability_without_authorizing(configured):
     assert by_id["doctor.preflight"]["mcp_tool"] == "ncp_doctor"
     assert by_id["linear-response.library"]["mcp_tool"] == "ncp_linear_preview"
     assert by_id["synthetic-oscillator-demo"]["mcp_tool"] == "ncp_demo"
-    assert by_id["bounded_fluid_models"]["mcp_profile"] == "fluid" and by_id["bounded_fluid_models"]["callable"] is True
+    assert by_id["bounded_fluid_models"]["mcp_profile"] == "fluid"
+    assert by_id["bounded_fluid_models"]["mcp_profiles"] == ["fluid", "fluid-molecular", "fluid-fsi"]
+    for name, profile in (
+        ("fluid.reservoir.simulate.v1", "fluid"),
+        ("fluid.molecular.simulate.v1", "fluid-molecular"),
+        ("fluid.fsi.simulate.v1", "fluid-fsi"),
+    ):
+        assert by_id[name]["mcp_profile"] == profile and by_id[name]["callable"] is True
+        assert by_id[name]["mcp_tool"] is None and by_id[name]["authorizes_execution"] is False
+    for name in ("fluid.wave.simulate.v1", "fluid.wave.verify.v1", "fluid.sph.simulate.v1", "fluid.sph.verify.v1"):
+        assert by_id[name]["mcp_tool"] == "ncp_fluid_field" and by_id[name]["mcp_profile"] is None
+        assert by_id[name]["callable"] is True and by_id[name]["authorizes_execution"] is False
     assert by_id["hypergraph_rewriting"]["mcp_tool"] == "ncp_hypergraph" and by_id["hypergraph_rewriting"]["mcp_profile"] is None
     assert by_id["proved_heat"]["mcp_profile"] is None and by_id["proved_heat"]["mcp_tool"] == "ncp_ledger_read"
     assert by_id["proved_heat"]["callable"] is True and by_id["proved_heat"]["authorizes_execution"] is False
@@ -219,8 +230,50 @@ def test_index_pages_every_capability_without_authorizing(configured):
     assert owner.capabilities()["execution_budget"]["used"] == used
     names = {tool["name"] for tool in host.descriptions()}
     assert "ncp_index_list" in names
-    for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle"):
+    for name in ("ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_ledger_read", "ncp_toolpoint", "ncp_polymer_cycle", "ncp_fluid_field"):
         assert name in names
+
+
+@pytest.mark.parametrize("family", ["reservoir", "molecular", "fsi"])
+def test_fluid_profile_executes_its_own_solver(tmp_path, family):
+    import importlib.util
+    from pathlib import Path
+    from ciw.fluid_contract import ALL_OPERATIONS
+    path = Path(__file__).resolve().parents[1] / "examples" / "fluid_operations" / "prepare.py"
+    spec = importlib.util.spec_from_file_location("fluid_prepare", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    profile = module.prepare(tmp_path / family, family)
+    with from_profile(profile, instrument="fluid") as owner, ControlHost(owner) as host:
+        granted = [item["operation_id"] for item in call(host, "ncp_capabilities_list")["items"] if item["authorized"]]
+        assert granted == list(ALL_OPERATIONS[family])
+        draft = plan(host)
+        call(host, "ncp_plan_admit", plan_id=draft["plan_id"], expected_digest=draft["digest"])
+        run = call(host, "ncp_run_submit", plan_id=draft["plan_id"], expected_digest=draft["digest"], attempt="fluid-" + family)
+        end = time.monotonic() + 30
+        while time.monotonic() < end:
+            done = call(host, "ncp_run_get", run_id=run["run_id"])
+            if done["state"] not in {"queued", "running"}:
+                break
+            time.sleep(0.05)
+        else:
+            pytest.fail(family + " did not finish")
+        assert done["state"] == "completed", done
+        assert len(done["result"]["execution_ids"]) == 2
+        assert owner.capabilities()["execution_budget"]["used"] == 1
+
+
+def test_wave_and_sph_return_verifier_checks(configured):
+    _, owner, host = configured
+    used = owner.capabilities()["execution_budget"]["used"]
+    for solver in ("wave", "sph"):
+        body = call(host, "ncp_fluid_field", solver=solver)
+        assert body["status"] in {"PASS", "FAIL"}
+        assert body["checks"] and all(row["status"] in {"PASS", "FAIL"} for row in body["checks"])
+        assert body["field_retained"] is False
+        assert body["authorizes_execution"] is False
+        assert body["physical_validation"] == "not_established"
+    assert owner.capabilities()["execution_budget"]["used"] == used
 
 
 def test_preserves_baseline_global_context(tmp_path):

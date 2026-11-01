@@ -324,10 +324,19 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
         host_class = DataHost
         registry = capability_registry(bind=bool(value["allow_operations"]))
     elif instrument == "fluid":
-        from .fluid_workflow import capability_registry
+        from .fluid_contract import profile_for_request
+        from .fluid_workflow import capability_registry, source_request
         if value["candidate_domains"] != {}:
             raise ValueError("Fluid operations have no agent-editable parameter domains")
-        registry = capability_registry(bind=bool(value["allow_operations"]), profile="reservoir")
+        selected = []
+        for raw in inputs.values():
+            artifact = parse(raw)
+            metadata = artifact.get("metadata") if type(artifact) is dict else None
+            if type(metadata) is dict and "fluid_request" in metadata:
+                selected.append(profile_for_request(source_request(artifact)))
+        if len(selected) != 1:
+            raise ValueError("Fluid instrument requires exactly one synthetic fluid source")
+        registry = capability_registry(bind=bool(value["allow_operations"]), profile=selected[0])
     else:
         registry = builtin_registry(bind=bool(value["allow_operations"]))
         if read_only:
