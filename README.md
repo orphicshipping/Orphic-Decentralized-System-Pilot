@@ -4,9 +4,15 @@ Scientific computing, measurement context, and reproducible engineering investig
 
 Developed by **Notation Systems Inc.**
 
-[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Models and MCP](docs/MCP_MODEL.md) · [Documentation](#documentation-and-development)
+[System design](#system-design) · [Local evaluation](#local-evaluation) · [Technical assessment](#technical-assessment) · [Integration](#integration) · [Models and MCP](docs/MCP_PROJECT.md) · [Documentation](#documentation-and-development)
 
-<a id="from-a-calculation-to-an-engineering-record"></a>
+## Model entry
+
+Models call this repository through MCP. The folder map is [docs/MCP_PROJECT.md](docs/MCP_PROJECT.md) and [mcp/project-map.json](mcp/project-map.json). The call contract is [docs/MCP_MODEL.md](docs/MCP_MODEL.md). The tool index is [mcp/model-catalog.json](mcp/model-catalog.json). None of those files authorizes execution.
+
+Start with `ncp_index_list`. A row is callable when it names `mcp_profile` or `mcp_tool`. `authorizes_execution` stays false. Then `ncp_capabilities_list` on the selected profile, or a direct tool. Provider-free synthetic solvers are `ncp_domain_list` then `ncp_domain_run`. Wave and SPH are `ncp_fluid_field`. `proved_heat` is `ncp_ledger_read`, not an SP1 proof.
+
+A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release. Leakage and BIM stay on the retained pins in the model contract. Julia, Godot, Bevy, and Blender stay unbound. Tests under `tests/` stay; do not drop a verification workflow to widen a grant. The rest of this file is the scientific scope those calls must not overclaim.
 
 ## Purpose and scope
 

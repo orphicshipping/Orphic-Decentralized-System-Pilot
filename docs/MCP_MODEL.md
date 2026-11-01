@@ -4,6 +4,7 @@ This is the call contract for a tool-using model. It adds no solver. Enforcement
 in the owning Session and the operator's launch command. Reading this page is not a grant.
 
 Machine-readable copy: [mcp/model-catalog.json](../mcp/model-catalog.json).
+Folder map: [MCP_PROJECT.md](MCP_PROJECT.md) and [mcp/project-map.json](../mcp/project-map.json).
 Older transport notes: [NET_AGENT_PROTOCOL.md](NET_AGENT_PROTOCOL.md).
 
 ## Transport

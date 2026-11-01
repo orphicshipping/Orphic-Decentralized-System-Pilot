@@ -12,6 +12,8 @@ imports `ciw`. The command-line entry points are `net` and `ciw`.
 
 | Need | Page |
 | --- | --- |
+| Model entry: folders, call order, mandates, and what is not a grant | [MCP project map](MCP_PROJECT.md) |
+| Tool arguments, profile grants, and refusals a model must repeat | [MCP contract](MCP_MODEL.md) |
 | Every tracked folder, loose/latent candidates and explicit integration gates | [Complete repository folder audit, 2026-10-18](REPOSITORY_FOLDER_AUDIT_20261018.md) |
 | DC electronics repair, refurbishment and retrofit cases | [Electronics repair](ELECTRONICS_REPAIR.md) |
 | Install and check the public Terminal/Legibility workflows together | [Run NET](RUN_NET.md) |

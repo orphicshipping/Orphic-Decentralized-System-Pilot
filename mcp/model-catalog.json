@@ -3,6 +3,7 @@
   "authorizes_execution": false,
   "qualification": "not_performed_by_this_file",
   "note": "Names the MCP tools and profile grants implemented in this tree. Launch still needs an operator-selected profile and instrument. This file does not run a provider.",
+  "project_map": "mcp/project-map.json",
   "preferred_surface": "control",
   "protocol_versions": ["2025-11-25", "2025-06-18"],
   "methods": ["initialize", "ping", "tools/list", "tools/call"],
