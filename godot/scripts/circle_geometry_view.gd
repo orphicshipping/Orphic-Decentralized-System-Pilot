@@ -168,7 +168,7 @@ func _try_load() -> void:
 	_draw_stale = false
 	_verify_label.text = Kit.verification_label(_data)
 	_verify_label.add_theme_color_override(
-		"font_color", Kit.TEAL if bool(_data.get("fresh_verifier_occurrence", false)) else Kit.AMBER
+		"font_color", Kit.TEAL if Kit.has_fresh_verifier(_data) else Kit.AMBER
 	)
 	_refresh()
 

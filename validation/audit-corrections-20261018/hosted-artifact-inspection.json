@@ -1,0 +1,589 @@
+{
+  "baseline_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "qualification": "NOT_CLOSED",
+  "waivers": [],
+  "artifacts": [
+    {
+      "artifact_id": 12126140417,
+      "name": "proved-heat-native-evidence",
+      "run_id": 39080520456,
+      "run_status_at_download": "completed",
+      "run_conclusion_at_download": "failure",
+      "sha256": "c4c13909adbe90b406a88ba98ff90b317489f36de08c0359899feb82fbca9e23",
+      "members": 1,
+      "xml_reports": [],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "failure",
+      "resources": {
+        "available_memory_bytes": 7035379712,
+        "free_disk_bytes": 13635911680
+      },
+      "disposition": "NOT_QUALIFIED: runner resource preflight failed before native proving"
+    },
+    {
+      "artifact_id": 12125179260,
+      "name": "system-reference-ubuntu-latest-3.12",
+      "run_id": 39080520390,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "8fdd6b39ba35d845f01eebb545049dbb494fb20cff38b15571075b9ade5aa374",
+      "members": 48,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/system-source.xml",
+          "tests": 386,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126381235,
+      "name": "legibility-operator-ubuntu-latest-3.12",
+      "run_id": 39080520428,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "3a3d54a22813aa39d2a0696cbdc3bb7c26a7848e54cb3542bbedeb5cbaa2e61d",
+      "members": 113,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/legibility-source.xml",
+          "tests": 240,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12125842335,
+      "name": "legibility-operator-ubuntu-latest-3.11",
+      "run_id": 39080520428,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "72ca4260678f2ba3e085cf1e831d6d89e02b3fa6cbdee301b97297b308c29ae3",
+      "members": 113,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/legibility-source.xml",
+          "tests": 240,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12125913238,
+      "name": "release-operator-ubuntu-latest",
+      "run_id": 39080520379,
+      "run_status_at_download": "completed",
+      "run_conclusion_at_download": "success",
+      "sha256": "6af03854d62afd10ae5ba2644046716b15334fd4695d1c9b0c824b8dc47ecb41",
+      "members": 130,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/release-operator-tests.xml",
+          "tests": 43,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/release-operator-candidate.json",
+          "record": {
+            "schema": "ciw.release-operator-candidate.v1",
+            "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+            "wheel": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+            "wheel_sha256": "0bf83916f667c1cb1e800598c87dd9df91cfb0ce7b479c0a6b852a35583d68fb",
+            "run_id": "39080520379",
+            "run_attempt": "1",
+            "platform": "linux"
+          }
+        }
+      ],
+      "acceptance_reports": [
+        {
+          "path": "_temp/net-release-operator/machine-manifest/report.json",
+          "status": "PASS",
+          "scope": "machine-manifest",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        },
+        {
+          "path": "_temp/net-release-operator/project-graph/report.json",
+          "status": "PASS",
+          "scope": "project-graph",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        },
+        {
+          "path": "_temp/net-release-operator/report.json",
+          "status": "PASS",
+          "scope": "three_installed_scripted_synthetic_correction_journeys",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 722
+        },
+        {
+          "path": "_temp/net-release-operator/thermal-observer/report.json",
+          "status": "PASS",
+          "scope": "thermal-observer",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        }
+      ],
+      "non_json_outputs": [],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "wheel": {
+        "sha256": "0bf83916f667c1cb1e800598c87dd9df91cfb0ce7b479c0a6b852a35583d68fb",
+        "package_files_byte_matched_to_baseline_tree": 715
+      },
+      "disposition": "PASS: same-SHA scripted installed operator lane on the recorded platform"
+    },
+    {
+      "artifact_id": 12124999954,
+      "name": "release-operator-windows-latest",
+      "run_id": 39080520379,
+      "run_status_at_download": "completed",
+      "run_conclusion_at_download": "success",
+      "sha256": "5b8efb29ce71e9c610c616dfecabb7fbe85dc26be6ec44e8037e2e4a92328411",
+      "members": 130,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/release-operator-tests.xml",
+          "tests": 43,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/release-operator-candidate.json",
+          "record": {
+            "schema": "ciw.release-operator-candidate.v1",
+            "candidate_sha": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+            "wheel": "computational_instrumentation_workbench-0.1.0-py3-none-any.whl",
+            "wheel_sha256": "da907e575ebcadb7ecf15c90573da14d533ab3405ab4c97cadaa08972b11a489",
+            "run_id": "39080520379",
+            "run_attempt": "1",
+            "platform": "win32"
+          }
+        }
+      ],
+      "acceptance_reports": [
+        {
+          "path": "_temp/net-release-operator/machine-manifest/report.json",
+          "status": "PASS",
+          "scope": "machine-manifest",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        },
+        {
+          "path": "_temp/net-release-operator/project-graph/report.json",
+          "status": "PASS",
+          "scope": "project-graph",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        },
+        {
+          "path": "_temp/net-release-operator/report.json",
+          "status": "PASS",
+          "scope": "three_installed_scripted_synthetic_correction_journeys",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 722
+        },
+        {
+          "path": "_temp/net-release-operator/thermal-observer/report.json",
+          "status": "PASS",
+          "scope": "thermal-observer",
+          "authority": {
+            "independent_human_operator_acceptance": "not_performed",
+            "physical_validation": "not_performed",
+            "state_admission": "not_performed",
+            "hardware_actuation": "not_performed",
+            "private_provider_qualification": "not_performed"
+          },
+          "checks": 22
+        }
+      ],
+      "non_json_outputs": [],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "wheel": {
+        "sha256": "da907e575ebcadb7ecf15c90573da14d533ab3405ab4c97cadaa08972b11a489",
+        "package_files_byte_matched_to_baseline_tree": 715
+      },
+      "disposition": "PASS: same-SHA scripted installed operator lane on the recorded platform"
+    },
+    {
+      "artifact_id": 12126315099,
+      "name": "hardware-ubuntu-24.04-3.11",
+      "run_id": 39080520465,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "1f53cc19be4dfe077124e94d5a4cd726b04a6a15c78a0427ce57ac3ace058bad",
+      "members": 73,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/hardware-tests.xml",
+          "tests": 401,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [
+        "_temp/installed-hardware-smoke/commands/09-overwrite-example.stdout.json",
+        "_temp/installed-hardware-smoke/commands/10-overwrite-configuration.stdout.json",
+        "_temp/installed-hardware-smoke/commands/11-overwrite-run.stdout.json",
+        "_temp/installed-hardware-smoke/commands/12-overwrite-replay.stdout.json",
+        "_temp/installed-hardware-smoke/commands/13-overwrite-report.stdout.json",
+        "_temp/installed-hardware-smoke/commands/20-configuration-mismatch.stdout.json"
+      ],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "disposition": "COMPLETED: same-SHA workflow success; provider and physical scope follows the retained reports"
+    },
+    {
+      "artifact_id": 12126250928,
+      "name": "hardware-ubuntu-24.04-3.12",
+      "run_id": 39080520465,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "fd39cd6b682d75abde6835989f5d7003cbf56c9d4f508d1fa708fae9dca83cb7",
+      "members": 73,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/hardware-tests.xml",
+          "tests": 401,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [
+        "_temp/installed-hardware-smoke/commands/09-overwrite-example.stdout.json",
+        "_temp/installed-hardware-smoke/commands/10-overwrite-configuration.stdout.json",
+        "_temp/installed-hardware-smoke/commands/11-overwrite-run.stdout.json",
+        "_temp/installed-hardware-smoke/commands/12-overwrite-replay.stdout.json",
+        "_temp/installed-hardware-smoke/commands/13-overwrite-report.stdout.json",
+        "_temp/installed-hardware-smoke/commands/20-configuration-mismatch.stdout.json"
+      ],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "disposition": "COMPLETED: same-SHA workflow success; provider and physical scope follows the retained reports"
+    },
+    {
+      "artifact_id": 12126003161,
+      "name": "hardware-windows-latest-3.11",
+      "run_id": 39080520465,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "5447b8de9ac81ee23b38dedf43cb394cb5cf5c9e41eb60f2e4e08a68d6231f66",
+      "members": 73,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/hardware-tests.xml",
+          "tests": 401,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [
+        "_temp/installed-hardware-smoke/commands/09-overwrite-example.stdout.json",
+        "_temp/installed-hardware-smoke/commands/10-overwrite-configuration.stdout.json",
+        "_temp/installed-hardware-smoke/commands/11-overwrite-run.stdout.json",
+        "_temp/installed-hardware-smoke/commands/12-overwrite-replay.stdout.json",
+        "_temp/installed-hardware-smoke/commands/13-overwrite-report.stdout.json",
+        "_temp/installed-hardware-smoke/commands/20-configuration-mismatch.stdout.json"
+      ],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "disposition": "COMPLETED: same-SHA workflow success; provider and physical scope follows the retained reports"
+    },
+    {
+      "artifact_id": 12125464586,
+      "name": "refurbishment-candidate-wheel",
+      "run_id": 39080520430,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "9ad01b202066313970225958491e396a721895b9ad335f181f7e50eda0530a55",
+      "members": 2,
+      "xml_reports": [],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126376784,
+      "name": "monorepo-math-python-3.12",
+      "run_id": 39080520370,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "a4466c78038df369a63796eed8d51fb89056672e5b28862cfd5336ccae65ec30",
+      "members": 39,
+      "xml_reports": [
+        {
+          "path": "edspt-tests.xml",
+          "tests": 103,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "historical-rci-tests.xml",
+          "tests": 126,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "jspt-tests.xml",
+          "tests": 68,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "measurement-chain-tests.xml",
+          "tests": 149,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "rci-tests.xml",
+          "tests": 155,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "sidt-tests.xml",
+          "tests": 80,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        },
+        {
+          "path": "stfe-tests.xml",
+          "tests": 95,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126356921,
+      "name": "monorepo-source-audit-ubuntu-latest",
+      "run_id": 39080520370,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "c59002c19c2c4441bf5669359d1679c0ff68126d07bc046771d6a69b64a09dae",
+      "members": 3,
+      "xml_reports": [
+        {
+          "path": "migration-tests.xml",
+          "tests": 385,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 6
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12125564540,
+      "name": "monorepo-web-node-24-windows-latest",
+      "run_id": 39080520370,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "c5e89b7021ca04cb9bb6ebcf665fbc64b6c4de1fd37f2fb1c8474e48b1ff0e1d",
+      "members": 3,
+      "xml_reports": [],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126665983,
+      "name": "declared-workload-native-replay",
+      "run_id": 39080520368,
+      "run_status_at_download": "completed",
+      "run_conclusion_at_download": "success",
+      "sha256": "64ec00d06c916905e03ddc46212945cb0fa9540f7b320c7589f3a5da2986c4e6",
+      "members": 4,
+      "xml_reports": [],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "disposition": "COMPLETED: same-SHA workflow success; provider and physical scope follows the retained reports"
+    },
+    {
+      "artifact_id": 12126761788,
+      "name": "calibrated-window-3.11",
+      "run_id": 39080520444,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "3af881378d831734fae576bcdd9997a6ae6af63544641cce4c604b5270afab17",
+      "members": 2,
+      "xml_reports": [],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126705359,
+      "name": "legibility-operator-windows-latest-3.12",
+      "run_id": 39080520428,
+      "run_status_at_download": "queued",
+      "run_conclusion_at_download": null,
+      "sha256": "4cb9d1365ef71a27740f555de2a140f3949b51669841b589768f4c8fe406c51b",
+      "members": 113,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/results/legibility-source.xml",
+          "tests": 240,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [],
+      "latest_run_status": "queued",
+      "latest_run_conclusion": null,
+      "disposition": "PARTIAL: retained job evidence does not close the still-incomplete workflow"
+    },
+    {
+      "artifact_id": 12126615764,
+      "name": "hardware-windows-latest-3.12",
+      "run_id": 39080520465,
+      "run_status_at_download": "completed",
+      "run_conclusion_at_download": "success",
+      "sha256": "91e28a68c997602bc2cec18d271e46bc9879324d45548c6dc36198f4118415a8",
+      "members": 73,
+      "xml_reports": [
+        {
+          "path": "Notations-Control-Protocol/Notations-Control-Protocol/hardware-tests.xml",
+          "tests": 401,
+          "failures": 0,
+          "errors": 0,
+          "skipped": 0
+        }
+      ],
+      "candidate_records": [],
+      "acceptance_reports": [],
+      "non_json_outputs": [
+        "_temp/installed-hardware-smoke/commands/09-overwrite-example.stdout.json",
+        "_temp/installed-hardware-smoke/commands/10-overwrite-configuration.stdout.json",
+        "_temp/installed-hardware-smoke/commands/11-overwrite-run.stdout.json",
+        "_temp/installed-hardware-smoke/commands/12-overwrite-replay.stdout.json",
+        "_temp/installed-hardware-smoke/commands/13-overwrite-report.stdout.json",
+        "_temp/installed-hardware-smoke/commands/20-configuration-mismatch.stdout.json"
+      ],
+      "latest_run_status": "completed",
+      "latest_run_conclusion": "success",
+      "disposition": "COMPLETED: same-SHA workflow success; provider and physical scope follows the retained reports"
+    }
+  ]
+}

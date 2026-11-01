@@ -247,8 +247,10 @@ class OperationalHost:
             from .operational_findings import hypotheses
             value={**value,**hypotheses(value)}
         value = {'investigation': self.spec['investigation'], **deepcopy(value)}
-        ref = records.put(value)
-        if value['schema']=='ncp.operational-finding.v1':
+        ref, created = records.publish(value)
+        # Returning historical content is idempotent retrieval, not a new
+        # finding occurrence and never a reason to roll its current head back.
+        if value['schema']=='ncp.operational-finding.v1' and created:
             key=self._finding_key(value)
             old=records.journal.state(key)
             if old is None or old['value']['finding']!=ref:
@@ -405,7 +407,7 @@ class OperationalHost:
                     applicability='STALE_NEW_ADMISSION_REQUIRES_NEW_PROPOSAL'
                 finding=self._owned(records,v['finding'])
                 head=records.journal.state(self._finding_key(finding))
-                if head is not None and head['value']['finding']!=v['finding']: applicability='STALE_FINDING'
+                if head is None or head['value']['finding']!=v['finding']: applicability='STALE_FINDING'
                 t=self.investigation['templates'].get(v['template'])
                 if t is None or content_identity(t)!=v['dependencies']['template_ref']:
                     applicability='STALE_TEMPLATE'

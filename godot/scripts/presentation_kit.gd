@@ -143,9 +143,20 @@ static func apply_stale(controls: Array, stale: bool) -> void:
 
 static func verification_label(data: Dictionary) -> String:
 	## Never paint VERIFIED unless the retained JSON asserts a fresh verifier occurrence.
-	if bool(data.get("fresh_verifier_occurrence", false)):
+	if has_fresh_verifier(data):
 		return "VERIFIED"
 	return "VERIFICATION  /  NOT CLAIMED"
+
+
+static func has_fresh_verifier(data: Dictionary) -> bool:
+	return typeof(data.get("fresh_verifier_occurrence")) == TYPE_BOOL and data.get("fresh_verifier_occurrence") == true
+
+
+static func retained_status(status: String, data: Dictionary) -> String:
+	var key := status.strip_edges().to_upper()
+	if key == "VERIFIED" and not has_fresh_verifier(data):
+		return "HISTORICAL"
+	return "UNAVAILABLE" if key.is_empty() else key
 
 
 static func panel() -> PanelContainer:

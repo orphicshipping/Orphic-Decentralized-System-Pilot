@@ -1,0 +1,30 @@
+{
+  "code_sha": "6f783dd8a37c4509a91cc86f8cfccba6ca2579e1",
+  "tree_sha": "adc47d4cb015238740493cd7b23bb4732975791a",
+  "tracked_files": 5430,
+  "folders_including_root": 794,
+  "byte_matched_files": 5427,
+  "missing": [
+    {
+      "path": "delivery/source-retirement/native-full-final.bundle.part01",
+      "mode": "100644",
+      "sha": "a6ef6f9d3a990a421e499d86cf745ce0a82adc9c",
+      "size": 5242880
+    },
+    {
+      "path": "delivery/source-retirement/native-full-final.bundle.part02",
+      "mode": "100644",
+      "sha": "4e5a810eaf270e90f7c1cda3fa2f501a63dac174",
+      "size": 5242880
+    },
+    {
+      "path": "delivery/source-retirement/native-full-final.bundle.part03",
+      "mode": "100644",
+      "sha": "6accf412a1fb769d3c1b8f933f14aab68d955253",
+      "size": 4245116
+    }
+  ],
+  "mismatches": [],
+  "local_head": "ecb1c301926f411069b4608287f8a0d4f3208fb1",
+  "scope": "Published source tree byte identity; full history is not materialized or qualified"
+}

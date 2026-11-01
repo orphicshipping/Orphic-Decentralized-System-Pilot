@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:ncp:retained-render:v1",
+  "title": "NCP retained render writer contract v1",
+  "description": "Presentation of retained host values; executable selection and authority are never supplied by this document. Existing domain fields remain extensions.",
+  "type": "object",
+  "required": ["status", "source", "cards", "may_authorize", "presentation_only", "claim_scope", "fresh_verifier_occurrence"],
+  "properties": {
+    "status": {"type": "string"},
+    "source": {"type": "string"},
+    "cards": {"type": ["array", "object"]},
+    "may_authorize": {"const": false},
+    "presentation_only": {"const": true},
+    "claim_scope": {"type": "string"},
+    "fresh_verifier_occurrence": {"type": "boolean"},
+    "series": {"type": ["array", "object"]},
+    "caption": {"type": "string"}
+  },
+  "additionalProperties": true
+}

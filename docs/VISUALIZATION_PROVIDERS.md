@@ -51,10 +51,19 @@ missing historical source only from a separately reviewed exact source revision.
 
 ## Shared status and authority
 
+The [retained render contract v1](RETAINED_RENDER_CONTRACT.md) freezes the
+existing writer fields and documents supported display subsets. Use the
+existing catalog exporter as the primary host entry point: select a scenario,
+emit it, and optionally launch Godot for card inspection or Bevy for path review.
+Godot's explicit retained-render mode runs the same teaching view without
+connecting a Session client. Ordinary Workbench/Oscillator functionality and
+the separately registered Bevy projectile computation remain available.
+
 The kit defines `LIVE`, `STALE`, `UNAVAILABLE`, `REFUSED`, `HELD`, `RECONCILED`,
 `SATISFIED`, `VIOLATED`, `REQUEST_EVIDENCE` and `HISTORICAL`.
 `HISTORICAL` displays as `retained_runtime_report_requires_fresh_verification`.
-The kit paints VERIFIED only when `fresh_verifier_occurrence` is true; a client
+The kit paints VERIFIED only when `fresh_verifier_occurrence` is the JSON boolean
+`true`, after normalizing status whitespace/case; a client
 does not produce a fresh verifier occurrence by drawing a record.
 
 Engines project host-owned retained values. Meshes do not compute science,

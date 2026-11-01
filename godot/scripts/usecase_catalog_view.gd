@@ -6,6 +6,7 @@ var repository_root: String = ProjectSettings.globalize_path("res://").path_join
 var entries: Array = []
 var current_status: String = "STALE"
 var current_render: Dictionary = {}
+var render_path: String = ""
 var _choice: OptionButton
 var _status: Label
 var _body: Label
@@ -31,6 +32,7 @@ func _ready() -> void:
 	refresh.text = "Refresh samples"
 	refresh.pressed.connect(load_catalog)
 	row.add_child(refresh)
+	row.visible = render_path.is_empty()
 	_status = Kit.make_label("STALE", 16, Kit.AMBER)
 	add_child(_status)
 	var scroll := ScrollContainer.new()
@@ -41,7 +43,10 @@ func _ready() -> void:
 	_body.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	scroll.add_child(_body)
 	add_child(Kit.make_label(Kit.CAPTION, 12, Kit.MUTED))
-	load_catalog()
+	if render_path.is_empty():
+		load_catalog()
+	else:
+		load_render(render_path)
 
 
 func _set_status(value: String, text: String) -> void:
@@ -93,6 +98,11 @@ func select_entry(index: int) -> void:
 		_set_status("REFUSED", "Unknown teaching sample.")
 		return
 	var path: String = repository_root.path_join(entries[index]["render_path"])
+	load_render(path)
+
+
+func load_render(path: String) -> void:
+	current_render.clear()
 	if not FileAccess.file_exists(path):
 		_set_status("STALE", "The selected teaching render is unavailable. Export the sample and refresh.")
 		return
@@ -101,10 +111,8 @@ func select_entry(index: int) -> void:
 		_set_status("REFUSED", "Invalid teaching render.")
 		return
 	current_render = parsed
-	var fresh: bool = typeof(parsed.get("fresh_verifier_occurrence")) == TYPE_BOOL and parsed.get("fresh_verifier_occurrence") == true
-	var state: String = str(parsed.get("status", parsed.get("upstream_status", "UNAVAILABLE"))).to_upper()
-	if state == "VERIFIED" and not fresh:
-		state = "HISTORICAL"
+	var fresh: bool = Kit.has_fresh_verifier(parsed)
+	var state: String = Kit.retained_status(str(parsed.get("status", parsed.get("upstream_status", "UNAVAILABLE"))), parsed)
 	var lines: Array[String] = [str(parsed.get("caption", "")), "VERIFIED" if fresh else "NOT VERIFIED"]
 	var cards: Variant = parsed.get("cards", [])
 	if cards is Dictionary:
@@ -117,7 +125,7 @@ func select_entry(index: int) -> void:
 					if key in ["title", "label", "may_authorize"]:
 						continue
 					var value: String = str(card[key])
-					if key == "status" and value.to_upper() == "VERIFIED" and not fresh:
-						value = Kit.format_status_label("HISTORICAL")
+					if key in ["status", "verification_status"]:
+						value = Kit.format_status_label(Kit.retained_status(value, parsed))
 					lines.append("  " + str(key).replace("_", " ") + ": " + value)
 	_set_status(state, "\n\n".join(lines))

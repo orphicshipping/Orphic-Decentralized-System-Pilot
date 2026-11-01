@@ -28,12 +28,15 @@ class Records:
     def _immutable(self, key, value):
         old = self.journal.state(key)
         if old is None:
-            try: self.journal.compare_and_set_state(key, 0, value)
+            try:
+                self.journal.compare_and_set_state(key, 0, value)
+                return True
             except ValueError:
                 old = self.journal.state(key)
                 if old is None or old['value'] != value: raise
         elif old['value'] != value:
             raise ValueError('Immutable operational record conflicts with retained bytes')
+        return False
 
     def bytes(self, ref):
         c.content_ref(ref)
@@ -56,9 +59,17 @@ class Records:
         return raw
 
     def put(self, value):
+        return self.publish(value)[0]
+
+    def publish(self, value):
+        """Return the reference and whether this call first published it.
+
+        The immutable journal CAS distinguishes a new record from a retry,
+        including competing hosts publishing identical content concurrently.
+        """
         raw = encode(value); ref=self.put_bytes(raw)
-        self._immutable('oe-record:' + ref, {'ref': ref, 'schema': value.get('schema', value.get('run_schema', 'unknown'))})
-        return ref
+        created = self._immutable('oe-record:' + ref, {'ref': ref, 'schema': value.get('schema', value.get('run_schema', 'unknown'))})
+        return ref, created
 
     def get(self, ref):
         return parse(self.bytes(ref))

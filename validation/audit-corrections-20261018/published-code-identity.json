@@ -1,0 +1,184 @@
+{
+  "repository": "notationsystems/Notations-Control-Protocol",
+  "base": "861e29fa8f78e3f953991ca7f5f62790a3088df7",
+  "code_sha": "6f783dd8a37c4509a91cc86f8cfccba6ca2579e1",
+  "code_tree": "adc47d4cb015238740493cd7b23bb4732975791a",
+  "branch": "work/audit-corrections-projectors-20261018",
+  "files": [
+    {
+      "path": ".github/workflows/workflow-contracts.yml",
+      "mode": "100644",
+      "sha256": "795f3fc7ec493a5c30049fd3efcd55f15c6612bbf0ea74f678bf966c66a095c2",
+      "git_blob": "2b2a39838841c1ca6e31a18309f75f4b8e050e80",
+      "bytes": 2979
+    },
+    {
+      "path": "docs/BASELINE_START_HERE.md",
+      "mode": "100644",
+      "sha256": "d3ba7c36292c487bc97287af64f3d22f8656455ae8f1bd1e92b768aa0c6849b5",
+      "git_blob": "e399099bfdd3f4f26c6209f4542d6e2bc5c88209",
+      "bytes": 2478
+    },
+    {
+      "path": "docs/RETAINED_RENDER_CONTRACT.md",
+      "mode": "100644",
+      "sha256": "1b4a69b886bce16c2d0a15dbc5046802b332504af20ac823e250637ba211c64a",
+      "git_blob": "a6adacc1e46593590b8e3949add83c2772daafa6",
+      "bytes": 4578
+    },
+    {
+      "path": "docs/VISUALIZATION_PROVIDERS.md",
+      "mode": "100644",
+      "sha256": "459307a8ffa29675417d22d1bae5c04db9d8e64f0a4d1223f4c91044d0a9b149",
+      "git_blob": "3b93d510fd25105079867519bdab88a61f8dec11",
+      "bytes": 5519
+    },
+    {
+      "path": "examples/_render_json.py",
+      "mode": "100644",
+      "sha256": "c696418fafdf93c89887fbd7345bf21307f9b575099083e45778977d76df380b",
+      "git_blob": "a03022301540e154214ed4720f18d3a46fa9b5d5",
+      "bytes": 1820
+    },
+    {
+      "path": "examples/retained-render.schema.json",
+      "mode": "100644",
+      "sha256": "c94ad40e6bba0af84ab78eb7802fde6bf5bf1bf04033fd43da63642352252a00",
+      "git_blob": "d6b822035182e330ebfd9856fa2dd79bfca241b0",
+      "bytes": 895
+    },
+    {
+      "path": "examples/workflows/README.md",
+      "mode": "100644",
+      "sha256": "4568d1d31ad6adf28f5431a4f93e59dc4a42faaeb7a5e8f8d5af2ea228a11d3b",
+      "git_blob": "e8f6fd46e141da660fec71fe7585f9261ce8b635",
+      "bytes": 5523
+    },
+    {
+      "path": "examples/workflows/emit_all_usecases.py",
+      "mode": "100644",
+      "sha256": "1310b2e734a2eb4a5b0a69f7320256b2ec576b51aa9f5fb3a12a029c124bee74",
+      "git_blob": "8389d469386040972b6a30d03ee23c3bf7e936a8",
+      "bytes": 7293
+    },
+    {
+      "path": "godot/scripts/circle_geometry_view.gd",
+      "mode": "100644",
+      "sha256": "0ef2ed9c049641358a360d7b28551aeb777e0b32685181017de7701ac3d8b874",
+      "git_blob": "b19f7a5083380dd44f23ebf56506cea8741921dd",
+      "bytes": 11479
+    },
+    {
+      "path": "godot/scripts/main.gd",
+      "mode": "100644",
+      "sha256": "238e849373d93a7fe998f0f25f98cc9539b95a87e98224fc059bfa3a5e26eee6",
+      "git_blob": "25fa708e25e6e0094c98614dd639f09808bb0bf0",
+      "bytes": 18515
+    },
+    {
+      "path": "godot/scripts/presentation_kit.gd",
+      "mode": "100644",
+      "sha256": "a84ea9a39adf83b4132f8ac1323a50de727af943966add3cb23acf43ffd3c078",
+      "git_blob": "e63a7838a1f168eea1d53f453c233de247ab4681",
+      "bytes": 5087
+    },
+    {
+      "path": "godot/scripts/usecase_catalog_view.gd",
+      "mode": "100644",
+      "sha256": "b2bf9e7a94faf9d8e67100dc9da4dabbf04d40c1a8dc1bf6e92c36b9d1882c26",
+      "git_blob": "5b9afcfe63b710b3b51dd6d9d269bd8a6a85e912",
+      "bytes": 5073
+    },
+    {
+      "path": "godot/tests/retained_status_smoke.gd",
+      "mode": "100644",
+      "sha256": "09fb5e4891228343f0b5a6710618687cbc6a7be5e849d6333789d9178a6cf72a",
+      "git_blob": "920f7d386910c097b81ff4a71ff8ae1bd20de46f",
+      "bytes": 2286
+    },
+    {
+      "path": "godot/tests/retained_status_smoke.gd.uid",
+      "mode": "100644",
+      "sha256": "27d050f268c744fa9ba53bbfd6c2003e3b947d172f7d23e2b92a12e8ffe37f1e",
+      "git_blob": "3e6e77682ea64d0bc225e67974847190b6317630",
+      "bytes": 20
+    },
+    {
+      "path": "scripts/check_godot.py",
+      "mode": "100644",
+      "sha256": "c8e8e67da4ae39aba3c8672aa90121fa54b45d825f063fe3548b492423825b0f",
+      "git_blob": "335116a7d5b4f7b1f82d445391eed781cb67c1f9",
+      "bytes": 10511
+    },
+    {
+      "path": "src/ciw/operational_agent.py",
+      "mode": "100644",
+      "sha256": "7caf15406d103ec09c625e05a137ee7e90e17898f79061eccf8532b17f08d143",
+      "git_blob": "0e2d3b0bf1a91257ec8f8fc9fb0c718cd1ddae86",
+      "bytes": 30893
+    },
+    {
+      "path": "src/ciw/operational_cli.py",
+      "mode": "100644",
+      "sha256": "39e44cadbd1f47677c6d92c9a09830d53b25064ae18f2752f71c43a1dcced62e",
+      "git_blob": "748ef2fbe249e1ecb1a194627b19a959b6ed47cc",
+      "bytes": 17702
+    },
+    {
+      "path": "src/ciw/operational_store.py",
+      "mode": "100644",
+      "sha256": "dbcfd6198042024848526179c133ee01233f6d05b4d82e017d5cafe567f9a80b",
+      "git_blob": "31faf0cbcf025a0db8758bd1dd0e1c9a9623d91d",
+      "bytes": 3548
+    },
+    {
+      "path": "src/ciw/session.py",
+      "mode": "100644",
+      "sha256": "214d00cdf5e29b099dfbbe0237955b9dc632d3faddd2ec7601fd965e1d9cd25b",
+      "git_blob": "42718df3b3ff09170197af55f637f0b3352d3c09",
+      "bytes": 45493
+    },
+    {
+      "path": "src/ciw/workbench.py",
+      "mode": "100644",
+      "sha256": "a952bf606d6b5a83911c166ef1554cb970b4c87c84b534b739c434f51fd425a2",
+      "git_blob": "52cc036c6b91a88cc328cf5bde398282906c9825",
+      "bytes": 78287
+    },
+    {
+      "path": "tests/test_operational_engineering.py",
+      "mode": "100644",
+      "sha256": "9dcd17383085b0513935098330ccc504c8a968d0699c671208bd397c8b08d93b",
+      "git_blob": "bcf09eddb8e92a7b5b3e71a67106e15a9863ab98",
+      "bytes": 35762
+    },
+    {
+      "path": "tests/test_teaching_corpus.py",
+      "mode": "100644",
+      "sha256": "34008edcb089a7e9804c83a938199b16c9b6b60b6c9857e7d4af52c2ee24dba2",
+      "git_blob": "a7261216f88fe456e6a9ebfa53609627b463121d",
+      "bytes": 8899
+    },
+    {
+      "path": "tests/test_workspace_occurrence_collisions.py",
+      "mode": "100644",
+      "sha256": "d20d60e4ac2f899cace079357b38e8387afd7925eb77f916536b9defda068afa",
+      "git_blob": "41f0da818965adfec7ebf91b7f8482abe28d37d4",
+      "bytes": 2101
+    },
+    {
+      "path": "tools/bevy-render-view/src/lib.rs",
+      "mode": "100644",
+      "sha256": "a7c107dc646e864597065d8bd94110e0c35bc9095b68400ef9729354aaaaf0e8",
+      "git_blob": "585039697546397bc72accee465adcdb6d8affa0",
+      "bytes": 11376
+    },
+    {
+      "path": "tools/bevy-render-view/src/main.rs",
+      "mode": "100644",
+      "sha256": "6878cedaa94ce88221047ecd7847c030b02c82d3720d3de30fe267ad217869ac",
+      "git_blob": "77e74ea4957148a98843b4d65543d4942fa8eab1",
+      "bytes": 3967
+    }
+  ]
+}

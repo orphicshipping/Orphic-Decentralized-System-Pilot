@@ -1,0 +1,216 @@
+{
+  "schema": "ncp.audit-corrections-evidence.v1",
+  "code_sha": "6f783dd8a37c4509a91cc86f8cfccba6ca2579e1",
+  "base_main": "861e29fa8f78e3f953991ca7f5f62790a3088df7",
+  "qualification_baseline": "312a37ba613a0b57ea027b8d00df5b3b4fe08d69",
+  "claim": "Corrective research-software increment; full local ancestry and hosted/physical qualification remain separate gates",
+  "counts_overlap_and_are_not_additive": true,
+  "findings": {
+    "CR01": "FIXED",
+    "CR02": "FIXED",
+    "CR03": "FIXED",
+    "CR04": "FIXED",
+    "CR05": "FIXED"
+  },
+  "full_regression": {
+    "modules": 519,
+    "modules_without_failures_or_errors": 517,
+    "gate": "NOT_PASSED",
+    "tests": 20272,
+    "failures": 13,
+    "errors": 136,
+    "skipped": 1173,
+    "passed_cases": 18950,
+    "nonpassing_modules": [
+      {
+        "module": "test_module_update.py",
+        "returncode": 1,
+        "passed": false,
+        "seconds": 158.88,
+        "tests": 44,
+        "failures": 0,
+        "errors": 44,
+        "skipped": 0
+      },
+      {
+        "module": "test_monorepo.py",
+        "returncode": 1,
+        "passed": false,
+        "seconds": 220.96,
+        "tests": 132,
+        "failures": 13,
+        "errors": 92,
+        "skipped": 0
+      }
+    ],
+    "classification": "All 13 failures are missing Git ancestry objects; all 136 setup errors arise from missing source/backup objects in disposable clones. Unchanged tests were retained."
+  },
+  "targeted_regression": {
+    "tests": 326,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 61
+  },
+  "teaching_export": {
+    "tests": 23,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0
+  },
+  "installed_regression": {
+    "tests": 135,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 14
+  },
+  "rust_unit_checks": {
+    "passed": 7,
+    "failed": 0,
+    "toolchain": "1.97.1",
+    "viewer_build": "PASS"
+  },
+  "godot_status_checks": 122,
+  "complete_godot_checker": "PASS",
+  "native_projectors": {
+    "may_authorize": false,
+    "physical_qualification": "NOT_ESTABLISHED",
+    "journeys": [
+      {
+        "client": "bevy",
+        "status": "PASS",
+        "receipt": "bevy-launch.json",
+        "input_sha256": "8fc865f2e49c2026d02b8e838190b5d8fdd9e4d1154dcc7696e32ec79e4b5b57",
+        "visible_pixels": 742,
+        "screenshot_sha256": "384a6caa3c175923d347f8af17045fddb4bc791f8dee8de02bbf3e6daf291139"
+      },
+      {
+        "client": "godot",
+        "status": "PASS",
+        "receipt": "godot-launch.json",
+        "input_sha256": "8fc865f2e49c2026d02b8e838190b5d8fdd9e4d1154dcc7696e32ec79e4b5b57",
+        "visible_pixels": 15299,
+        "screenshot_sha256": "fa533ffcd390828a347ad1d61044494ea5888edb2a97518eac90a0e12d30aded"
+      },
+      {
+        "case": "origin",
+        "status": "PASS",
+        "native_window": true,
+        "may_authorize": false,
+        "binary_sha256": "bab129c2c1a8d945a24ea06dbef7cc3f101fbb7e12d7519dd6aaa8a92ef9c961",
+        "input_sha256": "f14a088b344fbab51296a850d959bf604e6a861a1c34e902e7c18e9149baf24d",
+        "pillow": "12.3.0",
+        "visible_path_pixels": 742,
+        "screenshot_size": [
+          1280,
+          900
+        ],
+        "screenshot_sha256": "435580dc19fea66e1ed9e698df0ce1731a7da201660ccfef18a2b07cb9dae1ec",
+        "exit_code": 0,
+        "render_errors": []
+      },
+      {
+        "case": "translated",
+        "status": "PASS",
+        "native_window": true,
+        "may_authorize": false,
+        "binary_sha256": "bab129c2c1a8d945a24ea06dbef7cc3f101fbb7e12d7519dd6aaa8a92ef9c961",
+        "input_sha256": "4e000e3d8770222bd7f12fd4ed48eecdab95d2e801737b15027496caf27d7411",
+        "pillow": "12.3.0",
+        "visible_path_pixels": 742,
+        "screenshot_size": [
+          1280,
+          900
+        ],
+        "screenshot_sha256": "435580dc19fea66e1ed9e698df0ce1731a7da201660ccfef18a2b07cb9dae1ec",
+        "exit_code": 0,
+        "render_errors": []
+      }
+    ],
+    "session_connections": 0,
+    "status": "PASS"
+  },
+  "installed_MCP_journeys": "PASS J1-J5; modern/legacy/reconnect/fresh replay",
+  "installed_SDK_HTTP": "PASS; 3 sessions, separate worker, restart/interruption/revocation",
+  "independent_review": {
+    "required_findings": 0,
+    "independently_passed_tests": 33
+  },
+  "source_identity": {
+    "code_sha": "6f783dd8a37c4509a91cc86f8cfccba6ca2579e1",
+    "tree_sha": "adc47d4cb015238740493cd7b23bb4732975791a",
+    "tracked_files": 5430,
+    "folders_including_root": 794,
+    "byte_matched_files": 5427,
+    "missing": [
+      {
+        "path": "delivery/source-retirement/native-full-final.bundle.part01",
+        "mode": "100644",
+        "sha": "a6ef6f9d3a990a421e499d86cf745ce0a82adc9c",
+        "size": 5242880
+      },
+      {
+        "path": "delivery/source-retirement/native-full-final.bundle.part02",
+        "mode": "100644",
+        "sha": "4e5a810eaf270e90f7c1cda3fa2f501a63dac174",
+        "size": 5242880
+      },
+      {
+        "path": "delivery/source-retirement/native-full-final.bundle.part03",
+        "mode": "100644",
+        "sha": "6accf412a1fb769d3c1b8f933f14aab68d955253",
+        "size": 4245116
+      }
+    ],
+    "mismatches": [],
+    "local_head": "ecb1c301926f411069b4608287f8a0d4f3208fb1",
+    "scope": "Published source tree byte identity; full history is not materialized or qualified"
+  },
+  "hosted_baseline": {
+    "observed_at": "2026-10-18T05:38:46.218Z",
+    "successful_runs": 6,
+    "failed_runs": 1,
+    "queued_runs": 7,
+    "downloaded_artifacts": 17,
+    "downloaded_archive_bytes": 130883004,
+    "successful_job_logs_retained": 11,
+    "waivers": [],
+    "qualification": "NOT_CLOSED"
+  },
+  "branch_cleanup": "AUTHORIZED_NOT_EXECUTED; tag/delete and authenticated Git controls unavailable",
+  "physical_validation": "NOT_PERFORMED",
+  "authority": "No new execution or equipment authority; saved records remain data",
+  "atomic_native": {
+    "status": "PASS",
+    "cases": 12,
+    "checks": 58,
+    "runtime": {
+      "schema": "ciw.subprocess-runtime.v1",
+      "adapter_version": "ciw-pinned-subprocess-v1",
+      "repository_root": "/workspace/scratch/983c4968e2d6/finish-atomic-source",
+      "revision": "c7bf306d891b5ce603325fea9918d17a1da483c3",
+      "source_tree": "d5a7880c3cbe3b4f3d48e9f7571128f7f78c38aa",
+      "module": "ciw.nvalchemi_worker",
+      "source_root": "src",
+      "python_executable": "/workspace/scratch/983c4968e2d6/finish-atomic-clean-env/bin/python",
+      "python_sha256": "fa67443527ed9647f760d807e2a38f26340757123e643c4639cf273ed15d5ea7",
+      "python_version": "3.12.14",
+      "dependencies": {
+        "distribution_inventory_sha256": "sha256:b0aee831533c748c1c0f9372611857038385ee99700e5e9bbb27cd84df1c27ef",
+        "numpy": "2.4.3",
+        "nvalchemi-toolkit": "0.2.0",
+        "nvalchemi-toolkit-ops": "0.5.0",
+        "ops_files_sha256": "sha256:a04f970e574c6543a5cdb8981a8cb010bcb95da33cb5a2977f0b8719e41d65ab",
+        "pydantic": "2.14.1",
+        "toolkit_files_sha256": "sha256:d10987585d3ee71286beb92d434780cf91361258fce2f32767752a47ab3fa372",
+        "toolkit_revision": "bf605f9191b2978fc865f4286d11e4481b679999",
+        "torch": "2.10.0+cpu",
+        "warp-lang": "1.18.0"
+      },
+      "alchemi_profile": "atomic.lj-energy-forces.v1",
+      "device_binding": "cpu",
+      "precision": "float64",
+      "dependency_binary_attestation": "not_established"
+    },
+    "physical_validation": "not_performed"
+  }
+}

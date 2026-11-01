@@ -391,6 +391,83 @@ def test_changed_finding_invalidates_prior_proposal(tmp_path):
         newer=h.call('oe_model_support',{'attempt':'new'})
         assert newer['record']!=f['record']
         assert h.call('oe_inspect',{'record':p['record']})['applicability']=='STALE_FINDING'
+        assert h.call('oe_model_support',{'attempt':'first'}) == f
+        assert h.call('oe_inspect',{'record':p['record']})['applicability']=='STALE_FINDING'
+
+
+def test_identical_record_publication_has_one_winner_across_journals(tmp_path):
+    from concurrent.futures import ThreadPoolExecutor
+    path = tmp_path / 'publication.sqlite'
+    with Journal(path, create=True):
+        pass
+    def publish(_):
+        with Journal(path) as db:
+            return Records(db).publish({'schema': 'review.fixture.v1', 'value': 42})
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        replies = list(pool.map(publish, range(8)))
+    assert len({ref for ref, _ in replies}) == 1
+    assert sum(created for _, created in replies) == 1
+
+
+def test_missing_finding_head_does_not_gain_applicability_on_retry(tmp_path, monkeypatch):
+    with OperationalHost(profile(tmp_path)) as h:
+        execute(h)
+        original = Journal.compare_and_set_state
+        def interrupted(db, namespace, *args, **kwargs):
+            if namespace.startswith('oe-finding-head:'):
+                raise ValueError('interrupted before head publication')
+            return original(db, namespace, *args, **kwargs)
+        with monkeypatch.context() as patch:
+            patch.setattr(Journal, 'compare_and_set_state', interrupted)
+            with pytest.raises(ValueError, match='interrupted'):
+                h.call('oe_model_support', {'attempt': 'first'})
+        finding = h.call('oe_model_support', {'attempt': 'first'})
+        proposal = h.call('oe_propose', {'finding': finding['record'], 'template': 'resolve'})
+        assert h.call('oe_inspect', {'record': proposal['record']})['applicability'] == 'STALE_FINDING'
+
+
+def test_historical_finding_retry_cannot_revive_an_approved_command(tmp_path):
+    from ciw.link_profiles import example_manifest, example_observations
+    from ciw.link_protocol import encode as wire
+    from ciw.link_gateway import receive, capture
+    from ciw.operational_supervision import approve_command
+    device = example_manifest()
+    device['clock']['timestamp_event'] = 'sensor_sample'
+    device = c.manifest(device)
+    with Journal(tmp_path / 'source.sqlite', create=True) as db:
+        receive([wire('manifest', c.bounded(device))] + [wire('observation', c.bounded(row))
+            for row in example_observations(device, rounds=2)], db, expected_manifest=device)
+        raw = encode(capture(db, expected_manifest=device, boot_id='synthetic.boot.1'))
+    replacement = deepcopy(device['configuration'])
+    replacement['revision'] += 1
+    replacement['ranges']['CH0'] = [0, 30]
+    p = prepare(tmp_path / 'host', investigation_id='stale-command', sources={'link': {
+        'raw': raw, 'family': 'link-capture', 'configurations': [],
+        'context': default_context(producer=device['device_id'], boot='synthetic.boot.1',
+            clock=device['clock']['id'], origin='synthetic')}}, templates={'resolve': default_template()},
+        supervision={'alarms': {}, 'configuration_candidates': {'range-change': {
+            'source': 'link', 'new_configuration': replacement, 'expiry_duration_s': 300,
+            'required_proposal_template': 'resolve'}}}, grants=['inspect', 'derive', 'prepare', 'supervise'])
+    with OperationalHost(p) as h:
+        base = {'source': 'link', 'channel': 'CH0', 'clock': device['clock']['id'], 'boot': 'synthetic.boot.1'}
+        a = h.call('oe_query', {**base, 'start': 1_000_000, 'end': 1_010_000})
+        b = h.call('oe_query', {**base, 'start': 1_010_000, 'end': 1_020_000})
+        args = {'baseline': a['record'], 'changed': a['record']}
+        finding = h.call('oe_change', args)
+        proposal = h.call('oe_propose', {'finding': finding['record'], 'template': 'resolve'})
+        command = h.call('oe_command_prepare', {'proposal': proposal['record'], 'candidate': 'range-change'})
+        approve_command(p, command['record'], expected_ref=command['record'], approval_ref='review-1',
+            principal='operator', expires_ns=time.time_ns() + 60_000_000_000)
+        h.call('oe_change', {'baseline': a['record'], 'changed': b['record']})
+    with OperationalHost(p, resume=True) as h:
+        for _ in range(2):
+            assert h.call('oe_change', args) == finding
+            assert h.call('oe_inspect', {'record': proposal['record']})['applicability'] == 'STALE_FINDING'
+            with pytest.raises(ValueError, match='Proposal is stale'):
+                h.call('oe_command_dispatch', {'command': command['record'], 'attempt': 'apply-1'})
+        with h._records() as records:
+            assert not any(records.journal.db.execute(
+                "SELECT 1 FROM state WHERE namespace LIKE 'oe-command-attempt:%'"))
 
 
 def test_alarm_fresh_stale_missing_acknowledgment_and_no_equipment_reset(tmp_path):
@@ -411,7 +488,8 @@ def test_alarm_fresh_stale_missing_acknowledgment_and_no_equipment_reset(tmp_pat
         with pytest.raises(PermissionError):h.call('oe_alarm_evaluate',{'query':q['record'],'rule':'arbitrary','as_of':2})
 
 
-def test_supervisory_configuration_review_approval_dispatch_and_retry(tmp_path):
+@pytest.mark.parametrize('approval_entry', ['function', 'cli'])
+def test_supervisory_configuration_review_approval_dispatch_and_retry(tmp_path, approval_entry, capsys):
     from ciw.link_profiles import example_manifest,example_observations
     from ciw.link_protocol import encode as wire
     from ciw.link_gateway import receive,capture
@@ -449,7 +527,14 @@ def test_supervisory_configuration_review_approval_dispatch_and_retry(tmp_path):
         expires=time.time_ns()+60_000_000_000
         with pytest.raises(ValueError):approve_command(p,cmd['record'],expected_ref='sha256:'+'0'*64,
             approval_ref='review-1',principal='operator',expires_ns=expires)
-        approve_command(p,cmd['record'],expected_ref=cmd['record'],approval_ref='review-1',principal='operator',expires_ns=expires)
+        if approval_entry == 'cli':
+            from ciw.operational_cli import main
+            assert main(['approve-command', '--profile', str(p), '--command', cmd['record'],
+                '--expected-ref', cmd['record'], '--approval-ref', 'review-1',
+                '--principal', 'operator', '--expires-ns', str(expires)]) == 0
+            assert json.loads(capsys.readouterr().out)['status'] == 'APPROVED_SIMULATED_CONFIGURATION'
+        else:
+            approve_command(p,cmd['record'],expected_ref=cmd['record'],approval_ref='review-1',principal='operator',expires_ns=expires)
         applied=h.call('oe_command_dispatch',{'command':cmd['record'],'attempt':'apply-1'})
         assert applied['status']=='completed' and applied['physical_dispatch']=='not_performed'
         assert applied['review']['plan_ref']==cmd['data']['plan']['plan_ref']

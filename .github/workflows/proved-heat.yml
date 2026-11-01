@@ -28,7 +28,7 @@ concurrency:
 
 jobs:
   native-proof:
-    runs-on: ubuntu-24.04
+    runs-on: ${{ fromJSON((vars.NCP_NATIVE_LINUX_RUNNER == 'enabled' && (github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && github.ref == 'refs/heads/main'))) && '["self-hosted","Linux","X64","ncp-native-linux"]' || '["ubuntu-24.04"]') }}
     timeout-minutes: 180
     env:
       CARGO_BUILD_JOBS: '2'
@@ -41,6 +41,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - name: Validate dedicated native runner
+        if: runner.environment == 'self-hosted'
+        run: python3 scripts/check_native_runner.py --output runner-preflight.json
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
@@ -199,5 +202,7 @@ jobs:
         if: always()
         with:
           name: proved-heat-native-evidence
-          path: results/proved-heat
+          path: |
+            results/proved-heat
+            runner-preflight.json
           if-no-files-found: error

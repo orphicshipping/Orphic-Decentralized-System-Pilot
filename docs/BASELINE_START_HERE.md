@@ -39,3 +39,10 @@ results and remaining public-CI, private-provider, platform and physical gates.
 Maintainers should use the [workflow lane review](WORKFLOW_LANE_REVIEW_20261018.md)
 for per-module CI comparisons and the disposition of pending hosted jobs. A
 repeated test filename alone does not identify a redundant qualification lane.
+
+For teaching and retained visualization on current main, use the
+[single host export/launch path](RETAINED_RENDER_CONTRACT.md): Godot displays
+cards and status; Bevy displays paths and gizmos from the same retained JSON.
+These post-baseline tools have separate evidence and do not qualify the frozen
+SHA above. The bounded Bevy projectile runtime remains a separate registered
+simulation profile.

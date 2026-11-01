@@ -146,7 +146,7 @@ def _host(args):
 
 def main(argv=None):
     parser=argparse.ArgumentParser(prog='net operational',description=__doc__)
-    sub=parser.add_subparsers(dest='command',required=True)
+    sub=parser.add_subparsers(dest='action',required=True)
     demo=sub.add_parser('example');demo.add_argument('--output-dir',required=True,type=Path);demo.add_argument('--case',choices=['pass','fail','unknown'],default='pass')
     admit=sub.add_parser('admit');admit.add_argument('--manifest',required=True,type=Path);admit.add_argument('--output-dir',required=True,type=Path)
     for name in ('serve','init','call','view','export','attach-workbench'):
@@ -165,8 +165,8 @@ def main(argv=None):
     http=sub.add_parser('serve-http');http.add_argument('--config',required=True,type=Path);http.add_argument('--port',type=int,default=18767)
     args=parser.parse_args(argv)
     try:
-        if args.command=='example': result={'status':'PREPARED_SYNTHETIC','profile':str(example(args.output_dir,case=args.case))}
-        elif args.command=='admit':
+        if args.action=='example': result={'status':'PREPARED_SYNTHETIC','profile':str(example(args.output_dir,case=args.case))}
+        elif args.action=='admit':
             spec=parse(args.manifest.read_bytes())
             keys({k:v for k,v in spec.items() if k!='providers'},{'schema','id','sources','models','templates','grants','supervision'})
             if spec['schema']!='ncp.operational-admission.v1':raise ValueError('Unknown admission schema')
@@ -182,12 +182,12 @@ def main(argv=None):
                 models=models,templates=spec['templates'],grants=spec['grants'],supervision=spec['supervision'],
                 providers={engine:{role:str(safe_path(args.manifest.parent/path).resolve()) for role,path in bindings.items()}
                     for engine,bindings in spec.get('providers',{}).items()} if 'providers' in spec else None))}
-        elif args.command.startswith('collector-'):
+        elif args.action.startswith('collector-'):
             from .operational_collection import Collector
             with Journal(args.journal) as db:
                 collector=Collector(db,args.id)
-                result={'collector-state':collector.state,'collector-stop':collector.request_stop,'collector-recover':collector.recover}[args.command]()
-        elif args.command=='collect':
+                result={'collector-state':collector.state,'collector-stop':collector.request_stop,'collector-recover':collector.recover}[args.action]()
+        elif args.action=='collect':
             from .operational_collection import Collector, nvml_segments, link_segments
             spec=parse(args.manifest.read_bytes())
             keys(spec,{'schema','journal','id','adapter','binding','max_segments','max_bytes','cadence_s'})
@@ -212,32 +212,32 @@ def main(argv=None):
                         db,expected_manifest=device,boot_id=binding['boot_id'],max_records=binding.get('segment_records',1))
                 else:raise ValueError('Unsupported collector adapter; no data-selected imports')
                 result=collector.run(lambda index:next(iterator),source_identity={'adapter':spec['adapter'],'binding':binding},restart=args.restart)
-        elif args.command=='approve-command':
+        elif args.action=='approve-command':
             from .operational_supervision import approve_command
             result=approve_command(args.profile,args.command,expected_ref=args.expected_ref,approval_ref=args.approval_ref,principal=args.principal,expires_ns=args.expires_ns)
-        elif args.command=='revoke':
+        elif args.action=='revoke':
             spec=parse(args.profile.read_bytes())
             with Journal(safe_path(args.profile.parent/spec['journal'])) as db:
                 key='oe-revoked:'+spec['investigation'];old=db.state(key)
                 db.compare_and_set_state(key,0 if old is None else old['revision'],{'revoked':True})
             result={'status':'REVOKED','already_dispatched_work':'not_undone'}
-        elif args.command=='serve-http':
+        elif args.action=='serve-http':
             from .operational_http import main as http_main
             return http_main(['--config',str(args.config),'--port',str(args.port)])
         else:
             with _host(args) as host:
-                if args.command=='serve':
+                if args.action=='serve':
                     if args.sdk:
                         from .mcp_server import serve_sdk
                         return serve_sdk(host,name='ncp-operational')
                     from .agent_mcp import serve
                     return serve(host,sys.stdin.buffer,sys.stdout.buffer)
-                if args.command=='init':result=host.call('oe_catalog',{})
-                elif args.command=='call': result=host.call(args.tool,parse(args.arguments.encode()))
-                elif args.command in ('view','export'):
+                if args.action=='init':result=host.call('oe_catalog',{})
+                elif args.action=='call': result=host.call(args.tool,parse(args.arguments.encode()))
+                elif args.action in ('view','export'):
                     from .operational_view import snapshot, render_html
                     report=snapshot(host)
-                    with args.output.open('xb') as out:out.write(render_html(report) if args.command=='view' else encode(report))
+                    with args.output.open('xb') as out:out.write(render_html(report) if args.action=='view' else encode(report))
                     result={'status':'EXPORTED','investigation':host.spec['investigation'],'output':str(args.output)}
                 else:
                     from .operational_view import attach_workbench
