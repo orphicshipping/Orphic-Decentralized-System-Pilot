@@ -5,7 +5,7 @@
   "tools": [
     {
       "name": "ncp_artifact_read",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "artifact"
@@ -15,7 +15,7 @@
     },
     {
       "name": "ncp_capabilities_list",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [],
       "description": "Discover host-bound contracts, inputs and frozen grants. Listing does not execute, provision or qualify providers.",
@@ -23,7 +23,7 @@
     },
     {
       "name": "ncp_capability_describe",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "capability_id"
@@ -33,7 +33,7 @@
     },
     {
       "name": "ncp_compare",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "left",
@@ -45,7 +45,7 @@
     },
     {
       "name": "ncp_demo",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": true,
       "required": [],
       "description": "Build the deterministic synthetic oscillator recording in memory. No sensor and no retained file. Not physical qualification.",
@@ -53,7 +53,7 @@
     },
     {
       "name": "ncp_doctor",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": true,
       "required": [],
       "description": "Run the read-only doctor preflight for core or legibility. preflight_passed is not qualification and does not grant an operation.",
@@ -79,7 +79,7 @@
     },
     {
       "name": "ncp_fluid_field",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": false,
       "required": [
         "solver"
@@ -89,7 +89,7 @@
     },
     {
       "name": "ncp_hypergraph",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": false,
       "required": [],
       "description": "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
@@ -97,7 +97,7 @@
     },
     {
       "name": "ncp_index_list",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [],
       "description": "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile is an execution profile. mcp_tool is a direct call. Null for both means it is not in this toolset.",
@@ -105,7 +105,7 @@
     },
     {
       "name": "ncp_integration_describe",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "section",
@@ -116,7 +116,7 @@
     },
     {
       "name": "ncp_integrations_list",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [],
       "description": "Page imported modules, surrounding systems or external boundaries with source/licence and existing profile-specific workflow declarations. This does not probe, install, bind, execute or qualify a provider.",
@@ -134,7 +134,7 @@
     },
     {
       "name": "ncp_lesson",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": false,
       "required": [],
       "description": "Read the oscillator-rms lesson, or mode=work to run statistics.v1 on the synthetic oscillator. Not a curriculum engine or a qualification.",
@@ -142,7 +142,7 @@
     },
     {
       "name": "ncp_linear_preview",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": true,
       "required": [
         "model",
@@ -154,7 +154,7 @@
     },
     {
       "name": "ncp_observe",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "artifact"
@@ -164,7 +164,7 @@
     },
     {
       "name": "ncp_plan_admit",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "plan_id",
@@ -175,7 +175,7 @@
     },
     {
       "name": "ncp_plan_create",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "source",
@@ -187,7 +187,7 @@
     },
     {
       "name": "ncp_plan_get",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "plan_id"
@@ -197,7 +197,7 @@
     },
     {
       "name": "ncp_plan_template",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "baseline"
@@ -215,7 +215,7 @@
     },
     {
       "name": "ncp_polymer_cycle",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": false,
       "required": [],
       "description": "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
@@ -223,7 +223,7 @@
     },
     {
       "name": "ncp_qualify",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "suite",
@@ -234,7 +234,7 @@
     },
     {
       "name": "ncp_run_cancel",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "run_id"
@@ -244,7 +244,7 @@
     },
     {
       "name": "ncp_run_get",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [
         "run_id"
@@ -254,7 +254,7 @@
     },
     {
       "name": "ncp_run_submit",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": false,
       "required": [
         "plan_id",
@@ -266,7 +266,7 @@
     },
     {
       "name": "ncp_toolpoint",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.invoke",
       "read_only": false,
       "required": [],
       "description": "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
@@ -292,7 +292,7 @@
     },
     {
       "name": "ncp_workflows_list",
-      "service": "ciw.control_gateway.ControlHost.call",
+      "service": "ciw.services.open_demo",
       "read_only": true,
       "required": [],
       "description": "Page the wider operator workflow catalog and explicit provisioning prerequisites. These are navigation declarations, not grants or host-bound executable capabilities.",
@@ -941,5 +941,5 @@
       "notes": "Does not run a solver, select a pin, or replace the tests."
     }
   ],
-  "note": "Same domain functions back the MCP tools and ciw.services.invoke. A row is not a grant."
+  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
 }

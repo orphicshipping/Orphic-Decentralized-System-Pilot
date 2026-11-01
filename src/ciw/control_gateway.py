@@ -618,108 +618,28 @@ class ControlHost:
         return self.owner.call("net_qualify", arguments)
 
     def doctor(self, diagnostic="core"):
-        from .doctor import diagnose
-        if diagnostic not in {"core", "legibility"}:
-            raise ValueError("Doctor on this host accepts core or legibility only")
-        report = diagnose(diagnostic)
-        report["qualification"] = "not_performed"
-        report["authorizes_execution"] = False
-        return report
+        from .services import doctor
+        return doctor(diagnostic)
 
     def demo(self):
-        from .adapters.oscillator import make_demo_run
-        run = make_demo_run()
-        return {"schema": "ciw.synthetic-oscillator-demo.v1", "run_id": run["run_id"],
-                "evidence_id": run["evidence_id"], "instrument": run["instrument"],
-                "samples": len(run["time_s"]), "channels": sorted(run["channels"]),
-                "provenance": deepcopy(run["metadata"].get("provenance")),
-                "sensor": False, "physical_qualification": "not_established",
-                "authorizes_execution": False}
+        from .services import demo
+        return demo()
 
     def linear_preview(self, model, base_point, delta):
-        from .linear_response import PROFILES, make_request, preview
-        if model not in PROFILES:
-            raise ValueError("Unknown linear-response model")
-        def numbers(text):
-            values = []
-            for part in text.split(","):
-                part = part.strip()
-                if not part:
-                    raise ValueError("Linear-response coordinate is empty")
-                value = float(part)
-                if value != value or value in {float("inf"), float("-inf")}:
-                    raise ValueError("Linear-response coordinate must be finite")
-                values.append(value)
-            return values
-        source = None
-        if model.startswith("oscillator-"):
-            source = {"schema": "ciw.julia-oscillator-source.v1",
-                      "experiment_id": "linear-response-oscillator-v1",
-                      "operation_id": "ciw.julia-oscillator.v1",
-                      "model": {"omega_0_rad_s": 2.0, "gamma_s_inv": 0.1, "mass_kg": 2.0},
-                      "initial_state": {"q0_m": numbers(base_point)[0], "v0_m_s": numbers(base_point)[1]},
-                      "time_s": [0.0, 0.1, 0.2],
-                      "solver": {"abstol": 1e-10, "reltol": 1e-10, "maxiters": 100000},
-                      "claim_scope": "simulated_numerical_trajectory_against_independent_analytic_oracle"}
-        record = preview(make_request(model, numbers(base_point), numbers(delta), source=source))
-        record["authorizes_execution"] = False
-        return record
+        from .services import linear_preview
+        return linear_preview(model, base_point, delta)
 
     def lesson(self, mode="learn", level="structural"):
-        from .learning import TOPIC, lesson as load, work
-        if mode not in {"learn", "work"}:
-            raise ValueError("Lesson mode must be learn or work")
-        body = load(TOPIC, level)
-        if mode == "learn":
-            return {"mode": "learn", "lesson": body, "physical_qualification": "not_established",
-                    "authorizes_execution": False}
-        import shutil
-        import tempfile
-        parent = Path(tempfile.mkdtemp(prefix="ncp-lesson-"))
-        try:
-            reply = work(parent / "work", TOPIC)
-        finally:
-            shutil.rmtree(parent, ignore_errors=True)
-        public = {key: value for key, value in reply.items() if key != "workspace_file"}
-        return {"mode": "work", "topic": TOPIC, "level": level, "result": public,
-                "physical_qualification": "not_established", "authorizes_execution": False}
+        from .services import lesson
+        return lesson(mode, level)
 
     def hypergraph(self):
-        from .hypergraph_rewrite import example_request, run
-        record = run(example_request("thermal"))
-        return {"schema": record["schema"], "status": record["status"], "mode": record["mode"],
-                "attempt_count": record["attempt_count"], "record_digest": record["record_digest"],
-                "authority": record["authority"], "physical_qualification": "not_established",
-                "authorizes_execution": False}
+        from .services import hypergraph
+        return hypergraph()
 
     def fluid_field(self, solver):
-        """Execute wave or SPH. The retained field does not fit a control document."""
-        if solver not in {"wave", "sph"}:
-            raise ValueError("ncp_fluid_field accepts wave or sph. Reservoir, molecular, and FSI are plan profiles.")
-        import importlib.util
-        from .fluid_contract import simulate, verify
-        path = Path(__file__).resolve().parents[2] / "examples" / "fluid_operations" / "prepare.py"
-        spec = importlib.util.spec_from_file_location("fluid_operations_prepare", path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        request = module.bounded_request(solver)
-        result = simulate(request)
-        report = verify(request, result)
-        qualification = report["qualification"]
-        return {
-            "profile": solver,
-            "status": report["status"],
-            "checks": report["checks"],
-            "qualification_action": qualification.get("action"),
-            "qualification_reason": qualification.get("reason"),
-            "request_digest": report["request_digest"],
-            "result_digest": report["result_digest"],
-            "report_digest": report["record_digest"],
-            "field_retained": False,
-            "retention": "The field exceeds the control document budget and is not retained.",
-            "physical_validation": "not_established",
-            "authorizes_execution": False,
-        }
+        from .services import fluid_field
+        return fluid_field(solver)
 
     def domain_list(self):
         from .services import domain_list
@@ -742,50 +662,12 @@ class ControlHost:
         return plug_in()
 
     def polymer_cycle(self):
-        import base64
-        import json
-        from .data_compute_bridge import _polymer
-        from .data_sources import retain_record
-        from .polymer_contract import example_request
-        from .workbench import Workbench
-        request = example_request()
-        workbench = Workbench()
-        raw = json.dumps(retain_record(
-            request, dataset_id="cycle", revision=1, parent_source_id=None,
-            recorded_at="2026-10-05T21:00:00+00:00", data_family="polymer-cycle-request"), indent=2).encode()
-        descriptor = workbench.add_source({"kind": "data-record", "label": "cycle",
-                                            "bytes_b64": base64.b64encode(raw).decode()})
-        result = _polymer({"source": workbench.get_source(descriptor["source_id"])})
-        assessment = result["assessment"]
-        return {"schema": result["schema"], "source_id": result["source_id"],
-                "conservation": result["conservation"],
-                "authority": assessment.get("authority"),
-                "physical_qualification": "not_established", "authorizes_execution": False}
+        from .services import polymer_cycle
+        return polymer_cycle()
 
     def toolpoint(self):
-        import tempfile
-        from .data_manufacturing_bridge import review
-        from pathlib import Path
-        destination = Path(tempfile.mkdtemp(prefix="ncp-toolpoint-"))
-        try:
-            import importlib.util
-            spec = importlib.util.spec_from_file_location(
-                "ncp_data_prepare",
-                Path(__file__).resolve().parents[2] / "examples" / "data_operations" / "prepare.py",
-            )
-            module = importlib.util.module_from_spec(spec)
-            spec.loader.exec_module(module)
-            from .workbench import Workbench
-            parameters = module._toolpoint(Workbench(), destination)
-            result = review(parameters)
-        finally:
-            import shutil
-            shutil.rmtree(destination, ignore_errors=True)
-        return {"schema": result["schema"], "scope": result["scope"],
-                "storage_write": result["storage_write"], "hold_release": result["hold_release"],
-                "authority": result["authority"], "containment_result_ref": result["containment_result_ref"],
-                "containment": result["containment"], "physical_qualification": "not_established",
-                "authorizes_execution": False}
+        from .services import toolpoint
+        return toolpoint()
 
     def ledger(self, capability_id):
         from .services import ledger_read
@@ -813,10 +695,17 @@ class ControlHost:
         return {"schema": "ncp.control-response.v1", "status": "refused", "data": None,
                 "error": {"code": "request_refused"}}
 
+    def list_resources(self):
+        from .services import list_contracts
+        return list_contracts()
+
     def read_resource(self, uri):
         if self._closed:
             raise ValueError("Host closed")
         self._store.check_current()
+        from .services import CONTRACTS, read_contract
+        if uri in CONTRACTS:
+            return read_contract(uri)
         for prefix, getter in (("ncp://plans/", self.get_plan), ("ncp://runs/", self.get_run)):
             if uri.startswith(prefix):
                 return getter(uri[len(prefix):])

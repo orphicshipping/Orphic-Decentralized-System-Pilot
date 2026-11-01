@@ -5,7 +5,7 @@ from pathlib import Path
 
 from ciw.agent_mcp import demo_config, from_profile
 from ciw.control_gateway import TOOLS, ControlHost
-from ciw.services import invoke
+from ciw.services import CONTRACTS, OPERATIONS, SESSION, invoke, open_demo
 from ciw.transformation import document
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -84,9 +84,35 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
         assert project["authorizes_execution"] is False
         assert project["physical_qualification"] == "not_established"
         assert project["bundle_retained"] is False
+        assert set(OPERATIONS) | set(SESSION) == set(TOOLS)
+        doctor = invoke("ncp_doctor")
+        via_doctor = host.call("ncp_doctor", {})
+        assert via_doctor["status"] == "ok"
+        assert doctor["authorizes_execution"] is False
+        assert doctor["qualification"] == "not_performed"
+        assert via_doctor["data"]["qualification"] == "not_performed"
+        listed = {row["uri"] for row in host.list_resources()}
+        assert listed == set(CONTRACTS)
+        contract = host.read_resource("ncp://contract/plug-in")
+        assert contract["schema"] == "ncp.mcp-plug-in.v1"
+        assert contract["authorizes_execution"] is False
+        try:
+            invoke("ncp_plan_template", {"baseline": "baseline"})
+        except ValueError as exc:
+            assert "open_demo" in str(exc)
+        else:
+            raise AssertionError("session")
     finally:
         host.close()
         owner.close()
+    session = open_demo(tmp_path / "sdk")
+    try:
+        template = invoke("ncp_plan_template", {"baseline": "baseline"}, host=session)
+        assert "graph" in template
+        assert template.get("authorizes_execution") is not True
+    finally:
+        session.close()
+        session._service_owner.close()
 
 
 def test_capability_map_matches_advertised_tools_and_the_report_stays_incomplete():
@@ -95,6 +121,7 @@ def test_capability_map_matches_advertised_tools_and_the_report_stays_incomplete
     assert {row["name"] for row in mapped["tools"]} == set(TOOLS)
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     assert report["status"] == "INCOMPLETE"
+    assert report["mcp_surface"] == "implemented"
     assert report["authorizes_execution"] is False
     assert {item["id"] for item in report["blocked"]} >= {"julia", "godot", "sp1-proof", "leakage-without-host-pin", "bim-without-host-pin"}
     assert "not an SP1 proof" in (ROOT / "README.md").read_text(encoding="utf-8")

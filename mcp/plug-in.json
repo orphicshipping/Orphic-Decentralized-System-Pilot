@@ -26,7 +26,8 @@
     "folder_index": "mcp/folder-index.json",
     "project_map": "mcp/project-map.json",
     "call_contract": "docs/MCP_MODEL.md",
-    "agent_guide": "docs/AGENT_OPERATIONS.md"
+    "agent_guide": "docs/AGENT_OPERATIONS.md",
+    "resources": ["ncp://contract/plug-in", "ncp://contract/capability-map", "ncp://contract/verification"]
   },
   "rules": [
     "Advertised, bound, and granted stay different. authorizes_execution stays false on index rows.",

@@ -23,7 +23,9 @@ The host launch selects the profile and the instrument. A tool argument cannot s
 3. `ncp_workbench_list`, then `ncp_workbench_run` with one workflow name. The workbench does not opt for the easiest task in a set. Five workflows run from retained fixtures. The rest stay documentation and evidence until the host selects that binding.
 4. `ncp_domain_list`, then `ncp_domain_run`. Weather, impact, geomatics, and thermofluids refuse until the caller names the task.
 5. `ncp_fluid_field` is wave or SPH. The field is not retained.
-6. A granted plan is `ncp_capabilities_list`, `ncp_plan_template`, `ncp_plan_create`, `ncp_plan_admit`, `ncp_run_submit`, `ncp_run_get`.
+6. A granted plan uses `open_demo` for other software, then `ncp_plan_template`, `ncp_plan_create`, `ncp_plan_admit`, `ncp_run_submit`, `ncp_run_get`. Without that session the call refuses.
+
+Readable contracts, not executions: `ncp://contract/plug-in`, `ncp://contract/capability-map`, `ncp://contract/verification`.
 
 The tool index is [mcp/model-catalog.json](mcp/model-catalog.json). Arguments are [docs/MCP_MODEL.md](docs/MCP_MODEL.md). Folders are [mcp/folder-index.json](mcp/folder-index.json) and [docs/MCP_PROJECT.md](docs/MCP_PROJECT.md). None of those files authorizes execution.
 

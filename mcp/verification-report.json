@@ -1,6 +1,7 @@
 {
   "schema": "ncp.verification-report.v1",
   "status": "INCOMPLETE",
+  "mcp_surface": "implemented",
   "authorizes_execution": false,
   "qualification": "not_performed_by_this_file",
   "verified_by": "tests/test_transformation_ledger.py",
@@ -16,7 +17,11 @@
     "ncp_workbench_list returns the 29 session workflows.",
     "An unknown service name refuses.",
     "A service argument cannot carry a pin.",
-    "ncp_domain_run atmosphere and ncp_workbench_run project-graph return retained synthetic results with authorizes_execution false."
+    "ncp_domain_run atmosphere and ncp_workbench_run project-graph return retained synthetic results with authorizes_execution false.",
+    "Every advertised tool is either ciw.services.invoke or ciw.services.open_demo.",
+    "ncp_doctor agrees across the SDK and ControlHost and does not qualify.",
+    "ncp://contract/plug-in is listed and readable. It does not authorize execution.",
+    "ncp_plan_template refuses without open_demo and returns a graph with it."
   ],
   "blocked": [
     {"id": "julia", "reason": "No host-selected Julia executable. The source stays. A run is not fabricated."},

@@ -47,7 +47,8 @@ def create_server(host, *, name="ncp-control"):
     if hasattr(host, "read_resource"):
         async def resources(context, params):
             cursor(params)
-            return types.ListResourcesResult.model_validate({"resources": [], "ttlMs": 0, "cacheScope": "private"})
+            rows = host.list_resources() if hasattr(host, "list_resources") else []
+            return types.ListResourcesResult.model_validate({"resources": rows, "ttlMs": 0, "cacheScope": "private"})
 
         async def templates(context, params):
             cursor(params)
