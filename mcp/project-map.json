@@ -55,7 +55,7 @@
   ],
   "callable": {
     "plan_profiles": ["builtin", "numerical", "analysis", "polymer", "temperature", "measured-thermal", "link-scalar", "leakage", "bim-clearance", "system", "legibility", "data", "fluid", "fluid-molecular", "fluid-fsi"],
-    "direct_tools": ["ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_polymer_cycle", "ncp_toolpoint", "ncp_fluid_field", "ncp_domain_list", "ncp_domain_run", "ncp_ledger_read"],
+    "direct_tools": ["ncp_doctor", "ncp_demo", "ncp_linear_preview", "ncp_lesson", "ncp_hypergraph", "ncp_polymer_cycle", "ncp_toolpoint", "ncp_fluid_field", "ncp_domain_list", "ncp_domain_run", "ncp_workbench_list", "ncp_workbench_run", "ncp_ledger_read"],
     "synthetic_domains": {
       "list_tool": "ncp_domain_list",
       "run_tool": "ncp_domain_run",
