@@ -247,7 +247,7 @@
       "required": [
         "artifact_id"
       ],
-      "description": "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
+      "description": "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
       "authorizes_execution": false
     },
     {

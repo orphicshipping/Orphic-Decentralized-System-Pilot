@@ -17,9 +17,9 @@ def domain_list():
     return listing()
 
 
-def domain_run(domain, name=None):
+def domain_run(domain, name=None, example=False, request=None):
     from .domain_surface import run
-    return run(domain, name)
+    return run(domain, name=name, example=example, request=request)
 
 
 def workbench_list():

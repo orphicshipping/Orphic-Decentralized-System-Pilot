@@ -50,7 +50,13 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
         missing = host.call("ncp_domain_run", {"domain": "weather"})
         assert missing["status"] == "refused"
         try:
-            invoke("ncp_domain_run", {"domain": "weather"})
+            invoke("ncp_domain_run", {"domain": "atmosphere"})
+        except ValueError as exc:
+            assert "example" in str(exc)
+        else:
+            raise AssertionError("silent example")
+        try:
+            invoke("ncp_domain_run", {"domain": "weather", "example": True})
         except ValueError as exc:
             assert "easiest" in str(exc)
         else:
@@ -78,7 +84,7 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
             assert "cannot select" in str(exc)
         else:
             raise AssertionError("pin")
-        atmosphere = invoke("ncp_domain_run", {"domain": "atmosphere"})
+        atmosphere = invoke("ncp_domain_run", {"domain": "atmosphere", "example": True})
         assert atmosphere["authorizes_execution"] is False
         assert atmosphere["synthetic"] is True
         project = invoke("ncp_workbench_run", {"workflow": "project-graph"})
@@ -96,6 +102,7 @@ def test_services_and_mcp_call_the_same_functions(tmp_path):
                 break
             offset = part["next_offset"]
         assert json.loads(raw)["bundle_digest"] == project["bundle_digest"]
+        assert part["digest"] == "sha256:" + __import__("hashlib").sha256(raw).hexdigest()
         from ciw import retention
         previous = retention._OWNER
         retention._OWNER = "other-session"
@@ -230,10 +237,69 @@ def test_retention_evicts_the_oldest_and_refuses_a_symlink(tmp_path, monkeypatch
     outside = tmp_path / "secret.json"
     outside.write_text("{}\n", encoding="utf-8")
     link_id = "retained-" + ("ab" * 16)
-    (tmp_path / (link_id + ".json")).symlink_to(outside)
+    (retention._owner_dir(retention._OWNER) / (link_id + ".json")).symlink_to(outside)
     try:
         retention.native(link_id)
     except ValueError as exc:
         assert "Unknown" in str(exc)
     else:
         raise AssertionError("symlink")
+    other = retention.Store("other-host")
+    try:
+        other.native(ids[-1])
+    except ValueError as exc:
+        assert "another host session" in str(exc)
+    else:
+        raise AssertionError("other host")
+    first = retention.Store("restart-host")
+    kept = first.keep({"n": 1, "bundle_digest": "one"}, kind="project-graph", catalog=catalog)
+    second = retention.Store("restart-host")
+    assert second.native(kept)["n"] == 1
+    again = second.keep({"n": 2, "bundle_digest": "two"}, kind="project-graph", catalog=catalog)
+    assert second.native(again)["n"] == 2
+    sequence = (retention._owner_dir("restart-host") / "sequence").read_text(encoding="utf-8")
+    assert sequence.strip() == "2"
+
+
+def test_catalog_union_rejects_conflicts_and_cycles():
+    from ciw.workbench_surface import compose_catalogs
+    shared = {"schema": "ciw.retained-workbench.v1", "sources": [{"source_id": "s", "n": 1}],
+              "bundles": [{"bundle_id": "b", "upstream_bundle_id": None}]}
+    composed = compose_catalogs([shared, shared])
+    assert len(composed["sources"]) == 1 and len(composed["bundles"]) == 1
+    conflict = {"schema": "ciw.retained-workbench.v1", "sources": [{"source_id": "s", "n": 2}],
+                "bundles": [{"bundle_id": "b", "upstream_bundle_id": None}]}
+    try:
+        compose_catalogs([shared, conflict])
+    except ValueError as exc:
+        assert "conflict" in str(exc)
+    else:
+        raise AssertionError("conflict")
+    cycle = {"schema": "ciw.retained-workbench.v1", "sources": [{"source_id": "s", "n": 1}], "bundles": [
+        {"bundle_id": "a", "upstream_bundle_id": "b"},
+        {"bundle_id": "b", "upstream_bundle_id": "a"},
+    ]}
+    try:
+        compose_catalogs([cycle])
+    except ValueError as exc:
+        assert "cycle" in str(exc)
+    else:
+        raise AssertionError("cycle")
+
+
+def test_atmosphere_accepts_a_caller_request_and_refuses_a_bad_one():
+    from copy import deepcopy
+    from ciw.atmosphere_contract import example_request
+    from ciw.services import invoke
+    request = deepcopy(example_request())
+    request["profile"]["wind_enu_m_per_s"] = [1.0, 0.0, 0.0]
+    body = invoke("ncp_domain_run", {"domain": "atmosphere", "request": request})
+    assert body["example"] is False
+    assert body["authorizes_execution"] is False
+    assert body["bundle_retained"] is True
+    try:
+        invoke("ncp_domain_run", {"domain": "atmosphere", "request": {"schema": "not-a-request"}})
+    except ValueError as exc:
+        assert "contract" in str(exc).lower() or "schema" in str(exc).lower()
+    else:
+        raise AssertionError("bad atmosphere request")

@@ -1,0 +1,18 @@
+{
+  "schema": "ncp.acceptance-baseline.v1",
+  "status": "INCOMPLETE",
+  "authorizes_execution": false,
+  "base": "07750eebec516a45986fc613ca206e4041380ebb",
+  "follow_up_merged_into_branch": ["de65623", "06ec68a"],
+  "gates": {
+    "A0": "Main 07750ee merged into mcp/model-call-surface. The two follow-up commits were not on main. This file does not merge a pull request.",
+    "A1": "Owner directories, durable sequence, symlink refusal, and cross-owner refusal are tested in tests/test_transformation_ledger.py. Restart requires the same principal and NCP_RETAIN_DIR. A tool argument cannot set the owner.",
+    "A2": "compose_catalogs deduplicates identical records and refuses conflicts, missing parents, and cycles. A live chained workflow was not executed.",
+    "A3": "SDK and MCP share the schema check, including boolean example. Preflight remains declared_only.",
+    "A4": "Atmosphere accepts a non-example request. Weather, impact, and irrigation accept a validated request. Geomatics, thermofluids, sequence, and thermal identification still require example true, and their results are retained. This is not every domain and not an independent physical check.",
+    "A5": "Not done. The transformation ledger still accounts for tracked paths. A document supersession map was not generated.",
+    "A6": "Not done. Specialist hosts stay separate.",
+    "A7": "Blocked. Julia, SP1, Godot, Bevy, Blender, leakage, and BIM were not provisioned or executed.",
+    "A8": "Not done. No outside-checkout install was run."
+  }
+}

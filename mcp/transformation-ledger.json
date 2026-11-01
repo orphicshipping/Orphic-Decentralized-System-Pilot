@@ -11,7 +11,7 @@
   "counts": {
     "retained_and_verified": 2714,
     "generated": 658,
-    "rewritten": 26,
+    "rewritten": 27,
     "blocked": 109,
     "vendor_exempt": 3308
   },
@@ -33947,6 +33947,13 @@
     },
     {
       "path": "mcp/README.md",
+      "disposition": "rewritten",
+      "component": "model_contract",
+      "reason": "Machine contract for models and other software. The file does not authorize execution.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "mcp/acceptance-baseline.json",
       "disposition": "rewritten",
       "component": "model_contract",
       "reason": "Machine contract for models and other software. The file does not authorize execution.",

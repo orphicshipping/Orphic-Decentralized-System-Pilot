@@ -256,26 +256,26 @@ def test_domain_run_executes_synthetic_solvers_without_qualifying(configured):
     assert {f"weather.{name}.v1" for name in weather_catalog()["profiles"]} == {item for item in ids if item.startswith("weather.")}
     assert set(GEOMATICS) == {item for item in ids if item.startswith("geomatics.")}
     assert {f"thermofluids.{name}.v1" for name in PROFILES} == {item for item in ids if item.startswith("thermofluids.")}
-    atmosphere = call(host, "ncp_domain_run", domain="atmosphere")
+    atmosphere = call(host, "ncp_domain_run", domain="atmosphere", example=True)
     assert atmosphere["status"] == "LOCAL" and atmosphere["synthetic"] is True
-    assert atmosphere["authorizes_execution"] is False and atmosphere["bundle_retained"] is False
-    transmission = host.call("ncp_domain_run", {"domain": "geomatics", "name": "geomatics.atmosphere.transmission.v1"})
+    assert atmosphere["authorizes_execution"] is False and atmosphere["bundle_retained"] is True
+    transmission = host.call("ncp_domain_run", {"domain": "geomatics", "name": "geomatics.atmosphere.transmission.v1", "example": True})
     assert transmission["status"] == "ok"
     transmission = transmission["data"]
-    assert transmission["status"] == "PASS" and transmission["field_retained"] is False
+    assert transmission["status"] == "PASS" and transmission["field_retained"] is True
     assert transmission["physical_qualification"] == "not_established"
-    weather = host.call("ncp_domain_run", {"domain": "weather", "name": "thermodynamics"})
+    weather = host.call("ncp_domain_run", {"domain": "weather", "name": "thermodynamics", "example": True})
     assert weather["status"] == "ok"
     weather = weather["data"]
-    assert weather["authorizes_execution"] is False and weather["bundle_retained"] is False
-    thermo = host.call("ncp_domain_run", {"domain": "thermofluids", "name": "convection"})
+    assert weather["authorizes_execution"] is False and weather["bundle_retained"] is True
+    thermo = host.call("ncp_domain_run", {"domain": "thermofluids", "name": "convection", "example": True})
     assert thermo["status"] == "ok"
     thermo = thermo["data"]
-    assert thermo["status"] == "PASS" and thermo["data_retained"] is False
-    sequence = call(host, "ncp_domain_run", domain="sequence")
+    assert thermo["status"] == "PASS" and thermo["data_retained"] is True
+    sequence = call(host, "ncp_domain_run", domain="sequence", example=True)
     assert sequence["status"] == "PASS" and sequence["synthetic"] is True
-    identified = call(host, "ncp_domain_run", domain="thermal-identification")
-    assert identified["status"] == "candidate" and identified["residuals_retained"] is False
+    identified = call(host, "ncp_domain_run", domain="thermal-identification", example=True)
+    assert identified["status"] == "candidate" and identified["residuals_retained"] is True
     refused = host.call("ncp_domain_run", {"domain": "julia"})
     assert refused["status"] == "refused"
     assert owner.capabilities()["execution_budget"]["used"] == used

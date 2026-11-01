@@ -7,6 +7,7 @@ Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not here.
 from __future__ import annotations
 
 from hashlib import sha256
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -143,92 +144,193 @@ def _bundle(run, request):
         shutil.rmtree(parent, ignore_errors=True)
 
 
-def _atmosphere(_name):
-    from .atmosphere_contract import example_request
+def _retain(kind, value):
+    from .retention import keep
+    if type(value) is not dict:
+        raise ValueError("Domain result is not a record")
+    try:
+        json.dumps(value)
+    except TypeError:
+        value = json.loads(json.dumps(value, default=lambda item: item.tolist() if hasattr(item, "tolist") else item.item()))
+    return keep(value, kind=kind, catalog={"schema": "ncp.domain-result.v1", "kind": kind})
+
+
+def _prepared(request, example, factory, validate):
+    if example is True and request is not None:
+        raise ValueError("Name a request or an example, not both.")
+    if request is None:
+        if example is not True:
+            raise ValueError("Name a request or set example true. This call does not substitute an example.")
+        return factory(), True
+    if type(request) is not dict:
+        raise ValueError("Domain request must be an object")
+    return validate(request), False
+
+
+def _atmosphere(_name, request=None, example=False):
+    from .atmosphere_contract import example_request, validate_request
     from .atmosphere_workflow import run
-    return _bundle(run, example_request())
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    try:
+        report = run(prepared, parent / "out")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = _retain("atmosphere", report)
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    return body
 
 
-def _moist(_name):
-    from .atmosphere_moist_contract import example_request
+def _moist(_name, request=None, example=False):
+    from .atmosphere_moist_contract import example_request, validate_request
     from .atmosphere_workflow import run
-    return _bundle(run, example_request())
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    try:
+        report = run(prepared, parent / "out")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = _retain("atmosphere-moist", report)
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    return body
 
 
-def _weather(name):
-    from .weather_contract import example_request
+def _weather(name, request=None, example=False):
+    from .weather_contract import example_request, validate_request
     from .weather_workflow import run
-    return _bundle(run, example_request(name))
+    prepared, used_example = _prepared(request, example, lambda: example_request(name), validate_request)
+    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    try:
+        report = run(prepared, parent / "out")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = _retain("weather", report)
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    return body
 
 
-def _impact(name):
+def _impact(name, request=None, example=False):
     from .impact_workflow import run
     if name == "contact":
-        from .impact_contract import example_request
+        from .impact_contract import example_request, validate_request
     elif name == "plate":
-        from .impact_plate_contract import example_request
+        from .impact_plate_contract import example_request, validate_request
     elif name == "crush":
-        from .impact_crush_contract import example_request
+        from .impact_crush_contract import example_request, validate_request
     else:
         raise ValueError("Impact name must be contact, plate, or crush")
-    return _bundle(run, example_request())
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    try:
+        report = run(prepared, parent / "out")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = _retain("impact", report)
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    return body
 
 
-def _irrigation(_name):
-    from .irrigation_contract import example_request
+def _irrigation(_name, request=None, example=False):
+    from .irrigation_contract import example_request, validate_request
     from .irrigation_workflow import run
-    return _bundle(run, example_request())
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    try:
+        report = run(prepared, parent / "out")
+    finally:
+        shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = _retain("irrigation", report)
+    body["bundle_retained"] = True
+    body["example"] = used_example
+    return body
 
 
-def _geomatics(name):
+def _geomatics(name, request=None, example=False):
     from .core.identities import canonical_json
-    from .geomatics_workflow import example
+    from .geomatics_workflow import example as geomatics_example
     from net_geomatics.catalog import execute, validate_output
-    request = example(name)
-    output = execute(name, request["parameters"])
-    validate_output(name, request["parameters"], output)
-    return _stamp({
+    if request is not None:
+        raise ValueError("Geomatics on this surface takes the named example. A free request is not a declared schema.")
+    if example is not True:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
+    chosen = geomatics_example(name)
+    output = execute(name, chosen["parameters"])
+    validate_output(name, chosen["parameters"], output)
+    body = _stamp({
         "status": "PASS",
         "output_digest": sha256(canonical_json(output).encode()).hexdigest(),
-        "field_retained": False,
+        "field_retained": True,
+        "example": True,
         "authority": {"physical_validation": "not_established", "source_authenticity": "not_established"},
     })
+    body["artifact_id"] = _retain("geomatics", {"request": chosen, "output": output})
+    return body
 
 
-def _thermo(name):
+def _thermo(name, request=None, example=False):
     from .thermofluids_models import example_request
     from .thermofluids_workflow import run, verify
+    if request is not None:
+        raise ValueError("Thermofluids on this surface takes the named example. A free request is not a declared schema.")
+    if example is not True:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
     record = run(example_request(name))
     report = verify(record)
-    return _stamp({
+    body = _stamp({
         "status": report["status"],
         "record_digest": record["record_digest"],
         "authority": record["authority"],
-        "data_retained": False,
+        "data_retained": True,
+        "example": True,
     })
+    body["artifact_id"] = _retain("thermofluids", record)
+    return body
 
 
-def _sequence(_name):
+def _sequence(_name, request=None, example=False):
     from .sequence_kinetics import example_request, analyze
+    if request is not None:
+        raise ValueError("Sequence on this surface takes the labelled example. A free request is not a declared schema.")
+    if example is not True:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
     report = analyze(example_request())
-    return _stamp({
+    body = _stamp({
         "status": report["status"],
         "schema": report["schema"],
         "source_kind": report["source_kind"],
         "markov_entropy_rate_nats_per_symbol": report["markov_entropy_rate_nats_per_symbol"],
+        "example": True,
     })
+    body["artifact_id"] = _retain("sequence", report)
+    return body
 
 
-def _identify(_name):
+def _identify(_name, request=None, example=False):
     from .thermal_identification import example_request, fit
+    if request is not None:
+        raise ValueError("Thermal identification on this surface takes the labelled example. A free request is not a declared schema.")
+    if example is not True:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
     report = fit(example_request())
-    return _stamp({
+    body = _stamp({
         "status": report["status"],
         "schema": report["schema"],
         "authority": report["authority"],
         "record_digest": report["record_digest"],
-        "residuals_retained": False,
+        "residuals_retained": True,
+        "example": True,
     })
+    body["artifact_id"] = _retain("thermal-identification", report)
+    return body
 
 
 _CALLS = {
@@ -247,9 +349,15 @@ for _capability_id, _domain, _name, _summary in OPERATIONS:
     _NAMES.setdefault(_domain, set()).add(_name)
 
 
-def run(domain, name=None):
+def run(domain, name=None, example=False, request=None):
     if domain not in _CALLS:
         raise ValueError("Unknown domain. Call ncp_domain_list.")
+    if example is True and request is not None:
+        raise ValueError("Name a request or an example, not both.")
+    if example is not True and request is None:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
+    if request is not None and len(json.dumps(request)) > 65536:
+        raise ValueError("Request exceeds the argument budget")
     allowed = _NAMES[domain]
     if None in allowed:
         if name is not None:
@@ -263,7 +371,7 @@ def run(domain, name=None):
         choices = ", ".join(sorted(item for item in allowed if item is not None))
         raise ValueError("Unknown name for " + domain + ". Use one of: " + choices)
     try:
-        body = _CALLS[domain](name)
+        body = _CALLS[domain](name, request=request, example=example)
     except ValueError:
         raise
     except (KeyError, TypeError, OSError) as exc:

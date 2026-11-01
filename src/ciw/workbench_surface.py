@@ -247,29 +247,65 @@ def _source_bytes(workflow: str, source_b64: str | None) -> tuple[bytes, bool]:
     return _fixture_bytes(workflow), True
 
 
-def _adopt(session, artifact_ids: list[str]) -> None:
-    from .retention import catalog as retained_catalog
-    from .workbench import Workbench
-
-    sources = []
-    bundles = []
-    schema = None
-    for artifact_id in artifact_ids:
-        saved = retained_catalog(artifact_id)
-        if schema is None:
-            schema = saved.get("schema")
-        elif saved.get("schema") != schema:
-            raise ValueError("Upstream artifacts do not share a catalog schema")
-        sources.extend(saved.get("sources") or [])
-        bundles.extend(saved.get("bundles") or [])
-    if schema is None or not bundles:
+def compose_catalogs(catalogs: list[dict]) -> dict:
+    """Identity-aware union. Identical records collapse. Conflicts refuse."""
+    import json
+    if not catalogs:
         raise ValueError("Upstream artifact has no retained bundle")
-    restored = Workbench.restore({
+    schema = catalogs[0].get("schema")
+    if schema not in {"ciw.retained-workbench.v1", "ciw.retained-workbench.v2", "ciw.retained-workbench.v3"}:
+        raise ValueError("Upstream artifact is not a workbench catalog")
+    if any(item.get("schema") != schema for item in catalogs):
+        raise ValueError("Upstream artifacts do not share a catalog schema")
+
+    def union(records, key):
+        seen = {}
+        ordered = []
+        for record in records:
+            if type(record) is not dict or type(record.get(key)) is not str:
+                raise ValueError("Upstream record has no identity")
+            ident = record[key]
+            raw = json.dumps(record, sort_keys=True, separators=(",", ":"))
+            if ident in seen:
+                if seen[ident] != raw:
+                    raise ValueError("Upstream records share an identity and conflict")
+                continue
+            seen[ident] = raw
+            ordered.append(record)
+        return ordered
+
+    sources = union([row for item in catalogs for row in item.get("sources") or []], "source_id")
+    bundles = union([row for item in catalogs for row in item.get("bundles") or []], "bundle_id")
+    if not bundles:
+        raise ValueError("Upstream artifact has no retained bundle")
+    identities = {row["bundle_id"] for row in bundles}
+    graph = {row["bundle_id"]: row.get("upstream_bundle_id") for row in bundles}
+    for ident, parent in graph.items():
+        if parent is None:
+            continue
+        if type(parent) is not str or parent not in identities:
+            raise ValueError("Upstream bundle is missing from the retained catalog")
+        seen = set()
+        cursor = ident
+        while cursor is not None:
+            if cursor in seen:
+                raise ValueError("Upstream catalog contains a cycle")
+            seen.add(cursor)
+            cursor = graph.get(cursor)
+    document = {
         "schema": schema,
         "revision": len(sources) + len(bundles),
         "sources": sources,
         "bundles": bundles,
-    })
+    }
+    return document
+
+
+def _adopt(session, artifact_ids: list[str]) -> None:
+    from .retention import catalog as retained_catalog
+    from .workbench import Workbench
+
+    restored = Workbench.restore(compose_catalogs([retained_catalog(item) for item in artifact_ids]))
     restored._bindings = dict(session.workbench._bindings)
     session.workbench = restored
 
@@ -340,6 +376,10 @@ def run(workflow: str, source_b64: str | None = None, upstream_artifact: str | N
         })
         bundle = _call(session, "bundle.get", {"bundle_id": completed["bundle_id"]})
         artifact_id = keep(bundle, kind=workflow, catalog=session.workbench.serialize())
+    except ValueError as exc:
+        from .retention import keep_failure
+        keep_failure({"workflow": workflow, "error": str(exc)[:500]})
+        raise
     finally:
         shutil.rmtree(parent, ignore_errors=True)
     step = bundle["steps"][0]

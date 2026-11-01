@@ -60,7 +60,7 @@ def _shape(value, spec):
             except ValueError:
                 pass
         raise ValueError("Argument has unsupported type")
-    types = {"string": str, "object": dict, "integer": int, "array": list}
+    types = {"string": str, "object": dict, "integer": int, "array": list, "boolean": bool}
     if type(value) is not types[spec["type"]]:
         raise ValueError("Argument has incorrect type")
     if "enum" in spec and value not in spec["enum"]:

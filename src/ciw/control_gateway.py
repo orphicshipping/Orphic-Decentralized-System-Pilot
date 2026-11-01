@@ -104,7 +104,9 @@ TOOLS = {
         {}, JSON_OBJECT, required=[]),
     "ncp_domain_run": _tool("domain_run", "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
         {"domain": {"type": "string", "enum": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]},
-         "name": {"type": "string", "minLength": 1, "maxLength": 80}}, JSON_OBJECT, required=["domain"], read=False),
+         "name": {"type": "string", "minLength": 1, "maxLength": 80},
+         "example": {"type": "boolean"},
+         "request": {"type": "object"}}, JSON_OBJECT, required=["domain"], read=False),
     "ncp_workbench_list": _tool("workbench_list", "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
         {}, JSON_OBJECT, required=[]),
     "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
@@ -656,9 +658,9 @@ class ControlHost:
         from .services import domain_list
         return domain_list()
 
-    def domain_run(self, domain, name=None):
+    def domain_run(self, domain, name=None, example=False, request=None):
         from .services import domain_run
-        return domain_run(domain, name)
+        return domain_run(domain, name=name, example=example, request=request)
 
     def workbench_list(self):
         from .services import workbench_list
