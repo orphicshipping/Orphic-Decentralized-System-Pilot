@@ -20,6 +20,32 @@ from .numerical_runtime import runtime_identity as numerical_runtime_identity
 
 SCHEMA = "ciw.capability-catalog.v1"
 
+_FLUID_PROFILES = (
+    ("fluid.reservoir.simulate.v1", "fluid", "Simulate the shortened two-reservoir synthetic trajectory."),
+    ("fluid.reservoir.verify.v1", "fluid", "Independently verify that reservoir trajectory."),
+    ("fluid.wave.simulate.v1", "fluid-wave", "Simulate the bounded linear shallow-water wave."),
+    ("fluid.wave.verify.v1", "fluid-wave", "Independently verify that wave trajectory."),
+    ("fluid.sph.simulate.v1", "fluid-sph", "Simulate the bounded one-dimensional SPH parcel trajectory."),
+    ("fluid.sph.verify.v1", "fluid-sph", "Independently verify that SPH trajectory."),
+    ("fluid.molecular.simulate.v1", "fluid-molecular", "Simulate the bounded structureless Lennard-Jones sites."),
+    ("fluid.molecular.verify.v1", "fluid-molecular", "Independently verify that molecular trajectory."),
+    ("fluid.fsi.simulate.v1", "fluid-fsi", "Simulate the bounded linear shallow-water wall coupling."),
+    ("fluid.fsi.verify.v1", "fluid-fsi", "Independently verify that coupled trajectory."),
+)
+
+
+def fluid_profile_grants():
+    """Plan-graph profiles whose retained trajectory fits the control document."""
+    retained = {"fluid", "fluid-molecular", "fluid-fsi"}
+    return {name: (profile,) for name, profile, _summary in _FLUID_PROFILES if profile in retained}
+
+
+def fluid_direct_tools():
+    """Wave and SPH fields exceed the control document, so they are direct calls."""
+    direct = {"fluid-wave", "fluid-sph"}
+    return {name: "ncp_fluid_field" for name, profile, _summary in _FLUID_PROFILES if profile in direct}
+
+
 _FIELDS = (
     "capability_id",
     "disposition",
@@ -170,6 +196,59 @@ _CAPABILITIES = (
         command=["data", "review-toolpoint"], operation_id="data.review-toolpoint-containment.v1", role="backend",
         runtime_identity=_toolpoint_containment_identity(), module="ciw.data_manufacturing_bridge",
         notes="Retained-record replay only; no store writes, hold release, shipment authorization or physical qualification.",
+    ),
+    *(_record(
+        capability_id=name, disposition="implemented", kind="synthetic_model",
+        summary=summary, operation_id=name, role="backend",
+        module="ciw.fluid_workflow", profiles=[profile],
+        notes="Bounded synthetic trajectory on the smallest contract-legal grid. Not a physical measurement. Listing does not execute.",
+    ) for name, profile, summary in _FLUID_PROFILES),
+    _record(
+        capability_id="leakage.assess-balance.v1",
+        disposition="implemented",
+        kind="pinned_profile",
+        summary="Assess a synthetic volume or mass balance on the host-selected FlowState pin.",
+        operation_id="leakage.assess-balance.v1",
+        role="backend",
+        module="ciw.leakage_workflow",
+        profiles=["leakage"],
+        runtime_identity={
+            "provider": "fsrt",
+            "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+            "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3",
+        },
+        notes="The host selects that checkout. The vendored subtree is not this pin. Not a physical leak finding.",
+    ),
+    _record(
+        capability_id="leakage.verify-balance.v1",
+        disposition="implemented",
+        kind="pinned_profile",
+        summary="Verify that synthetic balance against the same retained FlowState pin.",
+        operation_id="leakage.verify-balance.v1",
+        role="verification",
+        module="ciw.leakage_workflow",
+        profiles=["leakage"],
+        runtime_identity={
+            "provider": "fsrt",
+            "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+            "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3",
+        },
+        notes="Verification of the retained calculation. Not a physical leak finding.",
+    ),
+    _record(
+        capability_id="metrology.bim-clearance.v1",
+        disposition="implemented",
+        kind="pinned_profile",
+        summary="Run the frozen BIM inspection on the host-selected CSE tree pin.",
+        operation_id="metrology.bim-clearance.v1",
+        role="state_estimator",
+        module="ciw.metrology_clearance",
+        profiles=["bim-clearance"],
+        runtime_identity={
+            "provider": "ciw.metrology-clearance",
+            "source_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+        },
+        notes="A completed inspection can stay held. Not a physical clearance. The vendored directory is not the checkout.",
     ),
     _record(
         capability_id="learning.oscillator-rms",

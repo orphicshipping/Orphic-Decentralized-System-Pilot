@@ -21,7 +21,16 @@
       "tools": [
         {"name": "ncp_capabilities_list", "read_only": true, "required": []},
         {"name": "ncp_index_list", "read_only": true, "required": [], "authorizes_execution": false},
-        {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"]},
+        {"name": "ncp_doctor", "read_only": true, "required": [], "optional": ["diagnostic"], "note": "core or legibility. A blocked check stays blocked."},
+        {"name": "ncp_demo", "read_only": true, "required": [], "note": "In-memory synthetic oscillator. No sensor."},
+        {"name": "ncp_linear_preview", "read_only": true, "required": ["model", "base_point", "delta"]},
+        {"name": "ncp_lesson", "read_only": false, "required": [], "optional": ["mode", "level"], "note": "mode=work runs statistics.v1. Not a qualification."},
+        {"name": "ncp_hypergraph", "read_only": false, "required": [], "note": "Synthetic thermal rewrite. Not physical qualification."},
+        {"name": "ncp_polymer_cycle", "read_only": false, "required": [], "note": "Does not fit a plan graph. Not a part release."},
+        {"name": "ncp_fluid_field", "read_only": false, "required": ["solver"], "note": "solver is wave or sph. Returns verifier checks. The field is not retained. Not a measurement."},
+        {"name": "ncp_toolpoint", "read_only": false, "required": [], "note": "Journals do not fit a plan graph. Not a hold release."},
+        {"name": "ncp_ledger_read", "read_only": true, "required": ["capability_id"], "note": "qualified stays not_assessed. proved_heat is a read, not a proof."},
+        {"name": "ncp_capability_describe", "read_only": true, "required": ["capability_id"], "note": "Reads a profile-bound id or an index row. An index row is not authorization on the selected profile."},
         {"name": "ncp_workflows_list", "read_only": true, "required": [], "authorizes_execution": false},
         {"name": "ncp_integrations_list", "read_only": true, "required": []},
         {"name": "ncp_integration_describe", "read_only": true, "required": ["section", "source_id"]},
@@ -59,6 +68,7 @@
   },
   "profiles": [
     {
+      "profile": "builtin",
       "instrument": "builtin",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "builtin", "--output-dir", "DIR"],
       "granted_operations": ["statistics.v1"],
@@ -101,6 +111,7 @@
       "note": "Separate directory. Spectrum stays unauthorized on the builtin demo profile."
     },
     {
+      "profile": "polymer",
       "instrument": "polymer",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "polymer", "--output-dir", "DIR"],
       "granted_operations": [
@@ -113,6 +124,7 @@
       "physical_qualification": "not_established"
     },
     {
+      "profile": "temperature",
       "instrument": "temperature",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "temperature", "--output-dir", "DIR"],
       "granted_operations": ["metrology.temperature.process.v1", "metrology.temperature.verify.v1"],
@@ -120,6 +132,7 @@
       "physical_qualification": "not_established"
     },
     {
+      "profile": "link-scalar",
       "instrument": "link-scalar",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "link-scalar", "--output-dir", "DIR"],
       "granted_operations": ["link.decode-scalar.v1", "link.apply-affine.v1", "link.mean-model.v1", "link.audit-scalar.v1"],
@@ -127,6 +140,7 @@
       "inspection_qualification": "HELD"
     },
     {
+      "profile": "measured-thermal",
       "instrument": "measured-thermal",
       "prepare": ["python", "-m", "ciw.agent_mcp", "measured-thermal-config", "--source", "FILE", "--output-dir", "DIR"],
       "granted_operations": ["measured-thermal.assess.v1"],
@@ -134,37 +148,104 @@
       "physical_validation": "not_established"
     },
     {
+      "profile": "leakage",
       "instrument": "leakage",
       "prepare": ["python", "-m", "ciw.net", "control", "demo-config", "--instrument", "leakage", "--output-dir", "DIR"],
       "granted_operations": ["leakage.assess-balance.v1", "leakage.verify-balance.v1"],
       "native_checkout": true,
-      "startup_without_checkout": "refused"
+      "revision": "09a756dd9cdd3a9bb6cb14b5cd498f6259937ac2",
+      "source_tree": "c79c44f90d5ff3920e58a53e9c277104e7e07bd3",
+      "startup_without_checkout": "refused",
+      "note": "The host selects that FlowState commit. The vendored instruments/domain/flowstate tree is a different pin and is not substituted."
     },
     {
+      "profile": "bim-clearance",
       "instrument": "bim-clearance",
       "prepare": ["python", "-m", "ciw.net", "control", "prepare-bim", "--inspection", "FILE", "--output-dir", "DIR"],
       "granted_operations": ["metrology.bim-clearance.v1"],
       "native_checkout": true,
-      "startup_without_checkout": "refused"
+      "revision": "f1ceeae28168de32ca9aea44f7b6d67d2090677e",
+      "source_tree": "f91c982b580ad4f16a27ea149eedf0e338f6d764",
+      "startup_without_checkout": "refused",
+      "note": "The host selects a checkout of that CSE tree. Pointing at the vendored subtree fails the source pin. The pin is not overridden. A completed inspection can stay held."
+    },
+    {
+      "profile": "system",
+      "instrument": "system",
+      "prepare": ["python", "examples/system_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["system.compile.v1", "system.simulate.v1", "system.verify.v1", "system.compare.v1", "system.study.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "A FAIL study or reduction report is a numerical outcome, not physical qualification."
+    },
+    {
+      "profile": "legibility",
+      "instrument": "legibility",
+      "prepare": ["python", "examples/legibility_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["legibility.compile.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established"
+    },
+    {
+      "profile": "data",
+      "instrument": "data",
+      "prepare": ["python", "examples/data_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["data.compare-observations.v1", "data.review-product-study.v1", "data.project-gltf-mesh.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Polymer cycle and toolpoint containment are direct tools, not nodes in this graph."
+    },
+    {
+      "profile": "fluid",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.reservoir.simulate.v1", "fluid.reservoir.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Shortened reservoir clock so the trajectory fits the control document budget. Not a physical measurement. Wave and SPH are ncp_fluid_field, not this profile."
+    },
+    {
+      "profile": "fluid-molecular",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--profile", "molecular", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.molecular.simulate.v1", "fluid.molecular.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "Eight structureless Lennard-Jones sites, 32 steps. Not water, not a measurement."
+    },
+    {
+      "profile": "fluid-fsi",
+      "instrument": "fluid",
+      "prepare": ["python", "examples/fluid_operations/prepare.py", "--profile", "fsi", "--output-dir", "DIR"],
+      "granted_operations": ["fluid.fsi.simulate.v1", "fluid.fsi.verify.v1"],
+      "native_checkout": false,
+      "physical_qualification": "not_established",
+      "note": "16 cells and 16 steps of linear wall coupling. Not a general FSI measurement."
     }
   ],
+  "direct_tools": {
+    "data.assess-polymer-cycle.v1": "ncp_polymer_cycle",
+    "data.review-toolpoint-containment.v1": "ncp_toolpoint",
+    "learning.oscillator-rms": "ncp_lesson",
+    "doctor.preflight": "ncp_doctor",
+    "linear-response.library": "ncp_linear_preview",
+    "synthetic-oscillator-demo": "ncp_demo",
+    "hypergraph_rewriting": "ncp_hypergraph",
+    "fluid.wave.simulate.v1": "ncp_fluid_field",
+    "fluid.wave.verify.v1": "ncp_fluid_field",
+    "fluid.sph.simulate.v1": "ncp_fluid_field",
+    "fluid.sph.verify.v1": "ncp_fluid_field"
+  },
+  "ledger_read": {
+    "tool": "ncp_ledger_read",
+    "qualified": "not_assessed",
+    "note": "Every other release-ledger id, including proved_heat and bounded_fluid_models, is readable. bounded_fluid_models also names the fluid profile. Reading a row does not execute it."
+  },
   "not_mcp_grants": [
-    "system.compile.v1",
-    "system.simulate.v1",
-    "system.verify.v1",
-    "system.compare.v1",
-    "system.study.v1",
-    "legibility.compile.v1",
-    "data.project-gltf-mesh.v1",
-    "data.compare-observations.v1",
-    "data.review-product-study.v1",
-    "data.assess-polymer-cycle.v1",
-    "data.review-toolpoint-containment.v1",
-    "learning.oscillator-rms",
-    "doctor.preflight",
-    "linear-response.library",
-    "synthetic-oscillator-demo",
-    "release ledger ids, including fluid, hypergraph, and proved heat"
+    "atmosphere, SP1, Julia, Godot, Bevy, Blender, and any module with neither mcp_profile nor mcp_tool",
+    "a leakage or BIM launch that does not select the retained pin; the vendored subtree is not that pin",
+    "a ledger read treated as execution of that capability",
+    "an SP1 proof: proved_heat remains ncp_ledger_read until a host binds the registered guest"
   ],
   "separate_hosts": [
     "external work: python -m ciw.external_work_mcp, host-owned database and principal",

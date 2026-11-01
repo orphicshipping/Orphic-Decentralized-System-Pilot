@@ -159,6 +159,37 @@ def registry():
     return result
 
 
+def capability_registry(*, bind: bool = False, profile: str = "reservoir"):
+    """Advertise one synthetic fluid profile. A trajectory is not a physical measurement."""
+    from .adapters.protocol import InstrumentManifest
+    from .control_plane import CapabilityRegistry, Port
+    if profile not in contract.ALL_PROFILES:
+        raise ValueError("Fluid MCP profile must be one bounded synthetic request: " + ", ".join(contract.ALL_PROFILES))
+    selected = {name for name in OPERATIONS[profile]}
+    registry = CapabilityRegistry()
+    result = Port("ciw.operation-result.v1").to_dict()
+    for item in operations():
+        if item.operation_id not in selected:
+            continue
+        inputs = {"candidate": result} if item.role == "verification" else {}
+        registry.advertise(
+            InstrumentManifest(
+                instrument_id="fluid-" + profile + "." + item.role,
+                role="synthetic_model_configuration",
+                units={"configuration_declaration": "1"},
+                frames=(FRAME,),
+                sampling={"kind": "one_synthetic_configuration_declaration"},
+                supported_operations=(item.operation_id,),
+            ),
+            runtime=item.runtime_identity(),
+            capabilities={item.operation_id: [item.operation_id]},
+            inputs={item.operation_id: inputs},
+        )
+        if bind:
+            registry.bind(item)
+    return registry
+
+
 def validate_payload(operation: str, data: dict, source: dict, parameters: dict, selection: dict) -> None:
     """Validate stored content without numerical simulation or verification."""
     request = source_request(source)

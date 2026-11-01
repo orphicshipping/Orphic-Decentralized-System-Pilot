@@ -22,7 +22,7 @@ from .session import loads_json
 from .control_plane import builtin_registry, experiment, plan_graph, ParameterSpace, Choice
 
 VERSIONS = ("2025-11-25", "2025-06-18")
-INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance")
+INSTRUMENTS = ("builtin", "polymer", "leakage", "temperature", "measured-thermal", "link-scalar", "bim-clearance", "system", "legibility", "data", "fluid")
 
 
 def native_bindings(instrument, *, checkout=None, revision=None, python=None):
@@ -307,6 +307,36 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
             artifact = parse(raw)
             if artifact.get("schema") == "ciw.experiment.v1":
                 _leakage_graph(artifact, registry)
+    elif instrument == "system":
+        from .system_workflow import capability_registry
+        if value["candidate_domains"] != {}:
+            raise ValueError("System operations have no agent-editable parameter domains")
+        registry = capability_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "legibility":
+        from .legibility_workflow import capability_registry
+        if value["candidate_domains"] != {}:
+            raise ValueError("Legibility compilation has no agent-editable parameter domains")
+        registry = capability_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "data":
+        from .data_workflow import capability_registry, DataHost
+        if value["candidate_domains"] != {}:
+            raise ValueError("Data operations have no agent-editable parameter domains")
+        host_class = DataHost
+        registry = capability_registry(bind=bool(value["allow_operations"]))
+    elif instrument == "fluid":
+        from .fluid_contract import profile_for_request
+        from .fluid_workflow import capability_registry, source_request
+        if value["candidate_domains"] != {}:
+            raise ValueError("Fluid operations have no agent-editable parameter domains")
+        selected = []
+        for raw in inputs.values():
+            artifact = parse(raw)
+            metadata = artifact.get("metadata") if type(artifact) is dict else None
+            if type(metadata) is dict and "fluid_request" in metadata:
+                selected.append(profile_for_request(source_request(artifact)))
+        if len(selected) != 1:
+            raise ValueError("Fluid instrument requires exactly one synthetic fluid source")
+        registry = capability_registry(bind=bool(value["allow_operations"]), profile=selected[0])
     else:
         registry = builtin_registry(bind=bool(value["allow_operations"]))
         if read_only:

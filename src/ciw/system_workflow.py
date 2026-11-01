@@ -26,6 +26,35 @@ def _keys(value, required, optional=()):
         raise ValueError("System operation fields differ from the declared contract")
 
 
+def _project_retained_ids(parameters, operation_id):
+    """Copy an id the caller already retained inside an upstream record.
+
+    A graph port carries the whole record. The scientific check still requires
+    the sibling id fields, and an explicit id that differs still fails. This
+    does not invent a result, and it does not mutate the caller's object: the
+    execution record and the result record must stay the same bytes.
+    """
+    if not isinstance(parameters, dict):
+        return parameters
+    projected = dict(parameters)
+    if operation_id in {RUN, STUDY}:
+        plan = projected.get("plan")
+        if isinstance(plan, dict) and isinstance(plan.get("result_id"), str):
+            projected.setdefault("source_result_id", plan["result_id"])
+    elif operation_id == VERIFY:
+        candidate = projected.get("candidate")
+        if isinstance(candidate, dict) and isinstance(candidate.get("result_id"), str):
+            projected.setdefault("source_result_id", candidate["result_id"])
+    elif operation_id == COMPARE:
+        left, right = projected.get("left"), projected.get("right")
+        if (isinstance(left, dict) and isinstance(right, dict)
+                and isinstance(left.get("result_id"), str) and isinstance(right.get("result_id"), str)):
+            ids = [left["result_id"], right["result_id"]]
+            projected.setdefault("source_result_id", ids[0])
+            projected.setdefault("source_result_ids", ids)
+    return projected
+
+
 def source_run(specifications):
     from .system_spec import validate_spec
     from .adapters.protocol import InstrumentManifest
@@ -98,6 +127,7 @@ def _plan_record(run, record):
 
 
 def _run_parameters(run, parameters):
+    parameters = _project_retained_ids(parameters, RUN)
     _keys(parameters, {"plan", "source_result_id"}, {"engine", "image", "timeout_s"})
     if parameters["source_result_id"] != parameters["plan"]["result_id"]:
         raise ValueError("Simulation source_result_id differs from its compiled result")
@@ -204,6 +234,7 @@ def _simulate(run, parameters):
 
 
 def _verification_inputs(run, parameters):
+    parameters = _project_retained_ids(parameters, VERIFY)
     _keys(parameters, {"candidate", "source_result_id"})
     if parameters["source_result_id"] != parameters["candidate"]["result_id"]:
         raise ValueError("Verification source result differs from candidate")
@@ -221,6 +252,7 @@ def _verify(run, parameters):
 
 
 def _comparison_inputs(run, parameters):
+    parameters = _project_retained_ids(parameters, COMPARE)
     _keys(parameters, {"left", "right", "source_result_id", "source_result_ids"})
     ids = [parameters["left"]["result_id"], parameters["right"]["result_id"]]
     if parameters["source_result_id"] != ids[0] or parameters["source_result_ids"] != ids or ids[0] == ids[1]:
@@ -239,6 +271,7 @@ def _compare(run, parameters):
 
 
 def _study_inputs(run, parameters):
+    parameters = _project_retained_ids(parameters, STUDY)
     _keys(parameters, {"plan", "source_result_id"}, {"step_sizes_s"})
     if parameters["source_result_id"] != parameters["plan"]["result_id"]:
         raise ValueError("Temporal study source_result_id differs from its compiled result")
@@ -413,3 +446,38 @@ def run_specification(session, specification, *, engine="local", image=None, sou
     candidate = execute(session, RUN, parameters)
     verification = execute(session, VERIFY, {"candidate": candidate, "source_result_id": candidate["result_id"]})
     return {"plan": plan, "candidate": candidate, "verification": verification}
+
+
+def capability_registry(*, bind: bool = False):
+    """Advertise the existing system operations. Binding does not qualify them.
+
+    Simulate, verify, compare and study read source_result_id from the retained
+    upstream record when the graph port did not repeat it. They do not invent one.
+    """
+    from .adapters.protocol import InstrumentManifest
+    from .control_plane import CapabilityRegistry, Port
+    registry = CapabilityRegistry()
+    bound = operations()
+    result = Port("ciw.operation-result.v1").to_dict()
+    registry.advertise(
+        InstrumentManifest(
+            instrument_id="scientific-system.specification.v1",
+            role="scientific_specification",
+            units={"configuration_count": "1"},
+            frames=("rod.material-axis.v1",),
+            sampling={"kind": "specification_snapshot"},
+            supported_operations=tuple(item.operation_id for item in bound),
+        ),
+        runtime=runtime_identity(),
+        capabilities={item.operation_id: [item.operation_id] for item in bound},
+        inputs={
+            RUN: {"plan": result},
+            VERIFY: {"candidate": result},
+            COMPARE: {"left": result, "right": result},
+            STUDY: {"plan": result},
+        },
+    )
+    if bind:
+        for item in bound:
+            registry.bind(item)
+    return registry

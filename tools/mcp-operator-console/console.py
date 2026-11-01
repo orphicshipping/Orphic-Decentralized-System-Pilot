@@ -34,10 +34,12 @@ READ_TOOLS = frozenset({
     'ncp_integrations_list', 'ncp_integration_describe',
     'ncp_workflows_list', 'ncp_capabilities_list', 'ncp_capability_describe', 'ncp_index_list',
     'ncp_plan_template', 'ncp_plan_get', 'ncp_run_get', 'ncp_artifact_read', 'ncp_observe',
+    'ncp_doctor', 'ncp_demo', 'ncp_linear_preview', 'ncp_ledger_read',
 })
 WRITE_TOOLS = frozenset({
     'ncp_plan_create', 'ncp_plan_admit', 'ncp_run_submit', 'ncp_run_cancel',
     'ncp_compare', 'ncp_qualify',
+    'ncp_lesson', 'ncp_hypergraph', 'ncp_polymer_cycle', 'ncp_toolpoint',
 })
 OPERATIONAL_READ_TOOLS = frozenset({'oe_catalog','oe_rows','oe_inspect','oe_trace','oe_search','oe_alarm_inspect',
     'net_capabilities','net_inspect','net_observe'})
@@ -75,7 +77,7 @@ def launch_arguments(config):
     """Trusted launch configuration only; no web/MCP request selects providers."""
     if config.surface not in {'control', 'operational'}:
         raise ConsoleError('invalid_configuration', 'Select an existing control or operational surface.')
-    if config.instrument not in {'builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance'}:
+    if config.instrument not in {'builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance', 'system', 'legibility', 'data', 'fluid'}:
         raise ConsoleError('unsupported_instrument', 'Select a supported existing instrument profile.')
     native = (config.provider_checkout, config.provider_revision, config.provider_python)
     if config.surface == 'operational':
@@ -415,7 +417,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--python', type=Path, required=True, help='Absolute installed NCP Python interpreter; launched with -I.')
     parser.add_argument('--profile', type=Path, required=True)
-    parser.add_argument('--instrument', choices=['builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance'], default='builtin')
+    parser.add_argument('--instrument', choices=['builtin', 'polymer', 'temperature', 'link-scalar', 'measured-thermal', 'leakage', 'bim-clearance', 'system', 'legibility', 'data', 'fluid'], default='builtin')
     parser.add_argument('--provider-checkout', type=Path, help='Absolute trusted native checkout; never supplied by the browser.')
     parser.add_argument('--provider-revision', help='Full CSE revision; BIM clearance only.')
     parser.add_argument('--provider-python', type=Path, help='Absolute interpreter for the pinned native provider.')

@@ -252,3 +252,27 @@ def fixture_summary(run, parameters):
 def validate_fixture_payload(operation_id, data, run, parameters, selection):
     if operation_id != "legibility.fixture-summary.v1" or data != fixture_summary(run, parameters):
         raise ValueError("Fixture summary differs from its retained source")
+
+
+def capability_registry(*, bind: bool = False):
+    """Advertise legibility compilation. A bundle is not physical qualification."""
+    from .adapters.protocol import InstrumentManifest
+    from .control_plane import CapabilityRegistry
+    registry = CapabilityRegistry()
+    item = operation()
+    registry.advertise(
+        InstrumentManifest(
+            instrument_id="legibility.synthetic-impact-fixture.v1",
+            role="synthetic_fixture",
+            units={"force": "N"},
+            frames=("impact.normal.inward_positive.v1",),
+            sampling={"kind": "illustrative_fixture"},
+            supported_operations=(OPERATION,),
+        ),
+        runtime=item.runtime_identity(),
+        capabilities={OPERATION: [OPERATION]},
+        inputs={OPERATION: {}},
+    )
+    if bind:
+        registry.bind(item)
+    return registry
