@@ -1,6 +1,6 @@
-# Start the NET instrument
+# Start the Orphic Systems instrument
 
-NET provides one local workbench for retained scientific investigations. Start
+Orphic Decentralized Systems Protocol (ODSP) provides one local workbench for retained scientific investigations. Start
 with its built-in synthetic workflows, then provision a specialist workflow
 when its inputs and runtime are available. The monorepo's 21 public modules
 retain their own packages, execution pins and qualification boundaries.

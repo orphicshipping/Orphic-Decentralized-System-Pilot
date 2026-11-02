@@ -9,7 +9,7 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2729,
+    "retained_and_verified": 2730,
     "generated": 661,
     "rewritten": 35,
     "blocked": 109,
@@ -2279,6 +2279,13 @@
     },
     {
       "path": "docs/IMPACT_SCENARIO_ENVELOPE.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/IMPLEMENTATION_AUDIT_20261102.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",

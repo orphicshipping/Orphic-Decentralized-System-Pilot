@@ -1,4 +1,4 @@
-"""Ingest portable Notation Systems instrument manifests as unbound providers.
+"""Ingest portable Orphic Systems instrument manifests as unbound providers.
 
 The manifest and verification files are descriptive/evidentiary data. They can
 advertise an operation and semantic lowering, but they cannot load code, select

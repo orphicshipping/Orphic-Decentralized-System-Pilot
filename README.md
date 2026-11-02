@@ -1,8 +1,8 @@
-# Notations Control Protocol
+# Orphic Decentralized Systems Protocol
 
 One MCP for models and for other software. Call a tool. A folder, a file, a line of code, a shell command, or a PASS is not a run.
 
-Developed by **Notation Systems Inc.**
+Developed by **Orphic Systems**
 
 ## Bind
 
@@ -113,3 +113,7 @@ Julia, Godot, Bevy, and Blender stay unbound. Leakage and BIM run only when the 
 
 Shell install, `net start`, and the operator manual are not this product. They remain at [docs/OPERATOR_REFERENCE.md](docs/OPERATOR_REFERENCE.md) so that record is not deleted. They add no tool and no grant.
 
+
+## Implementation audit
+
+See the [2026-11-02 scoped implementation audit](docs/IMPLEMENTATION_AUDIT_20261102.md) for findings, executed checks, and remaining qualification limits.
