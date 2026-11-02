@@ -9,9 +9,9 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2719,
-    "generated": 658,
-    "rewritten": 28,
+    "retained_and_verified": 2729,
+    "generated": 661,
+    "rewritten": 35,
     "blocked": 109,
     "vendor_exempt": 3308
   },
@@ -753,6 +753,13 @@
     },
     {
       "path": ".github/workflows/nvalchemi-cpu.yml",
+      "disposition": "retained_and_verified",
+      "component": "ci",
+      "reason": "Continuous integration. Not a scientific grant.",
+      "authorizes_execution": false
+    },
+    {
+      "path": ".github/workflows/odrp-private-host-candidate.yml",
       "disposition": "retained_and_verified",
       "component": "ci",
       "reason": "Continuous integration. Not a scientific grant.",
@@ -2919,6 +2926,13 @@
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/ODRP.md",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
       "authorizes_execution": false
     },
     {
@@ -39043,9 +39057,9 @@
     },
     {
       "path": "src/ciw/operator_commands.py",
-      "disposition": "retained_and_verified",
-      "component": "domain",
-      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
       "authorizes_execution": false
     },
     {
@@ -39658,6 +39672,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/reference_cli.py",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/reference_comparison.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -39669,6 +39690,20 @@
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/reference_mcp.py",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/reference_profile.py",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
       "authorizes_execution": false
     },
     {
@@ -41300,6 +41335,13 @@
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/reference_fixture_helpers.py",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
       "authorizes_execution": false
     },
     {
@@ -44075,6 +44117,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_reference_profile.py",
+      "disposition": "rewritten",
+      "component": "service_boundary",
+      "reason": "Model-facing service, contract, or test of that boundary. Domain algorithms under this path were not copied.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_refurbishment_cli.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -45301,6 +45350,97 @@
     },
     {
       "path": "tools/mcp-operator-console/web/styles.css",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/Dockerfile",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/Dockerfile.ci",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/adapter.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/gateway.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_adapter.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_reference_adapter.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/worker.mjs",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Maintenance console or view. No required workflow depends on a human screen.",
