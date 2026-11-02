@@ -1,5 +1,14 @@
-# Isolated private-host candidate
+# MCP contract
 
-ODSP execution and optional ODRP reference access. See the candidate README.
-No new grants, production corpus, deployment or historical-state migration.
-This folder is a build/qualification surface, not an independently callable tool.
+- path: `tools/odrp-private-host-candidate/tools/private-mcp-host`
+- class: `navigation`
+- authorizes_execution: false
+- call: `ncp_index_list`
+
+`private-mcp-host` is inside `tools` (navigation). Operator consoles. They do not add a grant the control tools lack.
+
+Tracked files here, none of them a tool call: `adapter.py`, `gateway.mjs`, `test_adapter.py`, `test_gateway.mjs`, `test_reference_adapter.py`, `test_worker.mjs`, `worker.mjs`.
+
+This folder does not opt for the easiest task in a set. Name the task.
+
+A file in this folder is not a tool call. This folder is not a human console. Use `ncp_index_list` and the [project map](../../../../mcp/project-map.json). The [folder index](../../../../mcp/folder-index.json) lists every tracked folder. Reading this contract does not run a solver, bind a provider, or qualify a result. A PASS, a LOCAL check, or a completed graph is not a physical release.

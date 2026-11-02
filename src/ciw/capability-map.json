@@ -979,7 +979,6 @@
       "notes": "Does not run a solver, select a pin, or replace the tests."
     }
   ],
-  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
   "reference_profiles": [
     {
       "profile_id": "odrp.reference.v1",
@@ -1382,5 +1381,6 @@
         }
       ]
     }
-  ]
+  ],
+  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
 }

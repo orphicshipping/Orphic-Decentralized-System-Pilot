@@ -2942,11 +2942,6 @@
       "call": "none"
     },
     {
-      "path": "instruments/representation/frame-mapper/scripts",
-      "class": "unbound",
-      "call": "none"
-    },
-    {
       "path": "instruments/representation/frame-mapper/src",
       "class": "unbound",
       "call": "none"
