@@ -7,7 +7,7 @@
 
 `tests` is inside `scripts` (navigation). Check and prepare scripts. A model does not pass a script path as authority.
 
-Tracked files here, none of them a tool call: `README.md`, `test_branch_cleanup.py`, `test_ci_policy.py`, `test_foundry_delivery.py`, `test_native_runner.py`, `test_operator_artifact.py`, `test_private_release_build.py`, `test_qualification_commands.py` (2 more).
+Tracked files here, none of them a tool call: `README.md`, `test_branch_cleanup.py`, `test_ci_policy.py`, `test_foundry_delivery.py`, `test_native_runner.py`, `test_operator_artifact.py`, `test_private_release_build.py`, `test_private_woodpecker.py` (3 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

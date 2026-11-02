@@ -34,6 +34,16 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": ".woodpecker/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": ".woodpecker/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "CONTRIBUTING.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -1840,6 +1850,11 @@
     },
     {
       "path": "docs/WEATHER_SCIENCE.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/WOODPECKER_PRIVATE_CI.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
