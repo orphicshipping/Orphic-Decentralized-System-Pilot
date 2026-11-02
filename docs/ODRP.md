@@ -5,6 +5,10 @@ ODRP is the reference profile of the existing ODSP substrate. It reuses
 reference disclosure remain separate authority boundaries. The common service
 entrypoint is `ciw.services.invoke`, not a second retrieval implementation.
 
+NSL captured-state and OLM retained-logistics reads use separate host bindings;
+see [read-only adapter profiles](READ_ONLY_ADAPTERS.md). Their discovery entries
+do not add grants or tools to this ODRP host.
+
 ## Host-owned bindings and shared software API
 
 ```python

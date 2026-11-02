@@ -8,6 +8,16 @@ from __future__ import annotations
 SCHEMA = "ncp.transformation-ledger.v1"
 
 _REWRITTEN = {
+    "src/ciw/state_read_profile.py",
+    "src/ciw/logistics_profile.py",
+    "src/ciw/logistics_mcp.py",
+    "tests/test_state_read_profile.py",
+    "tests/test_logistics_profile.py",
+    "tests/test_logistics_mcp.py",
+    "tests/test_read_adapter_boundaries.py",
+    "tests/logistics_fixture_helpers.py",
+    "tests/logistics_fixture_server.py",
+    "docs/READ_ONLY_ADAPTERS.md",
     "src/ciw/reference_profile.py",
     "src/ciw/reference_cli.py",
     "src/ciw/reference_mcp.py",

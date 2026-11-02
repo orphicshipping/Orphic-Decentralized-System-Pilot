@@ -22,6 +22,8 @@ Control-tool calls share `ciw.services.admit`: the MCP control host, control cal
 
 The [ODRP reference profile](ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
 
+The [NSL and OLM read-only profiles](READ_ONLY_ADAPTERS.md) require their own trusted host bindings. NSL exposes only exact captured state responses; OLM exposes existing governed retained reads with owner-scoped paging. Caller payloads cannot choose principal, tenant, roles, endpoint, credentials or source pin. These profiles add no control or ODRP grant.
+
 Control-host and SDK calls apply the same serialized-data response budget through
 `ciw.services.response_postcondition`. Refused retained operations preserve their
 artifact identifiers for inspection.

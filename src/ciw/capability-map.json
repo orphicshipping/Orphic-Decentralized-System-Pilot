@@ -1380,6 +1380,644 @@
           "requires_evidence_bundle": false
         }
       ]
+    },
+    {
+      "profile_id": "nsl.state-ledger.v1",
+      "adapter_contract_commit": "4fef5f488694d0dd526b2a2166f5e5c90f1dd7ec",
+      "authority": "host_selected_exact_offline_capture",
+      "authorizes_execution": false,
+      "qualification": "live_upstream_not_verified",
+      "capture_authority": "host_declared_unverified",
+      "upstream_receipt_verification": "not_performed",
+      "host_factory": "ciw.state_read_profile.open_state_reference",
+      "service": "ciw.services.invoke",
+      "transport": "ciw.knowledge_mcp.serve_stdio",
+      "tools": [
+        {
+          "name": "ncp_state_releases",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "corpus": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_release",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "release_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "release_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_release_manifest",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "release_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "release_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_records",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "release_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "predicate": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "release_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_as_of",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "release_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "subject": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "predicate": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "valid_at": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "known_at": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "question": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "enum": [
+                  "WHAT_WE_HELD",
+                  "WHAT_THE_SOURCE_KNEW"
+                ]
+              }
+            },
+            "required": [
+              "release_id",
+              "subject",
+              "predicate",
+              "valid_at",
+              "known_at",
+              "question"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_retractions",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "since": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_ruling",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "ruling_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "ruling_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_state_ruling_manifest",
+          "description": "Read an exact host-approved offline NSL capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "ruling_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "ruling_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    },
+    {
+      "profile_id": "olm.logistics.v1",
+      "adapter_contract_commit": "217a09016116123a5be95544b870e990c895e142",
+      "authority": "upstream_governed_retained_reads",
+      "authorizes_execution": false,
+      "upstream_revision_verified": false,
+      "qualification": "live_upstream_not_verified",
+      "host_factory": "ciw.logistics_profile.open_logistics",
+      "service": "ciw.services.invoke",
+      "transport": "ciw.logistics_mcp.serve",
+      "upstream_identity": "host_configured_then_upstream_authenticated",
+      "receipt_hashes": "preserved_upstream_claims_not_independently_attested",
+      "maximum_bundle_bytes": 3800000,
+      "owner_retention_bytes": 4000000,
+      "tools": [
+        {
+          "name": "ncp_logistics_catalog",
+          "description": "Read governed retained capability catalog; no execution.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "ncp_logistics_describe",
+          "description": "Read all matching catalog versions, or exact version.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "capability_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "version": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              }
+            },
+            "required": [
+              "capability_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "ncp_logistics_job",
+          "description": "Read existing job only; never submits.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "job_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "include": {
+                "enum": [
+                  "status",
+                  "result"
+                ]
+              }
+            },
+            "required": [
+              "job_id",
+              "include"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "ncp_logistics_inspect",
+          "description": "Read one exact permitted retained selector.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "source": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "workflow"
+                      },
+                      "mode": {
+                        "const": "plan"
+                      },
+                      "planId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "mode",
+                      "planId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "workflow"
+                      },
+                      "mode": {
+                        "const": "run"
+                      },
+                      "planId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "runId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "mode",
+                      "planId",
+                      "runId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "acquisition"
+                      },
+                      "planId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "planId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "compute"
+                      },
+                      "jobId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "include": {
+                        "enum": [
+                          "status",
+                          "result"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "jobId",
+                      "include"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "observation"
+                      },
+                      "observationId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "observationDigest": {
+                        "type": "string",
+                        "pattern": "^sha256:[a-fA-F0-9]{64}$"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "observationId",
+                      "observationDigest"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "catalog"
+                      }
+                    },
+                    "required": [
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "state"
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "validAt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "knownAt": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "entityId",
+                      "validAt",
+                      "knownAt"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "twin"
+                      },
+                      "projectionId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "projectionId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "const": "package"
+                      },
+                      "mode": {
+                        "const": "manifest"
+                      },
+                      "packageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      },
+                      "version": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "mode",
+                      "packageId",
+                      "version"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "required": [
+              "source"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true
+          }
+        },
+        {
+          "name": "ncp_logistics_retained_read",
+          "description": "Page immutable host-owned result bytes.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "artifact_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 32768
+              }
+            },
+            "required": [
+              "artifact_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
     }
   ],
   "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."

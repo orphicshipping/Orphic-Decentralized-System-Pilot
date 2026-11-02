@@ -364,6 +364,12 @@ def response_postcondition(value):
 
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
+    if isinstance(name, str) and name.startswith("ncp_state_"):
+        from .state_read_profile import invoke_state
+        return invoke_state(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_logistics_"):
+        from .logistics_profile import invoke_logistics
+        return invoke_logistics(host, name, {} if arguments is None else arguments)
     # Reference disclosure is a separate host profile, not a control-host grant.
     # Resolve it before importing execution/session providers.
     if isinstance(name, str) and (name == "ncp_system_status" or
@@ -403,6 +409,8 @@ def capability_map():
     from .control_gateway import TOOLS
     from .domain_surface import tool_grants
     from .reference_profile import profile_manifest
+    from .state_read_profile import profile_manifest as state_manifest
+    from .logistics_profile import profile_manifest as logistics_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -437,7 +445,7 @@ def capability_map():
         "qualification": "not_performed_by_this_file",
         "tools": tools,
         "indexed": indexed,
-        "reference_profiles": [profile_manifest()],
+        "reference_profiles": [profile_manifest(), state_manifest(), logistics_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 

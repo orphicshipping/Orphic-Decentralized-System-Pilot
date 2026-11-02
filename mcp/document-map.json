@@ -1439,6 +1439,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/READ_ONLY_ADAPTERS.md",
+      "status": "current_surface",
+      "owner": "docs/READ_ONLY_ADAPTERS.md"
+    },
+    {
       "path": "docs/REAL_IFC_TRANSITION.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"

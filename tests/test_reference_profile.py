@@ -72,6 +72,11 @@ class VerticalSlice(unittest.TestCase):
         moved=open_host(catalog_path=new/'catalog',catalog_ref=self.ref,evidence_path=new/'evidence',evidence_ref=self.eref)
         self.assertEqual(expected,invoke(moved,'ncp_evidence_search',{'query':'calibration'}))
     def test_real_mcp_stdio_outside_checkout(self):
+        from importlib.metadata import PackageNotFoundError, version
+        try:
+            version('mcp')
+        except PackageNotFoundError:
+            self.skipTest("Optional MCP transport dependency is not installed")
         try:
             import anyio
             import mcp
