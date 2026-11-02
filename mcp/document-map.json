@@ -1209,6 +1209,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/ODRP.md",
+      "status": "current_surface",
+      "owner": "docs/ODRP.md"
+    },
+    {
       "path": "docs/OPERATIONAL_ENGINEERING.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -10515,6 +10520,26 @@
     },
     {
       "path": "tools/mcp-operator-console/web/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/README.md",
+      "status": "current_surface",
+      "owner": "tools/odrp-private-host-candidate/README.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/MCP.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },

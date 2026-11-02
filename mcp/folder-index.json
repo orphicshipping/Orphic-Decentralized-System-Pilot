@@ -3712,6 +3712,21 @@
       "call": "ncp_index_list"
     },
     {
+      "path": "tools/odrp-private-host-candidate",
+      "class": "navigation",
+      "call": "ncp_index_list"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools",
+      "class": "navigation",
+      "call": "ncp_index_list"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host",
+      "class": "navigation",
+      "call": "ncp_index_list"
+    },
+    {
       "path": "tools/private-mcp-host",
       "class": "navigation",
       "call": "ncp_index_list"
