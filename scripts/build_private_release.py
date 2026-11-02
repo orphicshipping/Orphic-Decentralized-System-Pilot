@@ -114,6 +114,20 @@ def bound_wheel(path, source, epoch):
             archive.writestr(info, data, compress_type=zipfile.ZIP_DEFLATED, compresslevel=9)
 
 
+def verify_source_bytes(wheel, source):
+    """Bind every wheel-owned package to source, not just the CIW namespace."""
+    files = contract.wheel_files(wheel, require_source_binding=False)
+    contract.require("ciw/" + contract.SOURCE_MARKER not in files,
+                     "source wheel already contains the reserved generated binding")
+    with zipfile.ZipFile(wheel) as archive:
+        for name in files:
+            original = source / "src" / name
+            contract.require(original.is_file() and not original.is_symlink()
+                             and archive.read(name) == original.read_bytes(),
+                             "source-to-wheel byte mismatch: " + name)
+    return files
+
+
 def context_files(source, output):
     mapping = {}
     candidate = source / PRIVATE
@@ -146,12 +160,13 @@ def build(root, output, dependencies):
     epoch = int(git(root, "show", "-s", "--format=%ct", revision))
     pins = audit_pins(root, revision)
     output.mkdir(parents=True)
-    receipt = {"schema": "odsp.private-build-receipt.v1", "status": "failed", "repository": REPOSITORY,
+    receipt = {"schema": "odsp.private-build-receipt.v2", "status": "failed", "repository": REPOSITORY,
                "source_commit": revision, "source_tree": tree, "source_date_epoch": epoch,
                "python": platform.python_version(), "platform": platform.platform(),
                "build_tools": {name: metadata.version(name) for name in ("setuptools", "wheel")},
                "reproducibility_scope": "two isolated source exports with this interpreter, platform and backend; cross-toolchain and base-image reproduction unproven",
-               "dependency_evidence": "exact selected installed versions; dependency binary provenance requires retained wheelhouse or pinned cached image",
+               "dependency_evidence": "version checks only; dependency bytes are not attested by this manifest",
+               "compatibility": "v1 manifests and source bindings covered only ciw and are refused; rebuild and independently select a v2 release",
                "ci_release_qualification": "not_performed", "publication": "not_performed", "deployment": "not_performed"}
     if os.environ.get("GITHUB_ACTIONS") == "true":
         receipt["runner_asserted_identity"] = {key: os.environ.get(key) for key in (
@@ -171,9 +186,6 @@ def build(root, output, dependencies):
                 export_source(root, revision, source)
                 if index == 0:
                     services = context_files(source, output)
-                closure = {"dependencies": dependencies, "service_files": services, "pins_digest": contract.digest(pins)}
-                binding = {"schema": contract.SOURCE_SCHEMA, "repository": REPOSITORY, "source_commit": revision,
-                           "source_tree": tree, "closure_digest": contract.digest(closure)}
                 wheel_dir = area / ("wheel-" + str(index))
                 env = {**os.environ, "SOURCE_DATE_EPOCH": str(epoch), "PYTHONHASHSEED": "0", "PYTHONDONTWRITEBYTECODE": "1", "PIP_NO_INDEX": "1", "PIP_DISABLE_PIP_VERSION_CHECK": "1"}
                 command = [sys.executable, "-B", "-m", "pip", "wheel", "--no-deps", "--no-build-isolation", "--no-index", "--wheel-dir", str(wheel_dir), str(source)]
@@ -181,13 +193,11 @@ def build(root, output, dependencies):
                 (output / ("build-" + str(index) + ".log")).write_text(result.stdout + result.stderr)
                 contract.require(result.returncode == 0, "offline wheel build failed; see build log")
                 wheel, = wheel_dir.glob("*.whl")
-                # Every packaged source/resource byte must originate in this exact
-                # source tree. The generated binding is the single declared addition.
-                with zipfile.ZipFile(wheel) as archive:
-                    for name in archive.namelist():
-                        if name.startswith("ciw/") and not name.endswith("/"):
-                            original = source / "src" / name
-                            contract.require(original.is_file() and archive.read(name) == original.read_bytes(), "source-to-wheel byte mismatch: " + name)
+                files = verify_source_bytes(wheel, source)
+                closure = {"package_roots": contract.package_roots(files), "dependencies": dependencies,
+                           "service_files": services, "pins_digest": contract.digest(pins)}
+                binding = {"schema": contract.SOURCE_SCHEMA, "repository": REPOSITORY, "source_commit": revision,
+                           "source_tree": tree, "closure_digest": contract.digest(closure)}
                 bound_wheel(wheel, binding, epoch)
                 wheels.append(wheel.read_bytes())
                 filename = wheel.name
@@ -212,7 +222,7 @@ def build(root, output, dependencies):
         (output / "requirements.lock").write_text("".join(f"{name}=={version}\n" for name, version in sorted(dependencies.items())))
         (output / "wheelhouse").mkdir()
         receipt.update(status="passed", identity=identity, manifest_sha256=contract.file_hash(manifest_path),
-                       package_files=len(files), imported_subtrees=len(pins["imports"]),
+                       package_roots=manifest["package_roots"], package_files=len(files), imported_subtrees=len(pins["imports"]),
                        source_byte_check="passed", reproducible_wheels=[sha256(raw).hexdigest() for raw in wheels])
         return receipt
     except Exception as exc:

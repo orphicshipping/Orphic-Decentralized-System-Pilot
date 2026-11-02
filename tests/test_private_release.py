@@ -18,27 +18,37 @@ def bundle(tmp_path, monkeypatch):
     service.parent.mkdir(parents=True)
     service.write_bytes(b'# service\n')
     dependencies = {name: '1.0' for name in ('numpy', 'websockets', 'mcp', 'starlette', 'uvicorn', 'jsonschema')}
-    closure = {'dependencies': dependencies, 'service_files': {'tools/private-mcp-host/adapter.py': release.file_hash(service)}, 'pins_digest': 'c' * 64}
+    closure = {'package_roots': ['ciw', 'net_geomatics'], 'dependencies': dependencies, 'service_files': {'tools/private-mcp-host/adapter.py': release.file_hash(service)}, 'pins_digest': 'c' * 64}
     source = {'schema': release.SOURCE_SCHEMA, 'repository': 'orphicsystems/Orphic-Decentralized-Systems-Protocol', 'source_commit': 'a' * 40, 'source_tree': 'b' * 40, 'closure_digest': release.digest(closure)}
-    entries = {'__init__.py': b'# package\n', 'model.json': b'{"example":1}', release.SOURCE_MARKER: release.canonical(source)}
+    entries = {'ciw/__init__.py': b'# package\n', 'ciw/model.json': b'{"example":1}', 'ciw/' + release.SOURCE_MARKER: release.canonical(source), 'net_geomatics/__init__.py': b'# geomatics\n', 'net_geomatics/gis.py': b'# gis\n'}
     wheel = wheel_root / 'computational_instrumentation_workbench-0.1.0-py3-none-any.whl'
     with zipfile.ZipFile(wheel, 'w') as archive:
         for name, content in entries.items():
-            archive.writestr('ciw/' + name, content)
-    installed = tmp_path / 'site-packages/ciw'
-    installed.mkdir(parents=True)
+            archive.writestr(name, content)
+        archive.writestr('computational_instrumentation_workbench-0.1.0.dist-info/top_level.txt', 'ciw\nnet_geomatics\n')
+    site = tmp_path / 'site-packages'
+    installed = site / 'ciw'
     for name, content in entries.items():
-        (installed / name).write_bytes(content)
+        target = site / name
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(content)
     manifest = {'schema': release.MANIFEST_SCHEMA, 'identity': {}, 'wheel': {'filename': wheel.name, 'size_bytes': wheel.stat().st_size}, 'distribution': {'name': release.DISTRIBUTION, 'version': '0.1.0'}, 'package_files': {name: sha256(content).hexdigest() for name, content in entries.items()}, **closure}
     identity = {'schema': release.IDENTITY_SCHEMA, 'repository': source['repository'], 'source_commit': source['source_commit'], 'source_tree': source['source_tree'], 'wheel_sha256': release.file_hash(wheel), 'package_digest': release.package_digest(manifest)}
     manifest['identity'] = identity
     path = wheel_root / 'release-manifest.json'
     path.write_text(json.dumps(manifest))
-    distribution = SimpleNamespace(version='0.1.0', locate_file=lambda name: installed, read_text=lambda name: None)
+    distribution = SimpleNamespace(version='0.1.0', locate_file=lambda name: site / name, read_text=lambda name: None)
     monkeypatch.setattr(release.metadata, 'distribution', lambda name: distribution)
     monkeypatch.setattr(release.metadata, 'version', lambda name: dependencies[name])
-    monkeypatch.setattr(release.importlib.util, 'find_spec', lambda name: SimpleNamespace(origin=str(installed / '__init__.py')))
-    return SimpleNamespace(path=path, manifest=manifest, identity=identity, root=root, service=service, wheel=wheel, installed=installed, distribution=distribution)
+    spec = lambda name: SimpleNamespace(origin=str(site / name / '__init__.py'), submodule_search_locations=[str(site / name)])
+    original_find = release.importlib.util.find_spec
+    original_path_find = release.importlib.machinery.PathFinder.find_spec
+    monkeypatch.setattr(release.importlib.util, 'find_spec',
+                        lambda name, *args: spec(name) if name in closure['package_roots'] else original_find(name, *args))
+    monkeypatch.setattr(release.importlib.machinery.PathFinder, 'find_spec',
+                        lambda name, *args: spec(name) if name in closure['package_roots'] else original_path_find(name, *args))
+    monkeypatch.setattr(release, 'sys', SimpleNamespace(path=[], modules={}))
+    return SimpleNamespace(path=path, manifest=manifest, identity=identity, root=root, service=service, wheel=wheel, installed=installed, site=site, distribution=distribution)
 
 
 def rewrite(bundle, manifest):
@@ -133,3 +143,69 @@ def test_manifest_is_explicit_and_absolute(bundle):
         release.verify_release('release-manifest.json')
     with pytest.raises(ValueError):
         release.verify_release(None)
+
+
+def test_owned_inventory_is_wheel_relative_and_includes_geomatics(bundle):
+    files = release.wheel_files(bundle.wheel)
+    assert set(files) == set(bundle.manifest['package_files'])
+    assert release.package_roots(files) == ['ciw', 'net_geomatics']
+    assert 'net_geomatics/gis.py' in files
+
+
+@pytest.mark.parametrize('mutation', ['changed', 'missing', 'unexpected', 'cache', 'symlink'])
+def test_every_owned_package_has_exact_installed_file_closure(bundle, mutation):
+    root = bundle.site / 'net_geomatics'
+    target = root / 'gis.py'
+    if mutation == 'changed':
+        target.write_bytes(b'# changed')
+    elif mutation == 'missing':
+        target.unlink()
+    elif mutation == 'unexpected':
+        (root / 'unexpected.py').write_bytes(b'# extra code')
+    elif mutation == 'cache':
+        (root / 'gis.pyc').write_bytes(b'executable cache')
+    else:
+        target.unlink()
+        target.symlink_to(bundle.installed / '__init__.py')
+    with pytest.raises(ValueError):
+        release.verify_release(bundle.path)
+
+
+def test_old_incomplete_manifest_requires_rebuild(bundle):
+    old = deepcopy(bundle.manifest)
+    old['schema'] = 'odsp.private-release-manifest.v1'
+    old.pop('package_roots')
+    old['package_files'] = {name[4:]: checksum for name, checksum in old['package_files'].items() if name.startswith('ciw/')}
+    rewrite(bundle, old)
+    with pytest.raises(ValueError, match='v1 package closure is incomplete and requires a rebuild'):
+        release.verify_release(bundle.path)
+
+
+def test_relabelled_partial_inventory_cannot_drop_owned_root(bundle):
+    partial = deepcopy(bundle.manifest)
+    partial['package_roots'] = ['ciw']
+    partial['package_files'] = {name: checksum for name, checksum in partial['package_files'].items() if name.startswith('ciw/')}
+    partial['identity']['package_digest'] = release.package_digest(partial)
+    rewrite(bundle, partial)
+    with pytest.raises(ValueError, match='package file manifest mismatch'):
+        release.verify_release(bundle.path)
+
+
+@pytest.mark.parametrize('entry', ['unowned.py', 'boot.pth', 'namespace/code.py', 'third_party/native.so', 'extra.dist-info/METADATA'])
+def test_unknown_wheel_install_layout_is_refused(bundle, entry):
+    with zipfile.ZipFile(bundle.wheel, 'a') as archive:
+        archive.writestr(entry, b'unsupported')
+    with pytest.raises(ValueError):
+        release.wheel_files(bundle.wheel)
+
+
+@pytest.mark.parametrize('declaration', ['ciw\n', 'ciw\nnet_geomatics\nnet_geomatics\n', 'ciw\nnet_geomatics\nabsent\n'])
+def test_root_ownership_metadata_must_match_complete_wheel(bundle, declaration):
+    with zipfile.ZipFile(bundle.wheel) as archive:
+        entries = {name: archive.read(name) for name in archive.namelist()}
+    entries['computational_instrumentation_workbench-0.1.0.dist-info/top_level.txt'] = declaration.encode()
+    with zipfile.ZipFile(bundle.wheel, 'w') as archive:
+        for name, raw in entries.items():
+            archive.writestr(name, raw)
+    with pytest.raises(ValueError, match='ownership metadata'):
+        release.wheel_files(bundle.wheel)

@@ -5,25 +5,32 @@ The retained wheel binds the source, dependency inventory and service files. The
 manifest is a consistency/provenance receipt, not a signature or a trust root.
 Install without bytecode and launch with -B so executable caches cannot bypass
 the installed-file check. No source checkout or network is used by verification.
+
+Version 2 inventories every regular package in the wheel, using wheel-relative
+paths. Version 1 receipts covered only ciw and are deliberately refused: rebuild
+and independently select a v2 release instead of relabelling an old receipt.
+Dependency versions are checked separately; they do not attest dependency bytes.
 """
 from __future__ import annotations
 
 from hashlib import sha256
 import importlib.metadata as metadata
+import importlib.machinery
 import importlib.util
 import json
 from pathlib import Path, PurePosixPath
 import re
 import stat
+import sys
 import zipfile
 
 IDENTITY_SCHEMA = "odsp.private-release-identity.v1"
-MANIFEST_SCHEMA = "odsp.private-release-manifest.v1"
-SOURCE_SCHEMA = "odsp.private-release-source.v1"
+MANIFEST_SCHEMA = "odsp.private-release-manifest.v2"
+SOURCE_SCHEMA = "odsp.private-release-source.v2"
 DISTRIBUTION = "computational-instrumentation-workbench"
 SOURCE_MARKER = "_private_release_source.json"
 IDENTITY_FIELDS = {"schema", "repository", "source_commit", "source_tree", "wheel_sha256", "package_digest"}
-MANIFEST_FIELDS = {"schema", "identity", "wheel", "distribution", "package_files", "dependencies", "service_files", "pins_digest"}
+MANIFEST_FIELDS = {"schema", "identity", "wheel", "distribution", "package_roots", "package_files", "dependencies", "service_files", "pins_digest"}
 MAX_BYTES = 256 * 1024 * 1024
 MAX_ENTRIES = 20000
 WHEEL_NAME = re.compile(r"computational_instrumentation_workbench-[A-Za-z0-9_.+]+-py3-none-any\.whl\Z")
@@ -104,11 +111,30 @@ def _files(value):
     return value
 
 
-def wheel_files(wheel: Path):
-    """Read bounded, unambiguous package bytes without extracting the archive."""
+def package_roots(files):
+    """Fail closed on wheel layouts requiring a different installation contract."""
+    _files(files)
+    roots = sorted({name.split("/", 1)[0] for name in files})
+    require("ciw" in roots, "release wheel must own ciw")
+    for root in roots:
+        require(re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", root) is not None
+                and root + "/__init__.py" in files,
+                "only regular Python package roots are supported: " + root)
+    return roots
+
+
+def wheel_files(wheel: Path, *, require_source_binding=True):
+    """Inventory all wheel-owned packages; never ignore an unknown wheel root.
+
+    Standalone modules, top-level namespace packages, .pth files, native extensions
+    and .data relocation require an explicit future contract and currently refuse.
+    Metadata remains retained in the hashed wheel; installer-generated metadata is
+    not represented as package bytes.
+    """
     require(wheel.is_file() and not wheel.is_symlink() and 0 < wheel.stat().st_size <= MAX_BYTES,
             "release wheel must be a bounded regular file")
     files, seen, prefixes, total = {}, set(), {}, 0
+    metadata_root = wheel.name.removesuffix("-py3-none-any.whl") + ".dist-info"
     with zipfile.ZipFile(wheel) as archive:
         require(len(archive.infolist()) <= MAX_ENTRIES, "release wheel entry budget exceeded")
         for info in archive.infolist():
@@ -122,12 +148,21 @@ def wheel_files(wheel: Path):
                 require(prefixes.setdefault(prefix.casefold(), node) == node, "ambiguous release wheel prefix")
             require(not stat.S_ISLNK(info.external_attr >> 16), "wheel symlinks are unsupported")
             require(not any(part.casefold().endswith(".data") for part in path.parts), "wheel relocation is unsupported")
-            require(not name.casefold().startswith("ciw/") or name.startswith("ciw/"), "ambiguous package root")
             total += info.file_size
             require(0 <= info.file_size <= MAX_BYTES and total <= MAX_BYTES, "release wheel byte budget exceeded")
-            if not info.is_dir() and name.startswith("ciw/"):
-                files[name[4:]] = sha256(archive.read(info)).hexdigest()
-    require("__init__.py" in files and SOURCE_MARKER in files, "release wheel source binding is missing")
+            if info.is_dir():
+                continue
+            if path.parts[0] == metadata_root:
+                continue
+            require(not name.casefold().endswith((".so", ".pyd", ".dll", ".pth")), "unsupported executable wheel layout")
+            files[name] = sha256(archive.read(info)).hexdigest()
+        roots = package_roots(files)
+        top_level = metadata_root + "/top_level.txt"
+        require(top_level in archive.namelist(), "wheel package ownership metadata is missing")
+        declared = archive.read(top_level).decode("utf-8").splitlines()
+        require(sorted(declared) == roots, "wheel package roots disagree with ownership metadata")
+    if require_source_binding:
+        require("ciw/" + SOURCE_MARKER in files, "release wheel source binding is missing")
     return files
 
 
@@ -149,7 +184,7 @@ def installed_files(files, root):
 
 
 def closure(manifest):
-    return {key: manifest[key] for key in ("dependencies", "service_files", "pins_digest")}
+    return {key: manifest[key] for key in ("package_roots", "dependencies", "service_files", "pins_digest")}
 
 
 def package_digest(manifest):
@@ -162,8 +197,9 @@ def verify_manifest(manifest_path):
     require(path.is_absolute() and path.is_file() and not path.is_symlink(), "release manifest must be an explicit absolute regular file")
     require(path.stat().st_size <= 4 * 1024 * 1024, "release manifest byte budget exceeded")
     manifest = strict_json(path.read_bytes())
-    require(isinstance(manifest, dict) and set(manifest) == MANIFEST_FIELDS, "invalid release manifest fields")
-    require(manifest["schema"] == MANIFEST_SCHEMA, "unsupported release manifest schema")
+    require(isinstance(manifest, dict) and manifest.get("schema") == MANIFEST_SCHEMA,
+            "unsupported release manifest schema; v1 package closure is incomplete and requires a rebuild")
+    require(set(manifest) == MANIFEST_FIELDS, "invalid release manifest fields")
     identity = validate_identity(manifest["identity"])
     wheel = manifest["wheel"]
     require(isinstance(wheel, dict) and set(wheel) == {"filename", "size_bytes"}, "invalid wheel binding")
@@ -172,7 +208,8 @@ def verify_manifest(manifest_path):
     distribution = manifest["distribution"]
     require(isinstance(distribution, dict) and set(distribution) == {"name", "version"}
             and distribution["name"] == DISTRIBUTION and isinstance(distribution["version"], str), "invalid distribution binding")
-    _files(manifest["package_files"])
+    require(manifest["package_roots"] == package_roots(manifest["package_files"]),
+            "release package root inventory mismatch")
     _files(manifest["service_files"])
     dependencies = manifest["dependencies"]
     require(isinstance(dependencies, dict) and 0 < len(dependencies) <= 256, "invalid dependency inventory")
@@ -194,20 +231,74 @@ def verify_manifest(manifest_path):
     return manifest
 
 
+def _import_location(name, files, distribution):
+    path = name.replace(".", "/")
+    if path + "/__init__.py" in files:
+        return Path(distribution.locate_file(path + "/__init__.py")), Path(distribution.locate_file(path))
+    if path + ".py" in files:
+        return Path(distribution.locate_file(path + ".py")), None
+    if any(item.startswith(path + "/") for item in files):
+        # Package data may be accessed as a subordinate PEP 420 namespace.
+        return None, Path(distribution.locate_file(path))
+    raise ValueError("loaded module is outside the release package inventory: " + name)
+
+
+def _origin_matches(spec, origin, directory):
+    if spec is None:
+        return False
+    observed = getattr(spec, "origin", None)
+    if origin is None:
+        if observed is not None:
+            return False
+    elif not isinstance(observed, str) or Path(observed).resolve() != origin.resolve():
+        return False
+    locations = getattr(spec, "submodule_search_locations", None)
+    if directory is None:
+        return locations is None
+    return locations is not None and [Path(item).resolve() for item in locations] == [directory.resolve()]
+
+
+def verify_import_origins(files, roots, distribution):
+    """Check fresh root resolution and all already loaded owned modules.
+
+    Finding a root spec does not import its package or execute numerical providers.
+    PathFinder also checks current sys.path when find_spec returns a cached module.
+    """
+    for name in roots:
+        origin, directory = _import_location(name, files, distribution)
+        require(_origin_matches(importlib.util.find_spec(name), origin, directory)
+                and _origin_matches(importlib.machinery.PathFinder.find_spec(name, sys.path), origin, directory),
+                "release package import origin mismatch: " + name)
+    for name, module in tuple(sys.modules.items()):
+        if name.split(".", 1)[0] not in roots:
+            continue
+        require(module is not None, "release package import is blocked: " + name)
+        origin, directory = _import_location(name, files, distribution)
+        require(_origin_matches(getattr(module, "__spec__", None), origin, directory),
+                "loaded release module origin mismatch: " + name)
+        observed = getattr(module, "__file__", None)
+        require((origin is None and observed is None) or (origin is not None and isinstance(observed, str)
+                and Path(observed).resolve() == origin.resolve()), "loaded release module file mismatch: " + name)
+        locations = getattr(module, "__path__", None)
+        require((directory is None and locations is None) or (directory is not None and locations is not None
+                and [Path(item).resolve() for item in locations] == [directory.resolve()]),
+                "loaded release package search path mismatch: " + name)
+
+
 def verify_release(manifest_path):
-    """Verify the installed CIW, service files and exact dependency versions."""
+    """Verify every owned package and service byte, plus dependency versions."""
     try:
         manifest = verify_manifest(manifest_path)
         distribution = metadata.distribution(DISTRIBUTION)
         require(distribution.version == manifest["distribution"]["version"], "installed distribution version mismatch")
-        root = Path(distribution.locate_file("ciw"))
-        spec = importlib.util.find_spec("ciw")
-        require(spec is not None and spec.origin is not None
-                and Path(spec.origin).resolve() == (root / "__init__.py").resolve(), "imported package differs from installed distribution")
         direct = distribution.read_text("direct_url.json")
         if direct:
             require(not strict_json(direct).get("dir_info", {}).get("editable", False), "editable release installations are unsupported")
-        installed_files(manifest["package_files"], root)
+        for root in manifest["package_roots"]:
+            files = {name[len(root) + 1:]: checksum for name, checksum in manifest["package_files"].items()
+                     if name.startswith(root + "/")}
+            installed_files(files, Path(distribution.locate_file(root)))
+        verify_import_origins(manifest["package_files"], manifest["package_roots"], distribution)
         for name, version in manifest["dependencies"].items():
             require(metadata.version(name) == version, "installed release dependency mismatch: " + name)
         service_root = Path(manifest_path).parent.parent
@@ -221,5 +312,5 @@ def verify_release(manifest_path):
                         if str(PurePosixPath(name).parent) == directory}
             installed_files(expected, service_root / directory)
         return dict(manifest["identity"])
-    except (OSError, TypeError, KeyError, AttributeError, zipfile.BadZipFile, metadata.PackageNotFoundError) as exc:
+    except (OSError, TypeError, KeyError, AttributeError, RuntimeError, zipfile.BadZipFile, metadata.PackageNotFoundError) as exc:
         raise ValueError("private release verification refused: " + str(exc)) from exc

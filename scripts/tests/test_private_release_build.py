@@ -67,3 +67,219 @@ def test_private_policy_is_additive_to_unchanged_baseline_requirements():
         'jobs': ['isolated-container'], 'artifacts': ['odsp-private-host-evidence'],
         'allowed_skipped_jobs': [], 'excluded_jobs': {},
     }]
+
+
+def test_source_to_wheel_check_covers_non_ciw_package(tmp_path):
+    source = tmp_path / 'source'
+    wheel = tmp_path / 'computational_instrumentation_workbench-0.1.0-py3-none-any.whl'
+    entries = {'ciw/__init__.py': b'# ciw\n', 'net_geomatics/__init__.py': b'# geomatics\n', 'net_geomatics/gis.py': b'# provider\n'}
+    with zipfile.ZipFile(wheel, 'w') as archive:
+        for name, raw in entries.items():
+            archive.writestr(name, raw)
+            target = source / 'src' / name
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(raw)
+        archive.writestr('computational_instrumentation_workbench-0.1.0.dist-info/top_level.txt', 'ciw\nnet_geomatics\n')
+    assert set(builder.verify_source_bytes(wheel, source)) == set(entries)
+    (source / 'src/net_geomatics/gis.py').write_bytes(b'# drifted provider\n')
+    with pytest.raises(ValueError, match='source-to-wheel byte mismatch: net_geomatics/gis.py'):
+        builder.verify_source_bytes(wheel, source)
+
+
+@pytest.fixture(scope='module')
+def installed_release(tmp_path_factory):
+    """Install the actual source wheel outside the checkout, without downloads.
+
+    This focuses on the release verifier, not an MCP/scientific qualification.
+    The six required runtime distributions are copied from the interpreter that
+    runs this gate; their versions are recorded, not claimed as byte attestation.
+    No import hooks, editable install, source overlay or verifier mock is used.
+    """
+    import importlib.metadata as metadata
+    import os
+    import shutil
+    import subprocess
+    import sys
+    from types import SimpleNamespace
+    import venv
+
+    root = tmp_path_factory.mktemp('private-release-installed')
+    source, context, environment = root / 'source', root / 'context', root / 'environment'
+    source.mkdir()
+    shutil.copytree(builder.ROOT / 'src', source / 'src', ignore=shutil.ignore_patterns('__pycache__', '*.pyc', '*.egg-info'))
+    for name in ('pyproject.toml', 'LICENSE'):
+        shutil.copyfile(builder.ROOT / name, source / name)
+    wheels = context / 'wheel'
+    wheels.mkdir(parents=True)
+    result = subprocess.run([sys.executable, '-B', '-m', 'pip', 'wheel', '--no-index', '--no-deps', '--no-build-isolation',
+                             '--wheel-dir', str(wheels), str(source)], cwd=root,
+                            env={**os.environ, 'PIP_NO_INDEX':'1', 'PIP_DISABLE_PIP_VERSION_CHECK':'1',
+                                 'SOURCE_DATE_EPOCH':'1700000000', 'PYTHONDONTWRITEBYTECODE':'1'},
+                            capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stdout + result.stderr
+    (root / 'wheel-build.log').write_text(result.stdout + result.stderr)
+    wheel, = wheels.glob('*.whl')
+    files = builder.verify_source_bytes(wheel, source)
+    assert builder.contract.package_roots(files) == ['ciw', 'net_geomatics']
+    assert len([name for name in files if name.startswith('net_geomatics/')]) == 7
+    venv.EnvBuilder(with_pip=False).create(environment)
+    python = environment / ('Scripts/python.exe' if os.name == 'nt' else 'bin/python')
+    probe = subprocess.run([str(python), '-I', '-B', '-c', 'import sysconfig; print(sysconfig.get_path("purelib"))'],
+                           cwd=root, capture_output=True, text=True, check=True)
+    site = Path(probe.stdout.strip())
+    dependencies = {}
+    for name in ('numpy', 'websockets', 'mcp', 'starlette', 'uvicorn', 'jsonschema'):
+        distribution = metadata.distribution(name)
+        dependencies[name] = distribution.version
+        for owned in distribution.files or ():
+            # Console entry points outside site-packages are not needed by this
+            # verifier fixture. Copy only the existing distribution's files.
+            if '..' in owned.parts or owned.is_absolute():
+                continue
+            origin = Path(distribution.locate_file(owned))
+            if not origin.is_file():
+                continue
+            target = site / owned
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(origin, target)
+    service = context / 'tools/private-mcp-host/adapter.py'
+    service.parent.mkdir(parents=True)
+    service.write_text('# Synthetic service byte fixture; never executed.\n')
+    closure = {'package_roots':builder.contract.package_roots(files), 'dependencies':dependencies,
+               'service_files':{'tools/private-mcp-host/adapter.py':builder.contract.file_hash(service)}, 'pins_digest':'c' * 64}
+    binding = {'schema':builder.contract.SOURCE_SCHEMA, 'repository':builder.REPOSITORY, 'source_commit':'a' * 40,
+               'source_tree':'b' * 40, 'closure_digest':builder.contract.digest(closure)}
+    builder.bound_wheel(wheel, binding, 1700000000)
+    files = builder.contract.wheel_files(wheel)
+    manifest = {'schema':builder.contract.MANIFEST_SCHEMA, 'identity':{},
+                'wheel':{'filename':wheel.name,'size_bytes':wheel.stat().st_size},
+                'distribution':{'name':builder.contract.DISTRIBUTION,'version':'0.1.0'}, 'package_files':files, **closure}
+    identity = {'schema':builder.contract.IDENTITY_SCHEMA, 'repository':builder.REPOSITORY, 'source_commit':'a' * 40,
+                'source_tree':'b' * 40, 'wheel_sha256':builder.contract.file_hash(wheel),
+                'package_digest':builder.contract.package_digest(manifest)}
+    manifest['identity'] = identity
+    path = wheels / 'release-manifest.json'
+    path.write_text(json.dumps(manifest))
+    result = subprocess.run([sys.executable, '-B', '-m', 'pip', '--python', str(python), 'install', '--no-index', '--no-deps',
+                             '--no-compile', str(wheel)], cwd=root, capture_output=True, text=True, timeout=60)
+    assert result.returncode == 0, result.stdout + result.stderr
+    (root / 'wheel-install.log').write_text(result.stdout + result.stderr)
+    fixture = SimpleNamespace(root=root, site=site, python=python, manifest=manifest, path=path,
+                              identity=identity, wheel=wheel, calls=[])
+    yield fixture
+    (root / 'installed-verifier-calls.json').write_text(json.dumps(fixture.calls, sort_keys=True, indent=2) + '\n')
+
+
+def run_installed(fixture, program):
+    import subprocess
+    import textwrap
+    result = subprocess.run([str(fixture.python), '-I', '-B', '-c', textwrap.dedent(program)],
+                            cwd=fixture.root, capture_output=True, text=True, timeout=30)
+    fixture.calls.append({'argv':result.args, 'returncode':result.returncode, 'stdout':result.stdout, 'stderr':result.stderr})
+    assert result.returncode == 0, result.stdout + result.stderr
+    return json.loads(result.stdout)
+
+
+def test_real_installed_wheel_verifies_every_owned_root(installed_release):
+    item = installed_release
+    result = run_installed(item, f'''
+        import ciw, ciw.operator_examples, net_geomatics.gis, json, pathlib, sys
+        from ciw.private_release import verify_release
+        assert pathlib.Path(ciw.__file__).is_relative_to(pathlib.Path(sys.prefix))
+        assert pathlib.Path(net_geomatics.gis.__file__).is_relative_to(pathlib.Path(sys.prefix))
+        assert pathlib.Path.cwd() != pathlib.Path({str(builder.ROOT)!r})
+        print(json.dumps(verify_release({str(item.path)!r})))
+    ''')
+    assert result == item.identity
+
+
+@pytest.mark.parametrize('mutation', ['changed', 'missing', 'unexpected', 'cache'])
+def test_real_installed_geomatics_byte_drift_refuses(installed_release, mutation):
+    item = installed_release
+    target = item.site / 'net_geomatics/gis.py'
+    original = target.read_bytes()
+    extra = item.site / ('net_geomatics/unexpected.py' if mutation == 'unexpected' else 'net_geomatics/gis.pyc')
+    try:
+        if mutation == 'changed':
+            target.write_bytes(original + b'\n# changed installed provider\n')
+        elif mutation == 'missing':
+            target.unlink()
+        else:
+            extra.write_bytes(b'unknown executable bytes')
+        result = run_installed(item, f'''
+            import json
+            from ciw.private_release import verify_release
+            try:
+                verify_release({str(item.path)!r})
+            except ValueError as error:
+                print(json.dumps({{'status':'refused','reason':str(error)}}))
+            else:
+                raise AssertionError('modified net_geomatics installation was accepted')
+        ''')
+        assert result['status'] == 'refused'
+    finally:
+        target.write_bytes(original)
+        if extra.exists():
+            extra.unlink()
+
+
+@pytest.mark.parametrize('loaded_first', [False, True])
+def test_real_installed_root_shadow_refuses_without_importing_shadow(installed_release, loaded_first):
+    item = installed_release
+    shadow = item.root / ('shadow-loaded' if loaded_first else 'shadow-fresh')
+    package = shadow / 'net_geomatics'
+    package.mkdir(parents=True)
+    marker = shadow / 'executed.txt'
+    (package / '__init__.py').write_text(f'from pathlib import Path\nPath({str(marker)!r}).write_text("executed")\n')
+    result = run_installed(item, f'''
+        import json, pathlib, sys
+        from ciw.private_release import verify_release
+        if {loaded_first!r}:
+            import net_geomatics.gis
+        sys.path.insert(0, {str(shadow)!r})
+        try:
+            verify_release({str(item.path)!r})
+        except ValueError as error:
+            assert not pathlib.Path({str(marker)!r}).exists(), 'verifier imported a shadow package'
+            print(json.dumps({{'status':'refused','reason':str(error)}}))
+        else:
+            raise AssertionError('shadowed package root was accepted')
+    ''')
+    assert 'import origin mismatch: net_geomatics' in result['reason']
+
+
+def test_real_installed_loaded_child_origin_refuses(installed_release):
+    item = installed_release
+    foreign = item.root / 'foreign-gis.py'
+    foreign.write_text('VALUE = "foreign module fixture"\n')
+    result = run_installed(item, f'''
+        import importlib.util, json, net_geomatics, sys
+        from ciw.private_release import verify_release
+        spec = importlib.util.spec_from_file_location('net_geomatics.gis', {str(foreign)!r})
+        module = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(module)
+        sys.modules['net_geomatics.gis'] = module
+        try:
+            verify_release({str(item.path)!r})
+        except ValueError as error:
+            print(json.dumps({{'status':'refused','reason':str(error)}}))
+        else:
+            raise AssertionError('foreign loaded provider module was accepted')
+    ''')
+    assert 'loaded release module origin mismatch: net_geomatics.gis' in result['reason']
+
+
+def test_real_installed_loaded_root_search_path_refuses(installed_release):
+    item = installed_release
+    result = run_installed(item, f'''
+        import json, net_geomatics
+        from ciw.private_release import verify_release
+        net_geomatics.__path__.append({str(item.root)!r})
+        try:
+            verify_release({str(item.path)!r})
+        except ValueError as error:
+            print(json.dumps({{'status':'refused','reason':str(error)}}))
+        else:
+            raise AssertionError('modified loaded package search path was accepted')
+    ''')
+    assert result['status'] == 'refused'
