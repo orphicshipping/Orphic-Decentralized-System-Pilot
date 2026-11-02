@@ -37,20 +37,33 @@ class _Lease:
     def try_acquire(self) -> bool:
         flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
         fd = os.open(self.path, flags, 0o600)
-        if _try_lock(fd):
-            self.fd = fd
-            return True
-        os.close(fd)
-        return False
+        try:
+            if _try_lock(fd):
+                self.fd = fd
+                return True
+            return False
+        except BaseException:
+            # A signal can arrive after the kernel acquired the lock. Until a
+            # successful return, this attempt must not leave an unowned fd.
+            if self.fd == fd:
+                self.fd = None
+            raise
+        finally:
+            if self.fd != fd:
+                # Closing also releases a possibly acquired lock; do not try
+                # to unlock a failed acquisition (not valid on every platform).
+                os.close(fd)
 
     def release(self) -> None:
-        if self.fd is not None:
+        fd, self.fd = self.fd, None
+        if fd is not None:
             try:
-                os.lseek(self.fd, 0, os.SEEK_SET)
-                _lock_release(self.fd)
+                os.lseek(fd, 0, os.SEEK_SET)
+                _lock_release(fd)
             finally:
-                os.close(self.fd)
-                self.fd = None
+                # Detach before I/O: a repeated cleanup must not close an fd
+                # number which the OS may have reused after a close error.
+                os.close(fd)
 
 
 def _lease_path(directory: Path, name: str) -> Path:
@@ -183,15 +196,21 @@ def _hold_exclusive(store, name: str, wait: float = 0.0):
     path = _exclusive_path(name)
     deadline = time.monotonic() + max(0.0, float(wait))
     lease = _Lease(path)
-    while not lease.try_acquire():
-        if time.monotonic() >= deadline:
-            return None
-        time.sleep(0.02)
-    record = json.dumps({"pid": os.getpid(), "owner": store.owner, "liveness": "file-lease"}).encode()
-    os.ftruncate(lease.fd, 0)
-    os.lseek(lease.fd, 0, os.SEEK_SET)
-    os.write(lease.fd, record)
-    return lease
+    try:
+        while not lease.try_acquire():
+            if time.monotonic() >= deadline:
+                return None
+            time.sleep(0.02)
+        record = json.dumps({"pid": os.getpid(), "owner": store.owner, "liveness": "file-lease"}).encode()
+        os.ftruncate(lease.fd, 0)
+        os.lseek(lease.fd, 0, os.SEEK_SET)
+        os.write(lease.fd, record)
+        return lease
+    except BaseException:
+        # The caller cannot clean up a lease which this function never returned.
+        # Leave the stable lock-file inode in place and release our local owner.
+        lease.release()
+        raise
 
 
 def _release_exclusive(lease) -> None:
@@ -226,15 +245,13 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
         return existing
     held = None
     try:
-        if exclusive is not None:
-            held = _hold_exclusive(store, exclusive, exclusive_wait)
-            if held is None:
-                failure = store.keep_failure({"error": "exclusive_resource_busy", "operation": operation})
-                _finish(store, idempotency_key, {**existing, "status": "failed",
-                                                 "error": "exclusive_resource_busy", "artifact_id": failure})
-                raise RetainedFailure("exclusive_resource_busy", failure)
-        _EXECUTIONS += 1
         try:
+            if exclusive is not None:
+                held = _hold_exclusive(store, exclusive, exclusive_wait)
+                if held is None:
+                    failure = store.keep_failure({"error": "exclusive_resource_busy", "operation": operation})
+                    raise RetainedFailure("exclusive_resource_busy", failure)
+            _EXECUTIONS += 1
             result = domain_run(store=store, **arguments)
         except _CANCELLED:
             _finish(store, idempotency_key, {**existing, "status": "cancelled", "error": "cancelled"})
@@ -251,10 +268,13 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
         done["authorizes_execution"] = False
         return done
     finally:
-        _release_exclusive(held)
-        # The terminal record is written before the lease drops, so no recoverer
-        # can see a running record with a free lease while this worker is alive.
-        lease.release()
+        try:
+            _release_exclusive(held)
+        finally:
+            # A resource-cleanup failure must not strand the job lease. Terminal
+            # publication precedes cleanup; never overwrite completed on a
+            # cleanup cancellation or permit a replay to execute the job again.
+            lease.release()
 
 
 def _grants_lock():
