@@ -67,7 +67,8 @@ def _specs():
     from .logistics_profile import TOOLS as LOGISTICS
     from .recompiler_profile import TOOLS as RECOMPILER
     from .schematic_profile import TOOLS as SCHEMATIC
-    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC,
+    from .clocksync_profile import TOOLS as CLOCKSYNC
+    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -227,6 +228,9 @@ def _direct_science(name, arguments):
     if name in {"ncp_schematic_validate", "ncp_schematic_retrieve", "ncp_schematic_assess", "ncp_schematic_verify_receipt"}:
         from .schematic_profile import OPERATION
         return {OPERATION}
+    if name in {"ncp_clocksync_reconcile", "ncp_clocksync_replay"}:
+        from .clocksync_profile import OPERATION
+        return {OPERATION}
     capability = {"ncp_demo": "synthetic-oscillator-demo", "ncp_linear_preview": "linear-response.library",
                   "ncp_polymer_cycle": "data.assess-polymer-cycle.v1",
                   "ncp_toolpoint": "data.review-toolpoint-containment.v1",
@@ -316,10 +320,10 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
-                               logistics=logistics, recompiler=recompiler, schematic=schematic)
+                               logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync)
 
 
 class PrincipalFacade:
@@ -329,7 +333,7 @@ class PrincipalFacade:
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
         self.retained = None
-        for family in ("state", "logistics", "recompiler", "schematic"):
+        for family in ("state", "logistics", "recompiler", "schematic", "clocksync"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
         if hosts.get("logistics") is not None:
@@ -352,7 +356,8 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("schematic" if name.startswith("ncp_schematic_") else
+        family = ("clocksync" if name.startswith("ncp_clocksync_") else
+                  "schematic" if name.startswith("ncp_schematic_") else
                   "recompiler" if name.startswith("ncp_recompiler_") else
                   "state" if name.startswith("ncp_state_") else "logistics" if name.startswith("ncp_logistics_")
                   else "reference" if name == "ncp_system_status" or name.startswith(("ncp_knowledge_", "ncp_evidence_"))

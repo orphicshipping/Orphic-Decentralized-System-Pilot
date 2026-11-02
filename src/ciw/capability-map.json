@@ -2292,6 +2292,109 @@
       "environment": "Existing pinned adapter inherits host environment except its stripped path variables; no network sandbox is claimed.",
       "qualification": "not_established_by_discovery",
       "authorizes_execution": false
+    },
+    {
+      "profile_id": "clocksync.affine.v1",
+      "adapter_contract_commit": "40507060ca7a9126a9d641999b994a757eef3bfd",
+      "operation_id": "tbrt.affine-clock-reconcile.v1",
+      "host_factory": "ciw.clocksync_profile.open_clocksync",
+      "service": "ciw.services.invoke",
+      "source_binding_verification": "caller_assertion_only",
+      "authorizes_execution": false,
+      "authorizes_state_admission": false,
+      "qualification": "not_performed_by_discovery",
+      "authority": {
+        "source_binding_verification": "caller_assertion_only",
+        "authorizes_execution": false,
+        "authorizes_state_admission": false,
+        "source_authenticated": false,
+        "synchronization_performed": false,
+        "utc_conversion_performed": false,
+        "traceability_verified": false,
+        "evidence_admission": false
+      },
+      "comparison_policy": {
+        "comparison_id": "odsp.clocksync.canonical-replay.v1",
+        "comparison": "complete_canonical_json_exact",
+        "scope": "same_bound_runtime",
+        "cross_platform_bitwise_guarantee": false,
+        "dependency_identity": "numpy_scipy_version_labels_only_not_binary_attestation",
+        "propagation": "first-order.v1",
+        "origins": "fixed_constants",
+        "bridge_sha256": "8730a424525857230c882eb9bb4b761ed5b1654def3e7fd02fe0c9ce040dd3a7",
+        "blas_threads": 1
+      },
+      "tools": [
+        {
+          "name": "ncp_clocksync_describe",
+          "description": "Describe bounded host-pinned TBRT mapping; no synchronization or authority grant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_clocksync_reconcile",
+          "description": "Map one declared event with an independently supplied expected reference, retained origin/delta and first-order covariance. Caller execution_id is preserved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_clocksync_replay",
+          "description": "Replay and compare every field of a complete receipt under the same runtime and comparison policy. No new occurrence identity or source authentication.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "receipt": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "receipt"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
     }
   ],
   "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
