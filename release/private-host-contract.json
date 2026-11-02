@@ -3,7 +3,7 @@
   "authorizes_execution": false,
   "authorizes_deployment": false,
   "qualification": "not_established_by_this_contract",
-  "repository": "orphicsystems/Orphic-Decentralized-Systems-Protocol",
+  "repository": "orphicsystems/Orphic-Decentralized-System-Protocol",
   "profile": "private-single-writer-posix",
   "deployment_assumptions": {
     "status": "proposed_requires_explicit_configuration_and_qualification",

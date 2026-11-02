@@ -23,7 +23,7 @@ from check_private_host_qualification import (parse_tap, require, run_command,
 from build_private_release import contract
 
 ROOT = Path(__file__).resolve().parents[1]
-REPOSITORY = "orphicsystems/Orphic-Decentralized-Systems-Protocol"
+REPOSITORY = "orphicsystems/Orphic-Decentralized-System-Protocol"
 PHASES = ("contracts", "build", "install", "qualify", "node")
 RELEASE_CONTRACT_TESTS = ("tests/test_private_release.py", "scripts/tests/test_private_release_build.py",
                           "scripts/tests/test_private_woodpecker.py")

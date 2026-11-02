@@ -21,7 +21,10 @@ def environment():
     return {"CI_REPO": ci.REPOSITORY, "CI_COMMIT_SHA": IDENTITY["commit"], "CI_PIPELINE_EVENT": "manual"}
 
 
-@pytest.mark.parametrize("key,value", [("CI_REPO", "other/repo"), ("CI_COMMIT_SHA", "c" * 40),
+@pytest.mark.parametrize("key,value", [("CI_REPO", "other/repo"),
+                                     ("CI_REPO", "orphicsystems/Orphic-Decentralized-Systems-Protocol"),
+                                     ("CI_REPO", "https://github.com/" + ci.REPOSITORY),
+                                     ("CI_REPO", ci.REPOSITORY.lower()), ("CI_COMMIT_SHA", "c" * 40),
                                      ("CI_PIPELINE_EVENT", "pull_request"), ("CI_PIPELINE_EVENT", "deployment")])
 def test_identity_and_event_refuse(key, value):
     env = environment(); env[key] = value

@@ -33,7 +33,7 @@ SPEC = importlib.util.spec_from_file_location("private_release_build_contract", 
 contract = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(contract)
 PRIVATE = "tools/odrp-private-host-candidate"
-REPOSITORY = "orphicsystems/Orphic-Decentralized-Systems-Protocol"
+REPOSITORY = "orphicsystems/Orphic-Decentralized-System-Protocol"
 
 
 def git(root, *args, binary=False):

@@ -69,6 +69,52 @@ def test_private_policy_is_additive_to_unchanged_baseline_requirements():
     }]
 
 
+def test_current_repository_bindings_and_project_urls_are_exact():
+    import tomllib
+    root = Path(__file__).resolve().parents[2]
+    repository = 'orphicsystems/Orphic-Decentralized-System-Protocol'
+    assert builder.REPOSITORY == repository
+    for name in ('qualification-policy.json', 'private-qualification-policy.json', 'private-host-contract.json'):
+        assert json.loads((root / 'release' / name).read_text())['repository'] == repository
+    project = tomllib.loads((root / 'pyproject.toml').read_text())['project']
+    base = 'https://github.com/' + repository
+    assert project['urls'] == {'Repository': base, 'Documentation': base + '/blob/main/docs/quickstart.md',
+                               'Issues': base + '/issues'}
+    assert f'The current repository is `{repository}`.' in (root / 'docs/QUALIFIED_RELEASE.md').read_text()
+    assert '--env CI_REPO=' + repository + '`' in (root / 'docs/WOODPECKER_PRIVATE_CI.md').read_text()
+
+
+@pytest.mark.parametrize('repository,sha', [
+    ('orphicsystems/Orphic-Decentralized-Systems-Protocol', 'a' * 40),
+    ('other/Orphic-Decentralized-System-Protocol', 'a' * 40),
+    ('orphicsystems/Orphic-Decentralized-System-Protocol', 'b' * 40),
+])
+def test_github_build_refuses_noncanonical_repository_or_wrong_sha_before_export(tmp_path, monkeypatch, repository, sha):
+    root, output = tmp_path / 'source', tmp_path / 'release'
+    root.mkdir()
+    def git(source, *args, binary=False):
+        if args[0] == 'status': return ''
+        if args[0] == 'rev-parse': return ('a' if args[1] == 'HEAD' else 'c') * 40
+        if args[-1].endswith(':release/qualification-policy.json'):
+            return json.dumps({'repository': builder.REPOSITORY}).encode()
+        return '1700000000'
+    monkeypatch.setattr(builder, 'git', git)
+    monkeypatch.setattr(builder, 'audit_pins', lambda *args: {})
+    monkeypatch.setattr(builder.metadata, 'version', lambda name: 'fixture-version')
+    def forbidden(*args): raise AssertionError('failed runner identity launched a build')
+    monkeypatch.setattr(builder, 'export_source', forbidden)
+    monkeypatch.setenv('GITHUB_ACTIONS', 'true')
+    monkeypatch.setenv('GITHUB_REPOSITORY', repository)
+    monkeypatch.setenv('GITHUB_SHA', sha)
+    with pytest.raises(ValueError, match='CI runner source/repository identity mismatch'):
+        builder.build(root, output, {})
+    receipt = json.loads((output / 'build-receipt.json').read_text())
+    assert receipt['status'] == 'failed'
+    assert receipt['repository'] == builder.REPOSITORY
+    assert receipt['runner_asserted_identity']['GITHUB_REPOSITORY'] == repository
+    assert not (output / 'wheel').exists()
+
+
 def test_private_workflow_selects_every_regular_package_root():
     import re
     root = Path(__file__).resolve().parents[2]

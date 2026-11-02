@@ -73,7 +73,7 @@ Use the official checksum-verified Woodpecker CLI3.20.1 with
 `--disable-update-check exec --backend-engine local --local --timeout 30m`,
 explicit repository/commit/manual metadata and the two launcher variables via
 `--env`. For CLI3.20.1, also supply the canonical repository explicitly as
-`--env CI_REPO=orphicsystems/Orphic-Decentralized-Systems-Protocol`: the declared
+`--env CI_REPO=orphicsystems/Orphic-Decentralized-System-Protocol`: the declared
 `--repo` flag does not populate it in this version. A local metadata probe and
 the [pinned metadata reader](https://github.com/woodpecker-ci/woodpecker/blob/v3.20.1/cli/exec/metadata.go#L49)
 confirm its `repo-name`/`repo` flag mismatch. Keep the driver's canonical-value

@@ -10,7 +10,7 @@ from ciw import private_release as release
 
 
 @pytest.fixture
-def bundle(tmp_path, monkeypatch):
+def bundle(tmp_path, monkeypatch, request):
     root = tmp_path / 'context'
     wheel_root = root / 'wheel'
     wheel_root.mkdir(parents=True)
@@ -19,7 +19,8 @@ def bundle(tmp_path, monkeypatch):
     service.write_bytes(b'# service\n')
     dependencies = {name: '1.0' for name in ('numpy', 'websockets', 'mcp', 'starlette', 'uvicorn', 'jsonschema')}
     closure = {'package_roots': ['ciw', 'net_geomatics'], 'dependencies': dependencies, 'service_files': {'tools/private-mcp-host/adapter.py': release.file_hash(service)}, 'pins_digest': 'c' * 64}
-    source = {'schema': release.SOURCE_SCHEMA, 'repository': 'orphicsystems/Orphic-Decentralized-Systems-Protocol', 'source_commit': 'a' * 40, 'source_tree': 'b' * 40, 'closure_digest': release.digest(closure)}
+    repository = getattr(request, 'param', 'orphicsystems/Orphic-Decentralized-System-Protocol')
+    source = {'schema': release.SOURCE_SCHEMA, 'repository': repository, 'source_commit': 'a' * 40, 'source_tree': 'b' * 40, 'closure_digest': release.digest(closure)}
     entries = {'ciw/__init__.py': b'# package\n', 'ciw/model.json': b'{"example":1}', 'ciw/' + release.SOURCE_MARKER: release.canonical(source), 'net_geomatics/__init__.py': b'# geomatics\n', 'net_geomatics/gis.py': b'# gis\n'}
     wheel = wheel_root / 'computational_instrumentation_workbench-0.1.0-py3-none-any.whl'
     with zipfile.ZipFile(wheel, 'w') as archive:
@@ -60,8 +61,21 @@ def test_verifies_real_package_and_service_bytes(bundle):
     assert release.verify_manifest(bundle.path)['identity'] == bundle.identity
 
 
+@pytest.mark.parametrize('bundle', ['orphicsystems/Orphic-Decentralized-Systems-Protocol'], indirect=True)
+def test_historical_source_bound_identity_is_preserved_not_aliased(bundle):
+    before = {path: path.read_bytes() for path in (bundle.path, bundle.wheel, bundle.installed / release.SOURCE_MARKER)}
+    assert release.verify_release(bundle.path) == bundle.identity
+    assert all(path.read_bytes() == raw for path, raw in before.items())
+    renamed = deepcopy(bundle.manifest)
+    renamed['identity']['repository'] = 'orphicsystems/Orphic-Decentralized-System-Protocol'
+    rewrite(bundle, renamed)
+    with pytest.raises(ValueError, match='source/closure binding'):
+        release.verify_release(bundle.path)
+
+
 @pytest.mark.parametrize('key,value', [
     ('source_commit', 'd' * 40), ('source_tree', 'd' * 40), ('repository', 'other/repository'),
+    ('repository', 'orphicsystems/Orphic-Decentralized-Systems-Protocol'),
     ('wheel_sha256', 'd' * 64), ('package_digest', 'd' * 64), ('source_commit', 'short'),
     ('source_tree', None), ('schema', 'historical-release'),
 ])

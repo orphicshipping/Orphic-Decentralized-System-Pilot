@@ -491,6 +491,25 @@ class PolicyAndRunSelectionTests(unittest.TestCase):
 
 
 class PaginationAndCollectionTests(unittest.TestCase):
+    def test_canonical_repository_is_used_without_following_rename_redirects(self):
+        canonical = 'orphicsystems/Orphic-Decentralized-System-Protocol'
+        policy = gate.strict_json((ROOT / 'release/qualification-policy.json').read_bytes())
+        self.assertEqual(policy['repository'], canonical)
+        client = gate.GitHub(policy['repository'])
+        with mock.patch.object(client.opener, 'open', return_value=io.BytesIO(b'{"workflow_runs":[]}')) as opened:
+            self.assertEqual(client.get('actions/runs', {'head_sha': SHA}), {'workflow_runs': []})
+        self.assertEqual(opened.call_args.args[0].full_url,
+                         'https://api.github.com/repos/' + canonical + '/actions/runs?head_sha=' + SHA)
+        self.assertEqual(opened.call_args.kwargs, {'timeout': 30})
+        for code in (301, 302, 307, 308):
+            with self.subTest(code=code), self.assertRaisesRegex(ValueError, 'redirect refused'):
+                gate.NoRedirect().redirect_request(None, None, code, '', {},
+                    'https://api.github.com/repos/' + canonical + '/actions/runs')
+        current = {**run_fixture(), 'head_repository': {'full_name': canonical}}
+        old = {**current, 'head_repository': {'full_name': 'orphicsystems/Orphic-Decentralized-Systems-Protocol'}}
+        self.assertIs(gate.select_run([old, current], SHA, canonical, WORKFLOW), current)
+        self.assertIsNone(gate.select_run([old], SHA, canonical, WORKFLOW))
+
     def pages(self, responses):
         client = gate.GitHub(REPOSITORY)
         with mock.patch.object(client, "get", side_effect=responses) as get:

@@ -28,7 +28,7 @@ numerical domains, experimental gaps and review criteria for extending selected
 merged models. Research-release acceptance does not certify a production
 measurement chain or product.
 
-The current repository is `orphicsystems/Orphic-Decentralized-Systems-Protocol`.
+The current repository is `orphicsystems/Orphic-Decentralized-System-Protocol`.
 The live qualification policy uses that canonical address; the collector refuses
 API redirects and checks the repository identity. Dated baseline observations
 and release-scope snapshots retain the repository name and URLs observed when
