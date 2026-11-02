@@ -655,3 +655,54 @@ def test_consumers_run_outside_the_checkout_on_python_311(tmp_path):
     for name, want in expected.items():
         out = subprocess.check_output([interpreter, str(destination / name)], cwd="/tmp", env=env)
         assert out == want, (name, out)
+
+
+def test_logistics_pathway_routes_reads_and_refuses_dispatch(tmp_path, monkeypatch):
+    import json
+    import threading
+    from http.server import BaseHTTPRequestHandler, HTTPServer
+    monkeypatch.delenv("NCP_LOGISTICS_ENDPOINT", raising=False)
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    from ciw.services import invoke
+    listed = invoke("ncp_logistics_list")
+    assert listed["segment"] == "odsp-logistics" and listed["grants_shared"] is False
+    assert listed["tool"] == "inspect_retained" and listed["authorizes_execution"] is False
+    assert invoke("ncp_logistics_route", {"intent": "catalog"})["disposition"] == "logistics_read"
+    assert invoke("ncp_logistics_route", {"intent": "vehicle-routing"})["disposition"] == "logistics_compute"
+    try:
+        invoke("ncp_logistics_call", {"intent": "dispatch"})
+    except ValueError as exc:
+        assert "logistics_effect_refused" in str(exc)
+    else:
+        raise AssertionError("dispatch")
+    try:
+        invoke("ncp_logistics_call", {"intent": "catalog"})
+    except ValueError as exc:
+        assert "logistics_host_unbound" in str(exc)
+    else:
+        raise AssertionError("unbound")
+
+    class Handler(BaseHTTPRequestHandler):
+        def do_POST(self):
+            raw = self.rfile.read(int(self.headers["content-length"]))
+            body = json.loads(raw)
+            assert body["params"]["arguments"]["source"] == {"kind": "catalog"}
+            assert self.headers["mcp-protocol-version"] == "2025-06-18"
+            reply = json.dumps({"jsonrpc": "2.0", "id": 1, "result": {"isError": False, "structuredContent": {"kind": "catalog"}}}).encode()
+            self.send_response(200)
+            self.send_header("content-length", str(len(reply)))
+            self.end_headers()
+            self.wfile.write(reply)
+
+        def log_message(self, *_args):
+            return
+
+    server = HTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    monkeypatch.setenv("NCP_LOGISTICS_ENDPOINT", "http://127.0.0.1:%s/api/pilot/mcp" % server.server_port)
+    try:
+        body = invoke("ncp_logistics_call", {"intent": "catalog"})
+        assert body["executed_on"] == "logistics-read" and body["artifact_id"].startswith("retained-")
+    finally:
+        server.shutdown()

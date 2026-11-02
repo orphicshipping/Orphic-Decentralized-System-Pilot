@@ -18,7 +18,7 @@
   },
   "bind": {
     "first_call": "ncp_plug_in",
-    "then": ["ncp_index_list", "ncp_workbench_list", "ncp_domain_list"],
+    "then": ["ncp_index_list", "ncp_workbench_list", "ncp_domain_list", "ncp_logistics_list"],
     "sdk": "ciw.services.invoke",
     "tool_index": "mcp/model-catalog.json",
     "capability_map": "mcp/capability-map.json",
@@ -35,7 +35,8 @@
     "Partial fields stay missing.",
     "A folder, a file, and a line of code are not tool calls. Source paths stay because tests and pins import them.",
     "A set of tasks does not opt for the easiest one. Name the task.",
-    "A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release."
+    "A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release.",
+    "The logistics segment is separate. ncp_logistics_list routes work. It does not dispatch a vehicle or release a package."
   ],
   "not_grants": [
     "SP1 proved heat as a proof",

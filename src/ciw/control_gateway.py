@@ -126,6 +126,23 @@ TOOLS = {
         {"host": {"type": "string", "enum": ["knowledge", "hoomd", "operational"]}}, JSON_OBJECT),
     "ncp_specialist_run": _tool("specialist_run", "Refuse a specialist run that has no host-selected grant. Knowledge needs its corpus pin. HOOMD is not executed here.",
         {"host": {"type": "string", "enum": ["knowledge", "hoomd", "operational"]}}, JSON_OBJECT, read=False),
+    "ncp_logistics_list": _tool("logistics_list", "List the ODSP logistics segment. It is a separate operating path. Listing does not read a shipment or dispatch a vehicle.",
+        {}, JSON_OBJECT, required=[]),
+    "ncp_logistics_route": _tool("logistics_route", "Say which logistics intent is a retained read, a logistics-host computation, or refused. Routing does not perform it.",
+        {"intent": {"type": "string", "enum": ["acquisition", "booking", "catalog", "compute-result", "compute-status", "dispatch", "instrumentation", "observation", "package-delivery", "package-manifest", "state", "terminal-events", "twin", "vehicle-routing", "workflow-plan", "workflow-run"]}}, JSON_OBJECT, required=["intent"]),
+    "ncp_logistics_call": _tool("logistics_call", "Read one retained logistics resource through the host-selected logistics endpoint. Dispatch, booking and package delivery refuse. A tool argument cannot name the endpoint.",
+        {"intent": {"type": "string", "enum": ["acquisition", "booking", "catalog", "compute-result", "compute-status", "dispatch", "instrumentation", "observation", "package-delivery", "package-manifest", "state", "terminal-events", "twin", "vehicle-routing", "workflow-plan", "workflow-run"]},
+         "plan_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "run_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "job_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "observation_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "observation_digest": {"type": "string", "minLength": 1, "maxLength": 128},
+         "entity_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "valid_at": {"type": "string", "minLength": 1, "maxLength": 64},
+         "known_at": {"type": "string", "minLength": 1, "maxLength": 64},
+         "projection_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "package_id": {"type": "string", "minLength": 1, "maxLength": 128},
+         "version": {"type": "string", "minLength": 1, "maxLength": 64}}, JSON_OBJECT, required=["intent"], read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
     "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
@@ -707,6 +724,18 @@ class ControlHost:
     def specialist_run(self, host):
         from .services import specialist_run
         return specialist_run(host)
+
+    def logistics_list(self):
+        from .services import logistics_list
+        return logistics_list()
+
+    def logistics_route(self, intent):
+        from .services import logistics_route
+        return logistics_route(intent)
+
+    def logistics_call(self, intent, **fields):
+        from .services import logistics_call
+        return logistics_call(intent, store=self.retained, **fields)
 
     def host_preflight(self):
         from .services import host_preflight

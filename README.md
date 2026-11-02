@@ -24,6 +24,7 @@ The host launch selects the profile and the instrument. A tool argument cannot s
 4. `ncp_domain_list`, then `ncp_domain_run`. Weather, impact, geomatics, and thermofluids refuse until the caller names the task.
 5. `ncp_fluid_field` is wave or SPH. The field is not retained.
 6. A granted plan uses `open_demo` for other software, then `ncp_plan_template`, `ncp_plan_create`, `ncp_plan_admit`, `ncp_run_submit`, `ncp_run_get`. Without that session the call refuses.
+7. `ncp_logistics_list`, then `ncp_logistics_route`. The logistics segment is a separate operating path. Its read tool is `inspect_retained`. Dispatch, booking and package delivery refuse on this host.
 
 Readable contracts, not executions: `ncp://contract/plug-in`, `ncp://contract/capability-map`, `ncp://contract/verification`.
 

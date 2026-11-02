@@ -22,6 +22,8 @@ Use `tools/call` or `ciw.services.invoke` with the same operation name. They cal
 
 `ncp_specialist_list` and `ncp_specialist_describe` name the knowledge, HOOMD, and operational hosts. `ncp_specialist_run` refuses. Their grants are not shared, and this call does not run HOOMD or open a corpus.
 
+`ncp_logistics_list` names the ODSP logistics segment. `ncp_logistics_route` says whether an intent is a retained read, a computation that stays on the logistics host, or refused. `ncp_logistics_call` reads only when the process already has `NCP_LOGISTICS_ENDPOINT`. A tool argument cannot set that endpoint. Dispatch, booking and package delivery refuse. A retained inspection is not a shipment and not a release.
+
 `ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
 
 

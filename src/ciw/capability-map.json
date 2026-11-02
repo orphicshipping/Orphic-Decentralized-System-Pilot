@@ -171,6 +171,34 @@
       "authorizes_execution": false
     },
     {
+      "name": "ncp_logistics_call",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "intent"
+      ],
+      "description": "Read one retained logistics resource through the host-selected logistics endpoint. Dispatch, booking and package delivery refuse. A tool argument cannot name the endpoint.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_logistics_list",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "List the ODSP logistics segment. It is a separate operating path. Listing does not read a shipment or dispatch a vehicle.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_logistics_route",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [
+        "intent"
+      ],
+      "description": "Say which logistics intent is a retained read, a logistics-host computation, or refused. Routing does not perform it.",
+      "authorizes_execution": false
+    },
+    {
       "name": "ncp_observe",
       "service": "ciw.services.open_demo",
       "read_only": true,

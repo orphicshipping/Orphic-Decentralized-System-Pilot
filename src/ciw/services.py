@@ -70,6 +70,21 @@ def specialist_run(host):
     return run(host)
 
 
+def logistics_list():
+    from .logistics_pathway import listing
+    return listing()
+
+
+def logistics_route(intent):
+    from .logistics_pathway import route
+    return route(intent)
+
+
+def logistics_call(intent, store=None, **fields):
+    from .logistics_pathway import call
+    return call(intent, store=store, **fields)
+
+
 def host_preflight():
     from .host_context import preflight
     return preflight()
@@ -302,6 +317,9 @@ OPERATIONS = {
     "ncp_specialist_list": specialist_list,
     "ncp_specialist_describe": specialist_describe,
     "ncp_specialist_run": specialist_run,
+    "ncp_logistics_list": logistics_list,
+    "ncp_logistics_route": logistics_route,
+    "ncp_logistics_call": logistics_call,
     "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,
@@ -363,7 +381,7 @@ def invoke(name, arguments=None, host=None):
         store = getattr(host, "retained", None)
         if store is None:
             raise ValueError("This host has no retained store")
-    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate"}:
+    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate", "ncp_logistics_call"}:
         return OPERATIONS[name](**arguments, store=store)
     if host is not None:
         raise ValueError("This operation does not take a session")
