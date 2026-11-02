@@ -91,6 +91,7 @@ class LogisticsHost:
             raise ValueError('invalid_host_binding')
         if not set(allowed_kinds)<=KINDS: raise ValueError('invalid_host_scope')
         self.transport,self.node,self.roles=transport,node,frozenset(roles)
+        self._bound_principal, self._bound_tenant = principal, tenant
         self.allowed=frozenset(allowed_kinds)
         self.synthetic=bool(synthetic)
         # Tenant and principal cannot share retained artifacts by collision.

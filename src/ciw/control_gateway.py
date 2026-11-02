@@ -52,6 +52,7 @@ RUN = _object({"run_id": TEXT, "plan_id": TEXT, "plan_digest": DIGEST,
     "attempt": TEXT, "engine_attempt": TEXT,
     "state": {"enum": ["queued", "running", "completed", "failed", "unknown", "cancelled"]},
     "cancel_requested": BOOL, "result": NULL_OBJECT, "uri": TEXT})
+_POLICY_REFUSAL = {"status": "refused", "reason": "principal_policy_refused", "execution_outcome": "not_started"}
 
 
 def _tool(method, description, props, output, *, read=True, required=None):
@@ -211,16 +212,19 @@ class ControlHost:
         "shell, code installation, release or acceptance tools are exposed."
     )
 
-    def __init__(self, owner, *, resume=False):
+    def __init__(self, owner, *, resume=False, retained_owner=None, execution_authorizer=None):
         self.owner = owner
         self._lock = threading.RLock()
         self._closed = False
         self._store = None
         self._executor = None
+        # Trusted launcher hooks; never populated by a request/checkpoint.
+        self._execution_authorizer = execution_authorizer
         self._plans, self._jobs = {}, {}
         self._semantic, self._names = semantic_registry(owner)
         from .retention import Store
-        self.retained = Store("output:" + str(owner._check_output().resolve()))
+        self.retained = Store(retained_owner if retained_owner is not None else
+                              "output:" + str(owner._check_output().resolve()))
         root = owner._check_output() / "control-state"
         try:
             if not resume:
@@ -298,7 +302,9 @@ class ControlHost:
                 job["result"] = deepcopy(saved["response"]) if saved else None
                 job["state"] = self._outcome(job["result"])
             elif job["state"] in {"completed", "failed"}:
-                if (saved is None or encode(job["result"]) != encode(saved["response"])
+                if job["state"] == "failed" and job["result"] == _POLICY_REFUSAL and saved is None:
+                    pass  # Durable current-policy refusal before any engine attempt.
+                elif (saved is None or encode(job["result"]) != encode(saved["response"])
                         or job["state"] != self._outcome(job["result"])):
                     raise ValueError("Job response differs from execution owner")
             elif job["state"] == "cancelled":
@@ -597,6 +603,17 @@ class ControlHost:
                 self._save()
                 plan = deepcopy(self._plans[job["plan_id"]])
             self._checked_plan(plan["plan_id"], plan["digest"])
+            if self._execution_authorizer is not None:
+                try:
+                    self._execution_authorizer(plan, deepcopy(job))
+                except ValueError:
+                    # A denied queued operation has not reached the provider.
+                    # Keep a durable refusal rather than an ambiguous retry.
+                    with self._lock:
+                        job["state"] = "failed"
+                        job["result"] = deepcopy(_POLICY_REFUSAL)
+                        self._save()
+                    return
             with self.owner._lock:
                 binding = self.owner._retain(plan["compilation"]["experiment"])
             result = self.owner.call("net_execute", {"source": plan["source"]["artifact_id"],

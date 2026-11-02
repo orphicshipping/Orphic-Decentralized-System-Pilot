@@ -364,6 +364,9 @@ def response_postcondition(value):
 
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
+    from .principal_policy import PrincipalFacade
+    if isinstance(host, PrincipalFacade):
+        return host.invoke(name, arguments)
     if isinstance(name, str) and name.startswith("ncp_state_"):
         from .state_read_profile import invoke_state
         return invoke_state(host, name, {} if arguments is None else arguments)
