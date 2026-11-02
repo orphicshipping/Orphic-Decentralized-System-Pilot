@@ -28,7 +28,17 @@ from pathlib import Path
 import ciw
 from ciw import coordinator as c, retention as r, services
 cfg=json.loads(sys.argv[1])
-signal.signal(signal.SIGINT,signal.default_int_handler)
+signal_observation={}
+def receive_sigint(signum, frame):
+    try:
+        signal.default_int_handler(signum, frame)
+    except KeyboardInterrupt as exc:
+        # A real asynchronous signal can interrupt an existing except block.
+        # Preserve that original object/context instead of requiring no context.
+        signal_observation['original']=exc
+        signal_observation['context']=exc.__context__
+        raise
+signal.signal(signal.SIGINT,receive_sigint)
 store=r.Store('submit-transfer-owner')
 arguments={'domain':'sequence','example':True}
 key='one-job'
@@ -80,7 +90,9 @@ else:
         try:c.submit(store,'ncp_domain_run',arguments,key)
         except BaseException as exc:
             outcome={'exception':type(exc).__name__,'same_primary':exc is primary,
-                     'context':type(exc.__context__).__name__ if exc.__context__ else None}
+                     'context':type(exc.__context__).__name__ if exc.__context__ else None,
+                     'same_signal':exc is signal_observation.get('original'),
+                     'same_signal_context':exc.__context__ is signal_observation.get('context')}
         else:outcome={'exception':None}
     finally:sys.settrace(None)
     outcome.update(injected=injected,lease_owned=held is not None and held.fd is not None,
@@ -169,7 +181,10 @@ def test_post_admission_caller_interruption_releases_job_before_worker_exit(chil
     assert worker[0].poll() is None
     assert result['exception'] == ('OSError' if fault == 'OSError' else 'KeyboardInterrupt')
     assert result['same_primary'] == (fault == 'OSError')
-    assert result['context'] is None
+    if fault == 'OSError':
+        assert result['context'] is None
+    else:
+        assert result['same_signal'] and result['same_signal_context']
     assert result['injected'] and result['operation_calls'] == result['coordinator_executions'] == 0
     observed = children.query()
     assert observed['available'], observed

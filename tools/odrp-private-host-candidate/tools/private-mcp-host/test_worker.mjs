@@ -160,12 +160,29 @@ test('late R2 publication after timeout cannot advance pointer or erase uncertai
   finish();await new Promise(resolve=>setTimeout(resolve,30));
   assert.equal(await f.storage.get('committed'),undefined);assert.deepEqual(await f.storage.get('pending'),pending);
 });
-test('commit timeout after durable effect retains receipt and late completion cannot clear its hold',async t=>{
-  const f=await fixture(t,{storage_ms:150});let finish,injected=false;
-  f.storage.afterCommit=async(old,value)=>{if(!injected&&value.committed&&!old.committed){injected=true;await new Promise(resolve=>{finish=resolve;});}};
-  const r=await parsed(await f.host.fetch(await request()));assert.equal(r.body.error.code,'committed_response_unconfirmed');
-  const saved=await snapshot(f.storage,f.config);assert.ok(saved.committed);assert.ok(saved.pending);
-  finish();await new Promise(resolve=>setTimeout(resolve,30));assert.deepEqual(await snapshot(f.storage,f.config),saved);
+test('commit timeout after durable effect retains receipt and late completion cannot clear its hold',{timeout:10000},async t=>{
+  const f=await fixture(t,{storage_ms:150});let finish,injected=false,resolveCommitted;
+  const committed=new Promise(resolve=>{resolveCommitted=resolve;});
+  f.storage.afterCommit=async(old,value)=>{if(!injected&&value.committed&&!old.committed){injected=true;resolveCommitted();await new Promise(resolve=>{finish=resolve;});}};
+  // Persist the intended boundary before advancing its deadline. Other tests
+  // retain real elapsed-time deadlines; slow fixture I/O cannot select another
+  // phase in this exact committed-receipt regression.
+  t.mock.timers.enable({apis:['Date','setTimeout'],now:Date.now()});
+  try{
+    const pendingResponse=f.host.fetch(await request());await committed;
+    assert.equal(injected,true);
+    const durable=await snapshot(f.storage,f.config);assert.ok(durable.committed);assert.equal(durable.pending,null);
+    const receipt=await f.storage.get('receipt:'+durable.committed.transaction_id);
+    assert.equal(receipt.phase,'committed');assert.equal(receipt.checkpoint.sha256,durable.committed.sha256);
+    assert.equal(f.native.calls.filter(x=>x.endsWith('/transaction')).length,1);assert.equal(f.bucket.puts,1);
+    t.mock.timers.tick(151);
+    const r=await parsed(await pendingResponse);assert.equal(r.body.error.code,'committed_response_unconfirmed');
+    assert.equal(r.body.error.uncertainty_hold_confirmed,true);
+    const saved=await snapshot(f.storage,f.config);assert.deepEqual(saved.committed,durable.committed);
+    assert.equal(saved.pending.phase,'committed_response_unconfirmed');
+    finish();await new Promise(resolve=>setImmediate(resolve));assert.deepEqual(await snapshot(f.storage,f.config),saved);
+    assert.equal((await f.storage.get('receipt:'+durable.committed.transaction_id)).phase,'committed');
+  }finally{finish?.();t.mock.timers.reset();}
 });
 test('uncertainty diagnostic cannot fence or overwrite a newer owner epoch',async t=>{
   const f=await fixture(t);await f.host.fetch(await request());const pointer=await f.storage.get('committed');
