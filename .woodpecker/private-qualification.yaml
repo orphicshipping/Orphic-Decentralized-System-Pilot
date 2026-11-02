@@ -1,0 +1,40 @@
+# Preparation profile: activation, persistent access and runner approval are separate.
+# The local backend executes trusted code directly; it is not an isolation boundary.
+when:
+  - event: manual
+
+labels:
+  backend: local
+  profile: odsp-private-disposable
+
+steps:
+  - name: source-and-runner-contract
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py preflight
+  - name: release-contracts
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py contracts
+  - name: reproducible-wheel
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py build
+  - name: offline-installed-wheel
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py install
+  - name: installed-client-qualification
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py qualify
+  - name: gateway-and-storage-contracts
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py node
+  - name: retained-attempt-summary
+    image: bash
+    commands:
+      - python3 -B scripts/run_private_woodpecker.py summarize
+    when:
+      - status: [success, failure]

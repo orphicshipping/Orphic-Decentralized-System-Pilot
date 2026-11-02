@@ -32,6 +32,12 @@
       "contract": ".github/workflows/MCP.md"
     },
     {
+      "path": ".woodpecker",
+      "class": "navigation",
+      "call": "ncp_index_list",
+      "contract": ".woodpecker/MCP.md"
+    },
+    {
       "path": "containers",
       "class": "navigation",
       "call": "ncp_index_list",
