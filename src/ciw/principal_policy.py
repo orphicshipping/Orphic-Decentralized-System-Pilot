@@ -66,7 +66,8 @@ def _specs():
     from .state_read_profile import _tool_descriptions
     from .logistics_profile import TOOLS as LOGISTICS
     from .recompiler_profile import TOOLS as RECOMPILER
-    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER,
+    from .schematic_profile import TOOLS as SCHEMATIC
+    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -129,20 +130,57 @@ def _read_policy(path):
         os.close(fd)
 
 
+def _schematic_content_key(path, key, value, arguments):
+    """Recognize fixed scientific content, never caller-selected host policy.
+
+    SRA certificates/decisions use the word owner for a scientific module, and
+    its receipt carries the frozen assessment configuration. Only these exact
+    paths/values are inert. The profile still validates the complete contract
+    and reproduces receipts before returning verified results.
+    """
+    from .declared_workload import ASSESSMENT_POLICY
+    steps = (("receipt", "bundle", "steps", 0),
+             ("receipt", "bundle", "verification", "reproduction"))
+    if key == "configuration":
+        locations = {("receipt", "bundle"), *(step + ("request",) for step in steps)}
+        return path in locations and encode(value) == encode(ASSESSMENT_POLICY)
+    if key != "owner" or type(value) is not str or value not in {"jspt", "plsr", "rci", "cse"}:
+        return False
+    graphs = [("schematic",), ("request", "schematic")]
+    for step in steps:
+        graphs.extend((step + ("request", "schematic"),
+                       step + ("result", "data", "schematic"),
+                       step + ("numerical_result", "data", "schematic")))
+        for result in ("result", "numerical_result"):
+            decisions = step + (result, "data", "decisions")
+            if len(path) == len(decisions) + 1 and path[:-1] == decisions and type(path[-1]) is int:
+                return True
+    for graph in graphs:
+        if (len(path) == len(graph) + 3 and path[:len(graph)] == graph
+                and path[-3] == "nodes" and type(path[-2]) is int and path[-1] == "attrs"):
+            node = arguments
+            for part in path[:-1]:
+                node = node[part]
+            return type(node) is dict and node.get("kind") == "certificate"
+    return False
+
+
 def _request(name, arguments):
     _require(type(name) is str and type(arguments) is dict and
              len(encode({"name": name, "arguments": arguments})) <= MAX_REQUEST)
-    def check(value):
+    def check(value, path=()):
         if type(value) is dict:
             # compare's existing selector names a frozen host comparison
             # policy; it cannot supply policy contents or alter grants.
             forbidden = _FORBIDDEN - {"policy"} if name == "ncp_compare" and value is arguments else _FORBIDDEN
-            _require(not forbidden.intersection(value))
-            for child in value.values():
-                check(child)
+            for key, child in value.items():
+                if key in forbidden:
+                    _require(name.startswith("ncp_schematic_") and
+                             _schematic_content_key(path, key, child, arguments))
+                check(child, path + (key,))
         elif type(value) is list:
-            for child in value:
-                check(child)
+            for index, child in enumerate(value):
+                check(child, path + (index,))
     check(arguments)
     from .agent_tools import _shape
     specs = _specs()
@@ -236,10 +274,10 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
-                               logistics=logistics, recompiler=recompiler)
+                               logistics=logistics, recompiler=recompiler, schematic=schematic)
 
 
 class PrincipalFacade:
@@ -249,7 +287,7 @@ class PrincipalFacade:
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
         self.retained = None
-        for family in ("state", "logistics", "recompiler"):
+        for family in ("state", "logistics", "recompiler", "schematic"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
         if hosts.get("logistics") is not None:
@@ -272,7 +310,8 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("recompiler" if name.startswith("ncp_recompiler_") else
+        family = ("schematic" if name.startswith("ncp_schematic_") else
+                  "recompiler" if name.startswith("ncp_recompiler_") else
                   "state" if name.startswith("ncp_state_") else "logistics" if name.startswith("ncp_logistics_")
                   else "reference" if name == "ncp_system_status" or name.startswith(("ncp_knowledge_", "ncp_evidence_"))
                   else "control")
@@ -303,6 +342,9 @@ class PrincipalFacade:
             self._science(grant, plan["compilation"]["experiment"])
 
     def _scope(self, grant, family, host, name, args):
+        if family == "schematic" and name != "ncp_schematic_describe":
+            from .schematic_profile import OPERATION
+            _require(OPERATION in grant["scientific_operations"])
         if family == "recompiler" and name != "ncp_recompiler_describe":
             from .recompiler_profile import OPERATION
             _require(OPERATION in grant["scientific_operations"])
