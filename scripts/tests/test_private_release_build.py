@@ -69,6 +69,21 @@ def test_private_policy_is_additive_to_unchanged_baseline_requirements():
     }]
 
 
+def test_private_workflow_selects_every_regular_package_root():
+    import re
+    root = Path(__file__).resolve().parents[2]
+    workflow = (root / '.github/workflows/odrp-private-host-candidate.yml').read_text()
+    pull_request = workflow.partition('  pull_request:\n')[2].partition('  workflow_dispatch:\n')[0]
+    paths = set(re.findall(r"^      - ['\"]([^'\"]+)['\"]$", pull_request, re.MULTILINE))
+    package_roots = {path.parent.name for path in (root / 'src').glob('*/__init__.py')}
+    assert {'ciw', 'net_geomatics'} <= package_roots
+    # Accept the complete src subtree or an explicit recursive filter for
+    # every root. Testing derived roots catches newly added owned packages too.
+    for package in package_roots:
+        assert {'src/**', f'src/{package}/**'} & paths, f'private qualification omits {package}'
+    assert not any(pattern.startswith('!src/') for pattern in paths)
+
+
 def test_source_to_wheel_check_covers_non_ciw_package(tmp_path):
     source = tmp_path / 'source'
     wheel = tmp_path / 'computational_instrumentation_workbench-0.1.0-py3-none-any.whl'
