@@ -68,6 +68,47 @@ def reseal(value):
     value["receipt_digest"] = profile._receipt_digest(value)
 
 
+def test_manifest_is_static_without_a_host_or_provider_and_returns_detached_metadata(monkeypatch):
+    def deny(*a, **k):
+        pytest.fail("discovery must not select or probe a runtime")
+    monkeypatch.setattr(profile.ClockSyncHost, "__init__", deny)
+    monkeypatch.setattr(profile._ClockAdapter, "__init__", deny)
+    monkeypatch.setattr(profile.resources, "files", deny)
+    before = {name for name in sys.modules if name == "tbrt" or name.startswith("tbrt.")}
+    value = profile.profile_manifest()
+    assert value["profile_id"] == profile.PROFILE
+    assert value["adapter_contract_commit"] == profile.PIN
+    assert value["operation_id"] == profile.OPERATION
+    assert value["host_factory"] == "ciw.clocksync_profile.open_clocksync"
+    assert value["service"] == "ciw.services.invoke"
+    assert value["qualification"] == "not_performed_by_discovery"
+    assert value["source_binding_verification"] == "caller_assertion_only"
+    assert value["authorizes_execution"] is value["authorizes_state_admission"] is False
+    assert "runtime" not in value
+    assert {row["name"] for row in value["tools"]} == set(profile.TOOLS)
+    value["tools"][0]["annotations"]["readOnlyHint"] = False
+    value["authority"]["authorizes_execution"] = True
+    value["comparison_policy"]["cross_platform_bitwise_guarantee"] = True
+    fresh = profile.profile_manifest()
+    assert fresh["tools"][0]["annotations"]["readOnlyHint"] is True
+    assert fresh["authority"]["authorizes_execution"] is False
+    assert fresh["comparison_policy"]["cross_platform_bitwise_guarantee"] is False
+    assert {name for name in sys.modules if name == "tbrt" or name.startswith("tbrt.")} == before
+
+
+def test_discovery_does_not_provide_an_implicit_binding():
+    with pytest.raises(TypeError):
+        profile.open_clocksync()
+    with pytest.raises(profile.ClockSyncRefusal, match="clocksync_host_required"):
+        profile.invoke_clocksync(None, "ncp_clocksync_describe", {})
+
+
+def test_factory_requires_and_preserves_explicit_host_binding(checkout):
+    with profile.open_clocksync(checkout=checkout, python_executable=sys.executable, principal="fixture-launcher") as host:
+        assert host._bound_principal == "fixture-launcher"
+        assert invoke(host, "ncp_clocksync_describe")["runtime"]["revision"] == profile.PIN
+
+
 def test_description_is_closed_and_non_authorizing(host):
     assert {row["name"] for row in host.descriptions()} == set(profile.TOOLS)
     assert all(row["annotations"]["readOnlyHint"] and not row["annotations"]["destructiveHint"] for row in host.descriptions())

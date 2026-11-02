@@ -304,6 +304,10 @@ TOOLS = {
 }
 
 
+def _tool_descriptions():
+    return [{"name": name, **deepcopy(spec)} for name, spec in TOOLS.items()]
+
+
 class _ClockAdapter(PinnedSubprocessAdapter):
     def __init__(self, *args, **kwargs):
         self.deadline = time.monotonic() + CALL_SECONDS
@@ -509,7 +513,7 @@ class ClockSyncHost:
         return envelope
 
     def descriptions(self):
-        return [{"name": name, **deepcopy(spec)} for name, spec in TOOLS.items()]
+        return _tool_descriptions()
 
     def list_resources(self):
         return []
@@ -525,3 +529,18 @@ def invoke_clocksync(host, name, arguments):
     if result["status"] != "ok":
         raise ClockSyncRefusal(result["reason"])
     return result["data"]
+
+
+def open_clocksync(**bindings):
+    """Trusted launcher factory; discovery and tool payloads never bind a host."""
+    return ClockSyncHost(**bindings)
+
+
+def profile_manifest():
+    """Static discovery only: no checkout, interpreter, probe or scientific call."""
+    return {"profile_id": PROFILE, "adapter_contract_commit": PIN, "operation_id": OPERATION,
+            "host_factory": "ciw.clocksync_profile.open_clocksync", "service": "ciw.services.invoke",
+            "source_binding_verification": "caller_assertion_only", "authorizes_execution": False,
+            "authorizes_state_admission": False, "qualification": "not_performed_by_discovery",
+            "authority": deepcopy(AUTHORITY), "comparison_policy": deepcopy(COMPARISON_POLICY),
+            "tools": _tool_descriptions()}
