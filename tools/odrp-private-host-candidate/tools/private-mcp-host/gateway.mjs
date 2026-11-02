@@ -114,7 +114,7 @@ export async function route(request, env) {
   }
   if (principal === null) return json({error:{code:'unauthorized'}},401);
   if (!ROUTES.has(`${request.method} ${url.pathname}`)) return json({error:{code:'not_found'}},404);
-  let body;
+  let body, serializedBody;
   if (request.method === 'POST') {
     if (request.headers.get('content-type')?.split(';')[0] !== 'application/json')
       return json({error: {code: 'invalid_content_type'}}, 415);
@@ -151,6 +151,10 @@ export async function route(request, env) {
     if (!body || typeof body !== 'object' || Array.isArray(body)
         || ['principal','owner','identity','grants','policy','policy_revision','policy_sha256'].some(key => key in body))
       return json({error: {code: 'invalid_request'}}, 400);
+    // Native parsing can accept nesting the serializer cannot safely traverse.
+    // Refuse before identity/host resolution and reuse the checked wire body.
+    try { serializedBody = JSON.stringify(body); }
+    catch { return json({error: {code: 'invalid_json'}}, 400); }
   }
   const identity = await context(config, principal);
   // Neither credentials nor caller internal headers are forwarded, even on GET.
@@ -158,6 +162,6 @@ export async function route(request, env) {
     'x-odsp-policy-revision':identity.policy_revision,'x-odsp-policy-sha256':identity.policy_sha256};
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   const forwarded = new Request(url, {method:request.method,headers,
-    ...(body === undefined ? {} : {body:JSON.stringify(body)})});
+    ...(serializedBody === undefined ? {} : {body:serializedBody})});
   return env.HOST.getByName(env.HOST_SINGLETON).fetch(forwarded);
 }

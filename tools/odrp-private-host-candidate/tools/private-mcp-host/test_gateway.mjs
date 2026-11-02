@@ -152,3 +152,30 @@ test('duplicate scan uses an iterative stack for deeply nested valid input',asyn
   const result=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env);
   assert.equal(result.status,400);assert.deepEqual(await result.json(),{error:{code:'invalid_json'}});assert.equal(requests.length,0);
 });
+
+for(const [kind,open,close] of [['arrays','[',']'],['objects','{"unique":','}']])
+test('unserializable deeply nested unique '+kind+' return invalid_json before host wake',async()=>{
+  const {env,requests}=fixture();let lookups=0;
+  env.HOST.getByName=()=>{lookups++;throw Error('host must not be resolved');};
+  const body='{"arguments":'+open.repeat(10000)+'null'+close.repeat(10000)+'}';
+  JSON.parse(body);assert.ok(Buffer.byteLength(body)<262144);
+  const result=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env);
+  assert.equal(result.status,400);assert.deepEqual(await result.json(),{error:{code:'invalid_json'}});
+  assert.equal(lookups,0);assert.equal(requests.length,0);
+});
+
+test('serialization guard preserves opaque nested-looking strings and valid siblings',async()=>{
+  const {env,requests}=fixture();
+  const opaque='{"unique":'.repeat(10000)+'null'+'}'.repeat(10000);
+  const bodies=[
+    JSON.stringify({arguments:{text:opaque,left:{key:1},right:{key:2}}}),
+    JSON.stringify({arguments:{rows:Array.from({length:10000},()=>({key:null}))}}),
+    '{"arguments":'+'['.repeat(1000)+'{"unique":true}'+']'.repeat(1000)+'}',
+  ];
+  for(const body of bodies){
+    assert.ok(Buffer.byteLength(body)<262144);
+    assert.equal((await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env)).status,200);
+    assert.equal(await requests.at(-1).text(),JSON.stringify(JSON.parse(body)));
+  }
+  assert.equal(requests.length,bodies.length);
+});
