@@ -299,6 +299,10 @@ def fence_path(identity):
     return STATE / 'fences' / (sha256(identity['principal'].encode('ascii')).hexdigest() + '.json')
 
 
+def returned_path(transaction_id):
+    return STATE / 'returned' / (transaction_id + '.json')
+
+
 def validate_members(members):
     if len(members) > MAX_MEMBERS or sum(item.size for item in members) > MAX_ARCHIVE:
         raise Refused('expanded_checkpoint_budget_exceeded', 413)
@@ -399,6 +403,38 @@ def workspace_capacity():
             raise Refused('workspace_capacity_exhausted', 507)
 
 
+def acknowledge_returned(body, config):
+    """Only a later Worker base_commit can acknowledge a returned checkpoint.
+
+    Until then, local effects and their completion receipt survive a Worker
+    publication failure. A receipt exists only after verified child cleanup;
+    this function never removes an uncertain/live writer's workspace.
+    """
+    previous = body['transaction']['base_commit']
+    if previous is None:
+        return
+    root = STATE / 'transactions' / previous
+    receipt_path = returned_path(previous)
+    if not receipt_path.exists():
+        return  # A restarted container can have only the durable Worker bytes.
+    safe_path(root)
+    receipt = strict_json(read_regular(receipt_path, 16384))
+    exact(receipt, {'schema', 'transaction', 'checkpoint_sha256'})
+    prior = receipt['transaction']
+    exact(prior, {'id', 'owner_id', 'generation', 'epoch', 'base_commit', 'release'})
+    if (receipt['schema'] != 'odsp.private-returned-checkpoint.v1'
+            or prior['id'] != previous or prior['owner_id'] != config.owner_id
+            or prior['generation'] != config.generation or type(prior['epoch']) is not int
+            or not 1 <= prior['epoch'] <= body['transaction']['epoch']
+            or receipt['checkpoint_sha256'] != sha256(body['state'].encode('ascii')).hexdigest()):
+        raise Refused('checkpoint_acknowledgement_refused', 409)
+    # Keep the receipt until the acknowledged state has been removed; a cleanup
+    # failure before a new operation cannot erase its provenance or start work.
+    if root.exists():
+        shutil.rmtree(root)
+    receipt_path.unlink()
+
+
 def restore(encoded_state, *, body, config):
     """Stage a global snapshot in a new, never-reused transaction workspace.
 
@@ -441,6 +477,11 @@ def restore(encoded_state, *, body, config):
                 raise Refused('historical_checkpoint_migration_required', 409)
             marker = strict_json(read_regular(marker_path, 16384))
             exact(marker, {'schema', 'owner_id', 'generation', 'identity', 'transaction_id', 'epoch', 'release'})
+            from ciw.private_release import validate_identity
+            try:
+                validate_identity(marker['release'])
+            except ValueError:
+                raise Refused('checkpoint_release_identity_refused', 409) from None
             expected = marker_for(body, config)
             if (marker['schema'] != expected['schema'] or marker['owner_id'] != expected['owner_id']
                     or marker['generation'] != expected['generation']
@@ -682,6 +723,7 @@ async def execute(body, config, principal, abandoned):
         validate_envelope(body, config)
         if fenced(body['identity']):
             raise Refused('outcome_unknown', 409)
+        acknowledge_returned(body, config)
         ref_host = reference_host()
         if ((body['action'] == 'call' and body['payload']['name'] in REFERENCE_NAMES)
                 or (body['action'] == 'resource' and body['payload']['uri'].startswith(('ncp://proto-corpus/', 'ncp://evidence/')))) and ref_host is None:
@@ -730,9 +772,13 @@ async def execute(body, config, principal, abandoned):
         reply = response(value)
         if abandoned.is_set():
             raise Uncertain()
+        receipt = returned_path(body['transaction']['id'])
+        receipt.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
+        atomic_write(receipt, encoded({
+            'schema': 'odsp.private-returned-checkpoint.v1', 'transaction': body['transaction'],
+            'checkpoint_sha256': value['checkpoint_sha256']}))
         fence_path(body['identity']).unlink()
         LOCAL_FENCES.discard(body['identity']['owner'])
-        shutil.rmtree(directory.parent)
         return reply
     except BaseException as exc:
         if started:
@@ -748,6 +794,8 @@ async def execute(body, config, principal, abandoned):
             # No actor was launched and no fence was written, so this new
             # disposable workspace cannot contain an in-flight writer.
             shutil.rmtree(directory.parent)
+        if not started and isinstance(exc, OSError):
+            raise Refused('working_state_refused', 503) from None
         raise
     finally:
         LOCK.release()
@@ -828,7 +876,7 @@ async def health(request):
         local_fences = bool(LOCAL_FENCES) or ((STATE / 'fences').is_dir() and any((STATE / 'fences').iterdir()))
         value.update(ready=not local_fences, fenced=local_fences, release=config.release,
                      owner_id=config.owner_id, generation=config.generation, checkpoint_generation=config.generation)
-    except (Refused, ImportError):
+    except (Refused, ImportError, OSError):
         pass
     return response(value, 200 if value['ready'] else 503)
 

@@ -358,6 +358,63 @@ def test_http_disconnect_is_an_unknown_outcome_without_cancelling_provider(host,
     asyncio.run(run())
 
 
+def test_returned_state_survives_worker_publication_failure_until_exact_ack(host, monkeypatch):
+    monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: mock_bridge())
+    async def run():
+        body = host.body()
+        async with host.client() as client:
+            first = await client.post('/transaction', json=body)
+        assert first.status_code == 200
+        value = first.json()
+        root = adapter.workspace_path(body)
+        receipt = adapter.returned_path(body['transaction']['id'])
+        assert root.exists() and receipt.exists()
+        assert not adapter.LOCAL_FENCES
+        # No subsequent request means no durable Worker acknowledgement: a
+        # publication failure cannot make this local evidence disappear.
+        assert (root / 'deployment-generation.json').exists()
+        async with host.client() as client:
+            health = await client.get('/health')
+        assert health.json()['ready']
+        host.state, host.base_commit = value['state'], body['transaction']['id']
+        next_body = host.body()
+        with pytest.raises(adapter.Refused, match='acknowledgement'):
+            adapter.acknowledge_returned({**next_body, 'state': value['state'] + 'AAAA'}, host.config)
+        assert root.exists() and receipt.exists()
+        second = await host.request()
+        assert second.status_code == 200
+        assert not root.exists() and not receipt.exists()
+        assert len(list((adapter.STATE / 'returned').iterdir())) == 1
+    asyncio.run(run())
+
+
+def test_acknowledged_cleanup_failure_preserves_receipt_and_starts_no_operation(host, monkeypatch):
+    bridge = mock_bridge()
+    monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: bridge)
+    async def run():
+        first = await host.request()
+        assert first.status_code == 200
+        prior = host.base_commit
+        root = adapter.STATE / 'transactions' / prior
+        receipt = adapter.returned_path(prior)
+        real_remove = adapter.shutil.rmtree
+        def fail_after_state(path, *args, **kwargs):
+            if path == root:
+                real_remove(root / 'state')
+                raise OSError('synthetic parent-directory cleanup failure')
+            return real_remove(path, *args, **kwargs)
+        monkeypatch.setattr(adapter.shutil, 'rmtree', fail_after_state)
+        bridge.reset_mock()
+        second = await host.request()
+        assert second.status_code == 503
+        assert second.json() == {'error': {'code': 'working_state_refused'}}
+        assert not bridge.open.called
+        assert receipt.exists()
+        assert not adapter.LOCAL_FENCES
+        assert not (root / 'state').exists()
+    asyncio.run(run())
+
+
 class TestInstalledMCP:
     """Each test starts real isolated installed principal-MCP subprocesses."""
 
@@ -381,7 +438,8 @@ class TestInstalledMCP:
             empty = await host.request('runs', principal='beta')
             assert empty.json()['result']['data']['items'] == []
             assert await host.call('ncp_run_get', {'run_id': done['run_id']}) == done
-            assert not any((adapter.STATE / 'transactions').iterdir())
+            assert len(list((adapter.STATE / 'transactions').iterdir())) == 1
+            assert adapter.returned_path(host.base_commit).exists()
         asyncio.run(run())
 
     def test_policy_revocation_and_reduced_grants_recheck_before_restore(self, host):
@@ -403,7 +461,7 @@ class TestInstalledMCP:
             async with host.client() as client:
                 revoked = await client.post('/transaction', json=body)
             assert revoked.status_code == 403
-            assert not any((adapter.STATE / 'transactions').iterdir())
+            assert len(list((adapter.STATE / 'transactions').iterdir())) == 1
         asyncio.run(run())
 
     def test_failed_worker_stays_alive_and_locked_while_new_restore_is_quarantined(self, host, monkeypatch):
