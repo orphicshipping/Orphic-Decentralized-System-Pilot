@@ -2,6 +2,8 @@
 
 These profiles expose existing pinned implementations through trusted subprocess bindings. They do not create a second science engine, authenticate caller evidence, admit state, qualify physical measurements or grant access to equipment. They are additional SDK/MCP profiles; the private HTTPS candidate does not automatically expose them. Discovery is not a grant.
 
+Cancellation and setup failures must stop and reap the owned subprocess even if both output pipes have already closed. If cleanup cannot confirm termination, the affected in-memory runtime binding remains held: later process launches refuse `RUNTIME_CLEANUP_UNCERTAIN`, exposed by these profiles as `runtime_cleanup_uncertain` and by the principal SDK as `PrincipalOutcomeUnknown`. Requests cannot clear that hold, and elapsed time or later observed process exit does not automatically reset it. Cleanup failures retain their diagnostic exception chain; they do not mean rollback or successful cancellation. Trusted operators must resolve process custody before deliberately creating a new binding. This local binding hold is not a durable cross-process recovery registry.
+
 ## NSR affine reconciliation
 
 The [recompiler profile](../src/ciw/recompiler_profile.py) preserves the existing `calibrated-observable-runtimes.json` CBSR pin `daf43fc870ba926289c3bc4908db784691c7addd`. A trusted launcher supplies an absolute approved checkout, interpreter and principal to `open_recompiler`. Requests cannot choose these bindings. The kernel is imported only inside the fixed child bootstrap, using the existing pinned process adapter.

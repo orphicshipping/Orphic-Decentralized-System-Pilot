@@ -285,8 +285,9 @@ class RecompilerHost:
             return response
         except RecompilerRefusal as exc:
             return {"status": "refused", "reason": str(exc)}
-        except AdapterRefusal:
-            return {"status": "refused", "reason": "recompiler_runtime_refused"}
+        except AdapterRefusal as exc:
+            return {"status": "refused", "reason": "runtime_cleanup_uncertain" if
+                    exc.code == "RUNTIME_CLEANUP_UNCERTAIN" else "recompiler_runtime_refused"}
         except (ValueError, TypeError, KeyError, OverflowError, RecursionError):
             return {"status": "refused", "reason": "invalid_arguments"}
         finally:

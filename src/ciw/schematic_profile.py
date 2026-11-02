@@ -296,7 +296,9 @@ class SchematicHost:
         except SchematicRefusal as exc:
             return {"status": "refused", "reason": str(exc), "authorizes_execution": False}
         except AdapterRefusal as exc:
-            return {"status": "refused", "reason": "runtime_refused", "code": exc.code, "authorizes_execution": False}
+            return {"status": "refused", "reason": "runtime_cleanup_uncertain" if
+                    exc.code == "RUNTIME_CLEANUP_UNCERTAIN" else "runtime_refused",
+                    "code": exc.code, "authorizes_execution": False}
         except OSError as exc:
             # Cleanup can fail after its effect, including while unwinding a
             # cancellation. Preserve the cause/context for the software caller;

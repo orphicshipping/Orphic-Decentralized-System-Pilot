@@ -517,6 +517,8 @@ class PrincipalFacade:
     def invoke(self, name, arguments=None):
         value = self.call(name, {} if arguments is None else arguments)
         if value.get("status") != "ok":
+            if value.get("reason") == "runtime_cleanup_uncertain":
+                raise PrincipalOutcomeUnknown()
             error = value.get("error") or {}
             artifact = error.get("artifact_id")
             if type(artifact) is str and re.fullmatch(r"(?:retained|failure)-[0-9a-f]{32}", artifact):

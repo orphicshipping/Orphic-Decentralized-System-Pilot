@@ -496,8 +496,9 @@ class ClockSyncHost:
             return response
         except ClockSyncRefusal as exc:
             return {"status": "refused", "reason": str(exc)}
-        except AdapterRefusal:
-            return {"status": "refused", "reason": "clocksync_runtime_refused"}
+        except AdapterRefusal as exc:
+            return {"status": "refused", "reason": "runtime_cleanup_uncertain" if
+                    exc.code == "RUNTIME_CLEANUP_UNCERTAIN" else "clocksync_runtime_refused"}
         except (ValueError, TypeError, KeyError, OverflowError, RecursionError):
             return {"status": "refused", "reason": "invalid_arguments"}
         finally:
