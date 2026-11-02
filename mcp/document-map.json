@@ -279,6 +279,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/BOUNDED_NATIVE_PROFILES.md",
+      "status": "current_surface",
+      "owner": "docs/BOUNDED_NATIVE_PROFILES.md"
+    },
+    {
       "path": "docs/CALIBRATED_OBSERVABLE.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -1345,8 +1350,8 @@
     },
     {
       "path": "docs/PRIVATE_HOST_OPERATIONS.md",
-      "status": "not_re_audited",
-      "owner": "owning guide, not re-audited in this pass"
+      "status": "current_surface",
+      "owner": "docs/PRIVATE_HOST_OPERATIONS.md"
     },
     {
       "path": "docs/PRIVATE_MCP_HOST_ACCEPTANCE.md",
@@ -1360,8 +1365,8 @@
     },
     {
       "path": "docs/PRIVATE_RELEASE_CONTRACT.md",
-      "status": "not_re_audited",
-      "owner": "owning guide, not re-audited in this pass"
+      "status": "current_surface",
+      "owner": "docs/PRIVATE_RELEASE_CONTRACT.md"
     },
     {
       "path": "docs/PROCEDURAL_GRAPHICS_WORKBENCH.md",
