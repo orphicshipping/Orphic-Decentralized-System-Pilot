@@ -607,3 +607,51 @@ def test_live_jobs_are_not_evicted_and_another_process_cannot_read_them(tmp_path
     env["ARTIFACT"] = kept
     out = subprocess.check_output([sys.executable, "-c", script], cwd="/tmp", env=env)
     assert b"another host session" in out
+
+
+def test_document_map_and_specialist_grants_stay_separate():
+    import json
+    import subprocess
+    document = json.loads((ROOT / "mcp" / "document-map.json").read_text(encoding="utf-8"))
+    tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).split(b"\0")
+    markdown = {item.decode() for item in tracked if item.endswith(b".md")}
+    rows = document["documents"]
+    assert {row["path"] for row in rows} == markdown
+    by_path = {row["path"]: row for row in rows}
+    assert by_path["README.md"]["status"] == "current_surface"
+    assert by_path["docs/JULIA_OSCILLATOR.md"]["status"] == "binding_missing"
+    assert by_path["docs/DOCTOR.md"]["status"] == "documents_existing_module"
+    assert all(row["authorizes_execution"] is False for row in rows)
+    from ciw.services import invoke
+    described = invoke("ncp_specialist_describe", {"host": "knowledge"})
+    assert "ncp_knowledge_search" in described["tools"] and described["executed"] is False
+    try:
+        invoke("ncp_specialist_run", {"host": "hoomd"})
+    except ValueError as exc:
+        assert "specialist_grant_refused" in str(exc)
+    else:
+        raise AssertionError("specialist grant")
+
+
+def test_consumers_run_outside_the_checkout_on_python_311(tmp_path):
+    import os
+    import shutil
+    import subprocess
+    interpreter = "/tmp/ncp-env/bin/python"
+    subprocess.check_call(
+        ["uv", "pip", "install", "--python", interpreter, str(ROOT)],
+        cwd="/tmp", stdout=subprocess.DEVNULL)
+    destination = tmp_path / "consumers"
+    shutil.copytree(ROOT / "examples" / "consumers", destination)
+    env = os.environ.copy()
+    env["NCP_RETAIN_DIR"] = str(tmp_path / "retain")
+    env.pop("PYTHONPATH", None)
+    expected = {
+        "mcp_client.py": b"False\nncp.retained-page.v1\n2025-11-25\n",
+        "software_call.py": b"False\nncp.retained-page.v1\n",
+        "single_agent.py": b"ok\nTrue\n1\n",
+        "two_workers.py": b"ok\nrefused\nrefused\n",
+    }
+    for name, want in expected.items():
+        out = subprocess.check_output([interpreter, str(destination / name)], cwd="/tmp", env=env)
+        assert out == want, (name, out)

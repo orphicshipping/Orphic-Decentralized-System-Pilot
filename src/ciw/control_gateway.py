@@ -122,6 +122,10 @@ TOOLS = {
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
     "ncp_specialist_list": _tool("specialist_list", "List specialist hosts that stay separate. Presence is not a grant and this call does not run them.",
         {}, JSON_OBJECT, required=[]),
+    "ncp_specialist_describe": _tool("specialist_describe", "Read one specialist host's existing tool names. This does not import a corpus or run HOOMD.",
+        {"host": {"type": "string", "enum": ["knowledge", "hoomd", "operational"]}}, JSON_OBJECT),
+    "ncp_specialist_run": _tool("specialist_run", "Refuse a specialist run that has no host-selected grant. Knowledge needs its corpus pin. HOOMD is not executed here.",
+        {"host": {"type": "string", "enum": ["knowledge", "hoomd", "operational"]}}, JSON_OBJECT, read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
     "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
@@ -695,6 +699,14 @@ class ControlHost:
     def specialist_list(self):
         from .services import specialist_list
         return specialist_list()
+
+    def specialist_describe(self, host):
+        from .services import specialist_describe
+        return specialist_describe(host)
+
+    def specialist_run(self, host):
+        from .services import specialist_run
+        return specialist_run(host)
 
     def host_preflight(self):
         from .services import host_preflight

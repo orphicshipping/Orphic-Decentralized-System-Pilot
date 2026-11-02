@@ -25,3 +25,24 @@ def listing() -> dict:
             for name, filename in _HOSTS
         ],
     }
+
+
+def describe(host: str) -> dict:
+    if host == "knowledge":
+        from .knowledge_mcp import TOOLS
+        return {"schema": "ncp.specialist-host.v1", "host": host, "tools": sorted(TOOLS),
+                "grants_shared": False, "executed": False, "authorizes_execution": False}
+    if host == "hoomd":
+        return {"schema": "ncp.specialist-host.v1", "host": host, "module": "ciw.hoomd_worker",
+                "qualification": "not_run", "grants_shared": False, "executed": False,
+                "authorizes_execution": False}
+    if host == "operational":
+        return {"schema": "ncp.specialist-host.v1", "host": host, "module": "ciw.operational_view",
+                "grants_shared": False, "executed": False, "authorizes_execution": False}
+    raise ValueError("unknown_specialist_host")
+
+
+def run(host: str) -> dict:
+    if host not in {"knowledge", "hoomd", "operational"}:
+        raise ValueError("unknown_specialist_host")
+    raise ValueError("specialist_grant_refused")

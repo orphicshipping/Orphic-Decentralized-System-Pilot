@@ -9,8 +9,8 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2720,
-    "generated": 658,
+    "retained_and_verified": 2726,
+    "generated": 659,
     "rewritten": 28,
     "blocked": 109,
     "vendor_exempt": 3308
@@ -4400,6 +4400,48 @@
     },
     {
       "path": "examples/computational-objects/statistics.json",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/README.md",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/mcp_client.py",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/single_agent.py",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/software_call.py",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/consumers/two_workers.py",
       "disposition": "retained_and_verified",
       "component": "fixture",
       "reason": "Labelled fixture. Not a measurement and not a live credential.",
@@ -37314,6 +37356,13 @@
     },
     {
       "path": "src/ciw/fluid_workflow.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/folded_stdio.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",

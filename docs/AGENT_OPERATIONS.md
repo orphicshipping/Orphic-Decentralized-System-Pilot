@@ -18,6 +18,10 @@ A granted plan is `ncp_plan_template`, then `ncp_plan_create` with that graph, t
 
 Use `tools/call` or `ciw.services.invoke` with the same operation name. They call the same domain functions. An unknown name refuses. There is no shell tool.
 
+`python -m ciw.folded_stdio` speaks MCP `2025-11-25` over stdin. `examples/consumers/` has the MCP client, the SDK program, one agent, and two workers. Run those with the installed package from a directory that is not the checkout.
+
+`ncp_specialist_list` and `ncp_specialist_describe` name the knowledge, HOOMD, and operational hosts. `ncp_specialist_run` refuses. Their grants are not shared, and this call does not run HOOMD or open a corpus.
+
 `ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
 
 

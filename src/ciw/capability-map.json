@@ -303,11 +303,31 @@
       "authorizes_execution": false
     },
     {
+      "name": "ncp_specialist_describe",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [
+        "host"
+      ],
+      "description": "Read one specialist host's existing tool names. This does not import a corpus or run HOOMD.",
+      "authorizes_execution": false
+    },
+    {
       "name": "ncp_specialist_list",
       "service": "ciw.services.invoke",
       "read_only": true,
       "required": [],
       "description": "List specialist hosts that stay separate. Presence is not a grant and this call does not run them.",
+      "authorizes_execution": false
+    },
+    {
+      "name": "ncp_specialist_run",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "host"
+      ],
+      "description": "Refuse a specialist run that has no host-selected grant. Knowledge needs its corpus pin. HOOMD is not executed here.",
       "authorizes_execution": false
     },
     {

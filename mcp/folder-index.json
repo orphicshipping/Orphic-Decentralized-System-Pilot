@@ -182,6 +182,11 @@
       "call": "ncp_index_list"
     },
     {
+      "path": "examples/consumers",
+      "class": "navigation",
+      "call": "ncp_plug_in"
+    },
+    {
       "path": "examples/corrections",
       "class": "navigation",
       "call": "ncp_index_list"

@@ -29,18 +29,35 @@ def main():
     for dest, src in copies.items():
         dest.write_bytes(src.read_bytes())
     docs = []
+    native = {
+        "docs/JULIA_OSCILLATOR.md": "runtimes/julia-oscillator; Julia 1.10.12 executable is not installed",
+        "docs/JULIA_SP1.md": "docs/JULIA_SP1.md; SP1 proof was not executed",
+        "docs/PROVED_HEAT.md": "SP1 heat guest; proof was not executed",
+        "docs/BIM_INTEROP_RUNTIME.md": "documented BIM commit 4b74abda40bba3277de69bf61e9e09283ae2d5b3; checkout is not selected",
+        "docs/NET_ASSET_WORKER.md": "Godot and Blender paths are operator-supplied; neither binary is installed",
+    }
     for path in paths:
-        if path.endswith(".md"):
-            current = path in {"README.md", "docs/AGENT_OPERATIONS.md"}
-            docs.append({
-                "path": path,
-                "status": "current_surface" if current else "not_re_audited",
-                "owner": "mcp/README and docs/AGENT_OPERATIONS.md" if current else "owning guide, not re-audited in this pass",
-            })
+        if not path.endswith(".md"):
+            continue
+        stem = Path(path).stem.lower().replace("-", "_")
+        module = ROOT / "src" / "ciw" / f"{stem}.py"
+        if path in {"README.md", "docs/AGENT_OPERATIONS.md"}:
+            status, owner = "current_surface", path
+        elif path in native:
+            status, owner = "binding_missing", native[path]
+        elif "AUDIT" in Path(path).stem.upper():
+            status, owner = "historical_record", path
+        elif module.is_file():
+            status, owner = "documents_existing_module", "src/ciw/" + module.name
+        elif path.startswith("instruments/") or "/vendor/" in path:
+            status, owner = "vendor_document", path
+        else:
+            status, owner = "unbound_prose", path
+        docs.append({"path": path, "status": status, "owner": owner, "authorizes_execution": False})
     (ROOT / "mcp" / "document-map.json").write_text(json.dumps({
         "schema": "ncp.document-map.v1",
         "authorizes_execution": False,
-        "note": "current_surface is the operating contract. not_re_audited is not a claim that the page is historical or current.",
+        "note": "current_surface is the operating contract. documents_existing_module means a same-stem module exists. unbound_prose was not relabelled historical or current. binding_missing is not a run.",
         "documents": docs,
     }, indent=2) + "\n", encoding="utf-8")
     print(f"ledger {len(paths)} {ledger['counts']}")

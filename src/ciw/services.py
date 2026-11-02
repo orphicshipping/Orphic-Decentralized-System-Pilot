@@ -60,6 +60,16 @@ def specialist_list():
     return listing()
 
 
+def specialist_describe(host):
+    from .specialist_surface import describe
+    return describe(host)
+
+
+def specialist_run(host):
+    from .specialist_surface import run
+    return run(host)
+
+
 def host_preflight():
     from .host_context import preflight
     return preflight()
@@ -290,6 +300,8 @@ OPERATIONS = {
     "ncp_retained_release": retained_release,
     "ncp_coordinate": coordinate,
     "ncp_specialist_list": specialist_list,
+    "ncp_specialist_describe": specialist_describe,
+    "ncp_specialist_run": specialist_run,
     "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,

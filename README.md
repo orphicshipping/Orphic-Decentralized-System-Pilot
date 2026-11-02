@@ -68,14 +68,20 @@ Every tracked folder still carries `MCP.md`. The folder is not a human console.
 
 ## Install and start
 
-Python 3.11 or newer. From a clean checkout, noninteractively:
+Python 3.11 or newer, with the declared `numpy==2.4.3`. This machine has no `ensurepip` for `/usr/bin/python3.11`. `uv` can make the environment without changing that pin:
 
 ```text
-python -m pip install .
-python -m ciw.net control serve --profile <abs-profile.json> --instrument <instrument>
+uv venv --python /usr/bin/python3.11 /tmp/ncp-env
+uv pip install --python /tmp/ncp-env/bin/python .
 ```
 
-The host selects the profile file and the instrument. Do not pass a checkout in a tool argument.
+Folded MCP stdio, from outside the checkout:
+
+```text
+python -m ciw.folded_stdio
+```
+
+The host launch selects the profile and the instrument. A tool argument cannot select a checkout, an interpreter, or a pin. Consumer programs are `examples/consumers/`.
 
 ## Permissions
 
