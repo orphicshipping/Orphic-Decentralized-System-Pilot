@@ -315,3 +315,24 @@ def test_post_effect_failure_is_unknown_not_authorization_refusal(configured,mon
     response=facade.call('ncp_coordinate',args)
     assert response['error']['code']=='outcome_unknown' and calls==['ncp_coordinate']
     with pytest.raises(PrincipalOutcomeUnknown):invoke('ncp_coordinate',args,host=facade)
+
+
+def test_principal_olm_capacity_refuses_without_evicting_then_explicit_release(tmp_path,monkeypatch):
+    import shutil
+    from logistics_fixture_helpers import Fixture
+    from ciw.logistics_profile import LogisticsHost
+    node=shutil.which('node')
+    if node is None:pytest.skip('OLM canonical digest requires host-selected Node')
+    monkeypatch.setenv('NCP_RETAIN_DIR',str(tmp_path/'retained'))
+    host=LogisticsHost(transport=Fixture(),principal='alice',tenant='test-tenant',roles=['pilot:agent-read','pilot:compute-read'],allowed_kinds=['catalog'],node=node,synthetic=True)
+    assert host.store._evict_existing is True  # Raw trusted-host default is unchanged.
+    g=grant();g['operations']=[{'name':'ncp_logistics_catalog','constraints':{}}]
+    facade=PrincipalPolicy(lambda:policy_value(g)).facade('alice',logistics=host)
+    assert host.store._evict_existing is False
+    artifacts=[host.store.keep({'index':i},kind='test',catalog={}) for i in range(32)]
+    assert facade.call('ncp_logistics_catalog',{})['status']=='refused'
+    assert [host.store.native(a)['index'] for a in artifacts]==list(range(32))
+    host.store.release(artifacts[0])
+    fresh=invoke('ncp_logistics_catalog',{},host=facade)['artifact_id']
+    assert host.store.native(fresh)['profile']=='olm.logistics.v1'
+    assert [host.store.native(a)['index'] for a in artifacts[1:]]==list(range(1,32))

@@ -247,6 +247,13 @@ class PrincipalFacade:
         for family in ("state", "logistics"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
+        if hosts.get("logistics") is not None:
+            from .retention import Store
+            # Same owner and durable records; principal-bound publication never
+            # evicts earlier evidence. Raw trusted hosts keep their own default.
+            store = hosts["logistics"].store
+            _require(type(store) is Store)
+            hosts["logistics"].store = Store(store.owner, evict=False)
         control = hosts.get("control")
         if control is not None:
             _require(control.retained.owner == owner_for(principal))
