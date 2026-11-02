@@ -126,9 +126,9 @@ def _settle_locked(store, directory: Path, name: str) -> dict | None:
     if job is None or job.get("status") != "running":
         return job
     lease = _Lease(_lease_path(directory, name))
-    if not lease.try_acquire():
-        return job
     try:
+        if not lease.try_acquire():
+            return job
         failed = {k: v for k, v in job.items() if k != "replayed"}
         failed["status"] = "failed"
         failed["error"] = "worker_lost"
@@ -441,12 +441,12 @@ def recover(store) -> dict:
             if current.get("owner") != store.owner:
                 continue
             lease = _Lease(path)
-            if lease.try_acquire():
-                try:
+            try:
+                if lease.try_acquire():
                     os.ftruncate(lease.fd, 0)
                     released.append(path.name)
-                finally:
-                    lease.release()
+            finally:
+                lease.release()
     return {"schema": "ncp.coordinator-recovery.v1", "jobs": recovered, "released": released,
             "authorizes_execution": False}
 
