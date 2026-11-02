@@ -154,32 +154,36 @@ def _admit(store, key: str, digest: str, operation: str):
     """Create the running record and take its lease, or return the existing record."""
     directory = _owner_dir(store.owner)
     name = _idem_name(key)
-    with _LOCK:
-        with _transaction(directory):
-            existing = _read_json(directory / name)
-            if existing is not None:
-                if existing.get("request_digest") != digest:
-                    raise ValueError("idempotency_key_conflict")
-                return _replay(_settle_locked(store, directory, name)), None
-            lease = _Lease(_lease_path(directory, name))
-            if not lease.try_acquire():
-                raise RuntimeError("coordinator lease is held without a job record")
-            job = {
-                "schema": "ncp.coordinator-job.v1",
-                "operation": operation,
-                "executions": 1,
-                "status": "running",
-                "pid": os.getpid(),
-                "liveness": "file-lease",
-                "request_digest": digest,
-                "authorizes_execution": False,
-            }
-            try:
+    lease = None
+    try:
+        with _LOCK:
+            with _transaction(directory):
+                existing = _read_json(directory / name)
+                if existing is not None:
+                    if existing.get("request_digest") != digest:
+                        raise ValueError("idempotency_key_conflict")
+                    return _replay(_settle_locked(store, directory, name)), None
+                lease = _Lease(_lease_path(directory, name))
+                if not lease.try_acquire():
+                    raise RuntimeError("coordinator lease is held without a job record")
+                job = {
+                    "schema": "ncp.coordinator-job.v1",
+                    "operation": operation,
+                    "executions": 1,
+                    "status": "running",
+                    "pid": os.getpid(),
+                    "liveness": "file-lease",
+                    "request_digest": digest,
+                    "authorizes_execution": False,
+                }
                 _store_job(store, name, job)
-            except BaseException:
-                lease.release()
-                raise
-            return job, lease
+        # Ownership transfers only after both context exits succeed. If exit
+        # fails, keep any committed job for recovery, but not an orphaned lease.
+        return job, lease
+    except BaseException:
+        if lease is not None:
+            lease.release()
+        raise
 
 
 def _finish(store, key: str, record: dict) -> None:
