@@ -68,6 +68,8 @@ Configure an MCP client to launch the current-policy stdio server with an existi
 
 The absolute paths and `operator` are placeholders for trusted launcher configuration. The [policy schema](src/ciw/principal_policy.py) requires explicit grants; preparing a demo does not create them. Use the installed interpreter's absolute path in the client's configuration. This launcher supports control and optional ODRP catalog/evidence bindings. The existing `ciw.net control serve` and `ciw.net reference serve` commands remain local trusted launchers; they do not authenticate separate remote users.
 
+The [private operator panel](docs/PRIVATE_OPERATOR_PANEL.md) uses the same installed MCP service through the existing private gateway. Its separate server proxy verifies an Access assertion, maps the authenticated subject to a host-selected principal, and preserves transaction receipts and uncertain outcomes. The browser receives no backend credential. Building or testing this candidate does not provision an Access application, change the paused historical portal, or qualify a hosted deployment.
+
 For an additional bound profile, deterministic software uses the same facade. This NISE example requires the approved provider checkout and its **separate** interpreter to exist already:
 
 ```python

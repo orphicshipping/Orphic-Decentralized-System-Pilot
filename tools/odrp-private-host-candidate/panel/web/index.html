@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ODSP · Operator console</title>
+  <link rel="stylesheet" href="/theme.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body class="orphic" data-orphic-theme="odsp-terminal">
+<a class="sr-only skip-link" href="#main">Skip to console</a>
+<aside class="rail">
+  <a class="brand" href="#overview"><span class="mark" aria-hidden="true">O</span><span>ORPHIC SYSTEMS<small>Instrument operations</small></span></a>
+  <div class="rail-label">CONTROL PLANE / 01</div>
+  <nav aria-label="Console sections"><a href="#overview" class="active">Overview</a><a href="#tools">MCP tools <span id="tool-count">—</span></a><a href="#runs">Runs &amp; evidence</a><a href="#maintenance">Maintenance</a><a href="#events">Activity log</a></nav>
+  <div class="rail-foot">PRIVATE OPERATOR CLIENT<small>Current grants. Retained evidence.<br>No implicit execution authority.</small></div>
+</aside>
+<main class="os-shell" id="main" tabindex="-1">
+  <header class="os-masthead">
+    <div><span class="eyebrow os-kicker">ODSP / SERVER OPERATIONS</span><h1>Operator console</h1><p>Inspect the server. Operate its tools. Keep the evidence.</p></div>
+    <div class="connection"><span class="dot" id="status-dot" aria-hidden="true"></span><span id="connection">Disconnected</span><span class="tag os-status" id="session-state" data-state="disconnected">DISCONNECTED</span><small id="last-seen">No live response received</small></div>
+  </header>
+  <section class="access os-panel" aria-labelledby="access-title">
+    <div><h2 id="access-title">Connect to this private console</h2><p>The service checks your session. This page does not accept credentials. Check readiness before opening an MCP session.</p></div>
+    <form id="connect-form"><button type="submit" id="connect">Connect / check readiness</button></form>
+    <button type="button" id="open-session" disabled>Open session &amp; discover tools</button>
+    <button type="button" class="secondary os-secondary" id="disconnect">Disconnect this page</button>
+  </section>
+  <div class="os-notice" id="notice" role="status" aria-live="polite">No simulated telemetry. Values appear only after an authenticated server response.</div>
+  <section id="hold-warning" class="boundary uncertainty os-notice" role="alert" hidden>
+    <div><h2>Outcome unknown — do not resubmit</h2><p>A checkpointed request has an uncertain outcome. This page cannot clear the hold or retry it. Readiness inspection remains available; a ready response does not resolve this earlier uncertainty.</p><pre class="os-code" id="hold-metadata"></pre></div>
+  </section>
+  <section class="os-panel" id="operations">
+    <div class="section-heading os-panel-heading"><div><span class="eyebrow os-kicker">LIVE MCP CAPABILITY REGISTRY</span><h2>Numerical operations <span id="operation-count">—</span></h2></div><button type="button" class="secondary os-secondary" id="load-capabilities" disabled>Load capabilities</button></div>
+    <p class="section-note">Discovery and execution grants are separate. These entries appear only after an explicit capability request. A grant does not bind or qualify a provider.</p>
+    <div id="operation-list" class="operation-grid"><p class="empty">No capability response received.</p></div>
+    <p class="section-note">Use <code class="os-code">ncp_plan_template</code> → <code class="os-code">ncp_plan_create</code> → <code class="os-code">ncp_plan_admit</code> → <code class="os-code">ncp_run_submit</code> below when permitted. Confirmation is never an execution grant.</p>
+  </section>
+  <section class="os-panel" id="overview">
+    <div class="section-heading os-panel-heading"><h2>Server overview</h2><span id="updated">AWAITING CONNECTION</span></div>
+    <div class="metrics"><article><span>Transport</span><strong id="transport">—</strong><small id="protocol">Protocol not yet discovered</small></article><article><span>Discovered tools</span><strong id="tools-metric">—</strong><small>Current principal-filtered MCP discovery</small></article><article><span>Observed runs</span><strong id="runs-metric">—</strong><small>Not a complete server job inventory</small></article><article><span>Profile</span><strong id="profile">—</strong><small id="instrument">Selected by the host</small></article></div>
+    <div class="boundary"><p><strong>One scientific owner. Serialized MCP requests.</strong> This console does not execute Python operations directly, broaden grants, or install providers. Successful execution is not scientific qualification.</p></div>
+    <div class="section-heading os-panel-heading"><h3>Read-only readiness</h3><button type="button" class="secondary os-secondary" id="refresh-readiness">Refresh readiness</button></div>
+    <p id="readiness-state" data-state="empty">EMPTY · No readiness response received.</p>
+    <dl class="identity-grid"><dt>Deployment owner</dt><dd><code class="os-code" id="owner-id">Not reported</code></dd><dt>Writer epoch</dt><dd id="writer-epoch">Not reported</dd><dt>Pending transaction</dt><dd><code class="os-code" id="pending-transaction">Not reported</code></dd><dt>Committed transaction</dt><dd><code class="os-code" id="committed-transaction">Not reported</code></dd><dt>Storage capacity</dt><dd id="capacity-state">Not reported</dd></dl>
+    <details><summary>Backend release identity</summary><pre class="os-code" id="release-identity">Not reported.</pre></details>
+    <details><summary>Panel source identity — separate from backend release</summary><pre class="os-code" id="source-identity">Not received. Connect to inspect the served source manifest.</pre></details>
+    <details><summary>Complete readiness response</summary><pre class="os-code" id="readiness-result">No readiness response received.</pre></details>
+  </section>
+  <section class="os-panel" id="tools">
+    <div class="section-heading os-panel-heading"><div><span class="eyebrow os-kicker">DISCOVER → REVIEW → CALL</span><h2>MCP tool workbench</h2></div><label class="search-label"><span class="sr-only">Filter tools</span><input id="search" type="search" placeholder="Filter tools…"></label></div>
+    <div class="workbench os-grid"><div id="tool-list" aria-label="Discovered tools"><p class="empty">Open a session to discover permitted tools.</p></div>
+      <article class="tool-detail os-panel"><div class="tool-title"><h3 id="selected-name">Select a tool</h3><span class="tag os-status" id="selected-access">NO SELECTION</span></div><p id="selected-description">Tool descriptions, schemas and annotations come from the current MCP server.</p>
+        <details><summary>Published input schema</summary><pre class="os-code" id="schema">{}</pre></details>
+        <label for="arguments">Arguments <span>Exact JSON text / checked by the server before dispatch</span></label><textarea id="arguments" spellcheck="false" rows="9" disabled>{}</textarea>
+        <div id="write-warning" hidden><label class="confirmation"><input type="checkbox" id="confirm-write" disabled>I reviewed this exact call and authorize its state change within the host’s existing grants.</label><p>Run submission: keep the same attempt and digest when inspecting an uncertain outcome. Never retry automatically.</p></div>
+        <div class="actions"><button type="button" id="call" disabled>Call tool</button><span id="call-state" role="status">No tool selected</span></div>
+      </article>
+    </div>
+    <div class="response os-panel"><div class="section-heading os-panel-heading"><h3>Server response</h3><button type="button" class="secondary os-secondary" id="download" disabled>Download complete response</button></div>
+      <p id="receipt-state" data-state="empty">EMPTY · No explicit request response.</p><p id="receipt-summary"></p>
+      <dl class="identity-grid"><dt>Effect state</dt><dd id="receipt-effects">Not reported</dd><dt>Transaction</dt><dd><code class="os-code" id="receipt-transaction">Not reported</code></dd><dt>Observed at</dt><dd><time id="receipt-at">Not received</time></dd></dl>
+      <button type="button" id="prepare-plan" class="secondary os-secondary" hidden>Prepare plan from this exact template</button>
+      <pre class="os-code" id="result" tabindex="0">Waiting for an explicit request. Complete transport envelopes are retained here.</pre>
+      <details><summary>Scientific JSON supplied by the server</summary><pre class="os-code" id="scientific-result">Not reported.</pre></details>
+    </div>
+  </section>
+  <section class="os-panel" id="runs"><div class="section-heading os-panel-heading"><div><span class="eyebrow os-kicker">RETAINED STATE</span><h2>Runs &amp; evidence</h2></div><button type="button" class="secondary os-secondary" id="refresh-runs" disabled>Refresh observed runs</button></div><p class="section-note" id="run-scope">Only runs returned for this principal are listed. This is not a complete server job inventory. Completed does not mean PASS; cancellation may only record intent.</p><div id="run-list" class="run-list"><p class="empty">No runs observed. This is not evidence that the server is idle.</p></div><form id="resource-form" class="resource-form"><label for="resource-uri">Read retained MCP resource</label><div><input id="resource-uri" placeholder="ncp://plans/… or ncp://runs/…" required><button id="read-resource" disabled>Read resource</button></div></form></section>
+  <section class="os-panel" id="maintenance"><div class="section-heading os-panel-heading"><div><span class="eyebrow os-kicker">CHECK BEFORE CHANGING</span><h2>Maintenance</h2></div></div><div class="maintenance-grid"><article><div class="tag os-status">EXPLICIT SESSION CHECK</div><h3>Connection diagnostics</h3><p>Ping the actual MCP session and refresh discovery. This is a checkpointed host request; use readiness above for a non-mutating check. Neither check qualifies a provider.</p><button type="button" id="diagnose" class="secondary os-secondary" disabled>Run diagnostics</button><pre class="os-code" id="diagnostic-result">Not checked.</pre></article><article><div class="tag caution os-status">UNAVAILABLE / SAFETY GATE</div><h3>Restart &amp; profile changes</h3><p>No complete job inventory or drain handshake is exposed by this server. Restart, upgrades, profile editing and clearing uncertainty are intentionally unavailable here.</p><button type="button" id="restart" class="secondary os-secondary" disabled>Restart unavailable</button><small>Change launch configuration only through the reviewed host lifecycle. A retained-checkpoint restore is not lost-history disaster recovery.</small></article></div></section>
+  <section class="os-panel" id="events"><div class="section-heading os-panel-heading"><h2>Activity log</h2><button type="button" class="secondary os-secondary" id="refresh-events" disabled>Refresh activity</button></div><p class="section-note">Host-recorded UTC timestamps and public operation metadata. Missing historical fields remain missing.</p><div id="event-list"><p class="empty">No console events received.</p></div></section>
+  <footer><span>ODSP / OPERATOR CONSOLE</span><span>Explicit calls · Full receipts · No automatic retries</span></footer>
+</main>
+<script src="/app.js" defer></script>
+</body>
+</html>

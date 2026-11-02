@@ -35,7 +35,10 @@ CONTRACT_TESTS = RELEASE_CONTRACT_TESTS + ANNOTATION_CONTRACT_TESTS + NISE_CONTR
 NATIVE_NISE_TESTS = ("tests/test_nise_profile.py", "tests/test_nise_policy.py")
 INSTALLED_NISE_TESTS = ("tests/test_nise_contract.py",) + NATIVE_NISE_TESTS + ("tests/test_control_annotations.py",)
 NODE_TESTS = tuple("tools/odrp-private-host-candidate/tools/private-mcp-host/test_" + name + ".mjs"
-                   for name in ("gateway", "release", "storage", "worker"))
+                   for name in ("gateway", "release", "storage", "worker")) + (
+    "tools/odrp-private-host-candidate/panel/tests/build.test.mjs",
+    "tools/odrp-private-host-candidate/panel/tests/proxy.test.mjs",
+)
 COMMANDS = ("source-pins", "node-version", "uv-version", "contracts", "build",
             "installed-environment", "install", "installed-verification", "qualify", "node")
 

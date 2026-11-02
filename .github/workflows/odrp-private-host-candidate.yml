@@ -90,6 +90,12 @@ jobs:
         run: >-
           node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs
           tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs
+          tools/odrp-private-host-candidate/panel/tests/build.test.mjs
+          tools/odrp-private-host-candidate/panel/tests/proxy.test.mjs
+      - name: Build exact-source authenticated panel modules without publishing
+        run: >-
+          node tools/odrp-private-host-candidate/panel/scripts/build.mjs
+          "$RUNNER_TEMP/odsp-private-panel"
       - name: Retain private-profile evidence from this exact attempt
         if: always()
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
@@ -98,6 +104,7 @@ jobs:
           path: |
             ${{ runner.temp }}/odsp-private-release/
             ${{ runner.temp }}/odsp-private-qualification/
+            ${{ runner.temp }}/odsp-private-panel/
           if-no-files-found: error
           retention-days: 30
       - name: Retain the selected private evidence for the existing collector
@@ -108,6 +115,7 @@ jobs:
           path: |
             ${{ runner.temp }}/odsp-private-release/
             ${{ runner.temp }}/odsp-private-qualification/
+            ${{ runner.temp }}/odsp-private-panel/
           if-no-files-found: error
           overwrite: true
           retention-days: 30

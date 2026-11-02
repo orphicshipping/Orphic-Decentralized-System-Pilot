@@ -9,8 +9,8 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2802,
-    "generated": 245,
+    "retained_and_verified": 2824,
+    "generated": 250,
     "rewritten": 46,
     "blocked": 109,
     "vendor_exempt": 2798
@@ -3182,6 +3182,13 @@
     },
     {
       "path": "docs/PRIVATE_MCP_HOST_SPEC.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/PRIVATE_OPERATOR_PANEL.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -39407,6 +39414,188 @@
     },
     {
       "path": "tools/odrp-private-host-candidate/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/DESIGN.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts/build.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/browser_journey.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/build.test.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/proxy.test.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/ui.test.cjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/vertical_fixture.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/vertical_server.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/app.js",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/index.html",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/styles.css",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/theme.css",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/access.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/bounds.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/index.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/panel.mjs",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Maintenance console or view. No required workflow depends on a human screen.",

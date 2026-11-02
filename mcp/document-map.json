@@ -1379,6 +1379,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/PRIVATE_OPERATOR_PANEL.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/PRIVATE_RELEASE_CONTRACT.md",
       "status": "current_surface",
       "owner": "docs/PRIVATE_RELEASE_CONTRACT.md"
@@ -5942,6 +5947,61 @@
       "path": "tools/odrp-private-host-candidate/README.md",
       "status": "current_surface",
       "owner": "tools/odrp-private-host-candidate/README.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/DESIGN.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
     },
     {
       "path": "tools/odrp-private-host-candidate/tools/MCP.md",
