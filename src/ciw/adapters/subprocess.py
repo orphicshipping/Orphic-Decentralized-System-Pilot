@@ -9,7 +9,9 @@ or authenticate its installed dependency binaries.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from contextlib import ExitStack
 from decimal import Decimal
+from functools import wraps
 from hashlib import new as new_hash, sha256
 import json
 import math
@@ -53,6 +55,45 @@ def _refuse(code: str, message: str) -> None:
     raise AdapterRefusal(code, message)
 
 
+class RuntimeCleanupUncertain(AdapterRefusal):
+    """Local ownership was not resolved; the binding must not launch again.
+
+    Keep the owned process handle for operator diagnosis. It is deliberately
+    absent from the public refusal record, which carries no PID or command.
+    """
+
+    def __init__(self, process: subprocess.Popen[bytes] | None = None):
+        self.process = process
+        super().__init__("RUNTIME_CLEANUP_UNCERTAIN", "Bound runtime cleanup could not be confirmed")
+
+
+def _guard_cleanup(operation):
+    @wraps(operation)
+    def guarded(self, *args, **kwargs):
+        previous = getattr(self, "_cleanup_uncertain", None)
+        if previous is not None:
+            raise RuntimeCleanupUncertain(previous.process) from previous
+        try:
+            return operation(self, *args, **kwargs)
+        except BaseException as exc:
+            # An enclosing tempfile/directory cleanup can raise while ownership
+            # uncertainty is propagating. Preserve the hold and both diagnostics.
+            pending, seen = [exc], set()
+            while pending:
+                failure = pending.pop()
+                if id(failure) in seen:
+                    continue
+                seen.add(id(failure))
+                if isinstance(failure, RuntimeCleanupUncertain):
+                    self._cleanup_uncertain = failure
+                    break
+                pending.extend(item for item in (failure.__cause__, failure.__context__) if item is not None)
+                if isinstance(failure, BaseExceptionGroup):
+                    pending.extend(failure.exceptions)
+            raise
+    return guarded
+
+
 def _stop(process: subprocess.Popen[bytes]) -> None:
     try:
         if os.name == "posix":
@@ -71,65 +112,123 @@ def _bounded_process(
     total = 0
     lock = threading.Lock()
     exceeded = threading.Event()
+    readers: list[threading.Thread] = []
+    reader_failures: list[BaseException] = []
+    stop_lock = threading.Lock()
+    stop_attempted = False
+    process = None
     environment = dict(os.environ)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment.pop("NODE_OPTIONS", None)
     environment.pop("NODE_PATH", None)
+
+    def stop_once() -> None:
+        nonlocal stop_attempted
+        with stop_lock:
+            if stop_attempted:
+                return
+            # Do not retry an ambiguous signal, including an after-effect error.
+            stop_attempted = True
+            _stop(process)
+
+    def drain(pipe: Any, retain: bool) -> None:
+        nonlocal total
+        try:
+            while chunk := pipe.read1(8192):
+                with lock:
+                    remaining = max(0, limit - total)
+                    total += len(chunk)
+                    if retain and remaining:
+                        output.append(chunk[:remaining])
+                    if total > limit:
+                        exceeded.set()
+                        stop_once()
+                        return
+        except BaseException as exc:
+            reader_failures.append(exc)
+            try:
+                stop_once()
+            except BaseException as stop_error:
+                reader_failures.append(stop_error)
+
+    def stop_and_reap() -> None:
+        if process is not None and process.returncode is None:
+            try:
+                stop_once()
+            finally:
+                # Reap even if signaling raised after taking effect.
+                process.wait(timeout=5)
+
+    def join_reader(index: int) -> None:
+        # start() can fail either before or after the OS thread starts.
+        if index < len(readers) and readers[index].ident is not None:
+            readers[index].join(timeout=0.5)
+
+    def stop_pipe_holders() -> None:
+        if any(reader.is_alive() for reader in readers):
+            try:
+                stop_once()
+            finally:
+                try:
+                    join_reader(0)
+                finally:
+                    join_reader(1)
+
+    def close_pipe(index: int) -> None:
+        if process is None:
+            return
+        if index < len(readers) and readers[index].is_alive():
+            # Closing a BufferedReader while its read is blocked can hang.
+            _refuse("RUNTIME_IO", "The bound runtime left an output reader active")
+        (process.stdout, process.stderr)[index].close()
+
+    def report_reader_failures() -> None:
+        if len(reader_failures) == 1:
+            raise reader_failures[0]
+        if reader_failures:
+            raise BaseExceptionGroup("Bound runtime output cleanup failed", reader_failures)
+
+    def report_ownership_uncertainty() -> None:
+        if process is not None and (process.returncode is None or any(reader.is_alive() for reader in readers)):
+            raise RuntimeCleanupUncertain(process)
+
     with tempfile.TemporaryFile() as request:
         request.write(stdin)
         request.seek(0)
-        try:
-            process = subprocess.Popen(
-                command, cwd=cwd, env=environment, stdin=request,
-                stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
-                start_new_session=os.name == "posix",
-            )
-        except (OSError, ValueError) as exc:
-            raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
-
-        def drain(pipe: Any, retain: bool) -> None:
-            nonlocal total
-            try:
-                while chunk := pipe.read1(8192):
-                    with lock:
-                        remaining = max(0, limit - total)
-                        total += len(chunk)
-                        if retain and remaining:
-                            output.append(chunk[:remaining])
-                        if total > limit:
-                            exceeded.set()
-                            _stop(process)
-                            return
-            finally:
-                pipe.close()
-
-        readers = [
-            threading.Thread(target=drain, args=(process.stdout, True), daemon=True),
-            threading.Thread(target=drain, args=(process.stderr, False), daemon=True),
-        ]
-        for reader in readers:
-            reader.start()
         timed_out = False
-        try:
-            process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            _stop(process)
-            process.wait(timeout=5)
-        finally:
-            for reader in readers:
-                reader.join(timeout=0.5)
-            if any(reader.is_alive() for reader in readers):
-                _stop(process)
-                for reader in readers:
-                    reader.join(timeout=0.5)
+        # Install ownership cleanup before Popen. ExitStack receives the primary
+        # exception and preserves it if later cleanup also fails. Cleanup never
+        # proves provider rollback; failed kill/wait remains explicit uncertainty.
+        with ExitStack() as cleanup:
+            cleanup.callback(report_ownership_uncertainty)
+            cleanup.callback(report_reader_failures)
+            cleanup.callback(close_pipe, 1)
+            cleanup.callback(close_pipe, 0)
+            cleanup.callback(stop_pipe_holders)
+            cleanup.callback(join_reader, 1)
+            cleanup.callback(join_reader, 0)
+            cleanup.callback(stop_and_reap)
+            try:
+                process = subprocess.Popen(
+                    command, cwd=cwd, env=environment, stdin=request,
+                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
+                    start_new_session=os.name == "posix",
+                )
+            except (OSError, ValueError) as exc:
+                raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
+            for pipe, retain in ((process.stdout, True), (process.stderr, False)):
+                reader = threading.Thread(target=drain, args=(pipe, retain), daemon=True)
+                readers.append(reader)
+                reader.start()
+            try:
+                process.wait(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                timed_out = True
         if exceeded.is_set():
             _refuse("OUTPUT_LIMIT", "The bound runtime exceeded its combined output limit")
         if timed_out:
             _refuse("TIMEOUT", "The bound runtime exceeded its execution deadline")
-        if any(reader.is_alive() for reader in readers):
-            _refuse("RUNTIME_IO", "The bound runtime left an output pipe open")
         return process.returncode, b"".join(output)
 
 
@@ -179,6 +278,7 @@ class PinnedSubprocessAdapter:
     part of the trusted environment; NumPy/SciPy versions are recorded and pinned.
     """
 
+    @_guard_cleanup
     def __init__(
         self, repository_root: str | Path, revision: str, module: str, *,
         source_root: str = "src", python_executable: str | Path = sys.executable,
@@ -187,6 +287,7 @@ class PinnedSubprocessAdapter:
         expected_python_version: str | None = None,
         expected_dependencies: Mapping[str, str | None] | None = None,
     ) -> None:
+        self._cleanup_uncertain: RuntimeCleanupUncertain | None = None
         if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", revision):
             raise ValueError("revision must be a full lowercase Git commit ID")
         if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
@@ -221,6 +322,7 @@ class PinnedSubprocessAdapter:
         if expected_dependencies is not None and dict(expected_dependencies) != self._dependencies:
             _refuse("RUNTIME_PIN_MISMATCH", "Dependency versions differ from the declared pin")
 
+    @_guard_cleanup
     def _git(self, *arguments: str) -> bytes:
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments], cwd=self.repository_root,
@@ -230,6 +332,7 @@ class PinnedSubprocessAdapter:
             _refuse("SOURCE_PIN_MISMATCH", "Cannot verify the bound Git checkout")
         return data
 
+    @_guard_cleanup
     def _verify_source(self) -> str:
         actual_root = self._git("rev-parse", "--show-toplevel").decode().strip()
         if Path(actual_root).resolve() != self.repository_root:
@@ -291,6 +394,7 @@ class PinnedSubprocessAdapter:
         except OSError as exc:
             raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot read the bound Python executable") from exc
 
+    @_guard_cleanup
     def _run(self, code: str, arguments: list[str], stdin: bytes = b"") -> tuple[int, bytes]:
         with tempfile.TemporaryDirectory(prefix="ciw-adapter-") as directory:
             return _bounded_process(
@@ -301,6 +405,7 @@ class PinnedSubprocessAdapter:
                 cwd=Path(directory), timeout=self.timeout_seconds, limit=self.max_output_bytes, stdin=stdin,
             )
 
+    @_guard_cleanup
     def _probe(self) -> dict[str, Any]:
         code, data = self._run(_RUNTIME_PROBE, [])
         if code:
@@ -310,6 +415,7 @@ class PinnedSubprocessAdapter:
             _refuse("RUNTIME_UNAVAILABLE", "The Python runtime identity probe failed")
         return result
 
+    @_guard_cleanup
     def runtime_identity(self) -> dict[str, Any]:
         tree = self._verify_source()
         if tree != self._source_tree or self._executable_digest() != self._python_sha256:
@@ -325,6 +431,7 @@ class PinnedSubprocessAdapter:
             "python_version": self._python_version, "dependencies": dict(self._dependencies),
         }
 
+    @_guard_cleanup
     def invoke(self, operation_id: str, inputs: Mapping[str, Any]) -> dict[str, Any]:
         if not isinstance(operation_id, str) or not operation_id or not isinstance(inputs, Mapping):
             _refuse("INVALID_INPUT", "An operation ID and JSON input object are required")
