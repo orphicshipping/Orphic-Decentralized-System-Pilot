@@ -7,7 +7,7 @@
 
 Capability ledger. `qualified` stays `not_assessed`. `proved_heat` is a read, not an SP1 proof.
 
-Tracked files here, none of them a tool call: `README.md`, `baseline-observation.json`, `capability-ledger.json`, `qualification-policy.json`, `release-scope.json`, `research-baseline-20261017.json`.
+Tracked files here, none of them a tool call: `README.md`, `baseline-observation.json`, `capability-ledger.json`, `private-host-contract.json`, `private-host-gaps.json`, `private-qualification-policy.json`, `qualification-policy.json`, `release-scope.json` (1 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

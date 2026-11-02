@@ -55,7 +55,7 @@ class InstalledDiscovery(unittest.TestCase):
                                   'execution_budget_used': used, 'module': str(module)}))
         """)
         with tempfile.TemporaryDirectory() as directory:
-            result = subprocess.run([sys.executable, '-I', '-c', program],
+            result = subprocess.run([sys.executable, '-I', '-B', '-c', program],
                                     cwd=directory, capture_output=True, text=True, timeout=30)
         self.assertEqual(result.returncode, 0, result.stdout + result.stderr)
         summary = json.loads(result.stdout)

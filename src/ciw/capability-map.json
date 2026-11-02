@@ -2020,5 +2020,382 @@
       ]
     }
   ],
+  "bounded_computation_profiles": [
+    {
+      "profile_id": "nsr.affine-exact.v1",
+      "operation_id": "cbsr.affine-exact.v1",
+      "adapter_contract_commit": "daf43fc870ba926289c3bc4908db784691c7addd",
+      "host_factory": "ciw.recompiler_profile.open_recompiler",
+      "service": "ciw.services.invoke",
+      "source_binding_verification": "caller_assertion_only",
+      "authorizes_execution": false,
+      "authorizes_state_admission": false,
+      "qualification": "not_performed_by_discovery",
+      "tools": [
+        {
+          "name": "ncp_recompiler_describe",
+          "description": "Describe the host-pinned bounded NSR affine profile; no scientific execution or grant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_recompiler_reconcile",
+          "description": "Reconcile a closed NSR affine request in the pinned subprocess. Preserve the caller's execution_id. Accepted, held, refused and invalid_contract are distinct; no evidence or state admission.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_recompiler_verify_receipt",
+          "description": "Replay a complete NSR receipt's retained request and compare every canonical field and digest. Receipt IDs alone are insufficient. This does not authenticate asserted sources.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "receipt": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "receipt"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    },
+    {
+      "profile_id": "sra.schematic.v1",
+      "runtime_commit": "a6e79585950bb6860e5edce5ebd2cce39ea481f2",
+      "scientific_operation": "ciw.schematic-assessment.v1",
+      "host_factory": "ciw.schematic_profile.open_schematic",
+      "service": "ciw.services.invoke",
+      "authority": {
+        "state_admission": "not_performed",
+        "sensor_fusion": "not_performed",
+        "physical_truth": "not_established",
+        "authorizes_execution": false,
+        "companion_execution": "not_performed",
+        "source_authentication": "not_performed",
+        "certificate_authentication": "not_performed",
+        "binding": "caller_assertion_only",
+        "independent_verification": false
+      },
+      "tools": [
+        {
+          "name": "ncp_schematic_describe",
+          "description": "Describe a host-pinned SRA profile; no execution grant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_schematic_validate",
+          "description": "Validate a bounded declared schematic through pinned SRA; no companion execution.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "schematic": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "schematic"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_schematic_retrieve",
+          "description": "Read at most 16 declared two-hop neighborhoods; no projections or embeddings.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "schematic": {
+                "type": "object"
+              },
+              "queries": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "maxItems": 16
+              }
+            },
+            "required": [
+              "schematic",
+              "queries"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_schematic_assess",
+          "description": "Assess declared eligibility using the existing pinned workflow; never call companions.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object",
+                "properties": {
+                  "experiment_id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512
+                  },
+                  "schematic": {
+                    "type": "object"
+                  },
+                  "queries": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512
+                    },
+                    "maxItems": 16
+                  }
+                },
+                "required": [
+                  "experiment_id",
+                  "schematic",
+                  "queries"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_schematic_verify_receipt",
+          "description": "Validate every public receipt field and freshly reproduce its numerical projection.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "receipt": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "receipt"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "limits": {
+        "nodes": 256,
+        "edges": 1024,
+        "queries": 16,
+        "argument_bytes": 65536,
+        "complete_mcp_bytes": 262144,
+        "call_deadline_seconds": 20,
+        "child_wall_seconds": 5,
+        "child_cpu_seconds": 3,
+        "child_address_bytes": 268435456,
+        "concurrent_calls_per_host": 1
+      },
+      "receipt_semantics": "Public redaction has its own digest; native path-derived hashes are not public identities. Reproduction has fresh occurrence and result IDs.",
+      "environment": "Existing pinned adapter inherits host environment except its stripped path variables; no network sandbox is claimed.",
+      "qualification": "not_established_by_discovery",
+      "authorizes_execution": false
+    },
+    {
+      "profile_id": "clocksync.affine.v1",
+      "adapter_contract_commit": "40507060ca7a9126a9d641999b994a757eef3bfd",
+      "operation_id": "tbrt.affine-clock-reconcile.v1",
+      "host_factory": "ciw.clocksync_profile.open_clocksync",
+      "service": "ciw.services.invoke",
+      "source_binding_verification": "caller_assertion_only",
+      "authorizes_execution": false,
+      "authorizes_state_admission": false,
+      "qualification": "not_performed_by_discovery",
+      "authority": {
+        "source_binding_verification": "caller_assertion_only",
+        "authorizes_execution": false,
+        "authorizes_state_admission": false,
+        "source_authenticated": false,
+        "synchronization_performed": false,
+        "utc_conversion_performed": false,
+        "traceability_verified": false,
+        "evidence_admission": false
+      },
+      "comparison_policy": {
+        "comparison_id": "odsp.clocksync.canonical-replay.v1",
+        "comparison": "complete_canonical_json_exact",
+        "scope": "same_bound_runtime",
+        "cross_platform_bitwise_guarantee": false,
+        "dependency_identity": "numpy_scipy_version_labels_only_not_binary_attestation",
+        "propagation": "first-order.v1",
+        "origins": "fixed_constants",
+        "bridge_sha256": "8730a424525857230c882eb9bb4b761ed5b1654def3e7fd02fe0c9ce040dd3a7",
+        "blas_threads": 1
+      },
+      "tools": [
+        {
+          "name": "ncp_clocksync_describe",
+          "description": "Describe bounded host-pinned TBRT mapping; no synchronization or authority grant.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_clocksync_reconcile",
+          "description": "Map one declared event with an independently supplied expected reference, retained origin/delta and first-order covariance. Caller execution_id is preserved.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_clocksync_replay",
+          "description": "Replay and compare every field of a complete receipt under the same runtime and comparison policy. No new occurrence identity or source authentication.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "receipt": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "receipt"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    }
+  ],
   "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
 }

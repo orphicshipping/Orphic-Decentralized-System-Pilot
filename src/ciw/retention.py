@@ -59,8 +59,11 @@ def _artifact_name(artifact_id: str) -> str:
 
 
 class Store:
-    def __init__(self, owner: str):
+    def __init__(self, owner: str, *, evict: bool = True):
+        if type(evict) is not bool:
+            raise ValueError("Retention eviction policy must be a boolean")
         self.owner = owner
+        self._evict_existing = evict
 
     def _path(self, artifact_id: str) -> Path:
         return _owner_dir(self.owner) / _artifact_name(artifact_id)
@@ -94,11 +97,16 @@ class Store:
         prefix = "failure-" if envelope["schema"] == "ncp.retained-failure.v1" else "retained-"
         artifact_id = prefix + sha256(raw).hexdigest()[:32]
         directory = _owner_dir(self.owner)
+        if not self._evict_existing:
+            self._check_capacity(directory, directory / (artifact_id + ".json"), raw)
         _publish(directory, artifact_id + ".json", raw)
         self._evict(directory, prefix, directory / (artifact_id + ".json"))
         return artifact_id
 
     def _evict(self, directory: Path, prefix: str, target: Path) -> None:
+        if not self._evict_existing:
+            self._check_capacity(directory, target, _read_regular(target))
+            return
         ranked = []
         total = 0
         for old in directory.glob(prefix + "*.json"):
@@ -123,6 +131,28 @@ class Store:
             old.unlink(missing_ok=True)
             total -= size
             remaining_count -= 1
+
+    def _check_capacity(self, directory: Path, target: Path, raw: bytes) -> None:
+        """Refuse before publication; the caller holds the owner's transaction.
+
+        Private hosts retain evidence until explicit release. Their bounded
+        capacity covers both success and failure records together. Sequence
+        reservation may already be durable; refusal does not mean rollback.
+        """
+        count, total = 1, len(raw)
+        for pattern in ("retained-*.json", "failure-*.json"):
+            for path in directory.glob(pattern):
+                existing = _read_regular(path)
+                if path == target:
+                    if existing != raw:
+                        raise ValueError("Retained artifact identity conflict")
+                    continue
+                count += 1
+                total += len(existing)
+                if count > _LIMIT or total > _BYTE_LIMIT:
+                    raise ValueError("Retained owner capacity exhausted; explicit release required")
+        if count > _LIMIT or total > _BYTE_LIMIT:
+            raise ValueError("Retained owner capacity exhausted; explicit release required")
 
     def keep(self, bundle: dict, *, kind: str, catalog: dict) -> str:
         with _LOCK:

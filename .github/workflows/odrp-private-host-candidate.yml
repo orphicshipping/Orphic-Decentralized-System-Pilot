@@ -1,14 +1,34 @@
 name: ODRP private host candidate qualification
 on:
   push:
-    branches: [odrp/private-host-candidate]
+    branches: [main, odrp/private-host-candidate]
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'instruments/**'
+      - 'pyproject.toml'
+      - 'tools/odrp-private-host-candidate/**'
+      - 'tools/mcp-operator-console/**'
+      - 'examples/numerical_operations/**'
+      - 'examples/workcells/godot-prop/**'
+      - 'scripts/*private*'
+      - 'scripts/tests/*private*'
+      - 'tests/test_private*'
+      - 'tests/private_host_qualification/**'
+      - 'tests/reference_fixture_helpers.py'
+      - 'release/qualification-policy.json'
+      - 'release/private-qualification-policy.json'
+      - '.github/workflows/odrp-private-host-candidate.yml'
   workflow_dispatch:
 permissions:
   contents: read
 jobs:
   isolated-container:
     runs-on: ubuntu-latest
-    timeout-minutes: 25
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      PIP_DISABLE_PIP_VERSION_CHECK: '1'
     steps:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
         with:
@@ -17,35 +37,77 @@ jobs:
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
         with:
           python-version: '3.12.14'
-      - name: Build candidate from this exact source revision
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.19.0'
+      - name: Provision declared private profile and build tools
+        run: >-
+          python -m pip install --no-compile setuptools==84.2.1 wheel==0.48.0
+          numpy==2.4.3 websockets==16.0 pytest==9.0.2 httpx==0.28.1
+          -r tools/mcp-operator-console/requirements.txt
+      - name: Release identity and refusal contracts
         run: |
-          C=tools/odrp-private-host-candidate
-          python -m pip wheel --no-deps . --wheel-dir "$C/wheel"
-          mkdir -p "$C/tools/mcp-operator-console" "$C/examples/numerical_operations"
-          cp tools/mcp-operator-console/{console.py,requirements.txt} "$C/tools/mcp-operator-console/"
-          cp examples/numerical_operations/prepare.py "$C/examples/numerical_operations/"
-          cp tests/reference_fixture_helpers.py "$C/tools/private-mcp-host/"
-          sha256sum "$C"/wheel/*.whl
-      - name: Source and wheel consistency
+          python -B -m pytest -q -p no:cacheprovider tests/test_private_release.py scripts/tests/test_private_release_build.py
+          node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_release.mjs
+      - name: Build and compare two exact-source wheels without network
+        run: python -B scripts/build_private_release.py --output-dir "$RUNNER_TEMP/odsp-private-release"
+      - name: Retain the exact dependency wheels before offline installation
         run: |
-          python - <<'PYCODE'
-          from pathlib import Path
-          import zipfile
-          with zipfile.ZipFile(next(Path('tools/odrp-private-host-candidate/wheel').glob('*.whl'))) as z:
-              for name in z.namelist():
-                  source = Path('src') / name
-                  if source.is_file():
-                      assert z.read(name) == source.read_bytes(), name
-          PYCODE
-      - name: Build isolated local image without registry credentials
-        run: docker build -f tools/odrp-private-host-candidate/Dockerfile.ci -t odrp-host-local-candidate tools/odrp-private-host-candidate
+          python -m pip download --only-binary=:all: --no-deps -r "$RUNNER_TEMP/odsp-private-release/requirements.lock" --dest "$RUNNER_TEMP/odsp-private-release/wheelhouse"
+          python -B scripts/seal_private_wheelhouse.py --context "$RUNNER_TEMP/odsp-private-release"
+      - name: Install the selected bytes outside the checkout
+        run: |
+          python -m venv "$RUNNER_TEMP/odsp-private-installed"
+          "$RUNNER_TEMP/odsp-private-installed/bin/python" -m pip install --no-index --no-deps --no-compile --require-hashes --find-links="$RUNNER_TEMP/odsp-private-release/wheelhouse" -r "$RUNNER_TEMP/odsp-private-release/requirements.hashed.lock"
+          "$RUNNER_TEMP/odsp-private-installed/bin/python" -m pip install --no-index --no-deps --no-compile "$RUNNER_TEMP"/odsp-private-release/wheel/*.whl
+      - name: Installed MCP and failure-injection qualification
+        run: >-
+          python -B scripts/check_private_host_qualification.py
+          --candidate-root "$GITHUB_WORKSPACE"
+          --python "$RUNNER_TEMP/odsp-private-installed/bin/python"
+          --wheel "$RUNNER_TEMP/odsp-private-release/wheel/computational_instrumentation_workbench-0.1.0-py3-none-any.whl"
+          --manifest "$RUNNER_TEMP/odsp-private-release/wheel/release-manifest.json"
+          --output-dir "$RUNNER_TEMP/odsp-private-qualification"
+      - name: Build local container from retained wheelhouse without registry login
+        run: >-
+          docker build --network=none -f "$RUNNER_TEMP/odsp-private-release/Dockerfile.ci"
+          -t odsp-private-local-candidate "$RUNNER_TEMP/odsp-private-release"
+      - name: Record immutable image identity and verify installed release bytes
+        run: >-
+          python -B scripts/record_private_image.py --image odsp-private-local-candidate
+          --context "$RUNNER_TEMP/odsp-private-release"
+          --output "$RUNNER_TEMP/odsp-private-release/image-receipt.json"
+          --base-image python:3.12-slim@sha256:a6e34c598f2467ed0e9a8d349809fcd8b5c603269512df273a0bb1784edc11b1
       - name: Actual container scientific and reference journeys
         run: >-
           docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev
           -e NCP_TRANSACTION_STATE=/tmp/odrp-ci/state
-          odrp-host-local-candidate python -m pytest -q -p no:cacheprovider
+          odsp-private-local-candidate python -B -m pytest -q -p no:cacheprovider
           tools/private-mcp-host/test_adapter.py
           tools/private-mcp-host/test_reference_adapter.py
           tools/private-mcp-host/test_installed_discovery.py
       - name: Gateway and uncertainty-fence simulations
-        run: node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs
+        run: >-
+          node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs
+          tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs
+      - name: Retain private-profile evidence from this exact attempt
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: odsp-private-host-evidence-${{ github.sha }}-${{ github.run_attempt }}
+          path: |
+            ${{ runner.temp }}/odsp-private-release/
+            ${{ runner.temp }}/odsp-private-qualification/
+          if-no-files-found: error
+          retention-days: 30
+      - name: Retain the selected private evidence for the existing collector
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a
+        with:
+          name: odsp-private-host-evidence
+          path: |
+            ${{ runner.temp }}/odsp-private-release/
+            ${{ runner.temp }}/odsp-private-qualification/
+          if-no-files-found: error
+          overwrite: true
+          retention-days: 30

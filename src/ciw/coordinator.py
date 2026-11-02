@@ -126,9 +126,9 @@ def _settle_locked(store, directory: Path, name: str) -> dict | None:
     if job is None or job.get("status") != "running":
         return job
     lease = _Lease(_lease_path(directory, name))
-    if not lease.try_acquire():
-        return job
     try:
+        if not lease.try_acquire():
+            return job
         failed = {k: v for k, v in job.items() if k != "replayed"}
         failed["status"] = "failed"
         failed["error"] = "worker_lost"
@@ -244,11 +244,11 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
         raise ValueError("coordinator arguments must be an object")
     _checked_arguments(arguments)
     digest = _digest(operation, arguments, exclusive)
-    existing, lease = _admit(store, idempotency_key, digest, operation)
-    if lease is None:
-        return existing
-    held = None
+    lease = held = None
     try:
+        existing, lease = _admit(store, idempotency_key, digest, operation)
+        if lease is None:
+            return existing
         try:
             if exclusive is not None:
                 held = _hold_exclusive(store, exclusive, exclusive_wait)
@@ -278,7 +278,8 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
             # A resource-cleanup failure must not strand the job lease. Terminal
             # publication precedes cleanup; never overwrite completed on a
             # cleanup cancellation or permit a replay to execute the job again.
-            lease.release()
+            if lease is not None:
+                lease.release()
 
 
 def _grants_lock():
@@ -441,12 +442,12 @@ def recover(store) -> dict:
             if current.get("owner") != store.owner:
                 continue
             lease = _Lease(path)
-            if lease.try_acquire():
-                try:
+            try:
+                if lease.try_acquire():
                     os.ftruncate(lease.fd, 0)
                     released.append(path.name)
-                finally:
-                    lease.release()
+            finally:
+                lease.release()
     return {"schema": "ncp.coordinator-recovery.v1", "jobs": recovered, "released": released,
             "authorizes_execution": False}
 

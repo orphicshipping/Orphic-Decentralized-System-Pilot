@@ -364,6 +364,18 @@ def response_postcondition(value):
 
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
+    from .principal_policy import PrincipalFacade
+    if isinstance(host, PrincipalFacade):
+        return host.invoke(name, arguments)
+    if isinstance(name, str) and name.startswith("ncp_clocksync_"):
+        from .clocksync_profile import invoke_clocksync
+        return invoke_clocksync(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_schematic_"):
+        from .schematic_profile import invoke_schematic
+        return invoke_schematic(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_recompiler_"):
+        from .recompiler_profile import invoke_recompiler
+        return invoke_recompiler(host, name, {} if arguments is None else arguments)
     if isinstance(name, str) and name.startswith("ncp_state_"):
         from .state_read_profile import invoke_state
         return invoke_state(host, name, {} if arguments is None else arguments)
@@ -411,6 +423,9 @@ def capability_map():
     from .reference_profile import profile_manifest
     from .state_read_profile import profile_manifest as state_manifest
     from .logistics_profile import profile_manifest as logistics_manifest
+    from .recompiler_profile import profile_manifest as recompiler_manifest
+    from .schematic_profile import profile_manifest as schematic_manifest
+    from .clocksync_profile import profile_manifest as clocksync_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -446,6 +461,7 @@ def capability_map():
         "tools": tools,
         "indexed": indexed,
         "reference_profiles": [profile_manifest(), state_manifest(), logistics_manifest()],
+        "bounded_computation_profiles": [recompiler_manifest(), schematic_manifest(), clocksync_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 

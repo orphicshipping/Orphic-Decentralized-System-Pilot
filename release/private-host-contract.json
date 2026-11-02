@@ -1,0 +1,67 @@
+{
+  "schema": "odsp.private-release-contract.v1",
+  "authorizes_execution": false,
+  "authorizes_deployment": false,
+  "qualification": "not_established_by_this_contract",
+  "repository": "orphicsystems/Orphic-Decentralized-Systems-Protocol",
+  "profile": "private-single-writer-posix",
+  "deployment_assumptions": {
+    "status": "proposed_requires_explicit_configuration_and_qualification",
+    "audience": "approved_principals_only",
+    "platform": "linux_posix",
+    "tenancy": "one_deployment_tenant_with_principal_isolation",
+    "writer_topology": "single_serialized_writer",
+    "ingress_candidate": "existing_cloudflare_private_host",
+    "historical_paused_host": "excluded_preserve_unchanged",
+    "native_streamable_http_mcp": "not_implied_by_https_to_stdio_wrapper"
+  },
+  "required_bindings": [
+    "verified_release_identity",
+    "deployment_owner",
+    "checkpoint_compatibility_generation",
+    "authoritative_writer_epoch",
+    "current_principal_policy",
+    "authenticated_principal_mapping",
+    "approved_resource_and_corpus_pins",
+    "explicit_queue_time_byte_and_storage_limits"
+  ],
+  "preservation": {
+    "import_manifest": "instruments/manifest.json",
+    "required_import_count": 21,
+    "exact_capsule": "examples/workcells/godot-prop",
+    "capsule_files": ["compiler.py", "motion.gd", "spec.json"],
+    "generator_clean_rounds": 2,
+    "existing_capability_holds": "preserve",
+    "existing_owner_retention_budget": "preserve"
+  },
+  "local_fixture_targets": {
+    "clients": 3,
+    "concurrent_reads_per_client": 8,
+    "soak_seconds_minimum": 60,
+    "soak_completed_reads_minimum": 100,
+    "operation_deadline_seconds": 60,
+    "soak_command_deadline_seconds": 90,
+    "process_tree_rss_bytes_maximum": 1073741824,
+    "process_count_maximum": 96,
+    "automatic_retry_after_unknown": false,
+    "production_slo_claim": false
+  },
+  "gates": [
+    {"id": "G1", "name": "reproducible_release_and_evidence", "required": true, "criteria": ["exact_source_package_image_receipts", "installed_byte_verification", "repeatable_build_or_explicit_blocker", "unchanged_source_pins", "exact_candidate_hosted_evidence"]},
+    {"id": "G2", "name": "principal_operation_resource_authorization", "required": true, "criteria": ["trusted_authenticated_binding", "current_tool_and_scientific_grants", "owner_scoped_resources", "revocation_and_reduced_grant_reopen", "authorized_handoff_and_claim", "sdk_mcp_parity"]},
+    {"id": "G3", "name": "durable_recovery_and_owned_restore", "required": true, "criteria": ["checkpoint_before_acknowledgment", "unknown_outcome_preservation", "atomic_epoch_admission_and_publication", "live_stale_writer_rejection", "backup_owner_continuity", "actual_selected_storage_qualification"]},
+    {"id": "G4", "name": "bounded_operations_and_observability", "required": true, "criteria": ["bounded_queue_concurrency_time_bytes_storage", "complete_serialized_envelope_limits", "redacted_audit_failure_semantics", "read_only_readiness", "owned_restore_upgrade_rollback_runbooks", "declared_production_objectives"]},
+    {"id": "G5", "name": "external_clients_and_capability_evidence", "required": true, "criteria": ["actual_installed_mcp_service", "deterministic_sdk_client", "restart_paging_handoff_denial_recovery", "declared_load_and_soak_targets", "before_after_exit_fault_boundaries", "explicit_selected_capability_qualification"]}
+  ],
+  "evidence_levels": ["source_inspection", "synthetic_unit_fixture", "local_process_and_filesystem", "installed_wheel", "installed_local_container", "local_platform_emulation", "hosted_runtime", "live_authenticated_upstream", "independent_operator", "physical_validation"],
+  "receipt_rules": {
+    "bind_full_source_commit": true,
+    "bind_source_tree": true,
+    "bind_wheel_and_image_digests": true,
+    "bind_policy_and_topology": true,
+    "retain_failed_and_unknown_outcomes": true,
+    "required_skips_are_passes": false,
+    "metadata_authenticates_artifact_contents": false,
+    "historical_results_qualify_new_source_sha": false
+  }
+}

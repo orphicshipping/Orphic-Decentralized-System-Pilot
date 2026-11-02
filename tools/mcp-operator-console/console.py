@@ -95,7 +95,9 @@ def launch_arguments(config):
             raise ConsoleError('invalid_configuration', 'Leakage retains its fixed provider revision.')
     elif any(value is not None for value in native):
         raise ConsoleError('invalid_configuration', 'Native bindings require leakage or BIM clearance.')
-    args = ['-I', '-m', 'ciw.net', config.surface, 'serve', '--profile', str(config.profile)]
+    # -I ignores PYTHONDONTWRITEBYTECODE, so -B is explicit: a verified installed
+    # wheel must not acquire unverified executable caches during an MCP call.
+    args = ['-I', '-B', '-m', 'ciw.net', config.surface, 'serve', '--profile', str(config.profile)]
     if config.surface == 'operational':
         args.append('--sdk')
     else:

@@ -23,6 +23,7 @@ class SecurityTests(unittest.TestCase):
         valid = replace(base, instrument='bim-clearance', provider_checkout=trusted / 'cse',
                         provider_revision='a' * 40, provider_python=Path(sys.executable), resume=True)
         args = launch_arguments(valid)
+        self.assertEqual(args[:4], ['-I', '-B', '-m', 'ciw.net'])
         self.assertIn('--provider-checkout', args)
         self.assertIn('--provider-revision', args)
         self.assertIn('--resume', args)

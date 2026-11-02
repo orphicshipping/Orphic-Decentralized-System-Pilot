@@ -114,6 +114,7 @@ class StateReadHost:
         if type(data['records']) is not list:
             raise StateRefusal('invalid_capture')
         self._records = {}
+        self._bound_principal = principal
         self._projection = projection
         self._rulings = frozenset(allowed_ruling_ids)
         self._metadata = {k:data[k] for k in ('source_commit','origin','captured_at','projection')}

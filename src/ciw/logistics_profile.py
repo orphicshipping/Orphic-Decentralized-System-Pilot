@@ -86,15 +86,16 @@ class HTTPSReader:
 
 class LogisticsHost:
     instructions='ODSP OLM retained reads only. No submission or execution authority.'
-    def __init__(self, *, transport, principal, tenant, roles, allowed_kinds, node, source_commit=PIN, synthetic=False):
+    def __init__(self, *, transport, principal, tenant, roles, allowed_kinds, node, source_commit=PIN, synthetic=False, retain_evict=True):
         if source_commit!=PIN or not principal or not tenant or not node.startswith('/'):
             raise ValueError('invalid_host_binding')
         if not set(allowed_kinds)<=KINDS: raise ValueError('invalid_host_scope')
         self.transport,self.node,self.roles=transport,node,frozenset(roles)
+        self._bound_principal, self._bound_tenant = principal, tenant
         self.allowed=frozenset(allowed_kinds)
         self.synthetic=bool(synthetic)
         # Tenant and principal cannot share retained artifacts by collision.
-        self.store=Store('olm:'+hashlib.sha256(raw([tenant,principal])).hexdigest())
+        self.store=Store('olm:'+hashlib.sha256(raw([tenant,principal])).hexdigest(), evict=retain_evict)
     def descriptions(self): return [{'name':n,**deepcopy(v)} for n,v in TOOLS.items()]
     def _require_scope(self, source):
         kind = source['kind']
