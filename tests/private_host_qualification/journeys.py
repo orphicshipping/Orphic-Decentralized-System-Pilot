@@ -152,20 +152,27 @@ async def call(client, name, arguments=None, *, refused=False, transcript=None):
     start = time.monotonic()
     response = await asyncio.wait_for(client.call_tool(name, arguments or {}), timeout=10)
     value = response.structured_content
-    require(type(value) is dict and value.get("status") in {"ok", "refused"}, "Unknown or missing MCP result")
-    require(response.is_error is refused and (value["status"] == "refused") is refused,
-            "MCP allowed/refused outcome differs from fixture expectation: " + name)
     if transcript is not None:
         raw = json.dumps(value, sort_keys=True, ensure_ascii=True, allow_nan=False).encode()
-        transcript.append({"tool": name, "status": value["status"], "duration_seconds": time.monotonic() - start,
+        transcript.append({"tool": name, "status": value.get("status") if type(value) is dict else None,
+                           "duration_seconds": time.monotonic() - start,
                            "response_sha256": hashlib.sha256(raw).hexdigest(), "response_bytes": len(raw)})
+    return control_response(value, response.is_error, refused=refused)
+
+
+def control_response(value, is_error, *, refused=False):
+    require(type(value) is dict and value.get("status") in {"ok", "refused"}, "Unknown or missing MCP result")
+    require((value.get("error") or {}).get("code") != "outcome_unknown",
+            "Unknown outcome cannot satisfy an expected safe refusal")
+    require(is_error is refused and (value["status"] == "refused") is refused,
+            "MCP allowed/refused outcome differs from fixture expectation")
     return value.get("data")
 
 
 def sdk_seed(profile, policy_path):
     from ciw.agent_mcp import from_profile
     from ciw.control_gateway import ControlHost
-    from ciw.principal_policy import PrincipalPolicy, owner_for
+    from ciw.principal_policy import PrincipalPolicy, PrincipalRefusal, owner_for
     from ciw.services import invoke
     from ciw.sequence_kinetics import example_request
     with from_profile(profile) as owner, ControlHost(owner, retained_owner=owner_for(ACTORS[0])) as host:
@@ -175,11 +182,11 @@ def sdk_seed(profile, policy_path):
         plan = invoke("ncp_plan_create", {"source": "source", "baseline": "baseline", "graph": template["graph"]}, host=facade)
         digest = {"plan_id": plan["plan_id"], "expected_digest": plan["digest"]}
         try:
-            invoke("ncp_run_submit", {**digest, "attempt": "before-admission"}, host=facade)
-        except ValueError:
+            invoke("ncp_domain_run", {"domain": "impact", "example": True}, host=facade)
+        except PrincipalRefusal:
             pass
         else:
-            raise ValueError("SDK admitted an unadmitted plan")
+            raise ValueError("SDK executed outside its current domain grant")
         invoke("ncp_plan_admit", digest, host=facade)
         run = invoke("ncp_run_submit", {**digest, "attempt": "native-fixture"}, host=facade)
         deadline = time.monotonic() + 10
@@ -447,11 +454,8 @@ async def adapter_process(args):
     async def tool(actor, name, arguments=None, *, refused=False):
         value = await send(envelope(actor, "call", {"name": name,
             "arguments_json": json.dumps(arguments or {}, ensure_ascii=False), "confirmed": True}))
-        require(value.get("isError", False) is refused, "Actual installed MCP allowed/refused result mismatch")
         structured = value.get("structuredContent")
-        require(type(structured) is dict and structured.get("status") == ("refused" if refused else "ok"),
-                "Actual installed MCP returned unknown or malformed result")
-        return structured.get("data")
+        return control_response(structured, value.get("isError", False), refused=refused)
 
     try:
         await start()
@@ -467,7 +471,9 @@ async def adapter_process(args):
         template = await tool(ACTORS[0], "ncp_plan_template", {"baseline": "baseline"})
         plan = await tool(ACTORS[0], "ncp_plan_create", {"source": "source", "baseline": "baseline", "graph": template["graph"]})
         digest = {"plan_id": plan["plan_id"], "expected_digest": plan["digest"]}
-        await tool(ACTORS[0], "ncp_run_submit", {**digest, "attempt": "not-admitted"}, refused=True)
+        denied = await send(envelope(ACTORS[0], "call", {"name": "ncp_domain_run", "confirmed": True,
+            "arguments_json": json.dumps({"domain": "impact", "example": True})}), expected_status=403)
+        require(denied == {"error": {"code": "principal_policy_refused"}}, "Predispatch scope denial was not explicit")
         await tool(ACTORS[0], "ncp_plan_admit", digest)
         run = await tool(ACTORS[0], "ncp_run_submit", {**digest, "attempt": "private-local-qualification"})
         require(run["state"] == "completed" and len(run["result"]["execution_ids"]) == 7,

@@ -13,6 +13,9 @@ ROOT = Path(__file__).resolve().parents[2]
 SPEC = importlib.util.spec_from_file_location("private_host_qualification", ROOT / "scripts/check_private_host_qualification.py")
 gate = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(gate)
+JOURNEY_SPEC = importlib.util.spec_from_file_location("private_host_journeys", ROOT / "tests/private_host_qualification/journeys.py")
+journeys = importlib.util.module_from_spec(JOURNEY_SPEC)
+JOURNEY_SPEC.loader.exec_module(journeys)
 
 
 def evidence(tmp_path, phase="native_clients"):
@@ -144,3 +147,20 @@ def test_soak_targets_are_explicit_and_distinct_from_smoke():
     assert gate.TARGETS["soak_minimum_completed_calls"] == 100
     assert gate.TARGETS["soak_command_timeout_seconds"] == 90
     assert gate.TARGETS["clients"] == 3
+
+
+def test_unknown_mutating_outcome_cannot_be_counted_as_safe_refusal():
+    envelope = {"status": "refused", "data": None, "error": {"code": "outcome_unknown"}}
+    with pytest.raises(ValueError, match="Unknown outcome"):
+        journeys.control_response(envelope, True, refused=True)
+
+
+def test_predispatch_refusal_is_distinct_from_unknown_outcome():
+    envelope = {"status": "refused", "data": None, "error": {"code": "principal_policy_refused"}}
+    assert journeys.control_response(envelope, True, refused=True) is None
+
+
+@pytest.mark.parametrize("value", [None, {}, {"status": "unknown"}, {"status": "completed"}])
+def test_missing_or_unknown_tool_response_fails(value):
+    with pytest.raises(ValueError, match="Unknown or missing"):
+        journeys.control_response(value, False)
