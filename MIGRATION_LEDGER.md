@@ -101,7 +101,7 @@ Windows qualification.
 ## 7. Historical conversion evidence matrix
 
 These are earlier reported results at the revisions named below, not results
-for the repaired head. The full suite has not been rerun by this repair.
+for the repaired head. The repair's separately observed results are in §12.
 
 | Gate | Command | Result |
 |---|---|---|
@@ -217,3 +217,47 @@ Local confirmation (2026-11-01, about 22:30 EST): `git grep -I -l "Incompatible 
 snapshot (2718 tracked files, including every instrument tree it holds) hits only the same 10 MPL `LICENSE` files and
 `surface/tests/test_licensing.py`, plus this ledger and `docs/licensing/rights-register.json`, which quote the phrase.
 Files not in the snapshot rely on the code search above.
+
+## 12. Local repair verification (2026-11-02)
+
+The following results were observed at source commit
+`aefe6434e7ad74cf0c15bf8f010f5bccffc8be0f`, after the real ancestry merge and
+the response-budget/claim-recovery repairs. The host was Linux x86_64,
+CPython 3.12.14; the isolated installed-wheel container used CPython 3.12.15.
+The full run used `OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 python -m pytest -q`
+with JUnit output, duration reporting and a one-hour timeout; it finished normally
+with test failures after 2,849.99 seconds, rather than reaching that timeout.
+
+| Gate | Observed result |
+|---|---|
+| Complete Python suite | 18,709 passed, 84 failed, 49 setup errors, 1,155 skipped; 318 subtests passed; 3 warnings |
+| Comparison of failing tests on main `26a437ef` | 132 of 133 failures/errors reproduced with the same status and normalized diagnostic, in a separate worktree with identical versions of all 44 installed packages |
+| Remaining project-map failure | The full run saw a temporary `build` directory. That directory was absent after the run and the exact test passed unchanged on rerun; no tracked map or source was changed |
+| Response, durable claim and ODRP regressions | 31 passed and 12 subtests passed; the same 31 tests and 12 subtests also passed from the installed wheel outside the checkout in a network-disabled, read-only-root container |
+| Same focused regressions without optional MCP | 30 passed, 1 transport-only skip; 12 subtests passed |
+| Pinned current/historical scientific adapters | 56 passed |
+| Installed ODRP container journeys | 8 passed with network disabled and a read-only root |
+| Node gateway/uncertainty-fence checks | 7 passed |
+| Generated indexes | 6,854 tracked paths, 2,200 document rows and 787 indexed non-ignored folders; repeat generation produced no changes |
+
+The reproduced main failures comprise 72 imported-subtree identity checks,
+24 native-tree pin checks, one capability-registry mismatch, 31 source-capsule
+file-set checks, three scientific-audit failures for the existing `reference`
+command, and one unavailable trusted host inventory collector. This was a
+comparison of the failing test IDs, not a second full main-suite run. No newly
+introduced failure was identified by that comparison; the full suite remains
+non-green and those main/environment issues remain open.
+
+Wheel SHA256:
+`d1fff22c08c8766ca723609852e0aceca460ee6a1f90b579d957a20badc49f3d`.
+All 743 packaged source files matched the checkout. The container build used
+the repository's pinned base and requirements with host-downloaded dependency
+wheels and an offline install, because package-host DNS failed inside the
+original build environment. The repository Dockerfile was not changed.
+
+This evidence does not qualify hosted CI, Windows/macOS, live upstream services,
+authenticated upstream identities, native engine deployment, physical results or
+power-loss recovery. Interruption during exclusive acquisition remains a known
+gap outside these fixes. The separately reviewed installed-resource/folder fix
+`246616d`, PR #261 and the NSL/OLM adapter layer are not incorporated in this
+repair. No remote push, review, comment, merge or deployment was performed.
