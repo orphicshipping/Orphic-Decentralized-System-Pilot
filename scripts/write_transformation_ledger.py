@@ -31,11 +31,14 @@ def main():
     docs = []
     for path in paths:
         if path.endswith(".md"):
-            current = path in {"README.md", "docs/AGENT_OPERATIONS.md", "docs/ODRP.md", "docs/READ_ONLY_ADAPTERS.md", "tools/odrp-private-host-candidate/README.md"}
+            operating_guides = {"docs/ODRP.md", "docs/READ_ONLY_ADAPTERS.md",
+                                "docs/PRIVATE_RELEASE_CONTRACT.md", "docs/PRIVATE_HOST_OPERATIONS.md",
+                                "docs/BOUNDED_NATIVE_PROFILES.md", "tools/odrp-private-host-candidate/README.md"}
+            current = path in {"README.md", "docs/AGENT_OPERATIONS.md"} | operating_guides
             docs.append({
                 "path": path,
                 "status": "current_surface" if current else "not_re_audited",
-                "owner": (path if path in {"docs/ODRP.md", "docs/READ_ONLY_ADAPTERS.md", "tools/odrp-private-host-candidate/README.md"} else
+                "owner": (path if path in operating_guides else
                           "mcp/README and docs/AGENT_OPERATIONS.md" if current else
                           "owning guide, not re-audited in this pass"),
             })

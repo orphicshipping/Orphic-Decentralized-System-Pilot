@@ -65,7 +65,8 @@ def _specs():
     from .knowledge_mcp import TOOLS as REFERENCE, EVIDENCE_TOOLS
     from .state_read_profile import _tool_descriptions
     from .logistics_profile import TOOLS as LOGISTICS
-    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS,
+    from .recompiler_profile import TOOLS as RECOMPILER
+    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -235,9 +236,10 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None):
         self.check_principal(principal)
-        return PrincipalFacade(self, principal, control=control, reference=reference, state=state, logistics=logistics)
+        return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
+                               logistics=logistics, recompiler=recompiler)
 
 
 class PrincipalFacade:
@@ -247,7 +249,7 @@ class PrincipalFacade:
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
         self.retained = None
-        for family in ("state", "logistics"):
+        for family in ("state", "logistics", "recompiler"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
         if hosts.get("logistics") is not None:
@@ -270,7 +272,8 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("state" if name.startswith("ncp_state_") else "logistics" if name.startswith("ncp_logistics_")
+        family = ("recompiler" if name.startswith("ncp_recompiler_") else
+                  "state" if name.startswith("ncp_state_") else "logistics" if name.startswith("ncp_logistics_")
                   else "reference" if name == "ncp_system_status" or name.startswith(("ncp_knowledge_", "ncp_evidence_"))
                   else "control")
         host = self.hosts.get(family)
@@ -300,6 +303,9 @@ class PrincipalFacade:
             self._science(grant, plan["compilation"]["experiment"])
 
     def _scope(self, grant, family, host, name, args):
+        if family == "recompiler" and name != "ncp_recompiler_describe":
+            from .recompiler_profile import OPERATION
+            _require(OPERATION in grant["scientific_operations"])
         if family == "reference":
             _require(host.corpus_ref in grant["reference_scopes"])
             if name.startswith("ncp_evidence_"):
