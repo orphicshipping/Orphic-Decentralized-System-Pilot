@@ -71,11 +71,26 @@ export class NCPHost extends DurableObject {
       await principalContext(request, this.env);
       const release = expectedRelease(this.env);
       const saved = await bounded(() => snapshot(this.ctx.storage, config), deadline, config.storage_ms);
+      const objects = saved.head?.objects || 0, accounted = saved.head?.bytes || 0;
+      const reserved = saved.pending && ['admitted', 'unconfirmed'].includes(saved.pending.phase) ? saved.pending.reserved_bytes : 0;
+      const nextBytes = accounted + config.max_checkpoint_bytes;
+      const capacityAvailable = objects < config.max_objects && Number.isSafeInteger(nextBytes) && nextBytes <= config.max_total_bytes;
+      const storage_capacity = {status: capacityAvailable ? 'available' : 'exhausted',
+        scope: 'encoded_checkpoint_payloads_and_reservations', objects_accounted: objects,
+        objects_limit: config.max_objects, bytes_accounted: accounted, bytes_limit: config.max_total_bytes,
+        reserved_bytes: Number.isSafeInteger(reserved) && reserved >= 0 ? reserved : null,
+        next_checkpoint_reservation_bytes: config.max_checkpoint_bytes};
+      const stale = this.writerEpoch !== null && this.writerEpoch !== (saved.head?.epoch || 1);
       let ready = false, reason = null;
-      try { await this.health(config, release, deadline, false); ready = true; }
-      catch (error) { reason = error.code || 'host_not_ready'; }
-      return json({schema: 'ciw.private-readiness.v1', ready: ready && !saved.pending,
-        fenced: Boolean(saved.pending), reason: saved.pending ? 'outcome_unknown' : reason,
+      if (saved.pending) reason = 'outcome_unknown';
+      else if (stale) reason = 'stale_writer';
+      else if (!capacityAvailable) reason = 'retention_capacity_exceeded';
+      else {
+        try { await this.health(config, release, deadline, false); ready = true; }
+        catch (error) { reason = error.code || 'host_not_ready'; }
+      }
+      return json({schema: 'ciw.private-readiness.v1', ready,
+        fenced: Boolean(saved.pending), reason, storage_capacity,
         owner_id: config.owner_id, generation: config.generation, epoch: saved.head?.epoch || null,
         release, committed_transaction_id: saved.committed?.transaction_id || null,
         pending_transaction_id: saved.pending?.transaction?.id || (typeof saved.pending === 'string' ? saved.pending : null),

@@ -198,3 +198,44 @@ test('readiness has its own single-flight bound without blocking or starting ope
   const second=await parsed(await f.host.fetch(await request('/api/readiness')));assert.equal(second.body.error.code,'readiness_busy');
   release();assert.equal((await first).status,200);assert.equal(await f.storage.get('control'),undefined);
 });
+
+test('readiness refuses cached stale epoch without refreshing it or changing durable state',async t=>{
+  const f=await fixture(t);assert.equal((await f.host.fetch(await request())).status,200);
+  const backup=await exportBackup(f.storage,f.bucket,f.config);await restoreBackup(f.storage,f.bucket,f.config,backup,1);
+  const before=await snapshot(f.storage,f.config),database=await readFile(f.storage.path),puts=f.bucket.puts,calls=f.native.calls.length;
+  assert.equal(f.host.writerEpoch,1);
+  const stale=await parsed(await f.host.fetch(await request('/api/readiness')));
+  assert.equal(stale.status,200);assert.equal(stale.body.ready,false);assert.equal(stale.body.reason,'stale_writer');
+  assert.equal(stale.body.epoch,2);assert.equal(stale.body.storage_capacity.status,'available');
+  assert.equal(f.host.writerEpoch,1);assert.equal(f.native.calls.length,calls);assert.equal(f.bucket.puts,puts);
+  assert.deepEqual(await snapshot(f.storage,f.config),before);assert.deepEqual(await readFile(f.storage.path),database);
+  const fresh=new NCPHost(f.ctx,f.env),valid=await parsed(await fresh.fetch(await request('/api/readiness')));
+  assert.equal(valid.body.ready,true);assert.equal(valid.body.reason,null);assert.equal(valid.body.epoch,2);
+  assert.equal(fresh.writerEpoch,null);assert.equal(f.host.writerEpoch,1);assert.equal(f.bucket.puts,puts);
+  assert.deepEqual(await snapshot(f.storage,f.config),before);assert.deepEqual(await readFile(f.storage.path),database);
+});
+test('readiness reports object or byte exhaustion and preserves the full store without waking container',async t=>{
+  for(const limits of [{max_objects:1},{max_total_bytes:4096}]){
+    const f=await fixture(t,limits);assert.equal((await f.host.fetch(await request())).status,200);
+    const before=await snapshot(f.storage,f.config),database=await readFile(f.storage.path),puts=f.bucket.puts,calls=f.native.calls.length;
+    f.native.running=false;
+    const r=await parsed(await f.host.fetch(await request('/api/readiness'))),capacity=r.body.storage_capacity;
+    assert.equal(r.status,200);assert.equal(r.body.ready,false);assert.equal(r.body.reason,'retention_capacity_exceeded');
+    assert.equal(capacity.status,'exhausted');assert.equal(capacity.objects_accounted,before.head.objects);
+    assert.equal(capacity.bytes_accounted,before.head.bytes);assert.equal(capacity.reserved_bytes,0);
+    assert.equal(capacity.next_checkpoint_reservation_bytes,f.config.max_checkpoint_bytes);
+    assert.equal(f.native.running,false);assert.equal(f.native.calls.length,calls);assert.equal(f.bucket.puts,puts);
+    assert.deepEqual(await snapshot(f.storage,f.config),before);assert.deepEqual(await readFile(f.storage.path),database);
+  }
+});
+test('readiness includes pending capacity reservations while preserving uncertainty priority',async t=>{
+  const f=await fixture(t,{max_total_bytes:4096},async()=>{throw Error('lost process');});
+  assert.equal((await f.host.fetch(await request())).status,503);
+  const before=await snapshot(f.storage,f.config),database=await readFile(f.storage.path),calls=f.native.calls.length;
+  const r=await parsed(await f.host.fetch(await request('/api/readiness')));
+  assert.equal(r.body.ready,false);assert.equal(r.body.reason,'outcome_unknown');assert.equal(r.body.fenced,true);
+  assert.equal(r.body.storage_capacity.status,'exhausted');assert.equal(r.body.storage_capacity.reserved_bytes,f.config.max_checkpoint_bytes);
+  assert.equal(r.body.storage_capacity.bytes_accounted,f.config.max_checkpoint_bytes);
+  assert.equal(f.native.calls.length,calls);assert.deepEqual(await snapshot(f.storage,f.config),before);
+  assert.deepEqual(await readFile(f.storage.path),database);assert.equal(f.bucket.puts,0);
+});
