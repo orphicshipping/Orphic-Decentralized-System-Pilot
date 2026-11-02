@@ -133,7 +133,10 @@ def _request(name, arguments):
              len(encode({"name": name, "arguments": arguments})) <= MAX_REQUEST)
     def check(value):
         if type(value) is dict:
-            _require(not _FORBIDDEN.intersection(value))
+            # compare's existing selector names a frozen host comparison
+            # policy; it cannot supply policy contents or alter grants.
+            forbidden = _FORBIDDEN - {"policy"} if name == "ncp_compare" and value is arguments else _FORBIDDEN
+            _require(not forbidden.intersection(value))
             for child in value.values():
                 check(child)
         elif type(value) is list:
@@ -291,8 +294,9 @@ class PrincipalFacade:
 
     def _authorize_execution(self, plan, job):
         with self.policy.lock:
-            grant = self.policy.authorize(self.principal, "ncp_run_submit", {
-                "plan_id": plan["plan_id"], "expected_digest": plan["digest"], "attempt": job["attempt"]})
+            arguments = {"plan_id": plan["plan_id"], "expected_digest": plan["digest"], "attempt": job["attempt"]}
+            grant = self.policy.authorize(self.principal, "ncp_run_submit", arguments)
+            self._scope(grant, "control", self.hosts["control"], "ncp_run_submit", arguments)
             self._science(grant, plan["compilation"]["experiment"])
 
     def _scope(self, grant, family, host, name, args):
@@ -318,11 +322,26 @@ class PrincipalFacade:
         if family != "control":
             return
         for tool, family_name, field in (("ncp_plan_get", "plans", "plan_id"),
-                ("ncp_run_get", "runs", "run_id"), ("ncp_artifact_read", "artifacts", "artifact"),
-                ("ncp_retained_read", "retained", "artifact_id"),
-                ("ncp_retained_release", "retained", "artifact_id")):
+                ("ncp_plan_admit", "plans", "plan_id"), ("ncp_run_submit", "plans", "plan_id"),
+                ("ncp_run_get", "runs", "run_id"), ("ncp_run_cancel", "runs", "run_id"),
+                ("ncp_retained_read", "retained", "artifact_id"), ("ncp_retained_release", "retained", "artifact_id")):
             if name == tool:
                 uri = "ncp://" + family_name + "/" + args[field]
+                _require(any(uri == p or p.endswith("/") and uri.startswith(p) for p in grant["resources"]))
+        fields = {"ncp_plan_template": ("baseline",), "ncp_plan_create": ("source", "baseline"),
+                  "ncp_artifact_read": ("artifact",), "ncp_observe": ("artifact",),
+                  "ncp_compare": ("left", "right")}.get(name, ())
+        artifacts = [args[field] for field in fields]
+        if name == "ncp_qualify":
+            artifacts.extend(args["inputs"].values())
+        for artifact in artifacts:
+            _require(type(artifact) is str)
+            uri = "ncp://artifacts/" + artifact
+            _require(any(uri == p or p.endswith("/") and uri.startswith(p) for p in grant["resources"]))
+            self._science(grant, host.owner._get(artifact))
+        if name == "ncp_workbench_run":
+            for artifact in ([args["upstream_artifact"]] if "upstream_artifact" in args else args.get("upstream_artifacts", [])):
+                uri = "ncp://retained/" + artifact
                 _require(any(uri == p or p.endswith("/") and uri.startswith(p) for p in grant["resources"]))
         if name == "ncp_plan_template":
             self._science(grant, host.owner._get(args["baseline"]))
@@ -384,6 +403,12 @@ class PrincipalFacade:
                 dispatched = True
                 value = host.call(name, arguments)
                 _require(type(value) is dict)
+                if not read_only and value.get("status") != "ok":
+                    # Older host envelopes cannot distinguish pre-effect
+                    # refusal from cleanup failure after publication/unlink.
+                    # Conservatively retain uncertainty and any failure locator.
+                    value = deepcopy(value)
+                    value["error"] = {**(value.get("error") or {}), "code": "outcome_unknown"}
                 if value.get("status") == "ok" and name in {"ncp_capabilities_list", "ncp_capability_describe"}:
                     value = deepcopy(value)
                     rows = value["data"].get("items", []) if name == "ncp_capabilities_list" else [value["data"]]
@@ -403,7 +428,13 @@ class PrincipalFacade:
     def invoke(self, name, arguments=None):
         value = self.call(name, {} if arguments is None else arguments)
         if value.get("status") != "ok":
-            if (value.get("error") or {}).get("code") == "outcome_unknown":
+            error = value.get("error") or {}
+            artifact = error.get("artifact_id")
+            if type(artifact) is str and re.fullmatch(r"(?:retained|failure)-[0-9a-f]{32}", artifact):
+                from .retention import RetainedFailure
+                raise RetainedFailure("outcome_unknown" if error.get("code") == "outcome_unknown" else
+                                      "request_refused", artifact)
+            if error.get("code") == "outcome_unknown":
                 raise PrincipalOutcomeUnknown()
             raise PrincipalRefusal()
         return value["data"]

@@ -90,7 +90,8 @@ def test_scientific_grant_separate_from_tool_and_reduced_after_admit(configured)
     assert owner.capabilities()['execution_budget']['used']==0
 
 
-def test_revocation_while_queued_refuses_before_provider_and_retains_outcome(configured):
+@pytest.mark.parametrize('removed',['scientific_operations','resources','operations'])
+def test_revocation_while_queued_refuses_before_provider_and_retains_outcome(configured,removed):
     value,policy,_,owner,control,facade=configured
     plan=planned(facade)
     invoke('ncp_plan_admit',{'plan_id':plan['plan_id'],'expected_digest':plan['digest']},host=facade)
@@ -100,7 +101,7 @@ def test_revocation_while_queued_refuses_before_provider_and_retains_outcome(con
     assert entered.wait(2)
     try:
         run=invoke('ncp_run_submit',{'plan_id':plan['plan_id'],'expected_digest':plan['digest'],'attempt':'queued'},host=facade)
-        value['principals'][0]['scientific_operations']=[]
+        value['principals'][0][removed]=[]
     finally:release.set()
     job=wait(control,run['run_id'])
     assert job['state']=='failed' and job['result']=={'status':'refused','reason':'principal_policy_refused','execution_outcome':'not_started'}
@@ -211,9 +212,11 @@ def test_reopen_never_restores_old_grants(tmp_path,monkeypatch):
 
 
 def test_actual_mcp_subprocess_rechecks_policy_and_resource(tmp_path,monkeypatch):
+    from ciw import coordinator,retention
     from mcp import ClientSession,StdioServerParameters
     from mcp.client.stdio import stdio_client
     from mcp.shared.exceptions import MCPError
+    monkeypatch.setenv('NCP_RETAIN_DIR',str(tmp_path/'retained'))
     from reference_fixture_helpers import make_catalog
     corpus,_,_=make_catalog(tmp_path/'catalog-input',b'Synthetic principal-bound reference.')
     catalog=tmp_path/'catalog-input/catalog-inputs/bundle'
@@ -234,6 +237,16 @@ def test_actual_mcp_subprocess_rechecks_policy_and_resource(tmp_path,monkeypatch
                     assert 'ncp_plan_template' in names
                     assert not (await client.call_tool('ncp_knowledge_overview',{})).is_error
                     assert (await client.read_resource(reference_uri)).contents
+                    held=coordinator._hold_exclusive(retention.Store('other-worker'),'mcp_exclusive')
+                    assert held is not None
+                    try:
+                        failed=await client.call_tool('ncp_coordinate',{'action':'submit','operation':'ncp_domain_run',
+                            'arguments':{'domain':'sequence','example':True},'exclusive':'mcp_exclusive','idempotency_key':'blocked'})
+                        assert failed.is_error and failed.structured_content['error']['code']=='outcome_unknown'
+                        locator=failed.structured_content['error']['artifact_id']
+                        found=await client.call_tool('ncp_retained_read',{'artifact_id':locator})
+                        assert not found.is_error and found.structured_content['data']['bundle']['error']=='exclusive_resource_busy'
+                    finally:coordinator._release_exclusive(held)
                     value['principals'][0]['reference_scopes']=[];path.write_text(json.dumps(value))
                     assert (await client.call_tool('ncp_knowledge_overview',{})).is_error
                     with pytest.raises(MCPError):await client.read_resource(reference_uri)
@@ -336,3 +349,80 @@ def test_principal_olm_capacity_refuses_without_evicting_then_explicit_release(t
     fresh=invoke('ncp_logistics_catalog',{},host=facade)['artifact_id']
     assert host.store.native(fresh)['profile']=='olm.logistics.v1'
     assert [host.store.native(a)['index'] for a in artifacts[1:]]==list(range(1,32))
+
+
+def test_observe_compare_and_qualify_cannot_read_outside_current_artifact_scope(tmp_path,monkeypatch):
+    from test_agent_protocol import observation_host
+    monkeypatch.setenv('NCP_RETAIN_DIR',str(tmp_path/'retained'))
+    g=grant();g['operations'] += [{'name':n,'constraints':{}} for n in ('ncp_observe','ncp_compare','ncp_qualify')]
+    value=policy_value(g);policy=PrincipalPolicy(lambda:value)
+    with observation_host(tmp_path) as owner,ControlHost(owner,retained_owner=owner_for('alice')) as control:
+        facade=policy.facade('alice',control=control)
+        assert len(invoke('ncp_observe',{'artifact':'left','limit':2},host=facade)['data'])==2
+        comparison=invoke('ncp_compare',{'left':'left','right':'right','policy':'strict'},host=facade)
+        assert comparison['outcome']['status']=='PASS'
+        inputs={'difference':comparison['comparison']['artifact_id']}
+        assert invoke('ncp_qualify',{'suite':'regression','inputs':inputs},host=facade)['summary']['status']=='PASS'
+        g['resources']=[]
+        calls=[];original=control.call
+        monkeypatch.setattr(control,'call',lambda name,args:(calls.append(name),original(name,args))[1])
+        for name,args in [('ncp_observe',{'artifact':'left'}),('ncp_compare',{'left':'left','right':'right','policy':'strict'}),
+                          ('ncp_qualify',{'suite':'regression','inputs':inputs})]:
+            assert facade.call(name,args)['status']=='refused'
+        assert calls==[]
+
+
+def test_workbench_references_require_current_retained_scope_before_dispatch(configured,monkeypatch):
+    value,_,_,_,control,facade=configured
+    value['principals'][0]['operations'].append({'name':'ncp_workbench_run','constraints':{}})
+    value['principals'][0]['resources']=[]
+    calls=[];monkeypatch.setattr(control,'call',lambda *args:calls.append(args))
+    for references in ({'upstream_artifact':'retained-'+'1'*32},{'upstream_artifacts':['retained-'+'1'*32]}):
+        assert facade.call('ncp_workbench_run',{'workflow':'identified-design',**references})['status']=='refused'
+    assert calls==[]
+
+
+def test_retained_failure_locator_survives_sdk_and_mcp_unknown_envelope(configured):
+    from ciw import coordinator,retention
+    _,_,_,_,control,facade=configured
+    held=coordinator._hold_exclusive(retention.Store('other-worker'),'fixture_exclusive')
+    assert held is not None
+    before=coordinator._EXECUTIONS
+    try:
+        args={'action':'submit','operation':'ncp_domain_run','arguments':{'domain':'sequence','example':True},'exclusive':'fixture_exclusive','idempotency_key':'sdk-failure'}
+        with pytest.raises(retention.RetainedFailure) as refused:
+            invoke('ncp_coordinate',args,host=facade)
+        assert str(refused.value)=='outcome_unknown'
+        assert control.retained.native(refused.value.artifact_id)['error']=='exclusive_resource_busy'
+        response=facade.call('ncp_coordinate',{**args,'idempotency_key':'mcp-failure'})
+        assert response['error']['code']=='outcome_unknown'
+        envelope=facade.mcp_result('ncp_coordinate',response)
+        assert envelope['isError'] and envelope['structuredContent']['error']['artifact_id']==response['error']['artifact_id']
+        assert control.retained.native(response['error']['artifact_id'])['error']=='exclusive_resource_busy'
+        assert coordinator._EXECUTIONS==before
+    finally:coordinator._release_exclusive(held)
+
+
+@pytest.mark.parametrize('surface',['call','sdk'])
+def test_real_unlink_then_cleanup_failure_remains_unknown(configured,monkeypatch,surface):
+    from ciw import retention
+    from ciw.principal_policy import PrincipalOutcomeUnknown
+    _,_,_,_,control,facade=configured
+    artifact=control.retained.keep({'fixture':True},kind='test',catalog={})
+    target=control.retained._path(artifact);lock=retention._owner_dir(control.retained.owner)/'sequence.lock'
+    original=retention._lock_release;fired=False
+    def unlock(fd):
+        nonlocal fired
+        actual,expected=os.fstat(fd),lock.stat()
+        matches=(actual.st_dev,actual.st_ino)==(expected.st_dev,expected.st_ino)
+        original(fd)
+        if matches and not fired:
+            fired=True
+            assert not target.exists()
+            raise OSError('synthetic cleanup failure after applied unlink')
+    monkeypatch.setattr(retention,'_lock_release',unlock)
+    if surface=='call':
+        assert facade.call('ncp_retained_release',{'artifact_id':artifact})['error']['code']=='outcome_unknown'
+    else:
+        with pytest.raises(PrincipalOutcomeUnknown):invoke('ncp_retained_release',{'artifact_id':artifact},host=facade)
+    assert fired and not target.exists()
