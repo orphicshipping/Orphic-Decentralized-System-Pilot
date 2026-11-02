@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "repository": "orphicsystems/Orphic-Decentralized-Systems-Protocol",
+  "scope": "Additive private host candidate software evidence. Evaluate separately with scripts/check_release_evidence.py --policy release/private-qualification-policy.json on the same exact SHA as release/qualification-policy.json. Both policies must pass; this policy does not replace any of the 56 baseline jobs or 45 artifacts, authenticate artifact bytes, establish physical qualification, or authorize publication or deployment. PR evidence remains excluded by the existing collector.",
+  "required_workflows": [
+    {
+      "path": ".github/workflows/odrp-private-host-candidate.yml",
+      "jobs": ["isolated-container"],
+      "artifacts": ["odsp-private-host-evidence"],
+      "allowed_skipped_jobs": [],
+      "excluded_jobs": {}
+    }
+  ]
+}

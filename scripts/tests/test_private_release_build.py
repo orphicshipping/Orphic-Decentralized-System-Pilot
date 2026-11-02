@@ -52,3 +52,18 @@ def test_output_is_create_only_and_outside_checkout(tmp_path):
         builder.build(tmp_path, output, {})
     with pytest.raises(ValueError, match='outside the checkout'):
         builder.build(tmp_path, output / 'new', {})
+
+
+def test_private_policy_is_additive_to_unchanged_baseline_requirements():
+    root = Path(__file__).resolve().parents[2]
+    baseline = json.loads((root / 'release/qualification-policy.json').read_text())
+    private = json.loads((root / 'release/private-qualification-policy.json').read_text())
+    assert baseline['repository'] == private['repository'] == builder.REPOSITORY
+    assert len(baseline['required_workflows']) == 14
+    assert sum(len(row['jobs']) for row in baseline['required_workflows']) == 56
+    assert sum(len(row['artifacts']) for row in baseline['required_workflows']) == 45
+    assert private['required_workflows'] == [{
+        'path': '.github/workflows/odrp-private-host-candidate.yml',
+        'jobs': ['isolated-container'], 'artifacts': ['odsp-private-host-evidence'],
+        'allowed_skipped_jobs': [], 'excluded_jobs': {},
+    }]

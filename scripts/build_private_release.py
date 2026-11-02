@@ -60,6 +60,9 @@ def audit_pins(root, revision):
     raw = git(root, "show", revision + ":instruments/manifest.json", binary=True)
     imported = contract.strict_json(raw)["modules"]
     contract.require(len(imported) == 21, "expected all 21 imported modules")
+    contract.require(len({row["role"] for row in imported}) == 21
+                     and len({row["path"] for row in imported}) == 21,
+                     "imported module roles and paths must remain distinct")
     records = []
     for module in imported:
         tree = git(root, "rev-parse", revision + ":" + module["path"])
@@ -150,7 +153,15 @@ def build(root, output, dependencies):
                "reproducibility_scope": "two isolated source exports with this interpreter, platform and backend; cross-toolchain and base-image reproduction unproven",
                "dependency_evidence": "exact selected installed versions; dependency binary provenance requires retained wheelhouse or pinned cached image",
                "ci_release_qualification": "not_performed", "publication": "not_performed", "deployment": "not_performed"}
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        receipt["runner_asserted_identity"] = {key: os.environ.get(key) for key in (
+            "GITHUB_REPOSITORY", "GITHUB_SHA", "GITHUB_RUN_ID", "GITHUB_RUN_ATTEMPT",
+            "GITHUB_JOB", "GITHUB_WORKFLOW_REF", "GITHUB_EVENT_NAME")}
     try:
+        if os.environ.get("GITHUB_ACTIONS") == "true":
+            contract.require(os.environ.get("GITHUB_SHA") == revision
+                             and os.environ.get("GITHUB_REPOSITORY") == REPOSITORY,
+                             "CI runner source/repository identity mismatch")
         wheels = []
         with tempfile.TemporaryDirectory(prefix=".odsp-private-build-", dir=output.parent) as temporary:
             area = Path(temporary)
