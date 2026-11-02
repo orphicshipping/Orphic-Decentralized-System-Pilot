@@ -346,8 +346,7 @@ def test_bound_adapter_holds_uncertain_ownership_before_any_followup_child(tmp_p
                     self.manager.__exit__(*args)
                     raise outer_failure
             patch.setattr(runtime.tempfile, outer_cleanup, FailedExit)
-        expected = OSError if outer_cleanup else runtime.RuntimeCleanupUncertain
-        with pytest.raises(expected) as caught:
+        with pytest.raises(runtime.RuntimeCleanupUncertain) as caught:
             if route == "source":
                 adapter.runtime_identity()
             else:
@@ -355,9 +354,11 @@ def test_bound_adapter_holds_uncertain_ownership_before_any_followup_child(tmp_p
         chain = list(causes(caught.value))
         held = adapter._cleanup_uncertain
         assert isinstance(held, runtime.RuntimeCleanupUncertain)
+        assert held is caught.value
         assert held in chain and primary in chain and stop_failure in chain
         if outer_cleanup:
-            assert caught.value is outer_failure
+            assert caught.value.__cause__ is outer_failure
+            assert outer_failure in chain
         process = ownership.processes[0]
         assert held.process is process and process.poll() is None
         assert attempts == [process.pid]

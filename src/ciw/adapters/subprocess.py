@@ -88,6 +88,12 @@ def _guard_cleanup(operation):
                     continue
                 seen.add(id(failure))
                 if isinstance(failure, RuntimeCleanupUncertain):
+                    if failure is not exc:
+                        # The first response must retain the unknown outcome,
+                        # while its cause and sticky hold keep all diagnostics.
+                        held = RuntimeCleanupUncertain(failure.process)
+                        self._cleanup_uncertain = held
+                        raise held from exc
                     self._cleanup_uncertain = failure
                     break
                 pending.extend(item for item in (failure.__cause__, failure.__context__) if item is not None)
