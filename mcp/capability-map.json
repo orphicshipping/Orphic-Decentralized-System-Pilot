@@ -50,7 +50,7 @@
       "required": [
         "action"
       ],
-      "description": "Admit one local job on this host. A payload cannot name another principal. Replay of the same idempotency key does not run the job again.",
+      "description": "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
       "authorizes_execution": false
     },
     {

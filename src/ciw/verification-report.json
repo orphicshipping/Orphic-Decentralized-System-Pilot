@@ -1,0 +1,46 @@
+{
+  "schema": "ncp.verification-report.v1",
+  "status": "INCOMPLETE",
+  "mcp_surface": "implemented",
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_this_file",
+  "verified_by": "tests/test_transformation_ledger.py",
+  "also_covers": [
+    "tests/test_mcp_project_map.py",
+    "tests/test_control_gateway.py"
+  ],
+  "verified_this_architecture": [
+    "Every tracked path has one ledger row and the row set matches git ls-files.",
+    "ciw.services.invoke and ControlHost.call agree on ncp_plug_in and ncp_domain_list.",
+    "ncp_domain_run without a weather name refuses and does not pick a profile.",
+    "ncp_workbench_run of julia-oscillator refuses and does not invent a Julia run.",
+    "ncp_workbench_list returns the 29 session workflows.",
+    "An unknown service name refuses.",
+    "A service argument cannot carry a pin.",
+    "ncp_workbench_run project-graph retains an artifact that ncp_retained_read returns and ncp_retained_release removes.",
+    "A host manifest with a non-Julia checkout is refused by the Julia runtime check and is not replaced with another engine.",
+    "The fake checkout includes a worker and a manifest, so the refusal is the Git revision check rather than a missing source.",
+    "proved-heat and variational-free-energy are in the scientific route table.",
+    "A retained result can be paged back in full, and another host session cannot read it.",
+    "Retention is owner-scoped. A second principal cannot read or evict the first. The sequence survives a new Store with the same principal.",
+    "ncp_domain_run refuses a silent example. Atmosphere accepts a caller request. Labelled examples retain their records.",
+    "Each ControlHost keeps artifacts under its own output directory. Another host cannot read or evict them.",
+    "An installed copy outside the checkout returns the plug-in schema. The sandbox Python is older than the declared 3.11 requirement.",
+    "A relative path in the host manifest is refused.",
+    "Every advertised tool is either ciw.services.invoke or ciw.services.open_demo.",
+    "ncp_doctor agrees across the SDK and ControlHost and does not qualify.",
+    "ncp://contract/plug-in is listed and readable. It does not authorize execution.",
+    "ncp_plan_template refuses without open_demo and returns a graph with it."
+  ],
+  "blocked": [
+    {"id": "julia", "reason": "No host-selected Julia executable. The source stays. A run is not fabricated."},
+    {"id": "godot", "reason": "Godot project retained. Not a grant."},
+    {"id": "bevy", "reason": "Bevy view retained. Not a grant."},
+    {"id": "blender", "reason": "Blender integration retained. Not a grant."},
+    {"id": "sp1-proof", "reason": "proved_heat is a ledger read, not an SP1 proof."},
+    {"id": "leakage-without-host-pin", "reason": "Vendored FlowState is not the retained pin."},
+    {"id": "bim-without-host-pin", "reason": "Vendored BIM tree is not the retained pin."},
+    {"id": "explicit-binding-workflows", "reason": "Workbench workflows other than the five unbound fixtures refuse until the host selects that binding."}
+  ],
+  "not_claimed": "This status stays INCOMPLETE while those blockers remain. Fixture success is not a live credential, a measurement, or a release. A green subset is not whole-tree execution of every solver."
+}

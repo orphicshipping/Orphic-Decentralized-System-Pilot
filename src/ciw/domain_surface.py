@@ -7,6 +7,7 @@ Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not here.
 from __future__ import annotations
 
 from hashlib import sha256
+import base64
 import json
 import shutil
 import tempfile
@@ -136,15 +137,43 @@ def _checks(report):
     })
 
 
-def _json_files(directory: Path) -> dict:
-    found = {}
+def _capture(directory: Path) -> tuple[dict, list]:
+    import os
+    files, omitted = {}, []
     if not directory.is_dir():
-        return found
-    for path in sorted(directory.glob("*.json")):
-        if path.is_symlink() or not path.is_file() or path.stat().st_size > 2_000_000:
+        return files, omitted
+    budget, used = 1_500_000, 0
+    for path in sorted(directory.rglob("*")):
+        if not path.is_file() and not path.is_symlink():
             continue
-        found[path.name] = json.loads(path.read_text(encoding="utf-8"))
-    return found
+        rel = str(path.relative_to(directory))
+        if path.is_symlink():
+            omitted.append({"path": rel, "reason": "symlink"})
+            continue
+        size = path.stat().st_size
+        if size > 500_000 or used + size > budget:
+            omitted.append({"path": rel, "reason": "byte_budget", "byte_size": size})
+            continue
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        try:
+            raw = os.read(fd, 500_001)
+        finally:
+            os.close(fd)
+        if len(raw) > 500_000:
+            omitted.append({"path": rel, "reason": "byte_budget", "byte_size": len(raw)})
+            continue
+        if path.suffix == ".json":
+            try:
+                files[rel] = json.loads(raw.decode("utf-8"))
+            except (UnicodeError, ValueError):
+                omitted.append({"path": rel, "reason": "unreadable_json", "byte_size": len(raw)})
+                continue
+        else:
+            files[rel] = {"byte_size": len(raw), "sha256": sha256(raw).hexdigest(),
+                          "b64": base64.b64encode(raw).decode("ascii")}
+        used += len(raw)
+    return files, omitted
 
 
 def _column(workflow, destination: Path):
@@ -174,24 +203,25 @@ def _complete(kind, workflow, prepared, store, used_example, *, require_profile=
     try:
         report = workflow.run(prepared, destination)
         request, profile = _column(workflow, destination)
-        files = _json_files(destination)
+        files, omitted = _capture(destination)
         if type(request) is not dict or (require_profile and type(profile) is not dict):
             raise ValueError("Native bundle was deleted before it was retained")
-        record = {"request": request, "files": files, "inspection": report}
+        record = {"request": request, "files": files, "omitted": omitted, "inspection": report}
         if profile is not None:
             record["profile"] = profile
         artifact_id = _retain(kind, record, store)
     except RetainedFailure:
         raise
     except ValueError as exc:
-        files = _json_files(destination)
-        artifact_id = _retain_failure(kind, str(exc), files, store)
+        files, omitted = _capture(destination)
+        artifact_id = _retain_failure(kind, str(exc), {"files": files, "omitted": omitted}, store)
         raise RetainedFailure(str(exc), artifact_id) from exc
     finally:
         shutil.rmtree(parent, ignore_errors=True)
     body = _checks(report)
     body["artifact_id"] = artifact_id
-    body["bundle_retained"] = True
+    body["omitted"] = omitted
+    body["bundle_retained"] = not omitted
     body["example"] = used_example
     body["retained_fields"] = ["request", "profile", "files"] if require_profile else ["request", "files"]
     return body

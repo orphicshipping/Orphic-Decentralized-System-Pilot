@@ -135,3 +135,41 @@ def review_parameters(workbench, *, manufacturing_source_id, stream_source_ids, 
         "assessed_at_s": assessed_at_s}
     _shape(parameters)
     return deepcopy(parameters)
+
+
+def prepare_toolpoint(workbench, directory: Path):
+    """Build the synthetic toolpoint review inputs. This does not clear a hold."""
+    import json
+    from .data_sources import retain_record
+    from .manufacturing_runtime import evaluate as manufacture
+    from .polymer_quality_example import manufacturing_request, source as quality_source
+    from .toolpoint_stream_example import demo
+    from .toolpoint_stream_store import StreamStore, initialize
+    request = manufacturing_request()
+    request["events"].append({
+        "event_id": "synthetic.data-postpack-hold", "at_s": 11, "actor_id": "synthetic.inspector",
+        "authorization_ref": quality_source("inspector"), "kind": "quality_hold",
+        "data": {"serial": "p001", "reason": "Synthetic post-pack concern", "evidence_ref": quality_source("concern")},
+    })
+    report = manufacture(request)
+    raw = json.dumps(retain_record(
+        report, dataset_id="manufacturing", revision=1, parent_source_id=None,
+        recorded_at="2026-10-05T21:00:00+00:00", data_family="manufacturing-report"), indent=2).encode()
+    manufacturing = workbench.add_source({"kind": "data-record", "label": "manufacturing", "bytes_b64": __import__("base64").b64encode(raw).decode()})
+    database = directory / "native.sqlite3"
+    initialize(database)
+    streams = []
+    for index, case in enumerate(("health-recovery", "nominal")):
+        journal = demo(case=case, cycle_index=index)
+        spec, head = journal["spec_ref"], journal["receipts"][-1]["receipt_ref"]
+        StreamStore(database).import_report(str(index), journal, expected_spec_ref=spec, expected_head_ref=head)
+        exported = StreamStore(database).export(str(index), expected_spec_ref=spec, expected_head_ref=head)
+        encoded = json.dumps(retain_record(
+            exported, dataset_id="cycle-" + str(index), revision=1, parent_source_id=None,
+            recorded_at="2026-10-05T21:00:00+00:00", data_family="toolpoint-stream-report"), indent=2).encode()
+        streams.append(workbench.add_source({"kind": "data-record", "label": "cycle-" + str(index),
+                                              "bytes_b64": __import__("base64").b64encode(encoded).decode()}))
+    return review_parameters(
+        workbench, manufacturing_source_id=manufacturing["source_id"],
+        stream_source_ids=[item["source_id"] for item in streams], assessed_at_s=12,
+    )

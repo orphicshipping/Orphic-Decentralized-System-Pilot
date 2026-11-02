@@ -368,12 +368,22 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
         )
         env["PYTHONPATH"] = str(target)
         env.pop("PYTHONSAFEPATH", None)
-        out = subprocess.check_output(
+        contracts = subprocess.check_output(
+            ["/usr/bin/python3.11", "-c",
+             "from ciw.plug_in import document; from ciw.services import read_contract, ledger_read; "
+             "print(document()['schema']); "
+             "print(read_contract('ncp://contract/verification')['schema']); "
+             "print(ledger_read('public_core')['record']['id'])"],
+            cwd="/tmp",
+            env=env,
+        )
+        assert contracts.splitlines() == [b"ncp.mcp-plug-in.v1", b"ncp.verification-report.v1", b"public_core"]
+        invoked = subprocess.check_output(
             [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
             cwd="/tmp",
             env=env,
         )
-        assert out.strip() == b"ncp.mcp-plug-in.v1"
+        assert invoked.strip() == b"ncp.mcp-plug-in.v1"
     finally:
         import shutil
         shutil.rmtree(ROOT / "build", ignore_errors=True)
@@ -427,10 +437,11 @@ def test_public_calls_keep_the_native_bundle_on_the_calling_host(tmp_path, monke
 
 def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, monkeypatch):
     monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    import json
     import os
     from ciw.agent_mcp import demo_config, from_profile
     from ciw.control_gateway import ControlHost
-    from ciw.coordinator import _exclusive_path, handoff
+    from ciw.coordinator import _exclusive_path
     from ciw.retention import SUPPORTED_PLATFORMS
     from ciw.sequence_kinetics import example_request
     from ciw.services import invoke
@@ -453,8 +464,16 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
         second = invoke("ncp_coordinate", payload, host=left)
         assert first["replayed"] is False and second["replayed"] is True
         assert second["executions"] == 1 and second["artifact_id"] == first["artifact_id"]
-        copied = handoff(left.retained, first["artifact_id"], right.retained)
-        assert right.retained.native(copied["artifact_id"])["schema"]
+        copied = invoke("ncp_coordinate", {"action": "handoff", "artifact_id": first["artifact_id"],
+                                           "recipient": right.retained.owner}, host=left)
+        claimed = invoke("ncp_coordinate", {"action": "claim", "grant_id": copied["grant_id"]}, host=right)
+        assert right.retained.native(claimed["artifact_id"])["schema"]
+        try:
+            invoke("ncp_coordinate", {"action": "claim", "grant_id": copied["grant_id"]}, host=left)
+        except ValueError as exc:
+            assert "handoff_refused" in str(exc)
+        else:
+            raise AssertionError("owner claim")
         try:
             right.retained.native(first["artifact_id"])
         except ValueError as exc:
@@ -462,8 +481,7 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
         else:
             raise AssertionError("handoff bypass")
         held = _exclusive_path("oven")
-        fd = os.open(held, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        os.close(fd)
+        held.write_text(json.dumps({"pid": os.getpid(), "owner": left.retained.owner}), encoding="utf-8")
         try:
             invoke("ncp_coordinate", {**payload, "idempotency_key": "job-2", "exclusive": "oven"}, host=left)
         except Exception as exc:
@@ -483,3 +501,57 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
         right.close()
         left.owner.close()
         right.owner.close()
+
+
+def test_same_key_is_admitted_once_and_a_dead_worker_is_recovered(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    import threading
+    from ciw.agent_mcp import demo_config, from_profile
+    from ciw.control_gateway import ControlHost
+    from ciw.coordinator import _digest, _idem_name, _store_job
+    from ciw import coordinator
+    from ciw.sequence_kinetics import example_request
+    from ciw.services import invoke
+    left = ControlHost(from_profile(demo_config(tmp_path / "left")))
+    try:
+        request = example_request()
+        payload = {"action": "submit", "idempotency_key": "job-race", "operation": "ncp_domain_run",
+                   "arguments": {"domain": "sequence", "request": request}}
+        coordinator._EXECUTIONS = 0
+        barrier = threading.Barrier(2)
+        errors = []
+
+        def work():
+            try:
+                barrier.wait()
+                invoke("ncp_coordinate", payload, host=left)
+            except Exception as exc:
+                errors.append(exc)
+
+        threads = [threading.Thread(target=work), threading.Thread(target=work)]
+        for thread in threads:
+            thread.start()
+        for thread in threads:
+            thread.join()
+        assert errors == []
+        assert coordinator._EXECUTIONS == 1
+        try:
+            invoke("ncp_coordinate", {"action": "submit", "idempotency_key": "job-race", "operation": "ncp_domain_run",
+                                      "arguments": {"domain": "sequence", "example": True}}, host=left)
+        except ValueError as exc:
+            assert "idempotency_key_conflict" in str(exc)
+        else:
+            raise AssertionError("digest")
+        digest = _digest("ncp_domain_run", {"domain": "sequence", "example": True}, None)
+        dead = {"schema": "ncp.coordinator-job.v1", "operation": "ncp_domain_run", "executions": 1,
+                "status": "running", "pid": 2**30, "request_digest": digest, "authorizes_execution": False}
+        _store_job(left.retained, _idem_name("job-dead"), dead)
+        recovered = invoke("ncp_coordinate", {"action": "recall", "idempotency_key": "job-dead"}, host=left)
+        assert recovered["status"] == "failed" and recovered["error"] == "worker_lost"
+        assert left.retained.native(recovered["artifact_id"])["error"] == "worker_lost"
+        again = invoke("ncp_coordinate", {"action": "submit", "idempotency_key": "job-dead", "operation": "ncp_domain_run",
+                                          "arguments": {"domain": "sequence", "example": True}}, host=left)
+        assert again["status"] == "failed" and again["replayed"] is True
+    finally:
+        left.close()
+        left.owner.close()

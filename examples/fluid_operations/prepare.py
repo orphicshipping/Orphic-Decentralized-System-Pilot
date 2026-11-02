@@ -14,36 +14,7 @@ from pathlib import Path
 from ciw.control_contracts import save_new
 from ciw.control_plane import experiment
 from ciw.fluid_contract import ALL_OPERATIONS, ALL_PROFILES, example_request, module
-from ciw.fluid_workflow import make_source
-
-
-def bounded_request(profile: str) -> dict:
-    if profile not in ALL_PROFILES:
-        raise ValueError("Unsupported fluid profile")
-    request = example_request(profile)
-    if profile == "reservoir":
-        request["clock"]["duration_s"] = 0.08
-        request["clock"]["coarse_step_count"] = 8
-    elif profile == "wave":
-        request["integration"]["cells"] = 32
-        request["integration"]["steps"] = 32
-        speed = module("wave").wave_speed_m_per_s(request["model"])
-        request["integration"]["duration_s"] = 0.1 * request["model"]["length_m"] / speed
-    elif profile == "sph":
-        request["integration"]["particles"] = 32
-        request["integration"]["steps"] = 32
-        length = request["model"]["length_m"]
-        speed = request["model"]["sound_speed_m_per_s"]
-        request["integration"]["duration_s"] = 0.05 * length / speed
-    elif profile == "molecular":
-        request["integration"]["steps"] = 32
-        request["integration"]["duration_reduced"] = 0.1
-    elif profile == "fsi":
-        request["integration"]["cells"] = 16
-        request["integration"]["steps"] = 16
-        mode = module("fsi").mode_parameters(request)
-        request["integration"]["duration_s"] = 0.05 * 2 * math.pi / mode["angular_frequency_per_s"]
-    return request
+from ciw.fluid_workflow import bounded_request, make_source
 
 
 def prepare(destination: Path, profile: str = "reservoir") -> Path:
