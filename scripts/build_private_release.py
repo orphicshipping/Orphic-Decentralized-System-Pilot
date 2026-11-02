@@ -77,7 +77,12 @@ def audit_pins(root, revision):
 
 def export_source(root, revision, destination):
     # Git archive uses committed bytes, never untracked or mutable source files.
-    raw = git(root, "archive", "--format=tar", revision, binary=True)
+    # Only build inputs are materialized. Imported engines are verified directly
+    # by their Git trees and are neither wheel inputs nor copied into this image.
+    inputs = ("pyproject.toml", "LICENSE", "src", PRIVATE,
+              "tools/mcp-operator-console/console.py", "examples/numerical_operations/prepare.py",
+              "tests/reference_fixture_helpers.py")
+    raw = git(root, "archive", "--format=tar", revision, "--", *inputs, binary=True)
     with tarfile.open(fileobj=io.BytesIO(raw)) as archive:
         archive.extractall(destination, filter="data")
 
@@ -147,7 +152,7 @@ def build(root, output, dependencies):
                "ci_release_qualification": "not_performed", "publication": "not_performed", "deployment": "not_performed"}
     try:
         wheels = []
-        with tempfile.TemporaryDirectory(prefix="odsp-private-build-") as temporary:
+        with tempfile.TemporaryDirectory(prefix=".odsp-private-build-", dir=output.parent) as temporary:
             area = Path(temporary)
             for index in range(2):
                 source = area / ("source-" + str(index))
