@@ -244,11 +244,11 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
         raise ValueError("coordinator arguments must be an object")
     _checked_arguments(arguments)
     digest = _digest(operation, arguments, exclusive)
-    existing, lease = _admit(store, idempotency_key, digest, operation)
-    if lease is None:
-        return existing
-    held = None
+    lease = held = None
     try:
+        existing, lease = _admit(store, idempotency_key, digest, operation)
+        if lease is None:
+            return existing
         try:
             if exclusive is not None:
                 held = _hold_exclusive(store, exclusive, exclusive_wait)
@@ -278,7 +278,8 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
             # A resource-cleanup failure must not strand the job lease. Terminal
             # publication precedes cleanup; never overwrite completed on a
             # cleanup cancellation or permit a replay to execute the job again.
-            lease.release()
+            if lease is not None:
+                lease.release()
 
 
 def _grants_lock():
