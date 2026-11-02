@@ -293,18 +293,42 @@ def _lock_release(fd) -> None:
 
 
 def _transaction(directory: Path):
-    """Hold the owner lock across sequence, publish and eviction."""
+    """Hold the owner lock across sequence, publish and eviction.
+
+    Cleanup errors propagate with the original exception as context. A failed
+    close is not retried: its descriptor number may already have been reused.
+    """
     class _Guard:
+        def __init__(self):
+            self.fd = None
+
         def __enter__(self):
-            self.fd = os.open(directory / "sequence.lock", os.O_CREAT | os.O_RDWR, 0o600)
-            self.kind = _lock_exclusive(self.fd)
-            for partial in directory.glob("*.partial"):
-                partial.unlink(missing_ok=True)
-            return self.kind
+            if self.fd is not None:
+                raise RuntimeError("Retention transaction is already active")
+            flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
+            fd = os.open(directory / "sequence.lock", flags, 0o600)
+            try:
+                self.kind = _lock_exclusive(fd)
+                for partial in directory.glob("*.partial"):
+                    partial.unlink(missing_ok=True)
+                self.fd = fd
+                return self.kind
+            except BaseException:
+                # __exit__ is not called when entry fails. Close even if the
+                # kernel acquired the lock before an interruption; do not try
+                # to unlock an acquisition which may not have succeeded.
+                self.fd = None
+                os.close(fd)
+                raise
 
         def __exit__(self, *exc):
-            _lock_release(self.fd)
-            os.close(self.fd)
+            fd, self.fd = self.fd, None
+            if fd is not None:
+                try:
+                    _lock_release(fd)
+                finally:
+                    os.close(fd)
+            return False
     return _Guard()
 
 
