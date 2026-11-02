@@ -81,7 +81,8 @@ typed uncertainty; a request cannot clear it or launch another child.
 An additional lease cleanup error preserves that first uncertain response and
 both local diagnostics. The declared limits are 5 seconds per child, 20 seconds
 of total call work, 3 CPU seconds, 256 MiB address space, 1 MiB file size,
-32 descriptors and 131,072 bytes of combined live stdout/stderr. No limit is a
+32 descriptors and 131,072 bytes of combined live provider stdout/stderr. Git
+metadata commands have a separate 4 MiB combined output cap. No limit is a
 promise of rollback, physical timing or deployed isolation.
 
 This is a pinned local process boundary, **not a network or secret-scrubbing

@@ -1,5 +1,7 @@
 # Preparation profile: activation, persistent access and runner approval are separate.
 # The local backend executes trusted code directly; it is not an isolation boundary.
+# Native NISE qualification requires launcher-selected ODSP_CI_NISE_MODE=native
+# plus CIW_NISE_CHECKOUT and CIW_NISE_PYTHON; contracts mode makes no native claim.
 when:
   - event: manual
 
@@ -12,7 +14,7 @@ steps:
     image: bash
     commands:
       - python3 -B scripts/run_private_woodpecker.py preflight
-  - name: release-contracts
+  - name: release-annotation-and-nise-contracts
     image: bash
     commands:
       - python3 -B scripts/run_private_woodpecker.py contracts
@@ -20,7 +22,7 @@ steps:
     image: bash
     commands:
       - python3 -B scripts/run_private_woodpecker.py build
-  - name: offline-installed-wheel
+  - name: offline-installed-wheel-and-selected-native-tests
     image: bash
     commands:
       - python3 -B scripts/run_private_woodpecker.py install

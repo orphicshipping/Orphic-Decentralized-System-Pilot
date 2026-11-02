@@ -1,17 +1,20 @@
 # Woodpecker preparation for the private ODSP candidate
 
-This is a separate follow-on to reviewed candidate `d8842760`; it does not alter
-that commit or PR264. It supplies a manual workflow, an exact-source driver and
-failure tests. No Woodpecker server, agent, OAuth application, repository hook,
+This integrates the historical local preparation `9f7fccd3` (based on
+`d8842760`) with the current NISE and annotation contracts. Those frozen commits
+and their receipts remain historical evidence; each new attempt records and
+checks its own complete source identity. It supplies a manual workflow, an
+exact-source driver and failure tests. No Woodpecker server, agent, OAuth application, repository hook,
 credential, registry publication or deployment is created by these files.
 
 ## Implemented local workflow
 
 `.woodpecker/private-qualification.yaml` selects the **local** backend and the
 `odsp-private-disposable` agent label. It is manual-only pending host/access
-review. It runs seven sequential steps: source/pins and tool versions; existing
-release-contract tests; the existing two-export offline wheel builder; fresh
-offline installation from the selected cache; the existing seven-phase installed
+review. It runs seven sequential steps: source/pins and tool versions; release,
+annotation and NISE contract tests; the existing two-export offline wheel builder;
+fresh offline installation from the selected cache and selected installed NISE
+tests; the existing seven-phase installed
 client/fault qualifier; all four candidate Node suites; and an always-attempted
 evidence summary. No deployment step or Docker command is included.
 
@@ -36,8 +39,35 @@ Trusted launcher variables:
 - `ODSP_CI_OUTPUT`: new absolute attempt directory outside source and cache.
 - `ODSP_CI_CACHE`: existing absolute offline uv cache, separate from source/output.
 - `PATH`: preselected Python/build, Node, Git and uv executables.
+- `ODSP_CI_NISE_MODE`: `contracts` (default) or `native`. Unknown values refuse.
+- For `native`, `CIW_NISE_CHECKOUT` and `CIW_NISE_PYTHON`: absolute paths to the
+  already-provisioned approved checkout and separate provider interpreter.
 - Woodpecker metadata: `CI_REPO`, `CI_COMMIT_SHA`, `CI_PIPELINE_EVENT=manual`, plus
   attempt/workflow identifiers. These are not new permissions or secrets.
+
+Contracts mode includes annotation records, annotation-to-NISE projection,
+truthful control annotations, the shared NISE data/stdio contract, handoff and
+semantic lowering. It does not bind a NISE runtime; the result explicitly records
+`nise_qualification.status=NOT_REQUESTED`. The existing private test environment
+must include the declared official MCP transport dependency; skips remain failures.
+
+Native mode is required for combined NISE acceptance. It additionally runs
+`test_nise_profile.py` and `test_nise_policy.py` against the host-selected clean
+checkout at `81908ddbe817018af5d9887a6bdd9cce3e3eafc6`. Missing host bindings
+refuse before an attempt is created. The selector and binding paths are recorded
+in the attempt and must remain unchanged through subsequent phases. Actual pin,
+runtime, replay, policy and transport checks remain in the existing NISE profile
+and tests; a path or runner declaration is not source authentication.
+
+During native installation qualification, only the three NISE test modules
+(contract, profile and policy) and `test_control_annotations.py` are copied to a
+fresh evidence directory outside the checkout. Their source hashes are retained
+in `installed-native-fixtures.json`. The installed interpreter runs with
+`-I -B`, an actual working directory outside the checkout, no source
+`PYTHONPATH`, an empty pytest configuration and an assertion that `ciw` is
+loaded from its environment prefix. The real MCP subprocess cases are included.
+This command has a 180-second deadline; missing XML, skips, failures or changed
+fixture bytes refuse qualification and the final summary.
 
 Use the official checksum-verified Woodpecker CLI3.20.1 with
 `--disable-update-check exec --backend-engine local --local --timeout 30m`,
@@ -54,6 +84,13 @@ environment and empty configuration directory; do not inherit GitHub/cloud
 credentials. This is command hygiene, **not isolation from the host filesystem**.
 The local backend is suitable here only for these reviewed local commands.
 
+For the native mode, additionally pass `--env ODSP_CI_NISE_MODE=native`,
+`--env CIW_NISE_CHECKOUT=/approved/nise-checkout` and
+`--env CIW_NISE_PYTHON=/approved/nise-venv/bin/python` from the trusted launcher.
+This workflow neither fetches NISE nor installs it into the NET environment.
+CLI lint remains usable without these runtime bindings; an ordinary contract-only
+attempt must not be described as native NISE qualification.
+
 `summary.json` and its file hashes describe `LOCAL_PIPELINE_PASS`, never a full
 release. Preserve the whole output privately before disposing of a runner;
 `installed/` and mutable contract test workspaces are excluded from the evidence
@@ -63,8 +100,13 @@ command receipts and CI logs too. They do not prove rollback.
 
 ## Existing gates remain intact
 
-This workflow is additive. Neither GitHub workflow file nor existing release
-collector policy changes. Woodpecker receipts do not satisfy the existing
+This workflow is additive and does not change the existing release collector
+policy. The separate annotation-loop GitHub workflow uses the same canonical NISE
+pin and isolated provider setup as the NISE handoff workflow: build from a clean
+Git archive and invoke the provider's `python -I -B -m nise.cli`. Its existing
+read-only permissions and credential non-persistence remain; access to the other
+private repository is still a hosted gate, with no new token supplied here.
+Woodpecker receipts do not satisfy the existing
 GitHub-specific 56-job/45-artifact collector or its private additional gate.
 The local pipeline does not run the full scientific suite, physical/provider
 qualification or build/execute a new container. Those omissions remain explicit

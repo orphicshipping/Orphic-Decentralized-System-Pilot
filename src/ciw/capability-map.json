@@ -2771,6 +2771,7 @@
         "jsonrpc_frame_reserve_bytes": 1024,
         "process_output_bytes": 131072,
         "child_wall_seconds": 5.0,
+        "git_metadata_output_bytes": 4194304,
         "call_work_deadline_seconds": 20.0,
         "kernel_cpu_seconds": 3,
         "kernel_address_space_bytes": 268435456,

@@ -27,6 +27,7 @@ MAX_ARGUMENT = 65536
 MAX_RESPONSE = 262144
 JSONRPC_RESERVE = 1024
 MAX_PROCESS_OUTPUT = 131072
+MAX_GIT_OUTPUT = 4 * 1024 * 1024
 PROCESS_SECONDS = 5.0
 CALL_SECONDS = 20.0
 CPU_SECONDS = 3
@@ -205,7 +206,7 @@ class _NiseAdapter(PinnedSubprocessAdapter):
     def _git(self, *arguments):
         code, output = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments],
-            cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024)
+            cwd=self.repository_root, timeout=self._remaining(), limit=MAX_GIT_OUTPUT)
         if code:
             raise AdapterRefusal("SOURCE_PIN_MISMATCH", "Cannot verify bound checkout")
         return output
@@ -450,6 +451,7 @@ def profile_manifest():
         "limits": {"argument_bytes": MAX_ARGUMENT, "mcp_envelope_bytes": MAX_RESPONSE,
             "mcp_result_bytes": MAX_RESPONSE - JSONRPC_RESERVE, "jsonrpc_frame_reserve_bytes": JSONRPC_RESERVE,
             "process_output_bytes": MAX_PROCESS_OUTPUT, "child_wall_seconds": PROCESS_SECONDS,
+            "git_metadata_output_bytes": MAX_GIT_OUTPUT,
             "call_work_deadline_seconds": CALL_SECONDS, "kernel_cpu_seconds": CPU_SECONDS,
             "kernel_address_space_bytes": ADDRESS_BYTES, "kernel_file_bytes": FILE_BYTES,
             "kernel_open_files": OPEN_FILES, "concurrent_calls": 1}}
