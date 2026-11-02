@@ -1,8 +1,8 @@
-# Notations Control Protocol
+# Orphic Decentralized Systems Protocol
 
 One MCP for models and for other software. Call a tool. A folder, a file, a line of code, a shell command, or a PASS is not a run.
 
-Developed by **Notation Systems Inc.**
+Developed by **Orphic Systems**
 
 ## Bind
 
@@ -47,7 +47,9 @@ Premise: a model and another program must call the same operations, without a hu
 
 Requirement: MCP is the model transport. `ciw.services.invoke` is the non-MCP route. Permissions and pins stay on the host launch.
 
-Every caller passes one request policy, `ciw.services.admit`: the MCP host, `ciw.services.invoke`, and the coordinator's inner operation. A request names a listed tool, passes an object, stays inside the 65536-byte argument budget, cannot select a checkout or a pin, and matches the tool's declared input schema. An argument named `owner`, `principal`, or `agent_id` refuses with `coordinator_impersonation_refused`; the host supplies identity. Transports format; they do not re-decide.
+Control-tool calls share `ciw.services.admit`: the MCP control host, control calls through `ciw.services.invoke`, and the coordinator's inner operation. A request names a listed tool, passes an object, stays inside the 65536-byte argument budget, cannot select a checkout or a pin, and matches the tool's declared input schema. An argument named `owner`, `principal`, or `agent_id` refuses with `coordinator_impersonation_refused`; the host supplies identity. Transports format; they do not re-decide.
+
+The [ODRP reference profile](docs/ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
 
 Decision: source paths stay. Tests and pins import them. `ciw.services` is the application service. The MCP methods delegate to it. The [transformation ledger](mcp/transformation-ledger.json) names every tracked path. Unbound engines stay blocked. They are not simulated.
 
@@ -97,7 +99,7 @@ That is the same function `ncp_domain_run` calls. It is a synthetic column, not 
 
 ## Limits and recovery
 
-Argument budget is 65536 bytes, enforced once in `ciw.services.admit` for MCP, SDK and coordinator calls. A coordinator job is alive while its worker holds a kernel file lease on `idem-<hash>.lease`; the PID is diagnostic only, so a reused PID cannot keep a dead job alive. Reusing an idempotency key with a different request refuses with `idempotency_key_conflict`. An exclusive resource is a kernel lease on `exclusive/<name>`; a busy resource refuses with `exclusive_resource_busy`. A control response that exceeds the response budget is refused. Plan runs are polled with `ncp_run_get`. Cancel records intent; intent is not proof the work stopped. A workbench result is kept under the returned `artifact_id` until `ncp_retained_release`. The example files stay. An operator manifest is `NCP_HOST_MANIFEST` or `ncp control serve --host-manifest`. A tool argument cannot set it.
+The control-tool argument budget is 65536 bytes, enforced in `ciw.services.admit` for MCP, SDK and coordinator calls. A coordinator job is alive while its worker holds a kernel file lease on `idem-<hash>.lease`; the PID is diagnostic only, so a reused PID cannot keep a dead job alive. Reusing an idempotency key with a different request refuses with `idempotency_key_conflict`. An exclusive resource is a kernel lease on `exclusive/<name>`; a busy resource refuses with `exclusive_resource_busy`. A control response that exceeds the response budget is refused. Plan runs are polled with `ncp_run_get`. Cancel records intent; intent is not proof the work stopped. A workbench result is kept under the returned `artifact_id` until `ncp_retained_release`. The example files stay. An operator manifest is `NCP_HOST_MANIFEST` or `ncp control serve --host-manifest`. A tool argument cannot set it.
 
 ## Testing
 

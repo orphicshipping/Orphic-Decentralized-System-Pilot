@@ -1,11 +1,28 @@
 # ODSP legacy conversion: migration ledger
 
-Branch `odsp-legacy-conversion` (local only, never pushed). Baseline: upstream
-`orphicsystems/Orphic-Decentralized-Systems-Protocol` main `24f6ef074c76da0ddf2a405001c00020061e98fc`
-(re-checked 2026-11-01 evening EST: main has not moved). Authority: `ODSP_LEGACY_CONVERSION_DIRECTIVE.md`
-(WO-20261101-MCP-COMPLETION-03 was not found). Nothing in this ledger authorizes execution.
+PR [#260](https://github.com/orphicsystems/Orphic-Decentralized-Systems-Protocol/pull/260)
+publishes branch `odsp-legacy-conversion`. On 2026-11-02 the remote head was
+`b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c` and main was
+`26a437ef1ec664069a948ab9b3f546ac7c3e1e35`; their merge base was
+`24f6ef074c76da0ddf2a405001c00020061e98fc`. Main already includes PR #259.
+The branch copied that tree through single-parent commits without integrating
+its ancestry. Local repair merge `41a3478d85e5235b65383fdbdc4af69c8b02222c`
+has the PR head and current main as its two parents, with the indexes regenerated
+from the complete checkout. This repair has not been pushed.
 
-## 1. Inventory
+The repository is private (GitHub repository metadata, checked 2026-11-02).
+Earlier snapshot counts, test reports, local commit IDs and statements attributed
+to the Chairman or Counsel below are retained conversion records from PR #260,
+not independent verification by this repair. The original record cites
+`ODSP_LEGACY_CONVERSION_DIRECTIVE.md`; that directive and the underlying decision
+transcripts were not supplied for this review. Nothing here creates rights,
+records a public release, or authorizes execution.
+
+## 1. Original partial-snapshot inventory
+
+This historical inventory describes the conversion author's snapshot at 24f6ef0.
+The repair checkout instead contains all 6,852 tracked paths: 6,842 from current
+main plus the conversion's ten additions. No tracked path was removed.
 
 | Measure | Count |
 |---|---|
@@ -18,8 +35,9 @@ Missing by top-level folder: instruments 3058, validation 306, examples 227, .gi
 tools 73, runtimes 65, godot 57, delivery 20.
 `src/`, `mcp/`, `tests/`, `scripts/`, top-level files, `third_party/` and licence/notice files are complete.
 
-The snapshot has no shared git history with upstream. Before publication, the commits after
-`5087e99` must be replayed on a real clone of 24f6ef0 (see section 9).
+The original snapshot reportedly lacked shared Git history. That historical
+replay instruction does not apply to this repair, which merges the actual
+published PR head with main and preserves both ancestries.
 
 ## 2. Per-capability matrix
 
@@ -29,16 +47,17 @@ The snapshot has no shared git history with upstream. Before publication, the co
 | Coordinator liveness | **rewritten**: kernel file leases (`idem-*.lease`) instead of PID probes | `coordinator.submit/recall/recover` | test_coordinator_multiprocess.py (crash, PID reuse, timeout, reconnect) | PID liveness deleted in ef86a6a |
 | Lost-worker settlement | **rewritten**: settled under the owner transaction lock | recall, recover | crash + 4 concurrent recoverers | — |
 | Exclusive resources | **rewritten**: never-unlinked flock files, bounded wait | submit(exclusive=) | exclusive not stolen / wait timeout / freed on crash; test_transformation_ledger busy-resource | pid-file holds deleted in ef86a6a |
-| Handoff / claim | **rewritten**: atomic under grants lock, claim receipt, duplicate delivery replays | handoff, claim | concurrent claims x6 + intruder + duplicate delivery | — |
+| Handoff / claim | **rewritten**: serialized under grants lock, claim receipt, duplicate delivery replays after receipt publication | handoff, claim | concurrent claims x6 + intruder + duplicate delivery; crash-safe publication remains unverified | — |
 | Idempotency keys | **rewritten**: conflicting reuse refused (`idempotency_key_conflict`) | submit | key-conflict test, coordinator journey | — |
 | Retained release | **rewritten**: holds owner transaction across processes | Store.release | concurrent release x5 | — |
-| Cancellation | **rewritten**: KeyboardInterrupt/SystemExit recorded `cancelled` before lease release | submit | hang-cancel test | — |
+| Cancellation | **rewritten**: KeyboardInterrupt/SystemExit during domain execution recorded `cancelled` before lease release | submit | hang-cancel test; interruption during exclusive acquisition remains a separate gap | — |
 | sequence_kinetics numerics | **retained_and_verified** | ncp_domain_run sequence | test_sequence_kinetics_numerical.py (13; mutation-checked) | — |
 | electronics_repair brand | **rewritten**: ODSP pixel wordmark | web UI | render-checks.json (8 screens, desktop + mobile) | Legacy "N∶" glyph deleted in f390414 |
 | tooling_explorer brand overlap | **rewritten** | web UI | render-checks.json | 7f3b7b9 |
 | Workbench workflows (calibrated-observable, identified-design, telemetry, …) | **blocked** | ncp_workbench_run | — | Need host-selected native runtime pins: INCOMPLETE |
 | Native control profiles | **blocked (pre-existing upstream)** | test_native_control_profiles | bim-estimator tree is now complete; the test still fails on the upstream `NATIVE_TREE` pin (computed 9b241ddd… ≠ pinned f91c982b…), identically on the 24f6ef0 baseline | Upstream must re-pin; not changed here |
-| Operator docs (README.md, docs/AGENT_OPERATIONS.md, docs/MCP_CONTROL.md) | **rewritten** (0d64421): describe `services.admit` as the one request policy, identity refusal, file-lease liveness (PID diagnostic only), `idempotency_key_conflict`, `exclusive_resource_busy` | readers, agents | checked against src/ciw/services.py and coordinator.py | — |
+| Operator docs (README.md, docs/AGENT_OPERATIONS.md, docs/MCP_CONTROL.md) | **rewritten**: describe the shared control-tool `services.admit` policy, separate ODRP `KnowledgeHost` validation, identity refusal, file-lease liveness (PID diagnostic only), `idempotency_key_conflict`, `exclusive_resource_busy` | readers, agents | checked against src/ciw/services.py and coordinator.py | — |
+| ODRP reference profile (PR #259) | **retained**: separate read-only `KnowledgeHost` validation before control admission | `ncp_system_status`, `ncp_knowledge_*`, `ncp_evidence_*` | test_reference_profile.py; reference dispatch and host bindings preserved from main | — |
 | agent (net_*) and semantic surfaces | **retained** (own tool families, own `validate_arguments`) | ciw.net agent/semantic serve | test_mcp_sdk.py (live stdio) | Not migrated to `admit`: different tool set |
 
 ## 3. Supersession map
@@ -69,12 +88,15 @@ H(3-blocks) − H(2-blocks) computation from raw counts.
 
 ## 6. Platform statement
 
-Qualified here: Linux x86_64, CPython 3.13.5 (dev venv, editable) and CPython 3.11.17
+Previously reported software-test environments: Linux x86_64, CPython 3.13.5 (dev venv, editable) and CPython 3.11.17
 (clean venv, wheel install), numpy 2.4.3, websockets 16.0, mcp 2.3.0. Cross-process locking uses
 `fcntl.flock` on POSIX and `msvcrt.locking` on Windows; **the Windows path was not run**.
 macOS was not run. Locks are advisory and assume a local filesystem (not NFS).
 
-## 7. Evidence matrix (exact revision: this branch head)
+## 7. Historical conversion evidence matrix
+
+These are earlier reported results at the revisions named below, not results
+for the repaired head. The full suite has not been rerun by this repair.
 
 | Gate | Command | Result |
 |---|---|---|
@@ -90,12 +112,13 @@ macOS was not run. Locks are advisory and assume a local filesystem (not NFS).
 | Interface render | `node render/wordmark.cjs` | 8 screens x 2 viewports: no overflow, no header or brand overlaps |
 | Hosted CI | — | Not run (local only) |
 
-## 8. Known failures and INCOMPLETE stages
+## 8. Historical failures and INCOMPLETE stages
 
-- test_transformation_ledger::test_every_tracked_path_has_one_disposition and
+- Previously, test_transformation_ledger::test_every_tracked_path_has_one_disposition and
   test_mcp_project_map (x2): compare against the local `git ls-files`; 4114 upstream paths are absent
   from this snapshot, so they fail here. The ledger, document map, folder index and folder contracts were
-  regenerated in 68ba4e2 for the publish tree (upstream + additions); after the graft they should pass.
+  regenerated in 68ba4e2 for the publish tree (upstream + additions). These checks now pass
+  in the complete repair checkout after regeneration.
   `mcp/project-map.json` (hand-maintained, top-level folders only) needed no change.
 - test_native_control_profiles and test_metrology_clearance (23): upstream `NATIVE_TREE` pin mismatch,
   identical on the 24f6ef0 baseline. Pre-existing; not changed here.
@@ -119,11 +142,15 @@ Total 229. Classified by test module and by the failure message; the rerun spot-
 
 ## 9. Licence audit (third_party/ and PLSR)
 
+The following licence inventory and decisions were reported by the conversion
+author. Notices are retained; the repair does not independently verify title,
+legal compatibility, decision authority or distribution permissions.
+
 | Item | Licence | Flag |
 |---|---|---|
 | Project | AGPL-3.0-or-later | — |
 | third_party/chemical-kinetics | Apache-2.0 (Google 2025), NOTICE.md present | Keep NOTICE |
-| third_party/reference-data (PTB MH44 hydrophone data via Ma-Weber/Tutorial-Deconvolution) | GPL-3.0 | **Kept public:** data grant not established; published by Chairman decision Nov 1 2026 against Counsel advice to withhold (see §11) |
+| third_party/reference-data (PTB MH44 hydrophone data via Ma-Weber/Tutorial-Deconvolution) | GPL-3.0 (upstream repository notice; data grant not established) | Retained in this private repository. The conversion author reported a Chairman decision and contrary Counsel advice; the underlying evidence and any public publication were not verified (see §11). |
 | integration-sources: real-time-globe, frame-mapper | GPL-3.0 | **Kept by Chairman decision, Nov 1 2026; flagged to Counsel** (see §10) |
 | integration-sources: state-recompiler | AGPL-3.0 | OK |
 | frame-mapper node_modules | MIT | OK |
@@ -138,9 +165,12 @@ Total 229. Classified by test module and by the failure message; the rerun spot-
 
 No new dependencies were added.
 
-## 10. Chairman decisions (Nov 1 2026)
+## 10. Reported Chairman decisions (Nov 1 2026)
 
-Recorded as given; each was applied as its own local commit. Nothing was pushed.
+The conversion author attributed the following decisions to the Chairman and
+reported separate local commits. Those decision transcripts and local commit IDs
+were not independently verified. The conversion is now published in PR #260;
+these records do not establish a third-party licence grant or legal clearance.
 
 | # | Decision | Applied in |
 |---|---|---|
@@ -149,9 +179,12 @@ Recorded as given; each was applied as its own local commit. Nothing was pushed.
 | 3 | **MPL-2.0 instruments are accepted.** MPL-2.0 is file-level copyleft: each MPL file keeps its own notice and stays MPL-2.0. AGPL-3.0 is an MPL "Secondary License" unless a file carries the Exhibit B "Incompatible With Secondary Licenses" notice (checked separately; see §11). | this commit |
 | 4 | Point the `pyproject.toml` project URLs at `https://github.com/orphicsystems/Orphic-Decentralized-Systems-Protocol`. | `a18fe95` |
 
-## 11. Counsel's ruling and owner declaration (Nov 1 2026)
+## 11. Reported Counsel statements and owner declaration (Nov 1 2026)
 
-**Owner declaration.** The Chairman's statement of Nov 1 2026: *"Orphic Systems holds the copyright in the original ODSP code and can license it AGPL-3.0-or-later"*.
+**Reported owner declaration.** The conversion author attributed this statement
+to the Chairman on Nov 1 2026: *"Orphic Systems holds the copyright in the original
+ODSP code and can license it AGPL-3.0-or-later"*. The source transcript and authority
+were not independently verified for this repair.
 - It is recorded as `owner_declaration` in `docs/licensing/rights-register.json`.
 - The earlier Notation Systems Inc. declaration is kept under `prior_owner_declarations`.
 - Independent title verification is still `false`. No assignment is created by the record.
@@ -162,13 +195,15 @@ Recorded as given; each was applied as its own local commit. Nothing was pushed.
 | (b) MPL Exhibit B check | **No hits in any source file.** See the method and limits below. | — |
 | (c) PTB removal | **Cancelled by the Chairman.** No commit was made and nothing was dropped. `/workspace/odsp/internal/ptb-hydrophone` was verified absent. | — |
 | (d) Per-item clearance rows | `rights-register.json` `third_party_clearance` has 32 rows, one per third-party item, using the `enrollment_fields` plus `git_blob`. `content_sha256` is computed locally where the file was fetched; otherwise the declared value is used, or null with a note. | `82b73fd` |
-| PTB hydrophone data | It stays in the public repo, with its own `THIRD_PARTY.md` entry and its own register row (`tp-ptb-mh44-hydrophone`) as GPL-3.0. The note reads: "data grant not established; published by Chairman decision Nov 1 2026 against Counsel advice to withhold". The local `content_sha256` matches the value in `src/ciw/link_references.py` (`598b7ac5…`). | `1ca8cdc`, `82b73fd` |
+| PTB hydrophone data | It remains in this private repository with its own `THIRD_PARTY.md` entry and register row (`tp-ptb-mh44-hydrophone`). GPL-3.0 identifies the upstream repository notice; the data grant remains unestablished. The reported Chairman/Counsel statements and any public publication were not independently verified. The conversion author reported a matching `content_sha256` (`598b7ac5…`). | reported `1ca8cdc`, `82b73fd` |
 
 **(b) Method and limits.** GitHub code search was run on `main` (24f6ef0) with the query `"Incompatible With Secondary Licenses" repo:orphicsystems/Orphic-Decentralized-Systems-Protocol`. It returned 11 results (`incomplete_results: false`):
 - the 10 MPL-2.0 `LICENSE` files, where the phrase is the licence's own definition (§1.5, §3.3, §10.4) and the Exhibit B template;
 - `instruments/mathematics/surface/tests/test_licensing.py`, which only asserts that the licence text contains the Exhibit B heading.
 
-The fetched copies of these files confirmed this. A second search for `"Mozilla Public License"` found only `LICENSE`, `NOTICE.md` and `README` files plus the same test. No source file attaches the Exhibit B notice, so AGPL-3.0, as an MPL "Secondary License", may be combined with these files.
+The conversion author reported matching fetched copies and a second search for
+`"Mozilla Public License"`. Those scoped search results do not independently
+establish legal compatibility or permission to combine or distribute the files.
 
 Limit: GitHub code search does not index files larger than 384 KB, nor binary or vendored files. The 402 MPL files were not all fetched and grepped locally. Only three MPL-tree files exceed 384 KB, so they were outside the search: `surface/figures/jacobi-testbed-v1.png`, `surface/figures/surfaces-testbed-v1.png` and the generated `surface/validation/report-v2-surfaces.json`. None of them is source code.
 

@@ -10,24 +10,29 @@ file's own notice governs.
 Blob SHAs are git object IDs at `main` `24f6ef074c76da0ddf2a405001c00020061e98fc`.
 Per-item clearance status lives in
 [`docs/licensing/rights-register.json`](docs/licensing/rights-register.json)
-under `third_party_clearance`.
+under `third_party_clearance`. Chairman and Counsel statements below are claims
+reported by the PR #260 conversion author in `MIGRATION_LEDGER.md`, not
+independently verified decisions or grants. The repository is private (GitHub
+metadata checked 2026-11-02); this table does not establish public distribution.
 
 ## GPL-3.0
 
-Kept by Chairman decision, Nov 1 2026; flagged to Counsel.
+The conversion author reported a Chairman decision dated Nov 1 2026 to retain
+these items and flag them to Counsel; the underlying decision was not verified.
 
 | Path | Licence file (blob) | Notes |
 |---|---|---|
 | `instruments/representation/frame-mapper/` (1285 files) | `LICENSE`, GPL-3.0 (`f288702d`) | Began as a fork of [simplifaisoul/osiris](https://github.com/simplifaisoul/osiris) (MIT); the README states the MIT grant and retained notice continue to apply to inherited code. |
 | `instruments/representation/frame-mapper/intel/node_modules/` (66 npm packages, e.g. `express`, `body-parser`, `qs`, `iconv-lite`, `inherits`, `once`, `wrappy`) | each package's own `LICENSE` and `package.json` `license` field | Vendored npm dependencies under their own permissive licences (MIT, ISC and similar). They were not individually re-verified for this table. |
 | `instruments/views/real-time-globe/` (94 files) | `LICENSE`, GPL-3.0 (`f288702d`) | README: "GNU General Public License v3.0". |
-| **PTB MH44 hydrophone data:** `tests/reference_data/MW_MH44ReIm.lines-1-18.csv` (blob `56e1f05c`) | `third_party/reference-data/GPL-3.0.txt` (`f288702d`), the upstream repository licence | The first 18 lines of `HydrophoneCalibrationData/MW_MH44ReIm.csv` from [Ma-Weber/Tutorial-Deconvolution @ 2de078bd](https://github.com/Ma-Weber/Tutorial-Deconvolution/blob/2de078bd09a58ed4063d2a6b477a94310a6e1039/HydrophoneCalibrationData/MW_MH44ReIm.csv). Institution: PTB / University of Helsinki authors. Reference: <https://doi.org/10.5281/zenodo.10079801>. Licence: [repository LICENSE](https://github.com/Ma-Weber/Tutorial-Deconvolution/blob/2de078bd09a58ed4063d2a6b477a94310a6e1039/LICENSE). Changes: truncated to lines 1–18 and re-serialised with LF line endings and a final LF. **Data grant not established; published by Chairman decision Nov 1 2026 against Counsel advice to withhold.** |
+| **PTB MH44 hydrophone data:** `tests/reference_data/MW_MH44ReIm.lines-1-18.csv` (blob `56e1f05c`) | `third_party/reference-data/GPL-3.0.txt` (`f288702d`), the upstream repository licence | The first 18 lines of `HydrophoneCalibrationData/MW_MH44ReIm.csv` from [Ma-Weber/Tutorial-Deconvolution @ 2de078bd](https://github.com/Ma-Weber/Tutorial-Deconvolution/blob/2de078bd09a58ed4063d2a6b477a94310a6e1039/HydrophoneCalibrationData/MW_MH44ReIm.csv). Institution: PTB / University of Helsinki authors. Reference: <https://doi.org/10.5281/zenodo.10079801>. Licence: [repository LICENSE](https://github.com/Ma-Weber/Tutorial-Deconvolution/blob/2de078bd09a58ed4063d2a6b477a94310a6e1039/LICENSE). Changes: truncated to lines 1–18 and re-serialised with LF line endings and a final LF. **Data grant not established. The conversion author reported publication by Chairman decision against Counsel advice; those claims and any public publication were not independently verified.** |
 
 ## MPL-2.0
 
-Accepted by Chairman decision, Nov 1 2026. MPL-2.0 is file-level copyleft:
+The conversion author reported Chairman acceptance dated Nov 1 2026; the
+underlying decision was not verified. The retained MPL-2.0 notices apply:
 every file here stays under MPL-2.0 and keeps its own notice. The Exhibit B
-check (Nov 1 2026) found no source file that carries the "Incompatible With
+check reported by that author (Nov 1 2026) found no source file that carries the "Incompatible With
 Secondary Licenses" notice. The only matches were the MPL-2.0 licence texts
 themselves and one test that checks them. The check's method and limits are
 in `MIGRATION_LEDGER.md` §11.

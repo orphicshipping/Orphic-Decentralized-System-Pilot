@@ -11,9 +11,10 @@
     "declared_by": "Chairman",
     "declared_local_date": "2026-11-01",
     "scope": "original ODSP code in orphicsystems/Orphic-Decentralized-Systems-Protocol; excludes every item in third_party_clearance",
-    "evidence_type": "Chairman's statement of Nov 1 2026, recorded by the conversion agent",
+    "evidence_type": "Conversion author reported a Chairman statement dated 2026-11-01; underlying transcript and authority not independently verified",
     "independent_title_verification": false,
-    "assignment_created_by_this_record": false
+    "assignment_created_by_this_record": false,
+    "claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review"
   },
   "licensing_contact": "https://github.com/atomtrapping/Notations-Systems-Terminal/issues/new?template=licensing-request.yml&title=Licensing%20request",
   "organization_declaration": {
@@ -82,10 +83,12 @@
         "intel/node_modules (row tp-frame-mapper-node-modules)"
       ],
       "applicable_notice": "instruments/representation/frame-mapper/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "kept by Chairman decision 2026-11-01; flagged to Counsel",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: kept by Chairman decision 2026-11-01; flagged to Counsel",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-frame-mapper-node-modules",
@@ -104,7 +107,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "each package's LICENSE and package.json",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance; per-package licences not individually re-verified",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -126,10 +129,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/views/real-time-globe/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "kept by Chairman decision 2026-11-01; flagged to Counsel",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: kept by Chairman decision 2026-11-01; flagged to Counsel",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-ptb-mh44-hydrophone",
@@ -148,10 +153,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "third_party/reference-data/GPL-3.0.txt",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "published by Chairman decision 2026-11-01 against Counsel advice to withhold",
-      "note": "data grant not established; published by Chairman decision Nov 1 2026 against Counsel advice to withhold"
+      "status": "Unverified conversion-source claim: published by Chairman decision 2026-11-01 against Counsel advice to withhold",
+      "note": "Data grant not established. The conversion author reported publication by Chairman decision against Counsel advice; those statements and any public publication were not independently verified. The repository is currently private.",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-faultsense",
@@ -170,10 +177,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/inference/faultsense/LICENSE, instruments/inference/faultsense/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-state-inference",
@@ -192,10 +201,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/inference/state-inference/LICENSE, instruments/inference/state-inference/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-linear-dynamics",
@@ -214,10 +225,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/linear-dynamics/LICENSE, instruments/mathematics/linear-dynamics/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-observability",
@@ -236,10 +249,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/observability/LICENSE, instruments/mathematics/observability/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-sensor-design",
@@ -258,10 +273,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/sensor-design/LICENSE, instruments/mathematics/sensor-design/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-surface",
@@ -280,10 +297,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/surface/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-calibration",
@@ -302,10 +321,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/measurement/calibration/LICENSE, instruments/measurement/calibration/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-clocksync",
@@ -324,10 +345,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/measurement/clocksync/LICENSE, instruments/measurement/clocksync/NOTICE.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-signal-conditioning",
@@ -346,10 +369,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/measurement/signal-conditioning/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-mpl-signal-processing",
@@ -368,10 +393,12 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/measurement/signal-processing/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
-      "status": "accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
-      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
     },
     {
       "asset_id": "tp-chemical-kinetics",
@@ -391,7 +418,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "third_party/chemical-kinetics-and-program-execution/NOTICE.md (shipped unchanged) and LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance"
     },
@@ -414,7 +441,7 @@
         "renderer/vendor/three.module.js (row tp-threejs)"
       ],
       "applicable_notice": "instruments/execution/compute-runtime/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -436,7 +463,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/execution/compute-runtime/renderer/vendor/THIRD_PARTY_NOTICES.md and file header",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -458,7 +485,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/verification/estimator-bench/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -480,7 +507,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "src/ciw/bench_examples/LICENSE.txt",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance"
     },
@@ -501,7 +528,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "examples/temperature-recording/UPSTREAM-LICENSE.txt",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance"
     },
@@ -522,7 +549,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/composition/retrieval-agent/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -544,7 +571,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/domain/bim-estimator/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -566,7 +593,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/domain/flowstate/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -588,7 +615,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/polygon-trajectories/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -610,7 +637,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/mathematics/sensitivity/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -632,7 +659,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/measurement/metrology/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -654,7 +681,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "instruments/resources/yield-weighted/LICENSE",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance",
       "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
@@ -676,7 +703,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "examples/preservation-experiments/external/LICENSE.txt; attribution in THIRD_PARTY.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance; content unmodified (blob equals declared upstream blob), renamed",
       "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
@@ -698,7 +725,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "examples/preservation-experiments/external/LICENSE.txt; attribution in THIRD_PARTY.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance; content unmodified (blob equals declared upstream blob), renamed",
       "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
@@ -720,7 +747,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "examples/ifc-transition/ATTRIBUTION.md",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance; unmodified, renamed",
       "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
@@ -742,7 +769,7 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "tests/reference_data/NIST-NOTICE.txt; third_party/reference-data/NIST-NOTICE.txt",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance"
     },
@@ -763,10 +790,18 @@
       ],
       "incorporated_third_party_material": [],
       "applicable_notice": "examples/molecular-data/sources/FEASST-LICENSE.rst",
-      "distribution_channel": "public GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
       "licensing_contact": null,
       "status": "recorded; licence notice retained; no global legal clearance"
     }
   ],
-  "global_legal_clearance": false
+  "global_legal_clearance": false,
+  "conversion_claim_review": {
+    "reviewed_date_utc": "2026-11-02",
+    "source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+    "repository_visibility_evidence": "GitHub repository API metadata returned visibility=private on 2026-11-02",
+    "independent_title_or_decision_authority_verification": false,
+    "grants_created_or_expanded": false,
+    "note": "Historical licence and notice entries are retained as recorded. Attributed decisions do not establish title, third-party permission or legal clearance."
+  }
 }

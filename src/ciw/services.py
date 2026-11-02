@@ -323,11 +323,12 @@ _IDENTITY_FIELDS = frozenset({"owner", "principal", "agent_id"})
 
 
 def admit(name, arguments):
-    """The one request policy for every caller: MCP host, SDK and coordinator.
+    """Shared control-tool request policy for the MCP host, SDK and coordinator.
 
     A request names a listed tool, stays inside the argument budget, cannot pick
     a checkout or pin, cannot name a principal (the host supplies identity) and
     matches the declared input schema. Transports format; they do not re-decide.
+    ODRP reference calls use the separate KnowledgeHost validation path.
     """
     from .agent_api import encode
     from .agent_tools import _shape

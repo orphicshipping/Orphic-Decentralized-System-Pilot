@@ -2,8 +2,6 @@
 import base64
 import json
 import subprocess
-
-import pytest
 from pathlib import Path
 
 from ciw.agent_mcp import demo_config, from_profile
@@ -364,29 +362,25 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
     try:
         subprocess.check_call(
             [sys.executable, "-m", "pip", "install", str(ROOT), "--target", str(target), "--no-deps", "--no-build-isolation", "--ignore-requires-python"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
             stdout=subprocess.DEVNULL,
         )
         env["PYTHONPATH"] = str(target)
         env.pop("PYTHONSAFEPATH", None)
-        import shutil as _shutil
-        py311 = os.environ.get("NCP_PYTHON311") or _shutil.which("python3.11")
-        if not py311:
-            pytest.skip("no Python 3.11 interpreter (set NCP_PYTHON311 or put python3.11 on PATH)")
         contracts = subprocess.check_output(
-            [py311, "-c",
+            [sys.executable, "-c",
              "from ciw.plug_in import document; from ciw.services import read_contract, ledger_read; "
              "print(document()['schema']); "
              "print(read_contract('ncp://contract/verification')['schema']); "
              "print(ledger_read('public_core')['record']['id'])"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
         )
         assert contracts.splitlines() == [b"ncp.mcp-plug-in.v1", b"ncp.verification-report.v1", b"public_core"]
         invoked = subprocess.check_output(
             [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
         )
         assert invoked.strip() == b"ncp.mcp-plug-in.v1"
