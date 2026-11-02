@@ -7,7 +7,7 @@
 
 Keep the suite. Do not delete or weaken a test to make a call look successful. A passing handler test is not physical qualification.
 
-Tracked files here, none of them a tool call: `README.md`, `check_simulation_godot.py`, `ncp_test_permissions.py`, `test_academic_consumers.py`, `test_academic_data.py`, `test_acquired_dataset.py`, `test_acquired_stream_gate.py`, `test_acquired_window.py` (521 more).
+Tracked files here, none of them a tool call: `README.md`, `check_simulation_godot.py`, `ncp_test_permissions.py`, `reference_fixture_helpers.py`, `test_academic_consumers.py`, `test_academic_data.py`, `test_acquired_dataset.py`, `test_acquired_stream_gate.py` (523 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 
