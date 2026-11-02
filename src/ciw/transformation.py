@@ -8,6 +8,13 @@ from __future__ import annotations
 SCHEMA = "ncp.transformation-ledger.v1"
 
 _REWRITTEN = {
+    "src/ciw/reference_profile.py",
+    "src/ciw/reference_cli.py",
+    "src/ciw/reference_mcp.py",
+    "src/ciw/operator_commands.py",
+    "tests/test_reference_profile.py",
+    "tests/reference_fixture_helpers.py",
+    "docs/ODRP.md",
     "README.md",
     "src/ciw/services.py",
     "src/ciw/host_context.py",

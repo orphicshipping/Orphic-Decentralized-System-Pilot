@@ -1,0 +1,50 @@
+name: ODRP private host candidate qualification
+on:
+  push:
+    branches: [odrp/private-host-candidate]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isolated-container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+          ref: ${{ github.sha }}
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065
+        with:
+          python-version: '3.12.14'
+      - name: Build candidate from this exact source revision
+        run: |
+          C=tools/odrp-private-host-candidate
+          python -m pip wheel --no-deps . --wheel-dir "$C/wheel"
+          mkdir -p "$C/tools/mcp-operator-console" "$C/examples/numerical_operations"
+          cp tools/mcp-operator-console/{console.py,requirements.txt} "$C/tools/mcp-operator-console/"
+          cp examples/numerical_operations/prepare.py "$C/examples/numerical_operations/"
+          cp tests/reference_fixture_helpers.py "$C/tools/private-mcp-host/"
+          sha256sum "$C"/wheel/*.whl
+      - name: Source and wheel consistency
+        run: |
+          python - <<'PYCODE'
+          from pathlib import Path
+          import zipfile
+          with zipfile.ZipFile(next(Path('tools/odrp-private-host-candidate/wheel').glob('*.whl'))) as z:
+              for name in z.namelist():
+                  source = Path('src') / name
+                  if source.is_file():
+                      assert z.read(name) == source.read_bytes(), name
+          PYCODE
+      - name: Build isolated local image without registry credentials
+        run: docker build -f tools/odrp-private-host-candidate/Dockerfile.ci -t odrp-host-local-candidate tools/odrp-private-host-candidate
+      - name: Actual container scientific and reference journeys
+        run: >-
+          docker run --rm --network none --read-only --tmpfs /tmp:rw,nosuid,nodev
+          -e NCP_TRANSACTION_STATE=/tmp/odrp-ci/state
+          odrp-host-local-candidate python -m pytest -q -p no:cacheprovider
+          tools/private-mcp-host/test_adapter.py
+          tools/private-mcp-host/test_reference_adapter.py
+      - name: Gateway and uncertainty-fence simulations
+        run: node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs

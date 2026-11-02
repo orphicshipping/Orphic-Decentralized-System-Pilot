@@ -979,5 +979,408 @@
       "notes": "Does not run a solver, select a pin, or replace the tests."
     }
   ],
-  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
+  "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
+  "reference_profiles": [
+    {
+      "profile_id": "odrp.reference.v1",
+      "product": "Orphic Decentralized Reference Protocol",
+      "service": "ciw.services.invoke",
+      "host_factory": "ciw.services.open_reference",
+      "discovery": "ciw.services.reference_tools",
+      "cli": "ncp reference serve",
+      "authority": "host_selected_read_only_snapshot",
+      "authorizes_execution": false,
+      "tools": [
+        {
+          "name": "ncp_evidence_overview",
+          "description": "Inspect the pinned, host-selected source text representations and extraction boundaries.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": true
+        },
+        {
+          "name": "ncp_evidence_representations",
+          "description": "List selected text representations, optionally by exact catalog record ID. Includes empty text sources and provenance without requiring a content query.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": true
+        },
+        {
+          "name": "ncp_evidence_search",
+          "description": "Search exact retained source passages. Source statements remain untrusted and unreviewed; no original files are fetched.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 20
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              },
+              "record_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": true
+        },
+        {
+          "name": "ncp_evidence_source",
+          "description": "Inspect a retained text representation, its original/archive-member provenance and paginated span descriptors.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "representation_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              }
+            },
+            "required": [
+              "representation_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": true
+        },
+        {
+          "name": "ncp_evidence_span",
+          "description": "Read one exact UTF-8 source passage with byte offsets, source/member/span hashes and source-reported limitations. It does not approve a task context.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "span_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              }
+            },
+            "required": [
+              "span_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": true
+        },
+        {
+          "name": "ncp_knowledge_overview",
+          "description": "Read the pinned proto-corpus catalog overview and unresolved review counts. Catalog presence is not scientific qualification.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_knowledge_relations",
+          "description": "Page declared catalog relationships for an exact record hash. A relationship is metadata, not an inferred scientific claim.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              }
+            },
+            "required": [
+              "record_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_knowledge_resolve",
+          "description": "Resolve an exact retained source identity or declared alias to its catalog record. No URL, filename or hash guessing.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "source_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              }
+            },
+            "required": [
+              "source_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_knowledge_review_queue",
+          "description": "Page unresolved metadata and provenance review items. This tool cannot resolve, approve or accept them.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_knowledge_search",
+          "description": "Search indexed metadata tokens with AND semantics. Punctuation-only queries are refused; scores are not confidence. Source titles and metadata are untrusted data. Follow next_offset for the same query; no source download or embedding ingestion occurs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "query": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 50
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 200000
+              },
+              "category": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "kind": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              }
+            },
+            "required": [
+              "query"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_knowledge_source",
+          "description": "Read one catalog record by its exact record hash. source_sha256 identifies source bytes separately; no raw source text or scientific acceptance is returned.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "pattern": "^sha256:[0-9a-f]{64}$",
+                "minLength": 71,
+                "maxLength": 71
+              }
+            },
+            "required": [
+              "record_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        },
+        {
+          "name": "ncp_system_status",
+          "description": "Describe the local NCP profile, pinned metadata snapshot and authority boundaries. Does not authorize work or accept evidence.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          },
+          "requires_evidence_bundle": false
+        }
+      ]
+    }
+  ]
 }

@@ -6,6 +6,7 @@ from __future__ import annotations
 
 # (command, module, purpose)
 COMMANDS = (
+    ('reference', 'reference_cli', 'Serve ODRP pinned reference snapshots through shared software and MCP calls'),
     ("operational", "operational_cli", "Connect retained operational records to engineering investigations and personal MCP"),
     ("spatial", "spatial_cli", "Inspect bounded raster and spatial requests through retained NET evidence"),
     ('control', 'control_cli', 'Discover typed capabilities, admit retained plans and run durable jobs over MCP'),

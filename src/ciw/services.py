@@ -319,6 +319,12 @@ SESSION = frozenset({
 
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
+    # Reference disclosure is a separate host profile, not a control-host grant.
+    # Resolve it before importing execution/session providers.
+    if isinstance(name, str) and (name == "ncp_system_status" or
+            name.startswith(("ncp_knowledge_", "ncp_evidence_"))):
+        from .reference_profile import invoke_reference
+        return invoke_reference(host, name, {} if arguments is None else arguments)
     if not isinstance(name, str) or (name not in OPERATIONS and name not in SESSION):
         raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
     arguments = {} if arguments is None else arguments
@@ -357,6 +363,7 @@ def capability_map():
     from .capabilities import catalog
     from .control_gateway import TOOLS
     from .domain_surface import tool_grants
+    from .reference_profile import profile_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -391,5 +398,18 @@ def capability_map():
         "qualification": "not_performed_by_this_file",
         "tools": tools,
         "indexed": indexed,
+        "reference_profiles": [profile_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
+
+
+def open_reference(**bindings):
+    """Bind approved catalog/evidence snapshots for the ODRP read-only profile."""
+    from .reference_profile import open_reference as bind
+    return bind(**bindings)
+
+
+def reference_tools(host):
+    """Typed discovery for the caller's already bound ODRP reference host."""
+    from .reference_profile import reference_tools as describe
+    return describe(host)
