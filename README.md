@@ -31,7 +31,7 @@ The tool index is [mcp/model-catalog.json](mcp/model-catalog.json). Arguments ar
 
 ## What a line of code is
 
-Source paths stay where the tests and the pins already import them. A module, a folder, and a line of code are not tools. Every tracked folder carries `MCP.md` and a rendered entry that names the call to use instead of the files. Rewriting each solver into a new function would break those imports and the retained evidence. The retrofit is this plug-in, not a second copy of the science.
+Source paths stay where the tests and the pins already import them. A module, a folder, and a line of code are not tools. The [folder index](mcp/folder-index.json) points to each tracked folder's contract. Imported sources and exact-input capsules use [external contracts](mcp/source-contracts.md), preserving their original files and modes; other folders carry `MCP.md` and a rendered entry. Rewriting each solver into a new function would break those imports and the retained evidence. The retrofit is this plug-in, not a second copy of the science.
 
 ## What is not a grant
 
@@ -74,7 +74,7 @@ The [capability map](mcp/capability-map.json) lists the advertised tools. The [v
 | `instruments/` | Vendored trees. Not the leakage or BIM pin. |
 | `release/` | Ledger. `ncp_ledger_read`. `qualified` stays `not_assessed`. |
 
-Every tracked folder still carries `MCP.md`. The folder is not a human console.
+Every tracked folder is discoverable through its contract pointer in [the folder index](mcp/folder-index.json). The folder is not a human console.
 
 ## Install and start
 

@@ -289,10 +289,8 @@ _CAPABILITIES = (
     _record(
         capability_id="workbench.fold.v1",
         disposition="implemented",
-        kind="registered_operation",
+        kind="service",
         summary="One fold of the workbench. Call ncp_workbench_list, then ncp_workbench_run with the workflow name. The call does not opt for the easiest task. Pinned workflows refuse until the host selects that binding. Documentation and evidence stay.",
-        operation_id="workbench.fold.v1",
-        role="state_estimator",
         module="ciw.workbench_surface",
         notes="Not a measurement, a booking, or a release. Julia, Godot, Bevy, Blender, and SP1 stay unbound.",
     ),

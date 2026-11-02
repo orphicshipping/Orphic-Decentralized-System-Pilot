@@ -965,7 +965,7 @@
     {
       "capability_id": "workbench.fold.v1",
       "module": "ciw.workbench_surface",
-      "kind": "registered_operation",
+      "kind": "service",
       "mcp_tool": null,
       "authorizes_execution": false,
       "notes": "Not a measurement, a booking, or a release. Julia, Godot, Bevy, Blender, and SP1 stay unbound."
