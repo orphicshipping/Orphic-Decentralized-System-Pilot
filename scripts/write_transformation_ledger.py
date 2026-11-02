@@ -31,11 +31,13 @@ def main():
     docs = []
     for path in paths:
         if path.endswith(".md"):
-            current = path in {"README.md", "docs/AGENT_OPERATIONS.md"}
+            current = path in {"README.md", "docs/AGENT_OPERATIONS.md", "docs/ODRP.md", "tools/odrp-private-host-candidate/README.md"}
             docs.append({
                 "path": path,
                 "status": "current_surface" if current else "not_re_audited",
-                "owner": "mcp/README and docs/AGENT_OPERATIONS.md" if current else "owning guide, not re-audited in this pass",
+                "owner": (path if path in {"docs/ODRP.md", "tools/odrp-private-host-candidate/README.md"} else
+                          "mcp/README and docs/AGENT_OPERATIONS.md" if current else
+                          "owning guide, not re-audited in this pass"),
             })
     (ROOT / "mcp" / "document-map.json").write_text(json.dumps({
         "schema": "ncp.document-map.v1",
