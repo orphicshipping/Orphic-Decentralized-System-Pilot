@@ -104,18 +104,33 @@ TOOLS = {
         {}, JSON_OBJECT, required=[]),
     "ncp_domain_run": _tool("domain_run", "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
         {"domain": {"type": "string", "enum": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]},
-         "name": {"type": "string", "minLength": 1, "maxLength": 80}}, JSON_OBJECT, required=["domain"], read=False),
+         "name": {"type": "string", "minLength": 1, "maxLength": 80},
+         "example": {"type": "boolean"},
+         "request": {"type": "object"}}, JSON_OBJECT, required=["domain"], read=False),
     "ncp_workbench_list": _tool("workbench_list", "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
         {}, JSON_OBJECT, required=[]),
     "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
         {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]},
-         "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000}}, JSON_OBJECT, required=["workflow"], read=False),
-    "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
-        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT),
+         "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000},
+         "upstream_artifact": {"type": "string", "minLength": 10, "maxLength": 80},
+         "upstream_artifacts": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "minLength": 10, "maxLength": 80}}}, JSON_OBJECT, required=["workflow"], read=False),
+    "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
+        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
+         "offset": {"type": "integer", "minimum": 0},
+         "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT, required=["artifact_id"]),
     "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
+    "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
+        {"action": {"type": "string", "enum": ["submit", "recall", "handoff", "claim", "recover"]},
+         "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 200},
+         "operation": {"type": "string", "enum": ["ncp_domain_run"]},
+         "arguments": {"type": "object"},
+         "exclusive": {"type": "string", "minLength": 1, "maxLength": 40},
+         "artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
+         "recipient": {"type": "string", "minLength": 1, "maxLength": 500},
+         "grant_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, required=["action"], read=False),
     "ncp_plug_in": _tool("plug_in", "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
         {}, JSON_OBJECT, required=[]),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
@@ -203,6 +218,8 @@ class ControlHost:
         self._executor = None
         self._plans, self._jobs = {}, {}
         self._semantic, self._names = semantic_registry(owner)
+        from .retention import Store
+        self.retained = Store("output:" + str(owner._check_output().resolve()))
         root = owner._check_output() / "control-state"
         try:
             if not resume:
@@ -652,29 +669,37 @@ class ControlHost:
         from .services import domain_list
         return domain_list()
 
-    def domain_run(self, domain, name=None):
+    def domain_run(self, domain, name=None, example=False, request=None):
         from .services import domain_run
-        return domain_run(domain, name)
+        return domain_run(domain, name=name, example=example, request=request, store=self.retained)
 
     def workbench_list(self):
         from .services import workbench_list
         return workbench_list()
 
-    def workbench_run(self, workflow, source_b64=None):
+    def workbench_run(self, workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None):
         from .services import workbench_run
-        return workbench_run(workflow, source_b64=source_b64)
+        return workbench_run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
+                             upstream_artifacts=upstream_artifacts, store=self.retained)
 
-    def retained_read(self, artifact_id):
+    def retained_read(self, artifact_id, offset=None, limit=None):
         from .services import retained_read
-        return retained_read(artifact_id)
+        return retained_read(artifact_id, offset=offset, limit=limit, store=self.retained)
 
     def retained_release(self, artifact_id):
         from .services import retained_release
-        return retained_release(artifact_id)
+        return retained_release(artifact_id, store=self.retained)
 
     def host_preflight(self):
         from .services import host_preflight
         return host_preflight()
+
+    def coordinate(self, action, idempotency_key=None, operation=None, arguments=None, exclusive=None,
+                   artifact_id=None, recipient=None, grant_id=None):
+        from .services import coordinate
+        return coordinate(action, idempotency_key=idempotency_key, operation=operation,
+                          arguments=arguments, exclusive=exclusive, artifact_id=artifact_id,
+                          recipient=recipient, grant_id=grant_id, store=self.retained)
 
     def plug_in(self):
         from .services import plug_in
@@ -697,6 +722,7 @@ class ControlHost:
                 for name, spec in sorted(TOOLS.items())]
 
     def call(self, name, arguments):
+        from .retention import RetainedFailure
         try:
             if self._closed or name not in TOOLS or len(encode(arguments)) > 65536:
                 raise ValueError("Unsupported request")
@@ -706,6 +732,10 @@ class ControlHost:
             if len(encode(value)) > MAX_RESPONSE:
                 raise ValueError("Response exceeds budget")
             return {"schema": "ncp.control-response.v1", "status": "ok", "data": value, "error": None}
+        except RetainedFailure as exc:
+            return {"schema": "ncp.control-response.v1", "status": "refused", "data": {
+                "artifact_id": exc.artifact_id, "failure_retained": True, "authorizes_execution": False},
+                "error": {"code": "request_refused", "artifact_id": exc.artifact_id}}
         except (ValueError, KeyError, TypeError, OSError, RecursionError):
             return self.refusal()
 

@@ -44,6 +44,16 @@
       "authorizes_execution": false
     },
     {
+      "name": "ncp_coordinate",
+      "service": "ciw.services.invoke",
+      "read_only": false,
+      "required": [
+        "action"
+      ],
+      "description": "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
+      "authorizes_execution": false
+    },
+    {
       "name": "ncp_demo",
       "service": "ciw.services.invoke",
       "read_only": true,
@@ -247,7 +257,7 @@
       "required": [
         "artifact_id"
       ],
-      "description": "Read one retained workbench bundle by the id returned from ncp_workbench_run. Not a filesystem path.",
+      "description": "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
       "authorizes_execution": false
     },
     {

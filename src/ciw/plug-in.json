@@ -1,0 +1,54 @@
+{
+  "schema": "ncp.mcp-plug-in.v1",
+  "product": "Notations Control Protocol",
+  "audience": ["language_models", "other_software"],
+  "not_a_human_console": true,
+  "authorizes_execution": false,
+  "qualification": "not_performed_by_this_file",
+  "protocol": {
+    "kind": "mcp",
+    "versions": ["2025-11-25", "2025-06-18"],
+    "methods": ["initialize", "ping", "tools/list", "tools/call"],
+    "transport": "stdio",
+    "command": ["python", "-m", "ciw.net", "control", "serve", "--profile", "<abs-profile.json>", "--instrument", "<instrument>"],
+    "host_selects": ["profile", "instrument"],
+    "tool_arguments_cannot_select": ["checkout", "interpreter", "pin"],
+    "argument_budget_bytes": 65536,
+    "response_budget_bytes": 262144
+  },
+  "bind": {
+    "first_call": "ncp_plug_in",
+    "then": ["ncp_index_list", "ncp_workbench_list", "ncp_domain_list"],
+    "sdk": "ciw.services.invoke",
+    "tool_index": "mcp/model-catalog.json",
+    "capability_map": "mcp/capability-map.json",
+    "transformation_ledger": "mcp/transformation-ledger.json",
+    "folder_index": "mcp/folder-index.json",
+    "project_map": "mcp/project-map.json",
+    "call_contract": "docs/MCP_MODEL.md",
+    "agent_guide": "docs/AGENT_OPERATIONS.md",
+    "resources": ["ncp://contract/plug-in", "ncp://contract/capability-map", "ncp://contract/verification"]
+  },
+  "rules": [
+    "Advertised, bound, and granted stay different. authorizes_execution stays false on index rows.",
+    "The same attempt returns the same run. A different request under that attempt refuses. Replay is a new occurrence.",
+    "Partial fields stay missing.",
+    "A folder, a file, and a line of code are not tool calls. Source paths stay because tests and pins import them.",
+    "A set of tasks does not opt for the easiest one. Name the task.",
+    "A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release."
+  ],
+  "not_grants": [
+    "SP1 proved heat as a proof",
+    "Julia",
+    "Godot",
+    "Bevy",
+    "Blender",
+    "the vendored leakage tree",
+    "the vendored BIM tree",
+    "a shell command"
+  ],
+  "human_console": {
+    "status": "not_the_product",
+    "retained_reference": "docs/OPERATOR_REFERENCE.md"
+  }
+}

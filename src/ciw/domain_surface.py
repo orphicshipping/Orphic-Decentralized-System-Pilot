@@ -7,6 +7,8 @@ Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not here.
 from __future__ import annotations
 
 from hashlib import sha256
+import base64
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -135,100 +137,235 @@ def _checks(report):
     })
 
 
-def _bundle(run, request):
+def _capture(directory: Path) -> tuple[dict, list]:
+    import os
+    files, omitted = {}, []
+    if not directory.is_dir():
+        return files, omitted
+    budget, used = 1_500_000, 0
+    for path in sorted(directory.rglob("*")):
+        if not path.is_file() and not path.is_symlink():
+            continue
+        rel = str(path.relative_to(directory))
+        if path.is_symlink():
+            omitted.append({"path": rel, "reason": "symlink"})
+            continue
+        size = path.stat().st_size
+        if size > 500_000 or used + size > budget:
+            omitted.append({"path": rel, "reason": "byte_budget", "byte_size": size})
+            continue
+        flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        try:
+            raw = os.read(fd, 500_001)
+        finally:
+            os.close(fd)
+        if len(raw) > 500_000:
+            omitted.append({"path": rel, "reason": "byte_budget", "byte_size": len(raw)})
+            continue
+        if path.suffix == ".json":
+            try:
+                files[rel] = json.loads(raw.decode("utf-8"))
+            except (UnicodeError, ValueError):
+                omitted.append({"path": rel, "reason": "unreadable_json", "byte_size": len(raw)})
+                continue
+        else:
+            files[rel] = {"byte_size": len(raw), "sha256": sha256(raw).hexdigest(),
+                          "b64": base64.b64encode(raw).decode("ascii")}
+        used += len(raw)
+    return files, omitted
+
+
+def _column(workflow, destination: Path):
+    session, candidate, _verification = workflow._read(destination)
+    request = workflow.source_request(session.run)
+    profile = None
+    if candidate is not None and type(candidate.get("data")) is dict:
+        profile = candidate["data"].get("profile")
+    return request, profile
+
+
+def _retain_failure(kind, message, files, store):
+    from .retention import RetainedFailure, _store
+    holder = store if store is not None else _store()
+    artifact_id = holder.keep_failure({
+        "kind": kind,
+        "error": message[:500],
+        "files": files,
+    })
+    return artifact_id
+
+
+def _complete(kind, workflow, prepared, store, used_example, *, require_profile=False):
+    from .retention import RetainedFailure
     parent = Path(tempfile.mkdtemp(prefix="ncp-domain-"))
+    destination = parent / "out"
     try:
-        return _checks(run(request, parent / "out"))
+        report = workflow.run(prepared, destination)
+        request, profile = _column(workflow, destination)
+        files, omitted = _capture(destination)
+        if type(request) is not dict or (require_profile and type(profile) is not dict):
+            raise ValueError("Native bundle was deleted before it was retained")
+        record = {"request": request, "files": files, "omitted": omitted, "inspection": report}
+        if profile is not None:
+            record["profile"] = profile
+        artifact_id = _retain(kind, record, store)
+    except RetainedFailure:
+        raise
+    except ValueError as exc:
+        files, omitted = _capture(destination)
+        artifact_id = _retain_failure(kind, str(exc), {"files": files, "omitted": omitted}, store)
+        raise RetainedFailure(str(exc), artifact_id) from exc
     finally:
         shutil.rmtree(parent, ignore_errors=True)
+    body = _checks(report)
+    body["artifact_id"] = artifact_id
+    body["omitted"] = omitted
+    body["bundle_retained"] = not omitted
+    body["example"] = used_example
+    body["retained_fields"] = ["request", "profile", "files"] if require_profile else ["request", "files"]
+    return body
 
 
-def _atmosphere(_name):
-    from .atmosphere_contract import example_request
-    from .atmosphere_workflow import run
-    return _bundle(run, example_request())
+def _retain(kind, value, store=None):
+    from .retention import _store
+    if type(value) is not dict:
+        raise ValueError("Domain result is not a record")
+    try:
+        json.dumps(value)
+    except TypeError:
+        value = json.loads(json.dumps(value, default=lambda item: item.tolist() if hasattr(item, "tolist") else item.item()))
+    holder = store if store is not None else _store()
+    return holder.keep(value, kind=kind, catalog={"schema": "ncp.domain-result.v1", "kind": kind})
 
 
-def _moist(_name):
-    from .atmosphere_moist_contract import example_request
-    from .atmosphere_workflow import run
-    return _bundle(run, example_request())
+def _prepared(request, example, factory, validate):
+    if example is True and request is not None:
+        raise ValueError("Name a request or an example, not both.")
+    if request is None:
+        if example is not True:
+            raise ValueError("Name a request or set example true. This call does not substitute an example.")
+        return factory(), True
+    if type(request) is not dict:
+        raise ValueError("Domain request must be an object")
+    checked = validate(request)
+    return (request if checked is None else checked), False
 
 
-def _weather(name):
-    from .weather_contract import example_request
-    from .weather_workflow import run
-    return _bundle(run, example_request(name))
+def _atmosphere(_name, request=None, example=False, store=None):
+    from . import atmosphere_workflow as workflow
+    from .atmosphere_contract import example_request, validate_request
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    return _complete("atmosphere", workflow, prepared, store, used_example, require_profile=True)
 
 
-def _impact(name):
-    from .impact_workflow import run
+def _moist(_name, request=None, example=False, store=None):
+    from . import atmosphere_workflow as workflow
+    from .atmosphere_moist_contract import example_request, validate_request
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    return _complete("atmosphere-moist", workflow, prepared, store, used_example, require_profile=True)
+
+
+def _weather(name, request=None, example=False, store=None):
+    from . import weather_workflow as workflow
+    from .weather_contract import example_request, validate_request
+    if request is not None and request.get("profile") != name:
+        raise ValueError("weather_profile_mismatch: named task was not executed")
+    prepared, used_example = _prepared(request, example, lambda: example_request(name), validate_request)
+    if prepared.get("profile") != name:
+        raise ValueError("weather_profile_mismatch: named task was not executed")
+    return _complete("weather", workflow, prepared, store, used_example)
+
+
+def _impact(name, request=None, example=False, store=None):
+    from . import impact_workflow as workflow
     if name == "contact":
-        from .impact_contract import example_request
+        from .impact_contract import example_request, validate_request
     elif name == "plate":
-        from .impact_plate_contract import example_request
+        from .impact_plate_contract import example_request, validate_request
     elif name == "crush":
-        from .impact_crush_contract import example_request
+        from .impact_crush_contract import example_request, validate_request
     else:
         raise ValueError("Impact name must be contact, plate, or crush")
-    return _bundle(run, example_request())
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    return _complete("impact", workflow, prepared, store, used_example)
 
 
-def _irrigation(_name):
-    from .irrigation_contract import example_request
-    from .irrigation_workflow import run
-    return _bundle(run, example_request())
+def _irrigation(_name, request=None, example=False, store=None):
+    from . import irrigation_workflow as workflow
+    from .irrigation_contract import example_request, validate_request
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    return _complete("irrigation", workflow, prepared, store, used_example)
 
 
-def _geomatics(name):
+def _geomatics(name, request=None, example=False, store=None):
     from .core.identities import canonical_json
-    from .geomatics_workflow import example
+    from .geomatics_workflow import example as geomatics_example, validate_request
     from net_geomatics.catalog import execute, validate_output
-    request = example(name)
-    output = execute(name, request["parameters"])
-    validate_output(name, request["parameters"], output)
-    return _stamp({
+    prepared, used_example = _prepared(request, example, lambda: geomatics_example(name), validate_request)
+    if prepared.get("operation_id") != name:
+        raise ValueError("Geomatics request does not match the named task")
+    output = execute(name, prepared["parameters"])
+    validate_output(name, prepared["parameters"], output)
+    body = _stamp({
         "status": "PASS",
         "output_digest": sha256(canonical_json(output).encode()).hexdigest(),
-        "field_retained": False,
+        "field_retained": True,
+        "example": used_example,
         "authority": {"physical_validation": "not_established", "source_authenticity": "not_established"},
     })
+    body["artifact_id"] = _retain("geomatics", {"request": prepared, "output": output}, store)
+    return body
 
 
-def _thermo(name):
-    from .thermofluids_models import example_request
+def _thermo(name, request=None, example=False, store=None):
+    from .thermofluids_models import example_request, validate_request
     from .thermofluids_workflow import run, verify
-    record = run(example_request(name))
+    prepared, used_example = _prepared(request, example, lambda: example_request(name), validate_request)
+    if prepared.get("profile") != name:
+        raise ValueError("Thermofluids request does not match the named task")
+    record = run(prepared)
     report = verify(record)
-    return _stamp({
+    body = _stamp({
         "status": report["status"],
         "record_digest": record["record_digest"],
         "authority": record["authority"],
-        "data_retained": False,
+        "data_retained": True,
+        "example": used_example,
     })
+    body["artifact_id"] = _retain("thermofluids", record, store)
+    return body
 
 
-def _sequence(_name):
-    from .sequence_kinetics import example_request, analyze
-    report = analyze(example_request())
-    return _stamp({
+def _sequence(_name, request=None, example=False, store=None):
+    from .sequence_kinetics import example_request, analyze, validate_request
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    report = analyze(prepared)
+    body = _stamp({
         "status": report["status"],
         "schema": report["schema"],
         "source_kind": report["source_kind"],
         "markov_entropy_rate_nats_per_symbol": report["markov_entropy_rate_nats_per_symbol"],
+        "example": used_example,
     })
+    body["artifact_id"] = _retain("sequence", report, store)
+    return body
 
 
-def _identify(_name):
-    from .thermal_identification import example_request, fit
-    report = fit(example_request())
-    return _stamp({
+def _identify(_name, request=None, example=False, store=None):
+    from .thermal_identification import example_request, fit, validate_request
+    prepared, used_example = _prepared(request, example, example_request, validate_request)
+    report = fit(prepared)
+    body = _stamp({
         "status": report["status"],
         "schema": report["schema"],
         "authority": report["authority"],
         "record_digest": report["record_digest"],
-        "residuals_retained": False,
+        "residuals_retained": True,
+        "example": used_example,
     })
+    body["artifact_id"] = _retain("thermal-identification", report, store)
+    return body
 
 
 _CALLS = {
@@ -247,9 +384,15 @@ for _capability_id, _domain, _name, _summary in OPERATIONS:
     _NAMES.setdefault(_domain, set()).add(_name)
 
 
-def run(domain, name=None):
+def run(domain, name=None, example=False, request=None, store=None):
     if domain not in _CALLS:
         raise ValueError("Unknown domain. Call ncp_domain_list.")
+    if example is True and request is not None:
+        raise ValueError("Name a request or an example, not both.")
+    if example is not True and request is None:
+        raise ValueError("Name a request or set example true. This call does not substitute an example.")
+    if request is not None and len(json.dumps(request)) > 65536:
+        raise ValueError("Request exceeds the argument budget")
     allowed = _NAMES[domain]
     if None in allowed:
         if name is not None:
@@ -263,7 +406,7 @@ def run(domain, name=None):
         choices = ", ".join(sorted(item for item in allowed if item is not None))
         raise ValueError("Unknown name for " + domain + ". Use one of: " + choices)
     try:
-        body = _CALLS[domain](name)
+        body = _CALLS[domain](name, request=request, example=example, store=store)
     except ValueError:
         raise
     except (KeyError, TypeError, OSError) as exc:

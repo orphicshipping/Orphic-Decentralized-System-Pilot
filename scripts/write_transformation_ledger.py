@@ -19,6 +19,30 @@ def main():
         json.dumps(ledger, indent=2) + "\n", encoding="utf-8")
     (ROOT / "mcp" / "capability-map.json").write_text(
         json.dumps(capability_map(), indent=2) + "\n", encoding="utf-8")
+    packaged = ROOT / "src" / "ciw"
+    copies = {
+        packaged / "plug-in.json": ROOT / "mcp" / "plug-in.json",
+        packaged / "capability-map.json": ROOT / "mcp" / "capability-map.json",
+        packaged / "verification-report.json": ROOT / "mcp" / "verification-report.json",
+        packaged / "capability-ledger.json": ROOT / "release" / "capability-ledger.json",
+    }
+    for dest, src in copies.items():
+        dest.write_bytes(src.read_bytes())
+    docs = []
+    for path in paths:
+        if path.endswith(".md"):
+            current = path in {"README.md", "docs/AGENT_OPERATIONS.md"}
+            docs.append({
+                "path": path,
+                "status": "current_surface" if current else "not_re_audited",
+                "owner": "mcp/README and docs/AGENT_OPERATIONS.md" if current else "owning guide, not re-audited in this pass",
+            })
+    (ROOT / "mcp" / "document-map.json").write_text(json.dumps({
+        "schema": "ncp.document-map.v1",
+        "authorizes_execution": False,
+        "note": "current_surface is the operating contract. not_re_audited is not a claim that the page is historical or current.",
+        "documents": docs,
+    }, indent=2) + "\n", encoding="utf-8")
     print(f"ledger {len(paths)} {ledger['counts']}")
 
 

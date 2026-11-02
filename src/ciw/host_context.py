@@ -12,6 +12,24 @@ from pathlib import Path
 
 SCHEMA = "ncp.host-bindings.v1"
 ENV = "NCP_HOST_MANIFEST"
+_MANIFEST_LIMIT = 65536
+
+
+def _read_bounded(path: Path, limit: int) -> bytes:
+    if path.is_symlink():
+        raise ValueError("Host file must be a regular file")
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0)
+    try:
+        fd = os.open(path, flags)
+    except OSError as exc:
+        raise ValueError("Host file is not readable") from exc
+    try:
+        raw = os.read(fd, limit + 1)
+    finally:
+        os.close(fd)
+    if len(raw) > limit:
+        raise ValueError("Host file exceeds the byte budget")
+    return raw
 
 
 def manifest_path() -> Path | None:
@@ -28,7 +46,8 @@ def load() -> dict:
     path = manifest_path()
     if path is None:
         return {"schema": SCHEMA, "authorization": "absent", "workflows": {}}
-    value = json.loads(path.read_text(encoding="utf-8"))
+    raw = _read_bounded(path, _MANIFEST_LIMIT)
+    value = json.loads(raw.decode("utf-8"))
     if type(value) is not dict or value.get("schema") != SCHEMA:
         raise ValueError("Host manifest schema refused")
     if value.get("authorization") != "operator":
@@ -57,6 +76,10 @@ def load() -> dict:
             if type(inputs) is not str or not Path(inputs).is_absolute():
                 raise ValueError("Host manifest input must be an absolute path")
             cleaned[name]["inputs"] = Path(inputs)
+        if "configuration" in item:
+            if type(item["configuration"]) is not dict:
+                raise ValueError("Host manifest configuration must be an object")
+            cleaned[name]["configuration"] = item["configuration"]
     return {"schema": SCHEMA, "authorization": "operator", "workflows": cleaned}
 
 
@@ -78,6 +101,13 @@ def input_path(workflow: str) -> Path | None:
     return item.get("inputs")
 
 
+def configuration_for(workflow: str):
+    item = load()["workflows"].get(workflow)
+    if item is None:
+        return None
+    return item.get("configuration")
+
+
 def preflight() -> dict:
     """Record what the operator manifest declares. This does not run a provider."""
     document = load()
@@ -96,11 +126,15 @@ def preflight() -> dict:
             "roles": roles,
             "input_declared": source is not None,
             "input_exists": bool(source and source.is_file()),
+            "runtime_ready": False,
+            "pin_checked": False,
+            "source_checked": False,
+            "readiness": "declared_only",
         })
     return {
         "schema": "ncp.host-preflight.v1",
         "authorization": document["authorization"],
         "workflows": rows,
         "authorizes_execution": False,
-        "note": "Declaration is not approval of a different engine and not a qualification.",
+        "note": "exists is a declaration. runtime_ready, pin_checked and source_checked stay false here. Preflight does not run the provider.",
     }

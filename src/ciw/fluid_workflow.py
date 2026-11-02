@@ -473,3 +473,35 @@ def reduce_particles(destination: Path, output: Path, *, sample_index: int, bins
     return {"status": "LOCAL", "file": str(output), "profile": checked["profile"],
             "map_digest": mapped["record_digest"], "fresh_verification_id": checked["fresh_verification_id"],
             "scope": "instantaneous finite mass, momentum and kinetic-energy accounting; no constitutive closure"}
+
+
+def bounded_request(profile: str) -> dict:
+    """Smallest contract-legal fluid request. This does not solve."""
+    import math
+    from .fluid_contract import ALL_PROFILES, example_request, module
+    if profile not in ALL_PROFILES:
+        raise ValueError("Unsupported fluid profile")
+    request = example_request(profile)
+    if profile == "reservoir":
+        request["clock"]["duration_s"] = 0.08
+        request["clock"]["coarse_step_count"] = 8
+    elif profile == "wave":
+        request["integration"]["cells"] = 32
+        request["integration"]["steps"] = 32
+        speed = module("wave").wave_speed_m_per_s(request["model"])
+        request["integration"]["duration_s"] = 0.1 * request["model"]["length_m"] / speed
+    elif profile == "sph":
+        request["integration"]["particles"] = 32
+        request["integration"]["steps"] = 32
+        length = request["model"]["length_m"]
+        speed = request["model"]["sound_speed_m_per_s"]
+        request["integration"]["duration_s"] = 0.05 * length / speed
+    elif profile == "molecular":
+        request["integration"]["steps"] = 32
+        request["integration"]["duration_reduced"] = 0.1
+    elif profile == "fsi":
+        request["integration"]["cells"] = 16
+        request["integration"]["steps"] = 16
+        mode = module("fsi").mode_parameters(request)
+        request["integration"]["duration_s"] = 0.05 * 2 * math.pi / mode["angular_frequency_per_s"]
+    return request

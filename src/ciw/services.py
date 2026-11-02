@@ -17,9 +17,9 @@ def domain_list():
     return listing()
 
 
-def domain_run(domain, name=None):
+def domain_run(domain, name=None, example=False, request=None, store=None):
     from .domain_surface import run
-    return run(domain, name)
+    return run(domain, name=name, example=example, request=request, store=store)
 
 
 def workbench_list():
@@ -27,19 +27,32 @@ def workbench_list():
     return listing()
 
 
-def workbench_run(workflow, source_b64=None):
+def workbench_run(workflow, source_b64=None, upstream_artifact=None, upstream_artifacts=None, store=None):
     from .workbench_surface import run
-    return run(workflow, source_b64=source_b64)
+    return run(workflow, source_b64=source_b64, upstream_artifact=upstream_artifact,
+               upstream_artifacts=upstream_artifacts, store=store)
 
 
-def retained_read(artifact_id):
-    from .retention import bounded
-    return bounded(artifact_id)
+def retained_read(artifact_id, offset=None, limit=None, store=None):
+    from .retention import _store, page
+    target = store if store is not None else _store()
+    if offset is None and limit is None:
+        return target.bounded(artifact_id)
+    return target.page(artifact_id, 0 if offset is None else offset, 32768 if limit is None else limit)
 
 
-def retained_release(artifact_id):
-    from .retention import release
-    return release(artifact_id)
+def retained_release(artifact_id, store=None):
+    from .retention import _store
+    target = store if store is not None else _store()
+    return target.release(artifact_id)
+
+
+def coordinate(action, idempotency_key=None, operation=None, arguments=None, exclusive=None,
+               artifact_id=None, recipient=None, grant_id=None, store=None):
+    from .coordinator import coordinate as run
+    return run(action, store=store, idempotency_key=idempotency_key, operation=operation,
+               arguments=arguments, exclusive=exclusive, artifact_id=artifact_id,
+               recipient=recipient, grant_id=grant_id)
 
 
 def host_preflight():
@@ -49,9 +62,7 @@ def host_preflight():
 
 def ledger_read(capability_id):
     import json
-    from pathlib import Path
-    ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
-    rows = json.loads(ledger_path.read_text(encoding="utf-8"))["capabilities"]
+    rows = json.loads(_packaged_text("capability-ledger.json"))["capabilities"]
     for item in rows:
         if item["id"] == capability_id:
             return {
@@ -147,16 +158,11 @@ def hypergraph():
 
 
 def fluid_field(solver):
-    import importlib.util
-    from pathlib import Path
     from .fluid_contract import simulate, verify
+    from .fluid_workflow import bounded_request
     if solver not in {"wave", "sph"}:
         raise ValueError("ncp_fluid_field accepts wave or sph. Reservoir, molecular, and FSI are plan profiles.")
-    path = Path(__file__).resolve().parents[2] / "examples" / "fluid_operations" / "prepare.py"
-    spec = importlib.util.spec_from_file_location("fluid_operations_prepare", path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    request = module.bounded_request(solver)
+    request = bounded_request(solver)
     result = simulate(request)
     report = verify(request, result)
     qualification = report["qualification"]
@@ -199,21 +205,14 @@ def polymer_cycle():
 
 
 def toolpoint():
-    import importlib.util
     import shutil
     import tempfile
     from pathlib import Path
-    from .data_manufacturing_bridge import review
+    from .data_manufacturing_bridge import prepare_toolpoint, review
     from .workbench import Workbench
     destination = Path(tempfile.mkdtemp(prefix="ncp-toolpoint-"))
     try:
-        spec = importlib.util.spec_from_file_location(
-            "ncp_data_prepare",
-            Path(__file__).resolve().parents[2] / "examples" / "data_operations" / "prepare.py",
-        )
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        parameters = module._toolpoint(Workbench(), destination)
+        parameters = prepare_toolpoint(Workbench(), destination)
         result = review(parameters)
     finally:
         shutil.rmtree(destination, ignore_errors=True)
@@ -225,24 +224,37 @@ def toolpoint():
 
 
 CONTRACTS = {
-    "ncp://contract/plug-in": ("mcp/plug-in.json", "Plug-in contract"),
-    "ncp://contract/capability-map": ("mcp/capability-map.json", "Capability map"),
-    "ncp://contract/verification": ("mcp/verification-report.json", "Verification report"),
+    "ncp://contract/plug-in": "plug-in.json",
+    "ncp://contract/capability-map": "capability-map.json",
+    "ncp://contract/verification": "verification-report.json",
 }
+
+
+def _packaged_text(name: str) -> str:
+    from pathlib import Path
+    packaged = Path(__file__).resolve().parent / name
+    checkout = {
+        "plug-in.json": Path(__file__).resolve().parents[2] / "mcp" / "plug-in.json",
+        "capability-map.json": Path(__file__).resolve().parents[2] / "mcp" / "capability-map.json",
+        "verification-report.json": Path(__file__).resolve().parents[2] / "mcp" / "verification-report.json",
+        "capability-ledger.json": Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json",
+    }[name]
+    if packaged.is_file() and checkout.is_file() and packaged.read_bytes() != checkout.read_bytes():
+        raise RuntimeError(name + " drifted from the packaged copy")
+    path = packaged if packaged.is_file() else checkout
+    return path.read_text(encoding="utf-8")
 
 
 def list_contracts():
     return [{"uri": uri, "name": name, "mimeType": "application/json"}
-            for uri, (_relative, name) in CONTRACTS.items()]
+            for uri, name in CONTRACTS.items()]
 
 
 def read_contract(uri):
     import json
-    from pathlib import Path
     if uri not in CONTRACTS:
         raise ValueError("Resource unavailable")
-    relative, _name = CONTRACTS[uri]
-    value = json.loads((Path(__file__).resolve().parents[2] / relative).read_text(encoding="utf-8"))
+    value = json.loads(_packaged_text(CONTRACTS[uri]))
     if isinstance(value, dict):
         value["authorizes_execution"] = False
     return value
@@ -271,6 +283,7 @@ OPERATIONS = {
     "ncp_workbench_run": workbench_run,
     "ncp_retained_read": retained_read,
     "ncp_retained_release": retained_release,
+    "ncp_coordinate": coordinate,
     "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,
@@ -311,9 +324,15 @@ def invoke(name, arguments=None, host=None):
     arguments = {} if arguments is None else arguments
     if type(arguments) is not dict:
         raise ValueError("Service arguments must be an object")
-    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository"}
+    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository", "configuration"}
     if forbidden & set(arguments):
         raise ValueError("Service arguments cannot select a checkout or a pin")
+    from .agent_api import encode
+    from .agent_tools import _shape
+    from .control_gateway import TOOLS
+    if name not in TOOLS or len(encode(arguments)) > 65536:
+        raise ValueError("Request exceeds the argument budget")
+    _shape(arguments, TOOLS[name]["inputSchema"])
     if name in SESSION:
         if host is None:
             raise ValueError("This operation needs open_demo. A folder is not a session.")
@@ -321,6 +340,13 @@ def invoke(name, arguments=None, host=None):
         if response["status"] != "ok":
             raise ValueError("request_refused")
         return response["data"]
+    store = None
+    if host is not None:
+        store = getattr(host, "retained", None)
+        if store is None:
+            raise ValueError("This host has no retained store")
+    if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate"}:
+        return OPERATIONS[name](**arguments, store=store)
     if host is not None:
         raise ValueError("This operation does not take a session")
     return OPERATIONS[name](**arguments)

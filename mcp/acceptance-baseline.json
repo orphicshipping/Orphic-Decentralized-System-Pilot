@@ -1,0 +1,18 @@
+{
+  "schema": "ncp.acceptance-baseline.v1",
+  "status": "INCOMPLETE",
+  "authorizes_execution": false,
+  "base": "07750eebec516a45986fc613ca206e4041380ebb",
+  "follow_up_merged_into_branch": ["de65623", "06ec68a"],
+  "gates": {
+    "A0": "Main 07750ee merged into mcp/model-call-surface. The two follow-up commits were not on main. This file does not merge a pull request.",
+    "A1": "Each ControlHost retains under its own output directory. A second host cannot read that artifact, and filling the second host does not evict the first. Restart requires that same output directory and NCP_RETAIN_DIR.",
+    "A2": "A real project-graph catalog composed with itself restores as one bundle. Conflicting identities and cycles still refuse. No bound chained workflow was executed.",
+    "A3": "SDK and MCP share the schema check, including boolean example. Preflight remains declared_only.",
+    "A4": "The provider-free domains accept a caller request through the existing validator. example true remains the labelled fixture. Results stay on the calling host. This is not a physical check.",
+    "A5": "Not done. The transformation ledger still accounts for tracked paths. A document supersession map was not generated.",
+    "A6": "Not done. Specialist hosts stay separate.",
+    "A7": "Blocked. Julia, SP1, Godot, Bevy, Blender, leakage, and BIM were not provisioned or executed.",
+    "A8": "pip install --target outside the checkout imports ciw and returns the plug-in schema. The sandbox interpreter is older than the declared Python 3.11 requirement, so the install used --ignore-requires-python. This is not a clean 3.11 environment and not hosted CI."
+  }
+}
