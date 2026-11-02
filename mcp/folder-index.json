@@ -4989,6 +4989,12 @@
       "contract": "tests/fixtures/rs/MCP.md"
     },
     {
+      "path": "tests/private_host_qualification",
+      "class": "evidence",
+      "call": "none",
+      "contract": "tests/private_host_qualification/MCP.md"
+    },
+    {
       "path": "tests/reference_data",
       "class": "evidence",
       "call": "none",

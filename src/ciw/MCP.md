@@ -7,7 +7,7 @@
 
 The `ncp_*` gateway lives in this package, including `control_gateway.py` and `domain_surface.py`. A module path is not a grant.
 
-Tracked files here, none of them a tool call: `README.md`, `__init__.py`, `__main__.py`, `acquired_dataset.py`, `acquired_window.py`, `adapter-runtimes.json`, `agent_api.py`, `agent_experiment.py` (657 more).
+Tracked files here, none of them a tool call: `README.md`, `__init__.py`, `__main__.py`, `acquired_dataset.py`, `acquired_window.py`, `adapter-runtimes.json`, `agent_api.py`, `agent_experiment.py` (660 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

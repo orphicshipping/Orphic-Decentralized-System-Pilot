@@ -7,7 +7,7 @@
 
 Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.
 
-Tracked files here, none of them a tool call: `README.md`, `adapter.py`, `gateway.mjs`, `test_adapter.py`, `test_gateway.mjs`, `test_installed_discovery.py`, `test_reference_adapter.py`, `test_worker.mjs` (1 more).
+Tracked files here, none of them a tool call: `README.md`, `adapter.py`, `conftest.py`, `gateway.mjs`, `release.mjs`, `storage.mjs`, `storage_fixture.mjs`, `storage_fixture.py` (9 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

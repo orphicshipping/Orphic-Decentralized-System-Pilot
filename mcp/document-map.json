@@ -1344,12 +1344,22 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/PRIVATE_HOST_OPERATIONS.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/PRIVATE_MCP_HOST_ACCEPTANCE.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
     {
       "path": "docs/PRIVATE_MCP_HOST_SPEC.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/PRIVATE_RELEASE_CONTRACT.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -5760,6 +5770,16 @@
     },
     {
       "path": "tests/fixtures/rs/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tests/private_host_qualification/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tests/private_host_qualification/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },

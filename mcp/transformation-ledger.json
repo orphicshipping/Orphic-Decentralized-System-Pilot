@@ -9,8 +9,8 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2747,
-    "generated": 243,
+    "retained_and_verified": 2775,
+    "generated": 244,
     "rewritten": 46,
     "blocked": 109,
     "vendor_exempt": 2798
@@ -3132,6 +3132,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "docs/PRIVATE_HOST_OPERATIONS.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
       "path": "docs/PRIVATE_MCP_HOST_ACCEPTANCE.md",
       "disposition": "retained_and_verified",
       "component": "record",
@@ -3140,6 +3147,13 @@
     },
     {
       "path": "docs/PRIVATE_MCP_HOST_SPEC.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/PRIVATE_RELEASE_CONTRACT.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -27618,6 +27632,27 @@
       "authorizes_execution": false
     },
     {
+      "path": "release/private-host-contract.json",
+      "disposition": "retained_and_verified",
+      "component": "ledger",
+      "reason": "Capability ledger. Read with ncp_ledger_read. qualified stays not_assessed.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "release/private-host-gaps.json",
+      "disposition": "retained_and_verified",
+      "component": "ledger",
+      "reason": "Capability ledger. Read with ncp_ledger_read. qualified stays not_assessed.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "release/private-qualification-policy.json",
+      "disposition": "retained_and_verified",
+      "component": "ledger",
+      "reason": "Capability ledger. Read with ncp_ledger_read. qualified stays not_assessed.",
+      "authorizes_execution": false
+    },
+    {
       "path": "release/qualification-policy.json",
       "disposition": "retained_and_verified",
       "component": "ledger",
@@ -28144,6 +28179,13 @@
     },
     {
       "path": "scripts/build_device_boundary_guest.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "scripts/build_private_release.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
@@ -28759,6 +28801,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "scripts/check_private_host_qualification.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
       "path": "scripts/check_procedural_installed.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
@@ -29151,6 +29200,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "scripts/record_private_image.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
       "path": "scripts/render_foundry_asset.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
@@ -29201,6 +29257,13 @@
     },
     {
       "path": "scripts/run_thermal_observation_demo.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "scripts/seal_private_wheelhouse.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
@@ -29271,6 +29334,13 @@
     },
     {
       "path": "scripts/tests/test_operator_artifact.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "scripts/tests/test_private_release_build.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
@@ -32987,6 +33057,27 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/principal_mcp.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/principal_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/private_release.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/procedural_cli.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -34863,6 +34954,34 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/private_host_qualification/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/private_host_qualification/README.md",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/private_host_qualification/journeys.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/private_host_qualification/test_acceptance.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/reference_data/MCP.md",
       "disposition": "generated",
       "component": "folder_contract",
@@ -35389,6 +35508,13 @@
     },
     {
       "path": "tests/test_coordinator_multiprocess.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_coordinator_recovery_transfer.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -37523,6 +37649,20 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_principal_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_private_release.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_procedural_core.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -37888,6 +38028,13 @@
     },
     {
       "path": "tests/test_response_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_retention_capacity_policy.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -39105,7 +39252,49 @@
       "authorizes_execution": false
     },
     {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/conftest.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/gateway.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/release.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/storage.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/storage_fixture.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/storage_fixture.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/storage_process_fixture.mjs",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Maintenance console or view. No required workflow depends on a human screen.",
@@ -39134,6 +39323,20 @@
     },
     {
       "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_reference_adapter.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_release.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/tools/private-mcp-host/test_storage.mjs",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Maintenance console or view. No required workflow depends on a human screen.",
