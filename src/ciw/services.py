@@ -55,6 +55,11 @@ def coordinate(action, idempotency_key=None, operation=None, arguments=None, exc
                recipient=recipient, grant_id=grant_id)
 
 
+def specialist_list():
+    from .specialist_surface import listing
+    return listing()
+
+
 def host_preflight():
     from .host_context import preflight
     return preflight()
@@ -284,6 +289,7 @@ OPERATIONS = {
     "ncp_retained_read": retained_read,
     "ncp_retained_release": retained_release,
     "ncp_coordinate": coordinate,
+    "ncp_specialist_list": specialist_list,
     "ncp_host_preflight": host_preflight,
     "ncp_ledger_read": ledger_read,
     "ncp_doctor": doctor,

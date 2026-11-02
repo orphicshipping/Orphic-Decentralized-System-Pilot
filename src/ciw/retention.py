@@ -21,9 +21,10 @@ _LIMIT = 32
 _BYTE_LIMIT = 4_000_000
 _PAGE = 32768
 _OWNER = os.environ.get("NCP_RETAIN_OWNER") or secrets.token_hex(16)
-# Linux flock is what this sandbox executes. Windows uses msvcrt when that
-# module exists. Any other platform refuses instead of skipping the lock.
-SUPPORTED_PLATFORMS = ("posix", "nt")
+# Linux flock plus O_NOFOLLOW and directory fsync is what this sandbox executes.
+# A platform without those flags is refused. Windows locking alone is not a
+# qualified storage boundary.
+SUPPORTED_PLATFORMS = ("posix",)
 
 
 class RetainedFailure(ValueError):
@@ -102,6 +103,7 @@ class Store:
         return artifact_id
 
     def _evict(self, directory: Path, prefix: str, target: Path) -> None:
+        pinned = _pinned_names(directory)
         ranked = []
         total = 0
         for old in directory.glob(prefix + "*.json"):
@@ -115,17 +117,18 @@ class Store:
             ranked.append((sequence if type(sequence) is int else 0, size, old))
             total += size
         ranked.sort(key=lambda item: item[0])
-        overflow = ranked[:-_LIMIT]
-        for _sequence, size, old in overflow:
-            if old != target:
-                old.unlink(missing_ok=True)
-                total -= size
         for _sequence, size, old in ranked:
-            if total <= _BYTE_LIMIT or old == target:
+            if total <= _BYTE_LIMIT and len(ranked) <= _LIMIT:
                 break
-            if old not in {item[2] for item in overflow}:
-                old.unlink(missing_ok=True)
-                total -= size
+            if old == target or old.name in pinned:
+                continue
+            old.unlink(missing_ok=True)
+            total -= size
+            ranked = [item for item in ranked if item[2] != old]
+        if total > _BYTE_LIMIT or len(list(directory.glob(prefix + "*.json"))) > _LIMIT:
+            if target.name not in pinned and target.is_file():
+                target.unlink(missing_ok=True)
+            raise ValueError("Live job artifacts fill the retention quota")
 
     def keep(self, bundle: dict, *, kind: str, catalog: dict) -> str:
         with _LOCK:
@@ -250,9 +253,37 @@ def _transaction(directory: Path):
     return _Guard()
 
 
+def _pinned_names(directory: Path) -> set[str]:
+    names = set()
+    for path in directory.glob("idem-*.json"):
+        if path.is_symlink() or not path.is_file():
+            continue
+        try:
+            job = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        artifact = job.get("artifact_id") if type(job) is dict else None
+        if type(artifact) is str and artifact.startswith(("retained-", "failure-")) and "/" not in artifact:
+            names.add(artifact + ".json")
+    return names
+
+
+def _sync_directory(directory: Path) -> None:
+    flag = getattr(os, "O_DIRECTORY", None)
+    if os.name != "posix" or flag is None or not hasattr(os, "O_NOFOLLOW"):
+        raise ValueError("Retention storage is unsupported on this platform")
+    fd = os.open(directory, os.O_RDONLY | flag)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
 def _publish(directory: Path, name: str, raw: bytes) -> None:
+    if len(raw) > _BYTE_LIMIT:
+        raise ValueError("Retained artifact exceeds the byte budget")
     partial = directory / (name + ".partial")
-    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | os.O_NOFOLLOW
     fd = os.open(partial, flags, 0o600)
     try:
         os.write(fd, raw)
@@ -260,6 +291,7 @@ def _publish(directory: Path, name: str, raw: bytes) -> None:
     finally:
         os.close(fd)
     os.replace(partial, directory / name)
+    _sync_directory(directory)
 
 
 def _allocate(directory: Path) -> int:

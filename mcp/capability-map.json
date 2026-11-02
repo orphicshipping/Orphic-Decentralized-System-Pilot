@@ -303,6 +303,14 @@
       "authorizes_execution": false
     },
     {
+      "name": "ncp_specialist_list",
+      "service": "ciw.services.invoke",
+      "read_only": true,
+      "required": [],
+      "description": "List specialist hosts that stay separate. Presence is not a grant and this call does not run them.",
+      "authorizes_execution": false
+    },
+    {
       "name": "ncp_toolpoint",
       "service": "ciw.services.invoke",
       "read_only": false,

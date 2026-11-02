@@ -384,6 +384,16 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
             env=env,
         )
         assert invoked.strip() == b"ncp.mcp-plug-in.v1"
+        ran = subprocess.check_output(
+            [sys.executable, "-c",
+             "from ciw.sequence_kinetics import example_request; from ciw.services import invoke; "
+             "body = invoke('ncp_domain_run', {'domain': 'sequence', 'request': example_request()}); "
+             "page = invoke('ncp_retained_read', {'artifact_id': body['artifact_id'], 'offset': 0, 'limit': 32}); "
+             "print(body['example']); print(page['schema'])"],
+            cwd="/tmp",
+            env=env,
+        )
+        assert ran.splitlines() == [b"False", b"ncp.retained-page.v1"]
     finally:
         import shutil
         shutil.rmtree(ROOT / "build", ignore_errors=True)
@@ -555,3 +565,45 @@ def test_same_key_is_admitted_once_and_a_dead_worker_is_recovered(tmp_path, monk
     finally:
         left.close()
         left.owner.close()
+
+
+def test_live_jobs_are_not_evicted_and_another_process_cannot_read_them(tmp_path, monkeypatch):
+    monkeypatch.setenv("NCP_RETAIN_DIR", str(tmp_path / "retain"))
+    import json
+    import os
+    import subprocess
+    import sys
+    from ciw.retention import Store
+    from ciw.services import invoke
+    owner = Store("process-a")
+    kept = owner.keep({"bundle_digest": "pinned", "n": 0}, kind="project-graph",
+                      catalog={"schema": "ciw.retained-workbench.v1", "revision": 0, "sources": [], "bundles": []})
+    from ciw.coordinator import _idem_name, _store_job
+    _store_job(owner, _idem_name("pinned-job"), {
+        "schema": "ncp.coordinator-job.v1", "status": "completed", "artifact_id": kept,
+        "executions": 1, "authorizes_execution": False,
+    })
+    catalog = {"schema": "ciw.retained-workbench.v1", "revision": 0, "sources": [], "bundles": []}
+    for index in range(40):
+        owner.keep({"bundle_digest": str(index), "n": index}, kind="project-graph", catalog=catalog)
+    assert owner.native(kept)["bundle_digest"] == "pinned"
+    hosts = invoke("ncp_specialist_list")
+    assert hosts["authorizes_execution"] is False
+    assert all(row["grants_shared"] is False and row["executed"] is False for row in hosts["hosts"])
+    script = (
+        "import json,os\n"
+        "from ciw.retention import Store\n"
+        "try:\n"
+        "    Store(os.environ['OTHER']).native(os.environ['ARTIFACT'])\n"
+        "except ValueError as exc:\n"
+        "    print(exc)\n"
+        "else:\n"
+        "    raise SystemExit(2)\n"
+    )
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(ROOT / "src")
+    env["NCP_RETAIN_DIR"] = str(tmp_path / "retain")
+    env["OTHER"] = "process-b"
+    env["ARTIFACT"] = kept
+    out = subprocess.check_output([sys.executable, "-c", script], cwd="/tmp", env=env)
+    assert b"another host session" in out

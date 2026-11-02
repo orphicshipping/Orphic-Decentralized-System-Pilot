@@ -120,6 +120,8 @@ TOOLS = {
          "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT, required=["artifact_id"]),
     "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
+    "ncp_specialist_list": _tool("specialist_list", "List specialist hosts that stay separate. Presence is not a grant and this call does not run them.",
+        {}, JSON_OBJECT, required=[]),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
     "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
@@ -689,6 +691,10 @@ class ControlHost:
     def retained_release(self, artifact_id):
         from .services import retained_release
         return retained_release(artifact_id, store=self.retained)
+
+    def specialist_list(self):
+        from .services import specialist_list
+        return specialist_list()
 
     def host_preflight(self):
         from .services import host_preflight

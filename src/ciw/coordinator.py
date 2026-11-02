@@ -64,7 +64,10 @@ def _read_json(path: Path):
 
 def _store_job(store, name: str, job: dict) -> None:
     directory = _owner_dir(store.owner)
-    _publish(directory, name, json.dumps(job, sort_keys=True, separators=(",", ":")).encode())
+    raw = json.dumps(job, sort_keys=True, separators=(",", ":")).encode()
+    if len(raw) > 65536:
+        raise ValueError("coordinator job record exceeds the byte budget")
+    _publish(directory, name, raw)
 
 
 def _fail_lost(store, name: str, job: dict) -> dict:
@@ -208,6 +211,9 @@ def handoff(store, artifact_id: str, recipient: str) -> dict:
         raise ValueError("handoff_refused")
     native = store.native(artifact_id)
     catalog = store.catalog(artifact_id)
+    raw = json.dumps(native, sort_keys=True, separators=(",", ":")).encode()
+    if len(raw) > 1_000_000:
+        raise ValueError("handoff_too_large")
     grant_id = "grant-" + sha256((store.owner + "\0" + recipient + "\0" + artifact_id).encode()).hexdigest()[:32]
     body = {
         "schema": "ncp.handoff-grant.v1",
@@ -215,6 +221,7 @@ def handoff(store, artifact_id: str, recipient: str) -> dict:
         "owner": store.owner,
         "recipient": recipient,
         "source_artifact_id": artifact_id,
+        "native_sha256": sha256(raw).hexdigest(),
         "native": native,
         "catalog": catalog,
     }
@@ -231,6 +238,10 @@ def claim(store, grant_id: str) -> dict:
     grant = _read_json(path)
     if grant is None or grant.get("recipient") != store.owner:
         raise ValueError("handoff_refused")
+    raw = json.dumps(grant.get("native"), sort_keys=True, separators=(",", ":")).encode()
+    from hmac import compare_digest
+    if not compare_digest(sha256(raw).hexdigest(), str(grant.get("native_sha256"))):
+        raise ValueError("handoff_integrity_refused")
     copied = store.keep(grant["native"], kind="handoff", catalog=grant["catalog"])
     if path.is_file() and not path.is_symlink():
         path.unlink()
