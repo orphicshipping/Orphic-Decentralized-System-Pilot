@@ -12,3 +12,22 @@
 .information-stats dd{color:var(--core)}.information-panel pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:11px;background:var(--bg);padding:12px;border-radius:5px;max-height:280px;overflow:auto}
 @media(max-width:1050px){.information-grid{grid-template-columns:1fr 1fr}.information-grid>div:last-child{grid-column:1/-1}.information-panel{scroll-margin-top:160px}}
 @media(max-width:620px){.information-grid{grid-template-columns:minmax(0,1fr);gap:18px}.information-panel .panel-head{flex-wrap:wrap}.information-panel .panel-head select{max-width:100%}.direction-control label{font-size:11px}.information-stats{font-size:10px}.information-panel{scroll-margin-top:155px}}
+
+
+/* ODSP identity layer: presentation only; authority and status semantics unchanged. */
+:root{--bg:#0B0D0C;--panel:#141713;--panel2:#10120F;--canvas:#0B0D0C;--raised:#1D2018;--hover:#29291C;--line:#5A4B28;--line-soft:#393521;--ink:#F1F2E9;--text:#F1F2E9;--muted:#B9BDB4;--faint:#A4A99F;--accent:#F6C344;--accent-soft:#302A18;--accent-text:#F6C344;--cyan:#F6C344;--amber:#F6C344;--green:#8DD5A0;--red:#FF9292;--sans:"DejaVu Sans Mono",ui-monospace,SFMono-Regular,Consolas,monospace;--mono:var(--sans)}
+body{font-family:var(--sans)}
+button,input,select,textarea,.pill,.tiny-pill,.badge,.chip,.panel,.boundary-card,.delta-chip,.version{border-radius:0}
+.topbar,.masthead,header{border-bottom-color:var(--line)}
+.brand{color:var(--accent);gap:14px}
+.odsp-wordmark{display:inline-block;width:100px;height:26px;flex:none;vertical-align:middle;color:var(--accent)}
+.brand-mark{display:flex;align-items:center}
+.brand-sub,.brand small{letter-spacing:.08em}
+.section-label,.edition,.surface-name{color:var(--muted)}
+button:focus-visible,a:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.primary{color:#0B0D0C;background:var(--accent);border-color:var(--accent)}
+.primary:hover:not(:disabled){color:#0B0D0C;background:#FFD976}
+:root[data-theme="light"]{--bg:#F1F2E9;--panel:#FFFFFF;--text:#191B14;--ink:#191B14;--muted:#515648;--accent:#795800;--accent-text:#795800;--line:#A59D7C;--raised:#EAEBDC;--canvas:#F1F2E9;--hover:#E3E4D4}
+.high-contrast{--accent:#FFDA75;--cyan:#FFDA75;--line:#B9BDB4}
+@media(max-width:760px){.topbar,.masthead,header{height:auto;min-height:73px;flex-wrap:wrap;gap:12px;padding:16px}.brand{max-width:100%;font-size:10px;letter-spacing:.08em}.brand small,.brand-sub{font-size:8px}.heading,.heading-actions,.run-strip{flex-wrap:wrap}.heading-actions{gap:8px}.view-tabs{flex-wrap:wrap}.workspace{min-width:0}.odsp-wordmark{width:82px;height:24px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
