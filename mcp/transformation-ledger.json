@@ -9,7 +9,7 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2789,
+    "retained_and_verified": 2796,
     "generated": 244,
     "rewritten": 46,
     "blocked": 109,
@@ -2923,6 +2923,13 @@
     },
     {
       "path": "docs/NISE_HANDOFF.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/NISE_PROFILE.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -32483,7 +32490,28 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/nise_contract.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/nise_handoff.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/nise_profile.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/nise_stdio.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -37334,7 +37362,28 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_nise_contract.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_nise_handoff.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_nise_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_nise_profile.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",

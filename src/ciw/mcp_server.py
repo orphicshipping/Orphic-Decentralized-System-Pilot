@@ -78,8 +78,12 @@ def serve_sdk(host, *, name="ncp-control"):
     from mcp.server.stdio import stdio_server
     async def run():
         server = create_server(host, name=name)
+        transport = stdio_server
+        if getattr(host, 'strict_mcp_input', False):
+            from .nise_stdio import strict_stdio_server
+            transport = strict_stdio_server
         # SDK 2.3 reserves stdout and redirects Python/native diagnostics.
-        async with stdio_server() as (read, write):
+        async with transport() as (read, write):
             await server.run(read, write, server.create_initialization_options())
     asyncio.run(run())
     return 0

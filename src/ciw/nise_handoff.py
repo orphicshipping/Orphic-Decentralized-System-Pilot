@@ -9,74 +9,14 @@ select an engine.
 from __future__ import annotations
 
 from copy import deepcopy
-from typing import Any
 
 from .control_contracts import detached, keys, text
-from .core.identities import content_identity
+from .nise_contract import validate_schematic
 from .operations.runner import seal
 from .semantic_capabilities import SemanticRegistry, compile_graph
 
 MAX_OPERATIONS = 64
-
-
-def _validate_schematic(value: dict) -> dict:
-    required = {
-        "schema", "schematic_id", "query", "catalog_id", "catalog_digest",
-        "V_q", "E_q", "M_q", "C_q", "O_q", "P_q",
-        "selection_trace", "unresolved_capabilities", "frontier", "claims",
-    }
-    keys(value, required)
-    if value["schema"] != "nise.inference-schematic.v1":
-        raise ValueError("Unsupported NISE schematic schema")
-    if type(value["query"]) is not dict:
-        raise ValueError("NISE query must be an object")
-    if value["query"].get("schema") != "nise.query.v1":
-        raise ValueError("Unsupported NISE query schema")
-    for field in ("query_id", "question"):
-        text(value["query"].get(field))
-    text(value["catalog_id"])
-    if type(value["P_q"]) is not list or len(value["P_q"]) > MAX_OPERATIONS:
-        raise ValueError("NISE operation partition exceeds NET handoff bound")
-    if type(value["unresolved_capabilities"]) is not list:
-        raise ValueError("NISE unresolved_capabilities must be an array")
-    for capability in value["unresolved_capabilities"]:
-        text(capability)
-
-    claims = value["claims"]
-    expected_claims = {
-        "candidate_structure": True,
-        "physical_truth_established": False,
-        "execution_authority": False,
-        "state_admission": False,
-        "causal_proof": False,
-    }
-    if claims != expected_claims:
-        raise ValueError("NISE schematic exceeds candidate-structure authority")
-
-    expected_id = content_identity(
-        {key: item for key, item in value.items() if key != "schematic_id"})
-    if value["schematic_id"] != expected_id:
-        raise ValueError("NISE schematic content identity mismatch")
-
-    seen = set()
-    for node in value["P_q"]:
-        keys(node, {"node_id", "kind", "label", "status", "attributes", "evidence_refs"})
-        node_id = text(node["node_id"])
-        if node_id in seen:
-            raise ValueError("Duplicate NISE operation node")
-        seen.add(node_id)
-        if node["kind"] != "OPERATION":
-            raise ValueError("P_q contains a non-operation node")
-        if node["status"] not in {"OBSERVED", "DERIVED", "DECLARED", "HYPOTHESIZED"}:
-            raise ValueError("Unknown NISE epistemic status")
-        if type(node["attributes"]) is not dict:
-            raise ValueError("NISE operation attributes must be an object")
-        text(node["attributes"].get("semantic_capability"))
-        if type(node["evidence_refs"]) is not list:
-            raise ValueError("NISE operation evidence_refs must be an array")
-        for ref in node["evidence_refs"]:
-            text(ref)
-    return detached(value)
+HANDOFF_MANDATE = "Compile the operator-authored NISE binding plan."
 
 
 def _validate_binding(value: dict) -> dict:
@@ -126,7 +66,9 @@ def compile_handoff(schematic: dict, binding: dict, registry: SemanticRegistry) 
     The NISE operation node supplies the semantic capability. The binding supplies
     only execution-shape details. Engine selection remains in SemanticRegistry.
     """
-    schematic = _validate_schematic(schematic)
+    schematic = validate_schematic(schematic)
+    if len(schematic["P_q"]) > MAX_OPERATIONS:
+        raise ValueError("NISE operation partition exceeds NET handoff bound")
     binding = _validate_binding(binding)
     if binding["schematic_id"] != schematic["schematic_id"]:
         raise ValueError("Binding plan targets a different NISE schematic")
@@ -173,7 +115,7 @@ def compile_handoff(schematic: dict, binding: dict, registry: SemanticRegistry) 
     graph = {
         "schema": "ciw.semantic-work-graph.v1",
         "graph_id": binding["graph_id"],
-        "mandate": schematic["query"]["question"],
+        "mandate": HANDOFF_MANDATE,
         "model_id": binding["model_id"],
         "nodes": graph_nodes,
     }
@@ -185,6 +127,16 @@ def compile_handoff(schematic: dict, binding: dict, registry: SemanticRegistry) 
         "query_id": schematic["query"]["query_id"],
         "catalog_id": schematic["catalog_id"],
         "binding_id": binding["binding_id"],
+        "query_context": {
+            "question": schematic["query"]["question"],
+            "role": "inert_scoping_context",
+            "execution_instruction": False,
+        },
+        "provenance": {
+            "validation": "structural_contract_only",
+            "source_authenticated": False,
+            "fresh_recomputation": False,
+        },
         "selected_operations": selected,
         "unbound_schematic_operations": unbound,
         "unresolved_capabilities": deepcopy(schematic["unresolved_capabilities"]),

@@ -2395,6 +2395,179 @@
           }
         }
       ]
+    },
+    {
+      "profile_id": "nise.schematic.v1",
+      "adapter_contract_commit": "81908ddbe817018af5d9887a6bdd9cce3e3eafc6",
+      "operation_id": "inference.schematic.construct.v1",
+      "category": "deterministic_schematic_relevance_and_scoping",
+      "host_factory": "ciw.nise_profile.open_nise",
+      "service": "ciw.services.invoke",
+      "tools": [
+        {
+          "name": "ncp_nise_describe",
+          "description": "Describe bounded host-pinned NISE candidate scoping; no execution authority or binding from discovery.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_nise_validate",
+          "description": "Validate a complete catalog and query against their pinned structural contracts; this does not compile or prove query focus applicability.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "catalog": {
+                "type": "object"
+              },
+              "query": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "catalog",
+              "query"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_nise_compile",
+          "description": "Compile one explicit catalog/query into a candidate inference schematic; retain the caller execution_id and expose focus displacement/frontier overlap diagnostics.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "request"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_nise_inspect",
+          "description": "Validate and inspect a complete supplied schematic without authenticating or recompiling its source catalog; no execution or admission.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "schematic": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "schematic"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_nise_verify",
+          "description": "Validate every receipt field and submitted schematic, then recompile its complete catalog/query under matching runtime and comparison policy; no fresh occurrence IDs.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "receipt": {
+                "type": "object"
+              }
+            },
+            "required": [
+              "receipt"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "source_binding_verification": "caller_assertion_only",
+      "authorizes_execution": false,
+      "authorizes_state_admission": false,
+      "authority": {
+        "source_binding_verification": "caller_assertion_only",
+        "source_authenticated": false,
+        "authorizes_execution": false,
+        "authorizes_state_admission": false,
+        "evidence_admission": false,
+        "physical_truth_established": false,
+        "causal_proof": false,
+        "provider_execution": false,
+        "candidate_scoping_only": true
+      },
+      "comparison_policy": {
+        "comparison_id": "odsp.nise.full-recompile.v1",
+        "comparison": "complete_canonical_json_exact",
+        "scope": "same_bound_runtime_and_complete_catalog_query",
+        "cross_platform_bitwise_guarantee": false,
+        "dependency_identity": "numpy_scipy_version_labels_only_not_binary_attestation",
+        "bridge_sha256": "259edaaddb48c8e382ac571ae17e4ec2fef6d35797bac918b075d7a25b36c120"
+      },
+      "qualification": "not_performed_by_discovery",
+      "question_semantics": "retained_text_not_NLP_or_ML_selection",
+      "execution_identity": "caller_execution_id_preserved; verification_reuses_complete_request; no_occurrence_registry",
+      "process_isolation": "pinned_interpreter_and_import_root; no_environment_or_network_sandbox",
+      "limits": {
+        "argument_bytes": 65536,
+        "mcp_envelope_bytes": 262144,
+        "mcp_result_bytes": 261120,
+        "jsonrpc_frame_reserve_bytes": 1024,
+        "process_output_bytes": 131072,
+        "child_wall_seconds": 5.0,
+        "call_work_deadline_seconds": 20.0,
+        "kernel_cpu_seconds": 3,
+        "kernel_address_space_bytes": 268435456,
+        "kernel_file_bytes": 1048576,
+        "kernel_open_files": 32,
+        "concurrent_calls": 1
+      }
     }
   ],
   "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."

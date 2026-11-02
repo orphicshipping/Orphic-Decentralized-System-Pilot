@@ -68,7 +68,8 @@ def _specs():
     from .recompiler_profile import TOOLS as RECOMPILER
     from .schematic_profile import TOOLS as SCHEMATIC
     from .clocksync_profile import TOOLS as CLOCKSYNC
-    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC,
+    from .nise_profile import TOOLS as NISE
+    return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC, **NISE,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -167,6 +168,11 @@ def _schematic_content_key(path, key, value, arguments):
 
 
 def _request(name, arguments):
+    if isinstance(name, str) and name.startswith('ncp_nise_'):
+        # Reject huge integers, invalid Unicode and complex trees before the
+        # generic serializer can lose or reinterpret a NISE request.
+        from .nise_contract import canonical
+        _require(len(canonical({'name': name, 'arguments': arguments})) <= MAX_REQUEST)
     _require(type(name) is str and type(arguments) is dict and
              len(encode({"name": name, "arguments": arguments})) <= MAX_REQUEST)
     def check(value, path=()):
@@ -230,6 +236,9 @@ def _direct_science(name, arguments):
         return {OPERATION}
     if name in {"ncp_clocksync_reconcile", "ncp_clocksync_replay"}:
         from .clocksync_profile import OPERATION
+        return {OPERATION}
+    if name in {"ncp_nise_validate", "ncp_nise_compile", "ncp_nise_inspect", "ncp_nise_verify"}:
+        from .nise_profile import OPERATION
         return {OPERATION}
     capability = {"ncp_demo": "synthetic-oscillator-demo", "ncp_linear_preview": "linear-response.library",
                   "ncp_polymer_cycle": "data.assess-polymer-cycle.v1",
@@ -320,10 +329,10 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
-                               logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync)
+                               logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync, nise=nise)
 
 
 class PrincipalFacade:
@@ -332,8 +341,9 @@ class PrincipalFacade:
 
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
+        self.strict_mcp_input = hosts.get('nise') is not None
         self.retained = None
-        for family in ("state", "logistics", "recompiler", "schematic", "clocksync"):
+        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
         if hosts.get("logistics") is not None:
@@ -356,7 +366,8 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("clocksync" if name.startswith("ncp_clocksync_") else
+        family = ("nise" if name.startswith("ncp_nise_") else
+                  "clocksync" if name.startswith("ncp_clocksync_") else
                   "schematic" if name.startswith("ncp_schematic_") else
                   "recompiler" if name.startswith("ncp_recompiler_") else
                   "state" if name.startswith("ncp_state_") else "logistics" if name.startswith("ncp_logistics_")
