@@ -199,6 +199,41 @@ def _rule(grant, name, arguments):
         _require(any(encode(value) == encode(option) for option in allowed))
 
 
+def _direct_science(name, arguments):
+    """Execution identities behind direct tools, shared with nested admission.
+
+    Use the same catalogs as dispatch. An example or retained input never
+    substitutes for an execution grant. Non-registered computation wrappers
+    retain their existing catalog/ledger capability identity rather than
+    inventing a registered operation.
+    """
+    if name == "ncp_domain_run":
+        from .domain_surface import OPERATIONS
+        matches = [row[0] for row in OPERATIONS
+                   if row[1] == arguments["domain"] and row[2] == arguments.get("name")]
+        _require(len(matches) == 1)
+        return set(matches)
+    if name == "ncp_workbench_run":
+        from .workbench import OPERATIONS
+        return {OPERATIONS[arguments["workflow"]]}
+    if name == "ncp_fluid_field":
+        from .fluid_contract import ALL_OPERATIONS
+        return set(ALL_OPERATIONS[arguments["solver"]])
+    if name == "ncp_lesson" and arguments.get("mode", "learn") == "work":
+        return {"statistics.v1"}
+    if name in {"ncp_recompiler_reconcile", "ncp_recompiler_verify_receipt"}:
+        from .recompiler_profile import OPERATION
+        return {OPERATION}
+    if name in {"ncp_schematic_validate", "ncp_schematic_retrieve", "ncp_schematic_assess", "ncp_schematic_verify_receipt"}:
+        from .schematic_profile import OPERATION
+        return {OPERATION}
+    capability = {"ncp_demo": "synthetic-oscillator-demo", "ncp_linear_preview": "linear-response.library",
+                  "ncp_polymer_cycle": "data.assess-polymer-cycle.v1",
+                  "ncp_toolpoint": "data.review-toolpoint-containment.v1",
+                  "ncp_hypergraph": "hypergraph_rewriting"}.get(name)
+    return {capability} if capability else set()
+
+
 def _resource(uri):
     _require(type(uri) is str and len(uri) <= 1024)
     for family, name, key in (("plans", "ncp_plan_get", "plan_id"), ("runs", "ncp_run_get", "run_id"),
@@ -263,6 +298,13 @@ class PrincipalPolicy:
             _request(name, arguments)
             grant = self.check_principal(principal)
             _rule(grant, name, arguments)
+            _require(_direct_science(name, arguments) <= set(grant["scientific_operations"]))
+            if name == "ncp_coordinate" and arguments["action"] == "submit":
+                inner, selected = arguments.get("operation"), arguments.get("arguments", {})
+                _require(inner == "ncp_domain_run")
+                _request(inner, selected)
+                _rule(grant, inner, selected)
+                _require(_direct_science(inner, selected) <= set(grant["scientific_operations"]))
             return grant
         except Exception:
             raise PrincipalRefusal() from None
@@ -342,12 +384,6 @@ class PrincipalFacade:
             self._science(grant, plan["compilation"]["experiment"])
 
     def _scope(self, grant, family, host, name, args):
-        if family == "schematic" and name != "ncp_schematic_describe":
-            from .schematic_profile import OPERATION
-            _require(OPERATION in grant["scientific_operations"])
-        if family == "recompiler" and name != "ncp_recompiler_describe":
-            from .recompiler_profile import OPERATION
-            _require(OPERATION in grant["scientific_operations"])
         if family == "reference":
             _require(host.corpus_ref in grant["reference_scopes"])
             if name.startswith("ncp_evidence_"):

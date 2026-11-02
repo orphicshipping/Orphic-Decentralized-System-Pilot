@@ -221,6 +221,7 @@ def test_actual_mcp_subprocess_rechecks_policy_and_resource(tmp_path,monkeypatch
     corpus,_,_=make_catalog(tmp_path/'catalog-input',b'Synthetic principal-bound reference.')
     catalog=tmp_path/'catalog-input/catalog-inputs/bundle'
     profile=demo_config(tmp_path/'demo');path=tmp_path/'policy.json';value=policy_value()
+    value['principals'][0]['scientific_operations'].append('sequence.markov.v1')
     value['principals'][0]['operations'].append({'name':'ncp_knowledge_overview','constraints':{}})
     value['principals'][0]['reference_scopes']=[corpus.ref]
     reference_uri='ncp://proto-corpus/'+corpus.ref[7:]+'/overview'
@@ -375,6 +376,7 @@ def test_observe_compare_and_qualify_cannot_read_outside_current_artifact_scope(
 def test_workbench_references_require_current_retained_scope_before_dispatch(configured,monkeypatch):
     value,_,_,_,control,facade=configured
     value['principals'][0]['operations'].append({'name':'ncp_workbench_run','constraints':{}})
+    value['principals'][0]['scientific_operations'].append('ciw.identified-design.v1')
     value['principals'][0]['resources']=[]
     calls=[];monkeypatch.setattr(control,'call',lambda *args:calls.append(args))
     for references in ({'upstream_artifact':'retained-'+'1'*32},{'upstream_artifacts':['retained-'+'1'*32]}):
@@ -384,7 +386,8 @@ def test_workbench_references_require_current_retained_scope_before_dispatch(con
 
 def test_retained_failure_locator_survives_sdk_and_mcp_unknown_envelope(configured):
     from ciw import coordinator,retention
-    _,_,_,_,control,facade=configured
+    value,_,_,_,control,facade=configured
+    value['principals'][0]['scientific_operations'].append('sequence.markov.v1')
     held=coordinator._hold_exclusive(retention.Store('other-worker'),'fixture_exclusive')
     assert held is not None
     before=coordinator._EXECUTIONS

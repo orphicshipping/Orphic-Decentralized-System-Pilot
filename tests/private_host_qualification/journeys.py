@@ -103,7 +103,7 @@ def fixture_policy():
             rule["constraints"] = {"action": ["submit", "recall", "handoff", "claim", "recover"]}
     return {"schema": "ciw.principal-policy.v1", "revision": "fixture-1", "principals": [
         {"principal": actor, "enabled": True, "operations": deepcopy(rules),
-         "scientific_operations": ["statistics.v1"],
+         "scientific_operations": ["statistics.v1", "sequence.markov.v1"],
          "resources": ["ncp://retained/", "ncp://runs/", "ncp://plans/", "ncp://artifacts/"],
          "reference_scopes": [], "handoff_recipients": [other for other in ACTORS if other != actor]}
         for actor in ACTORS]}
@@ -366,7 +366,7 @@ async def adapter_process(args):
     policy_path = root / "policy.json"
     policy = fixture_policy()
     for actor in policy["principals"]:
-        actor["scientific_operations"] = list(SCIENTIFIC_OPERATIONS)
+        actor["scientific_operations"] = [*SCIENTIFIC_OPERATIONS, "sequence.markov.v1"]
     catalog_path, catalog_ref, record_id, reference_uri = prepare_reference(args, root, policy)
     publish_policy(policy_path, policy)
     authority = PrincipalPolicy.from_file(policy_path)

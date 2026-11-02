@@ -30,7 +30,7 @@ class Fixture:
         self.policy_data = {'schema': 'ciw.principal-policy.v1', 'revision': 'fixture-1', 'principals': [
             {'principal': principal, 'enabled': True,
              'operations': [{'name': name, 'constraints': {}} for name in sorted(set(TOOLS) | set(REFERENCE_NAMES))],
-             'scientific_operations': list(OPERATIONS),
+             'scientific_operations': [*OPERATIONS, 'sequence.markov.v1'],
              'resources': ['ncp://plans/', 'ncp://runs/', 'ncp://artifacts/', 'ncp://retained/'],
              'reference_scopes': [], 'handoff_recipients': ['beta'] if principal == 'alpha' else []}
             for principal in ('alpha', 'beta')]}
