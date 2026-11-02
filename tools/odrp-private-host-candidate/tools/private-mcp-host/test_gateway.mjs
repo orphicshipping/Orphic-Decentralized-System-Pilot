@@ -81,3 +81,74 @@ test('cancelled authenticated streaming body returns before host dispatch',async
   const result=route(incoming,env);setTimeout(()=>controller.abort(),20);
   assert.equal((await result).status,408);assert.equal(requests.length,0);assert.equal(cancelled,true);
 });
+
+const duplicateBodies=[
+  ['top-level operation',String.raw`{"name":"ncp_knowledge_overview","name":"ncp_domain_run","arguments":{}}`],
+  ['nested argument',String.raw`{"name":"ncp_domain_run","arguments":{"domain":"sequence","domain":"impact"}}`],
+  ['object inside array',String.raw`{"arguments":{"rows":[{"other":1},{"key":1,"key":2}]}}`],
+  ['escaped ASCII key',String.raw`{"arguments":{"name":1,"\u006eame":2}}`],
+  ['escaped quote key',String.raw`{"arguments":{"a\"b":1,"a\u0022b":2}}`],
+  ['escaped backslash key',String.raw`{"arguments":{"a\\b":1,"a\u005cb":2}}`],
+  ['escaped solidus key',String.raw`{"arguments":{"a/b":1,"a\/b":2}}`],
+  ['escaped control key',String.raw`{"arguments":{"line\n":1,"line\u000a":2}}`],
+  ['surrogate pair equivalent to literal Unicode',String.raw`{"arguments":{"🚀":1,"\ud83d\ude80":2}}`],
+  ['empty key',String.raw`{"arguments":{"":1,"":2}}`],
+  ['prototype-looking key',String.raw`{"arguments":{"__proto__":1,"__proto__":2}}`],
+  ['duplicate after nested container',String.raw`{"arguments":{"key":{"rows":[{},[]]},"key":2}}`],
+];
+for(const [label,body] of duplicateBodies)test('duplicate JSON '+label+' refuses before host wake',async()=>{
+  const {env,requests}=fixture();JSON.parse(body); // Each fixture is otherwise valid JSON.
+  const result=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env);
+  assert.equal(result.status,400);assert.deepEqual(await result.json(),{error:{code:'invalid_json'}});
+  assert.equal(requests.length,0);
+});
+
+test('unique keys are scoped to each object and JSON-looking strings remain opaque',async()=>{
+  const {env,requests}=fixture();
+  const bodies=[
+    String.raw`{"arguments":{"left":{"key":1},"right":{"key":2},"rows":[{"key":3},{"key":4}]}}`,
+    String.raw`{"arguments":{"a":1,"\\u0061":2,"é":3,"e\u0301":4,"__proto__":5,"constructor":6}}`,
+    JSON.stringify({arguments:{text:'"key":1, "key":2, { [ } ] \\ quoted " suffix',empty:'',unicode:'界🚀'}}),
+    JSON.stringify({name:'ncp_domain_run',arguments_json:'{"domain":"sequence","domain":"impact"}'}),
+    ' \n { "arguments" : { "rows" : [ null, true, false, -2.5e3, { "key" : "value" } ] } } \t ',
+  ];
+  for(const body of bodies){
+    assert.equal((await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env)).status,200);
+    assert.deepEqual(await requests.at(-1).json(),JSON.parse(body));
+  }
+  assert.equal(requests.length,bodies.length);
+});
+test('duplicate scan retains strict native JSON and UTF-8 rejection',async()=>{
+  const {env,requests}=fixture();
+  for(const body of ['{"arguments":{"a":1,}}','{"arguments":{"a":01}}','{"arguments":{"a":"\\x61"}}',
+    '{"arguments":{"a":1}} trailing','{"arguments":{"a":"unterminated}}',new Uint8Array([123,34,97,34,58,34,0xc3,0x28,34,125])]){
+    const response=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env);
+    assert.equal(response.status,400);assert.deepEqual(await response.json(),{error:{code:'invalid_json'}});
+  }
+  assert.equal(requests.length,0);
+});
+test('duplicate scan preserves exact body byte boundary',async()=>{
+  const {env,requests}=fixture();
+  const prefix='{"arguments":{"text":"',suffix='"}}',body=prefix+'x'.repeat(262144-prefix.length-suffix.length)+suffix;
+  assert.equal(Buffer.byteLength(body),262144);
+  assert.equal((await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env)).status,200);
+  assert.equal((await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body:body+' '}),env)).status,413);
+  assert.equal(requests.length,1);
+});
+
+test('decoded duplicate keys cover every ASCII code unit and Unicode edge cases',async()=>{
+  const {env,requests}=fixture();
+  for(const key of [...Array.from({length:128},(_,i)=>String.fromCharCode(i)),'é','e\u0301','🚀','\ud800','\udfff']){
+    const unicode='"'+key.split('').map(c=>'\\u'+c.charCodeAt(0).toString(16).padStart(4,'0')).join('')+'"';
+    const body='{"arguments":{'+JSON.stringify(key)+':{"nested":[{},[]]},'+unicode+':2}}';
+    assert.equal((await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env)).status,400,JSON.stringify(key));
+  }
+  assert.equal(requests.length,0);
+});
+test('duplicate scan uses an iterative stack for deeply nested valid input',async()=>{
+  const {env,requests}=fixture();
+  const body='{"arguments":'+'['.repeat(10000)+'{"key":1,"key":2}'+']'.repeat(10000)+'}';
+  JSON.parse(body);assert.ok(Buffer.byteLength(body)<262144);
+  const result=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},body}),env);
+  assert.equal(result.status,400);assert.deepEqual(await result.json(),{error:{code:'invalid_json'}});assert.equal(requests.length,0);
+});

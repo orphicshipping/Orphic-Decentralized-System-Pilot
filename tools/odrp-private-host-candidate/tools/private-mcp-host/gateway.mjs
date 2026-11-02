@@ -22,6 +22,36 @@ export function json(value, status = 200) {
 async function digest(value) {
   return [...new Uint8Array(await crypto.subtle.digest('SHA-256', encoder.encode(value)))].map(x => x.toString(16).padStart(2,'0')).join('');
 }
+function parseUniqueJson(text) {
+  // Native parsing owns JSON syntax/values. Before reserialization can erase
+  // duplicates, scan the already byte-bounded input for object key tokens.
+  // This iterative scan does not recurse or parse JSON-looking string values.
+  const value = JSON.parse(text), containers = [];
+  for (let i = 0; i < text.length;) {
+    const character = text[i];
+    if (character === '{' || character === '[') {
+      containers.push(character === '{' ? new Set() : null); i++;
+    } else if (character === '}' || character === ']') {
+      containers.pop(); i++;
+    } else if (character === '"') {
+      const start = i++;
+      while (i < text.length) {
+        if (text[i] === '\\') { i += 2; continue; }
+        if (text[i++] === '"') break;
+      }
+      let next = i;
+      while (next < text.length && /[ \t\r\n]/.test(text[next])) next++;
+      // In syntactically valid JSON only an object key is followed by ':';
+      // JSON.parse decodes escaped-equivalent spellings for Set comparison.
+      if (text[next] === ':') {
+        const keys = containers.at(-1), key = JSON.parse(text.slice(start, i));
+        if (!keys || keys.has(key)) throw Error('duplicate_json_key');
+        keys.add(key);
+      }
+    } else i++;
+  }
+  return value;
+}
 function authConfig(env) {
   if (typeof env.PRINCIPAL_AUTH_JSON !== 'string' || encoder.encode(env.PRINCIPAL_AUTH_JSON).length > 65536)
     throw Error('authentication_configuration_refused');
@@ -116,7 +146,7 @@ export async function route(request, env) {
     }
     const bytes = new Uint8Array(length); let offset = 0;
     for (const chunk of chunks) { bytes.set(chunk, offset); offset += chunk.length; }
-    try { body = JSON.parse(new TextDecoder('utf-8', {fatal: true}).decode(bytes)); }
+    try { body = parseUniqueJson(new TextDecoder('utf-8', {fatal: true}).decode(bytes)); }
     catch { return json({error: {code: 'invalid_json'}}, 400); }
     if (!body || typeof body !== 'object' || Array.isArray(body)
         || ['principal','owner','identity','grants','policy','policy_revision','policy_sha256'].some(key => key in body))
