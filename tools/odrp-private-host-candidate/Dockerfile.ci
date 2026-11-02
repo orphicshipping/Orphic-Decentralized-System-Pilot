@@ -6,7 +6,7 @@ RUN python -m pip install --no-cache-dir /tmp/wheel/*.whl -r /tmp/requirements.t
 COPY tools/mcp-operator-console/console.py tools/mcp-operator-console/console.py
 COPY examples/numerical_operations/prepare.py examples/numerical_operations/prepare.py
 COPY tools/private-mcp-host/adapter.py tools/private-mcp-host/adapter.py
-COPY tools/private-mcp-host/test_adapter.py tools/private-mcp-host/test_reference_adapter.py tools/private-mcp-host/reference_fixture_helpers.py tools/private-mcp-host/
+COPY tools/private-mcp-host/test_adapter.py tools/private-mcp-host/test_reference_adapter.py tools/private-mcp-host/test_installed_discovery.py tools/private-mcp-host/reference_fixture_helpers.py tools/private-mcp-host/
 RUN chmod -R a+rX tools examples && useradd --uid 10001 --create-home ncp && mkdir runtime && chown ncp:ncp runtime
 USER 10001
 ENV OPENBLAS_NUM_THREADS=1 OMP_NUM_THREADS=1 PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1

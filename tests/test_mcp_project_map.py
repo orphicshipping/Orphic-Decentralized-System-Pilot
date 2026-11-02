@@ -2,8 +2,26 @@
 import json
 from pathlib import Path
 
+import pytest
+
 ROOT = Path(__file__).resolve().parents[1]
 MAP = ROOT / "mcp" / "project-map.json"
+
+
+@pytest.mark.parametrize("directory", [
+    "tools/odrp-private-host-candidate",
+    "tools/odrp-private-host-candidate/tools",
+    "tools/odrp-private-host-candidate/tools/private-mcp-host",
+])
+def test_private_host_candidate_folders_are_indexed_without_a_tool_grant(directory):
+    index = json.loads((ROOT / "mcp/folder-index.json").read_text(encoding="utf-8"))
+    rows = [row for row in index["folders"] if row["path"] == directory]
+    assert rows == [{"path": directory, "class": "navigation", "call": "none"}]
+    for name in ("MCP.md", "README.md"):
+        text = (ROOT / directory / name).read_text(encoding="utf-8")
+        assert f"- path: `{directory}`" in text
+        assert "- authorizes_execution: false" in text
+        assert "- call: `none`" in text
 
 
 def test_project_map_matches_the_tree_and_does_not_grant():

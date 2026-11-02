@@ -3,11 +3,11 @@
 - path: `tools/odrp-private-host-candidate/tools/private-mcp-host`
 - class: `navigation`
 - authorizes_execution: false
-- call: `ncp_index_list`
+- call: `none`
 
-`private-mcp-host` is inside `tools` (navigation). Operator consoles. They do not add a grant the control tools lack.
+Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.
 
-Tracked files here, none of them a tool call: `adapter.py`, `gateway.mjs`, `test_adapter.py`, `test_gateway.mjs`, `test_reference_adapter.py`, `test_worker.mjs`, `worker.mjs`.
+Tracked files here, none of them a tool call: `README.md`, `adapter.py`, `gateway.mjs`, `test_adapter.py`, `test_gateway.mjs`, `test_installed_discovery.py`, `test_reference_adapter.py`, `test_worker.mjs` (1 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

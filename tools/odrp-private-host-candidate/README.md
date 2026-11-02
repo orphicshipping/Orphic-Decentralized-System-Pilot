@@ -4,7 +4,7 @@
 - path: `tools/odrp-private-host-candidate`
 - class: `navigation`
 - authorizes_execution: false
-- call: `ncp_index_list`
+- call: `none`
 
 This folder does not opt for the easiest task in a set. Name the task.
 
@@ -36,12 +36,14 @@ state: this candidate uses a distinct singleton name and checkpoint generation.
 - tools/mcp-operator-console/: existing MCP client, not a replacement engine.
 - examples/numerical_operations/: existing seven synthetic operation profile.
 - Historical source remains in tools/private-mcp-host at the repository root.
-- Local candidate acceptance: 8 Python adapter tests and 7 Node boundary/fence tests; not cloud qualification.
+- Local candidate acceptance: 9 Python adapter/discovery tests and 7 Node boundary/fence tests; not cloud qualification.
 
 Build context is this directory. Dockerfile retains the pinned upstream Python
-3.12 image and existing build-time proxy-CA secret requirement. No Docker engine
-is available here: the image has NOT been built or deployed. A wheel install in
-an isolated Python 3.12 environment was tested, not a container image.
+3.12 image and existing build-time proxy-CA secret requirement. Dockerfile.ci
+adds test dependencies and runs installed-wheel discovery in an isolated Python
+subprocess outside the checkout, as well as the existing adapter journeys.
+Record the exact source, wheel, image and dependency receipts for each build;
+passing this local gate does not establish cloud deployment qualification.
 Use a separately approved private staging application and separate Durable Object
 storage/R2 prefix before any rollout. Do NOT bind this candidate to the deployed
 ncp-control singleton/application or overwrite its image. The gateway hostname
@@ -83,12 +85,12 @@ and obtain a separately approved evidence-based historical migration decision.
 No automatic cross-generation importer is provided because conversion cannot
 resolve an unknown transaction outcome. All scientific fixtures stay synthetic.
 
-## Proposed CI qualification (not published or run)
+## Build-only CI qualification
 .github/workflows/odrp-private-host-candidate.yml reuses existing system-composition workflow's
 pinned checkout action, read-only permission and 25-minute Ubuntu image gate.
 It runs only on the approved candidate branch push or manual dispatch and builds a local image without registry login/push; its
 Dockerfile.ci uses normal package TLS (no invented proxy secret) and installs
 only the test dependencies needed for the candidate. Container execution has
 network disabled, read-only root, disposable /tmp, and no mounted corpus/secret.
-It runs the scientific + reference adapter tests inside the actual image, then
+It runs the scientific + reference adapter and installed discovery tests inside the actual image, then
 local Node gateway/fence simulations. Workflow presence is not a CI result. Consult the exact commit run before claiming container qualification.

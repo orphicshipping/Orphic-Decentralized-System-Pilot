@@ -3,9 +3,9 @@
 - path: `tools/odrp-private-host-candidate`
 - class: `navigation`
 - authorizes_execution: false
-- call: `ncp_index_list`
+- call: `none`
 
-`odrp-private-host-candidate` is inside `tools` (navigation). Operator consoles. They do not add a grant the control tools lack.
+Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.
 
 Tracked files here, none of them a tool call: `Dockerfile`, `Dockerfile.ci`, `README.md`.
 

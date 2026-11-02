@@ -17,6 +17,11 @@ INDEX_PATH = ROOT / "mcp" / "folder-index.json"
 # the files. "none" means this folder is not a tool.
 OVERRIDES: tuple[tuple[str, str, str], ...] = (
     (
+        "tools/odrp-private-host-candidate",
+        "none",
+        "Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.",
+    ),
+    (
         "instruments/domain/flowstate",
         "none",
         "Vendored FlowState tree. Not the leakage pin. Do not point an adapter here. Leakage runs only when the host selected the retained checkout.",

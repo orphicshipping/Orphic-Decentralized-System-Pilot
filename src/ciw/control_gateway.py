@@ -397,8 +397,8 @@ class ControlHost:
                 "mcp_tool": tool_name,
                 "callable": bool(profiles or tool_name),
             })
-        ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
-        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        from .services import _packaged_text
+        ledger = json.loads(_packaged_text("capability-ledger.json"))
         for item in ledger["capabilities"]:
             profiles = ["fluid", "fluid-molecular", "fluid-fsi"] if item["id"] == "bounded_fluid_models" else []
             tool_name = "ncp_hypergraph" if item["id"] == "hypergraph_rewriting" else "ncp_ledger_read"

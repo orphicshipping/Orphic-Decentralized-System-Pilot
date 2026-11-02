@@ -46,5 +46,6 @@ jobs:
           odrp-host-local-candidate python -m pytest -q -p no:cacheprovider
           tools/private-mcp-host/test_adapter.py
           tools/private-mcp-host/test_reference_adapter.py
+          tools/private-mcp-host/test_installed_discovery.py
       - name: Gateway and uncertainty-fence simulations
         run: node --test tools/odrp-private-host-candidate/tools/private-mcp-host/test_gateway.mjs tools/odrp-private-host-candidate/tools/private-mcp-host/test_worker.mjs
