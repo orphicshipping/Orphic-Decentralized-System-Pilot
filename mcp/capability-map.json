@@ -7,6 +7,12 @@
       "name": "ncp_artifact_read",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "artifact"
       ],
@@ -17,6 +23,12 @@
       "name": "ncp_capabilities_list",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Discover host-bound contracts, inputs and frozen grants. Listing does not execute, provision or qualify providers.",
       "authorizes_execution": false
@@ -25,6 +37,12 @@
       "name": "ncp_capability_describe",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "capability_id"
       ],
@@ -35,6 +53,12 @@
       "name": "ncp_compare",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "left",
         "right",
@@ -47,6 +71,12 @@
       "name": "ncp_coordinate",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [
         "action"
       ],
@@ -57,6 +87,12 @@
       "name": "ncp_demo",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Build the deterministic synthetic oscillator recording in memory. No sensor and no retained file. Not physical qualification.",
       "authorizes_execution": false
@@ -65,6 +101,12 @@
       "name": "ncp_doctor",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Run the read-only doctor preflight for core or legibility. preflight_passed is not qualification and does not grant an operation.",
       "authorizes_execution": false
@@ -73,6 +115,12 @@
       "name": "ncp_domain_list",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "List provider-free synthetic domain operations and the domain and name to pass to ncp_domain_run. Listing does not run them.",
       "authorizes_execution": false
@@ -81,6 +129,12 @@
       "name": "ncp_domain_run",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [
         "domain"
       ],
@@ -91,6 +145,12 @@
       "name": "ncp_fluid_field",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [
         "solver"
       ],
@@ -101,6 +161,12 @@
       "name": "ncp_host_preflight",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
       "authorizes_execution": false
@@ -109,6 +175,12 @@
       "name": "ncp_hypergraph",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
       "authorizes_execution": false
@@ -117,6 +189,12 @@
       "name": "ncp_index_list",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Page the provider-free capability index and release-ledger ids. authorizes_execution stays false. mcp_profile is an execution profile. mcp_tool is a direct call. Null for both means it is not in this toolset.",
       "authorizes_execution": false
@@ -125,6 +203,12 @@
       "name": "ncp_integration_describe",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "section",
         "source_id"
@@ -136,6 +220,12 @@
       "name": "ncp_integrations_list",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Page imported modules, surrounding systems or external boundaries with source/licence and existing profile-specific workflow declarations. This does not probe, install, bind, execute or qualify a provider.",
       "authorizes_execution": false
@@ -144,6 +234,12 @@
       "name": "ncp_ledger_read",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "capability_id"
       ],
@@ -154,6 +250,12 @@
       "name": "ncp_lesson",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Read the oscillator-rms lesson, or mode=work to run statistics.v1 on the synthetic oscillator. Not a curriculum engine or a qualification.",
       "authorizes_execution": false
@@ -162,6 +264,12 @@
       "name": "ncp_linear_preview",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "model",
         "base_point",
@@ -174,6 +282,12 @@
       "name": "ncp_observe",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "artifact"
       ],
@@ -184,6 +298,12 @@
       "name": "ncp_plan_admit",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "plan_id",
         "expected_digest"
@@ -195,6 +315,12 @@
       "name": "ncp_plan_create",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "source",
         "baseline",
@@ -207,6 +333,12 @@
       "name": "ncp_plan_get",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "plan_id"
       ],
@@ -217,6 +349,12 @@
       "name": "ncp_plan_template",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "baseline"
       ],
@@ -227,6 +365,12 @@
       "name": "ncp_plug_in",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
       "authorizes_execution": false
@@ -235,6 +379,12 @@
       "name": "ncp_polymer_cycle",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
       "authorizes_execution": false
@@ -243,6 +393,12 @@
       "name": "ncp_qualify",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "suite",
         "inputs"
@@ -254,6 +410,12 @@
       "name": "ncp_retained_read",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "artifact_id"
       ],
@@ -264,6 +426,12 @@
       "name": "ncp_retained_release",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "artifact_id"
       ],
@@ -274,6 +442,12 @@
       "name": "ncp_run_cancel",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "run_id"
       ],
@@ -284,6 +458,12 @@
       "name": "ncp_run_get",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "run_id"
       ],
@@ -294,6 +474,12 @@
       "name": "ncp_run_submit",
       "service": "ciw.services.open_demo",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [
         "plan_id",
         "expected_digest",
@@ -306,6 +492,12 @@
       "name": "ncp_toolpoint",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
       "authorizes_execution": false
@@ -314,6 +506,12 @@
       "name": "ncp_workbench_list",
       "service": "ciw.services.invoke",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
       "authorizes_execution": false
@@ -322,6 +520,12 @@
       "name": "ncp_workbench_run",
       "service": "ciw.services.invoke",
       "read_only": false,
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      },
       "required": [
         "workflow"
       ],
@@ -332,6 +536,12 @@
       "name": "ncp_workflows_list",
       "service": "ciw.services.open_demo",
       "read_only": true,
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      },
       "required": [],
       "description": "Page the wider operator workflow catalog and explicit provisioning prerequisites. These are navigation declarations, not grants or host-bound executable capabilities.",
       "authorizes_execution": false

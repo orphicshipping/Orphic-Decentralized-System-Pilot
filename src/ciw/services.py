@@ -442,6 +442,7 @@ def capability_map():
             "name": name,
             "service": route,
             "read_only": bool(spec["annotations"]["readOnlyHint"]),
+            "annotations": dict(spec["annotations"]),
             "required": list(schema.get("required") or []),
             "description": spec["description"],
             "authorizes_execution": False,
