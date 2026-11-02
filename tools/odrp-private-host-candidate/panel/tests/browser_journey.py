@@ -7,6 +7,7 @@ deployment, physical model qualification, or comprehensive WCAG claim is made.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -15,6 +16,7 @@ import shutil
 import subprocess
 import sys
 import time
+import traceback
 
 from playwright.sync_api import sync_playwright
 
@@ -24,6 +26,7 @@ class Fixture:
         self.args, self.process, self.log = args, None, None
         self.sequence = 0
         self.info = None
+        self.cleanup = []
 
     def receive(self, deadline=120):
         until = time.monotonic() + deadline
@@ -50,25 +53,35 @@ class Fixture:
         assert self.info.get("ready"), self.info
         return self.info
 
-    def command(self, op, **fields):
+    def command(self, op, *, deadline=120, **fields):
         self.sequence += 1
         self.process.stdin.write(json.dumps({"id": self.sequence, "op": op, **fields}) + "\n")
         self.process.stdin.flush()
-        result = self.receive()
+        result = self.receive(deadline)
         assert result.get("id") == self.sequence and "error" not in result, result
         return result["value"]
 
     def stop(self):
         if self.process is not None and self.process.poll() is None:
+            result = {"stopped": False, "outcome": "unconfirmed"}
             try:
-                self.command("shutdown")
-            except (AssertionError, OSError, RuntimeError, TimeoutError):
+                result = self.command("shutdown", deadline=20)
+            except (AssertionError, OSError, RuntimeError, TimeoutError) as exc:
+                result["failure_type"] = type(exc).__name__
                 self.process.terminate()
             try:
                 self.process.wait(timeout=12)
             except subprocess.TimeoutExpired:
                 self.process.kill()
                 self.process.wait(timeout=5)
+            result["fixture_exit_code"] = self.process.returncode
+            self.cleanup.append(result)
+        elif self.process is not None:
+            # A fixture that exited before acknowledging shutdown cannot prove
+            # its adapter/MCP descendants stopped, even with exit status zero.
+            self.cleanup.append({"stopped": False, "outcome": "unconfirmed",
+                                 "failure_type": "exited_before_shutdown_acknowledgment",
+                                 "fixture_exit_code": self.process.returncode})
         if self.process:
             self.process.stdin.close()
             self.process.stdout.close()
@@ -94,13 +107,14 @@ def main():
     args.output_dir.mkdir(parents=True, exist_ok=False)
     if shutil.disk_usage(args.output_dir).free < 1024**3:
         raise RuntimeError("Insufficient temporary space: reserve at least 1 GiB")
-    report = {"schema": "odsp.panel-browser-journey.v1", "status": "FAIL", "checks": [], "screenshots": [],
+    report = {"schema": "odsp.panel-browser-journey.v1", "status": "RUNNING", "checks": [], "screenshots": [],
               "scope": "local_synthetic_browser_RS256_BFF_gateway_Worker_installed_MCP",
               "storage": "repository_DiskStorage_FileBucket_substitutes_not_Cloudflare_qualification",
               "hosted_authentication": "not_qualified", "physical_qualification": "not_performed",
               "accessibility_scope": "structural_keyboard_reflow_reduced_motion_checks_not_complete_WCAG_audit"}
     fixture, browser, context = Fixture(args), None, None
-    errors, traffic = [], []
+    errors, traffic, navigations = [], [], []
+    report["downloaded_responses"] = []
 
     def save():
         (args.output_dir / "report.json").write_text(json.dumps(report, indent=2) + "\n")
@@ -129,6 +143,7 @@ def main():
                 page = ctx.new_page()
                 page.on("pageerror", lambda error: errors.append(str(error)))
                 page.on("request", lambda req: traffic.append({"method": req.method, "path": req.url.split("/", 3)[-1]}))
+                page.on("framenavigated", lambda frame: navigations.append(frame.url) if frame == page.main_frame else None)
                 return ctx, page
 
             anonymous = browser.new_context()
@@ -170,9 +185,30 @@ def main():
             open_session(page)
             snapshot = fixture.command("snapshot")
             assert snapshot["metrics"]["container_starts"] == 1
+            assert not snapshot["metrics"]["process_observation_failures"]
             assert snapshot["metrics"]["mcp_process_ids"]
             assert snapshot["committed"] and snapshot["pending"] is None
             check("explicit_session_crosses_real_BFF_gateway_Worker_installed_MCP", subprocesses=len(snapshot["metrics"]["mcp_process_ids"]))
+
+            def downloaded_receipt(target, response, stage):
+                # The production UI downloads its exact received Uint8Array.
+                # Verify it against the fixture-observed BFF wire bytes without
+                # relying on Chromium DevTools' evictable response-body cache.
+                target.wait_for_function("() => !document.querySelector('#arguments').disabled || !document.querySelector('#hold-warning').hidden", timeout=95000)
+                target.wait_for_function("() => !document.querySelector('#download').disabled")
+                with target.expect_download() as saved:
+                    target.locator("#download").click()
+                name = f"response-{len(report['downloaded_responses']) + 1:03}.json"
+                saved.value.save_as(args.output_dir / name)
+                raw = (args.output_dir / name).read_bytes()
+                wire = fixture.command("last-response")
+                assert wire["path"] == "/api/calls" and wire["status"] == response.status
+                assert len(raw) == wire["bytes"] <= 32 * 1024 * 1024
+                assert hashlib.sha256(raw).hexdigest() == wire["sha256"]
+                assert target.locator("#result").text_content().encode("utf-8") == raw
+                report["downloaded_responses"].append({"stage": stage, "file": name, **wire})
+                save()
+                return json.loads(raw)
 
             def call(target, name, arguments=None, *, raw=None, write=False, expect_error=False):
                 target.locator("#tool-list .tool-item").filter(has_text=name).first.click()
@@ -184,11 +220,12 @@ def main():
                     target.locator("#arguments").fill(text + "\n")
                     assert target.locator("#call").is_disabled()
                     target.locator("#confirm-write").check()
+                navigation_count = len(navigations)
                 with target.expect_response(lambda r: r.url.endswith("/api/calls"), timeout=95000) as returned:
                     target.locator("#call").click()
                 response = returned.value
-                value = response.json()
-                target.wait_for_function("() => !document.querySelector('#arguments').disabled || !document.querySelector('#hold-warning').hidden", timeout=95000)
+                value = downloaded_receipt(target, response, name)
+                assert len(navigations) == navigation_count, "Tool call unexpectedly navigated the page"
                 if expect_error:
                     return response.status, value
                 assert response.ok, value
@@ -330,9 +367,10 @@ def main():
             focus_style = page.locator("#call").evaluate("""e=>{const s=getComputedStyle(e);return {
                 outline:s.outlineStyle, width:parseFloat(s.outlineWidth), shadow:s.boxShadow};}""")
             assert focus_style["outline"] != "none" and focus_style["width"] >= 1 or focus_style["shadow"] != "none", focus_style
-            with page.expect_response(lambda r:r.url.endswith("/api/calls")):
+            with page.expect_response(lambda r:r.url.endswith("/api/calls")) as keyboard_response:
                 page.keyboard.press("Enter")
-            page.wait_for_function("() => !document.querySelector('#arguments').disabled")
+            keyboard_receipt = downloaded_receipt(page, keyboard_response.value, "keyboard_ncp_run_get")
+            assert keyboard_receipt["retention"]["committed"] is True
             (args.output_dir / "accessibility-tree.txt").write_text(page.locator("body").aria_snapshot())
             check("keyboard_operation_labels_live_status_noncolour_state_and_reduced_motion", audit=audit, focus=focus_style)
 
@@ -369,7 +407,15 @@ def main():
             check("credentials_stay_out_of_browser_UI_and_script_cookie_access")
             report["status"] = "PARTIAL" if report.get("remaining_gaps") else "PASS"
     except BaseException as exc:
-        report["failure"] = {"type": type(exc).__name__, "message": str(exc)[:3000]}
+        report["status"] = "FAIL"
+        report["failure"] = {"type": type(exc).__name__, "message": str(exc)[:3000],
+                             "location": traceback.format_tb(exc.__traceback__)[-1][-1500:]}
+        save()
+        try:
+            report["failure_fixture_snapshot"] = fixture.command("snapshot", deadline=10)
+            save()
+        except Exception:
+            pass
         if context:
             try:
                 context.pages[-1].screenshot(path=args.output_dir / "failure.png", full_page=True)
@@ -389,13 +435,22 @@ def main():
             except Exception:
                 pass
         fixture.stop()
+        report["fixture_cleanup"] = fixture.cleanup
+        if any(not item.get("stopped") or item.get("owned_survivors") != 0 or
+               item.get("fixture_exit_code") != 0 or item.get("process_observation_failures")
+               for item in fixture.cleanup):
+            report["status"] = "FAIL"
+            report["cleanup_failure"] = "Fixture shutdown did not confirm all owned processes stopped."
         report["page_errors"] = errors
         report["browser_requests"] = traffic
+        report["page_navigations"] = navigations
         save()
         print(json.dumps({"status": report["status"], "checks": len(report["checks"]),
                           "report": str(args.output_dir / "report.json")}), flush=True)
     if report["status"] == "PARTIAL":
         raise SystemExit(2)
+    if report["status"] == "FAIL":
+        raise SystemExit(1)
 
 
 if __name__ == "__main__":

@@ -59,21 +59,92 @@ function accessToken(principal) {
 }
 const metrics={schema:'odsp.panel-vertical-fixture.v1',scope:'local_DO_R2_substitutes_actual_installed_MCP',
   container_starts:0,adapter_health_requests:0,adapter_transactions:0,gateway_requests:0,worker_requests:0,
-  mcp_process_ids:[],transactions:[],browser_requests:0,started_at:new Date().toISOString()};
-let adapter=null,adapterUrl=null,adapterLog=null,starting=null,publicationFault=false;
+  mcp_process_ids:[],process_observation_failures:[],transactions:[],browser_requests:0,started_at:new Date().toISOString()};
+let adapter=null,adapterStart=null,adapterUrl=null,adapterLog=null,starting=null,publicationFault=false;
+let scanning=null;
+let lastResponse=null,responseSequence=0;
+const ownedProcesses=new Map();
+
+function observationFailure(code) {
+  if(!metrics.process_observation_failures.includes(code))metrics.process_observation_failures.push(code);
+}
+const processGone=error=>['ENOENT','ESRCH'].includes(error.code);
+
+async function processStat(pid) {
+  const raw=await readFile(`/proc/${pid}/stat`,'utf8');
+  const fields=raw.slice(raw.lastIndexOf(')')+2).split(' ');
+  return {parent:Number(fields[1]),start:fields[19],state:fields[0]};
+}
 
 async function scanMcp() {
-  if(!adapter?.pid)return;
-  const queue=[adapter.pid],seen=new Set();
-  while(queue.length) {
-    const pid=queue.pop();if(seen.has(pid))continue;seen.add(pid);
-    try {
-      const cmd=(await readFile(`/proc/${pid}/cmdline`)).toString().split('\0');
-      if(cmd.includes('ciw.principal_mcp')&&!metrics.mcp_process_ids.includes(pid))metrics.mcp_process_ids.push(pid);
-      const children=(await readFile(`/proc/${pid}/task/${pid}/children`,'utf8')).trim().split(/\s+/).filter(Boolean).map(Number);
-      queue.push(...children);
-    } catch {}
+  if(!adapter?.pid||adapter.exitCode!==null||adapter.signalCode!==null)return;
+  if(scanning)return scanning;
+  const rootProcess=adapter,rootPid=adapter.pid,rootStart=adapterStart;
+  scanning=(async()=>{
+    // Some managed Linux environments omit task/<tid>/children entirely.
+    // Observe parent IDs from proc stat instead, and inspect command lines
+    // only for descendants of this fixture's verified adapter process.
+    const pids=(await readdir('/proc')).filter(x=>/^\d+$/.test(x)).map(Number);
+    if(pids.length>4096)throw Error('fixture_process_observation_capacity');
+    const observed=new Map();
+    for(let i=0;i<pids.length;i+=64)await Promise.all(pids.slice(i,i+64).map(async pid=>{
+      try {observed.set(pid,await processStat(pid));}
+      catch(error) {if(!processGone(error))observationFailure('fixture_process_stat_unreadable');}
+    }));
+    // A terminated process number may belong to an unrelated new process.
+    // The root identity was captured at spawn and is never refreshed here.
+    if(rootProcess.exitCode!==null||rootProcess.signalCode!==null)return;
+    if(!rootStart||observed.get(rootPid)?.start!==rootStart) {
+      observationFailure('fixture_adapter_identity_changed');return;
+    }
+    for(const pid of pids) {
+      let ancestor=pid;
+      for(let depth=0;depth<32&&ancestor!==rootPid;depth++)ancestor=observed.get(ancestor)?.parent;
+      if(ancestor!==rootPid)continue;
+      const info=observed.get(pid);
+      if(info) {
+        if(ownedProcesses.has(pid)&&ownedProcesses.get(pid)!==info.start) {
+          observationFailure('fixture_owned_identity_changed');continue;
+        }
+        ownedProcesses.set(pid,info.start);
+      }
+      if(metrics.mcp_process_ids.includes(pid))continue;
+      try {
+        const cmd=(await readFile(`/proc/${pid}/cmdline`)).toString().split('\0');
+        if(cmd.includes('ciw.principal_mcp'))metrics.mcp_process_ids.push(pid);
+      } catch(error) {if(!processGone(error))observationFailure('fixture_owned_command_unreadable');}
+    }
+  })();
+  try {await scanning;} catch(error) {
+    const code=error.message==='fixture_process_observation_capacity'?error.message:'fixture_process_observation_failed';
+    observationFailure(code);
+  } finally {scanning=null;}
+}
+
+async function ownedAlive() {
+  const result={alive:[],unknown:false};
+  for(const [pid,start] of ownedProcesses)try {
+    const current=await processStat(pid);
+    if(current.start===start&&!['Z','X'].includes(current.state))result.alive.push(pid);
+  } catch(error) {if(!processGone(error)) {
+    result.unknown=true;observationFailure('fixture_owned_process_state_unknown');
+  }}
+  return result;
+}
+async function waitOwned(deadline) {
+  const until=Date.now()+deadline;
+  while(Date.now()<until) {
+    const status=await ownedAlive();if(!status.alive.length&&!status.unknown)return status;
+    await new Promise(done=>setTimeout(done,100));
   }
+  return ownedAlive();
+}
+async function signalOwned(pid,signal) {
+  try {
+    const current=await processStat(pid),start=ownedProcesses.get(pid);
+    if(!start||current.start!==start) {observationFailure('fixture_owned_identity_changed');return;}
+    if(!['Z','X'].includes(current.state))process.kill(pid,signal);
+  } catch(error) {if(!processGone(error))observationFailure('fixture_owned_signal_unconfirmed');}
 }
 async function startAdapter() {
   if(adapter&&adapter.exitCode===null&&adapterUrl)return;
@@ -83,6 +154,8 @@ async function startAdapter() {
     adapterLog=createWriteStream(join(root,'adapter-stderr.log'),{flags:'a',mode:0o600});
     adapter=spawn(python,['-I','-B',helper,'serve','--manifest',manifest,'--root',fixture],
       {cwd:root,stdio:['ignore','pipe','pipe'],env:{PATH:process.env.PATH,HOME:process.env.HOME}});
+    adapterStart=(await processStat(adapter.pid)).start;
+    ownedProcesses.set(adapter.pid,adapterStart);
     adapter.stderr.pipe(adapterLog);
     const lines=createInterface({input:adapter.stdout});
     const hello=await new Promise((accept,reject)=>{
@@ -103,13 +176,26 @@ async function startAdapter() {
   try {await starting;} finally {starting=null;}
 }
 async function stopAdapter() {
-  if(adapter&&adapter.exitCode===null) {
+  await scanMcp();
+  if(adapter&&adapter.exitCode===null&&adapter.signalCode===null) {
     const child=adapter;
-    child.kill('SIGTERM');
-    await Promise.race([new Promise(done=>child.once('exit',done)),new Promise(done=>setTimeout(done,8000))]);
-    if(child.exitCode===null){child.kill('SIGKILL');await new Promise(done=>child.once('exit',done));}
+    const exited=new Promise(done=>child.once('exit',done));
+    const observing=setInterval(()=>void scanMcp(),250);
+    await signalOwned(child.pid,'SIGTERM');
+    await Promise.race([exited,new Promise(done=>setTimeout(done,8000))]);
+    if(child.exitCode===null&&child.signalCode===null){
+      await signalOwned(child.pid,'SIGKILL');
+      await Promise.race([exited,new Promise(done=>setTimeout(done,2000))]);
+    }
+    clearInterval(observing);
   }
-  adapter=null;adapterUrl=null;adapterLog?.end();adapterLog=null;
+  // Only captured descendants with the same process start time are ours to
+  // terminate. Preserve all saved state; stopping a process implies no rollback.
+  for(const pid of (await ownedAlive()).alive)await signalOwned(pid,'SIGTERM');
+  for(const pid of (await waitOwned(2000)).alive)await signalOwned(pid,'SIGKILL');
+  const remaining=await waitOwned(2000);
+  if(remaining.alive.length||remaining.unknown)throw Error('fixture_owned_process_cleanup_failed');
+  adapter=null;adapterStart=null;adapterUrl=null;adapterLog?.end();adapterLog=null;
 }
 const storage=new DiskStorage(join(fixture,'worker.sqlite'));
 const bucket=new FileBucket(join(fixture,'objects'));
@@ -127,7 +213,7 @@ const container={
         principal:input.identity.principal,transaction_id:input.transaction.id});
     }
     if(!adapterUrl)throw Error('actual_adapter_not_running');
-    const interval=setInterval(()=>void scanMcp(),10);
+    const interval=setInterval(()=>void scanMcp(),250);
     try{return await nativeFetch(adapterUrl+path,options);}finally{clearInterval(interval);await scanMcp();}
   }};}
 };
@@ -177,8 +263,12 @@ const server=createServer(async(req,res)=>{
     const input=new Request('https://'+panelHost+req.url,{method:req.method,headers,
       ...(chunks.length?{body:Buffer.concat(chunks)}:{})});
     const result=await panel.fetch(input,env);
+    const bytes=Buffer.from(await result.arrayBuffer());
+    if(new URL(input.url).pathname.startsWith('/api/'))lastResponse={sequence:++responseSequence,
+      fixture_pid:process.pid,path:new URL(input.url).pathname,status:result.status,
+      bytes:bytes.length,sha256:createHash('sha256').update(bytes).digest('hex')};
     res.writeHead(result.status,Object.fromEntries(result.headers));
-    res.end(Buffer.from(await result.arrayBuffer()));
+    res.end(bytes);
   } catch {res.writeHead(500,{'content-type':'application/json'});res.end('{"error":"fixture_transport_failed"}');}
 });
 await new Promise(done=>server.listen(Number(args.port||0),'127.0.0.1',done));
@@ -194,13 +284,23 @@ async function files(root) {
   return result;
 }
 const commands=createInterface({input:process.stdin});
-let chain=Promise.resolve(),closing=false;
-async function shutdown(){if(closing)return;closing=true;await stopAdapter();await new Promise(done=>server.close(done));}
+let chain=Promise.resolve(),shutdownPromise=null;
+function shutdown(){
+  shutdownPromise??=(async()=>{
+    await stopAdapter();
+    await new Promise(done=>{server.close(done);server.closeAllConnections();});
+    return {stopped:true,process_scope:'observed_PID_starttime_adapter_descendants',
+      owned_processes_seen:ownedProcesses.size,owned_survivors:0,
+      process_observation_failures:metrics.process_observation_failures};
+  })();
+  return shutdownPromise;
+}
 commands.on('line',line=>{chain=chain.then(async()=>{
   let message;
   try {
     message=JSON.parse(line);let value;
     if(message.op==='session')value={assertion:accessToken(message.principal)};
+    else if(message.op==='last-response')value=lastResponse;
     else if(message.op==='snapshot')value={metrics:structuredClone(metrics),control:await storage.get('control')||null,
       committed:await storage.get('committed')||null,pending:await storage.get('pending')||null,
       adapter_running:container.running,objects:await files(join(fixture,'objects')),state:await files(join(fixture,'state'))};
@@ -209,11 +309,14 @@ commands.on('line',line=>{chain=chain.then(async()=>{
     else if(message.op==='strict-gateway-probe') {
       const request=new Request('http://'+backendHost+'/api/readiness',{headers:{Authorization:'Bearer '+tokens.get(principals[0]),Origin:'https://'+panelHost}});
       const result=await gateway(request,backendEnv);value={status:result.status,body:await result.json()};
-    } else if(message.op==='shutdown'){await shutdown();value={stopped:true};}
+    } else if(message.op==='shutdown'){value=await shutdown();}
     else throw Error('unknown_fixture_command');
     emit({id:message.id,value});
     if(message.op==='shutdown')process.exit(0);
   } catch {emit({id:message?.id,error:'fixture_command_failed'});}
 });});
-process.on('SIGTERM',()=>void shutdown().finally(()=>process.exit(0)));
-process.on('SIGINT',()=>void shutdown().finally(()=>process.exit(0)));
+function stopSignal(){void shutdown().then(()=>process.exit(0),()=>{
+  process.stderr.write('fixture_shutdown_failed\n');process.exit(1);
+});}
+process.on('SIGTERM',stopSignal);
+process.on('SIGINT',stopSignal);
