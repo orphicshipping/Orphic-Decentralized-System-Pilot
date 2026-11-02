@@ -257,6 +257,7 @@ def validate_envelope(body, config):
             or type(transaction['epoch']) is not int or not 1 <= transaction['epoch'] <= 2**53 - 1
             or (transaction['base_commit'] is not None and (type(transaction['base_commit']) is not str
                 or not UUID.fullmatch(transaction['base_commit'])))
+            or transaction['id'] == transaction['base_commit']
             or transaction['release'] != config.release):
         raise Refused('transaction_binding_refused', 409)
     state = body['state']
@@ -279,6 +280,8 @@ def validate_envelope(body, config):
         raise Refused('principal_policy_refused', 403) from None
     if action == 'call' and payload['name'] not in REFERENCE_NAMES:
         from ciw.control_gateway import TOOLS
+        if payload['name'] not in TOOLS:
+            raise Refused('unsupported_tool', 404)
         if not TOOLS[payload['name']]['annotations']['readOnlyHint'] and payload.get('confirmed') is not True:
             raise Refused('confirmation_required', 409)
     return {**body, 'payload': payload}, principal

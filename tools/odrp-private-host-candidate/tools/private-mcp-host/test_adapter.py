@@ -307,6 +307,57 @@ def test_effect_unknown_from_shared_facade_is_not_checkpointed(host, monkeypatch
     asyncio.run(run())
 
 
+def test_timeout_retains_actor_until_effects_are_resolved_without_ack(host, monkeypatch):
+    monkeypatch.setattr(adapter, 'TRANSACTION_SECONDS', .02)
+    async def run():
+        entered, finish = asyncio.Event(), asyncio.Event()
+        bridge = mock_bridge()
+        async def waiting(*_):
+            entered.set()
+            await finish.wait()
+            return []
+        bridge.request.side_effect = waiting
+        monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: bridge)
+        reply = await host.request()
+        assert entered.is_set()
+        assert reply.status_code == 503 and 'state' not in reply.json()
+        assert not bridge.close.called
+        assert adapter.ACTIVE
+        finish.set()
+        await asyncio.gather(*tuple(adapter.ACTIVE), return_exceptions=True)
+        assert bridge.close.called
+        assert adapter.LOCAL_FENCES
+    asyncio.run(run())
+
+
+def test_http_disconnect_is_an_unknown_outcome_without_cancelling_provider(host, monkeypatch):
+    from starlette.requests import Request
+    async def run():
+        entered, finish = asyncio.Event(), asyncio.Event()
+        bridge = mock_bridge()
+        async def waiting(*_):
+            entered.set()
+            await finish.wait()
+            return []
+        bridge.request.side_effect = waiting
+        monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: bridge)
+        messages = asyncio.Queue()
+        messages.put_nowait({'type': 'http.request', 'body': adapter.encoded(host.body()), 'more_body': False})
+        request = Request({'type': 'http', 'method': 'POST', 'path': '/transaction',
+                           'headers': [(b'content-type', b'application/json')]}, messages.get)
+        handling = asyncio.create_task(adapter.transact(request))
+        await entered.wait()
+        messages.put_nowait({'type': 'http.disconnect'})
+        reply = await handling
+        assert reply.status_code == 503
+        assert json.loads(reply.body) == {'error': {'code': 'outcome_unknown'}}
+        assert not bridge.close.called
+        finish.set()
+        await asyncio.gather(*tuple(adapter.ACTIVE), return_exceptions=True)
+        assert adapter.LOCAL_FENCES
+    asyncio.run(run())
+
+
 class TestInstalledMCP:
     """Each test starts real isolated installed principal-MCP subprocesses."""
 
