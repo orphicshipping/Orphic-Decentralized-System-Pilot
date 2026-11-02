@@ -125,7 +125,7 @@ class Server:
             self.negotiated = True
             version = params["protocolVersion"] if params["protocolVersion"] in VERSIONS else VERSIONS[0]
             result = {"protocolVersion": version, "capabilities": {"tools": {"listChanged": False}},
-                      "serverInfo": {"name": "net-agent", "version": "1.0.0"}, "instructions": getattr(self.host, "instructions", INSTRUCTIONS)}
+                      "serverInfo": {"name": "net-agent", "title": "Orphic Decentralized Systems Protocol", "version": "1.0.0"}, "instructions": getattr(self.host, "instructions", INSTRUCTIONS)}
         elif method == "ping":
             result = {}
         elif not self.initialized:

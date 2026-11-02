@@ -177,7 +177,7 @@ def report(directory, output):
     payload = esc(json.dumps(summary, indent=2, allow_nan=False))
     body = f'''<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'">
-<title>Notation Systems / Industrial Pinwheel</title><style>
+<title>Orphic Systems / Industrial Pinwheel</title><style>
 :root{{color-scheme:dark;--bg:#111813;--panel:#19231b;--ink:#d5e5bb;--line:#657a58}}*{{box-sizing:border-box}}
 body{{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 ui-monospace,monospace}}main{{max-width:1180px;margin:auto;padding:20px}}
 h1{{font-size:clamp(25px,5vw,42px);letter-spacing:.045em}}h2{{font-size:18px}}a{{color:inherit}}a:focus-visible,summary:focus-visible{{outline:3px solid var(--ink);outline-offset:4px}}

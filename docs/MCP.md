@@ -7,7 +7,7 @@
 
 Scientific pages and mandates. Reading a page is not a run and not a qualification.
 
-Tracked files here, none of them a tool call: `ABOUT.md`, `ACADEMIC_CONSUMER_QUALIFICATION.md`, `ACQUIRED_DATASET.md`, `ACQUIRED_STREAM.md`, `ADAPTERS.md`, `AGENT_OPERATIONS.md`, `ANNOTATIONS.md`, `ANNOTATION_NISE_LOOP.md` (330 more).
+Tracked files here, none of them a tool call: `ABOUT.md`, `ACADEMIC_CONSUMER_QUALIFICATION.md`, `ACQUIRED_DATASET.md`, `ACQUIRED_STREAM.md`, `ADAPTERS.md`, `AGENT_OPERATIONS.md`, `ANNOTATIONS.md`, `ANNOTATION_NISE_LOOP.md` (331 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

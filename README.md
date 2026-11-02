@@ -123,3 +123,7 @@ Julia, Godot, Bevy, and Blender stay unbound. Leakage and BIM run only when the 
 
 Shell install, `net start`, and the operator manual are not this product. They remain at [docs/OPERATOR_REFERENCE.md](docs/OPERATOR_REFERENCE.md) so that record is not deleted. They add no tool and no grant.
 
+
+## Implementation audit
+
+See the [2026-11-02 scoped implementation audit](docs/IMPLEMENTATION_AUDIT_20261102.md) for the original findings, their disposition after the reviewed repair, and remaining qualification limits.

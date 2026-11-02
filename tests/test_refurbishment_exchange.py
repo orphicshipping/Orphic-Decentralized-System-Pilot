@@ -159,7 +159,7 @@ def test_customer_report_excludes_internal_fields_in_nested_service_records(popu
                     "PRIVATE-CONTACT", "PRIVATE-RELEASE-NOTES", "PRIVATE-WARRANTY-NOTES"):
         assert private not in customer
         assert private in internal
-    assert "Notation Systems \u00b7 Engineering Terminal" in customer
+    assert "Orphic Systems \u00b7 Engineering Terminal" in customer
     assert "\u00c2\u00b7" not in customer and "\u00e2\u20ac" not in customer
 
 

@@ -65,7 +65,7 @@ def _page(title: str, body: str, script: str = "") -> bytes:
             "<meta name='viewport' content='width=device-width, initial-scale=1'>"
             f"<meta http-equiv='Content-Security-Policy' content=\"{policy}\">"
             f"<title>{_e(title)}</title><style>{_STYLE}</style><body>"
-            "<header><small>Notation Systems · Engineering Terminal</small>"
+            "<header><small>Orphic Systems · Engineering Terminal</small>"
             f"<h1>{_e(title)}</h1></header>{body}{script}</body></html>").encode("utf-8")
 
 

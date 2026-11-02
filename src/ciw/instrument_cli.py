@@ -1,4 +1,4 @@
-"""Inspect/advertise portable Notation Systems instruments without executing them."""
+"""Inspect/advertise portable Orphic Systems instruments without executing them."""
 from __future__ import annotations
 
 import argparse

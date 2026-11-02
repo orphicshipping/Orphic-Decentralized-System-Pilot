@@ -1,6 +1,6 @@
 {
   "schema": "ncp.mcp-plug-in.v1",
-  "product": "Notations Control Protocol",
+  "product": "Orphic Decentralized Systems Protocol",
   "audience": ["language_models", "other_software"],
   "not_a_human_console": true,
   "authorizes_execution": false,
