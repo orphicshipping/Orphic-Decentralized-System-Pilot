@@ -145,15 +145,20 @@ class Store:
         with _LOCK:
             directory = _owner_dir(self.owner)
             with _transaction(directory):
-                sequence = _allocate(directory)
-                return self._write({
-                    "schema": "ncp.retained-failure.v1",
-                    "owner": self.owner,
-                    "kind": "failure",
-                    "sequence": sequence,
-                    "native": record,
-                    "catalog": {"schema": "ncp.failure-record.v1"},
-                })
+                return self._keep_failure_locked(record)
+
+    def _keep_failure_locked(self, record: dict) -> str:
+        """Write a failure record. The caller already holds _transaction for this owner."""
+        directory = _owner_dir(self.owner)
+        sequence = _allocate(directory)
+        return self._write({
+            "schema": "ncp.retained-failure.v1",
+            "owner": self.owner,
+            "kind": "failure",
+            "sequence": sequence,
+            "native": record,
+            "catalog": {"schema": "ncp.failure-record.v1"},
+        })
 
     def native(self, artifact_id: str) -> dict:
         return self._read(artifact_id)["native"]
@@ -200,11 +205,14 @@ class Store:
 
     def release(self, artifact_id: str) -> dict:
         target = self._path(artifact_id)
+        # The in-process RLock alone let another process publish or evict between
+        # the read and the unlink. The owner file lock covers both, across processes.
         with _LOCK:
-            self._read(artifact_id)
-            if target.is_symlink():
-                raise ValueError("Unknown retained artifact")
-            target.unlink()
+            with _transaction(_owner_dir(self.owner)):
+                self._read(artifact_id)
+                if target.is_symlink():
+                    raise ValueError("Unknown retained artifact")
+                target.unlink()
         return {"artifact_id": artifact_id, "released": True, "authorizes_execution": False}
 
 
@@ -221,6 +229,26 @@ def _lock_exclusive(fd) -> str:
         import msvcrt
         msvcrt.locking(fd, msvcrt.LK_LOCK, 1)
         return "nt-msvcrt"
+    raise ValueError("Retention locking is unsupported on this platform")
+
+
+def _try_lock(fd) -> bool:
+    """Take an exclusive lock without waiting. The kernel drops it if the holder dies."""
+    if os.name == "posix":
+        import fcntl
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            return False
+        return True
+    if os.name == "nt":
+        import msvcrt
+        try:
+            os.lseek(fd, 0, os.SEEK_SET)
+            msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+        except OSError:
+            return False
+        return True
     raise ValueError("Retention locking is unsupported on this platform")
 
 
