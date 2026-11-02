@@ -22,6 +22,10 @@ Control-tool calls share `ciw.services.admit`: the MCP control host, control cal
 
 The [ODRP reference profile](ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
 
+Control-host and SDK calls apply the same serialized-data response budget through
+`ciw.services.response_postcondition`. Refused retained operations preserve their
+artifact identifiers for inspection.
+
 `ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
 
 

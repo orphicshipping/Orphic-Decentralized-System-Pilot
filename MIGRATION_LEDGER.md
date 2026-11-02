@@ -21,8 +21,10 @@ records a public release, or authorizes execution.
 ## 1. Original partial-snapshot inventory
 
 This historical inventory describes the conversion author's snapshot at 24f6ef0.
-The repair checkout instead contains all 6,852 tracked paths: 6,842 from current
-main plus the conversion's ten additions. No tracked path was removed.
+The ancestry repair contains all 6,852 tracked paths: 6,842 from current main
+plus the conversion's ten additions. The subsequent response-policy and
+claim-recovery regressions add two test files, bringing the integrated repair
+to 6,854 tracked paths. No tracked path was removed.
 
 | Measure | Count |
 |---|---|
@@ -47,7 +49,7 @@ published PR head with main and preserves both ancestries.
 | Coordinator liveness | **rewritten**: kernel file leases (`idem-*.lease`) instead of PID probes | `coordinator.submit/recall/recover` | test_coordinator_multiprocess.py (crash, PID reuse, timeout, reconnect) | PID liveness deleted in ef86a6a |
 | Lost-worker settlement | **rewritten**: settled under the owner transaction lock | recall, recover | crash + 4 concurrent recoverers | — |
 | Exclusive resources | **rewritten**: never-unlinked flock files, bounded wait | submit(exclusive=) | exclusive not stolen / wait timeout / freed on crash; test_transformation_ledger busy-resource | pid-file holds deleted in ef86a6a |
-| Handoff / claim | **rewritten**: serialized under grants lock, claim receipt, duplicate delivery replays after receipt publication | handoff, claim | concurrent claims x6 + intruder + duplicate delivery; crash-safe publication remains unverified | — |
+| Handoff / claim | **rewritten**: durable grant-specific intent fixes artifact identity before publication; receipt replay does not recreate released artifacts | handoff, claim | test_claim_recovery.py: six real process-exit boundaries, concurrent reconnect, malformed receipt and partial-write refusals; Linux local filesystem only | — |
 | Idempotency keys | **rewritten**: conflicting reuse refused (`idempotency_key_conflict`) | submit | key-conflict test, coordinator journey | — |
 | Retained release | **rewritten**: holds owner transaction across processes | Store.release | concurrent release x5 | — |
 | Cancellation | **rewritten**: KeyboardInterrupt/SystemExit during domain execution recorded `cancelled` before lease release | submit | hang-cancel test; interruption during exclusive acquisition remains a separate gap | — |
@@ -92,6 +94,9 @@ Previously reported software-test environments: Linux x86_64, CPython 3.13.5 (de
 (clean venv, wheel install), numpy 2.4.3, websockets 16.0, mcp 2.3.0. Cross-process locking uses
 `fcntl.flock` on POSIX and `msvcrt.locking` on Windows; **the Windows path was not run**.
 macOS was not run. Locks are advisory and assume a local filesystem (not NFS).
+The integrated repair explicitly refuses retained reads when `O_NOFOLLOW` is
+unavailable. Lock support on Windows does not establish safe-read support or
+Windows qualification.
 
 ## 7. Historical conversion evidence matrix
 

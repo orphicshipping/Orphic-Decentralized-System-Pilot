@@ -51,6 +51,10 @@ Control-tool calls share `ciw.services.admit`: the MCP control host, control cal
 
 The [ODRP reference profile](docs/ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
 
+Control-host and SDK routes also share `ciw.services.response_postcondition`,
+which bounds serialized operation data without changing its return shape.
+Retained-failure artifact identifiers remain available on refusal.
+
 Decision: source paths stay. Tests and pins import them. `ciw.services` is the application service. The MCP methods delegate to it. The [transformation ledger](mcp/transformation-ledger.json) names every tracked path. Unbound engines stay blocked. They are not simulated.
 
 The [capability map](mcp/capability-map.json) lists the advertised tools. The [verification report](mcp/verification-report.json) stays `INCOMPLETE` while Julia, Godot, Bevy, Blender, an SP1 proof, and pin-required workflows are blocked. That is not a claim that those runs succeeded. The agent procedure is [docs/AGENT_OPERATIONS.md](docs/AGENT_OPERATIONS.md).

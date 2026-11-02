@@ -11,6 +11,7 @@ import base64
 import json
 import os
 import secrets
+import stat
 from hashlib import sha256
 from hmac import compare_digest
 from pathlib import Path
@@ -23,6 +24,8 @@ _PAGE = 32768
 _OWNER = os.environ.get("NCP_RETAIN_OWNER") or secrets.token_hex(16)
 # Linux flock is what this sandbox executes. Windows uses msvcrt when that
 # module exists. Any other platform refuses instead of skipping the lock.
+# Lock support alone is not read support: no-follow reads explicitly refuse
+# when O_NOFOLLOW is absent; Windows has not been qualified.
 SUPPORTED_PLATFORMS = ("posix", "nt")
 
 
@@ -71,15 +74,9 @@ class Store:
                 raise ValueError("Retained artifact belongs to another host session")
             raise ValueError("Unknown retained artifact")
         try:
-            fd = os.open(target, os.O_RDONLY | os.O_NOFOLLOW)
-        except OSError as exc:
+            raw = _read_regular(target)
+        except FileNotFoundError as exc:
             raise ValueError("Unknown retained artifact") from exc
-        try:
-            raw = os.read(fd, _BYTE_LIMIT + 1)
-        finally:
-            os.close(fd)
-        if len(raw) > _BYTE_LIMIT:
-            raise ValueError("Retained artifact exceeds the byte budget")
         value = json.loads(raw.decode("utf-8"))
         if type(value) is not dict or value.get("schema") not in {"ncp.retained-bundle.v1", "ncp.retained-failure.v1"}:
             raise ValueError("Retained artifact is not a record")
@@ -115,17 +112,17 @@ class Store:
             ranked.append((sequence if type(sequence) is int else 0, size, old))
             total += size
         ranked.sort(key=lambda item: item[0])
-        overflow = ranked[:-_LIMIT]
-        for _sequence, size, old in overflow:
-            if old != target:
-                old.unlink(missing_ok=True)
-                total -= size
+        # Recovery may publish an older reserved sequence after newer records.
+        # Preserve that target while enforcing both limits over the other files.
+        remaining_count = len(ranked)
         for _sequence, size, old in ranked:
-            if total <= _BYTE_LIMIT or old == target:
+            if remaining_count <= _LIMIT and total <= _BYTE_LIMIT:
                 break
-            if old not in {item[2] for item in overflow}:
-                old.unlink(missing_ok=True)
-                total -= size
+            if old == target:
+                continue
+            old.unlink(missing_ok=True)
+            total -= size
+            remaining_count -= 1
 
     def keep(self, bundle: dict, *, kind: str, catalog: dict) -> str:
         with _LOCK:
@@ -216,6 +213,39 @@ class Store:
         return {"artifact_id": artifact_id, "released": True, "authorizes_execution": False}
 
 
+def _read_regular(path: Path, *, byte_limit: int | None = None) -> bytes:
+    """Bounded no-follow read; an unsupported platform must not follow links."""
+    limit = _BYTE_LIMIT if byte_limit is None else byte_limit
+    if type(limit) is not int or limit < 1:
+        raise ValueError("Retention read budget must be a positive integer")
+    nofollow = getattr(os, "O_NOFOLLOW", None)
+    if nofollow is None:
+        raise ValueError("Retention no-follow reads are unsupported on this platform")
+    try:
+        fd = os.open(path, os.O_RDONLY | nofollow | getattr(os, "O_NONBLOCK", 0))
+    except FileNotFoundError:
+        raise
+    except OSError as exc:
+        raise ValueError("Retention record cannot be opened safely") from exc
+    try:
+        if not stat.S_ISREG(os.fstat(fd).st_mode):
+            raise ValueError("Retention record is not a regular file")
+        chunks = []
+        remaining = limit + 1
+        while remaining:
+            chunk = os.read(fd, remaining)
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        raw = b"".join(chunks)
+    finally:
+        os.close(fd)
+    if len(raw) > limit:
+        raise ValueError("Retained artifact exceeds the byte budget")
+    return raw
+
+
 def _canonical(value: dict) -> bytes:
     return json.dumps(value, sort_keys=True, separators=(",", ":")).encode()
 
@@ -283,11 +313,23 @@ def _publish(directory: Path, name: str, raw: bytes) -> None:
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0)
     fd = os.open(partial, flags, 0o600)
     try:
-        os.write(fd, raw)
+        pending = memoryview(raw)
+        while pending:
+            written = os.write(fd, pending)
+            if written <= 0:
+                raise OSError("Retention publication made no progress")
+            pending = pending[written:]
         os.fsync(fd)
     finally:
         os.close(fd)
     os.replace(partial, directory / name)
+    # Persist the rename as well as the data before the next transaction step.
+    if os.name == "posix":
+        directory_fd = os.open(directory, os.O_RDONLY | os.O_DIRECTORY)
+        try:
+            os.fsync(directory_fd)
+        finally:
+            os.close(directory_fd)
 
 
 def _allocate(directory: Path) -> int:

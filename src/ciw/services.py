@@ -350,6 +350,18 @@ def admit(name, arguments):
     _shape(arguments, TOOLS[name]["inputSchema"])
 
 
+def response_postcondition(value):
+    """Enforce the shared serialized data budget without adding an envelope.
+
+    The budget is for operation data, matching ControlHost's existing contract.
+    RetainedFailure exceptions propagate unchanged before this postcondition.
+    """
+    from .agent_api import encode, MAX_RESPONSE
+    if len(encode(value)) > MAX_RESPONSE:
+        raise ValueError("Response exceeds budget")
+    return value
+
+
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
     # Reference disclosure is a separate host profile, not a control-host grant.
@@ -367,18 +379,22 @@ def invoke(name, arguments=None, host=None):
             raise ValueError("This operation needs open_demo. A folder is not a session.")
         response = host.call(name, arguments)
         if response["status"] != "ok":
+            error = response.get("error") or {}
+            if error.get("artifact_id"):
+                from .retention import RetainedFailure
+                raise RetainedFailure("request_refused", error["artifact_id"])
             raise ValueError("request_refused")
-        return response["data"]
+        return response_postcondition(response["data"])
     store = None
     if host is not None:
         store = getattr(host, "retained", None)
         if store is None:
             raise ValueError("This host has no retained store")
     if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate"}:
-        return OPERATIONS[name](**arguments, store=store)
+        return response_postcondition(OPERATIONS[name](**arguments, store=store))
     if host is not None:
         raise ValueError("This operation does not take a session")
-    return OPERATIONS[name](**arguments)
+    return response_postcondition(OPERATIONS[name](**arguments))
 
 
 def capability_map():

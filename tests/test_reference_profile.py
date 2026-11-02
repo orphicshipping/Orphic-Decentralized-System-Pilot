@@ -1,11 +1,7 @@
 """Real engine + real subprocess MCP client. Synthetic fixture only."""
 import json, os, shutil, sys, tempfile, unittest
 from pathlib import Path
-import anyio
 import ciw
-import mcp
-from mcp import ClientSession, StdioServerParameters
-from mcp.client.stdio import stdio_client
 from ciw.evidence_corpus import compile_evidence
 from reference_fixture_helpers import make_catalog
 from ciw.services import open_reference as open_host, invoke as shared_invoke, reference_tools
@@ -76,6 +72,15 @@ class VerticalSlice(unittest.TestCase):
         moved=open_host(catalog_path=new/'catalog',catalog_ref=self.ref,evidence_path=new/'evidence',evidence_ref=self.eref)
         self.assertEqual(expected,invoke(moved,'ncp_evidence_search',{'query':'calibration'}))
     def test_real_mcp_stdio_outside_checkout(self):
+        try:
+            import anyio
+            import mcp
+            from mcp import ClientSession, StdioServerParameters
+            from mcp.client.stdio import stdio_client
+        except ModuleNotFoundError as exc:
+            if exc.name not in {"anyio", "mcp"}:
+                raise
+            self.skipTest("Optional MCP transport dependencies are not installed")
         expected=invoke(self.host,'ncp_evidence_search',{'query':'calibration'})
         env={**os.environ,'PYTHONPATH':str(Path(mcp.__file__).resolve().parents[1])+os.pathsep+str(Path(ciw.__file__).resolve().parents[1])}
         params=StdioServerParameters(command=sys.executable,args=['-m','ciw.net','reference','serve',

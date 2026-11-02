@@ -9,7 +9,7 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2738,
+    "retained_and_verified": 2740,
     "generated": 662,
     "rewritten": 35,
     "blocked": 109,
@@ -41758,6 +41758,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_claim_recovery.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_cli_json_boundary.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -44286,6 +44293,13 @@
     },
     {
       "path": "tests/test_residual_view.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_response_policy.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",

@@ -9,15 +9,20 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import time
 from hashlib import sha256
 from pathlib import Path
 
 from .retention import (_LOCK, _lock_release, _owner_dir, _publish, _root, _transaction,
-                        _try_lock)
+                        _try_lock, _allocate, _canonical, _read_regular, _BYTE_LIMIT)
 
 _EXECUTIONS = 0
 _CANCELLED = (KeyboardInterrupt, SystemExit)
+# Legacy grants use default JSON spacing, adding at most one byte for each
+# compact delimiter. Allow that expansion plus escaped owner/recipient metadata;
+# the recipient artifact itself still has the unchanged retention byte budget.
+_GRANT_BYTE_LIMIT = 2 * _BYTE_LIMIT + 12 * (4096 + 500) + 1024
 
 
 # Liveness is a kernel file lock (a lease), not a PID. A worker holds the lease on
@@ -282,35 +287,112 @@ def handoff(store, artifact_id: str, recipient: str) -> dict:
             "already_claimed": bool(claimed), "authorizes_execution": False}
 
 
-def claim(store, grant_id: str) -> dict:
-    """Claim a grant exactly once across processes.
+def _claim_record(path: Path, *, byte_limit: int | None = None) -> dict | None:
+    try:
+        raw = _read_regular(path, byte_limit=byte_limit)
+    except FileNotFoundError:
+        return None
+    try:
+        value = json.loads(raw)
+    except (ValueError, UnicodeError) as exc:
+        raise ValueError("handoff_record_invalid") from exc
+    if type(value) is not dict or not value:
+        raise ValueError("handoff_record_invalid")
+    return value
 
-    The read, the copy and the consumption happen under one cross-process file
-    lock. A repeated delivery of the same claim by the recipient returns the
-    same artifact instead of a second copy or a refusal.
+
+def _valid_artifact_id(value) -> bool:
+    return type(value) is str and re.fullmatch(r"(?:retained|failure)-[0-9a-f]{32}", value) is not None
+
+
+def _grant_identity(owner: str, recipient: str, source: str) -> str:
+    return "grant-" + sha256((owner + "\0" + recipient + "\0" + source).encode()).hexdigest()[:32]
+
+
+def _check_receipt(receipt: dict, grant_id: str, recipient: str) -> None:
+    if (receipt.get("schema") != "ncp.coordinator-claim-receipt.v1" or
+            receipt.get("recipient") != recipient or
+            not _valid_artifact_id(receipt.get("artifact_id")) or
+            not _valid_artifact_id(receipt.get("source_artifact_id"))):
+        raise ValueError("handoff_receipt_invalid")
+    # Old valid v1 receipts lack these fields. Do not require a retained artifact
+    # to exist: release/eviction must not authorize another execution or copy.
+    if "grant_id" in receipt or "source_owner" in receipt:
+        owner = receipt.get("source_owner")
+        if (type(owner) is not str or not owner or receipt.get("grant_id") != grant_id or
+                _grant_identity(owner, recipient, receipt["source_artifact_id"]) != grant_id):
+            raise ValueError("handoff_receipt_invalid")
+
+
+def claim(store, grant_id: str) -> dict:
+    """Recover a single grant-specific publication, including after process loss.
+
+    The grants lock serializes claims. A durable intent fixes the recipient's
+    sequence before publishing its artifact; retries reconstruct the same bytes
+    and identity, rather than allocating a new sequence. The owner lock also
+    excludes concurrent release/eviction until the receipt is committed.
     """
-    if type(grant_id) is not str or not grant_id.startswith("grant-") or "/" in grant_id or ".." in grant_id:
+    if type(grant_id) is not str or re.fullmatch(r"grant-[0-9a-f]{32}", grant_id) is None:
         raise ValueError("handoff_refused")
     directory, guard = _grants_lock()
     with guard:
-        receipt = _read_json(directory / (grant_id + ".claimed.json"))
-        if receipt:
+        receipt = _claim_record(directory / (grant_id + ".claimed.json"))
+        if receipt is not None:
             if receipt.get("recipient") != store.owner:
                 raise ValueError("handoff_refused")
+            _check_receipt(receipt, grant_id, store.owner)
             return {"schema": "ncp.coordinator-claim.v1", "artifact_id": receipt.get("artifact_id"),
                     "source_artifact_id": receipt.get("source_artifact_id"), "replayed": True,
                     "authorizes_execution": False}
         path = directory / (grant_id + ".json")
-        grant = _read_json(path)
-        if not grant or grant.get("recipient") != store.owner:
+        grant = _claim_record(path, byte_limit=_GRANT_BYTE_LIMIT)
+        if not grant or grant.get("recipient") != store.owner or grant.get("grant_id") != grant_id:
             raise ValueError("handoff_refused")
-        copied = store.keep(grant["native"], kind="handoff", catalog=grant["catalog"])
-        _publish(directory, grant_id + ".claimed.json", json.dumps(
-            {"schema": "ncp.coordinator-claim-receipt.v1", "recipient": store.owner, "artifact_id": copied,
-             "source_artifact_id": grant.get("source_artifact_id")}, sort_keys=True).encode())
+        if (grant.get("schema") != "ncp.handoff-grant.v1" or
+                type(grant.get("owner")) is not str or not grant["owner"] or
+                not _valid_artifact_id(grant.get("source_artifact_id")) or
+                type(grant.get("native")) is not dict or type(grant.get("catalog")) is not dict or
+                _grant_identity(grant["owner"], store.owner, grant["source_artifact_id"]) != grant_id):
+            raise ValueError("handoff_grant_invalid")
+        intent_name = grant_id + ".intent.json"
+        intent = _claim_record(directory / intent_name)
+        replayed = intent is not None
+        digest = sha256(_canonical(grant)).hexdigest()
+        with _LOCK:
+            owner_directory = _owner_dir(store.owner)
+            with _transaction(owner_directory):
+                if intent is None:
+                    intent = {"schema": "ncp.coordinator-claim-intent.v1", "recipient": store.owner,
+                              "grant_digest": digest, "sequence": _allocate(owner_directory)}
+                    _publish(directory, intent_name, _canonical(intent))
+                elif (intent.get("schema") != "ncp.coordinator-claim-intent.v1" or
+                      intent.get("recipient") != store.owner or intent.get("grant_digest") != digest or
+                      type(intent.get("sequence")) is not int or intent["sequence"] < 1):
+                    raise ValueError("handoff_intent_conflict")
+                envelope = {"schema": "ncp.retained-bundle.v1", "owner": store.owner,
+                            "kind": "handoff", "sequence": intent["sequence"],
+                            "native": grant["native"], "catalog": grant["catalog"]}
+                copied = "retained-" + sha256(_canonical(envelope)).hexdigest()[:32]
+                target = store._path(copied)
+                if target.is_symlink():
+                    raise ValueError("handoff_artifact_conflict")
+                if target.exists():
+                    if store._read(copied) != envelope:
+                        raise ValueError("handoff_artifact_conflict")
+                    # Publication may have survived a crash before eviction ran.
+                    store._evict(owner_directory, "retained-", target)
+                else:
+                    if store._write(envelope) != copied:
+                        raise RuntimeError("handoff_artifact_identity_mismatch")
+                _publish(directory, grant_id + ".claimed.json", _canonical(
+                    {"schema": "ncp.coordinator-claim-receipt.v1", "recipient": store.owner,
+                     "artifact_id": copied, "source_artifact_id": grant.get("source_artifact_id"),
+                     "grant_id": grant_id, "source_owner": grant["owner"]}))
+        # Receipt is durable before cleanup. A crash during cleanup just replays it.
         path.unlink(missing_ok=True)
+        (directory / intent_name).unlink(missing_ok=True)
     return {"schema": "ncp.coordinator-claim.v1", "artifact_id": copied,
-            "source_artifact_id": grant.get("source_artifact_id"), "replayed": False,
+            "source_artifact_id": grant.get("source_artifact_id"), "replayed": replayed,
             "authorizes_execution": False}
 
 
