@@ -9,8 +9,8 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2719,
-    "generated": 658,
+    "retained_and_verified": 2728,
+    "generated": 659,
     "rewritten": 28,
     "blocked": 109,
     "vendor_exempt": 3308
@@ -1221,6 +1221,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "MIGRATION_LEDGER.md",
+      "disposition": "retained_and_verified",
+      "component": "repository",
+      "reason": "Supporting tracked file. Accounted for. Not a tool call and not an unreviewed island.",
+      "authorizes_execution": false
+    },
+    {
       "path": "PUBLIC_ABOUT_COPY.md",
       "disposition": "retained_and_verified",
       "component": "repository",
@@ -1257,6 +1264,13 @@
     },
     {
       "path": "TECHNICAL_REFERENCE.md",
+      "disposition": "retained_and_verified",
+      "component": "repository",
+      "reason": "Supporting tracked file. Accounted for. Not a tool call and not an unreviewed island.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "THIRD_PARTY.md",
       "disposition": "retained_and_verified",
       "component": "repository",
       "reason": "Supporting tracked file. Accounted for. Not a tool call and not an unreviewed island.",
@@ -41303,6 +41317,27 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/support/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/support/README.md",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/support/coordinator_child.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_academic_consumers.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -41716,6 +41751,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_consumer_journeys.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_container_calculus.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -41731,6 +41773,13 @@
     },
     {
       "path": "tests/test_control_plane.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_coordinator_multiprocess.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -43249,6 +43298,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_mcp_sdk_parity_process.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_measured_thermal.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -44292,6 +44348,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_sequence_kinetics_numerical.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_sequence_session.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -44300,6 +44363,13 @@
     },
     {
       "path": "tests/test_server_json_boundary.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_shared_policy_boundary.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
