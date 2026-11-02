@@ -202,6 +202,7 @@ def semantic_registry(owner):
 
 class ControlHost:
     instructions = (
+        "ODSP (Orphic Decentralized Systems Protocol) MCP control surface. "
         "Discover capabilities, inspect a host baseline template, create a typed plan, "
         "admit its exact digest, then submit and poll the returned run ID. Admission "
         "uses existing operator grants and cannot broaden them. Reuse an attempt on "
@@ -724,9 +725,10 @@ class ControlHost:
     def call(self, name, arguments):
         from .retention import RetainedFailure
         try:
-            if self._closed or name not in TOOLS or len(encode(arguments)) > 65536:
+            if self._closed:
                 raise ValueError("Unsupported request")
-            _shape(arguments, TOOLS[name]["inputSchema"])
+            from .services import admit
+            admit(name, arguments)
             self._store.check_current()
             value = getattr(self, TOOLS[name]["method"])(**deepcopy(arguments))
             if len(encode(value)) > MAX_RESPONSE:

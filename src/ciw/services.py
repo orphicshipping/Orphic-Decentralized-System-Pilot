@@ -317,22 +317,44 @@ SESSION = frozenset({
 })
 
 
+_PIN_FIELDS = frozenset({"checkout", "python", "python_executable", "provider_revision", "pin", "repository",
+                         "configuration"})
+_IDENTITY_FIELDS = frozenset({"owner", "principal", "agent_id"})
+
+
+def admit(name, arguments):
+    """The one request policy for every caller: MCP host, SDK and coordinator.
+
+    A request names a listed tool, stays inside the argument budget, cannot pick
+    a checkout or pin, cannot name a principal (the host supplies identity) and
+    matches the declared input schema. Transports format; they do not re-decide.
+    """
+    from .agent_api import encode
+    from .agent_tools import _shape
+    from .control_gateway import TOOLS
+    if not isinstance(name, str) or name not in TOOLS:
+        raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
+    if type(arguments) is not dict:
+        raise ValueError("Service arguments must be an object")
+    if _PIN_FIELDS & set(arguments):
+        raise ValueError("Service arguments cannot select a checkout or a pin")
+    if _IDENTITY_FIELDS & set(arguments):
+        raise ValueError("coordinator_impersonation_refused")
+    try:
+        size = len(encode(arguments))
+    except ValueError as exc:
+        raise ValueError("Request exceeds the argument budget") from exc
+    if size > 65536:
+        raise ValueError("Request exceeds the argument budget")
+    _shape(arguments, TOOLS[name]["inputSchema"])
+
+
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
     if not isinstance(name, str) or (name not in OPERATIONS and name not in SESSION):
         raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
     arguments = {} if arguments is None else arguments
-    if type(arguments) is not dict:
-        raise ValueError("Service arguments must be an object")
-    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository", "configuration"}
-    if forbidden & set(arguments):
-        raise ValueError("Service arguments cannot select a checkout or a pin")
-    from .agent_api import encode
-    from .agent_tools import _shape
-    from .control_gateway import TOOLS
-    if name not in TOOLS or len(encode(arguments)) > 65536:
-        raise ValueError("Request exceeds the argument budget")
-    _shape(arguments, TOOLS[name]["inputSchema"])
+    admit(name, arguments)
     if name in SESSION:
         if host is None:
             raise ValueError("This operation needs open_demo. A folder is not a session.")

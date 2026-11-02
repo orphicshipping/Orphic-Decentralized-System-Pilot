@@ -9,24 +9,47 @@ from __future__ import annotations
 
 import json
 import os
+import time
 from hashlib import sha256
 from pathlib import Path
 
-from .retention import _LOCK, _owner_dir, _publish, _root, _transaction
+from .retention import (_LOCK, _lock_release, _owner_dir, _publish, _root, _transaction,
+                        _try_lock)
 
 _EXECUTIONS = 0
+_CANCELLED = (KeyboardInterrupt, SystemExit)
 
 
-def _alive(pid) -> bool:
-    if type(pid) is not int or pid <= 0:
+# Liveness is a kernel file lock (a lease), not a PID. A worker holds the lease on
+# idem-<hash>.lease for as long as it runs. The kernel drops it when the process
+# exits for any reason, so a reused PID cannot make a dead job look alive and a
+# live job cannot be stolen. The PID stays in the record for diagnosis only.
+class _Lease:
+    def __init__(self, path: Path):
+        self.path = path
+        self.fd = None
+
+    def try_acquire(self) -> bool:
+        flags = os.O_CREAT | os.O_RDWR | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(self.path, flags, 0o600)
+        if _try_lock(fd):
+            self.fd = fd
+            return True
+        os.close(fd)
         return False
-    try:
-        os.kill(pid, 0)
-    except ProcessLookupError:
-        return False
-    except PermissionError:
-        return True
-    return True
+
+    def release(self) -> None:
+        if self.fd is not None:
+            try:
+                os.lseek(self.fd, 0, os.SEEK_SET)
+                _lock_release(self.fd)
+            finally:
+                os.close(self.fd)
+                self.fd = None
+
+
+def _lease_path(directory: Path, name: str) -> Path:
+    return directory / (name[: -len(".json")] + ".lease")
 
 
 def _exclusive_path(name: str) -> Path:
@@ -67,94 +90,123 @@ def _store_job(store, name: str, job: dict) -> None:
     _publish(directory, name, json.dumps(job, sort_keys=True, separators=(",", ":")).encode())
 
 
-def _fail_lost(store, name: str, job: dict) -> dict:
-    failed = {k: v for k, v in job.items() if k != "replayed"}
-    failed["status"] = "failed"
-    failed["error"] = "worker_lost"
-    artifact = store.keep_failure({"error": "worker_lost", "operation": job.get("operation")})
-    failed["artifact_id"] = artifact
+def _replay(job: dict) -> dict:
+    replay = dict(job)
+    replay["replayed"] = True
+    replay["authorizes_execution"] = False
+    return replay
+
+
+def _settle_locked(store, directory: Path, name: str) -> dict | None:
+    """Resolve one job record. The caller holds _transaction(directory).
+
+    A running record whose lease nobody holds is a lost worker. It is marked
+    failed here, inside the same owner lock as the read, so two recoverers
+    cannot both write it and a finishing worker cannot be overwritten.
+    """
+    job = _read_json(directory / name)
+    if job is None or job.get("status") != "running":
+        return job
+    lease = _Lease(_lease_path(directory, name))
+    if not lease.try_acquire():
+        return job
+    try:
+        failed = {k: v for k, v in job.items() if k != "replayed"}
+        failed["status"] = "failed"
+        failed["error"] = "worker_lost"
+        failed["artifact_id"] = store._keep_failure_locked(
+            {"error": "worker_lost", "operation": job.get("operation")})
+        _store_job(store, name, failed)
+        return failed
+    finally:
+        lease.release()
+
+
+def _fail_lost(store, name: str, job: dict | None = None) -> dict:
     directory = _owner_dir(store.owner)
     with _LOCK:
         with _transaction(directory):
-            _store_job(store, name, failed)
-    failed["replayed"] = True
-    failed["authorizes_execution"] = False
-    return failed
+            settled = _settle_locked(store, directory, name)
+    if settled is None:
+        raise ValueError("unknown_job")
+    return _replay(settled)
 
 
-def _admit(store, key: str, digest: str, operation: str) -> tuple[dict, bool]:
-    """Create the running record or return the existing one. One lock covers both."""
+def _admit(store, key: str, digest: str, operation: str):
+    """Create the running record and take its lease, or return the existing record."""
     directory = _owner_dir(store.owner)
-    path = directory / _idem_name(key)
-    lost = None
+    name = _idem_name(key)
     with _LOCK:
         with _transaction(directory):
-            name = _idem_name(key)
-            path = directory / name
-            existing = _read_json(path)
+            existing = _read_json(directory / name)
             if existing is not None:
                 if existing.get("request_digest") != digest:
                     raise ValueError("idempotency_key_conflict")
-                if existing.get("status") == "running" and not _alive(existing.get("pid")):
-                    lost = (name, existing)
-                else:
-                    replay = dict(existing)
-                    replay["replayed"] = True
-                    replay["authorizes_execution"] = False
-                    return replay, True
-            else:
-                job = {
-                    "schema": "ncp.coordinator-job.v1",
-                    "operation": operation,
-                    "executions": 1,
-                    "status": "running",
-                    "pid": os.getpid(),
-                    "request_digest": digest,
-                    "authorizes_execution": False,
-                }
+                return _replay(_settle_locked(store, directory, name)), None
+            lease = _Lease(_lease_path(directory, name))
+            if not lease.try_acquire():
+                raise RuntimeError("coordinator lease is held without a job record")
+            job = {
+                "schema": "ncp.coordinator-job.v1",
+                "operation": operation,
+                "executions": 1,
+                "status": "running",
+                "pid": os.getpid(),
+                "liveness": "file-lease",
+                "request_digest": digest,
+                "authorizes_execution": False,
+            }
+            try:
                 _store_job(store, name, job)
-                return job, False
-    if lost is not None:
-        return _fail_lost(store, lost[0], lost[1]), True
-    raise RuntimeError("coordinator admission did not resolve")
+            except BaseException:
+                lease.release()
+                raise
+            return job, lease
 
 
-def _hold_exclusive(store, name: str) -> Path | None:
+def _finish(store, key: str, record: dict) -> None:
+    directory = _owner_dir(store.owner)
+    with _LOCK:
+        with _transaction(directory):
+            _store_job(store, _idem_name(key), {k: v for k, v in record.items() if k != "replayed"})
+
+
+# An exclusive resource is held by a kernel lock on exclusive/<name>. The file is
+# never unlinked: unlinking a locked file would let a second process lock a new
+# inode under the same name while the first still holds the old one.
+def _hold_exclusive(store, name: str, wait: float = 0.0):
     path = _exclusive_path(name)
-    record = json.dumps({"pid": os.getpid(), "owner": store.owner}).encode()
-    try:
-        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-    except FileExistsError:
-        current = _read_json(path) or {}
-        if _alive(current.get("pid")):
+    deadline = time.monotonic() + max(0.0, float(wait))
+    lease = _Lease(path)
+    while not lease.try_acquire():
+        if time.monotonic() >= deadline:
             return None
-        path.unlink(missing_ok=True)
-        try:
-            fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        except FileExistsError:
-            return None
+        time.sleep(0.02)
+    record = json.dumps({"pid": os.getpid(), "owner": store.owner, "liveness": "file-lease"}).encode()
+    os.ftruncate(lease.fd, 0)
+    os.lseek(lease.fd, 0, os.SEEK_SET)
+    os.write(lease.fd, record)
+    return lease
+
+
+def _release_exclusive(lease) -> None:
+    if lease is None or lease.fd is None:
+        return
     try:
-        os.write(fd, record)
+        os.ftruncate(lease.fd, 0)
     finally:
-        os.close(fd)
-    return path
-
-
-def _release_exclusive(path: Path) -> None:
-    current = _read_json(path) or {}
-    if current.get("pid") == os.getpid():
-        path.unlink(missing_ok=True)
+        lease.release()
 
 
 def _checked_arguments(arguments: dict) -> None:
-    from .agent_tools import _shape
-    from .control_gateway import TOOLS
-    if "owner" in arguments or "principal" in arguments or "agent_id" in arguments:
-        raise ValueError("coordinator_impersonation_refused")
-    _shape(arguments, TOOLS["ncp_domain_run"]["inputSchema"])
+    # The inner operation passes the same policy as a direct MCP or SDK call, so
+    # the coordinator cannot be used to bypass a check the host would enforce.
+    from .services import admit
+    admit("ncp_domain_run", arguments)
 
 
-def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusive: str | None = None) -> dict:
+def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusive: str | None = None,
+           exclusive_wait: float = 0.0) -> dict:
     global _EXECUTIONS
     from .retention import RetainedFailure
     from .services import domain_run
@@ -164,43 +216,46 @@ def submit(store, operation: str, arguments: dict, idempotency_key: str, exclusi
         raise ValueError("coordinator arguments must be an object")
     _checked_arguments(arguments)
     digest = _digest(operation, arguments, exclusive)
-    existing, replay = _admit(store, idempotency_key, digest, operation)
-    if replay:
+    existing, lease = _admit(store, idempotency_key, digest, operation)
+    if lease is None:
         return existing
     held = None
-    if exclusive is not None:
-        held = _hold_exclusive(store, exclusive)
-        if held is None:
-            failure = store.keep_failure({"error": "exclusive_resource_busy", "operation": operation})
-            failed = {**existing, "status": "failed", "error": "exclusive_resource_busy", "artifact_id": failure}
-            directory = _owner_dir(store.owner)
-            with _LOCK:
-                with _transaction(directory):
-                    _store_job(store, _idem_name(idempotency_key), {k: v for k, v in failed.items() if k != "replayed"})
-            raise RetainedFailure("exclusive_resource_busy", failure)
     try:
+        if exclusive is not None:
+            held = _hold_exclusive(store, exclusive, exclusive_wait)
+            if held is None:
+                failure = store.keep_failure({"error": "exclusive_resource_busy", "operation": operation})
+                _finish(store, idempotency_key, {**existing, "status": "failed",
+                                                 "error": "exclusive_resource_busy", "artifact_id": failure})
+                raise RetainedFailure("exclusive_resource_busy", failure)
         _EXECUTIONS += 1
-        result = domain_run(store=store, **arguments)
-    except Exception as exc:
-        failure = getattr(exc, "artifact_id", None)
-        failed = {**existing, "status": "failed", "artifact_id": failure, "error": str(exc)[:300]}
-        directory = _owner_dir(store.owner)
-        with _LOCK:
-            with _transaction(directory):
-                _store_job(store, _idem_name(idempotency_key), failed)
-        raise
-    else:
-        done = {**existing, "status": "completed", "artifact_id": result.get("artifact_id"), "example": result.get("example")}
-        directory = _owner_dir(store.owner)
-        with _LOCK:
-            with _transaction(directory):
-                _store_job(store, _idem_name(idempotency_key), done)
+        try:
+            result = domain_run(store=store, **arguments)
+        except _CANCELLED:
+            _finish(store, idempotency_key, {**existing, "status": "cancelled", "error": "cancelled"})
+            raise
+        except Exception as exc:
+            failure = getattr(exc, "artifact_id", None)
+            _finish(store, idempotency_key, {**existing, "status": "failed", "artifact_id": failure,
+                                             "error": str(exc)[:300]})
+            raise
+        done = {**existing, "status": "completed", "artifact_id": result.get("artifact_id"),
+                "example": result.get("example")}
+        _finish(store, idempotency_key, done)
         done["replayed"] = False
         done["authorizes_execution"] = False
         return done
     finally:
-        if held is not None:
-            _release_exclusive(held)
+        _release_exclusive(held)
+        # The terminal record is written before the lease drops, so no recoverer
+        # can see a running record with a free lease while this worker is alive.
+        lease.release()
+
+
+def _grants_lock():
+    directory = _root() / "grants"
+    directory.mkdir(parents=True, exist_ok=True)
+    return directory, _transaction(directory)
 
 
 def handoff(store, artifact_id: str, recipient: str) -> dict:
@@ -218,24 +273,45 @@ def handoff(store, artifact_id: str, recipient: str) -> dict:
         "native": native,
         "catalog": catalog,
     }
-    directory = _root() / "grants"
-    directory.mkdir(parents=True, exist_ok=True)
-    _publish(directory, grant_id + ".json", json.dumps(body, sort_keys=True).encode())
-    return {"schema": "ncp.coordinator-handoff.v1", "grant_id": grant_id, "authorizes_execution": False}
+    directory, guard = _grants_lock()
+    with guard:
+        claimed = _read_json(directory / (grant_id + ".claimed.json"))
+        if not claimed:
+            _publish(directory, grant_id + ".json", json.dumps(body, sort_keys=True).encode())
+    return {"schema": "ncp.coordinator-handoff.v1", "grant_id": grant_id,
+            "already_claimed": bool(claimed), "authorizes_execution": False}
 
 
 def claim(store, grant_id: str) -> dict:
+    """Claim a grant exactly once across processes.
+
+    The read, the copy and the consumption happen under one cross-process file
+    lock. A repeated delivery of the same claim by the recipient returns the
+    same artifact instead of a second copy or a refusal.
+    """
     if type(grant_id) is not str or not grant_id.startswith("grant-") or "/" in grant_id or ".." in grant_id:
         raise ValueError("handoff_refused")
-    path = _root() / "grants" / (grant_id + ".json")
-    grant = _read_json(path)
-    if grant is None or grant.get("recipient") != store.owner:
-        raise ValueError("handoff_refused")
-    copied = store.keep(grant["native"], kind="handoff", catalog=grant["catalog"])
-    if path.is_file() and not path.is_symlink():
-        path.unlink()
+    directory, guard = _grants_lock()
+    with guard:
+        receipt = _read_json(directory / (grant_id + ".claimed.json"))
+        if receipt:
+            if receipt.get("recipient") != store.owner:
+                raise ValueError("handoff_refused")
+            return {"schema": "ncp.coordinator-claim.v1", "artifact_id": receipt.get("artifact_id"),
+                    "source_artifact_id": receipt.get("source_artifact_id"), "replayed": True,
+                    "authorizes_execution": False}
+        path = directory / (grant_id + ".json")
+        grant = _read_json(path)
+        if not grant or grant.get("recipient") != store.owner:
+            raise ValueError("handoff_refused")
+        copied = store.keep(grant["native"], kind="handoff", catalog=grant["catalog"])
+        _publish(directory, grant_id + ".claimed.json", json.dumps(
+            {"schema": "ncp.coordinator-claim-receipt.v1", "recipient": store.owner, "artifact_id": copied,
+             "source_artifact_id": grant.get("source_artifact_id")}, sort_keys=True).encode())
+        path.unlink(missing_ok=True)
     return {"schema": "ncp.coordinator-claim.v1", "artifact_id": copied,
-            "source_artifact_id": grant.get("source_artifact_id"), "authorizes_execution": False}
+            "source_artifact_id": grant.get("source_artifact_id"), "replayed": False,
+            "authorizes_execution": False}
 
 
 def recover(store) -> dict:
@@ -243,19 +319,28 @@ def recover(store) -> dict:
     recovered = []
     if directory.is_dir():
         for path in sorted(directory.glob("idem-*.json")):
-            job = _read_json(path)
-            if job is None or job.get("status") != "running" or _alive(job.get("pid")):
-                continue
-            failed = _fail_lost(store, path.name, job)
-            recovered.append({"job": key_hint, "artifact_id": failed.get("artifact_id")})
+            with _LOCK:
+                with _transaction(directory):
+                    before = _read_json(path)
+                    if before is None or before.get("status") != "running":
+                        continue
+                    settled = _settle_locked(store, directory, path.name)
+            if settled is not None and settled.get("error") == "worker_lost":
+                recovered.append({"job": path.name[: -len(".json")], "artifact_id": settled.get("artifact_id")})
     exclusive = _root() / "exclusive"
     released = []
     if exclusive.is_dir():
         for path in sorted(exclusive.iterdir()):
             current = _read_json(path) or {}
-            if current.get("owner") == store.owner and not _alive(current.get("pid")):
-                path.unlink(missing_ok=True)
-                released.append(path.name)
+            if current.get("owner") != store.owner:
+                continue
+            lease = _Lease(path)
+            if lease.try_acquire():
+                try:
+                    os.ftruncate(lease.fd, 0)
+                    released.append(path.name)
+                finally:
+                    lease.release()
     return {"schema": "ncp.coordinator-recovery.v1", "jobs": recovered, "released": released,
             "authorizes_execution": False}
 
@@ -272,8 +357,8 @@ def coordinate(action: str, store=None, idempotency_key: str | None = None, oper
         found = _read_json(path)
         if found is None:
             raise ValueError("unknown_job")
-        if found.get("status") == "running" and not _alive(found.get("pid")):
-            return _fail_lost(holder, _idem_name(idempotency_key or ""), found)
+        if found.get("status") == "running":
+            return _fail_lost(holder, _idem_name(idempotency_key or ""))
         found["authorizes_execution"] = False
         return found
     if action == "handoff":
