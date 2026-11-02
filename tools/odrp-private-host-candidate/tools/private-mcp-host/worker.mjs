@@ -5,8 +5,14 @@ import { Refusal, configuration, bounded, bytes, digest, same, textBounded, snap
   admit, publish, readCheckpoint, holdUnconfirmed } from './storage.mjs';
 
 export default { fetch: route };
-const READ_NAMES = new Set(['ncp_workflows_list','ncp_capabilities_list','ncp_capability_describe',
-  'ncp_plan_template','ncp_plan_get','ncp_run_get','ncp_artifact_read','ncp_observe', ...ODRP_READ_NAMES]);
+// Confirmation classification matches ControlHost readOnlyHint plus ODRP reads.
+// This is not a grant: the adapter/facade still checks current principal,
+// scientific and resource authority for every dispatch.
+const READ_NAMES = new Set(['ncp_artifact_read','ncp_capabilities_list','ncp_capability_describe',
+  'ncp_demo','ncp_doctor','ncp_domain_list','ncp_host_preflight','ncp_index_list',
+  'ncp_integration_describe','ncp_integrations_list','ncp_ledger_read','ncp_linear_preview',
+  'ncp_observe','ncp_plan_get','ncp_plan_template','ncp_plug_in','ncp_retained_read',
+  'ncp_run_get','ncp_workbench_list','ncp_workflows_list', ...ODRP_READ_NAMES]);
 const refusal = (code, status = 503, effect_state = 'not_started', extra = {}) =>
   json({error: {code, effect_state, ...extra}}, status);
 

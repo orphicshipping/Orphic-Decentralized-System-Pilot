@@ -4,6 +4,9 @@ import assert from 'node:assert/strict';
 import {mkdtemp,rm,readFile} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
+import {fileURLToPath} from 'node:url';
+import {execFileSync} from 'node:child_process';
+import {ODRP_READ_NAMES} from './gateway.mjs';
 import {DiskStorage,FileBucket,environment,request,container,loadWorker} from './storage_fixture.mjs';
 import {configuration,digest,snapshot,exportBackup,restoreBackup,publish} from './storage.mjs';
 const NCPHost=await loadWorker();
@@ -14,6 +17,45 @@ async function fixture(t,overrides={},handler){
   return {dir,storage,bucket,env,native,ctx,host:new NCPHost(ctx,env),config:configuration(env)};
 }
 const parsed=async response=>({status:response.status,body:await response.json()});
+
+test('Worker confirmation list exactly matches real ControlHost annotations and ODRP source',async()=>{
+  const program=`import json, sys
+from pathlib import Path
+root=Path(sys.argv[1])
+if (root/'src/ciw/control_gateway.py').is_file(): sys.path.insert(0,str(root/'src'))
+from ciw.control_gateway import ControlHost
+from ciw.reference_profile import REFERENCE_NAMES
+rows=ControlHost.descriptions(object.__new__(ControlHost))
+print(json.dumps({'control':sorted(row['name'] for row in rows if row['annotations']['readOnlyHint'] is True),'reference':sorted(REFERENCE_NAMES)}))`;
+  const expected=JSON.parse(execFileSync(process.env.PYTHON||'python',['-B','-c',program,
+    fileURLToPath(new URL('../../../../',import.meta.url))],{encoding:'utf8',timeout:10000}));
+  const source=await readFile(new URL('./worker.mjs',import.meta.url),'utf8');
+  const declaration=source.match(/const READ_NAMES = new Set\(\[([\s\S]*?)\]\);/);
+  assert.ok(declaration,'A static confirmation list must be explicitly reviewed against the source catalog');
+  const literals=[...declaration[1].matchAll(/'([^']+)'/g)].map(match=>match[1]);
+  assert.equal(declaration[1].replace(/'[^']+'/g,'').replace(/\.\.\.ODRP_READ_NAMES/g,'').replace(/[\s,]/g,''),'');
+  assert.deepEqual([...ODRP_READ_NAMES].sort(),expected.reference);
+  const actual=[...literals,...ODRP_READ_NAMES];assert.equal(new Set(actual).size,actual.length);
+  assert.deepEqual(actual.sort(),[...expected.control,...expected.reference].sort());
+});
+test('existing retained/domain/workbench/index reads reach the host without write confirmation',async t=>{
+  const f=await fixture(t);
+  for(const [name,args] of [['ncp_retained_read',{artifact_id:'retained-synthetic'}],['ncp_domain_list',{}],
+    ['ncp_workbench_list',{}],['ncp_index_list',{}]]){
+    const result=await parsed(await f.host.fetch(await request('/api/calls',{name,arguments:args})));
+    assert.equal(result.status,200,name);
+  }
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,4);
+});
+test('read confirmation classification cannot override a host refusal or confirm a write',async t=>{
+  const f=await fixture(t,{},async()=>Response.json({error:{code:'principal_policy_refused'}},{status:403}));
+  const unconfirmed=await parsed(await f.host.fetch(await request('/api/calls',{name:'ncp_domain_run',arguments:{}})));
+  assert.equal(unconfirmed.status,409);assert.equal(unconfirmed.body.error.code,'confirmation_required');
+  assert.equal(f.native.calls.length,0);
+  const read=await parsed(await f.host.fetch(await request('/api/calls',{name:'ncp_domain_list',arguments:{}})));
+  assert.equal(read.status,503);assert.equal(read.body.error.code,'outcome_unknown');assert.equal(f.bucket.puts,0);
+  assert.ok(await f.storage.get('pending'));
+});
 
 test('missing trusted configuration and forged internal principal refuse before startup',async t=>{
   const f=await fixture(t);delete f.env.ODSP_STORAGE_POLICY;
