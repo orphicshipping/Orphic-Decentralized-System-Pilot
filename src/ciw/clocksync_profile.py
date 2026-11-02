@@ -482,6 +482,9 @@ class ClockSyncHost:
             _require(len(canonical({"name": name, "arguments": arguments})) <= MAX_ARGUMENT, "argument_budget_exceeded")
             _shape(arguments, TOOLS[name]["inputSchema"])
             _require(lease.try_acquire(), "clocksync_busy")
+            # close() may win the lease after the earlier fast-path check.
+            # Admission must observe its closed state while owning the lease.
+            _require(not self._closed, "clocksync_host_closed")
             self._adapter.deadline = time.monotonic() + CALL_SECONDS
             args = deepcopy(arguments)
             value = (self.describe() if name == "ncp_clocksync_describe" else

@@ -414,6 +414,9 @@ def test_busy_call_cannot_reset_active_deadline_or_release_active_lease(host, mo
         deadline = host._adapter.deadline
         assert host.call("ncp_clocksync_describe", {}) == {"status": "refused", "reason": "clocksync_busy"}
         assert host._adapter.deadline == deadline
+        with pytest.raises(profile.ClockSyncRefusal, match="^clocksync_busy$"):
+            host.close()
+        assert not host._closed and host._adapter.deadline == deadline
         lease = _Lease(Path(host._guard_directory.name) / "call.lease")
         try:
             assert not lease.try_acquire()
@@ -477,6 +480,77 @@ def test_close_is_idempotent_and_refuses_further_calls(checkout):
     host.close()
     assert not path.exists()
     assert host.call("ncp_clocksync_describe", {}) == {"status": "refused", "reason": "clocksync_host_closed"}
+
+
+def test_call_paused_before_admission_cannot_start_provider_after_close(checkout, monkeypatch):
+    host = profile.open_clocksync(checkout=checkout, python_executable=sys.executable, principal="fixture-owner")
+    path = Path(host._guard_directory.name)
+    waiting, admit, acquired, finish_acquire, cleaning, finish_cleanup = [threading.Event() for _ in range(6)]
+    original_acquire, original_cleanup, original_runtime = _Lease.try_acquire, host._guard_directory.cleanup, host._runtime
+    responses, failures, provider_calls = [], [], []
+
+    def acquire(lease):
+        if threading.current_thread().name == "closing-race-caller":
+            waiting.set()
+            assert admit.wait(10)
+            result = original_acquire(lease)
+            assert result
+            acquired.set()
+            assert finish_acquire.wait(10)
+            return result
+        return original_acquire(lease)
+
+    def cleanup():
+        cleaning.set()
+        assert finish_cleanup.wait(10)
+        return original_cleanup()
+
+    def runtime():
+        provider_calls.append(True)
+        return original_runtime()
+
+    def call():
+        try:
+            responses.append(host.call("ncp_clocksync_describe", {}))
+        except BaseException as exc:
+            failures.append(exc)
+
+    def close():
+        try:
+            host.close()
+        except BaseException as exc:
+            failures.append(exc)
+
+    with monkeypatch.context() as patch:
+        patch.setattr(_Lease, "try_acquire", acquire)
+        patch.setattr(host._guard_directory, "cleanup", cleanup)
+        patch.setattr(host, "_runtime", runtime)
+        caller = threading.Thread(target=call, name="closing-race-caller")
+        closer = threading.Thread(target=close, name="closing-race-closer")
+        try:
+            caller.start()
+            assert waiting.wait(10)
+            closer.start()
+            assert cleaning.wait(10) and host._closed
+            admit.set()
+            assert acquired.wait(10)
+            assert caller.is_alive() and closer.is_alive() and path.exists()
+            finish_cleanup.set()
+            closer.join(timeout=10)
+            assert not closer.is_alive() and not path.exists() and caller.is_alive()
+        finally:
+            admit.set()
+            finish_cleanup.set()
+            finish_acquire.set()
+            caller.join(timeout=10)
+            if closer.ident is not None:
+                closer.join(timeout=10)
+    assert not caller.is_alive() and not closer.is_alive()
+    assert not failures
+    assert not provider_calls
+    assert responses == [{"status": "refused", "reason": "clocksync_host_closed"}]
+    assert host._adapter.deadline is None
+    host.close()
 
 
 def test_official_mcp_reconnect_preserves_full_sdk_receipt(host, checkout, tmp_path, receipt):
