@@ -2,6 +2,8 @@
 import base64
 import json
 import subprocess
+
+import pytest
 from pathlib import Path
 
 from ciw.agent_mcp import demo_config, from_profile
@@ -368,8 +370,12 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
         )
         env["PYTHONPATH"] = str(target)
         env.pop("PYTHONSAFEPATH", None)
+        import shutil as _shutil
+        py311 = os.environ.get("NCP_PYTHON311") or _shutil.which("python3.11")
+        if not py311:
+            pytest.skip("no Python 3.11 interpreter (set NCP_PYTHON311 or put python3.11 on PATH)")
         contracts = subprocess.check_output(
-            ["/usr/bin/python3.11", "-c",
+            [py311, "-c",
              "from ciw.plug_in import document; from ciw.services import read_contract, ledger_read; "
              "print(document()['schema']); "
              "print(read_contract('ncp://contract/verification')['schema']); "
@@ -441,7 +447,7 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
     import os
     from ciw.agent_mcp import demo_config, from_profile
     from ciw.control_gateway import ControlHost
-    from ciw.coordinator import _exclusive_path
+    from ciw.coordinator import _hold_exclusive, _release_exclusive
     from ciw.retention import SUPPORTED_PLATFORMS
     from ciw.sequence_kinetics import example_request
     from ciw.services import invoke
@@ -480,15 +486,16 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
             assert "another host session" in str(exc)
         else:
             raise AssertionError("handoff bypass")
-        held = _exclusive_path("oven")
-        held.write_text(json.dumps({"pid": os.getpid(), "owner": left.retained.owner}), encoding="utf-8")
+        # A hold is a kernel lock, not a file's presence; another holder has it here.
+        held = _hold_exclusive(left.retained, "oven")
+        assert held is not None
         try:
             invoke("ncp_coordinate", {**payload, "idempotency_key": "job-2", "exclusive": "oven"}, host=left)
         except Exception as exc:
             assert "exclusive_resource_busy" in str(exc)
             assert left.retained.native(exc.artifact_id)["error"] == "exclusive_resource_busy"
         finally:
-            held.unlink(missing_ok=True)
+            _release_exclusive(held)
         try:
             invoke("ncp_coordinate", {"action": "submit", "idempotency_key": "job-3", "operation": "ncp_domain_run",
                                       "arguments": {"domain": "sequence", "agent_id": "other"}}, host=left)
