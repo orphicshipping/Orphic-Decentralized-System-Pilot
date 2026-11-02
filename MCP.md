@@ -7,7 +7,7 @@
 
 Repository root. Start at the project map and the folder index. This file is not a grant.
 
-Tracked files here, none of them a tool call: `.dockerignore`, `.gitattributes`, `.gitignore`, `CITATION.cff`, `CONTRIBUTING.md`, `DEVELOPMENT_REFERENCE.md`, `Dockerfile`, `LICENSE` (8 more).
+Tracked files here, none of them a tool call: `.dockerignore`, `.gitattributes`, `.gitignore`, `CITATION.cff`, `CONTRIBUTING.md`, `DEVELOPMENT_REFERENCE.md`, `Dockerfile`, `LICENSE` (10 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

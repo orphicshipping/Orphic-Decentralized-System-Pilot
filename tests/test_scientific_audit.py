@@ -19,7 +19,7 @@ def test_current_coverage_and_references_are_complete_without_execution(monkeypa
     monkeypatch.setattr(subprocess, "run", forbidden)
     report = scientific_audit.audit(repository=ROOT)
     assert report["issues"] == []
-    assert report["counts"] == {"commands": 86, "workflows": 29, "ladder_levels": 10}
+    assert report["counts"] == {"commands": 87, "workflows": 29, "ladder_levels": 10}
     assert report["source_references"] == "files_exist_only"
     assert report["tests_executed"] is False
     assert report["authorizes_execution"] is report["authorizes_state_admission"] is False
@@ -93,8 +93,9 @@ def test_integrated_system_command_has_explicit_review_references():
 @pytest.mark.parametrize("name,source,test", [
     ("refit", "board_refit_cli", "board_refit"),
     ("gaugelink-refit", "link_refit_cli", "link_refit"),
+    ("reference", "reference_cli", "reference_profile"),
 ])
-def test_refit_commands_have_scoped_references_without_qualification(name, source, test):
+def test_commands_have_scoped_references_without_qualification(name, source, test):
     report = scientific_audit.audit(repository=ROOT)
     rows = {row["command"]: row for row in report["commands"]}
     assert rows["net " + name] == {
@@ -109,8 +110,8 @@ def test_refit_commands_have_scoped_references_without_qualification(name, sourc
     assert report["authorizes_execution"] is report["authorizes_state_admission"] is False
 
 
-@pytest.mark.parametrize("name", ["refit", "gaugelink-refit"])
-def test_refit_command_still_requires_its_explicit_review(name, monkeypatch):
+@pytest.mark.parametrize("name", ["refit", "gaugelink-refit", "reference"])
+def test_command_still_requires_its_explicit_review(name, monkeypatch):
     monkeypatch.delitem(scientific_audit.COMMAND_REVIEWS, name)
     report = scientific_audit.audit()
     assert report["status"] == "failed"

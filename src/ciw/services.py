@@ -317,8 +317,59 @@ SESSION = frozenset({
 })
 
 
+_PIN_FIELDS = frozenset({"checkout", "python", "python_executable", "provider_revision", "pin", "repository",
+                         "configuration"})
+_IDENTITY_FIELDS = frozenset({"owner", "principal", "agent_id"})
+
+
+def admit(name, arguments):
+    """Shared control-tool request policy for the MCP host, SDK and coordinator.
+
+    A request names a listed tool, stays inside the argument budget, cannot pick
+    a checkout or pin, cannot name a principal (the host supplies identity) and
+    matches the declared input schema. Transports format; they do not re-decide.
+    ODRP reference calls use the separate KnowledgeHost validation path.
+    """
+    from .agent_api import encode
+    from .agent_tools import _shape
+    from .control_gateway import TOOLS
+    if not isinstance(name, str) or name not in TOOLS:
+        raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
+    if type(arguments) is not dict:
+        raise ValueError("Service arguments must be an object")
+    if _PIN_FIELDS & set(arguments):
+        raise ValueError("Service arguments cannot select a checkout or a pin")
+    if _IDENTITY_FIELDS & set(arguments):
+        raise ValueError("coordinator_impersonation_refused")
+    try:
+        size = len(encode(arguments))
+    except ValueError as exc:
+        raise ValueError("Request exceeds the argument budget") from exc
+    if size > 65536:
+        raise ValueError("Request exceeds the argument budget")
+    _shape(arguments, TOOLS[name]["inputSchema"])
+
+
+def response_postcondition(value):
+    """Enforce the shared serialized data budget without adding an envelope.
+
+    The budget is for operation data, matching ControlHost's existing contract.
+    RetainedFailure exceptions propagate unchanged before this postcondition.
+    """
+    from .agent_api import encode, MAX_RESPONSE
+    if len(encode(value)) > MAX_RESPONSE:
+        raise ValueError("Response exceeds budget")
+    return value
+
+
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
+    if isinstance(name, str) and name.startswith("ncp_state_"):
+        from .state_read_profile import invoke_state
+        return invoke_state(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_logistics_"):
+        from .logistics_profile import invoke_logistics
+        return invoke_logistics(host, name, {} if arguments is None else arguments)
     # Reference disclosure is a separate host profile, not a control-host grant.
     # Resolve it before importing execution/session providers.
     if isinstance(name, str) and (name == "ncp_system_status" or
@@ -328,34 +379,28 @@ def invoke(name, arguments=None, host=None):
     if not isinstance(name, str) or (name not in OPERATIONS and name not in SESSION):
         raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
     arguments = {} if arguments is None else arguments
-    if type(arguments) is not dict:
-        raise ValueError("Service arguments must be an object")
-    forbidden = {"checkout", "python", "python_executable", "provider_revision", "pin", "repository", "configuration"}
-    if forbidden & set(arguments):
-        raise ValueError("Service arguments cannot select a checkout or a pin")
-    from .agent_api import encode
-    from .agent_tools import _shape
-    from .control_gateway import TOOLS
-    if name not in TOOLS or len(encode(arguments)) > 65536:
-        raise ValueError("Request exceeds the argument budget")
-    _shape(arguments, TOOLS[name]["inputSchema"])
+    admit(name, arguments)
     if name in SESSION:
         if host is None:
             raise ValueError("This operation needs open_demo. A folder is not a session.")
         response = host.call(name, arguments)
         if response["status"] != "ok":
+            error = response.get("error") or {}
+            if error.get("artifact_id"):
+                from .retention import RetainedFailure
+                raise RetainedFailure("request_refused", error["artifact_id"])
             raise ValueError("request_refused")
-        return response["data"]
+        return response_postcondition(response["data"])
     store = None
     if host is not None:
         store = getattr(host, "retained", None)
         if store is None:
             raise ValueError("This host has no retained store")
     if name in {"ncp_domain_run", "ncp_workbench_run", "ncp_retained_read", "ncp_retained_release", "ncp_coordinate"}:
-        return OPERATIONS[name](**arguments, store=store)
+        return response_postcondition(OPERATIONS[name](**arguments, store=store))
     if host is not None:
         raise ValueError("This operation does not take a session")
-    return OPERATIONS[name](**arguments)
+    return response_postcondition(OPERATIONS[name](**arguments))
 
 
 def capability_map():
@@ -364,6 +409,8 @@ def capability_map():
     from .control_gateway import TOOLS
     from .domain_surface import tool_grants
     from .reference_profile import profile_manifest
+    from .state_read_profile import profile_manifest as state_manifest
+    from .logistics_profile import profile_manifest as logistics_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -398,7 +445,7 @@ def capability_map():
         "qualification": "not_performed_by_this_file",
         "tools": tools,
         "indexed": indexed,
-        "reference_profiles": [profile_manifest()],
+        "reference_profiles": [profile_manifest(), state_manifest(), logistics_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 

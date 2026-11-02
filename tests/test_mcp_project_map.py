@@ -1,9 +1,39 @@
 """The project map names real folders and does not authorize execution."""
 import json
 from pathlib import Path
+from urllib.parse import unquote
+
+import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP = ROOT / "mcp" / "project-map.json"
+
+
+def _contract_text(row):
+    path, _, fragment = row["contract"].partition("#")
+    text = (ROOT / path).read_text(encoding="utf-8")
+    if fragment:
+        marker = f'<a id="{unquote(fragment)}"></a>'
+        assert text.count(marker) == 1
+        return text.split(marker, 1)[1].split('\n<a id="', 1)[0]
+    return text
+
+
+@pytest.mark.parametrize("directory", [
+    "tools/odrp-private-host-candidate",
+    "tools/odrp-private-host-candidate/tools",
+    "tools/odrp-private-host-candidate/tools/private-mcp-host",
+])
+def test_private_host_candidate_folders_are_indexed_without_a_tool_grant(directory):
+    index = json.loads((ROOT / "mcp/folder-index.json").read_text(encoding="utf-8"))
+    rows = [row for row in index["folders"] if row["path"] == directory]
+    assert rows == [{"path": directory, "class": "navigation", "call": "none",
+                     "contract": f"{directory}/MCP.md"}]
+    for name in ("MCP.md", "README.md"):
+        text = (ROOT / directory / name).read_text(encoding="utf-8")
+        assert f"- path: `{directory}`" in text
+        assert "- authorizes_execution: false" in text
+        assert "- call: `none`" in text
 
 
 def test_project_map_matches_the_tree_and_does_not_grant():
@@ -53,6 +83,11 @@ def test_project_map_matches_the_tree_and_does_not_grant():
 
 def test_every_tracked_folder_has_a_contract_that_does_not_grant():
     import subprocess
+    modules = json.loads((ROOT / "instruments/manifest.json").read_text(encoding="utf-8"))["modules"]
+    protected_roots = [row["path"] for row in modules] + ["examples/workcells/godot-prop"]
+    index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
+    by_path = {row["path"]: row for row in index["folders"]}
+    assert len(by_path) == len(index["folders"])
     tracked = subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT)
     directories = {Path(".")}
     for raw in tracked.split(b"\0"):
@@ -63,20 +98,29 @@ def test_every_tracked_folder_has_a_contract_that_does_not_grant():
             directories.add(parent)
             parent = parent.parent
     checked = 0
+    expected = set()
     for directory in directories:
-        contract = ROOT / directory / "MCP.md"
+        rel = "." if directory == Path(".") else directory.as_posix()
+        protected = next((root for root in protected_roots if rel == root or rel.startswith(root + "/")), None)
         probe = "MCP.md" if directory == Path(".") else (directory / "MCP.md").as_posix()
         ignored = subprocess.run(["git", "check-ignore", "-q", "--", probe], cwd=ROOT).returncode == 0
-        if ignored:
+        if ignored and protected is None:
             continue
-        text = contract.read_text(encoding="utf-8")
-        rel = "." if directory == Path(".") else directory.as_posix()
+        expected.add(rel)
+        row = by_path[rel]
+        if protected is not None:
+            assert row["protected_source"] == protected
+            assert row["contract"].startswith("mcp/source-contracts.md#")
+        else:
+            assert "protected_source" not in row
+            assert row["contract"] == probe
+        text = _contract_text(row)
         assert f"- path: `{rel}`" in text
         assert "authorizes_execution: false" in text
         assert "not a tool call" in text
         assert "not a human console" in text
         assert "does not opt for the easiest" in text
-        if "node_modules" not in rel.split("/") and not (
+        if protected is None and "node_modules" not in rel.split("/") and not (
             subprocess.run(
                 ["git", "check-ignore", "-q", "--", "README.md" if directory == Path(".") else (directory / "README.md").as_posix()],
                 cwd=ROOT,
@@ -87,21 +131,13 @@ def test_every_tracked_folder_has_a_contract_that_does_not_grant():
             assert "does not opt for the easiest" in page
         checked += 1
     assert checked > 700
-    index = json.loads((ROOT / "mcp" / "folder-index.json").read_text(encoding="utf-8"))
-    assert {row["path"] for row in index["folders"]} == {
-        "." if directory == Path(".") else directory.as_posix()
-        for directory in directories
-        if subprocess.run(
-            ["git", "check-ignore", "-q", "--", "MCP.md" if directory == Path(".") else (directory / "MCP.md").as_posix()],
-            cwd=ROOT,
-        ).returncode != 0
-    }
-    by_path = {row["path"]: row for row in index["folders"]}
+    assert set(by_path) == expected
+    assert {row["protected_source"] for row in index["folders"] if "protected_source" in row} == set(protected_roots)
     assert by_path["src/ciw/adapters"]["class"] == "navigation"
     assert "not a grant" in (ROOT / "src" / "ciw" / "adapters" / "MCP.md").read_text(encoding="utf-8")
     assert "control_gateway.py" in (ROOT / "src" / "ciw" / "MCP.md").read_text(encoding="utf-8")
-    flow = (ROOT / "instruments" / "domain" / "flowstate" / "MCP.md").read_text(encoding="utf-8")
-    bim = (ROOT / "instruments" / "domain" / "bim-estimator" / "MCP.md").read_text(encoding="utf-8")
+    flow = _contract_text(by_path["instruments/domain/flowstate"])
+    bim = _contract_text(by_path["instruments/domain/bim-estimator"])
     assert "Not the leakage pin" in flow
     assert "Not the clearance pin" in bim
     assert "not an SP1 proof" in bim

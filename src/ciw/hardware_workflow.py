@@ -281,7 +281,7 @@ def export_report(destination: Path, output: Path) -> dict:
 <html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Hardware assessment — {escape(config['asset_id'])}</title>
 <style>body{{font:15px/1.5 system-ui,sans-serif;color:#182a35;max-width:1200px;margin:40px auto;padding:0 24px}}h1{{margin-bottom:8px}}.notice{{padding:16px;background:#fff3ce;border-left:4px solid #b07700}}dt{{font-weight:650;margin-top:8px}}dd{{margin:0;overflow-wrap:anywhere}}table{{width:100%;border-collapse:collapse;margin:20px 0}}th,td{{border:1px solid #d5dee4;text-align:left;padding:8px;overflow-wrap:anywhere}}th{{background:#edf2f5}}.status{{font-size:24px;font-weight:700}}@media print{{body{{margin:0;font-size:10pt}}thead{{display:table-header-group}}tr{{break-inside:avoid}}}}</style>
-<h1>Hardware assessment</h1><p>Notation Systems · NET</p>
+<h1>Hardware assessment</h1><p>Orphic Systems · NET</p>
 <p class="notice">{escape(source_label)}</p><p class="status">Declared criteria: {escape(summary['status'])}</p>
 <p>PASS means the imported values satisfy this declared numeric plan. It does not certify the equipment,
 authenticate its source, establish physical qualification, or authorize sale or deployment.

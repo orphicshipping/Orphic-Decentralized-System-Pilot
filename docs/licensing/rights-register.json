@@ -6,11 +6,15 @@
   "repository": "atomtrapping/Notations-Systems-Terminal",
   "inspected_source_commit": "55d67d42beea95d7ce98af935b48bd84df5e9b4b",
   "owner_declaration": {
-    "declared_owner": "Notation Systems Inc.",
-    "statement": "Project assets are original; the corpus serves as reference material.",
-    "evidence_type": "owner-supplied conversation declaration",
+    "declared_owner": "Orphic Systems",
+    "statement": "Orphic Systems holds the copyright in the original ODSP code and can license it AGPL-3.0-or-later",
+    "declared_by": "Chairman",
+    "declared_local_date": "2026-11-01",
+    "scope": "original ODSP code in orphicsystems/Orphic-Decentralized-Systems-Protocol; excludes every item in third_party_clearance",
+    "evidence_type": "Conversion author reported a Chairman statement dated 2026-11-01; underlying transcript and authority not independently verified",
     "independent_title_verification": false,
-    "assignment_created_by_this_record": false
+    "assignment_created_by_this_record": false,
+    "claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review"
   },
   "licensing_contact": "https://github.com/atomtrapping/Notations-Systems-Terminal/issues/new?template=licensing-request.yml&title=Licensing%20request",
   "organization_declaration": {
@@ -48,5 +52,756 @@
     "status"
   ],
   "reference_sources_claimed_owned": false,
-  "global_legal_clearance": false
+  "prior_owner_declarations": [
+    {
+      "declared_owner": "Notation Systems Inc.",
+      "statement": "Project assets are original; the corpus serves as reference material.",
+      "evidence_type": "owner-supplied conversation declaration",
+      "independent_title_verification": false,
+      "assignment_created_by_this_record": false,
+      "superseded_local_date": "2026-11-01"
+    }
+  ],
+  "third_party_clearance": [
+    {
+      "asset_id": "tp-frame-mapper",
+      "paths": [
+        "instruments/representation/frame-mapper/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+      "git_blob_of": "instruments/representation/frame-mapper/LICENSE",
+      "creator_and_creation_evidence": "README 'Origin and license'",
+      "actual_rights_holder": "frame-mapper contributors; inherited code from simplifaisoul/osiris (MIT)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "GPL-3.0"
+      ],
+      "incorporated_third_party_material": [
+        "simplifaisoul/osiris (MIT), retained notice",
+        "intel/node_modules (row tp-frame-mapper-node-modules)"
+      ],
+      "applicable_notice": "instruments/representation/frame-mapper/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: kept by Chairman decision 2026-11-01; flagged to Counsel",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-frame-mapper-node-modules",
+      "paths": [
+        "instruments/representation/frame-mapper/intel/node_modules/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": null,
+      "git_blob_of": null,
+      "creator_and_creation_evidence": "vendored npm packages, 66 packages",
+      "actual_rights_holder": "respective npm package authors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "per-package (MIT, ISC and similar; not individually verified)"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "each package's LICENSE and package.json",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance; per-package licences not individually re-verified",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-real-time-globe",
+      "paths": [
+        "instruments/views/real-time-globe/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "f288702d2fa16d3cdf0035b15a9fcbc552cd88e7",
+      "git_blob_of": "instruments/views/real-time-globe/LICENSE",
+      "creator_and_creation_evidence": "README '## License'",
+      "actual_rights_holder": "real-time-globe contributors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "GPL-3.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/views/real-time-globe/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: kept by Chairman decision 2026-11-01; flagged to Counsel",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-ptb-mh44-hydrophone",
+      "paths": [
+        "tests/reference_data/MW_MH44ReIm.lines-1-18.csv"
+      ],
+      "source_revision": "Ma-Weber/Tutorial-Deconvolution@2de078bd09a58ed4063d2a6b477a94310a6e1039 HydrophoneCalibrationData/MW_MH44ReIm.csv lines 1-18 (LF re-serialised)",
+      "content_sha256": "598b7ac55a7835ed646a5b7defa82f057fac542a259c67a78498fbf62ca743f1",
+      "git_blob": "56e1f05ce444cf8e1b2c8645b3ef617c84052674",
+      "git_blob_of": "tests/reference_data/MW_MH44ReIm.lines-1-18.csv",
+      "creator_and_creation_evidence": "src/ciw/link_references.py profile ptb-mh44-first17; doi:10.5281/zenodo.10079801",
+      "actual_rights_holder": "PTB / University of Helsinki authors via Ma-Weber/Tutorial-Deconvolution",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "GPL-3.0 (upstream repository licence)"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "third_party/reference-data/GPL-3.0.txt",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: published by Chairman decision 2026-11-01 against Counsel advice to withhold",
+      "note": "Data grant not established. The conversion author reported publication by Chairman decision against Counsel advice; those statements and any public publication were not independently verified. The repository is currently private.",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-faultsense",
+      "paths": [
+        "instruments/inference/faultsense/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/inference/faultsense/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/inference/faultsense/LICENSE, instruments/inference/faultsense/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-state-inference",
+      "paths": [
+        "instruments/inference/state-inference/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "a612ad9813b006ce81d1ee438dd784da99a54007",
+      "git_blob_of": "instruments/inference/state-inference/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "as stated in the tree's own notices",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/inference/state-inference/LICENSE, instruments/inference/state-inference/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-linear-dynamics",
+      "paths": [
+        "instruments/mathematics/linear-dynamics/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/mathematics/linear-dynamics/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/linear-dynamics/LICENSE, instruments/mathematics/linear-dynamics/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-observability",
+      "paths": [
+        "instruments/mathematics/observability/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/mathematics/observability/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/observability/LICENSE, instruments/mathematics/observability/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-sensor-design",
+      "paths": [
+        "instruments/mathematics/sensor-design/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/mathematics/sensor-design/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/sensor-design/LICENSE, instruments/mathematics/sensor-design/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-surface",
+      "paths": [
+        "instruments/mathematics/surface/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "d0a1fa1482eea82e19510e7920cbe3a03e41f691",
+      "git_blob_of": "instruments/mathematics/surface/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE",
+      "actual_rights_holder": "as stated in the tree's own notices",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/surface/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-calibration",
+      "paths": [
+        "instruments/measurement/calibration/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/measurement/calibration/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/measurement/calibration/LICENSE, instruments/measurement/calibration/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-clocksync",
+      "paths": [
+        "instruments/measurement/clocksync/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "2f8ed188e8baccf3ba1e11e52a79f851d6a13468",
+      "git_blob_of": "instruments/measurement/clocksync/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE and NOTICE.md",
+      "actual_rights_holder": "Bespoke Polymer Inc. (per NOTICE.md)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/measurement/clocksync/LICENSE, instruments/measurement/clocksync/NOTICE.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-signal-conditioning",
+      "paths": [
+        "instruments/measurement/signal-conditioning/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "d0a1fa1482eea82e19510e7920cbe3a03e41f691",
+      "git_blob_of": "instruments/measurement/signal-conditioning/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE",
+      "actual_rights_holder": "as stated in the tree's own notices",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/measurement/signal-conditioning/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-mpl-signal-processing",
+      "paths": [
+        "instruments/measurement/signal-processing/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "ee6256cdb62a765749a71aae3abea32884301cd1",
+      "git_blob_of": "instruments/measurement/signal-processing/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE",
+      "actual_rights_holder": "as stated in the tree's own notices",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MPL-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/measurement/signal-processing/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "Unverified conversion-source claim: accepted by Chairman decision 2026-11-01; no Exhibit B 'Incompatible With Secondary Licenses' notice found",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file",
+      "decision_claim_source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+      "decision_claim_independently_verified": false
+    },
+    {
+      "asset_id": "tp-chemical-kinetics",
+      "paths": [
+        "third_party/chemical-kinetics-and-program-execution/",
+        "src/ciw/sequence_kinetics.py (adaptation)"
+      ],
+      "source_revision": "paradigms-of-intelligence/chemical-kinetics-and-program-execution@8063d68d4f4c0c4ad751deeb27afd3bfb104c156",
+      "content_sha256": "81d388348d50c3c5c5e422c7069af396483c8ec88970b19123965cb403198646",
+      "git_blob": "750f5f5bb75c2946656e2e970c7d8b05a0f03b03",
+      "git_blob_of": "third_party/chemical-kinetics-and-program-execution/NOTICE.md",
+      "creator_and_creation_evidence": "NOTICE.md; Fischbacher, Phys. Rev. E 112, 035309 (2025), doi:10.1103/dyzr-m21s",
+      "actual_rights_holder": "Google LLC (2025)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "Apache-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "third_party/chemical-kinetics-and-program-execution/NOTICE.md (shipped unchanged) and LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance"
+    },
+    {
+      "asset_id": "tp-compute-runtime",
+      "paths": [
+        "instruments/execution/compute-runtime/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "b678792486d61680b0be7655b7ecfa82e1a45436",
+      "git_blob_of": "instruments/execution/compute-runtime/LICENSE",
+      "creator_and_creation_evidence": "release/*/template/NOTICE",
+      "actual_rights_holder": "Notation Systems Inc. (per release template NOTICE)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "Apache-2.0"
+      ],
+      "incorporated_third_party_material": [
+        "renderer/vendor/three.module.js (row tp-threejs)"
+      ],
+      "applicable_notice": "instruments/execution/compute-runtime/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-threejs",
+      "paths": [
+        "instruments/execution/compute-runtime/renderer/vendor/three.module.js"
+      ],
+      "source_revision": "mrdoob/three.js r160",
+      "content_sha256": null,
+      "git_blob": "0bcc7a286da2c115853ceec9deea19923e10ddc1",
+      "git_blob_of": "instruments/execution/compute-runtime/renderer/vendor/three.module.js",
+      "creator_and_creation_evidence": "THIRD_PARTY_NOTICES.md; three.js r160",
+      "actual_rights_holder": "Three.js Authors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/execution/compute-runtime/renderer/vendor/THIRD_PARTY_NOTICES.md and file header",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-estimator-bench",
+      "paths": [
+        "instruments/verification/estimator-bench/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "git_blob_of": "instruments/verification/estimator-bench/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE",
+      "actual_rights_holder": "as stated in the tree's own notices",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "Apache-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/verification/estimator-bench/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-smartctl-fixture",
+      "paths": [
+        "src/ciw/bench_examples/"
+      ],
+      "source_revision": "prometheus-community/smartctl_exporter@6274decc61212cc61e58796cc3b8cf5cfa035809",
+      "content_sha256": "309aa29bcb2cfa9576938238e9eea5af1d479e9fcd8c350fb1b8d52fe02a560b",
+      "git_blob": "f48f9fba06a73defcaf9b725bc400e0c9097ae5a",
+      "git_blob_of": "src/ciw/bench_examples/attribution.json",
+      "creator_and_creation_evidence": "src/ciw/bench_examples/attribution.json",
+      "actual_rights_holder": "Prometheus smartctl_exporter authors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "Apache-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "src/ciw/bench_examples/LICENSE.txt",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance"
+    },
+    {
+      "asset_id": "tp-apmonitor-tclab",
+      "paths": [
+        "examples/temperature-recording/"
+      ],
+      "source_revision": "APMonitor/arduino@f36e65a70dd7122d1829883899e40e56bf6c4279",
+      "content_sha256": "b40930bbcf80744c86c46a12bc9da056641d722716c378f5659b9e555ef833e1",
+      "git_blob": "8dada3edaf50dbc082c9a125058f25def75e625a",
+      "git_blob_of": "examples/temperature-recording/UPSTREAM-LICENSE.txt",
+      "creator_and_creation_evidence": "examples/temperature-recording/SOURCE.md",
+      "actual_rights_holder": "APMonitor/arduino publishers",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "Apache-2.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "examples/temperature-recording/UPSTREAM-LICENSE.txt",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance"
+    },
+    {
+      "asset_id": "tp-mit-retrieval-agent",
+      "paths": [
+        "instruments/composition/retrieval-agent/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "4857929d6a2836ec028fa8af46347e05f1a250bc",
+      "git_blob_of": "instruments/composition/retrieval-agent/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Schematics Retrieval Agent contributors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/composition/retrieval-agent/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-bim-estimator",
+      "paths": [
+        "instruments/domain/bim-estimator/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "8f44df88ac2480e050ed5b82d5739b43f7364582",
+      "git_blob_of": "instruments/domain/bim-estimator/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Notation Systems",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/domain/bim-estimator/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-flowstate",
+      "paths": [
+        "instruments/domain/flowstate/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "381a87529d078c82d3bb54ff57469f9db267f87b",
+      "git_blob_of": "instruments/domain/flowstate/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Fluid State Reconstruction Engine contributors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/domain/flowstate/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-polygon-trajectories",
+      "paths": [
+        "instruments/mathematics/polygon-trajectories/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "b9d9ef3946f251290e784164e549f37cf280c9d9",
+      "git_blob_of": "instruments/mathematics/polygon-trajectories/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Jason Pooni",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/polygon-trajectories/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-sensitivity",
+      "paths": [
+        "instruments/mathematics/sensitivity/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "acda1bd9ca3b7a979b19fae87650c759f718019f",
+      "git_blob_of": "instruments/mathematics/sensitivity/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Jacobian and Sensitivity Propagation Testbed contributors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/mathematics/sensitivity/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-metrology",
+      "paths": [
+        "instruments/measurement/metrology/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "8f44df88ac2480e050ed5b82d5739b43f7364582",
+      "git_blob_of": "instruments/measurement/metrology/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Notation Systems",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/measurement/metrology/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-mit-yield-weighted",
+      "paths": [
+        "instruments/resources/yield-weighted/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": null,
+      "git_blob": "c092a17de374d6909d4e1985e033bedb1eaf6016",
+      "git_blob_of": "instruments/resources/yield-weighted/LICENSE",
+      "creator_and_creation_evidence": "tree LICENSE copyright line",
+      "actual_rights_holder": "Yield-Weighted Inference Runtime contributors",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "MIT"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "instruments/resources/yield-weighted/LICENSE",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance",
+      "content_sha256_note": "tree not fetched locally at recording; git_blob identifies the licence file"
+    },
+    {
+      "asset_id": "tp-buildingsmart-wall",
+      "paths": [
+        "examples/preservation-experiments/external/wall.ifc"
+      ],
+      "source_revision": "buildingSMART/Certification-datasets@80d976a9b193a26a8e928c3e79bff67af1de68a8",
+      "content_sha256": "73b0e45d931d5dc13bfee5fdc7bd80f796526445458b2de74c4168d209097832",
+      "git_blob": "8820193e625f693712be860d79291a0ee48eacd7",
+      "git_blob_of": "examples/preservation-experiments/external/wall.ifc",
+      "creator_and_creation_evidence": "examples/preservation-experiments/external/README.md; title wall-with-opening-and-window.ifc",
+      "actual_rights_holder": "buildingSMART International Ltd.",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "CC-BY-4.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "examples/preservation-experiments/external/LICENSE.txt; attribution in THIRD_PARTY.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance; content unmodified (blob equals declared upstream blob), renamed",
+      "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
+    },
+    {
+      "asset_id": "tp-buildingsmart-structural",
+      "paths": [
+        "examples/preservation-experiments/external/structural.ifc"
+      ],
+      "source_revision": "buildingSMART/Certification-datasets@80d976a9b193a26a8e928c3e79bff67af1de68a8",
+      "content_sha256": "903b5a005901397aa2b235daf6a60f46c099eae286cb01c815abf0a341707432",
+      "git_blob": "0a0fc46360cd713fb92cf424f134356dc868a103",
+      "git_blob_of": "examples/preservation-experiments/external/structural.ifc",
+      "creator_and_creation_evidence": "examples/preservation-experiments/external/README.md; title Building-Structural.ifc",
+      "actual_rights_holder": "buildingSMART International Ltd.",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "CC-BY-4.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "examples/preservation-experiments/external/LICENSE.txt; attribution in THIRD_PARTY.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance; content unmodified (blob equals declared upstream blob), renamed",
+      "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
+    },
+    {
+      "asset_id": "tp-buildingsmart-ifc-transition",
+      "paths": [
+        "examples/ifc-transition/buildingSMART-wall-opening-window.ifc"
+      ],
+      "source_revision": "buildingSMART/Sample-Test-Files@e6f1c1d80ac216e1c1d6f88d4650f13d8c8277b7",
+      "content_sha256": "73b0e45d931d5dc13bfee5fdc7bd80f796526445458b2de74c4168d209097832",
+      "git_blob": "8820193e625f693712be860d79291a0ee48eacd7",
+      "git_blob_of": "examples/ifc-transition/buildingSMART-wall-opening-window.ifc",
+      "creator_and_creation_evidence": "examples/ifc-transition/ATTRIBUTION.md",
+      "actual_rights_holder": "buildingSMART International Ltd.",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "CC-BY-4.0"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "examples/ifc-transition/ATTRIBUTION.md",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance; unmodified, renamed",
+      "content_sha256_note": "as declared in the in-repo attribution; file not fetched locally"
+    },
+    {
+      "asset_id": "tp-nist-pontius",
+      "paths": [
+        "tests/reference_data/PONTIUS.DAT"
+      ],
+      "source_revision": "usnistgov/dataplot@d837c4af1282e51667ed75a02433f5e5590f1c6d lib/data/PONTIUS.DAT",
+      "content_sha256": "7854389f4b3058fc1d1f03250843d2c2ef00e09162939339769e9cb9ab1e8d8c",
+      "git_blob": "62e5292ae7798d61e18da8ef6cc8b9e41337b4e5",
+      "git_blob_of": "tests/reference_data/PONTIUS.DAT",
+      "creator_and_creation_evidence": "src/ciw/link_references.py profile nist-pontius",
+      "actual_rights_holder": "NIST (US public domain)",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "NIST-PD"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "tests/reference_data/NIST-NOTICE.txt; third_party/reference-data/NIST-NOTICE.txt",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance"
+    },
+    {
+      "asset_id": "tp-nist-feasst",
+      "paths": [
+        "examples/molecular-data/sources/"
+      ],
+      "source_revision": "orphicsystems/Orphic-Decentralized-Systems-Protocol@24f6ef074c76da0ddf2a405001c00020061e98fc",
+      "content_sha256": "f24668272071645a830ee70b641ac5a0a374929daaa0a68e77107fb20aca2786",
+      "git_blob": "aa05e3016a2639f712296eba1975bab41bf96113",
+      "git_blob_of": "examples/molecular-data/sources/FEASST-LICENSE.rst",
+      "creator_and_creation_evidence": "examples/molecular-data/sources/FEASST-LICENSE.rst",
+      "actual_rights_holder": "NIST",
+      "authority_or_title_evidence": "licence file or notice shipped with the item; no independent title verification",
+      "prior_grants": [
+        "NIST licence (July 2017)"
+      ],
+      "incorporated_third_party_material": [],
+      "applicable_notice": "examples/molecular-data/sources/FEASST-LICENSE.rst",
+      "distribution_channel": "private GitHub repository orphicsystems/Orphic-Decentralized-Systems-Protocol (visibility checked 2026-11-02)",
+      "licensing_contact": null,
+      "status": "recorded; licence notice retained; no global legal clearance"
+    }
+  ],
+  "global_legal_clearance": false,
+  "conversion_claim_review": {
+    "reviewed_date_utc": "2026-11-02",
+    "source": "PR #260 at b8eec0949ebd1a9a6dac4e9ef242b0db34dd4f0c: MIGRATION_LEDGER.md sections 10-11; underlying decision transcripts not supplied for this review",
+    "repository_visibility_evidence": "GitHub repository API metadata returned visibility=private on 2026-11-02",
+    "independent_title_or_decision_authority_verification": false,
+    "grants_created_or_expanded": false,
+    "note": "Historical licence and notice entries are retained as recorded. Attributed decisions do not establish title, third-party permission or legal clearance."
+  }
 }

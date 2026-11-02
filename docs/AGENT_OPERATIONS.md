@@ -18,6 +18,16 @@ A granted plan is `ncp_plan_template`, then `ncp_plan_create` with that graph, t
 
 Use `tools/call` or `ciw.services.invoke` with the same operation name. They call the same domain functions. An unknown name refuses. There is no shell tool.
 
+Control-tool calls share `ciw.services.admit`: the MCP control host, control calls through `ciw.services.invoke`, and the coordinator's inner operation. A request names a listed tool, passes an object, stays inside the 65536-byte argument budget, cannot select a checkout or a pin, and matches the tool's declared input schema. An argument named `owner`, `principal`, or `agent_id` refuses with `coordinator_impersonation_refused`; the host supplies identity. Transports format; they do not re-decide. `ncp_coordinate` runs its inner operation through the same check, so it cannot bypass a refusal the host would give.
+
+The [ODRP reference profile](ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
+
+The [NSL and OLM read-only profiles](READ_ONLY_ADAPTERS.md) require their own trusted host bindings. NSL exposes only exact captured state responses; OLM exposes existing governed retained reads with owner-scoped paging. Caller payloads cannot choose principal, tenant, roles, endpoint, credentials or source pin. These profiles add no control or ODRP grant.
+
+Control-host and SDK calls apply the same serialized-data response budget through
+`ciw.services.response_postcondition`. Refused retained operations preserve their
+artifact identifiers for inspection.
+
 `ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
 
 

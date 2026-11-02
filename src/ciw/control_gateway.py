@@ -14,7 +14,7 @@ from pathlib import Path
 import threading
 import uuid
 
-from .agent_api import encode, identifier, MAX_RESPONSE
+from .agent_api import encode, identifier
 from .agent_recovery import RecoveryStore
 from .agent_tools import _shape, STRING, OFFSET, LIMIT
 from .control_contracts import keys
@@ -202,6 +202,7 @@ def semantic_registry(owner):
 
 class ControlHost:
     instructions = (
+        "ODSP (Orphic Decentralized Systems Protocol) MCP control surface. "
         "Discover capabilities, inspect a host baseline template, create a typed plan, "
         "admit its exact digest, then submit and poll the returned run ID. Admission "
         "uses existing operator grants and cannot broaden them. Reuse an attempt on "
@@ -396,8 +397,8 @@ class ControlHost:
                 "mcp_tool": tool_name,
                 "callable": bool(profiles or tool_name),
             })
-        ledger_path = Path(__file__).resolve().parents[2] / "release" / "capability-ledger.json"
-        ledger = json.loads(ledger_path.read_text(encoding="utf-8"))
+        from .services import _packaged_text
+        ledger = json.loads(_packaged_text("capability-ledger.json"))
         for item in ledger["capabilities"]:
             profiles = ["fluid", "fluid-molecular", "fluid-fsi"] if item["id"] == "bounded_fluid_models" else []
             tool_name = "ncp_hypergraph" if item["id"] == "hypergraph_rewriting" else "ncp_ledger_read"
@@ -724,13 +725,13 @@ class ControlHost:
     def call(self, name, arguments):
         from .retention import RetainedFailure
         try:
-            if self._closed or name not in TOOLS or len(encode(arguments)) > 65536:
+            if self._closed:
                 raise ValueError("Unsupported request")
-            _shape(arguments, TOOLS[name]["inputSchema"])
+            from .services import admit, response_postcondition
+            admit(name, arguments)
             self._store.check_current()
             value = getattr(self, TOOLS[name]["method"])(**deepcopy(arguments))
-            if len(encode(value)) > MAX_RESPONSE:
-                raise ValueError("Response exceeds budget")
+            response_postcondition(value)
             return {"schema": "ncp.control-response.v1", "status": "ok", "data": value, "error": None}
         except RetainedFailure as exc:
             return {"schema": "ncp.control-response.v1", "status": "refused", "data": {

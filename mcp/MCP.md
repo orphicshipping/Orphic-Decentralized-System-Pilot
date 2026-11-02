@@ -7,7 +7,7 @@
 
 Machine catalogs. They name tools and folders. They do not authorize execution.
 
-Tracked files here, none of them a tool call: `README.md`, `folder-index.json`, `model-catalog.json`, `project-map.json`.
+Tracked files here, none of them a tool call: `README.md`, `acceptance-baseline.json`, `capability-map.json`, `document-map.json`, `folder-index.json`, `model-catalog.json`, `plug-in.json`, `project-map.json` (3 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

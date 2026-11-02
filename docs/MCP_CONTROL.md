@@ -104,9 +104,22 @@ serialize with the original execution owner and can wait for active computation.
 One bounded in-process worker executes jobs per host. Plans are limited to 64;
 job count and scientific execution/node budgets come from the frozen host profile.
 Durability means retained identity and recovery, not a distributed scheduler or
-automatic restart of calculations. Retained hashes detect inconsistent local
+automatic restart of calculations. A coordinator job's liveness is a kernel file
+lease on `idem-<hash>.lease`, released by the kernel when the worker exits; the
+recorded PID is diagnostic only. Reusing an idempotency key with a different
+request refuses with `idempotency_key_conflict`. Retained hashes detect inconsistent local
 state; they are not an authenticated history against an administrator who can
 rewrite the entire state and policy together.
+
+Every control-tool request first passes `ciw.services.admit`, the policy shared by this
+host, control-tool calls through `ciw.services.invoke` and the coordinator: listed tool, object arguments,
+65536-byte budget, no checkout or pin fields, declared input schema, and no
+`owner`/`principal`/`agent_id` argument (`coordinator_impersonation_refused`).
+
+The optional [ODRP reference profile](ODRP.md) has a separate read-only
+`KnowledgeHost` validation path. `ncp_system_status`, `ncp_knowledge_*` and
+`ncp_evidence_*` dispatch to that profile before control admission; they do not
+receive control-tool execution grants.
 
 Plan admission is distinct from baseline acceptance, release, deployment,
 calibration and physical equipment control. There are no arbitrary shell, code

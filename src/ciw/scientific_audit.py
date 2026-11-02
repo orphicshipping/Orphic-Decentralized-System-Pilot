@@ -45,6 +45,7 @@ COMMAND_REVIEWS = {
  'irrigation': 'irrigation_workflow',
  'polymer leakage': 'leakage_workflow',
  'system': 'system_workflow',
+ 'reference': 'reference_profile',
  'reference-compare': 'reference_comparison',
  'timing': 'transport_timing',
  'dsp': 'dsp',

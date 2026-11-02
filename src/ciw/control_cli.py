@@ -58,7 +58,7 @@ def main(argv=None):
             with ControlHost(owner, resume=args.resume) as host:
                 return serve_sdk(host)
     except (ImportError, OSError, ValueError, TypeError, KeyError) as exc:
-        print("NCP control startup refused: " + str(exc), file=sys.stderr)
+        print("ODSP control startup refused (ncp): " + str(exc), file=sys.stderr)
         return 1
 
 

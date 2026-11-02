@@ -1,21 +1,36 @@
-"""Write one MCP.md per tracked folder and mcp/folder-index.json.
+"""Write tracked-folder contracts and mcp/folder-index.json.
 
 Reading or running this script is not a tool call and not a grant.
-It does not move source trees. Imports, pins, and tests keep their paths.
+Imported trees and exact-input capsules keep their bytes, modes, and paths.
+Their navigation contracts live outside the protected source directories.
 """
 from __future__ import annotations
 
 import json
 import subprocess
+from html import escape
 from pathlib import Path
+from urllib.parse import quote
+
+from monorepo import load_manifest
 
 ROOT = Path(__file__).resolve().parents[1]
 MAP_PATH = ROOT / "mcp" / "project-map.json"
 INDEX_PATH = ROOT / "mcp" / "folder-index.json"
+OVERLAY_PATH = ROOT / "mcp" / "source-contracts.md"
+
+# This fixture is an exact input capsule owned by workcell_recipe.PROP.
+# WorkcellHost intentionally rejects files outside the declared source_paths.
+CAPSULE_ROOTS = ("examples/workcells/godot-prop",)
 
 # Longest matching prefix wins. Call is what a model should use instead of
 # the files. "none" means this folder is not a tool.
 OVERRIDES: tuple[tuple[str, str, str], ...] = (
+    (
+        "tools/odrp-private-host-candidate",
+        "none",
+        "Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.",
+    ),
     (
         "instruments/domain/flowstate",
         "none",
@@ -201,6 +216,16 @@ SET_RULE = "This folder does not opt for the easiest task in a set. Name the tas
 ENTRY_MARK = "<!-- ncp-folder-entry -->\n"
 
 
+def protected_roots() -> tuple[str, ...]:
+    # Validate the existing manifest before writing anything. Missing or invalid
+    # provenance must never silently turn imported trees into writable folders.
+    return tuple(module["path"] for module in load_manifest(ROOT)["modules"]) + CAPSULE_ROOTS
+
+
+def protected_root(rel: str, roots: tuple[str, ...]) -> str | None:
+    return next((root for root in roots if rel == root or rel.startswith(root + "/")), None)
+
+
 def tracked_directories() -> tuple[set[Path], dict[Path, list[str]]]:
     directories = {Path(".")}
     files: dict[Path, list[str]] = {Path("."): []}
@@ -286,15 +311,15 @@ def link(rel: str, target: str) -> str:
     return "../" * rel.count("/") + "../" + target
 
 
-def contract(rel: str, kind: str, call: str, sentence: str, names: list[str]) -> str:
+def contract(rel: str, kind: str, call: str, sentence: str, names: list[str], *, location: str | None = None) -> str:
     shown = sorted(name for name in names if name != "MCP.md")
     extra = ""
     if shown:
         head = ", ".join(f"`{name}`" for name in shown[:8])
         more = f" ({len(shown) - 8} more)" if len(shown) > 8 else ""
         extra = f"\nTracked files here, none of them a tool call: {head}{more}.\n"
-    target_map = link(rel, "mcp/project-map.json")
-    target_index = link(rel, "mcp/folder-index.json")
+    target_map = link(rel if location is None else location, "mcp/project-map.json")
+    target_index = link(rel if location is None else location, "mcp/folder-index.json")
     return (
         "# MCP contract\n"
         "\n"
@@ -378,31 +403,50 @@ def write_readme(rel: str, directory: Path, kind: str, call: str, directories: s
 
 
 def main() -> None:
+    roots = protected_roots()
     tops = load_tops()
     directories, files = tracked_directories()
     rows = []
     written = 0
+    overlay_rel = OVERLAY_PATH.relative_to(ROOT).as_posix()
+    overlay = [
+        "# Protected source folder contracts\n\n"
+        "Generated navigation for imported source trees and exact-input capsules. "
+        "The [folder index](folder-index.json) points to every protected tracked folder. "
+        "Source README files retain their original bytes; no navigation files are written into these trees. "
+        "These contracts do not authorize execution or qualify a result.\n"
+    ]
     for directory in sorted(directories, key=lambda path: (path != Path("."), path.as_posix())):
         rel = "." if directory == Path(".") else directory.as_posix()
         probe = "MCP.md" if directory == Path(".") else f"{rel}/MCP.md"
-        if ignored(probe):
+        protected = protected_root(rel, roots)
+        # Imported ignore rules cannot hide tracked source from the external index.
+        if protected is None and ignored(probe):
             continue
         kind = classify(rel, tops)
         call = call_for(rel, kind, tops)
         sentence = sentence_for(rel, kind, tops)
-        text = contract(rel, kind, call, sentence, files.get(directory, []))
-        path = ROOT / directory / "MCP.md"
-        path.write_text(text, encoding="utf-8")
-        write_readme(rel, directory, kind, call, directories)
-        rows.append({"path": rel, "class": kind, "call": call})
+        row = {"path": rel, "class": kind, "call": call, "contract": probe}
+        if protected is not None:
+            text = contract(rel, kind, call, sentence, files.get(directory, []), location="mcp")
+            overlay.append(f'\n<a id="{escape(rel, quote=True)}"></a>\n\n' + text.replace("# MCP contract\n", f"## `{rel}`\n", 1))
+            row.update(contract=overlay_rel + "#" + quote(rel, safe="/"), protected_source=protected)
+        else:
+            text = contract(rel, kind, call, sentence, files.get(directory, []))
+            path = ROOT / directory / "MCP.md"
+            path.write_text(text, encoding="utf-8")
+            write_readme(rel, directory, kind, call, directories)
+        rows.append(row)
         written += 1
+    OVERLAY_PATH.write_text("".join(overlay), encoding="utf-8")
     document = {
         "schema": "ncp.mcp-folder-index.v1",
         "authorizes_execution": False,
         "qualification": "not_performed_by_this_file",
         "contract": "MCP.md",
+        "protected_source_contracts": overlay_rel,
         "project_map": "mcp/project-map.json",
-        "note": "One row per tracked folder. A row is not a tool call and does not authorize execution. A folder does not opt for the easiest task in a set. Source paths stay where tests and pins import them.",
+        "note": "One row per tracked folder, except ignored local contract paths outside protected sources. Each row points to its contract. Imported sources and exact-input capsules use external contracts and retain their original bytes and modes. A row is not a tool call and does not authorize execution. A folder does not opt for the easiest task in a set.",
         "folders": rows,
     }
     INDEX_PATH.write_text(json.dumps(document, indent=2) + "\n", encoding="utf-8")

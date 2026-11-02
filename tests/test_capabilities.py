@@ -148,6 +148,19 @@ def test_registered_operations_match_the_default_registry():
         assert item["capability_id"] == operation_id
 
 
+def test_workbench_fold_describes_existing_callable_service():
+    from ciw import services, workbench_surface
+
+    item = get("workbench.fold.v1")
+    assert item["kind"] == "service"
+    assert item["module"] == "ciw.workbench_surface"
+    assert item["operation_id"] is item["role"] is item["runtime_identity"] is None
+    assert callable(workbench_surface.run) and callable(services.workbench_run)
+    assert services.invoke("ncp_workbench_list") == workbench_surface.listing()
+    assert item["authorizes_execution"] is False
+    assert item["qualification"] == "not_performed"
+
+
 def test_named_profiles_and_lesson_match_their_owners():
     from ciw.doctor import PROFILES
     from ciw.learning import TOPIC

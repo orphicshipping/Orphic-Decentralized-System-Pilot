@@ -5,7 +5,7 @@ in the owning Session and the operator's launch command. Reading this page is no
 
 Machine-readable copy: [mcp/model-catalog.json](../mcp/model-catalog.json).
 Folder map: [MCP_PROJECT.md](MCP_PROJECT.md), [mcp/project-map.json](../mcp/project-map.json), and [mcp/folder-index.json](../mcp/folder-index.json).
-Every tracked folder has `MCP.md`. That file is not a grant.
+Follow each folder's contract pointer in the [folder index](../mcp/folder-index.json). Protected source folders use [external contracts](../mcp/source-contracts.md). A contract is not a grant.
 Older transport notes: [NET_AGENT_PROTOCOL.md](NET_AGENT_PROTOCOL.md).
 
 ## Transport

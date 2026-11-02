@@ -362,25 +362,25 @@ def test_installed_package_answers_outside_the_checkout(tmp_path):
     try:
         subprocess.check_call(
             [sys.executable, "-m", "pip", "install", str(ROOT), "--target", str(target), "--no-deps", "--no-build-isolation", "--ignore-requires-python"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
             stdout=subprocess.DEVNULL,
         )
         env["PYTHONPATH"] = str(target)
         env.pop("PYTHONSAFEPATH", None)
         contracts = subprocess.check_output(
-            ["/usr/bin/python3.11", "-c",
+            [sys.executable, "-c",
              "from ciw.plug_in import document; from ciw.services import read_contract, ledger_read; "
              "print(document()['schema']); "
              "print(read_contract('ncp://contract/verification')['schema']); "
              "print(ledger_read('public_core')['record']['id'])"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
         )
         assert contracts.splitlines() == [b"ncp.mcp-plug-in.v1", b"ncp.verification-report.v1", b"public_core"]
         invoked = subprocess.check_output(
             [sys.executable, "-c", "from ciw.services import invoke; print(invoke('ncp_plug_in')['schema'])"],
-            cwd="/tmp",
+            cwd=tmp_path,
             env=env,
         )
         assert invoked.strip() == b"ncp.mcp-plug-in.v1"
@@ -441,7 +441,7 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
     import os
     from ciw.agent_mcp import demo_config, from_profile
     from ciw.control_gateway import ControlHost
-    from ciw.coordinator import _exclusive_path
+    from ciw.coordinator import _hold_exclusive, _release_exclusive
     from ciw.retention import SUPPORTED_PLATFORMS
     from ciw.sequence_kinetics import example_request
     from ciw.services import invoke
@@ -480,15 +480,16 @@ def test_coordinator_replays_hands_off_and_refuses_a_busy_resource(tmp_path, mon
             assert "another host session" in str(exc)
         else:
             raise AssertionError("handoff bypass")
-        held = _exclusive_path("oven")
-        held.write_text(json.dumps({"pid": os.getpid(), "owner": left.retained.owner}), encoding="utf-8")
+        # A hold is a kernel lock, not a file's presence; another holder has it here.
+        held = _hold_exclusive(left.retained, "oven")
+        assert held is not None
         try:
             invoke("ncp_coordinate", {**payload, "idempotency_key": "job-2", "exclusive": "oven"}, host=left)
         except Exception as exc:
             assert "exclusive_resource_busy" in str(exc)
             assert left.retained.native(exc.artifact_id)["error"] == "exclusive_resource_busy"
         finally:
-            held.unlink(missing_ok=True)
+            _release_exclusive(held)
         try:
             invoke("ncp_coordinate", {"action": "submit", "idempotency_key": "job-3", "operation": "ncp_domain_run",
                                       "arguments": {"domain": "sequence", "agent_id": "other"}}, host=left)
