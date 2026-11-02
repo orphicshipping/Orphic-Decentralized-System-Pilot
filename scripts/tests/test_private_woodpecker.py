@@ -1,5 +1,4 @@
 """Source/attempt identity, fail-closed summaries and bounded real command checks."""
-from copy import deepcopy
 import hashlib
 import importlib.util
 import json
@@ -116,6 +115,22 @@ def test_junit_skip_and_failure_remain_failures(tmp_path):
     for attrs in ('tests="0"', 'tests="1" skipped="1"', 'tests="1" failures="1"', 'tests="1" errors="1"'):
         path.write_text('<testsuites><testsuite ' + attrs + '/></testsuites>')
         with pytest.raises(ValueError): ci.junit(path)
+
+
+def test_node_phase_emits_parseable_test_totals(tmp_path, monkeypatch):
+    test_file = tmp_path / "controlled.test.mjs"
+    test_file.write_text("import test from 'node:test'; test('controlled test', () => {});\n")
+    output = tmp_path / "attempt"; output.mkdir()
+    ci.write_new(output / "preflight.json", {"status": "PASS"})
+    for earlier in ci.PHASES[:-1]:
+        ci.write_new(output / (earlier + ".json"), {"status": "PASS"})
+    monkeypatch.setattr(ci, "NODE_TESTS", (str(test_file),))
+    monkeypatch.setattr(ci, "source_identity", lambda root: IDENTITY)
+    ci.phase("node", output, tmp_path, IDENTITY)
+    result = json.loads((output / "node.json").read_text())
+    assert result["status"] == "PASS"
+    assert result["tests"]["tests"] == result["tests"]["pass"] == 1
+    assert result["tests"]["fail"] == result["tests"]["skipped"] == 0
 
 
 def test_checked_workflow_is_manual_sequential_and_has_no_privileged_inputs():

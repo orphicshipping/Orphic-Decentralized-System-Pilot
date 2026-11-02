@@ -217,7 +217,7 @@ def phase(name, output, cache, identity):
             require(qualification["status"] == "LOCAL_PASS" and qualification["source"] == identity,
                     "qualification did not pass for this source")
         elif name == "node":
-            run_checked(["node", "--test", *NODE_TESTS], output, name, timeout=180, env=env)
+            run_checked(["node", "--test", "--test-reporter=tap", *NODE_TESTS], output, name, timeout=180, env=env)
             record["tests"] = parse_tap((output / "commands/node/command.log").read_text())
         require(source_identity(ROOT) == identity, "source changed during phase")
         record["artifacts"] = result_artifacts(name, output, identity)
