@@ -495,7 +495,8 @@ async def adapter_process(args):
                         "declared_maximum_bytes": 262144})
         # Hold an actual child at startup, saturate the actual bounded adapter
         # queue, then disconnect its caller. No provider or bridge is replaced.
-        pending_body = envelope(ACTORS[0], "tools", {})
+        pending_body = envelope(ACTORS[0], "call", {"name": "ncp_domain_run", "confirmed": True,
+            "arguments_json": json.dumps({"domain": "sequence", "request": example_request()})})
         client = httpx.AsyncClient(trust_env=False, timeout=20)
         pending = asyncio.create_task(client.post(url + "/transaction", json=pending_body))
         deadline, child_pid = time.monotonic() + 10, None
@@ -527,6 +528,7 @@ async def adapter_process(args):
         except asyncio.CancelledError:
             pass
         await client.aclose()
+        await asyncio.sleep(0.05)  # Let the actual socket disconnect reach ASGI before resuming the child.
         os.kill(child_pid, signal.SIGCONT)
         stopped_children.discard(child_pid)
         # Allow the real child to close after the disconnect; its transaction
@@ -542,6 +544,7 @@ async def adapter_process(args):
         refused = await send(envelope(ACTORS[0], "tools", {}), expected_status=409)
         require(refused == {"error": {"code": "outcome_unknown"}}, "Process restart cleared an uncertain fence")
         records.append({"event": "actual_child_disconnect_fault", "child_pid": child_pid, "queue_limit": 8,
+                        "requested_tool": "ncp_domain_run", "effect_outcome": "unknown_not_retried",
                         "above_capacity_requests": 9, "overflow": overflow_results,
                         "child_alive_during_overflow": True, "caller_disconnected": True, "fence_survived_restart": True})
     finally:
