@@ -483,6 +483,7 @@ class TestInstalledMCP:
         async def run():
             first = await host.request()
             assert first.status_code == 200, first.text
+            template = await host.call('ncp_plan_template', {'baseline': 'baseline'})
             body = host.body()
             monkeypatch.setattr(adapter, 'PrincipalBridge', FaultAfterRealMCP)
             try:
@@ -503,16 +504,23 @@ class TestInstalledMCP:
                 new = adapter.workspace_path(new_body)
                 before = {p.relative_to(new).as_posix(): sha256(p.read_bytes()).hexdigest()
                           for p in new.rglob('*') if p.is_file()}
+                old_before = {p.relative_to(old).as_posix(): sha256(p.read_bytes()).hexdigest()
+                              for p in old.rglob('*') if p.is_file()}
                 assert old != new
                 with pytest.raises(adapter.Refused, match='reuse'):
                     adapter.restore(host.state, body=body, config=host.config)
-                # The faulty actor still completes real provider-free calls;
-                # its failure does not close or release the retained locks.
+                # The old child performs an actual retained-state write after
+                # the new restore. Its response fault preserves uncertainty,
+                # and its fixed old pathname cannot modify the new snapshot.
                 with pytest.raises(adapter.ConsoleError):
-                    await alive[0].request('call', {'name': 'ncp_plan_template', 'arguments': {'baseline': 'baseline'}})
+                    await alive[0].request('call', {'name': 'ncp_plan_create', 'confirmed': True,
+                        'arguments': {'source': 'source', 'baseline': 'baseline', 'graph': template['graph']}})
                 after = {p.relative_to(new).as_posix(): sha256(p.read_bytes()).hexdigest()
                          for p in new.rglob('*') if p.is_file()}
+                old_after = {p.relative_to(old).as_posix(): sha256(p.read_bytes()).hexdigest()
+                             for p in old.rglob('*') if p.is_file()}
                 assert after == before
+                assert old_after != old_before
                 with pytest.raises(ValueError, match='active writer'):
                     RecoveryStore(old_partition / 'profile/agent-output/control-state', resume=True)
             finally:
