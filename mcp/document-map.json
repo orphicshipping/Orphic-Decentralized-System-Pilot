@@ -49,6 +49,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "MIGRATION_LEDGER.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "PUBLIC_ABOUT_COPY.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -75,6 +80,11 @@
     },
     {
       "path": "TECHNICAL_REFERENCE.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "THIRD_PARTY.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -10390,6 +10400,16 @@
     },
     {
       "path": "tests/reference_data/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tests/support/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tests/support/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
