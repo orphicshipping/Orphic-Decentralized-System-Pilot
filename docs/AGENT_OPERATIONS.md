@@ -18,6 +18,8 @@ A granted plan is `ncp_plan_template`, then `ncp_plan_create` with that graph, t
 
 Use `tools/call` or `ciw.services.invoke` with the same operation name. They call the same domain functions. An unknown name refuses. There is no shell tool.
 
+Every caller passes one request policy, `ciw.services.admit`: the MCP host, `ciw.services.invoke`, and the coordinator's inner operation. A request names a listed tool, passes an object, stays inside the 65536-byte argument budget, cannot select a checkout or a pin, and matches the tool's declared input schema. An argument named `owner`, `principal`, or `agent_id` refuses with `coordinator_impersonation_refused`; the host supplies identity. Transports format; they do not re-decide. `ncp_coordinate` runs its inner operation through the same check, so it cannot bypass a refusal the host would give.
+
 `ncp_workbench_run` uses the operator manifest when the workflow is not one of the five unbound fixtures. The manifest is process configuration (`NCP_HOST_MANIFEST` or `--host-manifest`). Do not put a checkout, a pin, or an executable in the tool arguments. A mismatch fails closed. The returned `artifact_id` is read with `ncp_retained_read` and removed with `ncp_retained_release`.
 
 
