@@ -11,6 +11,7 @@ from __future__ import annotations
 import asyncio
 import base64
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import gzip
 from hashlib import sha256
 import io
@@ -69,6 +70,11 @@ LOCAL_FENCES = set()
 TOKEN = re.compile(r'[A-Za-z0-9_.:-]{1,128}\Z')
 UUID = re.compile(r'[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}\Z')
 ACTIONS = frozenset({'call', 'resource', 'tools', 'runs', 'events', 'status', 'diagnostics'})
+AUDIT_SCHEMA = 'odsp.private-audit-event.v1'
+AUDIT_ACTIONS = {'resource': 'mcp.resources.read', 'tools': 'mcp.tools.list',
+                 'runs': 'adapter.runs', 'events': 'adapter.events',
+                 'status': 'adapter.status', 'diagnostics': 'adapter.diagnostics'}
+MAX_AUDIT_ELAPSED_MS = 2**53 - 1
 HEADERS = {'Cache-Control': 'no-store', 'X-Content-Type-Options': 'nosniff'}
 
 
@@ -363,11 +369,26 @@ def load_journal(directory):
             or type(journal['events']) is not list or len(journal['events']) > MAX_EVENTS):
         raise Refused('invalid_operator_journal')
     for event in journal['events']:
-        exact(event, {'transaction_id', 'action', 'outcome'})
+        legacy = type(event) is dict and set(event) == {'transaction_id', 'action', 'outcome'}
+        if not legacy:
+            exact(event, {'schema', 'transaction_id', 'action', 'outcome', 'operation', 'recorded_at', 'elapsed_ms'})
         if (type(event['transaction_id']) is not str or not UUID.fullmatch(event['transaction_id'])
                 or type(event['action']) is not str or event['action'] not in ACTIONS
                 or type(event['outcome']) is not str or event['outcome'] not in {'started', 'returned', 'refused', 'unknown'}):
             raise Refused('invalid_operator_journal')
+        if not legacy:
+            if (event['schema'] != AUDIT_SCHEMA or type(event['operation']) is not str
+                    or event['operation'] != audit_operation({'action': event['action'], 'payload': {'name': event['operation']}})
+                    or type(event['elapsed_ms']) is not int or not 0 <= event['elapsed_ms'] <= MAX_AUDIT_ELAPSED_MS
+                    or type(event['recorded_at']) is not str
+                    or not re.fullmatch(r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z', event['recorded_at'])):
+                raise Refused('invalid_operator_journal')
+            try:
+                datetime.fromisoformat(event['recorded_at'].replace('Z', '+00:00'))
+            except ValueError:
+                raise Refused('invalid_operator_journal') from None
+        # Legacy records carry no operation/time evidence. Never infer or
+        # backfill it from a new request or the checkpoint's filesystem time.
     return journal
 
 
@@ -598,7 +619,8 @@ class PrincipalBridge(MCPBridge):
                      'OPENBLAS_NUM_THREADS': '1', 'OMP_NUM_THREADS': '1',
                      'PYTHONDONTWRITEBYTECODE': '1', 'PYTHONUNBUFFERED': '1'}
         # Raw child diagnostics can contain private paths/arguments. The durable
-        # operator journal retains only closed reason codes and transaction IDs.
+        # operator journal retains only closed operation/outcome descriptors,
+        # transaction IDs and host-measured timing, never payloads or diagnostics.
         errors = stack.enter_context(open(os.devnull, 'w'))
         read, write = await stack.enter_async_context(stdio_client(
             StdioServerParameters(command=str(cfg.python), args=args, env=child_env,
@@ -639,8 +661,30 @@ def fenced(identity):
     return bool(LOCAL_FENCES) or (root.is_dir() and any(root.iterdir()))
 
 
-def audit(directory, journal, body, outcome):
-    event = {'transaction_id': body['transaction']['id'], 'action': body['action'], 'outcome': outcome}
+def audit_operation(body):
+    """Name the admitted service boundary without serializing caller content.
+
+    Resource identifiers and scientific arguments belong to their retained
+    records, not the audit log. Unknown request names never become log text.
+    This descriptor is not an authorization decision or an execution receipt.
+    """
+    if body['action'] == 'call':
+        from ciw.control_gateway import TOOLS
+        name = body['payload'].get('name')
+        return name if type(name) is str and name in set(TOOLS) | set(REFERENCE_NAMES) else 'unrecognized_call'
+    return AUDIT_ACTIONS[body['action']]
+
+
+def audit(directory, journal, body, outcome, started_ns):
+    # UTC is a host observation, not trusted source time. Duration is monotonic
+    # from the pre-execution fence, excluding queue wait and checkpoint restore.
+    elapsed_ms = (time.monotonic_ns() - started_ns) // 1_000_000
+    if not 0 <= elapsed_ms <= MAX_AUDIT_ELAPSED_MS:
+        raise Refused('invalid_audit_clock', 503)
+    event = {'schema': AUDIT_SCHEMA, 'transaction_id': body['transaction']['id'],
+             'action': body['action'], 'outcome': outcome, 'operation': audit_operation(body),
+             'recorded_at': datetime.now(timezone.utc).isoformat(timespec='milliseconds').replace('+00:00', 'Z'),
+             'elapsed_ms': elapsed_ms}
     if len(journal['events']) >= MAX_EVENTS:
         raise Refused('audit_capacity_exhausted', 507)
     journal['events'].append(event)
@@ -715,6 +759,7 @@ async def execute(body, config, principal, abandoned):
     started = False
     created = False
     journal = None
+    audit_started_ns = None
     directory = workspace_path(body)
     partition = principal_path(directory, body['identity'])
     try:
@@ -732,9 +777,10 @@ async def execute(body, config, principal, abandoned):
         created = True
         if abandoned.is_set():
             raise Refused('request_abandoned', 409)
+        audit_started_ns = time.monotonic_ns()
         mark_fence(body, 'pending')
         started = True
-        audit(partition, journal, body, 'started')
+        audit(partition, journal, body, 'started', audit_started_ns)
         bridge = PrincipalBridge(ConsoleConfig(Path(sys.executable).absolute(), partition / 'profile' / 'profile.json',
                                  resume=resumed, state_dir=partition / 'console'),
                                  principal, config.policy_path, directory)
@@ -759,7 +805,7 @@ async def execute(body, config, principal, abandoned):
         if primary is not None or cleanup is not None or abandoned.is_set():
             raise Uncertain(primary, cleanup) from primary
         config.policy.validate_context(body['identity'])
-        audit(partition, journal, body, 'returned')
+        audit(partition, journal, body, 'returned', audit_started_ns)
         atomic_write(directory / 'deployment-generation.json', encoded(marker_for(body, config)))
         archive = checkpoint(directory)
         result_body = {'data': result, 'raw_json': encoded(result).decode('utf-8')}
@@ -785,7 +831,7 @@ async def execute(body, config, principal, abandoned):
             try:
                 mark_fence(body, 'unknown')
                 if journal is not None and len(journal['events']) < MAX_EVENTS:
-                    audit(partition, journal, body, 'unknown')
+                    audit(partition, journal, body, 'unknown', audit_started_ns)
             except BaseException as sink_error:
                 raise Uncertain(exc, sink_error) from exc
             if not isinstance(exc, Uncertain):

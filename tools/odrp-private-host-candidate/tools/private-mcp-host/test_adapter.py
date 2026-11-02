@@ -7,6 +7,8 @@ from pathlib import Path
 import sys
 import tarfile
 from hashlib import sha256
+from copy import deepcopy
+from datetime import datetime, timezone
 from unittest.mock import AsyncMock
 
 import pytest
@@ -285,6 +287,142 @@ def test_audit_capacity_refuses_without_dropping_old_events(host, monkeypatch, t
     assert path.read_bytes() == before
 
 
+def test_audit_records_allowlisted_operation_and_host_time_without_request_contents(host, monkeypatch):
+    secret_argument = 'retained-' + '1' * 32
+    secret_result = 'private-corpus-content-not-for-the-journal'
+    monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: mock_bridge({
+        'structuredContent': {'data': {'text': secret_result}}, 'isError': False}))
+    body = host.body('call', {'name': 'ncp_retained_read', 'arguments': {'artifact_id': secret_argument}})
+    async def run():
+        async with host.client() as client:
+            reply = await client.post('/transaction', json=body)
+        assert reply.status_code == 200, reply.text
+    asyncio.run(run())
+    directory = adapter.principal_path(adapter.workspace_path(body), body['identity'])
+    raw = (directory / 'operator.json').read_text()
+    assert secret_argument not in raw and secret_result not in raw
+    events = adapter.load_journal(directory)['events']
+    assert [event['outcome'] for event in events] == ['started', 'returned']
+    for event in events:
+        assert set(event) == {'schema', 'transaction_id', 'action', 'outcome', 'operation', 'recorded_at', 'elapsed_ms'}
+        assert event['schema'] == adapter.AUDIT_SCHEMA
+        assert event['transaction_id'] == body['transaction']['id']
+        assert event['action'] == 'call' and event['operation'] == 'ncp_retained_read'
+        instant = datetime.fromisoformat(event['recorded_at'].replace('Z', '+00:00'))
+        assert instant.tzinfo == timezone.utc
+        assert abs((datetime.now(timezone.utc) - instant).total_seconds()) < 30
+        assert type(event['elapsed_ms']) is int and event['elapsed_ms'] >= 0
+    assert events[1]['elapsed_ms'] >= events[0]['elapsed_ms']
+
+
+def test_audit_never_echoes_unknown_tool_names_or_resource_identifiers(host, tmp_path):
+    directory = tmp_path / 'redacted'
+    directory.mkdir()
+    journal = {'runs': [], 'events': []}
+    for action, payload, operation in [
+        ('call', {'name': 'ncp_secret_corpus_password'}, 'unrecognized_call'),
+        ('resource', {'uri': 'ncp://retained/private-record-id'}, 'mcp.resources.read'),
+    ]:
+        body = host.body(action, payload)
+        adapter.audit(directory, journal, body, 'started', adapter.time.monotonic_ns())
+        assert journal['events'][-1]['operation'] == operation
+    raw = (directory / 'operator.json').read_text()
+    assert 'secret_corpus_password' not in raw and 'private-record-id' not in raw
+    assert adapter.load_journal(directory) == journal
+
+
+def test_old_journal_records_restore_without_inventing_operation_or_time(host, monkeypatch, tmp_path):
+    monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: mock_bridge())
+    async def run():
+        assert (await host.request()).status_code == 200
+    asyncio.run(run())
+    root = tmp_path / 'legacy-checkpoint'
+    root.mkdir()
+    with tarfile.open(fileobj=io.BytesIO(base64.b64decode(host.state)), mode='r:gz') as stream:
+        stream.extractall(root, filter='data')
+    path = next((root / 'principals').glob('*/operator.json'))
+    journal = json.loads(path.read_text())
+    journal['events'] = [{key: event[key] for key in ('transaction_id', 'action', 'outcome')}
+                         for event in journal['events']]
+    legacy = deepcopy(journal)
+    path.write_bytes(adapter.encoded(journal))
+    # Exercise the restore validator with a legacy-format checkpoint fixture.
+    # This does not assert an authoritative Worker acknowledged edited bytes.
+    body = host.body()
+    resumed, restored = adapter.restore(adapter.checkpoint(root), body=body, config=host.config)
+    assert resumed and restored == legacy
+    directory = adapter.principal_path(adapter.workspace_path(body), body['identity'])
+    before = (directory / 'operator.json').read_bytes()
+    assert adapter.load_journal(directory) == legacy
+    assert (directory / 'operator.json').read_bytes() == before
+    adapter.audit(directory, restored, body, 'started', adapter.time.monotonic_ns())
+    mixed = adapter.load_journal(directory)
+    assert mixed['events'][:-1] == legacy['events']
+    assert mixed['events'][-1]['schema'] == adapter.AUDIT_SCHEMA
+    assert all('operation' not in event and 'recorded_at' not in event for event in mixed['events'][:-1])
+
+
+@pytest.mark.parametrize('mutation', [
+    lambda e: e.pop('recorded_at'), lambda e: e.update(schema='different'),
+    lambda e: e.update(operation='ncp_arbitrary_corpus_text'),
+    lambda e: e.update(operation='adapter.events'),
+    lambda e: e.update(recorded_at='2026-02-30T10:20:30.000Z'),
+    lambda e: e.update(recorded_at='2026-11-02T10:20:30+00:00'),
+    lambda e: e.update(elapsed_ms=True), lambda e: e.update(elapsed_ms=-1),
+    lambda e: e.update(elapsed_ms=adapter.MAX_AUDIT_ELAPSED_MS + 1),
+    lambda e: e.update(arguments={'private': 'data'}),
+])
+def test_audit_extended_records_remain_closed_and_bounded(host, tmp_path, mutation):
+    directory = tmp_path / 'closed-journal'
+    directory.mkdir()
+    journal = {'runs': [], 'events': []}
+    adapter.audit(directory, journal, host.body(), 'started', adapter.time.monotonic_ns())
+    mutation(journal['events'][0])
+    path = directory / 'operator.json'
+    path.write_bytes(adapter.encoded(journal))
+    before = path.read_bytes()
+    with pytest.raises(adapter.Refused):
+        adapter.load_journal(directory)
+    assert path.read_bytes() == before
+
+
+def test_audit_metadata_fits_existing_three_event_reservation(host, tmp_path):
+    from ciw.control_gateway import TOOLS
+    directory = tmp_path / 'event-budget'
+    directory.mkdir()
+    journal = {'runs': [], 'events': []}
+    for name in set(TOOLS) | set(adapter.REFERENCE_NAMES):
+        body = host.body('call', {'name': name})
+        adapter.audit(directory, journal, body, 'returned', adapter.time.monotonic_ns())
+    largest = 0
+    for event in journal['events']:
+        event['elapsed_ms'] = adapter.MAX_AUDIT_ELAPSED_MS
+        largest = max(largest, len(adapter.encoded(event)) + 1)
+    assert largest * 3 <= 1024
+
+
+def test_audit_write_error_after_effect_keeps_operation_evidence_and_unknown_fence(host, monkeypatch):
+    monkeypatch.setattr(adapter, 'PrincipalBridge', lambda *a: mock_bridge())
+    original = adapter.atomic_write
+    def fail_after_return(path, raw):
+        original(path, raw)
+        if path.name == 'operator.json' and json.loads(raw)['events'][-1]['outcome'] == 'returned':
+            raise OSError('private audit sink diagnostic')
+    monkeypatch.setattr(adapter, 'atomic_write', fail_after_return)
+    body = host.body()
+    async def run():
+        async with host.client() as client:
+            reply = await client.post('/transaction', json=body)
+        assert reply.status_code == 503 and reply.json() == {'error': {'code': 'outcome_unknown'}}
+    asyncio.run(run())
+    assert adapter.fence_path(body['identity']).exists()
+    journal = adapter.load_journal(adapter.principal_path(adapter.workspace_path(body), body['identity']))
+    assert [event['outcome'] for event in journal['events']] == ['started', 'returned', 'unknown']
+    assert all(event['operation'] == 'mcp.tools.list' for event in journal['events'])
+    assert 'private audit sink diagnostic' not in json.dumps(journal)
+    assert not adapter.returned_path(body['transaction']['id']).exists()
+
+
 def test_unknown_workspaces_are_never_evicted_for_capacity(host, monkeypatch):
     monkeypatch.setattr(adapter, 'MAX_WORKSPACES', 1)
     old = adapter.STATE / 'transactions' / 'old' / 'state'
@@ -417,6 +555,24 @@ def test_acknowledged_cleanup_failure_preserves_receipt_and_starts_no_operation(
 
 class TestInstalledMCP:
     """Each test starts real isolated installed principal-MCP subprocesses."""
+
+    def test_audit_operation_time_survive_actual_mcp_and_checkpoint_restart(self, host):
+        import ciw
+        assert Path(ciw.__file__).resolve().is_relative_to(Path(sys.prefix).resolve())
+        async def run():
+            await host.call('ncp_capabilities_list', {})
+            first_id = host.base_commit
+            response = await host.request('events')
+            assert response.status_code == 200, response.text
+            events = response.json()['result']['data']
+            returned, = [event for event in events
+                         if event['transaction_id'] == first_id and event['outcome'] == 'returned']
+            assert returned['operation'] == 'ncp_capabilities_list'
+            assert datetime.fromisoformat(returned['recorded_at'].replace('Z', '+00:00')).tzinfo == timezone.utc
+            assert returned['elapsed_ms'] >= 0
+            assert events[-1]['operation'] == 'adapter.events'
+            assert events[-1]['transaction_id'] != first_id
+        asyncio.run(run())
 
     def test_all_seven_operations_reopen_and_principal_isolation(self, host):
         import ciw
