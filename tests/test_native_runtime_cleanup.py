@@ -1,5 +1,6 @@
 """All three pinned profiles preserve an uncertain runtime hold across facades."""
 from copy import deepcopy
+from contextlib import contextmanager
 import os
 from pathlib import Path
 import sys
@@ -14,7 +15,8 @@ from ciw.services import invoke
     ("recompiler", "CIW_NSR_CHECKOUT"), ("schematic", "CIW_SRA_CHECKOUT"),
     ("clocksync", "CIW_CLOCKSYNC_CHECKOUT"),
 ])
-def test_uncertain_binding_never_restarts_children_after_pipe_cleanup_failure(family, environment, monkeypatch):
+@pytest.mark.parametrize("outer_cleanup", [False, True])
+def test_uncertain_binding_never_restarts_children_after_pipe_cleanup_failure(family, environment, outer_cleanup, monkeypatch):
     selected = os.environ.get(environment)
     if not selected:
         pytest.skip(environment + " must provide the approved pinned checkout")
@@ -45,8 +47,18 @@ def test_uncertain_binding_never_restarts_children_after_pipe_cleanup_failure(fa
         def unresolved(*args, **kwargs):
             attempts.append(args)
             raise uncertainty
+        original_directory = runner.tempfile.TemporaryDirectory
+        @contextmanager
+        def directory_cleanup_failure(*args, **kwargs):
+            with original_directory(*args, **kwargs) as directory:
+                try:
+                    yield directory
+                finally:
+                    raise OSError("controlled enclosing cleanup failure")
         with monkeypatch.context() as patch:
             patch.setattr(runner, "_bounded_process", unresolved)
+            if outer_cleanup:
+                patch.setattr(runner.tempfile, "TemporaryDirectory", directory_cleanup_failure)
             response = facade.call(name, arguments)
         assert response["status"] == "refused" and response["reason"] == "runtime_cleanup_uncertain"
         assert len(attempts) == 1
