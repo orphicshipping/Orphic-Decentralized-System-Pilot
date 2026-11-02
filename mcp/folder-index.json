@@ -2942,6 +2942,11 @@
       "call": "none"
     },
     {
+      "path": "instruments/representation/frame-mapper/scripts",
+      "class": "unbound",
+      "call": "none"
+    },
+    {
       "path": "instruments/representation/frame-mapper/src",
       "class": "unbound",
       "call": "none"
@@ -3653,6 +3658,11 @@
     },
     {
       "path": "tests/reference_data",
+      "class": "evidence",
+      "call": "none"
+    },
+    {
+      "path": "tests/support",
       "class": "evidence",
       "call": "none"
     },
