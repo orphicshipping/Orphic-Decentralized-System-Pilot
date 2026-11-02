@@ -73,6 +73,7 @@ def _guard_cleanup(operation):
         previous = getattr(self, "_cleanup_uncertain", None)
         if previous is not None:
             raise RuntimeCleanupUncertain(previous.process) from previous
+        inherited_context = sys.exception()
         try:
             return operation(self, *args, **kwargs)
         except BaseException as exc:
@@ -81,7 +82,9 @@ def _guard_cleanup(operation):
             pending, seen = [exc], set()
             while pending:
                 failure = pending.pop()
-                if id(failure) in seen:
+                # An exception already handled by our caller is diagnostic
+                # context, not evidence this operation lost process ownership.
+                if failure is inherited_context or id(failure) in seen:
                     continue
                 seen.add(id(failure))
                 if isinstance(failure, RuntimeCleanupUncertain):

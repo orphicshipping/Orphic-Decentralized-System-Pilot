@@ -404,6 +404,44 @@ def test_confirmed_reap_with_cleanup_error_does_not_install_false_hold(tmp_path,
     assert adapter._run("print('followup')", []) == (0, b"followup\n")
 
 
+def test_caller_uncertainty_context_does_not_hold_completed_source_probe(tmp_path):
+    adapter = bound_fixture(tmp_path)
+    foreign = runtime.RuntimeCleanupUncertain()
+    try:
+        raise foreign
+    except runtime.RuntimeCleanupUncertain:
+        with pytest.raises(runtime.AdapterRefusal) as caught:
+            adapter._git("definitely-not-a-git-command")
+    assert caught.value.code == "SOURCE_PIN_MISMATCH"
+    assert foreign in list(causes(caught.value))
+    assert adapter._cleanup_uncertain is None
+    assert adapter._run("print('followup')", []) == (0, b"followup\n")
+
+
+def test_caller_uncertainty_context_does_not_hold_confirmed_reap(tmp_path, monkeypatch):
+    adapter = bound_fixture(tmp_path)
+    foreign = runtime.RuntimeCleanupUncertain()
+    primary = KeyboardInterrupt("this operation cancelled")
+    cleanup = OSError("this signal failed after effect")
+    with monkeypatch.context() as patch, owned_children(patch) as ownership:
+        fail_wait(patch, ownership, primary)
+        original = runtime._stop
+        def stop(process):
+            original(process)
+            raise cleanup
+        patch.setattr(runtime, "_stop", stop)
+        try:
+            raise foreign
+        except runtime.RuntimeCleanupUncertain:
+            with pytest.raises(OSError) as caught:
+                adapter._run(CLOSED, [])
+        assert caught.value is cleanup
+        assert primary in list(causes(cleanup)) and foreign in list(causes(cleanup))
+        assert_reaped(ownership)
+        assert adapter._cleanup_uncertain is None
+    assert adapter._run("print('followup')", []) == (0, b"followup\n")
+
+
 @pytest.mark.parametrize("probe", ["_verify_source", "_probe"])
 def test_binding_initializes_hold_before_virtual_probes(tmp_path, monkeypatch, probe):
     failure = runtime.RuntimeCleanupUncertain()
