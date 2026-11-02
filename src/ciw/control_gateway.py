@@ -224,7 +224,8 @@ class ControlHost:
         self._semantic, self._names = semantic_registry(owner)
         from .retention import Store
         self.retained = Store(retained_owner if retained_owner is not None else
-                              "output:" + str(owner._check_output().resolve()))
+                              "output:" + str(owner._check_output().resolve()),
+                              evict=retained_owner is None)
         root = owner._check_output() / "control-state"
         try:
             if not resume:

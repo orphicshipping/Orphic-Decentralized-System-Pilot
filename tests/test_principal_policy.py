@@ -122,6 +122,17 @@ def test_resource_grant_is_current_for_tool_and_uri(configured):
     with pytest.raises(ValueError):policy.facade('alice',control=control)
 
 
+def test_private_host_capacity_refuses_without_evicting_evidence(configured):
+    from ciw.retention import _LIMIT
+    _, _, _, owner, control, facade = configured
+    artifacts = [control.retained.keep({'i': i}, kind='test', catalog={}) for i in range(_LIMIT)]
+    with pytest.raises(ValueError, match='capacity exhausted'):
+        control.retained.keep({'overflow': True}, kind='test', catalog={})
+    for i, artifact in enumerate(artifacts):
+        assert invoke('ncp_retained_read', {'artifact_id': artifact}, host=facade)['bundle'] == {'i': i}
+    assert owner.capabilities()['execution_budget']['used'] == 0
+
+
 def test_owner_isolation_and_revoked_handoff_claim(tmp_path,monkeypatch):
     monkeypatch.setenv('NCP_RETAIN_DIR',str(tmp_path/'retained'))
     alice,bob,eve=grant(),grant('bob'),grant('eve');alice['handoff_recipients']=['bob']
