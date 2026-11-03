@@ -4,7 +4,13 @@ Developed by **Orphic Systems**
 
 ODSP provides shared services for models, agents and deterministic software: retained investigations, bounded computation and controlled access to evidence. Clients use MCP over stdio or the Python service API. **ODRP** is the read-only reference profile of the same substrate.
 
-[Architecture and boundaries](#architecture-and-boundaries) · [Profiles](#implemented-profiles) · [Setup and clients](#setup-and-clients) · [Qualification and CI](#qualification-and-ci) · [Source and licensing](#source-and-licensing)
+[Current status](#current-status) · [Architecture](#architecture-and-boundaries) · [Profiles](#implemented-profiles) · [Toolbox and clients](#toolbox-and-clients) · [Setup](#setup) · [Outstanding programme](#outstanding-programme) · [Qualification and CI](#qualification-and-ci) · [Licensing](#source-and-licensing)
+
+## Current status
+
+**ODSP is operator-run research and pilot software. It is not release-qualified, and the updated project has not been deployed.** This README describes the implementation merged in [PR #266](https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/pull/266), at source revision `235ee45a11f744e8c801364965c07e9e3e13854f`. This documentation update does not publish the subsequent implementation campaign.
+
+The merged programme includes strict Python contracts, principal-bound service calls, retained audit records, a local fenced queue, read-only intake/domain profiles, proof-receipt verification, a Rust request observer, a typed client/viewer and Python client toolbox libraries. The broader Rust core, distributed coordinator, server toolbox, persistent cache, live integrations and Domain H work remain subject to the [outstanding programme](#outstanding-programme) and release gates below.
 
 ## Architecture and boundaries
 
@@ -16,7 +22,9 @@ Evidence access, computation and authority remain distinct:
 - **Computation:** host-bound operations preserve their inputs, runtime identities, outcomes and verification records. Full-content replay checks do not establish physical validity or evidence admission.
 - **Execution:** tool discovery and a successful check confer no grant. Plans require explicit admission and execution permissions; domain, workbench and nested coordinator calls also check the underlying scientific-operation grants. Missing bindings, revoked access and unresolved outcomes remain refusals or holds.
 
-The existing private ingress candidate wraps HTTPS requests around the installed stdio service. It is **not native MCP Streamable HTTP or OAuth**. Cloudflare ingress and isolated single-writer execution are a proposed private deployment profile. Ubuntu/PlanetScale/Cloudflare topology choices are not evidence of provisioned or qualified infrastructure; no database, Kubernetes cluster or hardware platform is mandated here.
+The published private ingress candidate wraps HTTPS requests around the installed stdio service. It does not provide a native MCP Streamable HTTP/OAuth control plane. The operator panel validates Cloudflare Access assertions at its server proxy and maps the authenticated subject to a host-selected backend principal; the browser receives no backend credential.
+
+The cloud direction is private authenticated ingress, separately operated compute and durable coordinator state. **PlanetScale-managed PostgreSQL is a candidate for that state; NATS messaging and compute remain separate services.** Portable PostgreSQL transactions and transaction-pool compatibility are being verified locally. This is not evidence of a provisioned PlanetScale database, a running NATS service or hosted failover/restore qualification. The existing Cloudflare Worker/Durable Object/storage implementation remains a separate candidate release path; no migration or deployment is implied by this README.
 
 See the [private release contract](docs/PRIVATE_RELEASE_CONTRACT.md), [operating runbook](docs/PRIVATE_HOST_OPERATIONS.md) and [underlying architecture](docs/ARCHITECTURE.md).
 
@@ -38,7 +46,7 @@ These are separately bound surfaces. A discovery entry neither installs a provid
 | Domain records | Inspect captured metrology/GIS contracts and finance/trade observations | [Domain records](docs/CAMPAIGN_DOMAIN_READ.md). No new engine, live feed, advice or order submission. |
 | Proof receipts | Verify complete attributed receipts against a current host key registry | [Proof verification](docs/PROOF_VERIFICATION_PROFILE.md). Signature attribution is separate from computation proof; native SP1 remains held. |
 
-NSR, SRA, ClockSync and NISE use fixed, host-selected subprocess bindings to their existing implementations. Verification validates complete supplied receipts before each profile's replay comparison; caller-supplied digest IDs alone are insufficient. Each profile preserves its own occurrence semantics. These process boundaries are not network or secret-scrubbing sandboxes.
+NSR, SRA, ClockSync and NISE use fixed, host-selected subprocess bindings to their existing implementations. Verification validates complete supplied receipts before each profile's replay comparison; caller-supplied digest IDs alone are insufficient. Each profile preserves its own occurrence semantics. These process boundaries alone do not isolate network access, files or inherited secrets.
 
 The [tool-programme acceptance contract](docs/TOOL_PROGRAMME_ACCEPTANCE.md) tracks the optional strict data boundaries, locked release inventory, audited principal host, fenced local queue and client work. Explicit process limits and a minimal environment can be selected by trusted launchers; strict namespace isolation must refuse when unavailable. These additions do not activate a deployment or expand existing grants.
 
@@ -46,9 +54,21 @@ An optional [Rust request observer](docs/RUST_REQUEST_BOUNDARY.md) compares boun
 
 Ledger reads do not execute the capability they describe: the `proved_heat` row is not an SP1 proof. Unbound providers and existing qualification holds remain explicit.
 
-## Setup and clients
+## Toolbox and clients
 
-The package declares Python 3.11 or newer. The private qualification environment selects Python 3.12.14 and Node 24.19.0; its exact dependencies and runtime bindings are part of the release evidence. From a checkout, an isolated local MCP installation starts with:
+The merged [context selector](docs/CLIENT_CONTEXT_SELECTOR.md) lists, searches, describes and selects exact schemas from the current authorized host view. Changes to policy, identity, schemas or bound captures invalidate stale selections. Selection changes a client's model context; it does not grant permission or invoke a service.
+
+The merged [client skills and cache](docs/TOOLBOX_SKILLS.md) provide:
+
+- Versioned `reference-citation` and `cross-profile-provenance` recipes over existing canonical services.
+- A bounded synchronous `SkillRunner`, with fresh host admission for every step, current principal checks, retained intent/results and durable attempt markers that prevent silent replay.
+- A separate in-memory cache for disclosed schemas and explicitly approved immutable reads. It caches no authorization decisions and is not used to execute skill steps.
+
+These libraries add no MCP tools and provide no server session load/unload API. The server toolbox, signed workflow registry and shared persistent cache belong to the subsequent completion campaign. The [typed client and read-only viewer](tools/campaign-client/README.md) are additional consumers of the same contracts; neither supplies authority.
+
+## Setup
+
+The package declares Python 3.11 or newer. Use the exact Python, Node, provider and dependency versions recorded for the release being qualified; an earlier environment receipt does not qualify a newer checkout. From a checkout, an isolated local MCP installation starts with:
 
 ```sh
 python3.12 -m venv .venv
@@ -77,23 +97,15 @@ The absolute paths and `operator` are placeholders for trusted launcher configur
 
 The [private operator panel](docs/PRIVATE_OPERATOR_PANEL.md) uses the same installed MCP service through the existing private gateway. Its separate server proxy verifies an Access assertion, maps the authenticated subject to a host-selected principal, and preserves transaction receipts and uncertain outcomes. The browser receives no backend credential. Building or testing this candidate does not provision an Access application, change the paused historical portal, or qualify a hosted deployment.
 
-For an additional bound profile, deterministic software uses the same facade. This NISE example requires the approved provider checkout and its **separate** interpreter to exist already:
+Additional profiles require their documented host factories, current grants, approved provider checkouts and runtime pins. See [bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md) and [NISE](docs/NISE_PROFILE.md). A provider checkout, installed SDK or selected tool schema is not an execution grant. Read the security defaults below before launching companion code.
 
-```python
-from ciw.nise_profile import open_nise
-from ciw.mcp_server import serve_sdk
-from ciw.principal_policy import PrincipalPolicy
-from ciw.services import invoke
+## Security defaults and execution limits
 
-policy = PrincipalPolicy.from_file('/absolute/approved-policy.json')
-with open_nise(checkout='/absolute/approved-nise',
-               python_executable='/absolute/nise-env/bin/python',
-               principal='operator') as host:
-    client = policy.facade('operator', nise=host)
-    description = invoke('ncp_nise_describe', {}, host=client)
-```
+At the published revision, principal policy and scope checks govern tool access, and private retention stores refuse capacity exhaustion. Raw in-process administration remains trusted code. Do not expose a raw host as an authenticated multi-user service.
 
-Inside that same host lifetime, a launcher can call `serve_sdk(client, name='odsp-nise')` to serve the facade over stdio. Every NISE operation except describe also requires `inference.schematic.construct.v1` in the principal's `scientific_operations`. Other profiles have their own host factories and grants in the linked guides.
+**Companion containment is an unresolved release gate.** Published companion launch paths do not uniformly require a scrubbed environment or namespace isolation. Optional Linux resource limits do not block network or filesystem access. The approved local remediation clears inherited environment variables and requires Bubblewrap for pinned companion execution, refusing when isolation is unavailable; that implementation is not included in this README-only update. The current test host refuses the namespace probe, so a successful strict-isolation run still needs a suitable host.
+
+The published gateway supports principal disabling/revocation, but its per-principal backend token format does not enforce expiry or rotation. A replacement credential lifecycle is in local qualification. In published main, nine raw-host profile routes return through profile-specific validators without running `services.admit`. Principal-bound facade calls still apply their own current policy and request checks; the local campaign is reconciling the shared admission path.
 
 ## Bounds and recovery
 
@@ -103,9 +115,45 @@ Owner retention has a 4,000,000-byte budget. Private principal-bound stores disa
 
 For control plans and coordinator jobs, reusing an attempt/key returns the same record; conflicting requests refuse. Timeout or cancellation is not proof of rollback. Uncertain subprocess cleanup holds the affected runtime binding against further launches; uncertain durable transactions retain their recovery fence. Current-checkpoint rehoming preserves owner/history; lost-history disaster recovery remains unresolved. Follow the [operations runbook](docs/PRIVATE_HOST_OPERATIONS.md#recovery-and-owned-backup); do not clear a hold or silently re-execute work.
 
+## Outstanding programme
+
+The following work is part of the active completion campaign. Local source, a passing slice or a planned interface does not mean it is published on main, qualified as an integrated release or deployed.
+
+| Workstream | Published main | Remaining completion and qualification |
+| --- | --- | --- |
+| Rust core and kernels | Opt-in request observer; Python remains authoritative | Native policy/numerical implementations and oracle comparisons are being integrated. The complete core/kernel port and final source-bound acceptance remain open. |
+| Distributed coordinator | Local atomic claims, leases and fencing | PostgreSQL/NATS custody and numerical execution have local integration evidence. Final combined checks, hosted PlanetScale compatibility, failover and restore remain open. |
+| MCP toolbox and skills | Client-side selection and synchronous recipes | Server tool loading and an MCP skill runner are being integrated with canonical admission, ownership and unresolved-outcome rules. |
+| Persistent cache and workflow registry | Isolated in-memory content cache and host-supplied recipes | Shared persistent storage and signed registry implementations need final combined acceptance, current trust/key policy and deployment qualification. |
+| Live ROS2 and industrial intake | Saved ROS/OPC UA/MQTT exports | Live adapter work remains separate from actual ROS runtime, broker/device and authorized network qualification. No equipment-control readiness is claimed. |
+| Operational metrology | Captured contracts plus existing native scientific workflows | New operational composition has local native evidence; final integration, traceable standards, uncertainty and physical acceptance remain separate gates. |
+| Native proofs | Attributed receipt verification | Local Kani harness evidence covers specific properties only. SP1 build/proof inputs, capacity and genuine proof acceptance remain unresolved. |
+| Remote control plane | Private HTTPS-to-stdio gateway and Access-validated panel candidate | Native Streamable HTTP/OAuth integration, bounded credentials, rate limiting and metrics need final integration and hosted identity/storage checks. |
+
+### Domain H: data systems
+
+Domain H treats each data source as an instrument: register its allowed use, calibrate against known samples, check freshness and schema drift, and hold affected downstream work until an impact review resolves drift. Dataset receipts must retain exact source/input/output identities. TBRT computation does not authenticate wall-clock time, and a receipt is not NSL admission.
+
+The six profiles below are **active work, not published tools in this revision**. Their intended contracts are:
+
+| Profile | Contract and current status |
+| --- | --- |
+| `ncp_collect_*` | Licensed, terms/robots-reviewed, honestly identified, rate-limited collection of places, assets, infrastructure and imagery only. Local source/dataset receipts and collection/R2 quarantine adapters exist; hosted collection and storage are unqualified. No person kind, stealth fetch or spoofed browser identity is admitted. |
+| `ncp_pipeline_*` | Declared transformations with exact inputs, code version, outputs, lineage, idempotent attempts and breaking-schema refusal. The pipeline integration remains in progress; arbitrary SQL execution is not implied. |
+| `ncp_analysis_*` | Reproducible queries, statistics and charts over exact dataset versions, with declared uncertainty. Implementation and qualification remain in progress. |
+| `ncp_db_*` | Vocabulary-bound schema/index/migration plans and isolated dry runs. The local database slice has PostgreSQL/transaction-pool evidence; integration remains open. Applying a migration requires separate human approval. |
+| `ncp_dbops_*` | Read-only health, drift, query/index advice and backup/restore assessment. Local checks do not establish a successful hosted restore. Destructive actions require explicit approval. |
+| `ncp_mining_*` | Evidence-linked anomaly, clustering, geodata/imagery change and ledger-pattern findings with confidence. Implementation and qualification remain open; findings never auto-actuate. |
+
+PPDA/SCOUT, SRA and NSL must be identified and verified at their actual source revisions before reuse. SRA's current profile is schematic assessment, not a verified live knowledge-graph connection. The new data layer does not establish authenticated time or actual NSL admission; its downstream trust remains held. OSINT exclusions in the new profile do not resolve the outstanding review of imported SCOUT/FrameMapper sources. Connector names are not evidence of configured access.
+
 ## Qualification and CI
 
-Implementation, local fixtures, installed-artifact tests, native-provider checks, hosted integration and physical qualification are separate claims. The NISE/CI integration requires fresh qualification against its complete source revision and installed wheel. Earlier receipts apply only to their recorded revisions; this README declares no final combined pass or production readiness.
+Implementation, local fixtures, installed-artifact tests, native-provider checks, hosted integration and physical qualification are separate claims. Earlier receipts apply only to their recorded source, package/image, runtime and configuration. The earlier frozen frontend container does not qualify the current completion campaign.
+
+The recorded [GitHub Actions run for main `235ee45a`](https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/actions/runs/41682002605) failed at startup with zero jobs. The platform cause remains unverified; workflow syntax checks or local tests do not resolve that failure. The full scientific baseline is also not a clean pass: its recorded attempt retains a trusted `lsblk` prerequisite refusal and skipped checks. Required collector ownership/trust checks remain enforced.
+
+Final integrated source/installed-wheel tests, a matching container, hosted identity/storage and restore checks, applicable native/physical evidence and operator acceptance remain open. No final combined pass or production readiness is declared.
 
 The [Woodpecker preparation](docs/WOODPECKER_PRIVATE_CI.md) provides a manual local workflow in [.woodpecker/private-qualification.yaml](.woodpecker/private-qualification.yaml) and an [exact-source driver](scripts/run_private_woodpecker.py). It uses the official CLI with preselected tools, offline dependencies and fresh evidence. `ODSP_CI_NISE_MODE=native` plus explicit `CIW_NISE_CHECKOUT` and `CIW_NISE_PYTHON` bindings is required for combined NISE acceptance. Default `contracts` mode records NISE qualification as `NOT_REQUESTED`.
 
@@ -119,6 +167,8 @@ The package retains its `ciw` namespace and `net`/`ncp` entry points. Start with
 
 The [folder index](mcp/folder-index.json) and [project guide](docs/MCP_PROJECT.md) point to each folder's `MCP.md` or [external contract](mcp/source-contracts.md). External navigation preserves imported sources and exact-input capsules, including all 21 import pins. A folder is not a human console and does not opt for the easiest task in a set. Source paths and catalog rows confer no tool grant.
 
-First-party code is declared `AGPL-3.0-or-later`, subject to explicit component exceptions: see [LICENSE](LICENSE) and the [licensing policy](docs/LICENSING.md). Imported components and separately bound providers retain their own licenses, copyright and provenance notices. NISE is an external MPL-2.0 provider, not an additional vendored import tree. Adapter integration expands no rights or counsel clearance.
+First-party code is declared `AGPL-3.0-or-later`, subject to explicit component exceptions: see [LICENSE](LICENSE) and the [licensing policy](docs/LICENSING.md). Imported components and separately bound providers retain their own licenses, copyright and provenance notices. NISE is an external MPL-2.0 provider, not an additional vendored import tree. Adapter integration expands no rights or counsel clearance. [THIRD_PARTY.md](THIRD_PARTY.md) identifies imported licenses, including FrameMapper GPLv3; the presence of that notice does not establish complete upstream-notice or distribution compliance.
+
+Companion qualification and licensing/removal review remain open. The exact six-copy removal scope, including whether history or retained artifacts are affected, has not been established. This documentation change removes no companion files, rewrites no history and clears no source or licensing hold.
 
 For changes, read [CONTRIBUTING.md](CONTRIBUTING.md). Historical operator material remains in [OPERATOR_REFERENCE.md](docs/OPERATOR_REFERENCE.md), and the [implementation audit](docs/IMPLEMENTATION_AUDIT_20261102.md) records the earlier repair's scope and remaining limits.
