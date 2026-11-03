@@ -42,6 +42,8 @@ NSR, SRA, ClockSync and NISE use fixed, host-selected subprocess bindings to the
 
 The [tool-programme acceptance contract](docs/TOOL_PROGRAMME_ACCEPTANCE.md) tracks the optional strict data boundaries, locked release inventory, audited principal host, fenced local queue and client work. Explicit process limits and a minimal environment can be selected by trusted launchers; strict namespace isolation must refuse when unavailable. These additions do not activate a deployment or expand existing grants.
 
+An optional [Rust request observer](docs/RUST_REQUEST_BOUNDARY.md) compares bounded protocol decisions while Python remains authoritative. Trusted launchers select its exact executable; default operation and grants are unchanged. Native comparison, installed-client and cleanup qualification are separate from formal proof or deployed containment.
+
 Ledger reads do not execute the capability they describe: the `proved_heat` row is not an SP1 proof. Unbound providers and existing qualification holds remain explicit.
 
 ## Setup and clients

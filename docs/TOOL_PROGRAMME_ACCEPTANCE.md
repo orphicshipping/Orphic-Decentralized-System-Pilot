@@ -26,7 +26,7 @@ source/tree, interpreter, installed wheel and commands.
 | NSR / SRA / ClockSync / NISE | Existing pinned computations with optional explicit process policy | Real native input/replay tests; preserve numerical semantics and all imported trees |
 | Strict client / viewer | Read-only typed canonical client and evidence view | Static compiler, adversarial response and browser gates; no UI-derived authority |
 | Toolbox / skills / isolated cache | Independently prepared branch, awaiting verified integration | Must pass fresh combined tests after complete patch transfer; standalone evidence is insufficient |
-| Rust request boundary | Independently prepared optional shadow verifier | Python stays authoritative; require complete patch, hook qualification and source-hash binding before activation |
+| Rust request boundary | Installed opt-in observer, sealed Linux executable snapshot and exact Python source bindings | Actual native comparisons and official-client grant checks; cancellation/cleanup faults must preserve diagnostics and prevent unresolved observers from relaunching; Python stays authoritative |
 
 **Containment is a separate gate.** Linux process limits are not a network or
 filesystem sandbox and process-group cleanup cannot guarantee termination of a

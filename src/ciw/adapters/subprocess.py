@@ -131,9 +131,11 @@ def _bounded_process(
     exceeded = threading.Event()
     readers: list[threading.Thread] = []
     reader_failures: list[BaseException] = []
+    cleanup_failures: list[BaseException] = []
     stop_lock = threading.Lock()
     stop_attempted = False
     process = None
+    body_failure = None
     environment = dict(os.environ if environment is None else environment)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
@@ -147,7 +149,20 @@ def _bounded_process(
                 return
             # Do not retry an ambiguous signal, including an after-effect error.
             stop_attempted = True
-            _stop(process)
+            try:
+                _stop(process)
+            except BaseException as exc:
+                cleanup_failures.append(exc)
+                raise
+
+    def capture_cleanup(callback, *args, **kwargs) -> None:
+        # ExitStack may replace cleanup-only exception contexts. Keep explicit
+        # references before another callback can obscure the diagnostic chain.
+        try:
+            callback(*args, **kwargs)
+        except BaseException as exc:
+            cleanup_failures.append(exc)
+            raise
 
     def drain(pipe: Any, retain: bool) -> None:
         nonlocal total
@@ -175,12 +190,12 @@ def _bounded_process(
                 stop_once()
             finally:
                 # Reap even if signaling raised after taking effect.
-                process.wait(timeout=5)
+                capture_cleanup(process.wait, timeout=5)
 
     def join_reader(index: int) -> None:
         # start() can fail either before or after the OS thread starts.
         if index < len(readers) and readers[index].ident is not None:
-            readers[index].join(timeout=0.5)
+            capture_cleanup(readers[index].join, timeout=0.5)
 
     def stop_pipe_holders() -> None:
         if any(reader.is_alive() for reader in readers):
@@ -206,9 +221,28 @@ def _bounded_process(
         if reader_failures:
             raise BaseExceptionGroup("Bound runtime output cleanup failed", reader_failures)
 
-    def report_ownership_uncertainty() -> None:
+    def report_cleanup(exc_type, exc, traceback) -> None:
+        failures, seen = [], set()
+        for failure in (body_failure, *cleanup_failures, *reader_failures, exc):
+            if failure is not None and id(failure) not in seen:
+                seen.add(id(failure))
+                failures.append(failure)
         if process is not None and (process.returncode is None or any(reader.is_alive() for reader in readers)):
+            if failures:
+                raise RuntimeCleanupUncertain(process) from BaseExceptionGroup(
+                    "Bound runtime ownership cleanup failed", failures)
             raise RuntimeCleanupUncertain(process)
+        if exc is not None:
+            # Preserve the existing top exception and custody classification,
+            # including successful reaping after an after-effect cleanup error.
+            # An explicit cause survives ExitStack's mutable context repair.
+            for previous in (exc.__cause__, exc.__context__):
+                if previous is not None and id(previous) not in seen:
+                    seen.add(id(previous))
+                    failures.append(previous)
+            previous = [failure for failure in failures if failure is not exc]
+            if previous:
+                exc.__cause__ = BaseExceptionGroup("Bound runtime cleanup diagnostics", previous)
 
     with tempfile.TemporaryFile() as request:
         request.write(stdin)
@@ -218,30 +252,34 @@ def _bounded_process(
         # exception and preserves it if later cleanup also fails. Cleanup never
         # proves provider rollback; failed kill/wait remains explicit uncertainty.
         with ExitStack() as cleanup:
-            cleanup.callback(report_ownership_uncertainty)
+            cleanup.push(report_cleanup)
             cleanup.callback(report_reader_failures)
-            cleanup.callback(close_pipe, 1)
-            cleanup.callback(close_pipe, 0)
+            cleanup.callback(capture_cleanup, close_pipe, 1)
+            cleanup.callback(capture_cleanup, close_pipe, 0)
             cleanup.callback(stop_pipe_holders)
             cleanup.callback(join_reader, 1)
             cleanup.callback(join_reader, 0)
             cleanup.callback(stop_and_reap)
             try:
-                process = subprocess.Popen(
-                    command, cwd=cwd, env=environment, stdin=request,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
-                    start_new_session=os.name == "posix",
-                )
-            except (OSError, ValueError) as exc:
-                raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
-            for pipe, retain in ((process.stdout, True), (process.stderr, False)):
-                reader = threading.Thread(target=drain, args=(pipe, retain), daemon=True)
-                readers.append(reader)
-                reader.start()
-            try:
-                process.wait(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                timed_out = True
+                try:
+                    process = subprocess.Popen(
+                        command, cwd=cwd, env=environment, stdin=request,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
+                        start_new_session=os.name == "posix",
+                    )
+                except (OSError, ValueError) as exc:
+                    raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
+                for pipe, retain in ((process.stdout, True), (process.stderr, False)):
+                    reader = threading.Thread(target=drain, args=(pipe, retain), daemon=True)
+                    readers.append(reader)
+                    reader.start()
+                try:
+                    process.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                    timed_out = True
+            except BaseException as exc:
+                body_failure = exc
+                raise
         if exceeded.is_set():
             _refuse("OUTPUT_LIMIT", "The bound runtime exceeded its combined output limit")
         if timed_out:

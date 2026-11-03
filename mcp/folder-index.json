@@ -789,6 +789,18 @@
       "contract": "experiments/MCP.md"
     },
     {
+      "path": "experiments/rust-request-boundary",
+      "class": "unbound",
+      "call": "none",
+      "contract": "experiments/rust-request-boundary/MCP.md"
+    },
+    {
+      "path": "experiments/rust-request-boundary/src",
+      "class": "unbound",
+      "call": "none",
+      "contract": "experiments/rust-request-boundary/src/MCP.md"
+    },
+    {
       "path": "godot",
       "class": "unbound",
       "call": "none",

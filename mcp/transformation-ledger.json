@@ -9,10 +9,10 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2883,
-    "generated": 255,
+    "retained_and_verified": 2889,
+    "generated": 257,
     "rewritten": 46,
-    "blocked": 109,
+    "blocked": 117,
     "vendor_exempt": 2798
   },
   "files": [
@@ -3490,6 +3490,13 @@
     },
     {
       "path": "docs/RUN_NET.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/RUST_REQUEST_BOUNDARY.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -7564,6 +7571,76 @@
     },
     {
       "path": "experiments/oscillator_reduction.py",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/.gitignore",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/Cargo.lock",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/Cargo.toml",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/README.md",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/rust-toolchain.toml",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/README.md",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/main.rs",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/test_boundary.py",
       "disposition": "blocked",
       "component": "research",
       "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
@@ -33638,6 +33715,27 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/request_boundary.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/request_boundary_contracts.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/request_boundary_transport.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/residual_monitor.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -38441,6 +38539,20 @@
     },
     {
       "path": "tests/test_representation_realizations.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_request_boundary.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_request_boundary_custody.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",

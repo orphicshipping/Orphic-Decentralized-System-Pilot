@@ -1,0 +1,7 @@
+[package]
+name = "odsp-request-boundary"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+[dependencies]
+serde_json = { version = "=1.0.145", features = ["arbitrary_precision"] }

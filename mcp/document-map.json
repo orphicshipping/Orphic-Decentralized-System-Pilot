@@ -1599,6 +1599,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/RUST_REQUEST_BOUNDARY.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/SCIENTIFIC_REFIT_COVERAGE_REVIEW.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -3190,6 +3195,26 @@
     },
     {
       "path": "experiments/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },

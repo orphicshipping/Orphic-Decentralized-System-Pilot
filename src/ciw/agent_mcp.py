@@ -63,9 +63,10 @@ INSTRUCTIONS = (
 
 class Server:
     """Sequential MCP tools profile; no task, sampling or resource subscriptions."""
-    def __init__(self, host: AgentHost, *, extra_tools=(), image_content=None):
+    def __init__(self, host: AgentHost, *, extra_tools=(), image_content=None, request_boundary=None):
         self.host = host
         self.image_content = image_content
+        self.request_boundary = request_boundary  # Trusted host observation only.
         self.tools = getattr(host, "descriptions", descriptions)() + deepcopy(list(extra_tools))
         names = [item["name"] for item in self.tools]
         if len(names) != len(set(names)):
@@ -79,6 +80,11 @@ class Server:
         return {"jsonrpc": "2.0", "id": request_id, "error": {"code": code, "message": message}}
 
     def handle(self, raw: bytes):
+        if self.request_boundary is not None:
+            try:
+                self.request_boundary.prefix(raw, frozenset(self.seen))
+            except Exception:
+                pass  # Existing Python gates remain authoritative.
         try:
             if type(raw) is not bytes or not 0 < len(raw) <= MAX_MESSAGE:
                 raise ValueError("Message exceeds bounds")
@@ -148,7 +154,13 @@ class Server:
                 # Binary ImageContent is transport data, not a scientific JSON
                 # string subject to the existing 64 KiB field bound. Bound the
                 # serialized wire envelope without weakening record validators.
-                if len(json.dumps(result, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode("utf-8")) > MAX_MESSAGE - 1024:
+                encoded_bytes = len(json.dumps(result, ensure_ascii=True, allow_nan=False, separators=(",", ":")).encode("utf-8"))
+                if self.request_boundary is not None:
+                    try:
+                        self.request_boundary.wire_output(encoded_bytes)
+                    except Exception:
+                        pass  # Observation cannot change the output refusal.
+                if encoded_bytes > MAX_MESSAGE - 1024:
                     raise ValueError("MCP result exceeds bounded wire budget")
             except Exception as exc:
                 value = {"status": "refused", "reason": type(exc).__name__ + ": " + str(exc)[:1000]}
@@ -159,8 +171,10 @@ class Server:
         return {"jsonrpc": "2.0", "id": request_id, "result": result}
 
 
-def serve(host: AgentHost, reader: BinaryIO, writer: BinaryIO, *, extra_tools=(), image_content=None) -> int:
-    server = Server(host, extra_tools=extra_tools, image_content=image_content)
+def serve(host: AgentHost, reader: BinaryIO, writer: BinaryIO, *, extra_tools=(), image_content=None,
+          request_boundary=None) -> int:
+    server = Server(host, extra_tools=extra_tools, image_content=image_content,
+                    request_boundary=request_boundary)
     for _ in range(MAX_REQUESTS * 2):
         line = reader.readline(MAX_MESSAGE + 1)
         if not line:
