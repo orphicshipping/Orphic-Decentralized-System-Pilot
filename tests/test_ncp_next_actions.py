@@ -31,7 +31,7 @@ def test_ncp_console_alias_uses_exact_legacy_dispatcher():
     project = tomllib.loads((Path(__file__).parents[1]/'pyproject.toml').read_text())['project']
     assert project['scripts']['ncp'] == project['scripts']['net'] == 'ciw.net:main'
     assert project['name'] == 'computational-instrumentation-workbench'
-    assert project['urls']['Repository'].endswith('/Orphic-Decentralized-Systems-Protocol')
+    assert project['urls']['Repository'].endswith('/Orphic-Decentralized-System-Protocol')
     assert project['dependencies'] == ['numpy==2.4.3', 'websockets==16.0']
 
 

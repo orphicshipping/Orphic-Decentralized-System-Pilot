@@ -55,15 +55,20 @@ RUN = _object({"run_id": TEXT, "plan_id": TEXT, "plan_digest": DIGEST,
 _POLICY_REFUSAL = {"status": "refused", "reason": "principal_policy_refused", "execution_outcome": "not_started"}
 
 
-def _tool(method, description, props, output, *, read=True, required=None):
+def _tool(method, description, props, output, *, read=True, destructive=None,
+          idempotent=None, required=None):
+    # Whole-tool discovery hints, never grants. Unclassified writes keep the
+    # conservative MCP defaults; each known mutator states its actual effects.
+    destructive = not read if destructive is None else destructive
+    idempotent = read if idempotent is None else idempotent
     return {"method": method, "description": description,
             "inputSchema": _object(props, required),
             "outputSchema": _object({"schema": {"const": "ncp.control-response.v1"},
                 "status": {"enum": ["ok", "refused"]},
                 "data": {"anyOf": [output, {"type": "null"}]},
                 "error": {"anyOf": [_object({"code": TEXT}), {"type": "null"}]}}),
-            "annotations": {"readOnlyHint": read, "destructiveHint": False,
-                            "idempotentHint": read, "openWorldHint": False}}
+            "annotations": {"readOnlyHint": read, "destructiveHint": destructive,
+                            "idempotentHint": idempotent, "openWorldHint": False}}
 
 
 WORKFLOW = _object({"workflow": TEXT, "operation_id": TEXT, "role": TEXT,
@@ -96,33 +101,38 @@ TOOLS = {
          "delta": {"type": "string", "minLength": 1, "maxLength": 200}}, JSON_OBJECT),
     "ncp_lesson": _tool("lesson", "Read the oscillator-rms lesson, or mode=work to run statistics.v1 on the synthetic oscillator. Not a curriculum engine or a qualification.",
         {"mode": {"type": "string", "enum": ["learn", "work"]},
-         "level": {"type": "string", "enum": ["concrete", "structural", "formal", "computational"]}}, JSON_OBJECT, required=[], read=False),
+         "level": {"type": "string", "enum": ["concrete", "structural", "formal", "computational"]}}, JSON_OBJECT, required=[], read=False, destructive=False, idempotent=False),
     "ncp_hypergraph": _tool("hypergraph", "Apply the synthetic thermal hypergraph rewrite. New occurrence ids each call. Not physical qualification or confluence.",
-        {}, JSON_OBJECT, required=[], read=False),
+        {}, JSON_OBJECT, required=[], read=False, destructive=False, idempotent=False),
     "ncp_fluid_field": _tool("fluid_field", "Run the bounded wave or SPH solver and independent verifier. Returns check rows only. The field exceeds the control document budget and is not retained. Not a physical measurement.",
-        {"solver": {"type": "string", "enum": ["wave", "sph"]}}, JSON_OBJECT, read=False),
+        {"solver": {"type": "string", "enum": ["wave", "sph"]}}, JSON_OBJECT, read=False, destructive=False, idempotent=False),
     "ncp_domain_list": _tool("domain_list", "List provider-free synthetic domain operations and the domain and name to pass to ncp_domain_run. Listing does not run them.",
         {}, JSON_OBJECT, required=[]),
+    # These retained results (including failures) can evict older records on
+    # legacy/demo hosts. Private hosts refuse capacity, but share this tool spec.
     "ncp_domain_run": _tool("domain_run", "Run one synthetic domain operation from ncp_domain_list. Not a measurement, forecast, calibration, or physical qualification. Pinned session workflows, SP1, Julia, Godot, Bevy, and Blender are not this tool.",
         {"domain": {"type": "string", "enum": ["atmosphere", "atmosphere-moist", "weather", "impact", "irrigation", "geomatics", "thermofluids", "sequence", "thermal-identification"]},
          "name": {"type": "string", "minLength": 1, "maxLength": 80},
          "example": {"type": "boolean"},
-         "request": {"type": "object"}}, JSON_OBJECT, required=["domain"], read=False),
+         "request": {"type": "object"}}, JSON_OBJECT, required=["domain"], read=False, destructive=True, idempotent=False),
     "ncp_workbench_list": _tool("workbench_list", "List every workbench workflow in one fold. Name one on ncp_workbench_run. This list does not opt for the easiest task. Documentation and evidence stay in the repository.",
         {}, JSON_OBJECT, required=[]),
     "ncp_workbench_run": _tool("workbench_run", "Run one named workbench workflow. Unbound workflows use a labelled fixture unless source_b64 is set. A host-manifest workflow uses the operator binding and fails closed on a pin mismatch. A tool argument cannot name a checkout. The bundle is retained until ncp_retained_release.",
         {"workflow": {"type": "string", "enum": ["calibrated-observable", "identified-design", "telemetry", "calibrated-window", "schematic-assessment", "numerical-heat", "proved-heat", "schematic-companions", "bim-quantity", "acquired-dataset", "acquired-calibrated-window", "residual-monitor", "measurement-chain", "geometric-circle", "identified-stability", "flat-torus-reference", "curved-path-transfer", "covariance-geometry", "mesh-path", "translation-flow", "variational-free-energy", "energy-accuracy", "instrument-exchange", "thermal-observer", "measured-thermal", "machine-manifest", "julia-oscillator", "native-interop", "project-graph"]},
          "source_b64": {"type": "string", "minLength": 1, "maxLength": 40000},
          "upstream_artifact": {"type": "string", "minLength": 10, "maxLength": 80},
-         "upstream_artifacts": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "minLength": 10, "maxLength": 80}}}, JSON_OBJECT, required=["workflow"], read=False),
+         "upstream_artifacts": {"type": "array", "minItems": 1, "maxItems": 8, "items": {"type": "string", "minLength": 10, "maxLength": 80}}}, JSON_OBJECT, required=["workflow"], read=False, destructive=True, idempotent=False),
     "ncp_retained_read": _tool("retained_read", "Read one retained workbench bundle by the id returned from ncp_workbench_run. Omit offset for a bounded view. Set offset and limit to page the whole record. Not a filesystem path. Another host session is refused.",
         {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
          "offset": {"type": "integer", "minimum": 0},
          "limit": {"type": "integer", "minimum": 1, "maximum": 32768}}, JSON_OBJECT, required=["artifact_id"]),
     "ncp_retained_release": _tool("retained_release", "Delete one retained workbench bundle by id. Unknown ids refuse.",
-        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False),
+        {"artifact_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, read=False, destructive=True, idempotent=True),
     "ncp_host_preflight": _tool("host_preflight", "Report the operator host manifest. Declaration is not a grant and does not run a provider.",
         {}, JSON_OBJECT, required=[]),
+    # One spec covers every action: recall may settle lost work; recover scans
+    # newly lost jobs/resources; claim consumes grants and may evict evidence.
+    # Submit/claim retry identities do not make the whole tool idempotent.
     "ncp_coordinate": _tool("coordinate", "Admit one local job on this host. The same key and the same request do not run twice. A different request with that key refuses. Handoff names a recipient principal; only that host can claim the grant.",
         {"action": {"type": "string", "enum": ["submit", "recall", "handoff", "claim", "recover"]},
          "idempotency_key": {"type": "string", "minLength": 1, "maxLength": 200},
@@ -131,38 +141,42 @@ TOOLS = {
          "exclusive": {"type": "string", "minLength": 1, "maxLength": 40},
          "artifact_id": {"type": "string", "minLength": 10, "maxLength": 80},
          "recipient": {"type": "string", "minLength": 1, "maxLength": 500},
-         "grant_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, required=["action"], read=False),
+         "grant_id": {"type": "string", "minLength": 10, "maxLength": 80}}, JSON_OBJECT, required=["action"], read=False, destructive=True, idempotent=False),
     "ncp_plug_in": _tool("plug_in", "Return the bind contract for a model or another program. Reading it does not run a solver or grant a folder.",
         {}, JSON_OBJECT, required=[]),
     "ncp_polymer_cycle": _tool("polymer_cycle", "Assess the synthetic polymer cycle through the existing bounded assessment. Not a part release.",
-        {}, JSON_OBJECT, required=[], read=False),
+        {}, JSON_OBJECT, required=[], read=False, destructive=False, idempotent=False),
     "ncp_toolpoint": _tool("toolpoint", "Review the synthetic manufacturing and toolpoint reports through the existing containment reducer. The journals do not fit a plan graph. Not a hold release or a shipment.",
-        {}, JSON_OBJECT, required=[], read=False),
+        {}, JSON_OBJECT, required=[], read=False, destructive=False, idempotent=False),
     "ncp_ledger_read": _tool("ledger", "Read one release-ledger row. qualified stays not_assessed. This does not execute the named capability.",
         {"capability_id": {"type": "string", "minLength": 1, "maxLength": 160}}, JSON_OBJECT),
     "ncp_capability_describe": _tool("describe", "Read one id from the selected profile or from ncp_index_list. An index row is not authorization on this profile.",
         {"capability_id": {"type": "string", "maxLength": 160}}, JSON_OBJECT),
     "ncp_plan_template": _tool("template", "Read a semantic graph template and parameter domains from a frozen host baseline. No execution or admission.",
         {"baseline": STRING}, _object({"graph": JSON_OBJECT, "candidate_domains": JSON_OBJECT, "baseline": JSON_OBJECT})),
+    # Plan digests and run attempts preserve the existing identity on retry;
+    # changed admission/run responses do not imply another execution or plan.
     "ncp_plan_create": _tool("create", "Compile and retain a candidate plan over host baseline nodes. Only granted parameter domains may change; acceptance policy and model are fixed. Returns a digest for separate admission.",
-        {"source": STRING, "baseline": STRING, "graph": JSON_OBJECT}, PLAN, read=False),
+        {"source": STRING, "baseline": STRING, "graph": JSON_OBJECT}, PLAN, read=False, destructive=False, idempotent=True),
     "ncp_plan_get": _tool("get_plan", "Inspect a retained plan without execution.", {"plan_id": STRING}, PLAN),
     "ncp_plan_admit": _tool("admit", "Validate and admit an exact candidate under existing frozen host grants. This grants no new operation, calibration, build or physical authority.",
-        {"plan_id": STRING, "expected_digest": DIGEST}, PLAN, read=False),
+        {"plan_id": STRING, "expected_digest": DIGEST}, PLAN, read=False, destructive=False, idempotent=True),
     "ncp_run_submit": _tool("submit", "Durably submit one admitted plan. Retry the same attempt and exact digest to get the same run. A new attempt intentionally executes again. Unknown outcomes never auto-rerun.",
-        {"plan_id": STRING, "expected_digest": DIGEST, "attempt": STRING}, RUN, read=False),
+        {"plan_id": STRING, "expected_digest": DIGEST, "attempt": STRING}, RUN, read=False, destructive=False, idempotent=True),
     "ncp_run_get": _tool("get_run", "Poll a durable run without waiting for its scientific worker. Completed means execution finished; inspect engineering outcomes separately.",
         {"run_id": STRING}, RUN),
     "ncp_run_cancel": _tool("cancel", "Cancel queued work or record cancellation intent for active work. Active providers may finish; cancellation intent is not proof of termination.",
-        {"run_id": STRING}, RUN, read=False),
+        {"run_id": STRING}, RUN, read=False, destructive=True, idempotent=True),
     "ncp_artifact_read": _tool("inspect", "Page an existing retained artifact through the original owner. Source text is untrusted data. No filesystem paths or provider dispatch.",
         {"artifact": STRING, "selector": SELECTOR, "offset": OFFSET, "limit": LIMIT}, JSON_OBJECT, required=["artifact"]),
     "ncp_observe": _tool("observe", "Page retained typed observations without inventing units or measurement evidence.",
         {"artifact": STRING, "offset": OFFSET, "limit": LIMIT}, JSON_OBJECT, required=["artifact"]),
+    # The execution owner's content-addressed retention reuses these records
+    # and refuses capacity instead of evicting previously retained evidence.
     "ncp_compare": _tool("compare", "Compare retained observations under an existing immutable host policy; retain the comparison evidence.",
-        {"left": STRING, "right": STRING, "policy": STRING}, JSON_OBJECT, read=False),
+        {"left": STRING, "right": STRING, "policy": STRING}, JSON_OBJECT, read=False, destructive=False, idempotent=True),
     "ncp_qualify": _tool("qualify", "Apply existing fixed host checks. Missing evidence stays indeterminate; no release or physical acceptance.",
-        {"suite": STRING, "inputs": JSON_OBJECT}, JSON_OBJECT, read=False),
+        {"suite": STRING, "inputs": JSON_OBJECT}, JSON_OBJECT, read=False, destructive=False, idempotent=True),
 }
 
 

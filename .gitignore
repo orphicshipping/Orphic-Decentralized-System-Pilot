@@ -30,6 +30,12 @@ docs/adr/
 /tools/private-mcp-host/**/__pycache__/
 /tools/private-mcp-host/panel/node_modules/
 /tools/private-mcp-host/panel/dist/
+!/tools/odrp-private-host-candidate/
+/tools/odrp-private-host-candidate/*
+!/tools/odrp-private-host-candidate/panel/
+!/tools/odrp-private-host-candidate/panel/**
+/tools/odrp-private-host-candidate/panel/node_modules/
+/tools/odrp-private-host-candidate/panel/dist/
 
 /.julia-depot/
 /.julia-depot2/

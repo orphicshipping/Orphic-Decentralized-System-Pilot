@@ -1,0 +1,75 @@
+/* Generated color variables from tokens.json. Scope theme to one ancestor. */
+[data-orphic-theme="odsp-terminal"] {
+  --os-background: #0B0D0C;
+  --os-surface: #141814;
+  --os-text: #F3EBD5;
+  --os-muted: #BCB59F;
+  --os-accent: #F6C344;
+  --os-on-accent: #0B0D0C;
+  --os-border: #82765B;
+  --os-success: #91D5A2;
+  --os-warning: #FFD166;
+  --os-danger: #FF9B93;
+  --os-info: #A9CEFF;
+}
+[data-orphic-theme="orphic-corporate"] {
+  --os-background: #F2EEDC;
+  --os-surface: #FFFCED;
+  --os-text: #131613;
+  --os-muted: #51564D;
+  --os-accent: #F5D600;
+  --os-on-accent: #131613;
+  --os-border: #676D61;
+  --os-success: #23643A;
+  --os-warning: #775600;
+  --os-danger: #A72C28;
+  --os-info: #245D8D;
+}
+[data-orphic-theme="orphic-dark"] {
+  --os-background: #0C1413;
+  --os-surface: #17211E;
+  --os-text: #F5F1DF;
+  --os-muted: #B5C0AD;
+  --os-accent: #F5D600;
+  --os-on-accent: #0C1413;
+  --os-border: #7B8A79;
+  --os-success: #91D5A2;
+  --os-warning: #FFD166;
+  --os-danger: #FF9B93;
+  --os-info: #A9CEFF;
+}
+
+.orphic { font-family: Arial, Helvetica, sans-serif; background:var(--os-background);color:var(--os-text);line-height:1.5; }
+.orphic * { box-sizing:border-box; }
+.orphic .os-shell { max-width:1180px;margin:auto;padding:clamp(1rem,3vw,3rem); }
+.orphic .os-masthead {border-top:8px solid var(--os-accent);border-bottom:1px solid var(--os-border);padding:1rem 0;display:flex;gap:1rem;justify-content:space-between;align-items:center;flex-wrap:wrap;}
+.orphic .os-kicker,.orphic .os-code,.orphic .os-status,.orphic label,.orphic th {font-family:ui-monospace,SFMono-Regular,Consolas,monospace;}
+.orphic .os-kicker {font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;}
+.orphic h1 {font-family:Arial Black,Arial,sans-serif;font-size:clamp(2rem,6vw,5rem);line-height:1.05;letter-spacing:-.04em;margin:1.5rem 0;}
+.orphic h2 {font-size:1.25rem;margin:0 0 1rem;}
+.orphic .os-muted {color:var(--os-muted);}
+.orphic .os-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1.5rem 0;}
+.orphic .os-panel {background:var(--os-surface);border:1px solid var(--os-border);padding:1.25rem;min-width:0;}
+.orphic .os-panel-heading {border-bottom:1px solid var(--os-border);padding-bottom:.75rem;}
+.orphic button,.orphic select,.orphic input {font:inherit;min-height:44px;border:1px solid var(--os-border);border-radius:0;padding:.6rem .85rem;}
+.orphic button {background:var(--os-accent);color:var(--os-on-accent);font-weight:700;cursor:pointer;}
+.orphic .os-secondary,.orphic select,.orphic input {background:var(--os-surface);color:var(--os-text);}
+.orphic button:disabled {opacity:.6;cursor:not-allowed;}
+.orphic :focus-visible {outline:3px solid var(--os-text);outline-offset:3px;}
+.orphic label {display:block;font-size:.9rem;margin:.75rem 0 .25rem;}
+.orphic input {width:100%;}
+.orphic .os-row {display:flex;gap:.75rem;flex-wrap:wrap;align-items:center;}
+.orphic .os-status {display:inline-block;border:1px solid currentColor;padding:.2rem .5rem;font-size:.8rem;}
+.orphic .os-status[data-state="passed"] {color:var(--os-success);}
+.orphic .os-status[data-state="pending"] {color:var(--os-warning);}
+.orphic .os-status[data-state="blocked"] {color:var(--os-danger);}
+.orphic .os-status[data-state="unknown"] {color:var(--os-muted);}
+.orphic .os-table-wrap {overflow:auto;}
+.orphic table {border-collapse:collapse;width:100%;font-size:.9rem;}
+.orphic th,.orphic td {text-align:left;padding:.65rem;border-bottom:1px solid var(--os-border);vertical-align:top;}
+.orphic pre {white-space:pre-wrap;overflow-wrap:anywhere;background:var(--os-background);border:1px solid var(--os-border);padding:1rem;}
+.orphic a {color:inherit;text-decoration:underline;text-underline-offset:.2em;}
+.orphic .os-notice {border-left:4px solid var(--os-accent);padding:.75rem 1rem;background:var(--os-surface);}
+.orphic .os-visually-hidden {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);}
+@media(max-width:720px){.orphic .os-grid{grid-template-columns:1fr}.orphic .os-masthead{align-items:flex-start}}
+@media(prefers-reduced-motion:reduce){.orphic *, .orphic *::before,.orphic *::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

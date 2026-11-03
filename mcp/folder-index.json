@@ -32,6 +32,12 @@
       "contract": ".github/workflows/MCP.md"
     },
     {
+      "path": ".woodpecker",
+      "class": "navigation",
+      "call": "ncp_index_list",
+      "contract": ".woodpecker/MCP.md"
+    },
+    {
       "path": "containers",
       "class": "navigation",
       "call": "ncp_index_list",
@@ -5065,6 +5071,36 @@
       "class": "navigation",
       "call": "none",
       "contract": "tools/odrp-private-host-candidate/MCP.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/odrp-private-host-candidate/panel/MCP.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/scripts",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/odrp-private-host-candidate/panel/scripts/MCP.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/tests",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/odrp-private-host-candidate/panel/tests/MCP.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/web",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/odrp-private-host-candidate/panel/web/MCP.md"
+    },
+    {
+      "path": "tools/odrp-private-host-candidate/panel/worker",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/odrp-private-host-candidate/panel/worker/MCP.md"
     },
     {
       "path": "tools/odrp-private-host-candidate/tools",

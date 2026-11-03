@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import {expectedRelease, releaseMatches, validateRelease} from './release.mjs';
-const release = {schema:'odsp.private-release-identity.v1',repository:'orphicsystems/Orphic-Decentralized-Systems-Protocol',source_commit:'a'.repeat(40),source_tree:'b'.repeat(40),wheel_sha256:'c'.repeat(64),package_digest:'d'.repeat(64)};
+const release = {schema:'odsp.private-release-identity.v1',repository:'orphicsystems/Orphic-Decentralized-System-Protocol',source_commit:'a'.repeat(40),source_tree:'b'.repeat(40),wheel_sha256:'c'.repeat(64),package_digest:'d'.repeat(64)};
 
 test('launcher identity is mandatory and exact', () => {
   assert.deepEqual(expectedRelease({ODSP_RELEASE_IDENTITY:JSON.stringify(release, null, 2)}), release);
@@ -26,4 +26,11 @@ test('release match refuses missing, extra, malformed and different fields', () 
     const absent = {...release}; delete absent[key];
     assert.equal(releaseMatches(absent, release), false);
   }
+});
+test('same-repository rename does not relabel retained release identities', () => {
+  const historical = {...release, repository:'orphicsystems/Orphic-Decentralized-Systems-Protocol'};
+  assert.deepEqual(validateRelease(historical), historical);
+  assert.equal(releaseMatches({...historical}, historical), true);
+  assert.equal(releaseMatches(historical, release), false);
+  assert.equal(releaseMatches(release, historical), false);
 });

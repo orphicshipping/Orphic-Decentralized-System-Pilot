@@ -1,129 +1,117 @@
 # Orphic Decentralized Systems Protocol
 
-One MCP for models and for other software. Call a tool. A folder, a file, a line of code, a shell command, or a PASS is not a run.
-
 Developed by **Orphic Systems**
 
-## Bind
+ODSP provides shared services for models, agents and deterministic software: retained investigations, bounded computation and controlled access to evidence. Clients use MCP over stdio or the Python service API. **ODRP** is the read-only reference profile of the same substrate.
 
-Other software loads [mcp/plug-in.json](mcp/plug-in.json) or calls `ncp_plug_in`. That object does not authorize execution. This repository is not a human console.
+[Architecture and boundaries](#architecture-and-boundaries) · [Profiles](#implemented-profiles) · [Setup and clients](#setup-and-clients) · [Qualification and CI](#qualification-and-ci) · [Source and licensing](#source-and-licensing)
 
-Transport is MCP over stdio. Protocol versions are `2025-11-25` and `2025-06-18`. Methods are `initialize`, `ping`, `tools/list`, and `tools/call`.
+## Architecture and boundaries
 
-```text
-python -m ciw.net control serve --profile <abs-profile.json> --instrument <instrument>
+A trusted launcher selects the installed release, principal, current policy, profile, corpus references and approved runtime pins. Client arguments cannot replace those bindings. The intended software boundary is a `PrincipalPolicy` facade: MCP and `ciw.services.invoke` use the same current tool, scientific-operation, resource and disclosure checks. Direct calls to raw in-process hosts remain trusted administration, not an authentication sandbox.
+
+Evidence access, computation and authority remain distinct:
+
+- **Evidence:** ODRP reads approved immutable catalog/evidence snapshots. Retrieved text is untrusted data. A source hash, capture or receipt does not independently authenticate its assertions.
+- **Computation:** host-bound operations preserve their inputs, runtime identities, outcomes and verification records. Full-content replay checks do not establish physical validity or evidence admission.
+- **Execution:** tool discovery and a successful check confer no grant. Plans require explicit admission and execution permissions; domain, workbench and nested coordinator calls also check the underlying scientific-operation grants. Missing bindings, revoked access and unresolved outcomes remain refusals or holds.
+
+The existing private ingress candidate wraps HTTPS requests around the installed stdio service. It is **not native MCP Streamable HTTP or OAuth**. Cloudflare ingress and isolated single-writer execution are a proposed private deployment profile. Ubuntu/PlanetScale/Cloudflare topology choices are not evidence of provisioned or qualified infrastructure; no database, Kubernetes cluster or hardware platform is mandated here.
+
+See the [private release contract](docs/PRIVATE_RELEASE_CONTRACT.md), [operating runbook](docs/PRIVATE_HOST_OPERATIONS.md) and [underlying architecture](docs/ARCHITECTURE.md).
+
+## Implemented profiles
+
+These are separately bound surfaces. A discovery entry neither installs a provider nor extends another profile's grants. Actual available tools come from the selected host's `tools/list` response.
+
+| Surface | Implemented scope | Contract and limits |
+| --- | --- | --- |
+| ODSP control | Discover capabilities; create/admit plans; submit, inspect and compare runs; named domain/workbench operations | [Control model](docs/MCP_MODEL.md). Runtime bindings and capability holds still apply. |
+| ODRP | Read catalog, knowledge and evidence snapshots with exact locators | [Reference profile](docs/ODRP.md). Disclosure grants remain separate from execution. |
+| NSL | Replay an exact host-approved offline state-ledger response | [Read profiles](docs/READ_ONLY_ADAPTERS.md). No fresh query; capture provenance remains host-declared and unverified. |
+| OLM | Read existing governed `inspect_retained` results, inspect catalog definitions and page owned retained data | [Read profiles](docs/READ_ONLY_ADAPTERS.md). Upstream identity/authorization remains required; no job submission. |
+| NSR | Describe, reconcile affine state and verify complete receipts using the existing pinned kernel | [Bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md#nsr-affine-reconciliation). Accepted, held, refused and invalid-contract outcomes stay distinct. |
+| SRA | Describe, validate, retrieve declared graph neighborhoods, assess and verify complete receipts | [Bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md#sra-schematic-assessment). No companion execution or rendering/projection surface. |
+| ClockSync | Describe, reconcile a declared affine event mapping and replay its complete receipt | [Bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md#clocksync-affine-event-mapping). No hardware-clock access or synchronization. |
+| NISE | Describe, validate, compile, inspect and verify deterministic schematic scoping over a supplied catalog | [NISE profile](docs/NISE_PROFILE.md), host pin `81908ddbe817018af5d9887a6bdd9cce3e3eafc6`. Question text is inert context; no ML inference, provider scheduling or control authority. |
+
+NSR, SRA, ClockSync and NISE use fixed, host-selected subprocess bindings to their existing implementations. Verification validates complete supplied receipts before each profile's replay comparison; caller-supplied digest IDs alone are insufficient. Each profile preserves its own occurrence semantics. These process boundaries are not network or secret-scrubbing sandboxes.
+
+Ledger reads do not execute the capability they describe: the `proved_heat` row is not an SP1 proof. Unbound providers and existing qualification holds remain explicit.
+
+## Setup and clients
+
+The package declares Python 3.11 or newer. The private qualification environment selects Python 3.12.14 and Node 24.19.0; its exact dependencies and runtime bindings are part of the release evidence. From a checkout, an isolated local MCP installation starts with:
+
+```sh
+python3.12 -m venv .venv
+.venv/bin/python -m pip install '.[mcp-control]'
 ```
 
-The host launch selects the profile and the instrument. A tool argument cannot select a checkout, an interpreter, or a pin.
+This installs ODSP and the optional official MCP SDK. It does not provision native providers, corpora, credentials or a private deployment. Release qualification uses the [offline build and installed-wheel procedure](docs/PRIVATE_HOST_OPERATIONS.md#reproducible-local-release).
 
-## Call
+For a synthetic control profile, prepare a **new** absolute output directory:
 
-1. `ncp_plug_in` returns the bind contract.
-2. `ncp_index_list` pages every indexed id. A row is callable only when it names `mcp_profile` or `mcp_tool`. `authorizes_execution` stays false.
-3. `ncp_workbench_list`, then `ncp_workbench_run` with one workflow name. The workbench does not opt for the easiest task in a set. Five workflows run from retained fixtures. The rest stay documentation and evidence until the host selects that binding.
-4. `ncp_domain_list`, then `ncp_domain_run`. Weather, impact, geomatics, and thermofluids refuse until the caller names the task.
-5. `ncp_fluid_field` is wave or SPH. The field is not retained.
-6. A granted plan uses `open_demo` for other software, then `ncp_plan_template`, `ncp_plan_create`, `ncp_plan_admit`, `ncp_run_submit`, `ncp_run_get`. Without that session the call refuses.
-
-Readable contracts, not executions: `ncp://contract/plug-in`, `ncp://contract/capability-map`, `ncp://contract/verification`.
-
-The tool index is [mcp/model-catalog.json](mcp/model-catalog.json). Arguments are [docs/MCP_MODEL.md](docs/MCP_MODEL.md). Folders are [mcp/folder-index.json](mcp/folder-index.json) and [docs/MCP_PROJECT.md](docs/MCP_PROJECT.md). None of those files authorizes execution.
-
-## What a line of code is
-
-Source paths stay where the tests and the pins already import them. A module, a folder, and a line of code are not tools. The [folder index](mcp/folder-index.json) points to each tracked folder's contract. Imported sources and exact-input capsules use [external contracts](mcp/source-contracts.md), preserving their original files and modes; other folders carry `MCP.md` and a rendered entry. Rewriting each solver into a new function would break those imports and the retained evidence. The retrofit is this plug-in, not a second copy of the science.
-
-## What is not a grant
-
-`proved_heat` is `ncp_ledger_read`, not an SP1 proof. Julia, Godot, Bevy, and Blender stay unbound. Leakage and BIM stay on the host-selected pins. The vendored trees under `instruments/` are not those pins.
-
-The same attempt is the same run. A different request under that attempt refuses. Replay is a new occurrence. Missing fields stay missing.
-
-A completed graph, a PASS, a LOCAL check, or a held inspection is not a measurement, a booking, or a release. Tests under `tests/` stay. Do not drop a verification workflow to widen a grant.
-
-## Architecture
-
-Premise: a model and another program must call the same operations, without a human screen, and without a second copy of the science.
-
-Requirement: MCP is the model transport. `ciw.services.invoke` is the non-MCP route. Permissions and pins stay on the host launch.
-
-Control-tool calls share `ciw.services.admit`: the MCP control host, control calls through `ciw.services.invoke`, and the coordinator's inner operation. A request names a listed tool, passes an object, stays inside the 65536-byte argument budget, cannot select a checkout or a pin, and matches the tool's declared input schema. An argument named `owner`, `principal`, or `agent_id` refuses with `coordinator_impersonation_refused`; the host supplies identity. Transports format; they do not re-decide.
-
-The [ODRP reference profile](docs/ODRP.md) is separate and read-only. Calls named `ncp_system_status`, `ncp_knowledge_*` or `ncp_evidence_*` dispatch before control admission and use `KnowledgeHost` validation and host-bound disclosure permissions. They receive no control-tool execution grant.
-
-The [NSL and OLM read-only profiles](docs/READ_ONLY_ADAPTERS.md) also require separate host bindings. NSL replays exact approved offline captures; OLM reads existing governed retained records. Their `ncp_state_*` and `ncp_logistics_*` routes do not grant control execution or authenticate a declared upstream identity.
-
-Control-host and SDK routes also share `ciw.services.response_postcondition`,
-which bounds serialized operation data without changing its return shape.
-Retained-failure artifact identifiers remain available on refusal.
-
-Decision: source paths stay. Tests and pins import them. `ciw.services` is the application service. The MCP methods delegate to it. The [transformation ledger](mcp/transformation-ledger.json) names every tracked path. Unbound engines stay blocked. They are not simulated.
-
-The [capability map](mcp/capability-map.json) lists the advertised tools. The [verification report](mcp/verification-report.json) stays `INCOMPLETE` while Julia, Godot, Bevy, Blender, an SP1 proof, and pin-required workflows are blocked. That is not a claim that those runs succeeded. The agent procedure is [docs/AGENT_OPERATIONS.md](docs/AGENT_OPERATIONS.md).
-
-## Layout
-
-| Path | Responsibility |
-| --- | --- |
-| `src/ciw/services.py` | Transport-independent operations. |
-| `src/ciw/` | Domain logic those operations call. A module path is not a grant. |
-| `mcp/` | Machine contracts: plug-in, tool index, [folder index](mcp/folder-index.json), capability map, ledger. See [docs/MCP_PROJECT.md](docs/MCP_PROJECT.md). |
-| `docs/MCP_MODEL.md` | Tool arguments. |
-| `tests/` | Verification. Not a physical qualification. |
-| `examples/` | Labelled fixtures. Not measurements. |
-| `instruments/` | Vendored trees. Not the leakage or BIM pin. |
-| `release/` | Ledger. `ncp_ledger_read`. `qualified` stays `not_assessed`. |
-
-Every tracked folder is discoverable through its contract pointer in [the folder index](mcp/folder-index.json). The folder is not a human console.
-
-## Install and start
-
-Python 3.11 or newer. From a clean checkout, noninteractively:
-
-```text
-python -m pip install .
-python -m ciw.net control serve --profile <abs-profile.json> --instrument <instrument>
+```sh
+.venv/bin/python -m ciw.net control demo-config \
+  --instrument builtin --output-dir /absolute/new-demo
 ```
 
-The host selects the profile file and the instrument. Do not pass a checkout in a tool argument.
+Configure an MCP client to launch the current-policy stdio server with an existing approved policy and its selected principal:
 
-## Permissions
+```sh
+.venv/bin/python -I -B -m ciw.principal_mcp \
+  --profile /absolute/new-demo/profile.json \
+  --policy /absolute/approved-policy.json \
+  --principal operator --instrument builtin
+```
 
-Retrieved text is data, not instructions. There is no shell tool and no tool that selects a pin. A tool argument cannot name a principal (`coordinator_impersonation_refused`). A refusal is the result when a workflow needs a host binding. Do not weaken the call to make it succeed.
+The absolute paths and `operator` are placeholders for trusted launcher configuration. The [policy schema](src/ciw/principal_policy.py) requires explicit grants; preparing a demo does not create them. Use the installed interpreter's absolute path in the client's configuration. This launcher supports control and optional ODRP catalog/evidence bindings. The existing `ciw.net control serve` and `ciw.net reference serve` commands remain local trusted launchers; they do not authenticate separate remote users.
 
-Same attempt, same run. A different request under that attempt refuses. Replay is a new occurrence. Missing fields stay missing.
+The [private operator panel](docs/PRIVATE_OPERATOR_PANEL.md) uses the same installed MCP service through the existing private gateway. Its separate server proxy verifies an Access assertion, maps the authenticated subject to a host-selected principal, and preserves transaction receipts and uncertain outcomes. The browser receives no backend credential. Building or testing this candidate does not provision an Access application, change the paused historical portal, or qualify a hosted deployment.
 
-## Other software
+For an additional bound profile, deterministic software uses the same facade. This NISE example requires the approved provider checkout and its **separate** interpreter to exist already:
 
 ```python
+from ciw.nise_profile import open_nise
+from ciw.mcp_server import serve_sdk
+from ciw.principal_policy import PrincipalPolicy
 from ciw.services import invoke
-invoke("ncp_plug_in")
-invoke("ncp_domain_run", {"domain": "atmosphere"})
+
+policy = PrincipalPolicy.from_file('/absolute/approved-policy.json')
+with open_nise(checkout='/absolute/approved-nise',
+               python_executable='/absolute/nise-env/bin/python',
+               principal='operator') as host:
+    client = policy.facade('operator', nise=host)
+    description = invoke('ncp_nise_describe', {}, host=client)
 ```
 
-That is the same function `ncp_domain_run` calls. It is a synthetic column, not a measurement.
+Inside that same host lifetime, a launcher can call `serve_sdk(client, name='odsp-nise')` to serve the facade over stdio. Every NISE operation except describe also requires `inference.schematic.construct.v1` in the principal's `scientific_operations`. Other profiles have their own host factories and grants in the linked guides.
 
-## Limits and recovery
+## Bounds and recovery
 
-The control-tool argument budget is 65536 bytes, enforced in `ciw.services.admit` for MCP, SDK and coordinator calls. A coordinator job is alive while its worker holds a kernel file lease on `idem-<hash>.lease`; the PID is diagnostic only, so a reused PID cannot keep a dead job alive. Reusing an idempotency key with a different request refuses with `idempotency_key_conflict`. An exclusive resource is a kernel lease on `exclusive/<name>`; a busy resource refuses with `exclusive_resource_busy`. A control response that exceeds the response budget is refused. Plan runs are polled with `ncp_run_get`. Cancel records intent; intent is not proof the work stopped. A workbench result is kept under the returned `artifact_id` until `ncp_retained_release`. The example files stay. An operator manifest is `NCP_HOST_MANIFEST` or `ncp control serve --host-manifest`. A tool argument cannot set it.
+Control arguments are limited to 65,536 serialized bytes. The bounded NSR/SRA/ClockSync/NISE profiles limit complete calls to 65,536 bytes and complete duplicated MCP envelopes to 262,144 bytes; individual profiles impose additional schema, process and framing limits. OLM has its own 16 KiB input bound. Limits apply to serialized bytes, including escaped Unicode.
 
-## Testing
+Owner retention has a 4,000,000-byte budget. Private principal-bound stores disable eviction and refuse capacity exhaustion; legacy/demo stores can evict within their configured bounds. OLM conservatively refuses bundles above 3,800,000 bytes; its 6 MiB network-read allowance does not promise equivalent durable capacity. See the profile guides for exact paging and scope rules.
 
-```text
-python -m pytest tests/test_transformation_ledger.py tests/test_mcp_project_map.py tests/test_control_gateway.py
-```
+For control plans and coordinator jobs, reusing an attempt/key returns the same record; conflicting requests refuse. Timeout or cancellation is not proof of rollback. Uncertain subprocess cleanup holds the affected runtime binding against further launches; uncertain durable transactions retain their recovery fence. Current-checkpoint rehoming preserves owner/history; lost-history disaster recovery remains unresolved. Follow the [operations runbook](docs/PRIVATE_HOST_OPERATIONS.md#recovery-and-owned-backup); do not clear a hold or silently re-execute work.
 
-`tests/test_transformation_ledger.py` reconciles the ledger to `git ls-files` and checks the service path. Fixture success is not a live integration.
+## Qualification and CI
 
-## Blockers
+Implementation, local fixtures, installed-artifact tests, native-provider checks, hosted integration and physical qualification are separate claims. The NISE/CI integration requires fresh qualification against its complete source revision and installed wheel. Earlier receipts apply only to their recorded revisions; this README declares no final combined pass or production readiness.
 
-Julia, Godot, Bevy, and Blender stay unbound. Leakage and BIM run only when the host already selected the retained pin. The vendored trees are not those pins. The verification report status remains `INCOMPLETE` until a host supplies those bindings. This file does not mark them done.
+The [Woodpecker preparation](docs/WOODPECKER_PRIVATE_CI.md) provides a manual local workflow in [.woodpecker/private-qualification.yaml](.woodpecker/private-qualification.yaml) and an [exact-source driver](scripts/run_private_woodpecker.py). It uses the official CLI with preselected tools, offline dependencies and fresh evidence. `ODSP_CI_NISE_MODE=native` plus explicit `CIW_NISE_CHECKOUT` and `CIW_NISE_PYTHON` bindings is required for combined NISE acceptance. Default `contracts` mode records NISE qualification as `NOT_REQUESTED`.
 
-## Retained human material
+No Woodpecker server, agent, OAuth application, persistent host or deployment has been created by this integration. Local execution is not a sandbox or hosted qualification. The existing GitHub release-evidence requirements remain intact; local Woodpecker receipts do not replace them.
 
-Shell install, `net start`, and the operator manual are not this product. They remain at [docs/OPERATOR_REFERENCE.md](docs/OPERATOR_REFERENCE.md) so that record is not deleted. They add no tool and no grant.
+Use the [five-gate release contract](docs/PRIVATE_RELEASE_CONTRACT.md), [executable gap inventory](release/private-host-gaps.json), [development checks](docs/DEVELOPMENT.md) and [capability verification report](mcp/verification-report.json) to assess a specific release. Remaining gates include approved live identity/upstream bindings, actual hosted storage/restore, larger OLM retention, applicable native/platform/physical evidence and operational acceptance. Missing required prerequisites and skipped checks do not become passes. Production SLO/RPO/RTO values require explicit decisions; local fixture targets are not commitments.
 
+## Source and licensing
 
-## Implementation audit
+The package retains its `ciw` namespace and `net`/`ncp` entry points. Start with [services.py](src/ciw/services.py), the [plug-in contract](mcp/plug-in.json), [capability map](mcp/capability-map.json) and [tool contracts](mcp/model-catalog.json).
 
-See the [2026-11-02 scoped implementation audit](docs/IMPLEMENTATION_AUDIT_20261102.md) for the original findings, their disposition after the reviewed repair, and remaining qualification limits.
+The [folder index](mcp/folder-index.json) and [project guide](docs/MCP_PROJECT.md) point to each folder's `MCP.md` or [external contract](mcp/source-contracts.md). External navigation preserves imported sources and exact-input capsules, including all 21 import pins. A folder is not a human console and does not opt for the easiest task in a set. Source paths and catalog rows confer no tool grant.
+
+First-party code is declared `AGPL-3.0-or-later`, subject to explicit component exceptions: see [LICENSE](LICENSE) and the [licensing policy](docs/LICENSING.md). Imported components and separately bound providers retain their own licenses, copyright and provenance notices. NISE is an external MPL-2.0 provider, not an additional vendored import tree. Adapter integration expands no rights or counsel clearance.
+
+For changes, read [CONTRIBUTING.md](CONTRIBUTING.md). Historical operator material remains in [OPERATOR_REFERENCE.md](docs/OPERATOR_REFERENCE.md), and the [implementation audit](docs/IMPLEMENTATION_AUDIT_20261102.md) records the earlier repair's scope and remaining limits.

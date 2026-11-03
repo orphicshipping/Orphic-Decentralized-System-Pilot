@@ -12,9 +12,9 @@ requires-python = ">=3.11"
 dependencies = ["numpy==2.4.3", "websockets==16.0"]
 
 [project.urls]
-Repository = "https://github.com/orphicsystems/Orphic-Decentralized-Systems-Protocol"
-Documentation = "https://github.com/orphicsystems/Orphic-Decentralized-Systems-Protocol/blob/main/docs/quickstart.md"
-Issues = "https://github.com/orphicsystems/Orphic-Decentralized-Systems-Protocol/issues"
+Repository = "https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol"
+Documentation = "https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/blob/main/docs/quickstart.md"
+Issues = "https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/issues"
 
 [project.optional-dependencies]
 particles = ["gsd==5.0.1"]
