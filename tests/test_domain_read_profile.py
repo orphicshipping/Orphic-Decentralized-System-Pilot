@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 
 import pytest
+import ciw
 
 from ciw.campaign_contracts import canonical, parse
 from ciw.domain_read_profile import (CAPTURE_LIMITS, CAPTURE_SCHEMA, DOMAINS, FORMATS,
@@ -165,7 +166,9 @@ def test_actual_mcp_restart_and_live_policy_denials(tmp_path):
     policy_path=tmp_path/'policy.json'; policy_path.write_bytes(canonical(policy_document()))
     capture_path=tmp_path/'capture.json'; raw=canonical(capture()); capture_path.write_bytes(raw)
     script=tmp_path/'host.py'
-    script.write_text('''import asyncio
+    # Select the same source or installed package as this test, without relying
+    # on PYTHONPATH inheritance through the bounded qualification launcher.
+    script.write_text('import sys\n'+f'sys.path.insert(0,{str(Path(ciw.__file__).resolve().parents[1])!r})\n'+'''import asyncio
 from pathlib import Path
 from ciw.domain_read_profile import DomainReadHost
 from ciw.knowledge_mcp import serve_stdio

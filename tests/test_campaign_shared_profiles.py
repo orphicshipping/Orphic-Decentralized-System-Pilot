@@ -3,10 +3,12 @@ from copy import deepcopy
 import importlib.abc
 import json
 import os
+from pathlib import Path
 import subprocess
 import sys
 
 import pytest
+import ciw
 
 from ciw.principal_policy import PrincipalPolicy, PrincipalRefusal
 from ciw.services import capability_map, invoke
@@ -38,7 +40,8 @@ def test_unbound_profile_and_mutation_routes_are_not_granted():
 
 
 def test_discovery_needs_no_optional_crypto_provider_or_native_binary(tmp_path):
-    program='''import importlib.abc,sys,json
+    program='import sys\n'+f'sys.path.insert(0,{str(Path(ciw.__file__).resolve().parents[1])!r})\n'+'''
+import importlib.abc,json
 class RefuseOptional(importlib.abc.MetaPathFinder):
  def find_spec(self,fullname,path=None,target=None):
   if fullname.split('.')[0] in {'cryptography','nise','schematics','cbsr','tbrt'}:

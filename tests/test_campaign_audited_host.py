@@ -10,6 +10,7 @@ import threading
 from hashlib import sha256
 
 import pytest
+import ciw
 
 from ciw.audit_chain import AuditChain, empty_anchor
 from ciw.audited_host import AuditedPrincipalHost
@@ -167,7 +168,8 @@ def test_actual_mcp_uses_audited_sdk_contract(tmp_path):
     from mcp.client.stdio import stdio_client
     script=tmp_path/'server.py'
     # All helpers are test-only and shipped alongside installed test inputs.
-    script.write_text('import sys,asyncio\n'+f'sys.path.insert(0,{str(Path(__file__).parent)!r})\n'+
+    script.write_text('import sys,asyncio\n'+f'sys.path.insert(0,{str(Path(ciw.__file__).resolve().parents[1])!r})\n'+
+        f'sys.path.insert(0,{str(Path(__file__).parent)!r})\n'+
         'from pathlib import Path\nfrom test_campaign_audited_host import bound\n'+
         'from ciw.knowledge_mcp import serve_stdio\n'+f'host,_,_,_=bound(Path({str(tmp_path)!r}))\n'+
         'asyncio.run(serve_stdio(host))\n')
