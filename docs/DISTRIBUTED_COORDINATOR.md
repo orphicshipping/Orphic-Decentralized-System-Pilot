@@ -326,6 +326,61 @@ least-privilege SQL and history corruption. All effects are synthetic local
 database records. No live scientific provider, device or hosted deployment is
 qualified by these tests.
 
+### Local current-checkpoint restore drill
+
+`tests/test_distributed_restore.py` and the test-only
+[`restore_fixture.py`](../tools/distributed-coordinator/restore_fixture.py) add a
+native PostgreSQL checkpoint, custom-format `pg_dump` and single-transaction
+`pg_restore` journey. The source and destination are newly initialized private
+local services containing synthetic custody/effect rows. This is a cold cutover:
+the fixture host owns and quiesces every worker, and the source PostgreSQL/NATS
+processes stop before the separate empty destination starts. The helper is not
+registered as an MCP operation or operational restore API.
+
+One exported repeatable-read snapshot binds all coordinator tables, the fixed
+schema-format record and the synthetic downstream SQL effects to the dump.
+Archive and logical-snapshot digests are supplied independently by the drill's
+host. Corrupted bytes, a changed expected digest, another source identity or
+custody that advanced after backup refuse before either service is stopped.
+An existing destination is never overwritten. These checks record local custody;
+they are not an independent signature or approval of an arbitrary SQL archive.
+Only dumps created from this owned fixture are restored. PostgreSQL documents
+the [snapshot/archive contract](https://www.postgresql.org/docs/17/app-pgdump.html)
+and [native restore behavior](https://www.postgresql.org/docs/17/app-pgrestore.html).
+
+The drill verifies complete custody/history equality immediately after restore,
+preserved completed results and consumed attempts, and the following recovery:
+
+- A fresh host callback supplies current authorization. A revoked callback
+  cannot claim or dispatch queued work; authorization is never read from backup.
+- The prior source endpoint is stopped and a saved old claim cannot settle on
+  the new queue instance. Expired restored claims advance the fence and become
+  terminal `outcome_unknown`, without repeating a possible effect.
+- A fresh empty JetStream broker receives only reconstructed queued wake-ups.
+  Previously saved PubAck metadata does not stand in for broker state. The queued
+  job dispatches once, while completed and uncertain jobs remain terminal.
+- The restored synthetic effect table has exactly the original completed effect,
+  the original uncertain effect and the one newly completed queued effect. It
+  contains no effect for the interrupted claim and no duplicate row.
+
+Run the restore test file with the pinned PostgreSQL/NATS inputs and drivers from
+the reproduction section. Keep `ODSP_DISTRIBUTED_EVIDENCE` short, for example
+`/tmp/odp-dr`, because native Unix socket paths have a platform length limit.
+The drill temporarily needs two PostgreSQL clusters plus backup/log space beyond
+the evidence reserve. On a constrained host, run test files in separate batches
+and preserve stopped synthetic clusters in byte-verified archives between batches.
+The JUnit properties and `restore-result.json` retain exact identities and the
+observed restoration duration; that duration is not a production RTO commitment.
+
+The dump covers this coordinator database and synthetic same-database effects.
+It does not restore external retained workspaces, audit anchors, object storage,
+broker credentials, identity policy or cross-system effects. Source-stop checks
+in a fully owned fixture do not establish fencing of a surviving remote writer.
+Restoring a stale backup after authoritative history is lost, an online takeover,
+replicated failover and a hosted restore remain unqualified. A production design
+must establish external custody/generation continuity, actual storage and TLS
+identities, separately approved access, and explicit RPO/RTO before acceptance.
+
 ## Managed PostgreSQL and transaction pooling
 
 The target architecture uses PostgreSQL for custody/cache, a separate NATS
