@@ -1,0 +1,11 @@
+body.orphic { margin:0; min-width:0; }
+.orphic .os-grid { grid-template-columns:minmax(0,2fr) minmax(0,1fr); }
+.orphic h1 { font-size:clamp(1.75rem,4vw,3rem); overflow-wrap:anywhere; }
+.orphic p,.orphic h2,.orphic h3,.orphic .os-code { overflow-wrap:anywhere; }
+.orphic pre { max-height:65vh; overflow:auto; tab-size:2; font-size:.9rem; }
+.orphic summary { cursor:pointer; padding:.75rem 0; }
+.orphic .os-status[data-state="returned"] { color:var(--os-success); }
+.orphic .os-status[data-state="loading"],.orphic .os-status[data-state="partial"],.orphic .os-status[data-state="held"] { color:var(--os-warning); }
+.orphic .os-status[data-state="denied"],.orphic .os-status[data-state="failed"] { color:var(--os-danger); }
+.orphic .os-status[data-state="unknown"],.orphic .os-status[data-state="stale"],.orphic .os-status[data-state="unsupported"] { color:var(--os-muted); }
+@media(max-width:800px) { .orphic .os-grid { grid-template-columns:minmax(0,1fr); } .orphic .os-panel { padding:.85rem; } }

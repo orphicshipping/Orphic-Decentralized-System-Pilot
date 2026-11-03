@@ -34,8 +34,13 @@ These are separately bound surfaces. A discovery entry neither installs a provid
 | SRA | Describe, validate, retrieve declared graph neighborhoods, assess and verify complete receipts | [Bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md#sra-schematic-assessment). No companion execution or rendering/projection surface. |
 | ClockSync | Describe, reconcile a declared affine event mapping and replay its complete receipt | [Bounded native profiles](docs/BOUNDED_NATIVE_PROFILES.md#clocksync-affine-event-mapping). No hardware-clock access or synchronization. |
 | NISE | Describe, validate, compile, inspect and verify deterministic schematic scoping over a supplied catalog | [NISE profile](docs/NISE_PROFILE.md), host pin `81908ddbe817018af5d9887a6bdd9cce3e3eafc6`. Question text is inert context; no ML inference, provider scheduling or control authority. |
+| Offline intake | Inspect and fully verify host-approved ROS, OPC UA and MQTT observation exports | [Offline intake](docs/OFFLINE_INTAKE.md). No broker, wire-protocol, device or control connection. |
+| Domain records | Inspect captured metrology/GIS contracts and finance/trade observations | [Domain records](docs/CAMPAIGN_DOMAIN_READ.md). No new engine, live feed, advice or order submission. |
+| Proof receipts | Verify complete attributed receipts against a current host key registry | [Proof verification](docs/PROOF_VERIFICATION_PROFILE.md). Signature attribution is separate from computation proof; native SP1 remains held. |
 
 NSR, SRA, ClockSync and NISE use fixed, host-selected subprocess bindings to their existing implementations. Verification validates complete supplied receipts before each profile's replay comparison; caller-supplied digest IDs alone are insufficient. Each profile preserves its own occurrence semantics. These process boundaries are not network or secret-scrubbing sandboxes.
+
+The [tool-programme acceptance contract](docs/TOOL_PROGRAMME_ACCEPTANCE.md) tracks the optional strict data boundaries, locked release inventory, audited principal host, fenced local queue and client work. Explicit process limits and a minimal environment can be selected by trusted launchers; strict namespace isolation must refuse when unavailable. These additions do not activate a deployment or expand existing grants.
 
 Ledger reads do not execute the capability they describe: the `proved_heat` row is not an SP1 proof. Unbound providers and existing qualification holds remain explicit.
 

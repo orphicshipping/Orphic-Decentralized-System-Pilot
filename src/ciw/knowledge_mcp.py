@@ -372,7 +372,10 @@ def create_server(host):
 
     async def list_resources(context, params):
         try:
-            descriptions = host.resource_descriptions()
+            getter = getattr(host, 'resource_descriptions', None)
+            if getter is None:
+                getter = host.list_resources
+            descriptions = getter()
             check_cursor(params)
             return types.ListResourcesResult(resources=[types.Resource.model_validate(x) for x in descriptions])
         except Exception as exc:
@@ -380,7 +383,8 @@ def create_server(host):
 
     async def list_templates(context, params):
         try:
-            descriptions = host.resource_templates()
+            templates = host.resource_templates
+            descriptions = templates() if callable(templates) else templates
             check_cursor(params)
             return types.ListResourceTemplatesResult(resourceTemplates=[
                 types.ResourceTemplate.model_validate(x) for x in descriptions])
@@ -389,8 +393,12 @@ def create_server(host):
 
     async def read_resource(context, params):
         try:
+            value = host.read_resource(str(params.uri))
+            if type(value) is not str:
+                from .agent_api import encode
+                value = encode(value).decode()
             return types.ReadResourceResult(contents=[types.TextResourceContents(
-                uri=params.uri, mimeType="application/json", text=host.read_resource(str(params.uri)))])
+                uri=params.uri, mimeType="application/json", text=value)])
         except Exception as exc:
             raise refusal(exc) from None
 
@@ -405,5 +413,9 @@ async def serve_stdio(host):
 
     host.descriptions()  # Fail closed before accepting protocol traffic.
     server = create_server(host)
+    if getattr(host, 'strict_mcp_input', False):
+        # Validate bounded raw frames before the SDK parses away duplicate keys.
+        from .nise_stdio import strict_stdio_server
+        stdio_server = strict_stdio_server
     async with stdio_server() as (read_stream, write_stream):
         await server.run(read_stream, write_stream, server.create_initialization_options())

@@ -5049,6 +5049,36 @@
       "contract": "tools/bevy-render-view/src/MCP.md"
     },
     {
+      "path": "tools/campaign-client",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/campaign-client/MCP.md"
+    },
+    {
+      "path": "tools/campaign-client/scripts",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/campaign-client/scripts/MCP.md"
+    },
+    {
+      "path": "tools/campaign-client/src",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/campaign-client/src/MCP.md"
+    },
+    {
+      "path": "tools/campaign-client/tests",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/campaign-client/tests/MCP.md"
+    },
+    {
+      "path": "tools/campaign-client/web",
+      "class": "navigation",
+      "call": "none",
+      "contract": "tools/campaign-client/web/MCP.md"
+    },
+    {
       "path": "tools/mcp-operator-console",
       "class": "navigation",
       "call": "ncp_index_list",

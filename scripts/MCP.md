@@ -7,7 +7,7 @@
 
 Check and prepare scripts. A model does not pass a script path as authority.
 
-Tracked files here, none of them a tool call: `README.md`, `audit_repository_folders.py`, `audit_workflow_inventory.py`, `build_device_boundary_guest.py`, `build_private_release.py`, `check_academic_data.py`, `check_acquired_stream.py`, `check_adapters.py` (159 more).
+Tracked files here, none of them a tool call: `README.md`, `audit_repository_folders.py`, `audit_workflow_inventory.py`, `build_device_boundary_guest.py`, `build_private_release.py`, `check_academic_data.py`, `check_acquired_stream.py`, `check_adapters.py` (161 more).
 
 This folder does not opt for the easiest task in a set. Name the task.
 

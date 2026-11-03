@@ -2781,5 +2781,359 @@
       }
     }
   ],
+  "inspection_profiles": [
+    {
+      "profile_id": "odsp.offline-intake.v1",
+      "authority": "host_selected_offline_observations",
+      "authorizes_execution": false,
+      "qualification": "local_capture_validation_only",
+      "source_binding_verification": "host_declared_unverified",
+      "host_factory": "ciw.offline_intake.open_offline_intake",
+      "service": "ciw.services.invoke",
+      "transport": "ciw.offline_intake.serve_stdio",
+      "tools": [
+        {
+          "name": "ncp_intake_describe",
+          "description": "Describe the bound offline observation capture, exact supported formats and limits.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_intake_records",
+          "description": "Page record identifiers from the bound offline capture; no live read.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 256
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 32
+              },
+              "protocol": {
+                "type": "string",
+                "enum": [
+                  "ros2.joint-state.v1",
+                  "opcua.scalar.v1",
+                  "mqtt.scalar-observation.v1"
+                ]
+              }
+            },
+            "required": [],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_intake_record",
+          "description": "Read a complete captured observation and its deterministic non-authorizing receipt.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "record_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_intake_verify",
+          "description": "Compare every supplied receipt field with fresh interpretation of the exact host capture; no source authentication.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "record_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "receipt_json": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 32768
+              }
+            },
+            "required": [
+              "record_id",
+              "receipt_json"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    },
+    {
+      "profile_id": "odsp.proof-verification.v1",
+      "service": "ciw.services.invoke",
+      "host_factory": "ciw.proof_profile.ProofHost",
+      "tools": [
+        {
+          "name": "ncp_proof_describe",
+          "description": "Describe host-bound proof receipt verification and explicit native prerequisites.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {},
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_proof_verify",
+          "description": "Verify the full supplied receipt against an expected statement and current host-selected keys; never proves, executes, or admits.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "request_json": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              },
+              "receipt_json": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 49152
+              }
+            },
+            "required": [
+              "request_json",
+              "receipt_json"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ],
+      "authorizes_execution": false,
+      "authorizes_state_admission": false,
+      "qualification": "local_signature_fixture_only_native_sp1_not_qualified"
+    },
+    {
+      "profile_id": "ciw.domain-read.v1",
+      "authority": "exact_host_selected_offline_records",
+      "qualification": "live_upstream_not_established",
+      "authorizes_execution": false,
+      "host_factory": "ciw.domain_read_profile.open_domain_read",
+      "knowledge_profile": "ciw.reference_profile.open_reference",
+      "tools": [
+        {
+          "name": "ncp_domain_read_describe",
+          "description": "Describe a host-approved offline domain capture and its exact limits. No live read or execution.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "enum": [
+                  "metrology",
+                  "gis",
+                  "finance",
+                  "trade"
+                ]
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_domain_read_list",
+          "description": "Page identifiers of approved captured records; recorded observations are not current market data.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "enum": [
+                  "metrology",
+                  "gis",
+                  "finance",
+                  "trade"
+                ]
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 64
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 32
+              }
+            },
+            "required": [
+              "domain"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_domain_read_record",
+          "description": "Read one exact captured record and its non-authorizing content receipt.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "enum": [
+                  "metrology",
+                  "gis",
+                  "finance",
+                  "trade"
+                ]
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              }
+            },
+            "required": [
+              "domain",
+              "record_id"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        },
+        {
+          "name": "ncp_domain_read_verify",
+          "description": "Compare the complete supplied receipt against the current host-bound capture, including content and identity.",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "enum": [
+                  "metrology",
+                  "gis",
+                  "finance",
+                  "trade"
+                ]
+              },
+              "record_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 160
+              },
+              "receipt_json": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 65536
+              }
+            },
+            "required": [
+              "domain",
+              "record_id",
+              "receipt_json"
+            ],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object"
+          },
+          "annotations": {
+            "readOnlyHint": true,
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": false
+          }
+        }
+      ]
+    }
+  ],
   "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant."
 }

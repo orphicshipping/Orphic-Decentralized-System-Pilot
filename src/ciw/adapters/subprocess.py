@@ -114,9 +114,17 @@ def _stop(process: subprocess.Popen[bytes]) -> None:
 
 
 def _bounded_process(
-    command: list[str], *, cwd: Path, timeout: float, limit: int, stdin: bytes = b""
+    command: list[str], *, cwd: Path, timeout: float, limit: int, stdin: bytes = b"",
+    process_policy=None, environment: Mapping[str, str] | None = None,
 ) -> tuple[int, bytes]:
     """Drain both pipes concurrently, retaining at most ``limit`` bytes in total."""
+    if process_policy is not None:
+        from ..process_policy import ProcessPolicy
+        if not isinstance(process_policy, ProcessPolicy) or environment is not None:
+            raise ValueError("process policy must be a host-created ProcessPolicy")
+        command, environment = process_policy.prepare(command, cwd, stdin)
+        timeout = min(timeout, process_policy.wall_seconds)
+        limit = min(limit, process_policy.max_output_bytes)
     output: list[bytes] = []
     total = 0
     lock = threading.Lock()
@@ -126,7 +134,7 @@ def _bounded_process(
     stop_lock = threading.Lock()
     stop_attempted = False
     process = None
-    environment = dict(os.environ)
+    environment = dict(os.environ if environment is None else environment)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment.pop("NODE_OPTIONS", None)
@@ -295,8 +303,14 @@ class PinnedSubprocessAdapter:
         expected_python_sha256: str | None = None,
         expected_python_version: str | None = None,
         expected_dependencies: Mapping[str, str | None] | None = None,
+        process_policy=None,
     ) -> None:
         self._cleanup_uncertain: RuntimeCleanupUncertain | None = None
+        if process_policy is not None:
+            from ..process_policy import ProcessPolicy
+            if not isinstance(process_policy, ProcessPolicy):
+                raise ValueError("process policy must be a host-created ProcessPolicy")
+        self.process_policy = process_policy
         if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", revision):
             raise ValueError("revision must be a full lowercase Git commit ID")
         if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
@@ -336,6 +350,7 @@ class PinnedSubprocessAdapter:
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments], cwd=self.repository_root,
             timeout=min(self.timeout_seconds, 10.0), limit=max(self.max_output_bytes, 4 * 1024 * 1024),
+            process_policy=self.process_policy,
         )
         if code:
             _refuse("SOURCE_PIN_MISMATCH", "Cannot verify the bound Git checkout")
@@ -412,6 +427,7 @@ class PinnedSubprocessAdapter:
                 [str(self.python_executable), "-I", "-B", "-X",
                  f"pycache_prefix={directory}/bytecode", "-c", code, *arguments],
                 cwd=Path(directory), timeout=self.timeout_seconds, limit=self.max_output_bytes, stdin=stdin,
+                process_policy=self.process_policy,
             )
 
     @_guard_cleanup
@@ -432,13 +448,16 @@ class PinnedSubprocessAdapter:
         probe = self._probe()
         if probe != {"python_version": self._python_version, "dependencies": self._dependencies}:
             _refuse("RUNTIME_PIN_MISMATCH", "The Python or dependency versions changed")
-        return {
+        identity = {
             "schema": "ciw.subprocess-runtime.v1", "adapter_version": ADAPTER_VERSION,
             "repository_root": str(self.repository_root), "revision": self.revision,
             "source_tree": tree, "module": self.module, "source_root": self.source_root_relative,
             "python_executable": str(self.python_executable), "python_sha256": self._python_sha256,
             "python_version": self._python_version, "dependencies": dict(self._dependencies),
         }
+        if self.process_policy is not None:
+            identity["process_policy"] = self.process_policy.identity()
+        return identity
 
     @_guard_cleanup
     def invoke(self, operation_id: str, inputs: Mapping[str, Any]) -> dict[str, Any]:

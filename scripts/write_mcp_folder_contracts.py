@@ -27,6 +27,11 @@ CAPSULE_ROOTS = ("examples/workcells/godot-prop",)
 # the files. "none" means this folder is not a tool.
 OVERRIDES: tuple[tuple[str, str, str], ...] = (
     (
+        "tools/campaign-client",
+        "none",
+        "Optional read-only client and evidence view over existing host-authorized profiles. Not an independently callable tool, authentication service, execution grant or deployment.",
+    ),
+    (
         "tools/odrp-private-host-candidate",
         "none",
         "Isolated ODSP / ODRP build and qualification candidate. Not an independently callable tool. No production corpus, deployment, new grants, or historical-state migration is authorized by this folder.",

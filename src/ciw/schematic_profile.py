@@ -115,6 +115,8 @@ def _public(native):
     runtime = bundle["runtimes"]["sra"]
     for key in _PATH_KEYS:
         runtime.pop(key)
+    if 'process_policy' in runtime:
+        runtime['process_policy_ref'] = runtime.pop('process_policy')['policy_sha256']
     runtime["launch_binding"] = "host_selected"
     for key in ("subject_ref", "runtime_digest", "verification_id"):
         bundle["verification"].pop(key)
@@ -128,11 +130,12 @@ def _public(native):
 
 
 class _BoundedAdapter(PinnedSubprocessAdapter):
-    def __init__(self, checkout, python):
+    def __init__(self, checkout, python, *, process_policy=None):
         self.deadline = time.monotonic() + CALL_SECONDS
         super().__init__(checkout, PIN, PINS["schematic-assessment"]["module"],
                          source_root="src", python_executable=python,
-                         timeout_seconds=CHILD_SECONDS, max_output_bytes=MAX_PROCESS_OUTPUT)
+                         timeout_seconds=CHILD_SECONDS, max_output_bytes=MAX_PROCESS_OUTPUT,
+                         process_policy=process_policy)
         self.deadline = None
 
     def _remaining(self):
@@ -144,7 +147,8 @@ class _BoundedAdapter(PinnedSubprocessAdapter):
     def _git(self, *arguments):
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments],
-            cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024)
+            cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024,
+            process_policy=self.process_policy)
         if code:
             raise AdapterRefusal("SOURCE_PIN_MISMATCH", "Cannot verify the bound Git checkout")
         return data
@@ -165,13 +169,13 @@ class SchematicHost:
     instructions = ("Host-pinned SRA schematic validation, topology retrieval and bounded assessment only. "
                     "No companion execution or rendering. Source and certificate claims remain unauthenticated.")
 
-    def __init__(self, *, checkout, python, principal):
+    def __init__(self, *, checkout, python, principal, process_policy=None):
         _require(os.name == "posix" and hasattr(os, "O_NOFOLLOW"), "unsupported_platform")
         _require(type(principal) is str and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}", principal),
                  "invalid_host_binding")
         _require(Path(checkout).is_absolute() and Path(python).is_absolute(), "invalid_host_binding")
         self._bound_principal = principal
-        self._adapter = _BoundedAdapter(checkout, python)
+        self._adapter = _BoundedAdapter(checkout, python, process_policy=process_policy)
         self._workflow = DeclaredWorkflow("schematic-assessment")
         self._guard_dir = tempfile.TemporaryDirectory(prefix="odsp-schematic-host-")
         self._lease = _Lease(Path(self._guard_dir.name) / "call.lease")
@@ -214,6 +218,8 @@ class SchematicHost:
         _exact(bundle["runtimes"], {"sra"})
         public_runtime = bundle["runtimes"]["sra"]
         expected = {key: value for key, value in runtime.items() if key not in _PATH_KEYS}
+        if 'process_policy' in expected:
+            expected['process_policy_ref'] = expected.pop('process_policy')['policy_sha256']
         expected["launch_binding"] = "host_selected"
         _require(encode(public_runtime) == encode(expected), "runtime_binding_mismatch")
         # Only the launcher supplies executable paths. No payload field selects
