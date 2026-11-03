@@ -71,7 +71,7 @@ class _ShapeMismatch(ValueError):
 
 
 def _shape_json(value, *, nodes=262144):
-    """Bound open payloads too; match the existing JSON depth/scalar ceilings."""
+    """Bound open JSON without replacing native finite-binary64 contracts."""
     remaining = [nodes, 8 * 1024 * 1024]
     active = set()
 
@@ -93,7 +93,19 @@ def _shape_json(value, *, nodes=262144):
                 raise ValueError("Argument text exceeds bounds")
             return
         if kind in (int, float):
-            if abs(item) > 1e150 or not math.isfinite(item):
+            # Open profile payloads have their own numeric contracts. ClockSync
+            # and NSR accept finite binary64 values above control json_tree's
+            # 1e150 ceiling, including exactly representable large integers.
+            # Keep structural work bounded; exact conversion and scientific
+            # validity remain the native profile's responsibility. Do not
+            # coerce integers here and lose its input_precision_loss refusal.
+            if kind is int and item.bit_length() > 1024:
+                raise ValueError("Argument number exceeds bounds")
+            try:
+                finite = math.isfinite(item)
+            except OverflowError:
+                finite = False
+            if not finite:
                 raise ValueError("Argument number exceeds bounds")
             return
         if kind not in (list, dict) or len(item) > (65536 if kind is list else 1024):

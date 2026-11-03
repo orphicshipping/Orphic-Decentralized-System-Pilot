@@ -2,6 +2,7 @@
 from copy import deepcopy
 import math
 import shutil
+import sys
 
 import pytest
 
@@ -237,6 +238,52 @@ def test_unsupported_or_malformed_schema_fails_closed(schema):
 def test_open_payload_is_still_finite_plain_bounded_json(value):
     with pytest.raises(ValueError):
         _shape(value, {})
+
+
+@pytest.mark.parametrize('value', [1e151, -1e151, 1e308, sys.float_info.max,
+                                 2**600, -(2**600), int(sys.float_info.max)])
+@pytest.mark.parametrize('schema', [
+    {}, {'type': 'object'},
+    {'type': 'object', 'properties': {'request': {'type': 'object'}},
+     'required': ['request'], 'additionalProperties': False},
+])
+def test_open_native_payload_preserves_finite_binary64_range(value, schema):
+    payload = {'request': {'number': value, 'array': [value]}}
+    before = deepcopy(payload)
+    assert _shape(payload, schema) is None
+    assert payload == before
+    assert type(payload['request']['number']) is type(value)
+
+
+@pytest.mark.parametrize('value', [math.inf, -math.inf, math.nan,
+                                 2**1024, 2**1024 - 1, -(2**1024), 10**400])
+def test_open_native_payload_still_refuses_nonfinite_and_oversized_integers(value):
+    with pytest.raises(ValueError, match='number exceeds bounds'):
+        _shape({'request': {'value': value}}, {'type': 'object'})
+
+
+@pytest.mark.parametrize('value,schema', [
+    (1e151, {'type': 'number'}), (-1e151, {'type': 'number'}),
+    (2**600, {'type': 'integer'}), (2**53 + 1, {'type': 'integer'}),
+    (1e151, {'type': 'number', 'maximum': 1e150}),
+    (1.0, {'type': 'integer'}), (True, {'type': 'integer'}),
+])
+def test_open_payload_range_does_not_widen_declared_numeric_rules(value, schema):
+    with pytest.raises(ValueError):
+        _shape(value, schema)
+
+
+def test_large_open_integer_remains_exact_for_downstream_precision_validation():
+    # A native profile must see the original integer to distinguish a valid
+    # exactly representable origin from caller precision loss.
+    for integer in (2**54, 2**54 + 1, 2**600):
+        payload = {'number': integer}
+        _shape(payload, {'type': 'object'})
+        assert type(payload['number']) is int and payload['number'] == integer
+    _shape(2**53, {'type': 'integer'})
+    _shape(2**54, {'type': 'integer', 'maximum': 2**54})
+    with pytest.raises(ValueError):
+        _shape(float(2**54), {'type': 'integer', 'maximum': 2**54})
 
 
 def test_cycles_depth_and_total_traversal_refuse_before_recursion_error():
