@@ -12,6 +12,7 @@ import sys
 import numpy as np
 import pytest
 
+from companion_policy_helpers import qualified_policies, policy_config_document
 from ciw.adapters.protocol import AdapterRefusal
 from ciw.cli import main
 from ciw.core.identities import evidence_id
@@ -35,7 +36,12 @@ def gte_repo():
 
 
 @pytest.fixture(scope="module")
-def investigation(gte_repo, tmp_path_factory):
+def policies(gte_repo):
+    return qualified_policies({"gte": gte_repo})
+
+
+@pytest.fixture(scope="module")
+def investigation(gte_repo, tmp_path_factory, policies):
     directory = tmp_path_factory.mktemp("ciw-gte")
     # Unicode and noncanonical whitespace exercise exact evidence-byte retention.
     inputs = json.loads(EXAMPLE.read_text())
@@ -43,7 +49,7 @@ def investigation(gte_repo, tmp_path_factory):
     source = directory / "source.json"
     source.write_bytes((json.dumps(inputs, indent=3, ensure_ascii=False) + "\n\n").encode())
     before = set(sys.modules)
-    summary = create_investigation(source, gte_repo, directory / "created")
+    summary = create_investigation(source, gte_repo, directory / "created", process_policies=policies)
     return {"summary": summary, "workspace": read_json(Path(summary["workspace_file"])),
             "source": source, "new_modules": set(sys.modules)-before}
 
@@ -99,9 +105,9 @@ def test_offline_inspection_does_not_execute_or_mutate(investigation, monkeypatc
     assert {p.name: p.read_bytes() for p in source.parent.iterdir() if p.is_file()} == before
 
 
-def test_replay_appends_events_without_replacing_evidence(investigation, gte_repo, tmp_path):
+def test_replay_appends_events_without_replacing_evidence(investigation, gte_repo, tmp_path, policies):
     original = investigation["summary"]
-    replay = replay_investigation(original["workspace_file"], gte_repo, tmp_path / "replay")
+    replay = replay_investigation(original["workspace_file"], gte_repo, tmp_path / "replay", process_policies=policies)
     assert replay["replay_data_digest_matches"] is True
     assert replay["evidence_id"] == original["evidence_id"]
     assert replay["run_id"] == original["run_id"]
@@ -111,7 +117,7 @@ def test_replay_appends_events_without_replacing_evidence(investigation, gte_rep
 
 
 @pytest.mark.parametrize("kind", ["held", "stale", "singular", "covariance"])
-def test_domain_hold_and_refusals_remain_distinct(kind, gte_repo, tmp_path):
+def test_domain_hold_and_refusals_remain_distinct(kind, gte_repo, tmp_path, policies):
     inputs = json.loads(EXAMPLE.read_text())
     if kind == "held":
         inputs["policy"]["max_correction_m"] = 0.001
@@ -123,7 +129,7 @@ def test_domain_hold_and_refusals_remain_distinct(kind, gte_repo, tmp_path):
         inputs["observations"]["covariance"]["matrix"][0][0] = -1
     source = tmp_path / "input.json"
     source.write_text(json.dumps(inputs))
-    summary = create_investigation(source, gte_repo, tmp_path / "created")
+    summary = create_investigation(source, gte_repo, tmp_path / "created", process_policies=policies)
     assert inspect_investigation(summary["workspace_file"]) == summary
     if kind == "held":
         assert summary["status"] == "completed"
@@ -137,14 +143,14 @@ def test_domain_hold_and_refusals_remain_distinct(kind, gte_repo, tmp_path):
         assert summary["refusals"][0]["refusal"]["code"] == {
             "stale": "constraint_not_valid", "singular": "numeric_geometry", "covariance": "input_covariance",
         }[kind]
-        replay = replay_investigation(summary["workspace_file"], gte_repo, tmp_path / "replay")
+        replay = replay_investigation(summary["workspace_file"], gte_repo, tmp_path / "replay", process_policies=policies)
         assert replay["replay_data_digest_matches"] is True
         assert replay["status"] == "refused" and replay["results"] == []
 
 
-def test_shared_session_executes_full_batch_and_rejects_observation_overrides(investigation, gte_repo, tmp_path):
+def test_shared_session_executes_full_batch_and_rejects_observation_overrides(investigation, gte_repo, tmp_path, policies):
     session = Session.from_workspace(Path(investigation["summary"]["workspace_file"]), tmp_path)
-    bind_gte(session, gte_repo)
+    bind_gte(session, gte_repo, process_policy=policies["gte"])
     selection = session.handle({"protocol_version": 1, "request_id": "select", "type": "selection.update",
                                 "payload": {"expected_revision": 0, "interval_s": [0.0, 0.5], "channel": "y"}})
     assert selection["type"] == "response"
@@ -162,9 +168,9 @@ def test_shared_session_executes_full_batch_and_rejects_observation_overrides(in
     assert refusal["payload"]["execution"]["refusal"]["code"] == "invalid_parameters"
 
 
-def test_policy_override_preserves_evidence_and_replays_held_result(investigation, gte_repo, tmp_path):
+def test_policy_override_preserves_evidence_and_replays_held_result(investigation, gte_repo, tmp_path, policies):
     session = Session.from_workspace(Path(investigation["summary"]["workspace_file"]), tmp_path / "override")
-    bind_gte(session, gte_repo)
+    bind_gte(session, gte_repo, process_policy=policies["gte"])
     evidence = deepcopy(session.run)
     policy = {"max_correction_m": 0.001, "max_linearization_ratio": 0.1}
     response = session.handle(_request({"policy": policy}))
@@ -178,7 +184,7 @@ def test_policy_override_preserves_evidence_and_replays_held_result(investigatio
     session.handle({"protocol_version": 1, "request_id": "move-display", "type": "selection.update",
                     "payload": {"expected_revision": 0, "interval_s": [0.0, 0.5]}})
     path = session.save_workspace(session.output_dir / "workspace.json")
-    replay = replay_investigation(path, gte_repo, tmp_path / "replay")
+    replay = replay_investigation(path, gte_repo, tmp_path / "replay", process_policies=policies)
     assert replay["replay_data_digest_matches"] is True
     assert replay["results"][-1]["parameters"] == {"policy": policy}
     assert replay["results"][-1]["data"] == result["data"]
@@ -233,7 +239,10 @@ def test_resealed_parsed_source_cannot_replace_numeric_literal_with_bool(investi
 
 
 @pytest.mark.parametrize("refused", [False, True])
-def test_real_terminal_create_inspect_replay(gte_repo, tmp_path, refused):
+def test_real_terminal_create_inspect_replay(gte_repo, tmp_path, refused, policies):
+    policy_file = tmp_path / "companion-policies.json"
+    policy_file.write_text(json.dumps(policy_config_document({"geodesic": policies})))
+    policy_file.chmod(0o600)
     environment = dict(os.environ, PYTHONPATH=str(ROOT / "src"))
 
     def run(*arguments):
@@ -248,10 +257,12 @@ def test_real_terminal_create_inspect_replay(gte_repo, tmp_path, refused):
     source = tmp_path / "request.json"
     source.write_text(json.dumps(inputs))
     created = run("create", "--inputs", source, "--gte-repo", gte_repo,
+                  "--companion-policies", policy_file,
                   "--output-dir", tmp_path / "created", "--json")
     inspected = run("inspect", created["workspace_file"], "--json")
     assert inspected == created
     replay = run("replay", created["workspace_file"], "--gte-repo", gte_repo,
+                 "--companion-policies", policy_file,
                  "--output-dir", tmp_path / "replay", "--json")
     assert replay["replay_data_digest_matches"] is True
     assert created["status"] == ("refused" if refused else "completed")

@@ -141,7 +141,11 @@ def example(directory, *, case='pass'):
 
 def _host(args):
     from .operational_agent import OperationalHost
-    return OperationalHost(args.profile,resume=args.resume)
+    from .companion_policy_config import load_companion_policies
+    policies = load_companion_policies(getattr(args, 'companion_policies', None))
+    return OperationalHost(args.profile, resume=args.resume,
+        process_policies={name: value for name, value in policies.items()
+                          if name in {'calibrated-window', 'residual-monitor'}})
 
 
 def main(argv=None):
@@ -151,6 +155,8 @@ def main(argv=None):
     admit=sub.add_parser('admit');admit.add_argument('--manifest',required=True,type=Path);admit.add_argument('--output-dir',required=True,type=Path)
     for name in ('serve','init','call','view','export','attach-workbench'):
         action=sub.add_parser(name);action.add_argument('--profile',required=True,type=Path);action.add_argument('--resume',action='store_true')
+        action.add_argument('--companion-policies', type=Path,
+                            help='Host-only bounded companion policy file; required for native companions')
         if name=='serve':action.add_argument('--sdk',action='store_true')
         elif name=='call':action.add_argument('tool');action.add_argument('--arguments',default='{}')
         elif name in ('view','export'):action.add_argument('--output',required=True,type=Path)

@@ -8,7 +8,7 @@ ODSP provides shared services for models, agents and deterministic software: ret
 
 ## Current status
 
-**ODSP is operator-run research and pilot software. It is not release-qualified, and the updated project has not been deployed.** This README describes the implementation merged in [PR #266](https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/pull/266), at source revision `235ee45a11f744e8c801364965c07e9e3e13854f`. This documentation update does not publish the subsequent implementation campaign.
+**ODSP is operator-run research and pilot software. It is not release-qualified, and the updated project has not been deployed.** This README describes the implementation merged in [PR #266](https://github.com/orphicsystems/Orphic-Decentralized-System-Protocol/pull/266), at source revision `235ee45a11f744e8c801364965c07e9e3e13854f`. Published main now includes the README update in PR #267. This source branch also carries the separately reviewed completion work; the references below distinguish the main-line implementation from that candidate and its unresolved gates.
 
 The merged programme includes strict Python contracts, principal-bound service calls, retained audit records, a local fenced queue, read-only intake/domain profiles, proof-receipt verification, a Rust request observer, a typed client/viewer and Python client toolbox libraries. The broader Rust core, distributed coordinator, server toolbox, persistent cache, live integrations and Domain H work remain subject to the [outstanding programme](#outstanding-programme) and release gates below.
 
@@ -105,6 +105,8 @@ At the published revision, principal policy and scope checks govern tool access,
 
 **Companion containment is an unresolved release gate.** Published companion launch paths do not uniformly require a scrubbed environment or namespace isolation. Optional Linux resource limits do not block network or filesystem access. The approved local remediation clears inherited environment variables and requires Bubblewrap for pinned companion execution, refusing when isolation is unavailable; that implementation is not included in this README-only update. The current test host refuses the namespace probe, so a successful strict-isolation run still needs a suitable host.
 
+The unpublished completion candidate now also passes explicit operator policies through the investigation, covariance, geodesic, calibrated-window, residual-monitor and metrology host/CLI/replay paths. [Companion policy configuration](docs/COMPANION_POLICY_CONFIGURATION.md) documents the supported paths and remaining holds. Requests and saved receipts cannot choose a policy; changed or missing policy history blocks exact replay. Local routing/refusal checks do not complete native, container, hosted or physical qualification.
+
 The published gateway supports principal disabling/revocation, but its per-principal backend token format does not enforce expiry or rotation. A replacement credential lifecycle is in local qualification. In published main, nine raw-host profile routes return through profile-specific validators without running `services.admit`. Principal-bound facade calls still apply their own current policy and request checks; the local campaign is reconciling the shared admission path.
 
 ## Bounds and recovery
@@ -116,6 +118,8 @@ Owner retention has a 4,000,000-byte budget. Private principal-bound stores disa
 For control plans and coordinator jobs, reusing an attempt/key returns the same record; conflicting requests refuse. Timeout or cancellation is not proof of rollback. Uncertain subprocess cleanup holds the affected runtime binding against further launches; uncertain durable transactions retain their recovery fence. Current-checkpoint rehoming preserves owner/history; lost-history disaster recovery remains unresolved. Follow the [operations runbook](docs/PRIVATE_HOST_OPERATIONS.md#recovery-and-owned-backup); do not clear a hold or silently re-execute work.
 
 ## Outstanding programme
+
+The immediate internal-use order is durable coordinator/retention and restore, one or two governed offline intake flows, a recorded-sensor and one read-only instrument pilot, one held physical/geographic or molecular projection, and private operator/recovery tooling. The [engineering work order](docs/PROGRAMME_COMPLETION.md#immediate-internal-use-sequence) gives dependencies, acceptance criteria and contributor boundaries. External-client-only expansion is deferred for this pilot while controls for actual exposed services remain required. The broader obligations below remain open.
 
 The following work is part of the active completion campaign. Local source, a passing slice or a planned interface does not mean it is published on main, qualified as an integrated release or deployed.
 

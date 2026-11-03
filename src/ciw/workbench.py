@@ -650,6 +650,7 @@ class Workbench:
         self._bundles = {}
         self._failures = {}
         self._bindings = {"energy-accuracy": {}, "thermal-observer": {}, "measured-thermal": {}, "machine-manifest": {}, "project-graph": {}}
+        self._companion_policies = {}  # Host bindings only; never restored from workspace data.
         self._candidate_adapters = {}
         self._candidates = {}
         self._identities = {operation: ("operation", _digest(operation)) for operation in WORKFLOW_OPERATION_IDS}
@@ -658,7 +659,7 @@ class Workbench:
         self._reserved_bytes = 0
         self._revision = 0
 
-    def bind_workflow(self, kind, repositories):
+    def bind_workflow(self, kind, repositories, *, process_policies=None):
         """Bind host-selected repositories; no saved/client value calls this."""
         if kind not in OPERATIONS:
             raise ValueError("This source kind has no executable operation")
@@ -669,14 +670,24 @@ class Workbench:
         if any(not isinstance(path, (str, Path)) or not str(path).strip() for path in repositories.values()):
             raise ValueError("Workflow repository bindings must be explicit host paths")
         bindings = {role: Path(path).resolve() for role, path in repositories.items()}
+        policies = None
+        if kind in {"calibrated-window", "residual-monitor"}:
+            from .companion_policy_config import bind_process_policies
+            policies = bind_process_policies(bindings, process_policies)
+        elif process_policies is not None:
+            raise ValueError("This workflow has no companion policy binding interface")
         # Validate trusted provider identities before advertising availability.
         # The workflows check them again at each execution and replay.
         if kind == "telemetry":
             workflow._adapters({"cbsr": {}} if "cbsr" in bindings else {}, bindings)
+        elif policies is not None:
+            workflow._adapters(bindings, process_policies=policies)
         else:
             workflow._adapters(bindings)
         with self._lock:
             self._bindings[kind] = bindings
+            if policies is not None:
+                self._companion_policies[kind] = policies
 
     @property
     def pending_operations(self):
@@ -944,6 +955,13 @@ class Workbench:
         self._reserved_bytes += reserved
         return dict(self._bindings[kind]), reserved
 
+    def _reserve_with_policy(self, kind, failure_bytes=0):
+        # Callers hold _lock across both reads, pairing source and policy even
+        # if another trusted host thread rebinds the workflow after dispatch.
+        bindings, reserved = self._reserve(kind, failure_bytes)
+        policies = self._companion_policies.get(kind)
+        return bindings, (dict(policies) if policies is not None else None), reserved
+
     def list_failed_executions(self):
         with self._lock:
             return deepcopy(list(self._failures.values()))
@@ -1037,7 +1055,7 @@ class Workbench:
             from . import workflow_attempts as attempts
             context = attempts.start(kind, "execute", payload, source, operation_id=OPERATIONS[kind])
             failure_bytes = len(_canonical(payload)) + attempts.MAX_OVERHEAD
-            bindings, reserved = self._reserve(kind, failure_bytes)
+            bindings, policies, reserved = self._reserve_with_policy(kind, failure_bytes)
         phase = "dispatch"
         try:
             raw = base64.b64decode(source["bytes_b64"], validate=True)
@@ -1048,7 +1066,9 @@ class Workbench:
                     raise AdapterRefusal("operation_unavailable", "Telemetry reconciliation needs an explicitly bound CBSR checkout")
                 native = workflow.create_session(raw, configuration, {role: bindings[role] for role in roles})
             else:
-                native = workflow.create_session(raw, bindings) if upstream is None else workflow.create_session(raw, upstream, bindings)
+                kwargs = {"process_policies": policies} if kind in {"calibrated-window", "residual-monitor"} else {}
+                native = (workflow.create_session(raw, bindings, **kwargs) if upstream is None
+                          else workflow.create_session(raw, upstream, bindings, **kwargs))
             phase = "retention"
             return self._retain(kind, source, upstream_id, native)
         except Exception as exc:
@@ -1072,7 +1092,7 @@ class Workbench:
             context = attempts.start(record["kind"], "replay", payload, source,
                                      operation_id=OPERATIONS[record["kind"]])
             failure_bytes = len(_canonical(payload)) + attempts.MAX_OVERHEAD
-            bindings, reserved = self._reserve(record["kind"], failure_bytes)
+            bindings, policies, reserved = self._reserve_with_policy(record["kind"], failure_bytes)
         phase = "dispatch"
         try:
             if record["kind"] == "telemetry":
@@ -1080,7 +1100,8 @@ class Workbench:
                 if not roles <= bindings.keys():
                     raise AdapterRefusal("operation_unavailable", "Replay requires the original telemetry provider set")
                 bindings = {role: bindings[role] for role in roles}
-            replayed = _workflow(record["kind"]).replay_session(record["native"], bindings)
+            kwargs = {"process_policies": policies} if record["kind"] in {"calibrated-window", "residual-monitor"} else {}
+            replayed = _workflow(record["kind"]).replay_session(record["native"], bindings, **kwargs)
             phase = "retention"
             native, receipt = replayed["session"], replayed["replay_receipt"]
             if (receipt["source_bundle_digest"] != record["bundle_id"] or

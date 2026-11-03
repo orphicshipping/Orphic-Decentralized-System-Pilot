@@ -1,0 +1,23 @@
+[package]
+name = "odsp-control-core"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+publish = false
+build = "build.rs"
+
+[dependencies]
+serde_json = { version = "=1.0.145", features = ["arbitrary_precision", "float_roundtrip"] }
+num-bigint = "=0.4.8"
+num-traits = "=0.2.19"
+ryu = "=1.0.23"
+execution-commitment = { path = "../../instruments/execution/compute-runtime/crates/execution-commitment" }
+
+[build-dependencies]
+serde_json = "=1.0.145"
+execution-commitment = { path = "../../instruments/execution/compute-runtime/crates/execution-commitment" }
+
+[profile.release]
+overflow-checks = true
+panic = "abort"
+strip = true

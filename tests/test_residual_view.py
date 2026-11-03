@@ -9,6 +9,7 @@ import pytest
 
 from ciw import calibrated_window, residual_monitor, residual_view
 from ciw.telemetry import canonical, byte_digest
+from companion_policy_helpers import qualified_policies
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -32,7 +33,10 @@ def retained():
     template = json.loads((ROOT / "examples/calibrated-window/source.json").read_bytes())
     window_paths = {role: repositories / role for role in calibrated_window.ROLES}
     monitor_paths = {role: repositories / role for role in residual_monitor.ROLES}
-    first = calibrated_window.create_session(canonical(template), window_paths)
+    policies = qualified_policies({**window_paths, **monitor_paths})
+    window_policies = {role: policies[role] for role in window_paths}
+    monitor_policies = {role: policies[role] for role in monitor_paths}
+    first = calibrated_window.create_session(canonical(template), window_paths, process_policies=window_policies)
     later = deepcopy(template)
     later["experiment_id"] = "experiment:overlapping-window"
     later["samples"] = [deepcopy(template["samples"][1]), {
@@ -41,16 +45,16 @@ def retained():
     later["joint_covariance"]["order"] = calibrated_window.covariance_order(later)
     later["configuration"]["window"].update(start=1, end=3, received_by=3, decision_time=3)
     later["configuration"]["gsie"]["target_time"] = 3
-    second = calibrated_window.create_session(canonical(later), window_paths)
+    second = calibrated_window.create_session(canonical(later), window_paths, process_policies=window_policies)
     upstreams = {bundle["bundle_digest"]: bundle for bundle in (first, second)}
     declaration = {"schema": residual_monitor.SOURCE_SCHEMA, "experiment_id": "experiment:residual-view",
                    "window_bundle_ids": list(upstreams), "configuration": deepcopy(residual_monitor.DEFAULT_CONFIGURATION)}
     raw = canonical(declaration)
-    original = residual_monitor.create_session(raw, upstreams, monitor_paths)
-    replay = residual_monitor.replay_session(original, monitor_paths)["session"]
+    original = residual_monitor.create_session(raw, upstreams, monitor_paths, process_policies=monitor_policies)
+    replay = residual_monitor.replay_session(original, monitor_paths, process_policies=monitor_policies)["session"]
     unresolved = deepcopy(declaration)
     unresolved["configuration"]["observability"]["condition_limit"] = None
-    held = residual_monitor.create_session(canonical(unresolved), upstreams, monitor_paths)
+    held = residual_monitor.create_session(canonical(unresolved), upstreams, monitor_paths, process_policies=monitor_policies)
     return original, replay, declaration, held, unresolved
 
 
@@ -142,8 +146,9 @@ def test_cusum_plot_keeps_observed_alarm_before_declared_reset(retained):
     declaration = deepcopy(declaration)
     declaration["configuration"]["cusum"]["reset_on_alarm"] = True
     repositories = Path(os.environ["CIW_ACQUIRED_STREAM_STACK_ROOT"])
+    paths = {role: repositories / role for role in residual_monitor.ROLES}
     monitor = residual_monitor.create_session(canonical(declaration), original["upstream_windows"],
-        {role: repositories / role for role in residual_monitor.ROLES})
+        paths, process_policies=qualified_policies(paths))
     data = monitor["steps"][0]["result"]["data"]
     recurrence = data["rows"][-1]["cusum"]
     assert recurrence["observed_state"]["positive"] >= declaration["configuration"]["cusum"]["threshold"]

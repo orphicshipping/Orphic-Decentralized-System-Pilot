@@ -10,12 +10,16 @@ from __future__ import annotations
 import base64
 from copy import deepcopy
 import math
+from pathlib import Path
 import re
 import uuid
 
 from . import calibrated_window
 from .adapters.protocol import AdapterRefusal
 from .adapters.subprocess import PinnedSubprocessAdapter, _json
+from .companion_policy_config import (bind_process_policies, check_replay_policy,
+                                      validate_policy_identity)
+from .process_policy import ProcessPolicyHeld
 from .declared_workload import (AUTHORITY, DeclaredWorkflow, RESULT_SCHEMA,
                                SOURCE_LIMIT, _text, _verification)
 from .telemetry import canonical, digest, byte_digest, _bundle_digest, _keys, _now, _instant
@@ -361,15 +365,32 @@ class ResidualMonitorWorkflow(DeclaredWorkflow):
         value["companions"] = {"oit": DeclaredWorkflow._runtime_projection(runtime["companions"]["oit"])}
         return value
 
-    def _adapters(self, repositories, expected=None):
+    def _adapters(self, repositories, expected=None, *, process_policies=None):
         if set(repositories) != ROLES:
             raise ValueError("Bind exactly the native FDIR and OIT repositories")
+        policies = bind_process_policies(repositories, process_policies)
+        # The FDIR process imports OIT in the same fixed bootstrap, so that
+        # checkout must also be explicitly visible read-only to its policy.
+        if str(Path(repositories["oit"]).resolve()) not in policies["fdir"].read_only_roots:
+            raise ProcessPolicyHeld("monitor_companion_read_only_root_required")
+        # OIT executes inside FDIR's process, not under a second launcher. Its
+        # retained policy must therefore describe the same actual restrictions.
+        if canonical(policies["fdir"].identity()) != canonical(policies["oit"].identity()):
+            raise ProcessPolicyHeld("monitor_shared_process_policy_required")
+        if expected is not None:
+            if type(expected) is not dict or set(expected) != {"fdir"}:
+                raise ValueError("Retained monitor providers differ")
+            if set(expected["fdir"].get("companions", {})) != {"oit"}:
+                raise ValueError("Retained monitor companion differs")
+            check_replay_policy(policies["fdir"], expected["fdir"])
+            check_replay_policy(policies["oit"], expected["fdir"]["companions"]["oit"])
         old = expected["fdir"] if expected else None
         adapters, runtimes = {}, {}
         for role, pin in PINS.items():
             retained = (old if role == "fdir" else old["companions"]["oit"]) if old else {}
             adapters[role] = PinnedSubprocessAdapter(repositories[role], pin["revision"], pin["module"], source_root=pin["source_root"],
-                expected_python_sha256=retained.get("python_sha256"), expected_python_version=retained.get("python_version"), expected_dependencies=retained.get("dependencies"))
+                expected_python_sha256=retained.get("python_sha256"), expected_python_version=retained.get("python_version"),
+                expected_dependencies=retained.get("dependencies"), process_policy=policies[role])
             runtimes[role] = adapters[role].runtime_identity()
         runtime = {**runtimes["fdir"], "companions": {"oit": runtimes["oit"]}}
         if old and self._runtime_projection(runtime) != self._runtime_projection(old):
@@ -445,7 +466,9 @@ class ResidualMonitorWorkflow(DeclaredWorkflow):
             if set(runtime["companions"]) != {"oit"}:
                 raise ValueError("Unexpected monitor companion")
             for role, value in (("fdir", runtime), ("oit", runtime["companions"]["oit"])):
-                _keys(value, {"schema", "adapter_version", "repository_root", "revision", "source_tree", "module", "source_root", "python_executable", "python_sha256", "python_version", "dependencies"} | ({"companions"} if role == "fdir" else set()))
+                _keys(value, {"schema", "adapter_version", "repository_root", "revision", "source_tree", "module", "source_root", "python_executable", "python_sha256", "python_version", "dependencies"} | ({"companions"} if role == "fdir" else set()), {"process_policy"})
+                if "process_policy" in value:
+                    validate_policy_identity(value["process_policy"])
                 if (value["schema"] != "ciw.subprocess-runtime.v1" or any(value[k] != v for k, v in PINS[role].items())
                         or value["source_tree"] != SOURCE_TREES[role]
                         or not re.fullmatch(r"[a-f0-9]{64}", value["python_sha256"]) or not isinstance(value["dependencies"], dict)):
@@ -473,14 +496,15 @@ class ResidualMonitorWorkflow(DeclaredWorkflow):
         self._validate(bundle)
         return bundle
 
-    def create_session(self, raw, upstreams, repositories):
+    def create_session(self, raw, upstreams, repositories, *, process_policies=None):
         source = _source(raw)
         _request(source, upstreams)
-        return self._execute_selected(raw, upstreams, self._adapters(repositories))
+        return self._execute_selected(raw, upstreams, self._adapters(repositories, process_policies=process_policies))
 
-    def replay_session(self, bundle, repositories):
+    def replay_session(self, bundle, repositories, *, process_policies=None):
         raw = self._validate(bundle)
-        fresh = self._execute_selected(raw, bundle["upstream_windows"], self._adapters(repositories, bundle["runtimes"]))
+        fresh = self._execute_selected(raw, bundle["upstream_windows"],
+            self._adapters(repositories, bundle["runtimes"], process_policies=process_policies))
         receipt = {"schema": "ciw.residual-monitor-replay.v1", "source_bundle_digest": bundle["bundle_digest"],
                    "replayed_bundle_digest": fresh["bundle_digest"], "numerical_match": True,
                    "verification": _verification(bundle, fresh["steps"][0]), "admission": "not_performed"}

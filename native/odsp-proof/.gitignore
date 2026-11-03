@@ -1,0 +1,6 @@
+/target/
+/src/*.out
+/src/*.json
+/src/*.goto
+/src/*.symtab
+

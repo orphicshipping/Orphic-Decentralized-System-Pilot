@@ -11,6 +11,7 @@ from ciw import calibrated_window as window
 from ciw import residual_monitor as monitor
 from ciw.adapters.subprocess import PinnedSubprocessAdapter
 from ciw.declared_workload import _verification
+from companion_policy_helpers import qualified_policies
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -50,17 +51,24 @@ def repositories():
 
 
 @pytest.fixture(scope="module")
-def retained(repositories):
+def process_policies(repositories):
+    return qualified_policies(repositories)
+
+
+@pytest.fixture(scope="module")
+def retained(repositories, process_policies):
     declarations = runpy.run_path(str(ROOT / "examples/acquired-stream/make_sequence.py"))["templates"]()
-    windows = [window.create_session(window.canonical(item), {role: repositories[role] for role in window.ROLES}) for item in declarations]
+    windows = [window.create_session(window.canonical(item), {role: repositories[role] for role in window.ROLES},
+        process_policies={role: process_policies[role] for role in window.ROLES}) for item in declarations]
     upstreams = {item["bundle_digest"]: item for item in windows}
     raw = b"\n" + monitor.canonical(source(list(upstreams))) + b"\n "
     providers = {role: repositories[role] for role in monitor.ROLES}
-    original = monitor.create_session(raw, upstreams, providers)
-    replay = monitor.replay_session(original, providers)["session"]
+    policies = {role: process_policies[role] for role in monitor.ROLES}
+    original = monitor.create_session(raw, upstreams, providers, process_policies=policies)
+    replay = monitor.replay_session(original, providers, process_policies=policies)["session"]
     held_source = source(list(upstreams))
     held_source["configuration"]["observability"]["condition_limit"] = None
-    held = monitor.create_session(monitor.canonical(held_source), upstreams, providers)
+    held = monitor.create_session(monitor.canonical(held_source), upstreams, providers, process_policies=policies)
     return raw, original, replay, held, declarations
 
 
@@ -175,11 +183,12 @@ def test_resealed_false_diagnostics_or_bindings_refuse(retained, fault):
     with pytest.raises(ValueError): monitor._validate(bundle)
 
 
-def test_different_reference_prior_is_not_implicit_feedback(retained, repositories):
+def test_different_reference_prior_is_not_implicit_feedback(retained, repositories, process_policies):
     declaration = deepcopy(retained[4][-1])
     declaration["configuration"]["gsie"]["prior"]["mean"] = [8.0]
     declaration["configuration"]["gsie"]["prior"]["state_id"] = "forbidden:previous-posterior"
-    altered = window.create_session(window.canonical(declaration), {role: repositories[role] for role in window.ROLES})
+    altered = window.create_session(window.canonical(declaration), {role: repositories[role] for role in window.ROLES},
+        process_policies={role: process_policies[role] for role in window.ROLES})
     original = retained[1]
     first = next(iter(original["upstream_windows"]))
     selected = {first: original["upstream_windows"][first], altered["bundle_digest"]: altered}
@@ -187,10 +196,12 @@ def test_different_reference_prior_is_not_implicit_feedback(retained, repositori
         monitor._request(source(list(selected)), selected)
 
 
-def test_explicit_positive_direction_and_post_alarm_reset(retained, repositories):
+def test_explicit_positive_direction_and_post_alarm_reset(retained, repositories, process_policies):
     value = source(list(retained[1]["upstream_windows"]))
     value["configuration"]["cusum"].update(direction="positive", reset_on_alarm=True)
-    output = monitor.create_session(monitor.canonical(value), retained[1]["upstream_windows"], {role: repositories[role] for role in monitor.ROLES})
+    output = monitor.create_session(monitor.canonical(value), retained[1]["upstream_windows"],
+        {role: repositories[role] for role in monitor.ROLES},
+        process_policies={role: process_policies[role] for role in monitor.ROLES})
     row = output["steps"][0]["result"]["data"]["rows"][-1]
     assert row["cusum"]["observed_state"]["positive"] >= value["configuration"]["cusum"]["threshold"]
     assert row["cusum"]["next_state"] == {"positive": 0.0, "negative": 0.0, "sample_count": 3}

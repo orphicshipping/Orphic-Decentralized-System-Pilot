@@ -6,8 +6,10 @@ const base='https://private.example.test';
 const tokenA='test-only-alice-token-'.repeat(3),tokenB='test-only-bob-token-'.repeat(3);
 const hash=s=>createHash('sha256').update(s).digest('hex');
 function fixture(){
-  const config={schema:'ciw.bearer-principals.v1',policy_revision:'test-1',policy_sha256:'sha256:'+'1'.repeat(64),
-    principals:[{principal:'alice',enabled:true,token_sha256:hash(tokenA)},{principal:'bob',enabled:true,token_sha256:hash(tokenB)}]};
+  const start=Math.floor(Date.now()/1000)-1;
+  const config={schema:'ciw.bearer-principals.v2',policy_revision:'test-1',policy_sha256:'sha256:'+'1'.repeat(64),
+    principals:[{principal:'alice',enabled:true,token_sha256:hash(tokenA),credential_id:'alice-fixture-1',not_before:start,expires_at:start+3600},
+      {principal:'bob',enabled:true,token_sha256:hash(tokenB),credential_id:'bob-fixture-1',not_before:start,expires_at:start+3600}]};
   const requests=[];
   const env={PUBLIC_HOSTNAME:'private.example.test',HOST_SINGLETON:'test-local-singleton',PRINCIPAL_AUTH_JSON:JSON.stringify(config),
     HOST:{getByName(name){assert.equal(name,'test-local-singleton');return {fetch(request){requests.push(request);return Response.json({ok:true});}};}}};
@@ -38,7 +40,8 @@ test('two distinct principals remain distinct and all caller headers are replace
   for(const [token,principal] of [[tokenA,'alice'],[tokenB,'bob']]){
     for(const post of [false,true]){
       const headers={'x-odsp-principal':'attacker','x-odsp-owner':'attacker','x-odsp-policy-sha256':'forged',
-        'x-odsp-policy-revision':'forged','x-internal-admin':'yes','cookie':'secret'};
+        'x-odsp-policy-revision':'forged','x-odsp-credential-id':'forged','x-odsp-credential-sha256':'forged',
+        'x-internal-admin':'yes','cookie':'secret'};
       if(post)headers['Content-Type']='application/json';
       assert.equal((await route(request(post?'/api/calls':'/api/tools',token,{headers,...post?{method:'POST',body:'{}'}:{}}),env)).status,200);
       const forwarded=requests.at(-1);const identity=await principalContext(forwarded,env);
@@ -52,6 +55,79 @@ test('queued internal request fails current configuration after revoke or policy
   const {env,config,requests,update}=fixture();await route(request(),env);
   config.principals[0].enabled=false;update();await assert.rejects(principalContext(requests[0],env));
   config.principals[0].enabled=true;config.policy_revision='test-2';update();await assert.rejects(principalContext(requests[0],env));
+});
+test('version two requires distinct bounded credentials and rejects perpetual or ambiguous config',async()=>{
+  const mutations=[c=>c.schema='ciw.bearer-principals.v1', c=>delete c.principals[0].credential_id,
+    c=>c.principals[1].credential_id=c.principals[0].credential_id,c=>c.principals[0].credential_id='',
+    c=>delete c.principals[0].not_before,c=>delete c.principals[0].expires_at,
+    c=>c.principals[0].expires_at=c.principals[0].not_before,
+    c=>c.principals[0].expires_at=c.principals[0].not_before+3601];
+  for(const field of ['not_before','expires_at'])for(const value of [true,null,'123',-1,1.5,Number.MAX_SAFE_INTEGER+1])
+    mutations.push(c=>c.principals[0][field]=value);
+  for(const mutate of mutations){
+    const f=fixture();mutate(f.config);f.update();
+    assert.equal((await route(request(),f.env)).status,503);assert.equal(f.requests.length,0);
+  }
+  const f=fixture();f.env.PRINCIPAL_AUTH_JSON=f.env.PRINCIPAL_AUTH_JSON.replace('"enabled":true','"enabled":false,"enabled":true');
+  assert.equal((await route(request(),f.env)).status,503);assert.equal(f.requests.length,0);
+});
+test('credential validity includes not_before and excludes expires_at exactly',async()=>{
+  const f=fixture(),row=f.config.principals[0];
+  for(const [instant,status] of [[row.not_before*1000-1,401],[row.not_before*1000,200],
+    [row.expires_at*1000-1,200],[row.expires_at*1000,401],[NaN,401]]){
+    assert.equal((await route(request(),f.env,undefined,()=>instant)).status,status);
+  }
+  assert.equal(f.requests.length,2);
+  // The actual Workers fetch third parameter is an ExecutionContext, never a clock.
+  assert.equal((await route(request(),f.env,{waitUntil(){}})).status,200);
+});
+test('queued credential binding rejects rotation or renewal even with identical principal and policy',async()=>{
+  for(const change of [r=>r.credential_id='alice-fixture-2',r=>r.token_sha256=hash('new-secret'),
+    r=>r.not_before+=1,r=>r.expires_at-=1,r=>r.enabled=false]){
+    const f=fixture(),instant=(f.config.principals[0].not_before+5)*1000;
+    assert.equal((await route(request(),f.env,undefined,()=>instant)).status,200);
+    const queued=f.requests[0];
+    assert.equal((await principalContext(queued,f.env,()=>instant)).principal,'alice');
+    change(f.config.principals[0]);f.update();
+    await assert.rejects(principalContext(queued,f.env,()=>instant),/principal_refused/);
+  }
+  const f=fixture();await route(request(),f.env);
+  await assert.rejects(principalContext(f.requests[0],f.env,()=>f.config.principals[0].expires_at*1000));
+});
+test('rotation revocation and expiry during body upload refuse before host lookup',async()=>{
+  for(const kind of ['rotate','revoke','expire','renew','policy']){
+    const f=fixture();let instant=(f.config.principals[0].not_before+5)*1000,lookups=0;
+    f.env.HOST.getByName=()=>{lookups++;throw Error('stale authorization dispatched');};
+    const body=new ReadableStream({pull(controller){
+      const row=f.config.principals[0];
+      if(kind==='rotate'){row.credential_id='new';row.token_sha256=hash('replacement');}
+      if(kind==='revoke')row.enabled=false;
+      if(kind==='expire')instant=row.expires_at*1000;
+      if(kind==='renew')row.expires_at-=1;
+      if(kind==='policy')f.config.policy_revision='new';
+      f.update();controller.enqueue(new TextEncoder().encode('{}'));controller.close();
+    }},{highWaterMark:0});
+    const result=await route(request('/api/calls',tokenA,{method:'POST',headers:{'Content-Type':'application/json'},
+      body,duplex:'half'}),f.env,undefined,()=>instant);
+    assert.equal(result.status,401,kind);assert.equal(lookups,0);
+  }
+});
+test('internal identity rechecks configuration after asynchronous credential hashing',async t=>{
+  const f=fixture();await route(request(),f.env);const queued=f.requests[0];
+  const original=crypto.subtle.digest.bind(crypto.subtle);
+  t.mock.method(crypto.subtle,'digest',async(algorithm,input)=>{
+    const value=await original(algorithm,input);
+    f.config.principals[0].enabled=false;f.update();return value;
+  });
+  await assert.rejects(principalContext(queued,f.env),/principal_refused/);
+});
+test('real clock expiry invalidates an already authenticated internal request',async()=>{
+  const f=fixture(),seconds=Math.floor(Date.now()/1000),row=f.config.principals[0];
+  row.not_before=seconds-1;row.expires_at=seconds+2;f.update();
+  assert.equal((await route(request(),f.env)).status,200);
+  await new Promise(resolve=>setTimeout(resolve,Math.max(0,row.expires_at*1000-Date.now())+15));
+  await assert.rejects(principalContext(f.requests[0],f.env),/principal_refused/);
+  assert.equal((await route(request(),f.env)).status,401);assert.equal(f.requests.length,1);
 });
 test('host, origin, queries, scheme and unconfigured route are denied without dispatch',async()=>{
   const {env,requests}=fixture();

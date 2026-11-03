@@ -1,4 +1,4 @@
-// Authenticated browser boundary for the unchanged private gateway. No retries.
+// Authenticated browser boundary for the private gateway. No retries.
 import {accessVerifier, validateClaims} from './access.mjs';
 import {deadline, declaredLength, encoder, exact, readBounded, uniqueJson, utf8} from './bounds.mjs';
 
@@ -33,26 +33,36 @@ function configuration(env) {
       || typeof env.PANEL_PRINCIPALS_JSON !== 'string'
       || encoder.encode(env.PANEL_PRINCIPALS_JSON).length > 65536) throw Error('panel_configuration_refused');
   const mapping = uniqueJson(env.PANEL_PRINCIPALS_JSON);
-  if (!exact(mapping, ['schema', 'principals']) || mapping.schema !== 'odsp.panel-principals.v1'
+  if (!exact(mapping, ['schema', 'principals']) || mapping.schema !== 'odsp.panel-principals.v2'
       || !Array.isArray(mapping.principals) || mapping.principals.length < 1 || mapping.principals.length > 64)
     throw Error('panel_configuration_refused');
-  const subjects = new Set(), principals = new Set(), tokens = new Set();
+  const subjects = new Set(), principals = new Set(), tokens = new Set(), credentials = new Set();
   for (const row of mapping.principals) {
-    if (!exact(row, ['subject', 'principal', 'enabled', 'backend_token'])
+    if (!exact(row, ['subject', 'principal', 'enabled', 'backend_token', 'credential_id', 'not_before', 'expires_at'])
         || typeof row.subject !== 'string' || !row.subject || encoder.encode(row.subject).length > 512
         || /[\u0000-\u001f\u007f]/u.test(row.subject) || typeof row.principal !== 'string' || !ID.test(row.principal)
         || typeof row.enabled !== 'boolean' || typeof row.backend_token !== 'string'
-        || !/^[\x21-\x7e]{32,512}$/.test(row.backend_token) || subjects.has(row.subject)
-        || principals.has(row.principal) || tokens.has(row.backend_token)) throw Error('panel_configuration_refused');
-    subjects.add(row.subject); principals.add(row.principal); tokens.add(row.backend_token);
+        || !/^[\x21-\x7e]{32,512}$/.test(row.backend_token)
+        || typeof row.credential_id !== 'string' || !ID.test(row.credential_id)
+        || !Number.isSafeInteger(row.not_before) || row.not_before < 0 || !Number.isSafeInteger(row.expires_at)
+        || row.expires_at <= row.not_before || row.expires_at - row.not_before > 3600
+        || subjects.has(row.subject) || principals.has(row.principal) || tokens.has(row.backend_token)
+        || credentials.has(row.credential_id)) throw Error('panel_configuration_refused');
+    subjects.add(row.subject); principals.add(row.principal); tokens.add(row.backend_token); credentials.add(row.credential_id);
   }
   return {hostname: env.PANEL_HOSTNAME, issuer, audience: env.ACCESS_AUDIENCE, backend,
     binding: env.BACKEND, rows: mapping.principals};
 }
-function principal(config, subject) {
+function principal(config, subject, now) {
   const row = config.rows.find(row => row.subject === subject);
-  if (!row?.enabled) throw Error('panel_access_denied');
+  const seconds = Math.floor(now / 1000);
+  if (!Number.isSafeInteger(now) || now < 0 || !row?.enabled
+      || seconds < row.not_before || seconds >= row.expires_at) throw Error('panel_access_denied');
   return row;
+}
+function sameCredential(a, b) {
+  return ['subject', 'principal', 'backend_token', 'credential_id', 'not_before', 'expires_at']
+    .every(key => a[key] === b[key]);
 }
 function prepareAssets(assets) {
   if (!assets || typeof assets !== 'object' || Array.isArray(assets) || Object.keys(assets).length > 32)
@@ -91,7 +101,7 @@ export function createPanel({assets, fetchJwks = globalThis.fetch, now = () => D
     let claims, authenticated;
     try {
       claims = await verify(request.headers.get('cf-access-jwt-assertion'), config, request.signal);
-      authenticated = principal(config, claims.sub);
+      authenticated = principal(config, claims.sub, now());
     } catch { return errorResponse('panel_access_denied', 401); }
     // Cookie-authenticated browser navigation/simple cross-origin requests must
     // not start even a GET custody transaction. Cross-origin scripts cannot add
@@ -110,25 +120,31 @@ export function createPanel({assets, fetchJwks = globalThis.fetch, now = () => D
         const payload = uniqueJson(utf8(body));
         if (!payload || typeof payload !== 'object' || Array.isArray(payload)
             || ['principal', 'owner', 'identity', 'grants', 'policy', 'policy_revision', 'policy_sha256',
-              'token', 'backend_token', 'destination', 'endpoint'].some(key => Object.hasOwn(payload, key)))
+              'token', 'backend_token', 'destination', 'endpoint', 'credential_id', 'not_before', 'expires_at']
+              .some(key => Object.hasOwn(payload, key)))
           throw Error('invalid_request');
       } catch { return errorResponse('panel_request_refused', 400); }
     }
     // Do not cache subject grants. Recheck after every asynchronous preflight, so
     // disabling a mapping or changing an issuer cannot dispatch a stale identity.
-    let current, row;
-    try {
-      current = configuration(env);
-      if (!sameBinding(config, current)) throw Error('panel_configuration_changed');
-      validateClaims(claims, current, now());
-      row = principal(current, claims.sub);
-      if (row.principal !== authenticated.principal || request.signal.aborted) throw Error('panel_access_denied');
-    } catch { return errorResponse('panel_access_denied', 401); }
+    function currentCredential() {
+      try {
+        const current = configuration(env), instant = now();
+        if (!sameBinding(config, current)) throw Error('panel_configuration_changed');
+        validateClaims(claims, current, instant);
+        const row = principal(current, claims.sub, instant);
+        if (!sameCredential(row, authenticated) || request.signal.aborted) throw Error('panel_access_denied');
+        return {current, row};
+      } catch { throw Error('panel_access_denied'); }
+    }
+    try { currentCredential(); }
+    catch { return errorResponse('panel_access_denied', 401); }
     if (!api) return new Response(asset.body, {headers: {...SECURITY, 'Content-Type': asset.contentType}});
     const readiness = url.pathname === '/api/readiness';
     let dispatched = false;
     try {
       return await deadline(async signal => {
+        const {current, row} = currentCredential();
         const headers = {Accept: 'application/json', Authorization: 'Bearer ' + row.backend_token};
         if (body !== undefined) headers['Content-Type'] = 'application/json';
         const forwarded = new Request(current.backend + url.pathname,
@@ -141,14 +157,23 @@ export function createPanel({assets, fetchJwks = globalThis.fetch, now = () => D
           throw Error('backend_response_refused');
         }
         let bytes;
-        try { declaredLength(response.headers, LIMITS.responseBytes); bytes = await readBounded(response.body, LIMITS.responseBytes, signal); }
+        try {
+          currentCredential();
+          declaredLength(response.headers, LIMITS.responseBytes);
+          bytes = await readBounded(response.body, LIMITS.responseBytes, signal);
+          // Backend completion and body streaming are asynchronous. Suppress all
+          // result bytes if this exact mapping or the Access assertion expired.
+          currentCredential();
+        }
         catch (error) { void response.body?.cancel().catch(() => {}); throw error; }
         // Preserve the complete JSON bytes/status, including non-2xx error and
         // retention envelopes. No claim of commitment is added by this boundary.
         return new Response(bytes, {status: response.status, headers: {...SECURITY,
           'Content-Type': 'application/json; charset=utf-8'}});
       }, readiness ? LIMITS.readinessMs : LIMITS.backendMs, request.signal);
-    } catch {
+    } catch (error) {
+      if (error?.message === 'panel_access_denied')
+        return errorResponse('panel_access_denied', 401, dispatched && !readiness ? 'unconfirmed' : 'not_started');
       return errorResponse('panel_backend_unconfirmed', 502, dispatched && !readiness ? 'unconfirmed' : 'not_started');
     }
   }};

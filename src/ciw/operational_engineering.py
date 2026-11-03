@@ -6,9 +6,11 @@ No selected data can name a Python import, provider, device or acceptance policy
 from __future__ import annotations
 
 from copy import deepcopy
+from collections.abc import Mapping
 from hashlib import sha256
 from pathlib import Path
 import platform
+from types import MappingProxyType
 
 from . import link_contract as c
 from .agent_api import encode, parse
@@ -70,13 +72,20 @@ def source_request(source):
     return raw, v
 
 
-def runtime_identity():
+def runtime_identity(*, process_policies=None):
     from . import measured_thermal_workflow, reference_comparison, operational_native, link_study, calibrated_window, residual_monitor
     files = [Path(__file__), *(Path(module.__file__) for module in
         (reference_comparison,operational_native,link_study,calibrated_window,residual_monitor))]
-    return {'provider': 'ciw.operational_engineering', 'version': '1', 'python': platform.python_version(),
+    if process_policies:
+        from . import companion_policy_config
+        files.append(Path(companion_policy_config.__file__))
+    identity = {'provider': 'ciw.operational_engineering', 'version': '1', 'python': platform.python_version(),
         'adapter_sha256': sha256(b'\0'.join(p.read_bytes().replace(b'\r\n', b'\n') for p in files)).hexdigest(),
         'thermal': measured_thermal_workflow.runtime_identity(), 'scope': 'retained_data_only_no_hardware'}
+    if process_policies:
+        identity['companion_policies'] = {engine: {role: policy.identity() for role, policy in policies.items()}
+                                          for engine, policies in process_policies.items()}
+    return identity
 
 
 def _thermal_streams(raw, bundle):
@@ -112,7 +121,7 @@ def _thermal_policy(source, p, left, right):
         'max_standard_uncertainty': p['max_standard_uncertainty'], 'uncertainty': uncertainty}
 
 
-def assess(source, parameters, *, providers=None):
+def assess(source, parameters, *, providers=None, process_policies=None):
     from .reference_comparison import compare
     keys(parameters, set()); raw, v = source_request(source)
     native = None
@@ -125,7 +134,7 @@ def assess(source, parameters, *, providers=None):
         request = parse(raw); left, right, policy = request['left'], request['right'], request['policy']
     else:
         from . import operational_native
-        native=operational_native.execute(raw,v['engine'],providers or {})
+        native=operational_native.execute(raw,v['engine'],providers or {}, process_policies=process_policies)
         left,right,report=operational_native.comparison(raw,v['engine'],native,v['policy'])
         return {'schema':SCHEMA,'binding_ref':v['binding_ref'],'engine':v['engine'],'native_bundle':native,
             'prediction':left,'observation':right,'comparison':report,'model':model_metadata(raw,v['engine'],native),
@@ -224,7 +233,7 @@ def validate_payload(operation,data,source,parameters,selection):
 _REGISTERED = False
 
 
-def registry(*, bind=True, providers=None):
+def registry(*, bind=True, providers=None, process_policies=None):
     global _REGISTERED
     from .operations.schemas import register_payload_validator
     from .control_plane import CapabilityRegistry
@@ -234,12 +243,33 @@ def registry(*, bind=True, providers=None):
         register_payload_validator(VERIFY, validate_payload, role='verification')
         register_dependency_fields(VERIFY,('assessment',)); _REGISTERED=True
     from .control_plane import Port
+    from .companion_policy_config import bind_process_policies
+    from .operational_native import roles
+    from .process_policy import require_companion_policy
+    # Detach both halves of the host binding before any request can execute.
+    providers = {} if providers is None else providers
+    policies = {} if process_policies is None else process_policies
+    allowed = {'calibrated-window', 'residual-monitor'}
+    if (not isinstance(providers, Mapping) or set(providers) - allowed
+            or not isinstance(policies, Mapping) or set(policies) - allowed):
+        raise ValueError('Unknown native host binding')
+    for engine, values in policies.items():
+        if not isinstance(values, Mapping) or set(values) != roles(engine):
+            raise ValueError('Exact native process-policy roles required')
+        for policy in values.values():
+            require_companion_policy(policy)
+    providers = MappingProxyType({engine: MappingProxyType(dict(bindings))
+                                  for engine, bindings in providers.items()})
+    policies = MappingProxyType({engine: bind_process_policies(providers[engine], values)
+                                 for engine, values in policies.items() if engine in providers})
     reg = CapabilityRegistry()
-    implementation=assess if not providers else lambda source,parameters:assess(source,parameters,providers=providers)
-    for op in (Operation(ASSESS,'backend',implementation,runtime_identity),Operation(VERIFY,'verification',verify,runtime_identity)):
+    implementation = assess if not providers else lambda source, parameters: assess(
+        source, parameters, providers=providers, process_policies=policies)
+    identity = lambda: runtime_identity(process_policies=policies)
+    for op in (Operation(ASSESS,'backend',implementation,identity),Operation(VERIFY,'verification',verify,identity)):
         manifest=InstrumentManifest(instrument_id=op.operation_id,role=op.role,supported_operations=(op.operation_id,),
             sampling={'kind':'frozen_retained_data'},calibration_requirements={'scope':'native_checks_and_declared_joint_budget'})
-        reg.advertise(manifest,runtime=runtime_identity(),capabilities={op.operation_id:[op.operation_id]},
+        reg.advertise(manifest,runtime=identity(),capabilities={op.operation_id:[op.operation_id]},
             inputs={op.operation_id:{'assessment':Port('ciw.operation-result.v1').to_dict()} if op.operation_id==VERIFY else {}})
         if bind:reg.bind(op)
     return reg

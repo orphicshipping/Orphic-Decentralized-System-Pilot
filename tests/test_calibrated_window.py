@@ -11,6 +11,7 @@ from ciw import calibrated_window as window
 from ciw.cli import parser
 from ciw.instruments import make_demo_run
 from ciw.session import Session
+from companion_policy_helpers import qualified_policies
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = (ROOT / "examples/calibrated-window/source.json").read_bytes()
@@ -36,10 +37,15 @@ def repositories():
 
 
 @pytest.fixture(scope="module")
-def retained(repositories, tmp_path_factory):
+def process_policies(repositories):
+    return qualified_policies(repositories)
+
+
+@pytest.fixture(scope="module")
+def retained(repositories, process_policies, tmp_path_factory):
     directory = tmp_path_factory.mktemp("calibrated-window")
     session = Session(make_demo_run(), directory)
-    session.workbench.bind_workflow("calibrated-window", repositories)
+    session.workbench.bind_workflow("calibrated-window", repositories, process_policies=process_policies)
     raw = b"\n" + SOURCE + b"\n "
     source = add(session, raw)
     summary = call(session, "operation.execute", {"operation_id": "ciw.calibrated-window.v1", "parameters": {"source_id": source["source_id"]}})
@@ -195,13 +201,13 @@ def test_instruments_fusion_restore_and_candidate_boundary(retained, monkeypatch
 
 
 @pytest.mark.parametrize("attack", ["clock_expiry", "calibration_expiry", "late_sample"])
-def test_native_refusal_does_not_retain_partial_state(attack, repositories, tmp_path):
+def test_native_refusal_does_not_retain_partial_state(attack, repositories, process_policies, tmp_path):
     source = json.loads(SOURCE)
     if attack == "clock_expiry": source["clock_model"]["valid_device_interval"] = [10, 11]
     elif attack == "calibration_expiry": source["calibration_profile"]["valid_until"] = source["epoch"]
     else: source["samples"][1]["received_at"] = 1.5
     session = Session(make_demo_run(), tmp_path)
-    session.workbench.bind_workflow("calibrated-window", repositories)
+    session.workbench.bind_workflow("calibrated-window", repositories, process_policies=process_policies)
     descriptor = add(session, window.canonical(source))
     call(session, "operation.execute", {"operation_id": "ciw.calibrated-window.v1", "parameters": {"source_id": descriptor["source_id"]}}, error=True)
     assert session.workbench.list_bundles() == []

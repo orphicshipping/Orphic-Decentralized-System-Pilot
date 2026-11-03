@@ -1,10 +1,13 @@
 # Bounded process policy and durable audit barrier
 
-This campaign slice is opt-in host infrastructure. It grants no tool, resource,
-scientific operation, credential, or state-admission permission. Existing
-`PinnedSubprocessAdapter` bindings with `process_policy=None` retain their former
-environment and runtime-identity contract. The integration owner chooses which
-host constructors accept the optional policy and audit barrier.
+The current local candidate requires Bubblewrap isolation for pinned companion
+processes and removes inherited child environment variables. A missing policy or
+limits-only policy refuses before companion code. The optional audit barrier
+remains host infrastructure. Neither mechanism grants a tool, resource,
+scientific operation, credential or state-admission permission. Scientific and
+metrology hosts now accept the explicit [operator policy bindings](COMPANION_POLICY_CONFIGURATION.md);
+paths without that plumbing remain held. This supersedes the original opt-in
+companion behavior described by earlier campaign evidence.
 
 ## Process boundary
 

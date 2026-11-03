@@ -243,12 +243,14 @@ def _profile(path: Path) -> tuple[Path, dict]:
 
 
 def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=None, resume: bool = False,
-                 read_only: bool = False, clearance_provider=None) -> AgentHost:
+                 read_only: bool = False, clearance_provider=None, numerical_backend=None) -> AgentHost:
     """Only the operator's launch command selects this file; not an MCP tool."""
     if read_only and (instrument != "builtin" or leakage_backend is not None or resume):
         raise ValueError("Corpus inspection requires a read-only builtin host without resume")
     if type(instrument) is not str or instrument not in INSTRUMENTS:
         raise ValueError("Require a fixed operator-selected instrument")
+    if numerical_backend is not None and (instrument != "builtin" or read_only):
+        raise ValueError("A numerical backend requires the writable builtin instrument")
     if instrument == "leakage":
         from .leakage_native import NativeLeakageBackend
         if not isinstance(leakage_backend, NativeLeakageBackend):
@@ -353,7 +355,7 @@ def from_profile(path: Path, *, instrument: str = "builtin", leakage_backend=Non
             raise ValueError("Fluid instrument requires exactly one synthetic fluid source")
         registry = capability_registry(bind=bool(value["allow_operations"]), profile=selected[0])
     else:
-        registry = builtin_registry(bind=bool(value["allow_operations"]))
+        registry = builtin_registry(bind=bool(value["allow_operations"]), numerical_backend=numerical_backend)
         if read_only:
             # Fixed trusted offline readers for retained Link results; no operation bindings.
             from .link_study import register as register_link_readers

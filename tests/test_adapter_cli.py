@@ -11,6 +11,7 @@ from unittest.mock import AsyncMock, patch
 
 import pytest
 
+from companion_policy_helpers import qualified_policies, policy_config_document
 from ciw.cli import health_remote, main, print_investigation
 from ciw.instruments import make_demo_run
 from ciw.session import Session
@@ -76,6 +77,10 @@ def test_real_cli_create_inspect_and_offline_replay(tmp_path):
     repositories = {name: os.environ.get(f"CIW_{name.upper()}_REPO") for name in ("rci", "fsrt")}
     if not all(repositories.values()):
         pytest.skip("Set CIW_RCI_REPO and CIW_FSRT_REPO to the pinned source checkouts")
+    policies = qualified_policies(repositories)
+    policy_file = tmp_path / "companion-policies.json"
+    policy_file.write_text(json.dumps(policy_config_document({"investigation": policies})))
+    policy_file.chmod(0o600)
     root = Path(__file__).resolve().parents[1]
     environment = os.environ.copy()
     environment["PYTHONPATH"] = str(root / "src")
@@ -87,7 +92,8 @@ def test_real_cli_create_inspect_and_offline_replay(tmp_path):
         assert completed.returncode == 0, completed.stderr
         return completed.stdout
 
-    binding = ["--rci-repo", repositories["rci"], "--fsrt-repo", repositories["fsrt"]]
+    binding = ["--rci-repo", repositories["rci"], "--fsrt-repo", repositories["fsrt"],
+               "--companion-policies", policy_file]
     created = json.loads(run("investigation", "create", "--inputs",
                              root / "examples/adapters/two-reservoir.json", *binding,
                              "--output-dir", tmp_path / "created", "--json"))

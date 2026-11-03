@@ -8,6 +8,7 @@ import sys
 import numpy as np
 import pytest
 
+from companion_policy_helpers import qualified_policies
 from ciw.adapters.protocol import AdapterRefusal
 from ciw.core.identities import evidence_id
 from ciw.covariance_workflow import execute_covariance, replay_covariance
@@ -26,20 +27,27 @@ def sources():
 
 
 @pytest.fixture(scope='module')
+def policies(sources):
+    return qualified_policies(dict(zip(('rci', 'fsrt', 'jspt'), sources)))
+
+
+@pytest.fixture(scope='module')
 def inputs():
     return json.loads((ROOT / 'examples/adapters/two-reservoir-covariance.json').read_text())
 
 
 @pytest.fixture(scope='module')
-def created(tmp_path_factory, sources, inputs):
-    return create_investigation(deepcopy(inputs), *sources[:2], tmp_path_factory.mktemp('covariance-chain') / 'source', sys.executable)
+def created(tmp_path_factory, sources, inputs, policies):
+    return create_investigation(deepcopy(inputs), *sources[:2], tmp_path_factory.mktemp('covariance-chain') / 'source', sys.executable,
+                                process_policies={role: policies[role] for role in ('rci', 'fsrt')})
 
 
 @pytest.fixture(scope='module')
-def mapped(tmp_path_factory, sources, created):
+def mapped(tmp_path_factory, sources, created, policies):
     params = json.loads((ROOT / 'examples/adapters/tank-covariance-map.json').read_text())
     return execute_covariance(created['workspace_file'], sources[2], params,
-                              tmp_path_factory.mktemp('covariance-map') / 'mapped', sys.executable)
+                              tmp_path_factory.mktemp('covariance-map') / 'mapped', sys.executable,
+                              process_policies={'jspt': policies['jspt']})
 
 
 def test_calibration_provenance_and_native_parameterization_survive(created, inputs):
@@ -95,9 +103,10 @@ def test_saved_chain_inspects_without_importing_domain_engines(mapped, tmp_path)
     assert inspect_investigation(mapped['workspace_file'])['evidence_id'] == mapped['evidence_id']
 
 
-def test_covariance_replay_preserves_old_result_and_allocates_new_identities(mapped, sources, tmp_path):
+def test_covariance_replay_preserves_old_result_and_allocates_new_identities(mapped, sources, tmp_path, policies):
     old_bytes = Path(mapped['workspace_file']).read_bytes()
-    replay = replay_covariance(mapped['workspace_file'], sources[2], tmp_path / 'replayed', sys.executable)
+    replay = replay_covariance(mapped['workspace_file'], sources[2], tmp_path / 'replayed', sys.executable,
+                               process_policies={'jspt': policies['jspt']})
     assert replay['replay_data_digest_matches'] is True
     assert replay['results'][:-1] == mapped['results']
     assert replay['results'][-1]['execution_id'] != mapped['results'][-1]['execution_id']
@@ -106,14 +115,15 @@ def test_covariance_replay_preserves_old_result_and_allocates_new_identities(map
     assert Path(mapped['workspace_file']).read_bytes() == old_bytes
 
 
-def test_v2_calibration_replays_after_serving_expiry(created, sources, tmp_path):
+def test_v2_calibration_replays_after_serving_expiry(created, sources, tmp_path, policies):
     summary = inspect_investigation(created['workspace_file'], '2030-01-01T00:00:00Z')
     assert all(item['expired'] and item['applicable_at_acquisition'] for item in summary['calibration'])
-    replay = replay_investigation(created['workspace_file'], *sources[:2], tmp_path / 'replayed-estimator', sys.executable)
+    replay = replay_investigation(created['workspace_file'], *sources[:2], tmp_path / 'replayed-estimator', sys.executable,
+                                  process_policies={role: policies[role] for role in ('rci', 'fsrt')})
     assert replay['replay_data_digest_matches'] is True
 
 
-def test_common_reference_cannot_silently_enter_independent_assembly_composition(inputs, sources, tmp_path):
+def test_common_reference_cannot_silently_enter_independent_assembly_composition(inputs, sources, tmp_path, policies):
     altered = deepcopy(inputs)
     left = altered['sensors'][0]['request']['inputs']['calibration']['covariance_basis']
     right = altered['sensors'][1]['request']['inputs']['calibration']['covariance_basis']
@@ -123,7 +133,8 @@ def test_common_reference_cannot_silently_enter_independent_assembly_composition
         target[key] = deepcopy(reference[key])
     destination = tmp_path / 'must-not-write'
     with pytest.raises(AdapterRefusal, match='share uncertainty sources'):
-        create_investigation(altered, *sources[:2], destination, sys.executable)
+        create_investigation(altered, *sources[:2], destination, sys.executable,
+                             process_policies={role: policies[role] for role in ('rci', 'fsrt')})
     assert not destination.exists()
 
 
@@ -158,22 +169,24 @@ def test_historical_pins_remain_replayable_after_runtime_upgrade(monkeypatch, so
     legacy = [os.getenv('CIW_' + name + '_LEGACY_REPO') for name in ('RCI', 'FSRT')]
     if not all(legacy):
         pytest.skip('Historical clean pins are provided by scripts/check_adapters.py')
+    policies = qualified_policies(dict(zip(('rci', 'fsrt'), legacy)))
     import ciw.investigation as module
     from ciw.adapters.subprocess import PinnedSubprocessAdapter
     pins = json.loads((ROOT / 'src/ciw/adapter-runtimes.json').read_text())
     original_runtime = module._runtime
 
-    def historic(name, repo, python_executable=None, expected=None):
+    def historic(name, repo, python_executable=None, expected=None, *, process_policy=None):
         if expected is not None:
-            return original_runtime(name, repo, python_executable, expected)
+            return original_runtime(name, repo, python_executable, expected, process_policy=process_policy)
         spec = pins[name]['historical'][0]
-        return PinnedSubprocessAdapter(repo, spec['revision'], spec['module'], python_executable=python_executable or sys.executable)
+        return PinnedSubprocessAdapter(repo, spec['revision'], spec['module'], python_executable=python_executable or sys.executable,
+                                       process_policy=process_policy)
 
     with monkeypatch.context() as patch:
         patch.setattr(module, '_runtime', historic)
         v1 = json.loads((ROOT / 'examples/adapters/two-reservoir.json').read_text())
-        old = create_investigation(v1, *legacy, tmp_path / 'old', sys.executable)
-    replay = replay_investigation(old['workspace_file'], *legacy, tmp_path / 'old-replayed', sys.executable)
+        old = create_investigation(v1, *legacy, tmp_path / 'old', sys.executable, process_policies=policies)
+    replay = replay_investigation(old['workspace_file'], *legacy, tmp_path / 'old-replayed', sys.executable, process_policies=policies)
     assert replay['replay_data_digest_matches'] is True
     assert replay['results'][0] == old['results'][0]
     assert replay['results'][-1]['runtime']['revision'] == pins['fsrt']['historical'][0]['revision']

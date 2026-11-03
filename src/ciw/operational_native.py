@@ -57,7 +57,7 @@ def roles(engine):
     return set()
 
 
-def execute(raw, engine, providers):
+def execute(raw, engine, providers, *, process_policies=None):
     request(raw,engine)
     if engine == 'scalar':
         from .link_study_io import run
@@ -69,12 +69,15 @@ def execute(raw, engine, providers):
     selected=providers.get(engine,{})
     if set(selected) != roles(engine):
         raise ValueError('Native provider stack unavailable; bind exact role-named repositories in the operator profile')
+    from .companion_policy_config import bind_process_policies, policy_set
+    policies = bind_process_policies(selected, policy_set({} if process_policies is None else process_policies, engine))
     if engine == 'calibrated-window':
         from .calibrated_window import create_session
-        return create_session(raw,selected)
+        return create_session(raw,selected,process_policies=policies)
     from .residual_monitor import ResidualMonitorWorkflow
     value=parse(raw)
-    return ResidualMonitorWorkflow().create_session(c.unpack(value['source'],262144),value['upstreams'],selected)
+    return ResidualMonitorWorkflow().create_session(c.unpack(value['source'],262144),value['upstreams'],selected,
+                                                   process_policies=policies)
 
 
 def validate(raw, engine, native):

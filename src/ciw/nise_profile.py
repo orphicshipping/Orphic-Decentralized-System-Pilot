@@ -208,10 +208,11 @@ class _NiseAdapter(PinnedSubprocessAdapter):
 
     @_guard_cleanup
     def _git(self, *arguments):
+        from .process_policy import require_companion_policy
         code, output = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments],
             cwd=self.repository_root, timeout=self._remaining(), limit=MAX_GIT_OUTPUT,
-            process_policy=self.process_policy)
+            process_policy=require_companion_policy(self.process_policy))
         if code:
             raise AdapterRefusal("SOURCE_PIN_MISMATCH", "Cannot verify bound checkout")
         return output

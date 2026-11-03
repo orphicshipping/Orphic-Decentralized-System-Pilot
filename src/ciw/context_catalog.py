@@ -26,6 +26,10 @@ def source_registry():
     from .offline_intake import profile_manifest as intake
     from .proof_profile import profile_manifest as proof
     from .domain_read_profile import profile_manifest as domain_read
+    from .mcp_toolbox import profile_manifest as toolbox
+    from .live_intake import profile_manifest as live
+    from .metrology_operations import profile_manifest as metrology
+    from .data_database import profile_manifest as data_database
     return deepcopy({
         # descriptions does not access instance state; use the existing method.
         'control': ControlHost.descriptions(None),
@@ -35,7 +39,9 @@ def source_registry():
         'schematic': schematic()['tools'], 'clocksync': clocksync()['tools'],
         'state': state()['tools'], 'nise': nise()['tools'],
         'intake': intake()['tools'], 'proof': proof()['tools'],
-        'domain_read': domain_read()['tools'],
+        'domain_read': domain_read()['tools'], 'toolbox': toolbox()['tools'], 'live': live()['tools'],
+        'metrology': metrology()['tools'],
+        'data_database': data_database()['tools'],
     })
 
 
@@ -62,6 +68,14 @@ def _binding_scope(family, host):
         value['trust'] = host.registry.describe()
         value['native'] = None if host.native is None else {
             'scope': list(host.native.scope), 'binding_id': host.native._verifier._binding_id}
+    elif family == 'toolbox':
+        value['toolbox'] = host.binding_scope()
+    elif family == 'live':
+        value['live'] = host.binding_scope()
+    elif family == 'metrology':
+        value['metrology'] = host.binding_scope()
+    elif family == 'data_database':
+        value['data_database'] = host.binding_scope()
     elif family == 'control':
         value['host_policy'] = host.owner._host_policy
     elif family == 'logistics':

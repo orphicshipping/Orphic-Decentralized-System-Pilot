@@ -1,0 +1,24 @@
+[package]
+name = "odsp-numerical-core"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+publish = false
+build = "build.rs"
+
+[dependencies]
+serde = { version = "=1.0.229", features = ["derive"] }
+serde_json = { version = "=1.0.145", features = ["float_roundtrip"] }
+nalgebra = { version = "=0.34.1", default-features = false, features = ["std"] }
+libm = "=0.2.16"
+libloading = "=0.8.9"
+execution-core = { path = "../../instruments/execution/compute-runtime/crates/execution-core" }
+
+[build-dependencies]
+execution-commitment = { path = "../../instruments/execution/compute-runtime/crates/execution-commitment" }
+serde_json = "=1.0.145"
+
+[profile.release]
+overflow-checks = true
+panic = "abort"
+strip = true

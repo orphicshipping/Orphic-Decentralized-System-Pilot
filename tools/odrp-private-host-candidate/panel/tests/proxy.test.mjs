@@ -24,8 +24,9 @@ async function sign(claimOverrides = {}, headerOverrides = {}, rawClaims) {
   const value = b64(JSON.stringify(header)) + '.' + b64(rawClaims ?? JSON.stringify(claims));
   return value + '.' + b64(await crypto.subtle.sign('RSASSA-PKCS1-v1_5', key.privateKey, Buffer.from(value)));
 }
-const mapping = (patch = {}) => ({schema: 'odsp.panel-principals.v1', principals: [
-  {subject: SUBJECT, principal: 'fixture-principal', enabled: true, backend_token: TOKEN, ...patch}]});
+const mapping = (patch = {}) => ({schema: 'odsp.panel-principals.v2', principals: [
+  {subject: SUBJECT, principal: 'fixture-principal', enabled: true, backend_token: TOKEN, credential_id: 'fixture-credential-1',
+    not_before: NOW / 1000 - 1, expires_at: NOW / 1000 + 3599, ...patch}]});
 function setup(options = {}) {
   const backendCalls = [], keyCalls = [];
   let instant = NOW;
@@ -35,7 +36,7 @@ function setup(options = {}) {
       backendCalls.push(request);
       return options.backend ? options.backend(request) : Response.json({fixture: true, retention: {committed: true}});
     }}};
-  const panel = createPanel({assets, now: () => instant, fetchJwks: async request => {
+  const panel = createPanel({assets, now: options.now ?? (() => instant), fetchJwks: async request => {
     keyCalls.push(request);
     return options.keys ? options.keys(request) : Response.json({keys: [jwk]});
   }});
@@ -112,13 +113,13 @@ test('metadata-absent simple GET and cross-origin preflight cannot initiate cust
 
 test('two exact subjects select distinct server-only backend credentials', async () => {
   const f = setup(), second = {...mapping().principals[0], subject: 'second-subject',
-    principal: 'second-principal', backend_token: 'second-server-only-token-0123456789'};
-  f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v1', principals: [mapping().principals[0], second]});
+    principal: 'second-principal', credential_id: 'second-credential', backend_token: 'second-server-only-token-0123456789'};
+  f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v2', principals: [mapping().principals[0], second]});
   assert.equal((await f.panel.fetch(request(await sign()), f.env)).status, 200);
   assert.equal((await f.panel.fetch(request(await sign({sub: second.subject})), f.env)).status, 200);
   assert.deepEqual(f.backendCalls.map(r => r.headers.get('authorization')),
     ['Bearer ' + TOKEN, 'Bearer ' + second.backend_token]);
-  f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v1', principals: [
+  f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v2', principals: [
     {...mapping().principals[0], enabled: false}, second]});
   await refused(await f.panel.fetch(request(await sign()), f.env), 'not_started', 401);
   assert.equal((await f.panel.fetch(request(await sign({sub: second.subject})), f.env)).status, 200);
@@ -175,7 +176,7 @@ test('configuration has no credential fallback and binds one exact subject to on
   for (const rows of [[mapping().principals[0], mapping().principals[0]],
     [mapping().principals[0], {...mapping().principals[0], subject: 'other', principal: 'other'}],
     [{...mapping().principals[0], token: TOKEN}], [{...mapping().principals[0], backend_token: 'too-short'}]]) {
-    const f = setup(); f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v1', principals: rows});
+    const f = setup(); f.env.PANEL_PRINCIPALS_JSON = JSON.stringify({schema: 'odsp.panel-principals.v2', principals: rows});
     await refused(await f.panel.fetch(request(token), f.env), 'not_started', 503);
   }
   const f = setup(); f.env.PANEL_PRINCIPALS_JSON = JSON.stringify(mapping()).replace('"enabled":true', '"enabled":false,"enabled":true');
@@ -203,6 +204,113 @@ test('mapping revocation and token expiry during request upload prevent dispatch
     }});
     await refused(await f.panel.fetch(request(token, '/api/calls', {method: 'POST', body, duplex: 'half'}), f.env), 'not_started', 401);
     assert.equal(f.backendCalls.length, 0);
+  }
+});
+
+test('version two mappings require unique identifiers and at most one-hour integer validity', async () => {
+  const token=await sign();
+  const mutations=[m=>m.schema='odsp.panel-principals.v1', m=>delete m.principals[0].credential_id,
+    m=>m.principals[0].credential_id='', m=>delete m.principals[0].not_before,
+    m=>delete m.principals[0].expires_at, m=>m.principals[0].expires_at=m.principals[0].not_before,
+    m=>m.principals[0].expires_at=m.principals[0].not_before+3601,
+    m=>m.principals.push({...m.principals[0],subject:'other',principal:'other',backend_token:TOKEN+'other'})];
+  for(const field of ['not_before','expires_at'])for(const value of [true,null,'123',-1,1.5,Number.MAX_SAFE_INTEGER+1])
+    mutations.push(m=>m.principals[0][field]=value);
+  for(const mutate of mutations){
+    const f=setup(),m=mapping();mutate(m);f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(m);
+    await refused(await f.panel.fetch(request(token),f.env),'not_started',503);assert.equal(f.backendCalls.length,0);
+  }
+});
+
+test('credential not_before and expiry are exact and protect both assets and API', async () => {
+  const token=await sign();
+  for(const path of ['/','/api/tools']){
+    const f=setup();f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(mapping({not_before:NOW/1000+1,expires_at:NOW/1000+2}));
+    await refused(await f.panel.fetch(request(token,path),f.env),'not_started',401);
+    f.advance(1000);assert.equal((await f.panel.fetch(request(token,path),f.env)).status,200);
+    f.advance(1000);await refused(await f.panel.fetch(request(token,path),f.env),'not_started',401);
+    assert.equal(f.backendCalls.length,path==='/'?0:1);
+  }
+});
+
+test('same-principal rotation renewal and credential expiry during body upload never dispatch', async () => {
+  const token=await sign();
+  for(const change of ['id','token','renew','expire']){
+    const f=setup();f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(mapping({expires_at:NOW/1000+1}));
+    const body=new ReadableStream({pull(controller){
+      const m=JSON.parse(f.env.PANEL_PRINCIPALS_JSON),row=m.principals[0];
+      if(change==='id')row.credential_id='replacement-id';
+      if(change==='token')row.backend_token=TOKEN+'replacement';
+      if(change==='renew')row.expires_at+=1;
+      if(change==='expire')f.advance(1000);
+      f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(m);
+      controller.enqueue(new TextEncoder().encode('{}'));controller.close();
+    }},{highWaterMark:0});
+    await refused(await f.panel.fetch(request(token,'/api/calls',{method:'POST',body,duplex:'half'}),f.env),'not_started',401);
+    assert.equal(f.backendCalls.length,0,change);
+  }
+});
+
+test('mapping rotation during asynchronous JWKS verification cannot switch to a replacement credential', async () => {
+  let f;
+  f=setup({keys:async()=>{
+    await Promise.resolve();f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(mapping({credential_id:'replacement',backend_token:TOKEN+'new'}));
+    return Response.json({keys:[jwk]});
+  }});
+  await refused(await f.panel.fetch(request(await sign()),f.env),'not_started',401);
+  assert.equal(f.backendCalls.length,0);
+});
+
+test('expiry rotation and revocation before response disclosure suppress results and preserve possible-effect uncertainty', async () => {
+  const token=await sign();
+  for(const phase of ['headers','body'])for(const path of ['/api/tools','/api/calls','/api/readiness'])
+    for(const change of ['credential-expiry','assertion-expiry','id','token','renew','revoke','principal','issuer']){
+      let f;
+      const mutate=()=>{
+        const m=JSON.parse(f.env.PANEL_PRINCIPALS_JSON),row=m.principals[0];
+        if(change==='credential-expiry')f.advance(1000);
+        if(change==='assertion-expiry')f.advance(601000);
+        if(change==='id')row.credential_id='replacement';
+        if(change==='token')row.backend_token=TOKEN+'replacement';
+        if(change==='renew')row.expires_at+=1;
+        if(change==='revoke')row.enabled=false;
+        if(change==='principal')row.principal='replacement';
+        if(change==='issuer')f.env.ACCESS_ISSUER='https://replacement.cloudflareaccess.com';
+        f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(m);
+      };
+      f=setup({backend:async()=>{
+        if(phase==='headers')mutate();
+        return new Response(new ReadableStream({pull(controller){
+          if(phase==='body')mutate();
+          controller.enqueue(new TextEncoder().encode('{"private_result":"backend-sensitive","retention":{"committed":true}}'));
+          controller.close();
+        }},{highWaterMark:0}),{headers:{'content-type':'application/json'}});
+      }});
+      // A short credential permits testing its own expiry independently of the Access assertion.
+      f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(mapping({expires_at:NOW/1000+1}));
+      const response=await f.panel.fetch(request(token,path,path==='/api/calls'?{method:'POST',body:'{}'}:{}),f.env);
+      const value=await refused(response,path==='/api/readiness'?'not_started':'unconfirmed',401);
+      assert.equal(JSON.stringify(value).includes('backend-sensitive'),false,phase+':'+change);
+      assert.equal(f.backendCalls.length,1);assert.equal(Object.hasOwn(value,'retention'),false);
+    }
+});
+
+test('real clock expiration blocks a previously valid panel mapping without revoking its Access assertion', async () => {
+  const seconds=Math.floor(Date.now()/1000),f=setup({now:()=>Date.now()});
+  f.env.PANEL_PRINCIPALS_JSON=JSON.stringify(mapping({not_before:seconds-1,expires_at:seconds+2}));
+  const token=await sign({iat:seconds-1,exp:seconds+600});
+  assert.equal((await f.panel.fetch(request(token),f.env)).status,200);
+  await new Promise(resolve=>setTimeout(resolve,Math.max(0,(seconds+2)*1000-Date.now())+15));
+  await refused(await f.panel.fetch(request(token),f.env),'not_started',401);
+  assert.equal(f.backendCalls.length,1);
+});
+
+test('non-Error backend rejection still preserves uncertainty without disclosing thrown values', async () => {
+  const token=await sign();
+  for(const thrown of [null,undefined,'private thrown value',{details:'private thrown value'}]){
+    const f=setup({backend:()=>{throw thrown;}});
+    const value=await refused(await f.panel.fetch(request(token),f.env),'unconfirmed',502);
+    assert.equal(f.backendCalls.length,1);assert.equal(JSON.stringify(value).includes('private thrown value'),false);
   }
 });
 

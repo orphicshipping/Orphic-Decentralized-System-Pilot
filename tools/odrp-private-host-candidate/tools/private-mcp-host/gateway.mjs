@@ -11,6 +11,7 @@ export const ODRP_READ_NAMES = new Set(['ncp_system_status', 'ncp_knowledge_over
   'ncp_knowledge_relations', 'ncp_knowledge_review_queue', 'ncp_evidence_overview',
   'ncp_evidence_search', 'ncp_evidence_representations', 'ncp_evidence_source', 'ncp_evidence_span']);
 export const REQUEST_BODY_TIMEOUT_MS = 5000; // Local bound, not a deployed SLO.
+export const MAX_CREDENTIAL_SECONDS = 3600;
 const ID = /^[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}$/;
 const REF = /^sha256:[0-9a-f]{64}$/;
 const encoder = new TextEncoder();
@@ -55,43 +56,62 @@ function parseUniqueJson(text) {
 function authConfig(env) {
   if (typeof env.PRINCIPAL_AUTH_JSON !== 'string' || encoder.encode(env.PRINCIPAL_AUTH_JSON).length > 65536)
     throw Error('authentication_configuration_refused');
-  const config = JSON.parse(env.PRINCIPAL_AUTH_JSON);
-  if (!exact(config, ['schema','policy_revision','policy_sha256','principals']) || config.schema !== 'ciw.bearer-principals.v1'
+  const config = parseUniqueJson(env.PRINCIPAL_AUTH_JSON);
+  if (!exact(config, ['schema','policy_revision','policy_sha256','principals']) || config.schema !== 'ciw.bearer-principals.v2'
       || typeof config.policy_revision !== 'string' || !ID.test(config.policy_revision)
       || typeof config.policy_sha256 !== 'string' || !REF.test(config.policy_sha256)
       || !Array.isArray(config.principals) || config.principals.length < 1 || config.principals.length > 64)
     throw Error('authentication_configuration_refused');
-  const ids = new Set(), hashes = new Set();
+  const ids = new Set(), hashes = new Set(), credentials = new Set();
   for (const row of config.principals) {
-    if (!exact(row, ['principal','enabled','token_sha256']) || typeof row.principal !== 'string' || !ID.test(row.principal)
+    if (!exact(row, ['principal','enabled','token_sha256','credential_id','not_before','expires_at'])
+        || typeof row.principal !== 'string' || !ID.test(row.principal)
         || typeof row.enabled !== 'boolean' || typeof row.token_sha256 !== 'string' || !/^[0-9a-f]{64}$/.test(row.token_sha256)
-        || ids.has(row.principal) || hashes.has(row.token_sha256)) throw Error('authentication_configuration_refused');
-    ids.add(row.principal); hashes.add(row.token_sha256);
+        || typeof row.credential_id !== 'string' || !ID.test(row.credential_id)
+        || !Number.isSafeInteger(row.not_before) || row.not_before < 0 || !Number.isSafeInteger(row.expires_at)
+        || row.expires_at <= row.not_before || row.expires_at - row.not_before > MAX_CREDENTIAL_SECONDS
+        || ids.has(row.principal) || hashes.has(row.token_sha256) || credentials.has(row.credential_id))
+      throw Error('authentication_configuration_refused');
+    ids.add(row.principal); hashes.add(row.token_sha256); credentials.add(row.credential_id);
   }
   return config;
 }
-function configuredPrincipal(config, principal) {
+function configuredPrincipal(config, principal, now) {
   const row = config.principals.find(row => row.principal === principal);
-  if (!row || !row.enabled) throw Error('principal_refused');
+  const seconds = Math.floor(now / 1000);
+  if (!Number.isSafeInteger(now) || now < 0 || !row || !row.enabled
+      || seconds < row.not_before || seconds >= row.expires_at) throw Error('principal_refused');
   return row;
 }
+function credentialKey(row) {
+  return JSON.stringify(['ciw.bearer-credential.v2', row.principal, row.credential_id,
+    row.token_sha256, row.not_before, row.expires_at]);
+}
+function recheck(env, config, row, now) {
+  const current = authConfig(env), active = configuredPrincipal(current, row.principal, now);
+  if (config.policy_revision !== current.policy_revision || config.policy_sha256 !== current.policy_sha256
+      || credentialKey(active) !== credentialKey(row)) throw Error('principal_refused');
+}
 async function context(config, principal) {
-  configuredPrincipal(config, principal);
   return {schema:'ciw.principal-context.v1', principal, owner:'principal:' + await digest(principal),
     policy_revision:config.policy_revision, policy_sha256:config.policy_sha256};
 }
 // Only call on the internal binding. route() reconstructs every header first.
 // The Worker rechecks current auth configuration after waiting in its queue.
-export async function principalContext(request, env) {
+export async function principalContext(request, env, now = () => Date.now()) {
   const config = authConfig(env), principal = request.headers.get('x-odsp-principal');
   if (typeof principal !== 'string' || !ID.test(principal)) throw Error('principal_refused');
-  const value = await context(config, principal);
+  const row = configuredPrincipal(config, principal, now());
+  const [value, credentialHash] = await Promise.all([context(config, principal), digest(credentialKey(row))]);
+  recheck(env, config, row, now());
   if (request.headers.get('x-odsp-owner') !== value.owner
       || request.headers.get('x-odsp-policy-revision') !== value.policy_revision
-      || request.headers.get('x-odsp-policy-sha256') !== value.policy_sha256) throw Error('principal_refused');
+      || request.headers.get('x-odsp-policy-sha256') !== value.policy_sha256
+      || request.headers.get('x-odsp-credential-id') !== row.credential_id
+      || request.headers.get('x-odsp-credential-sha256') !== credentialHash) throw Error('principal_refused');
   return value;
 }
-export async function route(request, env) {
+export async function route(request, env, _executionContext, now = () => Date.now()) {
   const url = new URL(request.url);
   if (typeof env.PUBLIC_HOSTNAME !== 'string' || !/^[a-z0-9](?:[a-z0-9.-]{0,251}[a-z0-9])?$/.test(env.PUBLIC_HOSTNAME)
       || typeof env.HOST_SINGLETON !== 'string' || !ID.test(env.HOST_SINGLETON))
@@ -101,18 +121,22 @@ export async function route(request, env) {
   let config;
   try { config = authConfig(env); }
   catch { return json({error:{code:'authentication_configuration_refused'}},503); }
+  const binding = env.HOST, singleton = env.HOST_SINGLETON, hostname = env.PUBLIC_HOSTNAME;
   const supplied = request.headers.get('authorization') || '';
   const match = /^Bearer ([\x21-\x7e]{32,512})$/.exec(supplied);
   if (!match) return json({error:{code:'unauthorized'}},401);
   const hash = await digest(match[1]);
-  let principal = null;
+  let authenticated = null;
   // Compare all fixed-size digests. Config prevents ambiguous shared secrets.
   for (const row of config.principals) {
     let difference = 0;
     for (let i=0; i<64; i++) difference |= hash.charCodeAt(i) ^ row.token_sha256.charCodeAt(i);
-    if (difference === 0 && row.enabled) principal = row.principal;
+    if (difference === 0) authenticated = row;
   }
-  if (principal === null) return json({error:{code:'unauthorized'}},401);
+  try {
+    if (authenticated === null) throw Error('principal_refused');
+    recheck(env, config, authenticated, now());
+  } catch { return json({error:{code:'unauthorized'}},401); }
   if (!ROUTES.has(`${request.method} ${url.pathname}`)) return json({error:{code:'not_found'}},404);
   let body, serializedBody;
   if (request.method === 'POST') {
@@ -149,19 +173,28 @@ export async function route(request, env) {
     try { body = parseUniqueJson(new TextDecoder('utf-8', {fatal: true}).decode(bytes)); }
     catch { return json({error: {code: 'invalid_json'}}, 400); }
     if (!body || typeof body !== 'object' || Array.isArray(body)
-        || ['principal','owner','identity','grants','policy','policy_revision','policy_sha256'].some(key => key in body))
+        || ['principal','owner','identity','grants','policy','policy_revision','policy_sha256',
+          'credential_id','not_before','expires_at'].some(key => key in body))
       return json({error: {code: 'invalid_request'}}, 400);
     // Native parsing can accept nesting the serializer cannot safely traverse.
     // Refuse before identity/host resolution and reuse the checked wire body.
     try { serializedBody = JSON.stringify(body); }
     catch { return json({error: {code: 'invalid_json'}}, 400); }
   }
-  const identity = await context(config, principal);
+  let identity, credentialHash;
+  try {
+    [identity, credentialHash] = await Promise.all([context(config, authenticated.principal), digest(credentialKey(authenticated))]);
+    // Recheck after body upload and both async digests, immediately before dispatch.
+    recheck(env, config, authenticated, now());
+    if (request.signal.aborted || env.HOST !== binding || env.HOST_SINGLETON !== singleton
+        || env.PUBLIC_HOSTNAME !== hostname) throw Error('principal_refused');
+  } catch { return json({error:{code:'unauthorized'}},401); }
   // Neither credentials nor caller internal headers are forwarded, even on GET.
   const headers = {'x-odsp-principal':identity.principal,'x-odsp-owner':identity.owner,
-    'x-odsp-policy-revision':identity.policy_revision,'x-odsp-policy-sha256':identity.policy_sha256};
+    'x-odsp-policy-revision':identity.policy_revision,'x-odsp-policy-sha256':identity.policy_sha256,
+    'x-odsp-credential-id':authenticated.credential_id,'x-odsp-credential-sha256':credentialHash};
   if (body !== undefined) headers['Content-Type'] = 'application/json';
   const forwarded = new Request(url, {method:request.method,headers,
     ...(serializedBody === undefined ? {} : {body:serializedBody})});
-  return env.HOST.getByName(env.HOST_SINGLETON).fetch(forwarded);
+  return binding.getByName(singleton).fetch(forwarded);
 }

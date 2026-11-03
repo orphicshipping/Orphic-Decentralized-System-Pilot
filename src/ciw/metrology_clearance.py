@@ -624,7 +624,9 @@ def register():
 
 
 class Provider:
-    def __init__(self, repository, revision, *, python=sys.executable):
+    def __init__(self, repository, revision, *, python=sys.executable, process_policy=None):
+        from .companion_policy_config import bind_process_policy
+        policy = bind_process_policy(repository, process_policy)
         self.adapter = PinnedSubprocessAdapter(
             repository,
             revision,
@@ -633,6 +635,7 @@ class Provider:
             python_executable=python,
             timeout_seconds=30,
             max_output_bytes=256 * 1024,
+            process_policy=policy,
         )
         self._bound = self.runtime_identity()
 
@@ -763,6 +766,8 @@ def main(argv=None):
         p.add_argument("--provider", required=True)
         p.add_argument("--revision", required=True)
         p.add_argument("--python", default=sys.executable)
+        p.add_argument("--companion-policies", type=Path,
+                       help="Host-only bounded policy file selecting bim-clearance/cse isolation")
         p.add_argument("--resume", action="store_true")
         if command == "run":
             p.add_argument("--attempt", required=True)
@@ -779,7 +784,10 @@ def main(argv=None):
 
             print(encode(_validated(parse(Path(args.workspace).read_bytes()))).decode())
             return 0
-        provider = Provider(args.provider, args.revision, python=args.python)
+        from .companion_policy_config import load_companion_policies, policy_set
+        policies = policy_set(load_companion_policies(args.companion_policies), 'bim-clearance')
+        provider = Provider(args.provider, args.revision, python=args.python,
+                            process_policy=None if policies is None else policies['cse'])
         with from_profile(
             Path(args.profile),
             instrument="bim-clearance",

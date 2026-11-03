@@ -95,6 +95,7 @@ export class NCPHost extends DurableObject {
         try { await this.health(config, release, deadline, false); ready = true; }
         catch (error) { reason = error.code || 'host_not_ready'; }
       }
+      await principalContext(request, this.env);
       return json({schema: 'ciw.private-readiness.v1', ready,
         fenced: Boolean(saved.pending), reason, storage_capacity,
         owner_id: config.owner_id, generation: config.generation, epoch: saved.head?.epoch || null,
@@ -123,11 +124,13 @@ export class NCPHost extends DurableObject {
       binding = {id: crypto.randomUUID(), owner_id: config.owner_id, generation: config.generation,
         epoch: this.writerEpoch, base_commit: before.committed?.transaction_id || null, release};
       const request_sha256 = await digest(JSON.stringify({action, payload, identity}));
+      await principalContext(request, this.env);
       // Admission can itself commit and then fail to return. From this point any
       // ambiguous I/O must be inspected, never interpreted as rolled back.
       admitted = true;
       phase = 'admission';
       await bounded(() => admit(this.ctx.storage, config, binding, {...identity, request_sha256}, before, deadline), deadline, config.storage_ms);
+      await principalContext(request, this.env);
       phase = 'execution';
       const result = await bounded(async signal => {
         const response = await port.fetch('http://container/transaction', {method: 'POST', signal,
@@ -151,6 +154,7 @@ export class NCPHost extends DurableObject {
       await bounded(() => this.env.RETAINED.put(pointer.key, result.state,
         {customMetadata: {owner: config.owner_id, generation: config.generation, sha256: hash, transaction: binding.id}}), deadline, config.storage_ms);
       await bounded(() => publish(this.ctx.storage, config, binding, pointer, deadline), deadline, config.storage_ms);
+      await principalContext(request, this.env);
       return json(acknowledgment, result.status);
     } catch (error) {
       if (!admitted) return refusal(error.code || 'request_refused');

@@ -19,6 +19,7 @@ from pathlib import Path
 from .adapters.protocol import AdapterRefusal, InstrumentManifest
 from .adapters.subprocess import PinnedSubprocessAdapter
 from .core.identities import digest, evidence_id
+from .companion_policy_config import bind_process_policy, bind_process_policies, check_replay_policy
 from .operations.registry import Operation
 from .session import Session, read_json
 
@@ -29,7 +30,10 @@ RCI_OPERATION_V2 = "rci.calibrate.v2"
 FSRT_OPERATION_V2 = "fsrt.tank-reconstruct.v2"
 
 
-def _runtime(name, repo, python_executable=None, expected=None):
+def _runtime(name, repo, python_executable=None, expected=None, *, process_policy=None):
+    process_policy = bind_process_policy(repo, process_policy)
+    if expected is not None:
+        check_replay_policy(process_policy, expected)
     pins = json.loads(files("ciw").joinpath("adapter-runtimes.json").read_text())
     spec = pins[name]
     kwargs = {}
@@ -44,7 +48,8 @@ def _runtime(name, repo, python_executable=None, expected=None):
                   "expected_python_version": expected["python_version"],
                   "expected_dependencies": expected["dependencies"]}
     return PinnedSubprocessAdapter(Path(repo), spec["revision"], spec["module"],
-                                   python_executable=python_executable or sys.executable, **kwargs)
+                                   python_executable=python_executable or sys.executable,
+                                   process_policy=process_policy, **kwargs)
 
 
 def _rci_digest(value):
@@ -255,8 +260,8 @@ def _fsrt_inputs(run, parameters):
                 "evidence_ids": ["sha256:" + r["derived_evidence_digest"] for r in records], "unit": "kg"}]}
 
 
-def bind_fsrt(session, repo, python_executable=None, expected=None):
-    adapter = _runtime("fsrt", repo, python_executable, expected)
+def bind_fsrt(session, repo, python_executable=None, expected=None, *, process_policy=None):
+    adapter = _runtime("fsrt", repo, python_executable, expected, process_policy=process_policy)
     operation = fsrt_operation(session.run)
     session.operations.register(Operation(operation, "state_estimator",
         lambda run, parameters: adapter.invoke(operation, _fsrt_inputs_v2(run, parameters) if operation == FSRT_OPERATION_V2 else _fsrt_inputs(run, parameters)),
@@ -339,7 +344,7 @@ def _evaluate_and_save(session, path, parameters=None):
     return _summary(session, path)
 
 
-def create_investigation(inputs, rci_repo, fsrt_repo, output_dir, python_executable=None):
+def create_investigation(inputs, rci_repo, fsrt_repo, output_dir, python_executable=None, *, process_policies=None):
     required = {"schema", "sensors", "cross_assembly_independent", "model", "source_description"}
     if isinstance(inputs, dict) and inputs.get("schema") == "ciw.tank-investigation-input.v2":
         required.add("model_independence")
@@ -359,7 +364,8 @@ def create_investigation(inputs, rci_repo, fsrt_repo, output_dir, python_executa
     names = [s.get("name") for s in inputs["sensors"]]
     if any(not isinstance(n, str) or not n for n in names) or len(set(names)) != 2:
         raise ValueError("Two distinct sensor names are required")
-    adapter = _runtime("rci", rci_repo, python_executable)
+    policies = bind_process_policies({"rci": rci_repo, "fsrt": fsrt_repo}, process_policies)
+    adapter = _runtime("rci", rci_repo, python_executable, process_policy=policies["rci"])
     operation = RCI_OPERATION_V2 if inputs["schema"] == "ciw.tank-investigation-input.v2" else RCI_OPERATION
     sensors = []
     # No workspace or result is written unless all calibrations are applicable.
@@ -372,7 +378,7 @@ def create_investigation(inputs, rci_repo, fsrt_repo, output_dir, python_executa
         sensors.append({"name": sensor["name"], "request": copy.deepcopy(request), "measurement": measurement})
     run = _make_run(inputs, sensors, adapter.runtime_identity())
     session = Session(run, Path(output_dir))
-    bind_fsrt(session, fsrt_repo, python_executable)
+    bind_fsrt(session, fsrt_repo, python_executable, process_policy=policies["fsrt"])
     return _evaluate_and_save(session, Path(output_dir) / "workspace.json")
 
 
@@ -385,16 +391,12 @@ def inspect_investigation(path, evaluated_at=None):
         return _summary(session, path, evaluated_at)
 
 
-def replay_investigation(path, rci_repo, fsrt_repo, output_dir, python_executable=None):
+def replay_investigation(path, rci_repo, fsrt_repo, output_dir, python_executable=None, *, process_policies=None):
     # Validate the whole saved object before invoking any scientific code.
     with tempfile.TemporaryDirectory(prefix="ciw-replay-validate-") as directory:
         original = Session.from_workspace(Path(path), Path(directory))
         source = _validate_source(original.run)
-        rci = _runtime("rci", rci_repo, python_executable, source["runtime"])
-        for sensor in source["sensors"]:
-            actual = rci.invoke(sensor["request"]["operation_id"], sensor["request"]["inputs"])
-            if digest(actual) != digest(sensor["measurement"]):
-                raise AdapterRefusal("replay_mismatch", "Replayed calibration differs from retained derived evidence")
+        policies = bind_process_policies({"rci": rci_repo, "fsrt": fsrt_repo}, process_policies)
         operation = fsrt_operation(original.run)
         successful = [r for r in original.results.values() if r["operation_id"] == operation]
         previous = [e for e in original.executions.values() if e["operation_id"] == operation]
@@ -404,11 +406,20 @@ def replay_investigation(path, rci_repo, fsrt_repo, output_dir, python_executabl
         if expected is None:
             raise AdapterRefusal("replay_unavailable", "The retained attempt had no bound numerical runtime; execute a new operation explicitly")
         parameters = previous[-1]["parameters"]
-        fsrt = _runtime("fsrt", fsrt_repo, python_executable, expected)
+        # Both host policies must match retained evidence before either
+        # companion runs. A receipt cannot supply or repair a missing policy.
+        check_replay_policy(policies["rci"], source["runtime"])
+        check_replay_policy(policies["fsrt"], expected)
+        rci = _runtime("rci", rci_repo, python_executable, source["runtime"], process_policy=policies["rci"])
+        for sensor in source["sensors"]:
+            actual = rci.invoke(sensor["request"]["operation_id"], sensor["request"]["inputs"])
+            if digest(actual) != digest(sensor["measurement"]):
+                raise AdapterRefusal("replay_mismatch", "Replayed calibration differs from retained derived evidence")
+        fsrt = _runtime("fsrt", fsrt_repo, python_executable, expected, process_policy=policies["fsrt"])
         # Pin validation precedes any writes into the requested destination.
         fsrt.runtime_identity()
     session = Session.from_workspace(Path(path), Path(output_dir))
-    bind_fsrt(session, fsrt_repo, python_executable, expected)
+    bind_fsrt(session, fsrt_repo, python_executable, expected, process_policy=policies["fsrt"])
     summary = _evaluate_and_save(session, Path(output_dir) / "workspace.json", parameters)
     if successful and previous[-1]["status"] == "completed" and summary["status"] == "completed":
         comparison = digest(successful[-1]["data"]) == digest(summary["results"][-1]["data"])

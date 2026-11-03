@@ -7,7 +7,7 @@ import {join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {execFileSync} from 'node:child_process';
 import {ODRP_READ_NAMES} from './gateway.mjs';
-import {DiskStorage,FileBucket,environment,request,container,loadWorker} from './storage_fixture.mjs';
+import {DiskStorage,FileBucket,environment,request,container,loadWorker,fixtureCredential} from './storage_fixture.mjs';
 import {configuration,digest,snapshot,exportBackup,restoreBackup,publish} from './storage.mjs';
 const NCPHost=await loadWorker();
 async function fixture(t,overrides={},handler){
@@ -146,6 +146,91 @@ test('finite queue rejects excess requests and rechecks current identity before 
   const second=f.host.fetch(await request());const third=await parsed(await f.host.fetch(await request()));
   assert.equal(third.status,429);assert.equal(third.body.error.effect_state,'not_started');
   release();await first;await second;assert.equal(f.native.calls.filter(x=>x.endsWith('/transaction')).length,1);
+});
+const changeCredential=(env,change)=>{
+  const value=JSON.parse(env.PRINCIPAL_AUTH_JSON);change(value.principals[0]);env.PRINCIPAL_AUTH_JSON=JSON.stringify(value);
+};
+async function successfulContainerReply(input){
+  const state='synthetic-credential-lifecycle-checkpoint';
+  return Response.json({result:{data:{private_result:'synthetic-sensitive-result'}},status:200,state,
+    transaction:input.transaction,identity:input.identity,checkpoint_sha256:await digest(state)});
+}
+async function waitUntil(predicate){
+  const stop=Date.now()+2000;
+  while(!predicate()){assert.ok(Date.now()<stop,'fixture reached the intended asynchronous boundary');await new Promise(resolve=>setTimeout(resolve,5));}
+}
+test('actual Worker queue refuses rotated and revoked credentials before a second container operation',async t=>{
+  for(const change of [r=>r.credential_id='replacement',r=>r.token_sha256='a'.repeat(64),r=>r.enabled=false]){
+    let release;
+    const f=await fixture(t,{},input=>new Promise(resolve=>{release=async()=>resolve(await successfulContainerReply(input));}));
+    const first=f.host.fetch(await request());await waitUntil(()=>release);
+    const second=f.host.fetch(await request());await waitUntil(()=>f.host.queued===2);
+    changeCredential(f.env,change);await release();
+    const [completed,queued]=await Promise.all([first.then(parsed),second.then(parsed)]);
+    assert.equal(completed.body.error.effect_state,'committed_response_unconfirmed');
+    assert.equal(queued.body.error.effect_state,'not_started');
+    assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,1);
+    assert.equal(f.bucket.puts,1);assert.ok(await f.storage.get('committed'));
+    assert.ok(!JSON.stringify(completed.body).includes('synthetic-sensitive-result'));
+  }
+});
+test('real credential expiry while in the Worker queue prevents execution and stale disclosure',async t=>{
+  let release;
+  const f=await fixture(t,{},input=>new Promise(resolve=>{release=async()=>resolve(await successfulContainerReply(input));}));
+  const start=Math.floor(Date.now()/1000),credential={...fixtureCredential,not_before:start-1,expires_at:start+2};
+  changeCredential(f.env,row=>Object.assign(row,credential));
+  const first=f.host.fetch(await request('/api/tools',undefined,credential));await waitUntil(()=>release);
+  const second=f.host.fetch(await request('/api/tools',undefined,credential));await waitUntil(()=>f.host.queued===2);
+  await new Promise(resolve=>setTimeout(resolve,Math.max(0,credential.expires_at*1000-Date.now())+15));
+  await release();const [completed,queued]=await Promise.all([first.then(parsed),second.then(parsed)]);
+  assert.equal(queued.body.error.effect_state,'not_started');
+  assert.equal(completed.body.error.effect_state,'committed_response_unconfirmed');
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,1);
+  assert.ok(await f.storage.get('committed'));assert.equal(f.bucket.puts,1);
+});
+test('credential rotation during health preflight refuses before durable admission',async t=>{
+  const f=await fixture(t),getPort=f.native.getTcpPort.bind(f.native);
+  f.native.getTcpPort=()=>{const port=getPort();return {async fetch(url,options){
+    const result=await port.fetch(url,options);
+    if(url.endsWith('/health'))changeCredential(f.env,row=>row.credential_id='after-health');
+    return result;
+  }};};
+  const result=await parsed(await f.host.fetch(await request()));
+  assert.equal(result.body.error.effect_state,'not_started');
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,0);
+  assert.equal(await f.storage.get('pending'),undefined);assert.equal(f.bucket.puts,0);
+});
+test('credential revocation after durable admission starts no container operation and preserves uncertainty',async t=>{
+  const f=await fixture(t);let changed=false;
+  f.storage.afterCommit=async(_,body)=>{
+    if(!changed&&body.pending?.phase==='admitted'){changed=true;changeCredential(f.env,row=>row.enabled=false);}
+  };
+  const result=await parsed(await f.host.fetch(await request()));
+  assert.ok(changed);assert.equal(result.body.error.effect_state,'unconfirmed');
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,0);
+  assert.equal((await f.storage.get('pending')).phase,'unconfirmed');
+  assert.equal(await f.storage.get('committed'),undefined);assert.equal(f.bucket.puts,0);
+});
+test('credential rotation during commit suppresses disclosure while preserving committed bytes and receipt',async t=>{
+  const f=await fixture(t,{},successfulContainerReply);let changed=false;
+  f.storage.afterCommit=async(_,body)=>{
+    if(!changed&&body.committed){changed=true;changeCredential(f.env,row=>row.credential_id='after-commit');}
+  };
+  const result=await parsed(await f.host.fetch(await request()));
+  assert.ok(changed);assert.equal(result.body.error.effect_state,'committed_response_unconfirmed');
+  assert.ok(!JSON.stringify(result.body).includes('synthetic-sensitive-result'));
+  const pointer=await f.storage.get('committed');assert.ok(pointer);assert.ok(await f.bucket.get(pointer.key));
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,1);
+  assert.ok(await f.storage.get('receipt:'+pointer.transaction_id));
+});
+test('readiness rechecks credential after storage preflight without disclosing state',async t=>{
+  const f=await fixture(t),original=f.storage.transaction.bind(f.storage);
+  f.storage.transaction=async operation=>{
+    const result=await original(operation);changeCredential(f.env,row=>row.enabled=false);return result;
+  };
+  const result=await parsed(await f.host.fetch(await request('/api/readiness')));
+  assert.equal(result.body.error.effect_state,'not_started');assert.equal(Object.hasOwn(result.body,'storage_capacity'),false);
+  assert.equal(f.native.calls.filter(url=>url.endsWith('/transaction')).length,0);assert.equal(f.bucket.puts,0);
 });
 test('checkpoint quota refuses before container execution and never deletes retained evidence',async t=>{
   const f=await fixture(t,{max_objects:1});assert.equal((await f.host.fetch(await request())).status,200);

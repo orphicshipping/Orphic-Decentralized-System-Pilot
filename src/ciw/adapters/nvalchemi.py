@@ -29,7 +29,10 @@ exec(compile(source, '<ciw-nvalchemi-worker>', 'exec'), {'__name__': '__main__'}
 
 
 class NvalchemiLJBinding(PinnedSubprocessAdapter):
-    def __init__(self, repository_root, revision, *, python_executable, timeout_seconds=90.0):
+    def __init__(self, repository_root, revision, *, python_executable, timeout_seconds=90.0,
+                 process_policy=None):
+        from ..process_policy import require_companion_policy
+        process_policy = require_companion_policy(process_policy)
         root = Path(repository_root).resolve()
         lock_path = root / "runtimes/nvalchemi-lj/environment.json"
         lock = json.loads(lock_path.read_text())
@@ -50,10 +53,12 @@ class NvalchemiLJBinding(PinnedSubprocessAdapter):
         super().__init__(root, revision, "ciw.adapters.nvalchemi_worker", source_root="src",
                          python_executable=python_executable, timeout_seconds=timeout_seconds,
                          max_output_bytes=128 * 1024, expected_python_version=lock["python_version"],
-                         expected_dependencies=lock["packages"])
+                         expected_dependencies=lock["packages"], process_policy=process_policy)
         self._lock_sha256 = sha256(lock_path.read_bytes()).hexdigest()
 
     def _run(self, code, arguments, stdin=b""):
+        from ..process_policy import require_companion_policy
+        selected = require_companion_policy(self.process_policy)
         # Check before even the metadata probe, so a changed .pth, extension,
         # source module or sourceless .pyc never runs before drift refusal.
         if self._installed_files() != self._provider_files:
@@ -64,7 +69,7 @@ class NvalchemiLJBinding(PinnedSubprocessAdapter):
                  f"pycache_prefix={directory}/bytecode", "-c", _ISOLATED,
                  str(self._site_packages), code, *arguments],
                 cwd=Path(directory), timeout=self.timeout_seconds,
-                limit=self.max_output_bytes, stdin=stdin,
+                limit=self.max_output_bytes, stdin=stdin, process_policy=selected,
             )
 
     def _probe(self):

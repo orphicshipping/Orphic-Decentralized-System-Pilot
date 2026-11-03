@@ -35,13 +35,13 @@ RESULT = object_schema({"outcome": string(16), "candidate": string(16384),
                         "limitations": {"type": "array", "maxItems": 16, "items": string(1024)}})
 
 
-def spec(method, description, properties, *, write=False, role=None, optional=()):
+def spec(method, description, properties, *, write=False, destructive=False, role=None, optional=()):
     schema = object_schema(properties)
     schema["required"] = [k for k in properties if k not in optional]
     return {"method": method, "role": role, "description": description,
             "inputSchema": schema,
             "outputSchema": {"type": "object"},
-            "annotations": {"readOnlyHint": not write, "destructiveHint": False,
+            "annotations": {"readOnlyHint": not write, "destructiveHint": destructive,
                             "idempotentHint": True, "openWorldHint": False}}
 
 
@@ -62,7 +62,7 @@ TOOLS = {
                             {"task_id": string(), "expected_hash": string(), "attempt_id": string(),
                              "result": RESULT}, write=True, role="worker"),
     "ncp_work_cancel": spec("cancel", "Cancel your unsubmitted task and invalidate worker access and claims. Does not promise to stop work already running outside NCP.",
-                            {"task_id": string(), "reason": string(1024)}, write=True, role="requester"),
+                            {"task_id": string(), "reason": string(1024)}, write=True, destructive=True, role="requester"),
 }
 
 

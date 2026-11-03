@@ -10,16 +10,22 @@ export const release = {schema:'odsp.private-release-identity.v1',repository:'ex
   source_commit:'a'.repeat(40),source_tree:'b'.repeat(40),wheel_sha256:'c'.repeat(64),package_digest:'d'.repeat(64)};
 export const policy = {queue_limit:2,transaction_ms:5000,storage_ms:1500,ready_ms:1000,health_ms:500,
   max_request_bytes:4096,max_checkpoint_bytes:4096,max_response_bytes:16384,max_objects:40,max_total_bytes:163840};
+const issuedAt = Math.floor(Date.now() / 1000) - 1;
+export const fixtureCredential = {principal:'alice',enabled:true,token_sha256:'f'.repeat(64),
+  credential_id:'fixture-alice-1',not_before:issuedAt,expires_at:issuedAt+3600};
 export function environment(bucket, overrides = {}) {
   return {RETAINED:bucket,ODSP_OWNER_ID:'synthetic-deployment',ODSP_CHECKPOINT_GENERATION:'synthetic-generation-v1',
     ODSP_RELEASE_IDENTITY:JSON.stringify(release),ODSP_STORAGE_POLICY:JSON.stringify({...policy,...overrides}),
-    PRINCIPAL_AUTH_JSON:JSON.stringify({schema:'ciw.bearer-principals.v1',policy_revision:'fixture-v1',
-      policy_sha256:'sha256:'+'e'.repeat(64),principals:[{principal:'alice',enabled:true,token_sha256:'f'.repeat(64)}]})};
+    PRINCIPAL_AUTH_JSON:JSON.stringify({schema:'ciw.bearer-principals.v2',policy_revision:'fixture-v1',
+      policy_sha256:'sha256:'+'e'.repeat(64),principals:[fixtureCredential]})};
 }
-export async function request(path='/api/tools', payload) {
+export async function request(path='/api/tools', payload, credential=fixtureCredential) {
   return new Request('https://synthetic.invalid'+path,{method:payload===undefined?'GET':'POST',headers:{
     'Content-Type':'application/json','x-odsp-principal':'alice','x-odsp-owner':'principal:'+await digest('alice'),
-    'x-odsp-policy-revision':'fixture-v1','x-odsp-policy-sha256':'sha256:'+'e'.repeat(64)},
+    'x-odsp-policy-revision':'fixture-v1','x-odsp-policy-sha256':'sha256:'+'e'.repeat(64),
+    'x-odsp-credential-id':credential.credential_id,
+    'x-odsp-credential-sha256':await digest(JSON.stringify(['ciw.bearer-credential.v2', credential.principal,
+      credential.credential_id,credential.token_sha256,credential.not_before,credential.expires_at]))},
     ...(payload===undefined?{}:{body:JSON.stringify(payload)})});
 }
 function sqlite(path, action, input) {

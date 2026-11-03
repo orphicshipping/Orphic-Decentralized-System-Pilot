@@ -1,8 +1,10 @@
-"""Host-created Linux process limits and optional Bubblewrap isolation.
+"""Host-created Linux process limits and required companion isolation.
 
 Limits mode is not a network/filesystem sandbox. Bubblewrap mode requires an
 actual successful namespace probe before launching the requested executable.
 Neither mode attests dependencies or makes caller-supplied executable paths safe.
+Companion bindings require Bubblewrap; limits mode is for explicitly trusted
+host helpers and never satisfies the companion isolation contract.
 """
 from __future__ import annotations
 
@@ -31,6 +33,26 @@ class ProcessPolicyHeld(AdapterRefusal):
     def __init__(self, reason="sandbox_backend_unavailable"):
         self.reason = reason
         super().__init__("PROCESS_POLICY_HELD", "Selected process policy is unavailable: " + reason)
+
+
+def minimal_environment():
+    """Return fresh fixed defaults, without reading credentials or host settings."""
+    return dict(_DEFAULT_ENV)
+
+
+def require_companion_policy(policy):
+    """Refuse before companion code when the host has not selected isolation.
+
+    The actual launcher pins and namespace probe are checked by prepare() on
+    every launch. No request argument can select or downgrade this policy.
+    """
+    if policy is None:
+        raise ProcessPolicyHeld("companion_isolation_required")
+    if not isinstance(policy, ProcessPolicy):
+        raise ValueError("process policy must be a host-created ProcessPolicy")
+    if policy.mode != "bubblewrap":
+        raise ProcessPolicyHeld("companion_isolation_required")
+    return policy
 
 
 def executable_sha256(path: str | Path) -> str:

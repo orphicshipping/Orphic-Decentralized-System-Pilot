@@ -412,7 +412,7 @@ def inspect_provider_catalog(value: dict) -> dict:
             "source_text_is_untrusted_data": True, "verification_status": "not_performed"}
 
 
-def builtin_registry(*, bind: bool = False) -> CapabilityRegistry:
+def builtin_registry(*, bind: bool = False, numerical_backend=None) -> CapabilityRegistry:
     # Fixed installed built-in only; no entry-point scan, import-by-name or external probing.
     from .adapters.oscillator import OscillatorAdapter
     registry = CapabilityRegistry()
@@ -423,15 +423,25 @@ def builtin_registry(*, bind: bool = False) -> CapabilityRegistry:
     from .numerical_workflow import manifest
     from .numerical_runtime import runtime_identity
     from .numerical_contracts import OPERATIONS
-    registry.advertise(manifest(), runtime=runtime_identity(),
+    if numerical_backend is not None:
+        from .rust_numerical import RustNumericalBackend
+        if type(numerical_backend) is not RustNumericalBackend:
+            raise ValueError("Require a host-constructed Rust numerical backend")
+    runtime = runtime_identity() if numerical_backend is None else numerical_backend.runtime_identity()
+    registry.advertise(manifest(), runtime=runtime,
         capabilities={name:[name] for name in OPERATIONS})
     if bind:
         from .operations.registry import default_registry
         existing = default_registry()
+        if numerical_backend is not None:
+            from .numerical_workflow import operations
+            native = {operation.operation_id: operation for operation in operations(backend=numerical_backend)}
+        else:
+            native = {}
         # CIW's default registry also has separate specialist operations. Bind
         # only this NET registry's explicitly advertised provider contracts.
         for operation_id in registry.catalog()["operations"]:
-            registry.bind(existing.get(operation_id))
+            registry.bind(native[operation_id] if operation_id in native else existing.get(operation_id))
     return registry
 
 

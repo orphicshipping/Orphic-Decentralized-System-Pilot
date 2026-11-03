@@ -325,10 +325,11 @@ class _ClockAdapter(PinnedSubprocessAdapter):
         return remaining
 
     def _git(self, *arguments):
+        from .process_policy import require_companion_policy
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments],
             cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024,
-            process_policy=self.process_policy)
+            process_policy=require_companion_policy(self.process_policy))
         if code:
             raise AdapterRefusal("SOURCE_PIN_MISMATCH", "Cannot verify bound checkout")
         return data

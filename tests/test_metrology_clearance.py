@@ -14,6 +14,7 @@ from ciw.agent_api import encode, parse
 from ciw.agent_mcp import from_profile, serve
 from ciw.core.identities import evidence_id
 from ciw.session import Session
+from companion_policy_helpers import qualified_policies
 
 ROOT = Path(__file__).resolve().parents[1]
 EXAMPLES = ROOT / "examples/metrology-clearance"
@@ -53,7 +54,8 @@ def provider(tmp_path_factory):
         "Exact native source fixture",
     )
     assert git("rev-parse", "HEAD^{tree}") == c.NATIVE_TREE
-    return c.Provider(root, git("rev-parse", "HEAD"))
+    policies = qualified_policies({'cse': root})
+    return c.Provider(root, git("rev-parse", "HEAD"), process_policy=policies['cse'])
 
 
 @pytest.fixture

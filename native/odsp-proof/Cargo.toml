@@ -1,0 +1,21 @@
+[package]
+name = "odsp-device-kernel-qualification"
+version = "0.1.0"
+edition = "2021"
+license = "AGPL-3.0-or-later"
+publish = false
+
+# This qualification crate compiles the existing SP1 guest kernel by path.
+# It has no replacement arithmetic engine or registry dependencies.
+[dependencies]
+execution-commitment = { path = "../../instruments/execution/compute-runtime/crates/execution-commitment" }
+execution-model = { path = "../../instruments/execution/compute-runtime/crates/execution-model" }
+
+[workspace]
+
+[lints.rust]
+unexpected_cfgs = { level = "warn", check-cfg = ['cfg(kani)'] }
+
+[profile.release]
+overflow-checks = true
+

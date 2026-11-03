@@ -47,14 +47,14 @@ print(json.dumps({'environment':dict(os.environ),'limits':{
     assert 'CAMPAIGN_SYNTHETIC_PRIVATE_CANARY' not in json.dumps(selected.identity())
 
 
-def test_legacy_default_is_unchanged_and_selected_policy_is_identified(checkout):
+def test_companion_missing_or_limits_only_policy_refuses_before_launch(checkout, monkeypatch):
     path, revision = checkout
-    legacy = runtime.PinnedSubprocessAdapter(path, revision, 'example.endpoint')
-    assert 'process_policy' not in legacy.runtime_identity()
-    selected = policy(max_output_bytes=65536)
-    bounded = runtime.PinnedSubprocessAdapter(path, revision, 'example.endpoint', process_policy=selected)
-    assert bounded.invoke('evaluate.v1', {'x':7}) == legacy.invoke('evaluate.v1', {'x':7})
-    assert bounded.runtime_identity()['process_policy'] == selected.identity()
+    launches = []
+    monkeypatch.setattr(runtime.subprocess, 'Popen', lambda *a, **k: launches.append(a))
+    for selected in (None, policy(max_output_bytes=65536)):
+        with pytest.raises(ProcessPolicyHeld, match='companion_isolation_required'):
+            runtime.PinnedSubprocessAdapter(path, revision, 'example.endpoint', process_policy=selected)
+    assert launches == []
 
 
 def test_policy_is_copied_immutable_and_never_uses_payload_paths(tmp_path):

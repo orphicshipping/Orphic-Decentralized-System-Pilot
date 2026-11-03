@@ -230,12 +230,15 @@ backendEnv.HOST={getByName(name){if(name!==backendEnv.HOST_SINGLETON)throw Error
 const env={PANEL_HOSTNAME:panelHost,PANEL_BACKEND_ORIGIN:'https://'+backendHost,
   ACCESS_ISSUER:issuer,ACCESS_AUDIENCE:audience,
   BACKEND:{fetch(request){metrics.gateway_requests++;return gateway(request,backendEnv);}}};
+const credentialStart = Math.floor(Date.now()/1000)-1;
 function refreshBindings() {
-  backendEnv.PRINCIPAL_AUTH_JSON=JSON.stringify({schema:'ciw.bearer-principals.v1',
+  const credential = row => ({credential_id:'local-fixture:'+row.principal,
+    not_before:credentialStart,expires_at:credentialStart+3600});
+  backendEnv.PRINCIPAL_AUTH_JSON=JSON.stringify({schema:'ciw.bearer-principals.v2',
     policy_revision:configuration.policy_revision,policy_sha256:configuration.policy_sha256,
-    principals:configuration.principals.map(row=>({...row,token_sha256:createHash('sha256').update(tokens.get(row.principal)).digest('hex')}))});
-  env.PANEL_PRINCIPALS_JSON=JSON.stringify({schema:'odsp.panel-principals.v1',principals:
-    configuration.principals.map(row=>({...row,subject:'subject:'+row.principal,backend_token:tokens.get(row.principal)}))});
+    principals:configuration.principals.map(row=>({...row,...credential(row),token_sha256:createHash('sha256').update(tokens.get(row.principal)).digest('hex')}))});
+  env.PANEL_PRINCIPALS_JSON=JSON.stringify({schema:'odsp.panel-principals.v2',principals:
+    configuration.principals.map(row=>({...row,...credential(row),subject:'subject:'+row.principal,backend_token:tokens.get(row.principal)}))});
 }
 refreshBindings();
 const panel=createPanel({assets,fetchJwks:async request=>{

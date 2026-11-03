@@ -214,11 +214,20 @@ def test_source_registry_contains_exact_campaign_manifests():
     from ciw.offline_intake import profile_manifest as intake
     from ciw.proof_profile import profile_manifest as proof
     from ciw.domain_read_profile import profile_manifest as domain
+    from ciw.mcp_toolbox import profile_manifest as toolbox
+    from ciw.live_intake import profile_manifest as live
+    from ciw.metrology_operations import profile_manifest as metrology
+    from ciw.data_database import profile_manifest as data_database
     catalog = source_registry()
     assert catalog['intake'] == intake()['tools']
     assert catalog['proof'] == proof()['tools']
     assert catalog['domain_read'] == domain()['tools']
-    assert sum(map(len, catalog.values())) == 86
+    assert catalog['toolbox'] == toolbox()['tools']
+    assert catalog['live'] == live()['tools']
+    assert catalog['metrology'] == metrology()['tools']
+    assert catalog['data_database'] == data_database()['tools']
+    assert len(catalog['data_database']) == 7
+    assert sum(map(len, catalog.values())) == 111
     assert not {'finance', 'trade', 'gis'} & catalog.keys()
 
 

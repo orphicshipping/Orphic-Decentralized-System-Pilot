@@ -72,8 +72,12 @@ def _specs():
     from .offline_intake import TOOLS as INTAKE
     from .proof_profile import TOOLS as PROOF
     from .domain_read_profile import TOOLS as DOMAIN_READ
+    from .mcp_toolbox import TOOLS as TOOLBOX
+    from .live_intake import TOOLS as LIVE
+    from .metrology_operations import TOOLS as METROLOGY
+    from .data_database import TOOLS as DATA_DATABASE
     return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC, **NISE,
-            **INTAKE, **PROOF, **DOMAIN_READ,
+            **INTAKE, **PROOF, **DOMAIN_READ, **TOOLBOX, **LIVE, **METROLOGY, **DATA_DATABASE,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -172,7 +176,7 @@ def _schematic_content_key(path, key, value, arguments):
 
 
 def _request(name, arguments):
-    if isinstance(name, str) and name.startswith(('ncp_intake_', 'ncp_proof_', 'ncp_domain_read_')):
+    if isinstance(name, str) and name.startswith(('ncp_intake_', 'ncp_proof_', 'ncp_domain_read_', 'ncp_toolbox_', 'ncp_skill_', 'ncp_live_', 'ncp_metrology_', 'ncp_db_', 'ncp_dbops_')):
         from .campaign_contracts import canonical, REQUEST_LIMITS
         canonical({'name': name, 'arguments': arguments}, limits=REQUEST_LIMITS)
     if isinstance(name, str) and name.startswith('ncp_nise_'):
@@ -329,6 +333,14 @@ class PrincipalPolicy:
         except Exception:
             raise PrincipalRefusal() from None
 
+    def authorize_context(self, principal, name, arguments):
+        """Authorize and return identity from one coherent current snapshot."""
+        with self.lock:
+            snapshot = self.snapshot()
+            current = PrincipalPolicy(lambda: snapshot)
+            current.authorize(principal, name, arguments)
+            return current.context(principal)
+
     def authorize_resource(self, principal, uri):
         _, name, arguments, scope = _resource(uri)
         grant = self.authorize(principal, name, arguments)
@@ -336,11 +348,12 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None, intake=None, proof=None, domain_read=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None, intake=None, proof=None, domain_read=None, toolbox=None, live=None, metrology=None, data_database=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
                                logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync, nise=nise,
-                               intake=intake, proof=proof, domain_read=domain_read)
+                               intake=intake, proof=proof, domain_read=domain_read, toolbox=toolbox, live=live,
+                               metrology=metrology, data_database=data_database)
 
 
 class PrincipalFacade:
@@ -349,11 +362,18 @@ class PrincipalFacade:
 
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
-        self.strict_mcp_input = any(hosts.get(key) is not None for key in ('nise', 'intake', 'proof', 'domain_read'))
+        self.strict_mcp_input = any(hosts.get(key) is not None for key in ('nise', 'intake', 'proof', 'domain_read', 'toolbox', 'live', 'metrology', 'data_database'))
         self.retained = None
-        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise", "intake", "proof", "domain_read"):
+        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise", "intake", "proof", "domain_read", "toolbox", "live", "metrology", "data_database"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
+        if hosts.get("data_database") is not None:
+            from .data_database import DataDatabaseHost
+            _require(type(hosts["data_database"]) is DataDatabaseHost)
+        if hosts.get("live") is not None:
+            from .live_intake import LiveIntakeHost
+            _require(type(hosts["live"]) is LiveIntakeHost)
+            hosts["live"]._bind_principal_policy(policy, principal)
         if hosts.get("logistics") is not None:
             from .retention import Store
             # Same owner and durable records; principal-bound publication never
@@ -374,7 +394,11 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("domain_read" if name.startswith("ncp_domain_read_") else
+        family = ("data_database" if name.startswith(("ncp_db_", "ncp_dbops_")) else
+                  "metrology" if name.startswith("ncp_metrology_") else
+                  "live" if name.startswith("ncp_live_") else
+                  "toolbox" if name.startswith(("ncp_toolbox_", "ncp_skill_")) else
+                  "domain_read" if name.startswith("ncp_domain_read_") else
                   "intake" if name.startswith("ncp_intake_") else
                   "proof" if name.startswith("ncp_proof_") else
                   "nise" if name.startswith("ncp_nise_") else
@@ -411,6 +435,9 @@ class PrincipalFacade:
             self._science(grant, plan["compilation"]["experiment"])
 
     def _scope(self, grant, family, host, name, args):
+        if family == "live" and name == "ncp_live_receipt":
+            receipt = host.store.native(args["artifact_id"])
+            self.policy.authorize(self.principal, "ncp_live_read", receipt["request"])
         if family == "reference":
             _require(host.corpus_ref in grant["reference_scopes"])
             if name.startswith("ncp_evidence_"):
@@ -467,6 +494,35 @@ class PrincipalFacade:
         elif name == "ncp_artifact_read":
             self._science(grant, host.owner._get(args["artifact"]))
 
+    def request_scope_guard(self, name, arguments):
+        """Bind supplemental host trust checks to one detached audited request.
+
+        Only the concrete integrated hosts may supply this callback. It is
+        trusted launcher plumbing, never a field accepted from an MCP request.
+        The audit wrapper rechecks it after its own durable I/O.
+        """
+        from .mcp_toolbox import MCPToolboxHost
+        from .live_intake import LiveIntakeHost
+        from .data_database import DataDatabaseHost
+        if not name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_db_", "ncp_dbops_")):
+            return None
+        family, host = self._host(name)
+        if type(host) not in (MCPToolboxHost, LiveIntakeHost, DataDatabaseHost):
+            return None
+        check = host.request_scope_guard(name, deepcopy(arguments))
+        if check is None:
+            return None
+        _require(callable(check))
+        policy, principal = self.policy, self.principal
+
+        def current():
+            _require(self.policy is policy and self.principal == principal)
+            current_family, current_host = self._host(name)
+            _require(current_family == family and current_host is host)
+            return check() is True
+
+        return current
+
     def _handoff(self, grant, args):
         from .coordinator import _claim_record, _grant_identity, _GRANT_BYTE_LIMIT
         from .retention import _root
@@ -514,7 +570,11 @@ class PrincipalFacade:
                 dispatched = True
                 value = host.call(name, arguments)
                 _require(type(value) is dict)
-                if not read_only and value.get("status") != "ok":
+                from .mcp_toolbox import MCPToolboxHost
+                before_effect = (family == "toolbox" and type(host) is MCPToolboxHost and
+                                 value.get("effect_state") == "not_started" and
+                                 (value.get("error") or {}).get("code") != "outcome_unknown")
+                if not read_only and value.get("status") != "ok" and not before_effect:
                     # Older host envelopes cannot distinguish pre-effect
                     # refusal from cleanup failure after publication/unlink.
                     # Conservatively retain uncertainty and any failure locator.

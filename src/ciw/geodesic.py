@@ -11,6 +11,7 @@ import tempfile
 import uuid
 
 from .adapters.protocol import AdapterRefusal, InstrumentManifest
+from .companion_policy_config import bind_process_policies
 from .core.identities import digest, evidence_id
 from .core.records import finite_tree, mapping, number, string
 from .investigation import _runtime
@@ -151,8 +152,8 @@ def _inputs(run, parameters):
     return request
 
 
-def bind_gte(session, gte_repo, python_executable=None, expected=None):
-    adapter = _runtime("gte", gte_repo, python_executable, expected)
+def bind_gte(session, gte_repo, python_executable=None, expected=None, *, process_policy=None):
+    adapter = _runtime("gte", gte_repo, python_executable, expected, process_policy=process_policy)
     # Geometric computation uses the existing backend role without asserting
     # Bayesian inference or a dynamics model.
     session.operations.register(Operation(
@@ -191,14 +192,15 @@ def _evaluate_and_save(session, path, parameters=None):
     return _summary(session, path)
 
 
-def create_investigation(inputs_path, gte_repo, output_dir, python_executable=None):
+def create_investigation(inputs_path, gte_repo, output_dir, python_executable=None, *, process_policies=None):
     with Path(inputs_path).open("rb") as stream:
         run = _make_run(stream.read(MAX_REQUEST_BYTES + 1))
     # Validate the local executable pin before writing source or execution data.
-    adapter = _runtime("gte", gte_repo, python_executable)
+    policies = bind_process_policies({"gte": gte_repo}, process_policies)
+    adapter = _runtime("gte", gte_repo, python_executable, process_policy=policies["gte"])
     adapter.runtime_identity()
     session = Session(run, Path(output_dir))
-    bind_gte(session, gte_repo, python_executable)
+    bind_gte(session, gte_repo, python_executable, process_policy=policies["gte"])
     return _evaluate_and_save(session, Path(output_dir) / "workspace.json")
 
 
@@ -209,7 +211,7 @@ def inspect_investigation(path):
         return _summary(session, path)
 
 
-def replay_investigation(path, gte_repo, output_dir, python_executable=None):
+def replay_investigation(path, gte_repo, output_dir, python_executable=None, *, process_policies=None):
     with tempfile.TemporaryDirectory(prefix="ciw-gte-replay-") as directory:
         original = Session.from_workspace(Path(path), Path(directory))
         validate_source(original.run)
@@ -218,11 +220,12 @@ def replay_investigation(path, gte_repo, output_dir, python_executable=None):
             raise AdapterRefusal("replay_unavailable", "No GTE execution with retained runtime identity")
         expected = previous[-1]["runtime"]
         parameters = previous[-1]["parameters"]
-        adapter = _runtime("gte", gte_repo, python_executable, expected)
+        policies = bind_process_policies({"gte": gte_repo}, process_policies)
+        adapter = _runtime("gte", gte_repo, python_executable, expected, process_policy=policies["gte"])
         adapter.runtime_identity()
         old_result = original.results.get(previous[-1]["result_id"])
     session = Session.from_workspace(Path(path), Path(output_dir))
-    bind_gte(session, gte_repo, python_executable, expected)
+    bind_gte(session, gte_repo, python_executable, expected, process_policy=policies["gte"])
     # Reproduce the captured scientific support even if the user moved the
     # current selection after the last invocation. Selection history advances;
     # retained execution and result records remain unchanged.

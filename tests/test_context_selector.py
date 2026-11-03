@@ -26,13 +26,14 @@ class SelectorTests(unittest.TestCase):
         self.assertEqual({k: len(v) for k, v in self.registry.items()}, {
             'control': 35, 'reference': 7, 'evidence': 5, 'logistics': 5,
             'recompiler': 3, 'schematic': 5, 'clocksync': 3, 'state': 8, 'nise': 5,
-            'intake': 4, 'proof': 2, 'domain_read': 4})
+            'intake': 4, 'proof': 2, 'domain_read': 4,
+            'toolbox': 10, 'live': 3, 'metrology': 5, 'data_database': 7})
         for rows in self.registry.values():
             for row in rows:
                 self.assertEqual(self.selector.describe(row['name'])['tool'], row)
                 self.assertEqual(self.selector.select([row['name']])['tools'], [row])
                 self.selector.deselect([row['name']])
-        self.assertEqual(sum(map(len, self.registry.values())), 86)
+        self.assertEqual(sum(map(len, self.registry.values())), 111)
 
     def test_determinism_and_detached_output(self):
         a = self.selector.list(limit=64)
@@ -88,7 +89,7 @@ class SelectorTests(unittest.TestCase):
             cursor = page['next_cursor']
             if cursor is None:
                 break
-        self.assertEqual(len(names), 86)
+        self.assertEqual(len(names), 111)
         self.assertEqual(names, sorted(set(names)))
         page = self.selector.search('ncp', limit=1)
         with self.assertRaises(ValueError):

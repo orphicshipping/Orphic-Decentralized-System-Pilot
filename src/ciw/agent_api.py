@@ -11,6 +11,7 @@ from __future__ import annotations
 from copy import deepcopy
 from hashlib import sha256
 import json
+import os
 from pathlib import Path
 import re
 import tempfile
@@ -117,6 +118,10 @@ class AgentHost:
             if item is not None and (type(item) is not dict or len(item) > 64):
                 raise ValueError("Host policies must be bounded objects")
         self._lock = threading.RLock()
+        # Trusted launcher state only. The marker below persists the requirement
+        # to rebind a guard, never a callback or an execution permission.
+        self._execution_guard = None
+        self._execution_guard_binding = None
         self._registry = registry
         self._catalog = encode(registry.catalog())
         self._allow = frozenset(allow_operations)
@@ -469,7 +474,50 @@ class AgentHost:
         """Host-owned source admission before a granted graph. The default admits nothing."""
         return None
 
+    def bind_execution_guard(self, check, *, binding: str) -> None:
+        """Seal a dedicated execution owner to one host-only custody binding.
+
+        Not a tool or checkpoint field. Reopening a marked output directory
+        without its live guard refuses execute/replay. Rebinding this object or
+        changing the persistent binding requires a new owner, never a request.
+        """
+        from .retention import _read_regular
+        if not callable(check) or type(binding) is not str or re.fullmatch(r"[0-9a-f]{64}", binding) is None:
+            raise ValueError("Explicit execution custody binding required")
+        with self._lock:
+            if self._execution_guard is not None or self._attempts:
+                raise ValueError("Execution guard already bound or owner already used")
+            root = self._check_output()
+            marker = root / "execution-guard.json"
+            value = {"schema": "ciw.execution-guard.v1", "binding": binding}
+            # A dangling symlink is an existing invalid marker, not a fresh file.
+            if os.path.lexists(marker):
+                if parse(_read_regular(marker, byte_limit=1024)) != value:
+                    raise ValueError("Execution custody binding changed")
+            else:
+                save_new(marker, value)
+                descriptor = os.open(root, os.O_RDONLY | getattr(os, "O_DIRECTORY", 0))
+                try:
+                    os.fsync(descriptor)
+                finally:
+                    os.close(descriptor)
+            self._execution_guard_binding = binding
+            self._execution_guard = check
+
+    def _check_execution_guard(self) -> None:
+        from .retention import _read_regular
+        marker = self._check_output() / "execution-guard.json"
+        if self._execution_guard is None:
+            if os.path.lexists(marker):
+                raise ValueError("Dedicated execution owner requires its live custody guard")
+            return
+        if (parse(_read_regular(marker, byte_limit=1024)) != {
+                "schema": "ciw.execution-guard.v1", "binding": self._execution_guard_binding}
+                or self._execution_guard() is not True):
+            raise ValueError("Execution custody guard refused")
+
     def execute(self, source: str, graph: str, attempt: str) -> dict:
+        self._check_execution_guard()
         root = self._check_output()
         identifier(attempt)
         source_key, graph_key = self._resolve(source), self._resolve(graph)
@@ -501,10 +549,13 @@ class AgentHost:
             save_new(directory / "experiment.json", value)
             session = Session(run, directory, operations=self._registry.operations)
             self.prepare_session(session)
+            self._check_execution_guard()
             report = run_graph(session, value, self._registry)
+            self._check_execution_guard()
             save_new(directory / "graph-run.json", report)
             session.save_workspace(directory / "workspace.json")
             for name in ("experiment", "graph-run", "workspace"):
+                self._check_execution_guard()
                 raw = (directory / (name + ".json")).read_bytes()
                 handle = self._put(raw, generated=True)
                 response["artifacts"][name] = self._binding(handle)
@@ -521,6 +572,7 @@ class AgentHost:
         save_new(directory / "response.json", response)
         self._attempts[attempt] = {"request": request, "response": response, "state": "finished"}
         self._checkpoint()
+        self._check_execution_guard()
         return deepcopy(response)
 
     def replay(self, original_attempt: str, new_attempt: str) -> dict:

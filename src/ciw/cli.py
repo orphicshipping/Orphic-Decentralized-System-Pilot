@@ -277,6 +277,8 @@ def parser() -> argparse.ArgumentParser:
                         help="Explicit trusted checkout for pinned JSPT covariance operations")
     server.add_argument("--gte-repo", type=Path,
                         help="Explicit trusted checkout for pinned GTE circle projection")
+    server.add_argument("--companion-policies", type=Path,
+                        help="Absolute operator policy file for scientific companions; never read from retained data")
     stack = server.add_mutually_exclusive_group()
     stack.add_argument("--calibrated-stack-root", type=Path,
                        help="Bind eight role-named pinned checkouts to the shared process workbench")
@@ -418,6 +420,8 @@ def parser() -> argparse.ArgumentParser:
         "replay", help="Replay retained inputs with fresh execution and result identities")
     replay_investigation.add_argument("path", type=Path)
     for action in (create, replay_investigation):
+        action.add_argument("--companion-policies", type=Path,
+                            help="Absolute operator companion policy configuration")
         action.add_argument("--rci-repo", type=Path, required=True,
                             help="Explicit trusted RCI checkout at the pinned revision")
         action.add_argument("--fsrt-repo", type=Path, required=True,
@@ -432,6 +436,8 @@ def parser() -> argparse.ArgumentParser:
     covariance.add_argument("--parameters", type=Path, required=True,
                             help="JSON scientific operation parameters, never executable code")
     for action in (covariance, covariance_replay):
+        action.add_argument("--companion-policies", type=Path,
+                            help="Absolute operator companion policy configuration")
         action.add_argument("path", type=Path)
         action.add_argument("--jspt-repo", type=Path, required=True)
         action.add_argument("--output-dir", type=Path, required=True)
@@ -447,6 +453,8 @@ def parser() -> argparse.ArgumentParser:
     geodesic_replay = geodesic_actions.add_parser("replay", help="Replay retained GTE inputs with fresh result identities")
     geodesic_replay.add_argument("path", type=Path)
     for action in (geodesic_create, geodesic_replay):
+        action.add_argument("--companion-policies", type=Path,
+                            help="Absolute operator companion policy configuration")
         action.add_argument("--gte-repo", type=Path, required=True)
         action.add_argument("--output-dir", type=Path, required=True)
         action.add_argument("--python", dest="python_executable", type=Path)
@@ -660,18 +668,23 @@ def main(argv: list[str] | None = None) -> int:
                 return 2
             session.save_workspace(args.output_dir / "workspace.json")
         elif args.command == "serve":
+            from .companion_policy_config import load_companion_policies, policy_set
+            policies = load_companion_policies(args.companion_policies)
             if not 1 <= args.port <= 65535:
                 raise ValueError("port must be between 1 and 65535")
             session = load_server_session(args)
             if args.fsrt_repo is not None:
                 from .investigation import bind_fsrt
-                bind_fsrt(session, args.fsrt_repo, python_executable=args.python_executable)
+                bind_fsrt(session, args.fsrt_repo, python_executable=args.python_executable,
+                          process_policy=(policy_set(policies, "investigation") or {}).get("fsrt"))
             if args.jspt_repo is not None:
                 from .covariance_workflow import bind_jspt
-                bind_jspt(session, args.jspt_repo, python_executable=args.python_executable)
+                bind_jspt(session, args.jspt_repo, python_executable=args.python_executable,
+                          process_policy=(policy_set(policies, "covariance") or {}).get("jspt"))
             if args.gte_repo is not None:
                 from .geodesic import bind_gte
-                bind_gte(session, args.gte_repo, python_executable=args.python_executable)
+                bind_gte(session, args.gte_repo, python_executable=args.python_executable,
+                         process_policy=(policy_set(policies, "geodesic") or {}).get("gte"))
             if (args.julia_oscillator_runtime is None) != (args.julia_executable is None):
                 raise ValueError("--julia-oscillator-runtime and --julia-executable must be supplied together")
             if args.julia_oscillator_runtime is not None:
@@ -693,7 +706,8 @@ def main(argv: list[str] | None = None) -> int:
                 session.workbench.bind_workflow("telemetry", {role: args.telemetry_stack_root / role for role in TELEMETRY_ROLES})
             if args.calibrated_window_stack_root is not None:
                 from .calibrated_window import ROLES as WINDOW_ROLES
-                session.workbench.bind_workflow("calibrated-window", {role: args.calibrated_window_stack_root / role for role in WINDOW_ROLES})
+                session.workbench.bind_workflow("calibrated-window", {role: args.calibrated_window_stack_root / role for role in WINDOW_ROLES},
+                                                process_policies=policy_set(policies, "calibrated-window"))
             if args.schematic_repo is not None:
                 session.workbench.bind_workflow("schematic-assessment", {"sra": args.schematic_repo})
             if args.schematic_companions_root is not None:
@@ -711,8 +725,10 @@ def main(argv: list[str] | None = None) -> int:
                 from .calibrated_window import ROLES as WINDOW_ROLES
                 session.workbench.bind_workflow("acquired-dataset", {"ppda": root / "ppda"})
                 for kind in ("calibrated-window", "acquired-calibrated-window"):
-                    session.workbench.bind_workflow(kind, {role: root / role for role in WINDOW_ROLES})
-                session.workbench.bind_workflow("residual-monitor", {role: root / role for role in ("oit", "fdir")})
+                    kwargs = {"process_policies": policy_set(policies, kind)} if kind == "calibrated-window" else {}
+                    session.workbench.bind_workflow(kind, {role: root / role for role in WINDOW_ROLES}, **kwargs)
+                session.workbench.bind_workflow("residual-monitor", {role: root / role for role in ("oit", "fdir")},
+                                                process_policies=policy_set(policies, "residual-monitor"))
             if args.measurement_chain_stack_root is not None:
                 session.workbench.bind_workflow("measurement-chain", {
                     role: args.measurement_chain_stack_root / role for role in ("rci", "fsrt", "jspt")})
@@ -833,8 +849,10 @@ def main(argv: list[str] | None = None) -> int:
             if args.investigation_command == "inspect":
                 result = inspect_investigation(args.path, evaluated_at=args.evaluated_at)
             else:
+                from .companion_policy_config import load_companion_policies, policy_set
                 arguments = {"rci_repo": args.rci_repo, "fsrt_repo": args.fsrt_repo,
-                             "output_dir": args.output_dir, "python_executable": args.python_executable}
+                             "output_dir": args.output_dir, "python_executable": args.python_executable,
+                             "process_policies": policy_set(load_companion_policies(args.companion_policies), "investigation")}
                 if args.investigation_command == "create":
                     inputs = read_json(args.inputs)
                     if not isinstance(inputs, dict):
@@ -848,8 +866,10 @@ def main(argv: list[str] | None = None) -> int:
                 print_investigation(result)
         elif args.command in {"covariance", "covariance-replay"}:
             from .covariance_workflow import execute_covariance, replay_covariance
+            from .companion_policy_config import load_companion_policies, policy_set
             arguments = {"jspt_repo": args.jspt_repo, "output_dir": args.output_dir,
-                         "python_executable": args.python_executable}
+                         "python_executable": args.python_executable,
+                         "process_policies": policy_set(load_companion_policies(args.companion_policies), "covariance")}
             if args.command == "covariance":
                 parameters = read_json(args.parameters)
                 if not isinstance(parameters, dict):
@@ -866,8 +886,10 @@ def main(argv: list[str] | None = None) -> int:
             if args.geodesic_command == "inspect":
                 result = inspect_investigation(args.path)
             else:
+                from .companion_policy_config import load_companion_policies, policy_set
                 arguments = {"gte_repo": args.gte_repo, "output_dir": args.output_dir,
-                             "python_executable": args.python_executable}
+                             "python_executable": args.python_executable,
+                             "process_policies": policy_set(load_companion_policies(args.companion_policies), "geodesic")}
                 if args.geodesic_command == "create":
                     result = create_investigation(args.inputs, **arguments)
                 else:

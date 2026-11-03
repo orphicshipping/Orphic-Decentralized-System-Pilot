@@ -117,7 +117,12 @@ def _bounded_process(
     command: list[str], *, cwd: Path, timeout: float, limit: int, stdin: bytes = b"",
     process_policy=None, environment: Mapping[str, str] | None = None,
 ) -> tuple[int, bytes]:
-    """Drain both pipes concurrently, retaining at most ``limit`` bytes in total."""
+    """Bound pipes with a fixed environment; isolation requires a process policy.
+
+    This low-level helper also runs host-owned code. Companion callers must
+    require an isolating policy before reaching it; an empty credential surface
+    alone does not isolate network or filesystem access.
+    """
     if process_policy is not None:
         from ..process_policy import ProcessPolicy
         if not isinstance(process_policy, ProcessPolicy) or environment is not None:
@@ -136,11 +141,14 @@ def _bounded_process(
     stop_attempted = False
     process = None
     body_failure = None
-    environment = dict(os.environ if environment is None else environment)
+    from ..process_policy import minimal_environment
+    environment = minimal_environment() if environment is None else dict(environment)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment.pop("NODE_OPTIONS", None)
     environment.pop("NODE_PATH", None)
+    environment.pop("LD_PRELOAD", None)
+    environment.pop("LD_AUDIT", None)
 
     def stop_once() -> None:
         nonlocal stop_attempted
@@ -331,6 +339,8 @@ class PinnedSubprocessAdapter:
     checkout and is the only added import root. Isolated Python mode removes cwd,
     PYTHONPATH and user-site imports. Installed system/venv dependencies remain
     part of the trusted environment; NumPy/SciPy versions are recorded and pinned.
+    Every companion binding requires a host-created Bubblewrap policy. Missing
+    isolation or a failed namespace probe holds execution; there is no downgrade.
     """
 
     @_guard_cleanup
@@ -344,11 +354,8 @@ class PinnedSubprocessAdapter:
         process_policy=None,
     ) -> None:
         self._cleanup_uncertain: RuntimeCleanupUncertain | None = None
-        if process_policy is not None:
-            from ..process_policy import ProcessPolicy
-            if not isinstance(process_policy, ProcessPolicy):
-                raise ValueError("process policy must be a host-created ProcessPolicy")
-        self.process_policy = process_policy
+        from ..process_policy import require_companion_policy
+        self.process_policy = require_companion_policy(process_policy)
         if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", revision):
             raise ValueError("revision must be a full lowercase Git commit ID")
         if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
@@ -385,10 +392,11 @@ class PinnedSubprocessAdapter:
 
     @_guard_cleanup
     def _git(self, *arguments: str) -> bytes:
+        from ..process_policy import require_companion_policy
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments], cwd=self.repository_root,
             timeout=min(self.timeout_seconds, 10.0), limit=max(self.max_output_bytes, 4 * 1024 * 1024),
-            process_policy=self.process_policy,
+            process_policy=require_companion_policy(self.process_policy),
         )
         if code:
             _refuse("SOURCE_PIN_MISMATCH", "Cannot verify the bound Git checkout")
@@ -458,6 +466,7 @@ class PinnedSubprocessAdapter:
 
     @_guard_cleanup
     def _run(self, code: str, arguments: list[str], stdin: bytes = b"") -> tuple[int, bytes]:
+        from ..process_policy import require_companion_policy
         with tempfile.TemporaryDirectory(prefix="ciw-adapter-") as directory:
             return _bounded_process(
                 # -B disables writes only. A fresh prefix also prevents reads of
@@ -465,7 +474,7 @@ class PinnedSubprocessAdapter:
                 [str(self.python_executable), "-I", "-B", "-X",
                  f"pycache_prefix={directory}/bytecode", "-c", code, *arguments],
                 cwd=Path(directory), timeout=self.timeout_seconds, limit=self.max_output_bytes, stdin=stdin,
-                process_policy=self.process_policy,
+                process_policy=require_companion_policy(self.process_policy),
             )
 
     @_guard_cleanup

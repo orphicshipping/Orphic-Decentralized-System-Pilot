@@ -1,0 +1,49 @@
+{
+  "schema": "odsp.kani-runtime.v1",
+  "platform": "x86_64-unknown-linux-gnu",
+  "kani_version": "0.68.0",
+  "rustc_version": "rustc 1.100.0-nightly (8925ea358 2026-08-20)",
+  "rustc_commit": "8925ea358a0f265ca61026aadc7ecc506c545cbe",
+  "manifest": {
+    "url": "https://static.rust-lang.org/dist/2026-08-21/channel-rust-nightly.toml",
+    "sha256": "3c30cc655a7549d0b30015cd032f949e8723da5ad039f672d04520bbaea4e76d"
+  },
+  "archives": [
+    {
+      "url": "https://github.com/model-checking/kani/releases/download/kani-0.68.0/kani-0.68.0-x86_64-unknown-linux-gnu.tar.gz",
+      "compressed_bytes": 140315343,
+      "sha256": "32e2b484d73ede0bbf64a2cf0879c4259422497d8aec4ee67d448de9ae7843d3",
+      "unpacked_file_bytes": 507989223,
+      "members": 145,
+      "name": "kani"
+    },
+    {
+      "name": "rustc",
+      "url": "https://static.rust-lang.org/dist/2026-08-21/rustc-nightly-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256": "e531815fa551362b5a485e0d286b6c96555312d49359c0b8fe9e8f34c45594b4",
+      "compressed_bytes": 83512832,
+      "unpacked_file_bytes": 416932138
+    },
+    {
+      "name": "rust-std",
+      "url": "https://static.rust-lang.org/dist/2026-08-21/rust-std-nightly-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256": "52cd12570c6f967c3d04173e061fdab1cd44ab9613f53df8e04f7ce3b52ea3a3",
+      "compressed_bytes": 31592180,
+      "unpacked_file_bytes": 167400637
+    },
+    {
+      "name": "cargo",
+      "url": "https://static.rust-lang.org/dist/2026-08-21/cargo-nightly-x86_64-unknown-linux-gnu.tar.xz",
+      "sha256": "51306dcd70ad7ea807727fb313b6a0cbc6406934ad230b6c18db79a97c539c57",
+      "compressed_bytes": 10936072,
+      "unpacked_file_bytes": 36709992
+    },
+    {
+      "name": "rust-src",
+      "url": "https://static.rust-lang.org/dist/2026-08-21/rust-src-nightly.tar.xz",
+      "sha256": "b72d49563c50bf06ef9aa0dcbf57941051547e874b8ce6788aad92f67942f8cd",
+      "compressed_bytes": 5870828,
+      "unpacked_file_bytes": 73191264
+    }
+  ]
+}

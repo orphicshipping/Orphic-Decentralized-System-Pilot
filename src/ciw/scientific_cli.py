@@ -76,6 +76,9 @@ def main(argv: list[str] | None = None) -> int:
             command.add_argument("--label", required=True)
             command.add_argument("--upstream-bundle")
             command.add_argument("--configuration", type=Path)
+        if action in {"run", "replay"}:
+            command.add_argument("--companion-policies", type=Path,
+                help="Absolute operator policy file; independent of scientific source and saved receipts")
         if action in {"inspect", "state", "replay", "study"}:
             command.add_argument("--bundle", required=action in {"replay", "study"})
         if action == "inspect":
@@ -138,6 +141,8 @@ def main(argv: list[str] | None = None) -> int:
                     "state_admission": "not_performed", "new_execution": "not_performed"})}, args.json)
             return 0
         binding_record = None
+        from .companion_policy_config import load_companion_policies, policy_set
+        policies = load_companion_policies(getattr(args, "companion_policies", None))
         bindings = scientific.parse_bindings(args.binding) if args.command in {"run", "replay", "study", "replay-study"} else None
         if getattr(args, "bindings_file", None) is not None:
             from .operator_provision import load_bindings_file
@@ -163,9 +168,12 @@ def main(argv: list[str] | None = None) -> int:
                     raise ValueError("Operator bindings select a different retained workflow")
             if args.command == "run":
                 value = scientific.execute(session, args.kind, raw, label=args.label, repositories=bindings,
-                                           upstream_bundle_id=args.upstream_bundle, configuration=config)
+                                           upstream_bundle_id=args.upstream_bundle, configuration=config,
+                                           process_policies=policy_set(policies, args.kind))
             elif args.command == "replay":
-                value = scientific.replay(session, args.bundle, repositories=bindings)
+                original = scientific.selected_bundle(session, args.bundle)
+                value = scientific.replay(session, args.bundle, repositories=bindings,
+                                          process_policies=policy_set(policies, original["kind"]))
             elif args.command == "replay-study":
                 from .curved_path_study import load_study, replay_study, save_study
                 original = load_study(args.study, session.workbench)

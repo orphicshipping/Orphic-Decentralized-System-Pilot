@@ -4,6 +4,8 @@ Source contract: ORPHIC-LOGISTICS-MCP 217a09016116123a5be95544b870e990c895e142.
 from __future__ import annotations
 from copy import deepcopy
 import hashlib, json, re, subprocess, uuid
+from pathlib import Path
+import tempfile
 from urllib.parse import urlsplit
 from urllib.request import Request, build_opener, HTTPRedirectHandler
 from urllib.error import HTTPError
@@ -27,8 +29,16 @@ def raw(value):
 
 def canonical_digest(body, node):
     if len(body) > MAX_UPSTREAM: raise ValueError('upstream_response_too_large')
-    result = subprocess.run([node, '-e', CANON], input=body, capture_output=True, timeout=10, check=True)
-    return hashlib.sha256(result.stdout).hexdigest()
+    # This fixed host-owned serializer is not a companion interpreter. It still
+    # receives no inherited credentials, proxies or runtime injection settings,
+    # and both pipes are bounded. No network/filesystem isolation is claimed.
+    from .adapters.subprocess import _bounded_process
+    with tempfile.TemporaryDirectory(prefix='ciw-logistics-canonical-') as directory:
+        code, output = _bounded_process([node, '-e', CANON], stdin=body,
+            cwd=Path(directory), timeout=10, limit=MAX_UPSTREAM)
+    if code:
+        raise ValueError('canonical_serializer_refused')
+    return hashlib.sha256(output).hexdigest()
 
 def exact(value, required, optional=()):
     if type(value) is not dict or set(value)-set(required)-set(optional) or not set(required)<=set(value):

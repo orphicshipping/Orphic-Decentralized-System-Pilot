@@ -18,6 +18,7 @@ import sys
 import numpy as np
 import pytest
 
+from companion_policy_helpers import qualified_policies
 from ciw.adapters.protocol import AdapterRefusal
 from ciw.core.identities import digest, evidence_id
 from ciw.investigation import (
@@ -40,17 +41,22 @@ def sources():
 
 
 @pytest.fixture(scope="module")
+def policies(sources):
+    return qualified_policies(dict(zip(("rci", "fsrt"), sources)))
+
+
+@pytest.fixture(scope="module")
 def inputs():
     path = Path(__file__).parents[1] / "examples" / "adapters" / "two-reservoir.json"
     return json.loads(path.read_text())
 
 
 @pytest.fixture(scope="module")
-def investigation(tmp_path_factory, sources, inputs):
+def investigation(tmp_path_factory, sources, inputs, policies):
     output = tmp_path_factory.mktemp("calibrated-investigation") / "original"
     before_modules = set(sys.modules)
     summary = create_investigation(deepcopy(inputs), *sources, output,
-                                   python_executable=sys.executable)
+                                   python_executable=sys.executable, process_policies=policies)
     return {
         "summary": summary,
         "path": Path(summary["workspace_file"]),
@@ -145,10 +151,10 @@ def test_offline_inspection_needs_no_domain_runtime_and_leaves_source_unchanged(
     assert {p.name: p.read_bytes() for p in source.parent.iterdir() if p.is_file()} == before
 
 
-def test_offline_replay_retains_evidence_and_allocates_new_execution_and_result(investigation, sources, tmp_path):
+def test_offline_replay_retains_evidence_and_allocates_new_execution_and_result(investigation, sources, tmp_path, policies):
     original = investigation["summary"]
     replayed = replay_investigation(investigation["path"], *sources, tmp_path / "replay",
-                                     python_executable=sys.executable)
+                                     python_executable=sys.executable, process_policies=policies)
     assert replayed["status"] == "completed" and replayed["replay_data_digest_matches"] is True
     assert replayed["evidence_id"] == original["evidence_id"]
     assert replayed["run_id"] == original["run_id"]
@@ -162,7 +168,7 @@ def test_offline_replay_retains_evidence_and_allocates_new_execution_and_result(
 
 
 @pytest.mark.parametrize("state", ["missing", "expired", "mismatched"])
-def test_invalid_calibration_creates_neither_result_nor_output_directory(state, inputs, sources, tmp_path):
+def test_invalid_calibration_creates_neither_result_nor_output_directory(state, inputs, sources, tmp_path, policies):
     altered = deepcopy(inputs)
     # The mismatched second assembly proves the first successful calibration
     # does not publish a partial investigation.
@@ -175,7 +181,7 @@ def test_invalid_calibration_creates_neither_result_nor_output_directory(state, 
         request["calibration"]["installation_id"] = "unrelated-installation"
     output = tmp_path / state
     with pytest.raises(AdapterRefusal) as refusal:
-        create_investigation(altered, *sources, output, python_executable=sys.executable)
+        create_investigation(altered, *sources, output, python_executable=sys.executable, process_policies=policies)
     assert refusal.value.code == "calibration_unavailable"
     assert refusal.value.reason_code == {
         "missing": "calibration_missing", "expired": "calibration_expired",
@@ -184,9 +190,9 @@ def test_invalid_calibration_creates_neither_result_nor_output_directory(state, 
     assert not output.exists()
 
 
-def test_shared_session_executes_bound_provider_and_retains_unknown_provider_refusal(investigation, sources, tmp_path):
+def test_shared_session_executes_bound_provider_and_retains_unknown_provider_refusal(investigation, sources, tmp_path, policies):
     session = Session.from_workspace(investigation["path"], tmp_path / "shared-session")
-    bind_fsrt(session, sources[1], python_executable=sys.executable)
+    bind_fsrt(session, sources[1], python_executable=sys.executable, process_policy=policies["fsrt"])
     success = session.handle(_request(FSRT_OPERATION))
     assert success["type"] == "response" and success["payload"]["status"] == "completed"
     assert success["payload"]["result"]["evidence_id"] == session.run["evidence_id"]
@@ -264,7 +270,7 @@ def test_resealed_result_still_must_satisfy_physical_schema_and_source_binding(i
         assert not output.exists()
 
 
-def test_unicode_domain_metadata_preserves_native_rci_digests(inputs, sources, tmp_path):
+def test_unicode_domain_metadata_preserves_native_rci_digests(inputs, sources, tmp_path, policies):
     altered = deepcopy(inputs)
     request = altered["sensors"][0]["request"]["inputs"]
     request["assembly_toml"] = request["assembly_toml"].replace(
@@ -276,7 +282,7 @@ def test_unicode_domain_metadata_preserves_native_rci_digests(inputs, sources, t
     original_bytes = (json.dumps(raw, ensure_ascii=False, indent=2) + "\n").encode()
     request["records"][0]["raw_record_b64"] = base64.b64encode(original_bytes).decode()
     summary = create_investigation(altered, *sources, tmp_path / "unicode",
-                                   python_executable=sys.executable)
+                                   python_executable=sys.executable, process_policies=policies)
     assert summary["status"] == "completed"
     workspace = read_json(Path(summary["workspace_file"]))
     measurement = workspace["run"]["metadata"]["rci_source"]["sensors"][0]["measurement"]
@@ -288,9 +294,9 @@ def test_unicode_domain_metadata_preserves_native_rci_digests(inputs, sources, t
     assert inspect_investigation(Path(summary["workspace_file"]))["results"] == summary["results"]
 
 
-def test_replay_preserves_last_model_override_and_physical_disagreement(investigation, sources, tmp_path):
+def test_replay_preserves_last_model_override_and_physical_disagreement(investigation, sources, tmp_path, policies):
     session = Session.from_workspace(investigation["path"], tmp_path / "override")
-    bind_fsrt(session, sources[1], python_executable=sys.executable)
+    bind_fsrt(session, sources[1], python_executable=sys.executable, process_policy=policies["fsrt"])
     original_model = deepcopy(session.run["metadata"]["model"])
     override = {**original_model, "total_mass_kg": 50.0}
     response = session.handle(_request(FSRT_OPERATION, {"model": override}))
@@ -305,7 +311,7 @@ def test_replay_preserves_last_model_override_and_physical_disagreement(investig
     assert session.run["metadata"]["model"] == original_model
     workspace_path = session.save_workspace(session.output_dir / "workspace.json")
     replayed = replay_investigation(workspace_path, *sources, tmp_path / "override-replay",
-                                     python_executable=sys.executable)
+                                     python_executable=sys.executable, process_policies=policies)
     assert replayed["status"] == "completed" and replayed["replay_data_digest_matches"] is True
     latest = replayed["results"][-1]
     assert latest["parameters"] == {"model": override}

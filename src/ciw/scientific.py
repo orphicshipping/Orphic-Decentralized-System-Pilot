@@ -93,7 +93,7 @@ def source_payload(kind: str, raw: bytes, label: str) -> dict:
     return payload
 
 
-def bind(session, kind: str, repositories: dict[str, Path | str]) -> None:
+def bind(session, kind: str, repositories: dict[str, Path | str], *, process_policies=None) -> None:
     """Explicit operator paths only; retain the existing pin/closure validation."""
     _kind(kind)
     if type(repositories) is not dict:
@@ -102,16 +102,19 @@ def bind(session, kind: str, repositories: dict[str, Path | str]) -> None:
         text(role)
         if not isinstance(path, (str, Path)) or not str(path).strip() or not Path(path).is_absolute():
             raise ValueError("Use absolute paths for every explicit scientific binding")
-    session.workbench.bind_workflow(kind, repositories)
+    kwargs = {"process_policies": process_policies} if process_policies is not None else {}
+    session.workbench.bind_workflow(kind, repositories, **kwargs)
 
 
 def execute(session, kind: str, raw: bytes, *, label: str,
             repositories: dict | None = None, upstream_bundle_id: str | None = None,
-            configuration: dict | None = None) -> dict:
+            configuration: dict | None = None, process_policies=None) -> dict:
     """Use existing source.add / operation.execute. No provider code copied here."""
     payload = source_payload(kind, raw, label)
+    if process_policies is not None and repositories is None:
+        raise ValueError("Companion policies require an explicit host repository binding")
     if repositories is not None:
-        bind(session, kind, repositories)
+        bind(session, kind, repositories, process_policies=process_policies)
     source = request(session, "source.add", payload)
     parameters = {"source_id": source["source_id"]}
     if upstream_bundle_id is not None:
@@ -129,11 +132,13 @@ def selected_bundle(session, bundle_id: str) -> dict:
     return selected[0]
 
 
-def replay(session, bundle_id: str, *, repositories: dict | None = None) -> dict:
+def replay(session, bundle_id: str, *, repositories: dict | None = None, process_policies=None) -> dict:
     selected = selected_bundle(session, bundle_id)
     _kind(selected["kind"])
+    if process_policies is not None and repositories is None:
+        raise ValueError("Companion policies require an explicit host repository binding")
     if repositories is not None:
-        bind(session, selected["kind"], repositories)
+        bind(session, selected["kind"], repositories, process_policies=process_policies)
     return request(session, "bundle.replay", {"bundle_id": bundle_id})
 
 

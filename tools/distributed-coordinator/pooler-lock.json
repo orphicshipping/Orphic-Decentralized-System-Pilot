@@ -1,0 +1,26 @@
+{
+  "schema": "ciw.distributed-pooler-inputs.v1",
+  "platform": "linux-amd64-debian-13",
+  "packages_index_url": "https://deb.debian.org/debian/dists/trixie/main/binary-amd64/Packages.xz",
+  "packages_index_sha256": "7778d3e3f303b7ddb8ce0fe7c8d57473a076c6bf2e8f241f75421d2396352498",
+  "debian_packages": [
+    {
+      "Package": "pgbouncer",
+      "Version": "1.24.1-1+deb13u2",
+      "Filename": "pool/main/p/pgbouncer/pgbouncer_1.24.1-1+deb13u2_amd64.deb",
+      "Size": "248496",
+      "SHA256": "19a7df742f9c664ac88d04c5327ed97266844fd900ea7ccf0d8f6ddf27eca0db",
+      "Depends": "postgresql-common (>= 26), libc6 (>= 2.38), libcares2 (>= 1.12), libevent-2.1-7t64 (>= 2.1.8-stable), libpam0g (>= 0.99.7.1), libssl3t64 (>= 3.0.0), libsystemd0",
+      "url": "https://deb.debian.org/debian/pool/main/p/pgbouncer/pgbouncer_1.24.1-1+deb13u2_amd64.deb"
+    },
+    {
+      "Package": "libcares2",
+      "Version": "1.34.5-1+deb13u1",
+      "Filename": "pool/main/c/c-ares/libcares2_1.34.5-1+deb13u1_amd64.deb",
+      "Size": "98272",
+      "SHA256": "5034a2c34ea4730797df1a5f6a0ec142d7d09ce6923c06e167f08ad2e69a4218",
+      "Depends": "libc6 (>= 2.38)",
+      "url": "https://deb.debian.org/debian/pool/main/c/c-ares/libcares2_1.34.5-1+deb13u1_amd64.deb"
+    }
+  ]
+}

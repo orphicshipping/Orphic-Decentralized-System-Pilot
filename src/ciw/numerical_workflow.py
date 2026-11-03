@@ -20,7 +20,12 @@ def manifest():
         calibration_requirements={'physical_qualification':'not_established'})
 
 
-def execute(operation, run, parameters):
+def execute(operation, run, parameters, *, backend=None):
+    if backend is not None:
+        from .rust_numerical import RustNumericalBackend
+        if type(backend) is not RustNumericalBackend:
+            raise TypeError('host_selected_numerical_backend_required')
+        return backend.execute(operation, run, parameters)
     from .numerical_kernels import calculate
     from .numerical_records import validate_payload
     request = deepcopy(parameters_request(operation,run,parameters))
@@ -36,7 +41,12 @@ def execute(operation, run, parameters):
         raise AdapterRefusal('numerical_domain_error', 'Numerical computation exceeded its valid finite domain; no repair applied') from exc
 
 
-def operations():
+def operations(*, backend=None):
+    if backend is not None:
+        from .rust_numerical import RustNumericalBackend
+        if type(backend) is not RustNumericalBackend:
+            raise TypeError('host_selected_numerical_backend_required')
+        return backend.operations()
     from .operations.registry import Operation
     return [Operation(name,'calibration' if name == 'calibration.fit.v1' else 'backend',
         lambda run,parameters,op=name: execute(op,run,parameters),runtime_identity) for name in OPERATIONS]

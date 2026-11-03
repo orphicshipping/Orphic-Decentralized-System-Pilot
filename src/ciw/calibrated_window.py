@@ -18,6 +18,8 @@ import uuid
 from . import telemetry
 from .adapters.protocol import AdapterRefusal
 from .adapters.subprocess import PinnedSubprocessAdapter, _json
+from .companion_policy_config import (bind_process_policies, check_replay_policy,
+                                      validate_policy_identity)
 from .exchange import _identity
 from .calibrated_observable import _exact_timestamp
 from .telemetry import canonical, digest, byte_digest, _bundle_digest, _instant, _now, _keys
@@ -256,15 +258,23 @@ def _pins():
     return json.loads(resources.files("ciw").joinpath("calibrated-window-runtimes.json").read_text())
 
 
-def _adapters(repositories, expected=None):
+def _adapters(repositories, expected=None, *, process_policies=None):
     if set(repositories) != ROLES:
         raise ValueError("Bind exactly the five calibrated window providers")
+    policies = bind_process_policies(repositories, process_policies)
+    if expected is not None:
+        if type(expected) is not dict or set(expected) != ROLES:
+            raise ValueError("Retained calibrated window providers differ")
+        # Validate every binding before any provider is probed. Retained policy
+        # identities constrain replay; only the host supplies executable policy.
+        for role in ROLES:
+            check_replay_policy(policies[role], expected[role])
     adapters = {}
     for role, pin in _pins().items():
         retained = expected[role] if expected else {}
         adapter = PinnedSubprocessAdapter(repositories[role], pin["revision"], pin["module"], source_root=pin["source_root"],
             expected_python_sha256=retained.get("python_sha256"), expected_python_version=retained.get("python_version"),
-            expected_dependencies=retained.get("dependencies"))
+            expected_dependencies=retained.get("dependencies"), process_policy=policies[role])
         identity = adapter.runtime_identity()
         if retained and any(identity[k] != retained[k] for k in ("schema", "adapter_version", "revision", "source_tree", "module", "source_root", "python_sha256", "python_version", "dependencies")):
             raise ValueError("Calibrated window runtime identity mismatch")
@@ -395,6 +405,8 @@ def _validate(bundle):
             raise ValueError("Calibrated window graph/runtime mismatch")
         for role, pin in _pins().items():
             runtime = bundle["runtimes"][role]
+            if "process_policy" in runtime:
+                validate_policy_identity(runtime["process_policy"])
             if (runtime.get("schema") != "ciw.subprocess-runtime.v1" or any(runtime.get(k) != pin[k] for k in ("revision", "module", "source_root")) or
                     not re.fullmatch("[a-f0-9]{40}", runtime.get("source_tree", "")) or
                     not re.fullmatch("[a-f0-9]{64}", runtime.get("python_sha256", "")) or
@@ -441,9 +453,9 @@ def _verify(bundle, fresh, adapters):
     return receipt, values
 
 
-def create_session(raw, repositories):
+def create_session(raw, repositories, *, process_policies=None):
     _source(raw)
-    adapters = _adapters(repositories)
+    adapters = _adapters(repositories, process_policies=process_policies)
     bundle = _execute(raw, adapters)
     _validate(bundle)
     reproduced = _execute(raw, adapters, bundle)
@@ -452,9 +464,9 @@ def create_session(raw, repositories):
     return bundle
 
 
-def replay_session(bundle, repositories):
+def replay_session(bundle, repositories, *, process_policies=None):
     raw = _validate(bundle)
-    adapters = _adapters(repositories, bundle["runtimes"])
+    adapters = _adapters(repositories, bundle["runtimes"], process_policies=process_policies)
     reproduced = _execute(raw, adapters, bundle)
     telemetry._compare_reproduction(bundle, reproduced)
     fresh = _execute(raw, adapters)

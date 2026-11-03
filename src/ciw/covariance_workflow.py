@@ -12,6 +12,7 @@ import uuid
 
 from .adapters.protocol import AdapterRefusal
 from .core.identities import digest
+from .companion_policy_config import bind_process_policies
 from .investigation import _runtime, _summary
 from .operations.registry import Operation
 from .session import Session
@@ -53,8 +54,8 @@ def validate_source_link(parameters, results):
         raise ValueError("Covariance source artifact differs from its retained result")
 
 
-def bind_jspt(session, repo, python_executable=None, expected=None):
-    adapter = _runtime("jspt", repo, python_executable, expected)
+def bind_jspt(session, repo, python_executable=None, expected=None, *, process_policy=None):
+    adapter = _runtime("jspt", repo, python_executable, expected, process_policy=process_policy)
 
     def execute(run, parameters):
         with session._lock:
@@ -77,7 +78,7 @@ def _execute(session, parameters, output_dir):
     return _summary(session, path)
 
 
-def execute_covariance(workspace, jspt_repo, parameters, output_dir, python_executable=None):
+def execute_covariance(workspace, jspt_repo, parameters, output_dir, python_executable=None, *, process_policies=None):
     if not isinstance(parameters, dict) or not MAP_FIELDS <= parameters.keys() or set(parameters) - MAP_FIELDS - {"source_result_id", "source_artifact"}:
         raise ValueError("Declare the ordered covariance map; source result/artifact selectors are optional")
     with tempfile.TemporaryDirectory(prefix="ciw-covariance-inspect-") as directory:
@@ -94,13 +95,14 @@ def execute_covariance(workspace, jspt_repo, parameters, output_dir, python_exec
         name = parameters.get("source_artifact", "output_covariance" if source["operation_id"] == JSPT_OPERATION else "reconciled")
         resolved = {**copy.deepcopy(parameters), "source_result_id": source_id, "source_artifact": name,
                     "source_covariance": result_covariance(source, name)}
-        _runtime("jspt", jspt_repo, python_executable).runtime_identity()
+        policies = bind_process_policies({"jspt": jspt_repo}, process_policies)
+        _runtime("jspt", jspt_repo, python_executable, process_policy=policies["jspt"]).runtime_identity()
     session = Session.from_workspace(Path(workspace), Path(output_dir))
-    bind_jspt(session, jspt_repo, python_executable)
+    bind_jspt(session, jspt_repo, python_executable, process_policy=policies["jspt"])
     return _execute(session, resolved, output_dir)
 
 
-def replay_covariance(workspace, jspt_repo, output_dir, python_executable=None):
+def replay_covariance(workspace, jspt_repo, output_dir, python_executable=None, *, process_policies=None):
     with tempfile.TemporaryDirectory(prefix="ciw-covariance-replay-") as directory:
         original = Session.from_workspace(Path(workspace), Path(directory))
         previous = [e for e in original.executions.values() if e["operation_id"] == JSPT_OPERATION]
@@ -110,10 +112,11 @@ def replay_covariance(workspace, jspt_repo, output_dir, python_executable=None):
         expected, parameters = last["runtime"], copy.deepcopy(last["parameters"])
         if expected is None:
             raise AdapterRefusal("replay_unavailable", "The retained attempt had no bound numerical runtime; execute a new operation explicitly")
-        _runtime("jspt", jspt_repo, python_executable, expected).runtime_identity()
+        policies = bind_process_policies({"jspt": jspt_repo}, process_policies)
+        _runtime("jspt", jspt_repo, python_executable, expected, process_policy=policies["jspt"]).runtime_identity()
         old = original.results.get(last["result_id"])
     session = Session.from_workspace(Path(workspace), Path(output_dir))
-    bind_jspt(session, jspt_repo, python_executable, expected)
+    bind_jspt(session, jspt_repo, python_executable, expected, process_policy=policies["jspt"])
     summary = _execute(session, parameters, output_dir)
     if old and summary["status"] == "completed":
         matches = digest(old["data"]) == digest(summary["results"][-1]["data"])

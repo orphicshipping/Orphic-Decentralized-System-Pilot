@@ -22,6 +22,9 @@ def validate_runtime(value, *, allow_absent=False):
     """Check retained declarations without requiring the old runtime to be installed."""
     if value is None and allow_absent:
         return
+    if type(value) is dict and value.get('provider') == 'ciw.numerical.rust':
+        from .rust_numerical import validate_runtime as validate_rust_runtime
+        return validate_rust_runtime(value, allow_absent=allow_absent)
     if (type(value) is not dict or set(value) != {'provider','version','source_files_sha256','environment','scope'}
             or value['provider'] != 'ciw.numerical' or value['version'] != '1' or value['scope'] != SCOPE):
         raise ValueError('Invalid numerical runtime declaration')

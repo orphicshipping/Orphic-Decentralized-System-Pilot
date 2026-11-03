@@ -1,0 +1,195 @@
+{
+  "base_commit": "235ee45a11f744e8c801364965c07e9e3e13854f",
+  "checks": [
+    {
+      "errors": 0,
+      "failures": 0,
+      "junit": "native-reviewed-junit.xml",
+      "name": "native_and_mcp",
+      "skipped": 0,
+      "tests": 73
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "junit": "mixed-covariance-regression-junit.xml",
+      "name": "exact_mixed_covariance_regression",
+      "skipped": 0,
+      "tests": 1
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "junit": "native-reviewed-existing-junit.xml",
+      "name": "existing_numerical_suite_native",
+      "skipped": 0,
+      "tests": 67
+    },
+    {
+      "errors": 0,
+      "failures": 0,
+      "log": "native-final-cargo-test.log",
+      "name": "rust_unit_tests",
+      "skipped": 0,
+      "tests": 4
+    }
+  ],
+  "evidence_files_sha256": {
+    "disposable-build-cleanup.json": "dfae19df568ef4dd317192da62bac91f4cb71e234a001a527f8589b866edf668",
+    "lapack-rank-threshold-scan.json": "54e905035c3f42e83a06f45505c5cbd15cd5133bb96bcabb79c66a438c9b0c89",
+    "mixed-covariance-regression-junit.xml": "de5247518bfeb01165e5d850f18d84ed23e06e469180a8d6d06a8e99140cc6da",
+    "mixed-covariance-regression.log": "380e634f62363ee1d87f5542c70854c6962d8c651256733c2c5cc0c15410e4a2",
+    "native-final-cargo-test.log": "58bddeb724ed652426736cf7e016cdc8dbc3ca2a52abfd40229ab269e8baab0c",
+    "native-reviewed-existing-junit.xml": "bc63f8ac981eedee8d64732a307173e991189a7eb7eecf28d71b2aa958eb899b",
+    "native-reviewed-existing-pytest.log": "393eaabfdee7938b27fe3584a7eb72cffc7f192878063f324680a8df88b2e866",
+    "native-reviewed-existing-receipt.json": "5a9f4a4a9efdd280f75b044ccd2db4c993adde92a2ee7ea8b15e8d3bd1e963e5",
+    "native-reviewed-junit.xml": "7e80cefb5e643d6c3c06270f2c5f687512c2fb9a6581a5373bafdff88eaef523",
+    "native-reviewed-pytest.log": "e2094767ff0d99f914d91801c436b9bd78ec72f56033bc4be83d8987b5762036",
+    "odsp-native-boundary-review.json": "a4287710fe4534e7858ff1a2d4d99e9e6556a377818590f260062bd93d52cad6",
+    "odsp-native-boundary-review.py": "cd55f0157c1d338b9a5d025b3919741cf084b2e758e70faaefc8e4d9d26a32e8",
+    "rank-threshold-scan.json": "75317a4c8a45f2f9aa0bf33cc3b024fec2c0d81b995e7c296adf78597b7902d7",
+    "underflow-differential-before.json": "b41122b64992578d76824039f69cc930aed0df06e9f55b07b51fb9fdfb25bf4c"
+  },
+  "evidence_location": "/tmp/odsp-rust-completion/evidence",
+  "existing_suite_execute_attempts": {
+    "calibration.fit.v1": 11,
+    "calibration.residuals.v1": 8,
+    "model.discrepancy.v1": 11,
+    "observability.rank.v1": 14,
+    "sensitivity.local.v1": 8,
+    "uncertainty.budget.v1": 7,
+    "uncertainty.propagate.v1": 40
+  },
+  "independent_review": {
+    "computed": 159,
+    "differential_cases": 400,
+    "focused_tests_passed": 29,
+    "refused": 241,
+    "scope": "numerical boundary and FFI review; no sanitizer or independent MCP rerun",
+    "status_disagreements": 0,
+    "test_file_changes_after_review": "One exact mixed boolean/numeric covariance regression added; independently passed. Production sources unchanged."
+  },
+  "retained_initial_failures": {
+    "blas_underflow_refusal_disagreements": 4,
+    "nalgebra_svd_rank_decisions": 87,
+    "rank_threshold_cases": 400
+  },
+  "runtime": {
+    "binary_sha256": "a7fea5fa452b7b458cf47f40599681200324fef2df7c5677656edededda973d8",
+    "environment": {
+      "numpy": "2.4.3",
+      "python": "3.12.14",
+      "rustc": "rustc 1.91.0 (f8297e351 2025-10-28)",
+      "target": "x86_64-unknown-linux-gnu"
+    },
+    "native_abi": "scipy-openblas-ilp64-v1",
+    "native_configuration": {
+      "config": "OpenBLAS 0.3.31.dev  USE64BITINT DYNAMIC_ARCH NO_AFFINITY SkylakeX MAX_THREADS=64",
+      "core": "SkylakeX",
+      "threads": 1
+    },
+    "native_libraries_sha256": {
+      "libgfortran-040039e1-0352e75f.so.5.0.0": "c6090048eccc763522c12ef016f81da6b627cb3a044f55cf0479a839c41c0980",
+      "libquadmath-96973f99-934c22de.so.0.0.0": "6ed5137f412781ad7863439fb543613f620b43c32b63292a0029246162f5bbc6",
+      "libscipy_openblas64_-ff84a88b.so": "6de699054816593c6354474291eb5e5fa4f92bca04fd4884bdd0ce4496af04a3"
+    },
+    "native_sources_sha256": {
+      "instruments/execution/compute-runtime/crates/Cargo.toml": "8c06256b39b119f95cb99ce34e6eea17325d0b8ae792ba22fcc096beec6aee71",
+      "instruments/execution/compute-runtime/crates/execution-commitment/Cargo.toml": "25489a1e260c8b81ef176caba1c61029d1bd69743daa47566eab3d738498fd7a",
+      "instruments/execution/compute-runtime/crates/execution-commitment/src/lib.rs": "3f7a76429c4216299788cef7d1d85a68ce8d2fa5b08d87e0bbd8836c431e58ae",
+      "instruments/execution/compute-runtime/crates/execution-commitment/src/sha256.rs": "396a9254b6f27b51236c4afd71e3d59d26d077585f4fe9d5cbe4abc8433fa072",
+      "instruments/execution/compute-runtime/crates/execution-core/Cargo.toml": "10273b3055dd6861c9caa181a3eddc575ca0784e87d41bba93623493af97b912",
+      "instruments/execution/compute-runtime/crates/execution-core/src/lib.rs": "5f0b0a32a1bc1a208ed0b61a7a142d24251806e4be21786e9c66dc3cca8997e7",
+      "instruments/execution/compute-runtime/crates/execution-kernel/Cargo.toml": "261166c6e196eb1f50f8a2f08e02771c0650801f2fdf100709c80ae55573fb05",
+      "instruments/execution/compute-runtime/crates/execution-kernel/src/lib.rs": "006dc3660efa174ebbb67cfc44385701348a0a323ab5569725c3dea2390830da",
+      "instruments/execution/compute-runtime/crates/execution-model/Cargo.toml": "9be07eec54d65219abca1e36734c6d9071cdf12773e7decac933cf7321e1c53f",
+      "instruments/execution/compute-runtime/crates/execution-model/src/lib.rs": "fe4bc4d056c035d9a30fa44152e35a6ee80580ff1c9ec2f2890ef46c3f08e961",
+      "instruments/execution/compute-runtime/crates/execution-native/Cargo.toml": "e272b4729c4a30fcd81efcb5c2e046e9c16654b111d4516cbb965a57837d5df8",
+      "instruments/execution/compute-runtime/crates/execution-native/src/lib.rs": "16a036effb1a7c8d190bfe1e161cefcbbe9db16338d32a595c8a5bd8fca43931",
+      "instruments/execution/compute-runtime/crates/execution-native/src/reference.rs": "79055d83db88988febeb6413d2d74d8d9e67b2e445889508d678935ef8538b39",
+      "instruments/execution/compute-runtime/crates/execution-serialization/Cargo.toml": "d886d11831fce5eb1c6ea53f2f3b768734d01832361b4daca628c01cf02f0d25",
+      "instruments/execution/compute-runtime/crates/execution-serialization/src/lib.rs": "6e3ac98f1a34d2d0882e3bdb2ec7e42e7b8014a295b94027b7ff8da82c493845",
+      "instruments/execution/compute-runtime/crates/execution-trace/Cargo.toml": "0ed214498508527e4f06c5b3e349320f701605afcd22455a79dee4579a230c00",
+      "instruments/execution/compute-runtime/crates/execution-trace/src/lib.rs": "636d36904519aab4ec4448d27e87981717e92032ba80554900163a3d0ac9f53f",
+      "instruments/execution/compute-runtime/crates/execution-verification/Cargo.toml": "ee0dfa7df93cf6116e591036f884e070bdb34e0d04cd26e4e1b33be7ccc2293c",
+      "instruments/execution/compute-runtime/crates/execution-verification/src/lib.rs": "50db55cc49232926bed1e728766786cfdb8a38bdc7d2e394fa8d9d2e2a651a71",
+      "native/odsp-core/Cargo.lock": "20092937d6004cfe2a3758f8303d9dfa3c8f629193ac26b89bde16f895a4de4d",
+      "native/odsp-core/Cargo.toml": "e34f09322c6f9155e4fc26129a8f81257a29c33662b7ed18b7d34e6d394f3e93",
+      "native/odsp-core/build.rs": "25a21c53cfb90aa8c5a675b7b093b8519171b41d5874869a766e5cdda75f703c",
+      "native/odsp-core/rust-toolchain.toml": "57da15ac9b199a5169602f55715ebac933e4c0d59aa3560e6096f5494ee62f0c",
+      "native/odsp-core/src/lapack.rs": "bf1603657312b5a8e8bb18bd57d706232c86a7148499539808d2a4b403827e60",
+      "native/odsp-core/src/lib.rs": "569f928c249ca7b24ebc68f6d98a1f152a2c5720ff6d02d36c02607fbe60f59e",
+      "native/odsp-core/src/main.rs": "82de94661ed0cc7627dafbb7afba79297040cf800edba2beac9507e85987dd4e"
+    },
+    "process_policy": {
+      "cpu_seconds": 10,
+      "descendant_cleanup": "owned process group; escaped sessions are not contained in limits mode",
+      "environment_keys": [
+        "LANG",
+        "LC_ALL",
+        "OMP_NUM_THREADS",
+        "OPENBLAS_NUM_THREADS",
+        "PATH"
+      ],
+      "file_bytes": 0,
+      "filesystem_isolation_required": false,
+      "max_input_bytes": 524288,
+      "max_open_files": 128,
+      "max_output_bytes": 2097152,
+      "max_processes": 512,
+      "memory_bytes": 268435456,
+      "memory_limit_scope": "address space per process; not aggregate descendants",
+      "mode": "limits",
+      "network_isolation_required": false,
+      "policy_sha256": "sha256:35edbfa113a2a126191352110e831f2301fc25b935ddf79289e252c08c211686",
+      "process_limit_scope": "Linux RLIMIT_NPROC per real UID; not a per-job cgroup",
+      "schema": "ciw.process-policy.v1",
+      "wall_seconds": 10
+    },
+    "provider": "ciw.numerical.rust",
+    "scope": "bounded_supplied_model_computation_no_physical_qualification",
+    "source_files_sha256": {
+      "adapters/subprocess.py": "39c7ef37aa14ac6c9445351d782d3e1740844d693082f61a9f9c080e9761cfd6",
+      "core/covariance.py": "12151b40d863ccce85d60d2a94169587094d2468cd032cdc405d3d19985e9730",
+      "core/identities.py": "c746d6ecf24723ea9b3481895bb12094e98fff6bd821acd229eb0f5f13e9ead9",
+      "numerical_contracts.py": "641148081ae2a9a497352615dfadb707f08c8e11a7f1fb5e3a52b23d32778ba0",
+      "numerical_kernels.py": "5a08cb5e0b12e01417faeadc77c5cc6fae043a88443ca90394d496e9c1e986c3",
+      "numerical_records.py": "3aa5f021bcb33bacecee22cfd2d52d0511b2b189b04820c17b8570c043ae7699",
+      "numerical_runtime.py": "2d669aeca18e08b22fa051d9d8d53b1019bcc048fcf2e8103c86bb629fe69f9f",
+      "numerical_workflow.py": "d7b809d22d3c26e359a309fc3dc0a9d1ee4cf06b01246b9fe39d905986844322",
+      "process_policy.py": "c514e24b73e107bf1be506c325fb142f5456f7519e02154148f9e3b643136b21",
+      "rust_numerical.py": "e487ece73b07500f346d2a27c5ddb2dbaaaea25d76ae6e8dc88af241c6bd64e5",
+      "session.py": "214d00cdf5e29b099dfbbe0237955b9dc632d3faddd2ec7601fd965e1d9cd25b"
+    },
+    "version": "1"
+  },
+  "schema": "odsp.native-numerical-campaign-evidence.v1",
+  "scope": "local supplied-model numerical execution; host-selected native backend, existing Python authorization and records",
+  "source_files_sha256": {
+    "docs/RUST_NUMERICAL.md": "590fd7ee579e34064a08355f8b2f65ba5399f22c989c1e209037318353dc86ee",
+    "native/odsp-core/.gitignore": "306fd52e74fca6746e12acc750f232de15e71da917756a1270d74c91f5eb7368",
+    "native/odsp-core/Cargo.lock": "20092937d6004cfe2a3758f8303d9dfa3c8f629193ac26b89bde16f895a4de4d",
+    "native/odsp-core/Cargo.toml": "e34f09322c6f9155e4fc26129a8f81257a29c33662b7ed18b7d34e6d394f3e93",
+    "native/odsp-core/build.rs": "25a21c53cfb90aa8c5a675b7b093b8519171b41d5874869a766e5cdda75f703c",
+    "native/odsp-core/dependencies.lock.json": "5f4d116a4f0468ae471b1aa32417f965eabeb43028126fc61fb4dfde387ab49f",
+    "native/odsp-core/mcp_launcher.py": "f3dbcd1ad58963b6c1d9cd62ca68aa5b701e2c3b5a1635de7596a9e9a3013126",
+    "native/odsp-core/qualify_existing.py": "7dfd85258d99a9794c9c521404f54f664504910980b0614ee9b348349329953f",
+    "native/odsp-core/rust-toolchain.toml": "57da15ac9b199a5169602f55715ebac933e4c0d59aa3560e6096f5494ee62f0c",
+    "native/odsp-core/src/lapack.rs": "bf1603657312b5a8e8bb18bd57d706232c86a7148499539808d2a4b403827e60",
+    "native/odsp-core/src/lib.rs": "569f928c249ca7b24ebc68f6d98a1f152a2c5720ff6d02d36c02607fbe60f59e",
+    "native/odsp-core/src/main.rs": "82de94661ed0cc7627dafbb7afba79297040cf800edba2beac9507e85987dd4e",
+    "src/ciw/rust_numerical.py": "e487ece73b07500f346d2a27c5ddb2dbaaaea25d76ae6e8dc88af241c6bd64e5",
+    "tests/test_rust_numerical.py": "e8bc85fb124b7d7cb0710d655a4788bd5874d050676dcdee485c32e5ed3ef1bf",
+    "tests/test_rust_numerical_mcp.py": "97d5c37651c8c3b82d38096957c21c182f6666bad9fd14b5ae7fadc65d1b6f44"
+  },
+  "unsupported_or_unqualified": [
+    "complete Rust policy/control/session core migration",
+    "pure Rust SVD equivalence without pinned OpenBLAS",
+    "other OS or CPU targets",
+    "hermetic system dependency attestation",
+    "Bubblewrap namespace sandbox qualification",
+    "container or hosted deployment",
+    "physical metrology qualification",
+    "native SP1 or Kani proof qualification"
+  ]
+}

@@ -572,6 +572,9 @@ class ControlHost:
             return deepcopy(self._plans[plan_id])
 
     def submit(self, plan_id, expected_digest, attempt):
+        # A dedicated distributed owner cannot also launch local jobs or reset
+        # its aggregate budget through a separate canonical submit path.
+        self.owner._check_execution_guard()
         identifier(attempt)
         plan = self._checked_plan(plan_id, expected_digest)
         if not plan["admitted"]:
@@ -601,6 +604,85 @@ class ControlHost:
                 job["state"] = "unknown"
                 self._save()
             return deepcopy(job)
+
+    def seal_distributed_execution(self, binding):
+        """Host-only: dedicate a previously unused owner to PG job custody."""
+        with self._lock, self.owner._lock:
+            if self._closed or self._jobs or self.owner._attempts:
+                raise ValueError("Distributed source owner must have no previous executions")
+            self.owner.bind_execution_guard(lambda: False, binding=binding)
+
+    def native_occurrence(self, plan_id, expected_digest, *, backend, output_dir,
+                          execution_guard, binding):
+        """Isolate one already-admitted pure native plan under a live claim.
+
+        Launcher API only: not in TOOLS, never selected by request/checkpoint.
+        Reuse AgentHost, the canonical ControlHost worker and existing Session;
+        do not register generated occurrence artifacts on this source owner.
+        The caller closes both returned owners after the worker has terminated.
+        """
+        from .agent_api import AgentHost
+        from .control_plane import builtin_registry
+        from .numerical_contracts import OPERATIONS
+        from .rust_numerical import RustNumericalBackend
+        if (type(self) is not ControlHost or type(self.owner) is not AgentHost
+                or type(backend) is not RustNumericalBackend
+                or self.owner._execution_guard_binding is None
+                or not callable(execution_guard) or execution_guard() is not True):
+            raise ValueError("Bound native execution custody required")
+        with self._lock, self.owner._lock:
+            value = self._checked_plan(plan_id, expected_digest)
+            if (not value["admitted"] or not self.owner._allow
+                    or not self.owner._allow <= set(OPERATIONS)
+                    or any(node["operation_id"] not in OPERATIONS
+                           for node in value["compilation"]["experiment"]["nodes"])):
+                raise ValueError("Distributed execution requires an admitted pure native plan")
+            registry = builtin_registry(bind=True, numerical_backend=backend)
+            if encode(registry.catalog()) != self.owner._catalog:
+                raise ValueError("Native provider differs from the admitted host policy")
+            # Wrap only fresh, fixed native bindings. Recheck current principal
+            # and claim custody between graph nodes and after each native return;
+            # no request can provide a replacement operation or this guard.
+            from .operations.registry import Operation, OperationRegistry
+            guarded = OperationRegistry()
+            for descriptor in registry.operations.describe():
+                operation = registry.operations.get(descriptor["operation_id"])
+                if operation.operation_id in OPERATIONS:
+                    def execute(run, parameters, bound=operation.execute):
+                        if execution_guard() is not True:
+                            raise ValueError("Native operation custody refused")
+                        result = bound(run, parameters)
+                        if execution_guard() is not True:
+                            raise ValueError("Native operation custody lost")
+                        return result
+                    operation = Operation(operation.operation_id, operation.role, execute,
+                                          operation.runtime_identity)
+                guarded.register(operation)
+            registry.operations = guarded
+            options = {"inputs": {alias: self.owner._artifacts[key]
+                                  for alias, key in self.owner._aliases.items()},
+                       "candidate_domains": deepcopy(self.owner._domains),
+                       "comparisons": deepcopy(self.owner._policies),
+                       "check_suites": deepcopy(self.owner._suites),
+                       "allow_operations": tuple(sorted(self.owner._allow)),
+                       "max_executions": self.owner._maximum, "max_nodes": self.owner._max_nodes}
+        owner = AgentHost(registry=registry, output_dir=output_dir, **options)
+        control = None
+        try:
+            if owner._host_policy != value["host_policy_sha256"]:
+                raise ValueError("Isolated host policy differs from admitted plan")
+            owner.bind_execution_guard(execution_guard, binding=binding)
+            control = ControlHost(owner, retained_owner=self.retained.owner)
+            copied = control.create(value["source"]["artifact_id"], value["baseline"]["artifact_id"], value["graph"])
+            copied = control.admit(copied["plan_id"], copied["digest"])
+            if encode(copied) != encode(value) or execution_guard() is not True:
+                raise ValueError("Isolated plan or custody changed")
+            return owner, control
+        except BaseException:
+            if control is not None:
+                control.close()
+            owner.close()
+            raise
 
     @staticmethod
     def _outcome(result):

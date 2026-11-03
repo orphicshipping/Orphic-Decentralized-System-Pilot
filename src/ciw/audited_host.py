@@ -113,6 +113,12 @@ class AuditedPrincipalHost:
             request_ref='sha256:'+sha256(raw).hexdigest()
             if type(name) is not str or name not in _specs() or name not in self._audit.chain.allowed:
                 raise PrincipalRefusal()
+            # A profile's signer/source authority may change during journal or
+            # anchor I/O after its own call has returned. Bind its additional
+            # checks to this exact detached request and apply the same barriers.
+            guard = self._check_identity().request_scope_guard(name, arguments)
+            if guard is not None:
+                checks = checks + (guard,)
             dispatched = False
             def dispatch():
                 nonlocal dispatched

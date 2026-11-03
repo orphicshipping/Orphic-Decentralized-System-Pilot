@@ -1,0 +1,494 @@
+{
+  "cargo_lock_sha256": "20092937d6004cfe2a3758f8303d9dfa3c8f629193ac26b89bde16f895a4de4d",
+  "packages": [
+    {
+      "declared_license": "Apache-2.0",
+      "name": "approx",
+      "purl": "pkg:cargo/approx@0.5.1",
+      "registry_archive_sha256": "cab112f0a86d568ea0e627cc1d6be74a1e9cd55214684db5561995f6dad897c6",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.5.1"
+    },
+    {
+      "declared_license": "Apache-2.0 OR MIT",
+      "name": "autocfg",
+      "purl": "pkg:cargo/autocfg@1.5.1",
+      "registry_archive_sha256": "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.5.1"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "name": "bytemuck",
+      "purl": "pkg:cargo/bytemuck@1.25.2",
+      "registry_archive_sha256": "95832e849adfb21180ccb6826a99da14e5d266ae5c2e668e1602cf234f153797",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.25.2"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "cfg-if",
+      "purl": "pkg:cargo/cfg-if@1.0.5",
+      "registry_archive_sha256": "4e7648175b45a9a48536d676f68d918270699102aa8dab5496df06904c914600",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.5"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-commitment/Cargo.toml",
+      "name": "execution-commitment",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-core/Cargo.toml",
+      "name": "execution-core",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-kernel/Cargo.toml",
+      "name": "execution-kernel",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-model/Cargo.toml",
+      "name": "execution-model",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-native/Cargo.toml",
+      "name": "execution-native",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-serialization/Cargo.toml",
+      "name": "execution-serialization",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-trace/Cargo.toml",
+      "name": "execution-trace",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT",
+      "manifest_path": "instruments/execution/compute-runtime/crates/execution-verification/Cargo.toml",
+      "name": "execution-verification",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.14.0",
+      "registry_archive_sha256": "333928d5eb103c5d4050533cec0384302db6be8ef7d3cebd30ec6a35350353da",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.14.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.15.2",
+      "registry_archive_sha256": "3abb554f8ee44336b72d522e0a7fe86a29e09f839a36022fa869a7dfe941a54b",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.15.2"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.16.0",
+      "registry_archive_sha256": "4126c0479ccf7e8664c36a2d719f5f2c140fbb4f9090008098d2c291fa5b3f16",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.16.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.17.3",
+      "registry_archive_sha256": "e01732b97afd8508eee3333a541b9f7610f454bb818669e66e90f5f57c93a776",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.17.3"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.18.0",
+      "registry_archive_sha256": "525a3e490ba77b8e326fb67d4b44b4bd2f920f44d4cc73ccec50adc68e3bee34",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.18.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.19.0",
+      "registry_archive_sha256": "2b8509e6791516e81c1a630d0bd7fbac36d2fa8712a9da8662e716b52d5051ca",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.19.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.20.5",
+      "registry_archive_sha256": "f43e957e744be03f5801a55472f593d43fabdebf25a4585db250f04d86b1675f",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.20.5"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.21.3",
+      "registry_archive_sha256": "518faa5064866338b013ff9b2350dc318e14cc4fcd6cb8206d7e7c9886c98815",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.21.3"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.22.0",
+      "registry_archive_sha256": "12f597d56c1bd55a811a1be189459e8fad2bbc272616375602443bdfb37fa774",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.22.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.23.0",
+      "registry_archive_sha256": "8e4afd9ad95555081e109fe1d21f2a30c691b5f0919c67dfa690a2e1eb6bd51c",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.23.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.24.2",
+      "registry_archive_sha256": "b5418c17512bdf42730f9032c74e1ae39afc408745ebb2acf72fbc4691c17945",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.24.2"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.25.0",
+      "registry_archive_sha256": "151665d9be52f9bb40fc7966565d39666f2d1e69233571b71b87791c7e0528b3",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.25.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.27.0",
+      "registry_archive_sha256": "9e05e7e6723e3455f4818c7b26e855439f7546cf617ef669d1adedb8669e5cb9",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.27.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.28.0",
+      "registry_archive_sha256": "779ae4bf7e8421cf91c0b3b64e7e8b40b862fba4d393f59150042de7c4965a94",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.28.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.29.3",
+      "registry_archive_sha256": "8babf46d4c1c9d92deac9f7be466f76dfc4482b6452fc5024b5e8daf6ffeb3ee",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.29.3"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "glam",
+      "purl": "pkg:cargo/glam@0.30.10",
+      "registry_archive_sha256": "19fc433e8437a212d1b6f1e68c7824af3aed907da60afa994e7f542d18d12aa9",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.30.10"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "itoa",
+      "purl": "pkg:cargo/itoa@1.0.18",
+      "registry_archive_sha256": "8f42a60cbdf9a97f5d2305f08a87dc4e09308d1276d28c869c684d7777685682",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.18"
+    },
+    {
+      "declared_license": "ISC",
+      "name": "libloading",
+      "purl": "pkg:cargo/libloading@0.8.9",
+      "registry_archive_sha256": "d7c4b02199fee7c5d21a5ae7d8cfa79a6ef5bb2fc834d6e9058e89c825efdc55",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.8.9"
+    },
+    {
+      "declared_license": "MIT",
+      "name": "libm",
+      "purl": "pkg:cargo/libm@0.2.16",
+      "registry_archive_sha256": "b6d2cec3eae94f9f509c767b45932f1ada8350c4bdb85af2fcab4a3c14807981",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.2.16"
+    },
+    {
+      "declared_license": "MIT/Apache-2.0",
+      "name": "matrixmultiply",
+      "purl": "pkg:cargo/matrixmultiply@0.3.11",
+      "registry_archive_sha256": "3f607c237553f086e7043417a51df26b2eb899d3caff94e6a67592ff992fedc7",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.3.11"
+    },
+    {
+      "declared_license": "Unlicense OR MIT",
+      "name": "memchr",
+      "purl": "pkg:cargo/memchr@2.8.3",
+      "registry_archive_sha256": "cf8baf1c55e62ffcace7a9f06f4bd9cd3f0c4beb022d3b367256b91b87513d98",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "2.8.3"
+    },
+    {
+      "declared_license": "Apache-2.0",
+      "name": "nalgebra",
+      "purl": "pkg:cargo/nalgebra@0.34.1",
+      "registry_archive_sha256": "c4d5b3eff5cd580f93da45e64715e8c20a3996342f1e466599cf7a267a0c2f5f",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.34.1"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "num-bigint",
+      "purl": "pkg:cargo/num-bigint@0.4.8",
+      "registry_archive_sha256": "c89e69e7e0f03bea5ef08013795c25018e101932225a656383bd384495ecc367",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.4.8"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "num-complex",
+      "purl": "pkg:cargo/num-complex@0.4.6",
+      "registry_archive_sha256": "73f88a1307638156682bada9d7604135552957b7818057dcef22705b4d509495",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.4.6"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "num-integer",
+      "purl": "pkg:cargo/num-integer@0.1.47",
+      "registry_archive_sha256": "7ce2d95d4b3734dc35aa2f45e1aa22cd416814592a4f9d9205e11affd5b8e10b",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.1.47"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "num-rational",
+      "purl": "pkg:cargo/num-rational@0.4.2",
+      "registry_archive_sha256": "f83d14da390562dca69fc84082e73e548e1ad308d24accdedd2720017cb37824",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.4.2"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "num-traits",
+      "purl": "pkg:cargo/num-traits@0.2.19",
+      "registry_archive_sha256": "071dfc062690e90b734c0b2273ce72ad0ffa95f0c74596bc250dcfd960262841",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.2.19"
+    },
+    {
+      "declared_license": "AGPL-3.0-or-later",
+      "manifest_path": "native/odsp-core/Cargo.toml",
+      "name": "odsp-numerical-core",
+      "selected_linux_normal_or_build": true,
+      "version": "0.1.0"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "paste",
+      "purl": "pkg:cargo/paste@1.0.15",
+      "registry_archive_sha256": "57c0d7b74b563b49d38dae00a0c37d4d6de9b432382b2892f0574ddcae73fd0a",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.15"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "proc-macro2",
+      "purl": "pkg:cargo/proc-macro2@1.0.107",
+      "registry_archive_sha256": "985e7ec9bb745e6ce6535b544d84d6cd6f7ad8bd711c398938ae983b91a766d9",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.107"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "quote",
+      "purl": "pkg:cargo/quote@1.0.47",
+      "registry_archive_sha256": "1fbf4db142a473a8d80c26bbf18454ed458bf8d26c8219c331daecfdbd079001",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.47"
+    },
+    {
+      "declared_license": "MIT/Apache-2.0",
+      "name": "rawpointer",
+      "purl": "pkg:cargo/rawpointer@0.2.1",
+      "registry_archive_sha256": "60a357793950651c4ed0f3f52338f53b2f809f32d83a07f72909fa13e4c6c1e3",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.2.1"
+    },
+    {
+      "declared_license": "Apache-2.0 OR BSL-1.0",
+      "name": "ryu",
+      "purl": "pkg:cargo/ryu@1.0.23",
+      "registry_archive_sha256": "9774ba4a74de5f7b1c1451ed6cd5285a32eddb5cccb8cc655a4e50009e06477f",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.23"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "name": "safe_arch",
+      "purl": "pkg:cargo/safe_arch@0.7.4",
+      "registry_archive_sha256": "96b02de82ddbe1b636e6170c21be622223aea188ef2e139be0a5b219ec215323",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.7.4"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "serde",
+      "purl": "pkg:cargo/serde@1.0.229",
+      "registry_archive_sha256": "4148590afebada386688f18773da617792bf2ef03ffc1e4cbd2b1d45b023e0ba",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.229"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "serde_core",
+      "purl": "pkg:cargo/serde_core@1.0.229",
+      "registry_archive_sha256": "67dca2c9c51e58a4791a4b1ed58308b39c64224d349a935ab5039aa360942a48",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.229"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "serde_derive",
+      "purl": "pkg:cargo/serde_derive@1.0.229",
+      "registry_archive_sha256": "e7a5d71263a5a7d47b41f6b3f06ba276f10cc18b0931f1799f710578e2309348",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.229"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "serde_json",
+      "purl": "pkg:cargo/serde_json@1.0.145",
+      "registry_archive_sha256": "402a6f66d8c709116cf22f558eab210f5a50187f702eb4d7e5ef38d9a7f1c79c",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.145"
+    },
+    {
+      "declared_license": "Apache-2.0",
+      "name": "simba",
+      "purl": "pkg:cargo/simba@0.9.1",
+      "registry_archive_sha256": "c99284beb21666094ba2b75bbceda012e610f5479dfcc2d6e2426f53197ffd95",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.9.1"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "syn",
+      "purl": "pkg:cargo/syn@3.0.9",
+      "registry_archive_sha256": "d78c8dee4c7bf0e14673097256fed6142ce9d3b85a408189d07482442145823b",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "3.0.9"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "typenum",
+      "purl": "pkg:cargo/typenum@1.20.1",
+      "registry_archive_sha256": "b6f5e870be6c3b371b77fe0ee0bafb859fa4964b4404c27de1d380043c4dda20",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.20.1"
+    },
+    {
+      "declared_license": "(MIT OR Apache-2.0) AND Unicode-3.0",
+      "name": "unicode-ident",
+      "purl": "pkg:cargo/unicode-ident@1.0.27",
+      "registry_archive_sha256": "a2c754d6c33795a1c324727428e5a7dedb5b06195f9890bdbcba760d3e246563",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "1.0.27"
+    },
+    {
+      "declared_license": "Zlib OR Apache-2.0 OR MIT",
+      "name": "wide",
+      "purl": "pkg:cargo/wide@0.7.33",
+      "registry_archive_sha256": "0ce5da8ecb62bcd8ec8b7ea19f69a51275e91299be594ea5cc6ef7819e16cd03",
+      "selected_linux_normal_or_build": true,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.7.33"
+    },
+    {
+      "declared_license": "MIT OR Apache-2.0",
+      "name": "windows-link",
+      "purl": "pkg:cargo/windows-link@0.2.1",
+      "registry_archive_sha256": "f0805222e57f7521d6a62e36fa9163bc891acd422f971defe97d64e70d0a4fe5",
+      "selected_linux_normal_or_build": false,
+      "source": "registry+https://github.com/rust-lang/crates.io-index",
+      "version": "0.2.1"
+    }
+  ],
+  "schema": "odsp.rust-locked-dependency-inventory.v1",
+  "scope": "All Cargo.lock packages, with cargo tree normal/build selection. Declared licenses are not a legal clearance or an executable attestation. Native LAPACK/system libraries are separate runtime inputs.",
+  "target": "x86_64-unknown-linux-gnu"
+}

@@ -323,17 +323,17 @@ _IDENTITY_FIELDS = frozenset({"owner", "principal", "agent_id"})
 
 
 def admit(name, arguments):
-    """Shared control-tool request policy for the MCP host, SDK and coordinator.
+    """Shared request validation for every registered canonical profile.
 
     A request names a listed tool, stays inside the argument budget, cannot pick
     a checkout or pin, cannot name a principal (the host supplies identity) and
     matches the declared input schema. Transports format; they do not re-decide.
-    ODRP reference calls use the separate KnowledgeHost validation path.
+    This validates request structure; current grants remain the principal
+    facade's responsibility. Individual profiles retain their tighter checks.
     """
     from .agent_api import encode
-    from .agent_tools import _shape
-    from .control_gateway import TOOLS
-    if not isinstance(name, str) or name not in TOOLS:
+    from .principal_policy import _specs, _request
+    if not isinstance(name, str) or name not in _specs():
         raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
     if type(arguments) is not dict:
         raise ValueError("Service arguments must be an object")
@@ -347,7 +347,7 @@ def admit(name, arguments):
         raise ValueError("Request exceeds the argument budget") from exc
     if size > 65536:
         raise ValueError("Request exceeds the argument budget")
-    _shape(arguments, TOOLS[name]["inputSchema"])
+    _request(name, arguments)
 
 
 def response_postcondition(value):
@@ -370,6 +370,12 @@ def invoke(name, arguments=None, host=None):
         return host.invoke(name, arguments)
     if isinstance(host, PrincipalFacade):
         return host.invoke(name, arguments)
+    if isinstance(name, str) and name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_metrology_", "ncp_db_", "ncp_dbops_")):
+        # Server toolbox calls require the principal/audited path above.
+        # A raw profile object is not a replacement authorization boundary.
+        raise ValueError("server_toolbox_requires_principal_host")
+    arguments = {} if arguments is None else arguments
+    admit(name, arguments)
     if isinstance(name, str) and name.startswith("ncp_domain_read_"):
         from .domain_read_profile import invoke_domain_read
         return invoke_domain_read(host, name, {} if arguments is None else arguments)
@@ -405,8 +411,6 @@ def invoke(name, arguments=None, host=None):
         return invoke_reference(host, name, {} if arguments is None else arguments)
     if not isinstance(name, str) or (name not in OPERATIONS and name not in SESSION):
         raise ValueError("Unknown service. Call a named operation. This SDK is not a shell.")
-    arguments = {} if arguments is None else arguments
-    admit(name, arguments)
     if name in SESSION:
         if host is None:
             raise ValueError("This operation needs open_demo. A folder is not a session.")
@@ -445,6 +449,10 @@ def capability_map():
     from .offline_intake import profile_manifest as intake_manifest
     from .proof_profile import profile_manifest as proof_manifest
     from .domain_read_profile import profile_manifest as domain_read_manifest
+    from .mcp_toolbox import profile_manifest as toolbox_manifest
+    from .live_intake import profile_manifest as live_manifest
+    from .metrology_operations import profile_manifest as metrology_manifest
+    from .data_database import profile_manifest as database_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -483,6 +491,10 @@ def capability_map():
         "reference_profiles": [profile_manifest(), state_manifest(), logistics_manifest()],
         "bounded_computation_profiles": [recompiler_manifest(), schematic_manifest(), clocksync_manifest(), nise_manifest()],
         "inspection_profiles": [intake_manifest(), proof_manifest(), domain_read_manifest()],
+        "orchestration_profiles": [toolbox_manifest()],
+        "observation_connection_profiles": [live_manifest()],
+        "operational_metrology_profiles": [metrology_manifest()],
+        "data_systems_profiles": [database_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 

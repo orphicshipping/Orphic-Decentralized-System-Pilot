@@ -14,7 +14,7 @@ from .request_boundary_transport import _exchange, executable_snapshot, _close_o
 
 SOURCE_SHA256 = {
     'agent_api': '3ec9ae6f41e6618b6680f610ba39c06634639b17d3dffa86ab63a67f0898dd7e',
-    'agent_mcp': '564d51f4ea3e74b3ab56916e130d6efaaaa1e2ec3c374a2f174feb072a9643e3',
+    'agent_mcp': '826bd23e2cde0062365ec1f4c566fe95bebed0f00d5ffd76e24c4e4409f03b0d',
     'control_contracts': 'abbf4350e784efbc580318739a57e8e1a0a5e8f1d5dd8edb2b7b6a7385528a00',
     'session': '214d00cdf5e29b099dfbbe0237955b9dc632d3faddd2ec7601fd965e1d9cd25b',
     'request_boundary_contracts': '4ad61d781d8994730eafd68efcfc9e7f0bfd41344c48bb503a97ccb8fedfc6f1',
