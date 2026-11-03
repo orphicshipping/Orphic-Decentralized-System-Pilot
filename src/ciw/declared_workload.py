@@ -322,7 +322,16 @@ class DeclaredWorkflow:
             if set(bundle["runtimes"]) != {self.role}:
                 raise ValueError("Unexpected workload runtime")
             runtime = bundle["runtimes"][self.role]
-            _keys(runtime, {"schema", "adapter_version", "repository_root", "revision", "source_tree", "module", "source_root", "python_executable", "python_sha256", "python_version", "dependencies"} | ({"engine"} if self.role == "scr" else set()))
+            _keys(runtime, {"schema", "adapter_version", "repository_root", "revision", "source_tree", "module", "source_root", "python_executable", "python_sha256", "python_version", "dependencies"} | ({"engine"} if self.role == "scr" else set()), {"process_policy"})
+            if 'process_policy' in runtime:
+                # Full runtime equality is checked against the host-bound
+                # adapter before execution/replay. This field is evidence of
+                # the selected policy, never permission to select a sandbox.
+                policy = runtime['process_policy']
+                if (type(policy) is not dict or policy.get('schema') != 'ciw.process-policy.v1'
+                        or type(policy.get('policy_sha256')) is not str
+                        or re.fullmatch(r'sha256:[0-9a-f]{64}', policy['policy_sha256']) is None):
+                    raise ValueError('Invalid process policy identity')
             if runtime["schema"] != "ciw.subprocess-runtime.v1" or any(runtime[k] != self.pin[k] for k in ("revision", "module", "source_root")) or not re.fullmatch("[a-f0-9]{40}", runtime["source_tree"]) or not re.fullmatch("[a-f0-9]{64}", runtime["python_sha256"]):
                 raise ValueError("Unapproved native runtime pin")
             for k in ("adapter_version", "repository_root", "python_executable", "python_version"):

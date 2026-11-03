@@ -274,7 +274,11 @@ def _receipt(value):
     _text(value["execution_id"])
     _request(value["request"])
     _numerical(value["numerical_result"])
-    _exact(value["runtime"], _RUNTIME)
+    runtime_keys = _RUNTIME | ({'process_policy_ref'} if 'process_policy_ref' in value['runtime'] else set())
+    _exact(value["runtime"], runtime_keys)
+    if 'process_policy_ref' in value['runtime']:
+        _require(type(value['runtime']['process_policy_ref']) is str and
+                 re.fullmatch(r'sha256:[0-9a-f]{64}', value['runtime']['process_policy_ref']))
     _exact(value["runtime"]["dependencies"], {"numpy", "scipy"})
     for key in _RUNTIME - {"dependencies"}:
         _text(value["runtime"][key])
@@ -323,7 +327,8 @@ class _ClockAdapter(PinnedSubprocessAdapter):
     def _git(self, *arguments):
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments],
-            cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024)
+            cwd=self.repository_root, timeout=self._remaining(), limit=4 * 1024 * 1024,
+            process_policy=self.process_policy)
         if code:
             raise AdapterRefusal("SOURCE_PIN_MISMATCH", "Cannot verify bound checkout")
         return data
@@ -340,7 +345,7 @@ class ClockSyncHost:
     resource_templates = []
 
     def __init__(self, *, checkout, python_executable, principal, expected_python_sha256=None,
-                 expected_python_version=None, expected_dependencies=None):
+                 expected_python_version=None, expected_dependencies=None, process_policy=None):
         _require(os.name == "posix" and hasattr(os, "O_NOFOLLOW"), "unsupported_platform")
         _require(type(principal) is str and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9_.:@-]{0,127}", principal),
                  "invalid_host_binding")
@@ -352,7 +357,7 @@ class ClockSyncHost:
         self._adapter = _ClockAdapter(checkout, PIN, "tbrt.clock", source_root="src",
             python_executable=python_executable, timeout_seconds=PROCESS_SECONDS, max_output_bytes=MAX_PROCESS_OUTPUT,
             expected_python_sha256=expected_python_sha256, expected_python_version=expected_python_version,
-            expected_dependencies=expected_dependencies)
+            expected_dependencies=expected_dependencies, process_policy=process_policy)
         self._guard_directory = TemporaryDirectory(prefix="odsp-clocksync-call-")
         self._closed = False
 
@@ -376,7 +381,10 @@ class ClockSyncHost:
     def _runtime(self):
         identity = self._adapter.runtime_identity()
         self._adapter._remaining()
-        return {key: identity[key] for key in sorted(_RUNTIME)}
+        runtime = {key: identity[key] for key in sorted(_RUNTIME)}
+        if self._adapter.process_policy is not None:
+            runtime['process_policy_ref'] = self._adapter.process_policy.identity()['policy_sha256']
+        return runtime
 
     def _kernel(self, request, expected_runtime=None):
         _request(request)

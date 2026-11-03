@@ -9,10 +9,10 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2824,
-    "generated": 250,
+    "retained_and_verified": 2910,
+    "generated": 258,
     "rewritten": 46,
-    "blocked": 109,
+    "blocked": 117,
     "vendor_exempt": 2798
   },
   "files": [
@@ -1690,6 +1690,41 @@
       "authorizes_execution": false
     },
     {
+      "path": "docs/CAMPAIGN_AUDITED_HOST.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CAMPAIGN_CONTRACTS.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CAMPAIGN_DOMAIN_READ.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CAMPAIGN_PROCESS_AUDIT.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CAMPAIGN_QUEUE.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
       "path": "docs/CAPABILITIES.md",
       "disposition": "retained_and_verified",
       "component": "record",
@@ -1719,6 +1754,13 @@
     },
     {
       "path": "docs/CI_INBOX_RECOVERY.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CLIENT_CONTEXT_SELECTOR.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -2992,6 +3034,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "docs/OFFLINE_INTAKE.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
       "path": "docs/OPERATIONAL_ENGINEERING.md",
       "disposition": "retained_and_verified",
       "component": "record",
@@ -3210,6 +3259,13 @@
     },
     {
       "path": "docs/PROOF_HARDENING.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/PROOF_VERIFICATION_PROFILE.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -3441,6 +3497,13 @@
     },
     {
       "path": "docs/RUN_NET.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/RUST_REQUEST_BOUNDARY.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -3769,6 +3832,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "docs/TOOLBOX_SKILLS.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
       "path": "docs/TOOLING_VISUALIZER.md",
       "disposition": "retained_and_verified",
       "component": "record",
@@ -3805,6 +3875,13 @@
     },
     {
       "path": "docs/TOOLPOINT_UPGRADES_INTEGRATION.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/TOOL_PROGRAMME_ACCEPTANCE.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -4505,6 +4582,34 @@
     },
     {
       "path": "examples/computational-objects/statistics.json",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/README.md",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/offline_inventory.py",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/skills_inventory.py",
       "disposition": "retained_and_verified",
       "component": "fixture",
       "reason": "Labelled fixture. Not a measurement and not a live credential.",
@@ -7508,6 +7613,76 @@
     },
     {
       "path": "experiments/oscillator_reduction.py",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/.gitignore",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/Cargo.lock",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/Cargo.toml",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/README.md",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/rust-toolchain.toml",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/README.md",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/main.rs",
+      "disposition": "blocked",
+      "component": "research",
+      "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "experiments/rust-request-boundary/test_boundary.py",
       "disposition": "blocked",
       "component": "research",
       "reason": "Research script retained. Not a profile grant and not advertised as a tool.",
@@ -29249,6 +29424,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "scripts/qualify_tool_programme.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
       "path": "scripts/record_private_image.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
@@ -29439,6 +29621,13 @@
     },
     {
       "path": "scripts/workbench.ps1",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "scripts/write_locked_sbom.py",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Noninteractive maintenance script. Running it is not an MCP grant.",
@@ -29858,6 +30047,20 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/audit_chain.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/audited_host.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/bench_examples/LICENSE.txt",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -29998,6 +30201,20 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/campaign_contracts.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/campaign_receipts.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/candidate_evidence.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -30125,6 +30342,20 @@
     },
     {
       "path": "src/ciw/container_cli.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/context_catalog.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/context_selector.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -30433,6 +30664,13 @@
     },
     {
       "path": "src/ciw/domain_cli.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/domain_read_profile.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -32623,6 +32861,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/offline_intake.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/operational_agent.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -33232,6 +33477,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/process_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/product_study.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -33310,6 +33562,20 @@
     },
     {
       "path": "src/ciw/proof_obligations.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/proof_profile.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/proof_registry.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -33499,6 +33765,27 @@
     },
     {
       "path": "src/ciw/representation_realizations.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/request_boundary.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/request_boundary_contracts.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/request_boundary_transport.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -33967,6 +34254,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/store_queue.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/system_board.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -34199,6 +34493,34 @@
     },
     {
       "path": "src/ciw/thermofluids_workflow.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_cache.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_custody.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_recipes.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_skills.py",
       "disposition": "retained_and_verified",
       "component": "domain",
       "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
@@ -35255,6 +35577,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_argument_schema_gate.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_artifact_provenance.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -35409,6 +35738,20 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_audit_chain.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_audited_host_identity.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_bim_interop.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -35507,6 +35850,62 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_campaign_audited_host.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_client_metadata.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_contracts.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_coordinator.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_native_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_process_cleanup.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_receipts.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_campaign_shared_profiles.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_capabilities.py",
       "disposition": "rewritten",
       "component": "service_boundary",
@@ -35592,6 +35991,13 @@
     },
     {
       "path": "tests/test_container_calculus.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_context_selector.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -35872,6 +36278,13 @@
     },
     {
       "path": "tests/test_domain_examples.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_domain_read_profile.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -37110,6 +37523,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_locked_sbom.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_logistics_mcp.py",
       "disposition": "rewritten",
       "component": "service_boundary",
@@ -37482,6 +37902,20 @@
     },
     {
       "path": "tests/test_observation_origin_enforcement.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_offline_intake.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_offline_intake_policy.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -37880,6 +38314,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_process_policy.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_product_study.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -37923,6 +38364,20 @@
     },
     {
       "path": "tests/test_proof_obligations.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_proof_profile.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_proof_registry.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -38189,6 +38644,20 @@
     },
     {
       "path": "tests/test_representation_realizations.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_request_boundary.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_request_boundary_custody.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -38517,6 +38986,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_store_queue.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_subprocess_adapter.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -38770,6 +39246,55 @@
     },
     {
       "path": "tests/test_thermofluids_workflow.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_cache.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_campaign.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_custody.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_dispatch_scope.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_marker_integration.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_outcomes.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_skills.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -39197,6 +39722,195 @@
     },
     {
       "path": "tools/bevy-render-view/src/main.rs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/.gitignore",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/compiler-lock.json",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/package-lock.json",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/package.json",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/scripts/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/scripts/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/scripts/build.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/src/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/src/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/src/contract.ts",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/src/metadata.ts",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/src/viewer.ts",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/browser_journey.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/contract.test.mjs",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/mcp_bridge.py",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/tsconfig.json",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tests/types.ts",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/tsconfig.json",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/web/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/web/README.md",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/web/index.html",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/web/theme.css",
+      "disposition": "retained_and_verified",
+      "component": "maintenance",
+      "reason": "Maintenance console or view. No required workflow depends on a human screen.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tools/campaign-client/web/viewer.css",
       "disposition": "retained_and_verified",
       "component": "maintenance",
       "reason": "Maintenance console or view. No required workflow depends on a human screen.",

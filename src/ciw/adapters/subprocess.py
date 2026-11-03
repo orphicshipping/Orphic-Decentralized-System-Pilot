@@ -114,19 +114,29 @@ def _stop(process: subprocess.Popen[bytes]) -> None:
 
 
 def _bounded_process(
-    command: list[str], *, cwd: Path, timeout: float, limit: int, stdin: bytes = b""
+    command: list[str], *, cwd: Path, timeout: float, limit: int, stdin: bytes = b"",
+    process_policy=None, environment: Mapping[str, str] | None = None,
 ) -> tuple[int, bytes]:
     """Drain both pipes concurrently, retaining at most ``limit`` bytes in total."""
+    if process_policy is not None:
+        from ..process_policy import ProcessPolicy
+        if not isinstance(process_policy, ProcessPolicy) or environment is not None:
+            raise ValueError("process policy must be a host-created ProcessPolicy")
+        command, environment = process_policy.prepare(command, cwd, stdin)
+        timeout = min(timeout, process_policy.wall_seconds)
+        limit = min(limit, process_policy.max_output_bytes)
     output: list[bytes] = []
     total = 0
     lock = threading.Lock()
     exceeded = threading.Event()
     readers: list[threading.Thread] = []
     reader_failures: list[BaseException] = []
+    cleanup_failures: list[BaseException] = []
     stop_lock = threading.Lock()
     stop_attempted = False
     process = None
-    environment = dict(os.environ)
+    body_failure = None
+    environment = dict(os.environ if environment is None else environment)
     environment.pop("PYTHONPATH", None)
     environment.pop("PYTHONHOME", None)
     environment.pop("NODE_OPTIONS", None)
@@ -139,7 +149,20 @@ def _bounded_process(
                 return
             # Do not retry an ambiguous signal, including an after-effect error.
             stop_attempted = True
-            _stop(process)
+            try:
+                _stop(process)
+            except BaseException as exc:
+                cleanup_failures.append(exc)
+                raise
+
+    def capture_cleanup(callback, *args, **kwargs) -> None:
+        # ExitStack may replace cleanup-only exception contexts. Keep explicit
+        # references before another callback can obscure the diagnostic chain.
+        try:
+            callback(*args, **kwargs)
+        except BaseException as exc:
+            cleanup_failures.append(exc)
+            raise
 
     def drain(pipe: Any, retain: bool) -> None:
         nonlocal total
@@ -167,12 +190,12 @@ def _bounded_process(
                 stop_once()
             finally:
                 # Reap even if signaling raised after taking effect.
-                process.wait(timeout=5)
+                capture_cleanup(process.wait, timeout=5)
 
     def join_reader(index: int) -> None:
         # start() can fail either before or after the OS thread starts.
         if index < len(readers) and readers[index].ident is not None:
-            readers[index].join(timeout=0.5)
+            capture_cleanup(readers[index].join, timeout=0.5)
 
     def stop_pipe_holders() -> None:
         if any(reader.is_alive() for reader in readers):
@@ -198,9 +221,28 @@ def _bounded_process(
         if reader_failures:
             raise BaseExceptionGroup("Bound runtime output cleanup failed", reader_failures)
 
-    def report_ownership_uncertainty() -> None:
+    def report_cleanup(exc_type, exc, traceback) -> None:
+        failures, seen = [], set()
+        for failure in (body_failure, *cleanup_failures, *reader_failures, exc):
+            if failure is not None and id(failure) not in seen:
+                seen.add(id(failure))
+                failures.append(failure)
         if process is not None and (process.returncode is None or any(reader.is_alive() for reader in readers)):
+            if failures:
+                raise RuntimeCleanupUncertain(process) from BaseExceptionGroup(
+                    "Bound runtime ownership cleanup failed", failures)
             raise RuntimeCleanupUncertain(process)
+        if exc is not None:
+            # Preserve the existing top exception and custody classification,
+            # including successful reaping after an after-effect cleanup error.
+            # An explicit cause survives ExitStack's mutable context repair.
+            for previous in (exc.__cause__, exc.__context__):
+                if previous is not None and id(previous) not in seen:
+                    seen.add(id(previous))
+                    failures.append(previous)
+            previous = [failure for failure in failures if failure is not exc]
+            if previous:
+                exc.__cause__ = BaseExceptionGroup("Bound runtime cleanup diagnostics", previous)
 
     with tempfile.TemporaryFile() as request:
         request.write(stdin)
@@ -210,30 +252,34 @@ def _bounded_process(
         # exception and preserves it if later cleanup also fails. Cleanup never
         # proves provider rollback; failed kill/wait remains explicit uncertainty.
         with ExitStack() as cleanup:
-            cleanup.callback(report_ownership_uncertainty)
+            cleanup.push(report_cleanup)
             cleanup.callback(report_reader_failures)
-            cleanup.callback(close_pipe, 1)
-            cleanup.callback(close_pipe, 0)
+            cleanup.callback(capture_cleanup, close_pipe, 1)
+            cleanup.callback(capture_cleanup, close_pipe, 0)
             cleanup.callback(stop_pipe_holders)
             cleanup.callback(join_reader, 1)
             cleanup.callback(join_reader, 0)
             cleanup.callback(stop_and_reap)
             try:
-                process = subprocess.Popen(
-                    command, cwd=cwd, env=environment, stdin=request,
-                    stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
-                    start_new_session=os.name == "posix",
-                )
-            except (OSError, ValueError) as exc:
-                raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
-            for pipe, retain in ((process.stdout, True), (process.stderr, False)):
-                reader = threading.Thread(target=drain, args=(pipe, retain), daemon=True)
-                readers.append(reader)
-                reader.start()
-            try:
-                process.wait(timeout=timeout)
-            except subprocess.TimeoutExpired:
-                timed_out = True
+                try:
+                    process = subprocess.Popen(
+                        command, cwd=cwd, env=environment, stdin=request,
+                        stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,
+                        start_new_session=os.name == "posix",
+                    )
+                except (OSError, ValueError) as exc:
+                    raise AdapterRefusal("RUNTIME_UNAVAILABLE", "Cannot start the bound runtime") from exc
+                for pipe, retain in ((process.stdout, True), (process.stderr, False)):
+                    reader = threading.Thread(target=drain, args=(pipe, retain), daemon=True)
+                    readers.append(reader)
+                    reader.start()
+                try:
+                    process.wait(timeout=timeout)
+                except subprocess.TimeoutExpired:
+                    timed_out = True
+            except BaseException as exc:
+                body_failure = exc
+                raise
         if exceeded.is_set():
             _refuse("OUTPUT_LIMIT", "The bound runtime exceeded its combined output limit")
         if timed_out:
@@ -295,8 +341,14 @@ class PinnedSubprocessAdapter:
         expected_python_sha256: str | None = None,
         expected_python_version: str | None = None,
         expected_dependencies: Mapping[str, str | None] | None = None,
+        process_policy=None,
     ) -> None:
         self._cleanup_uncertain: RuntimeCleanupUncertain | None = None
+        if process_policy is not None:
+            from ..process_policy import ProcessPolicy
+            if not isinstance(process_policy, ProcessPolicy):
+                raise ValueError("process policy must be a host-created ProcessPolicy")
+        self.process_policy = process_policy
         if not isinstance(revision, str) or not re.fullmatch(r"[0-9a-f]{40}|[0-9a-f]{64}", revision):
             raise ValueError("revision must be a full lowercase Git commit ID")
         if not isinstance(module, str) or not re.fullmatch(r"[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)*", module):
@@ -336,6 +388,7 @@ class PinnedSubprocessAdapter:
         code, data = _bounded_process(
             ["git", "--no-replace-objects", "-c", "core.fsmonitor=false", *arguments], cwd=self.repository_root,
             timeout=min(self.timeout_seconds, 10.0), limit=max(self.max_output_bytes, 4 * 1024 * 1024),
+            process_policy=self.process_policy,
         )
         if code:
             _refuse("SOURCE_PIN_MISMATCH", "Cannot verify the bound Git checkout")
@@ -412,6 +465,7 @@ class PinnedSubprocessAdapter:
                 [str(self.python_executable), "-I", "-B", "-X",
                  f"pycache_prefix={directory}/bytecode", "-c", code, *arguments],
                 cwd=Path(directory), timeout=self.timeout_seconds, limit=self.max_output_bytes, stdin=stdin,
+                process_policy=self.process_policy,
             )
 
     @_guard_cleanup
@@ -432,13 +486,16 @@ class PinnedSubprocessAdapter:
         probe = self._probe()
         if probe != {"python_version": self._python_version, "dependencies": self._dependencies}:
             _refuse("RUNTIME_PIN_MISMATCH", "The Python or dependency versions changed")
-        return {
+        identity = {
             "schema": "ciw.subprocess-runtime.v1", "adapter_version": ADAPTER_VERSION,
             "repository_root": str(self.repository_root), "revision": self.revision,
             "source_tree": tree, "module": self.module, "source_root": self.source_root_relative,
             "python_executable": str(self.python_executable), "python_sha256": self._python_sha256,
             "python_version": self._python_version, "dependencies": dict(self._dependencies),
         }
+        if self.process_policy is not None:
+            identity["process_policy"] = self.process_policy.identity()
+        return identity
 
     @_guard_cleanup
     def invoke(self, operation_id: str, inputs: Mapping[str, Any]) -> dict[str, Any]:

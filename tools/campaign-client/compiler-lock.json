@@ -1,0 +1,12 @@
+{
+  "name": "typescript",
+  "version": "6.0.3",
+  "metadata_url": "https://registry.npmjs.org/typescript/6.0.3",
+  "archive_url": "https://registry.npmjs.org/typescript/-/typescript-6.0.3.tgz",
+  "registry_integrity": "sha512-y2TvuxSZPDyQakkFRPZHKFm+KKVqIisdg9/CZwm9ftvKXLP8NRWj38/ODjNbr43SsoXqNuAisEf1GdCxqWcdBw==",
+  "archive_sha256": "33cd0ee1beaa8c9e9d15a9da836c62ddea4c34a42d7c2d349dbc80d94165d22a",
+  "archive_bytes": 4515854,
+  "extracted_bytes": 24346827,
+  "executed_install_scripts": false,
+  "compiler": "package/lib/tsc.js"
+}

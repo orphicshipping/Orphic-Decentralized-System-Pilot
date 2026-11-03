@@ -255,6 +255,39 @@ def test_real_provider_refuses_wrong_frames_extrapolation_and_invalid_covariance
     assert host.call("ncp_clocksync_reconcile", {"request": request}) == {"status": "refused", "reason": "clock_model_refused"}
 
 
+@pytest.mark.parametrize("skew", [1e151, 2**600])
+def test_finite_binary64_profile_numbers_keep_the_native_contract(host, skew):
+    request = json.loads(json.dumps(INPUT))
+    # This profile declares finite binary64 with exact integer conversion.
+    # Its opaque request must not inherit a generic typed-number default.
+    request["model"]["skew"] = skew
+    request["joint_covariance"]["matrix"] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    result = invoke(host, request=request)
+    assert result["request"] == request
+    assert result["numerical_result"]["event_time_delta"] == 3 * float(skew)
+    assert result["numerical_result"]["variance"] == 0
+
+
+def test_real_provider_refuses_overflow_from_bounded_inputs(host, monkeypatch):
+    request = json.loads(json.dumps(INPUT))
+    # Bounded finite inputs can still overflow the native J C J.T product;
+    # the scientific refusal gate must remain independently effective.
+    request["model"]["skew"] = 1e150
+    request["joint_covariance"]["matrix"] = [
+        [1e150, 0, 0], [0, 1e150, 0], [0, 0, 1e150]]
+    calls = []
+    real = host._adapter._run
+
+    def observe(*args, **kwargs):
+        calls.append(True)
+        return real(*args, **kwargs)
+
+    monkeypatch.setattr(host._adapter, "_run", observe)
+    assert host.call("ncp_clocksync_reconcile", {"request": request}) == {
+        "status": "refused", "reason": "clock_model_refused"}
+    assert calls
+
+
 @pytest.mark.parametrize("path,changed", [
     (("numerical_result", "event_time"), 1111.0),
     (("numerical_result", "event_time_delta"), 7.0),

@@ -69,7 +69,11 @@ def _specs():
     from .schematic_profile import TOOLS as SCHEMATIC
     from .clocksync_profile import TOOLS as CLOCKSYNC
     from .nise_profile import TOOLS as NISE
+    from .offline_intake import TOOLS as INTAKE
+    from .proof_profile import TOOLS as PROOF
+    from .domain_read_profile import TOOLS as DOMAIN_READ
     return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC, **NISE,
+            **INTAKE, **PROOF, **DOMAIN_READ,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -168,6 +172,9 @@ def _schematic_content_key(path, key, value, arguments):
 
 
 def _request(name, arguments):
+    if isinstance(name, str) and name.startswith(('ncp_intake_', 'ncp_proof_', 'ncp_domain_read_')):
+        from .campaign_contracts import canonical, REQUEST_LIMITS
+        canonical({'name': name, 'arguments': arguments}, limits=REQUEST_LIMITS)
     if isinstance(name, str) and name.startswith('ncp_nise_'):
         # Reject huge integers, invalid Unicode and complex trees before the
         # generic serializer can lose or reinterpret a NISE request.
@@ -329,10 +336,11 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None, intake=None, proof=None, domain_read=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
-                               logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync, nise=nise)
+                               logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync, nise=nise,
+                               intake=intake, proof=proof, domain_read=domain_read)
 
 
 class PrincipalFacade:
@@ -341,9 +349,9 @@ class PrincipalFacade:
 
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
-        self.strict_mcp_input = hosts.get('nise') is not None
+        self.strict_mcp_input = any(hosts.get(key) is not None for key in ('nise', 'intake', 'proof', 'domain_read'))
         self.retained = None
-        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise"):
+        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise", "intake", "proof", "domain_read"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
         if hosts.get("logistics") is not None:
@@ -366,7 +374,10 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("nise" if name.startswith("ncp_nise_") else
+        family = ("domain_read" if name.startswith("ncp_domain_read_") else
+                  "intake" if name.startswith("ncp_intake_") else
+                  "proof" if name.startswith("ncp_proof_") else
+                  "nise" if name.startswith("ncp_nise_") else
                   "clocksync" if name.startswith("ncp_clocksync_") else
                   "schematic" if name.startswith("ncp_schematic_") else
                   "recompiler" if name.startswith("ncp_recompiler_") else

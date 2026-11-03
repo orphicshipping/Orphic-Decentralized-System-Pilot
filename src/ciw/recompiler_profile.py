@@ -148,7 +148,7 @@ class RecompilerHost:
     resource_templates = []
 
     def __init__(self, *, checkout, python_executable, principal, expected_python_sha256=None,
-                 expected_python_version=None, expected_dependencies=None):
+                 expected_python_version=None, expected_dependencies=None, process_policy=None):
         if (os.name != "posix" or type(principal) is not str or not _PRINCIPAL.fullmatch(principal)
                 or not Path(checkout).is_absolute() or not Path(python_executable).is_absolute()):
             raise RecompilerRefusal("invalid_or_unsupported_host_binding")
@@ -159,7 +159,7 @@ class RecompilerHost:
         self._adapter = PinnedSubprocessAdapter(checkout, PIN, "cbsr", source_root="src",
             python_executable=python_executable, timeout_seconds=PROCESS_TIMEOUT, max_output_bytes=MAX_RESPONSE,
             expected_python_sha256=expected_python_sha256, expected_python_version=expected_python_version,
-            expected_dependencies=expected_dependencies)
+            expected_dependencies=expected_dependencies, process_policy=process_policy)
         # Reuse the interruption-safe lease owner; a failed acquisition cannot
         # release another call's descriptor. This is ephemeral admission state,
         # not a result store, a cross-process deployment lock or a new grant.
@@ -167,8 +167,11 @@ class RecompilerHost:
 
     def _runtime(self):
         identity = self._adapter.runtime_identity()
-        return {key: identity[key] for key in ("schema", "adapter_version", "revision", "source_tree", "module",
+        runtime = {key: identity[key] for key in ("schema", "adapter_version", "revision", "source_tree", "module",
                                                "source_root", "python_sha256", "python_version", "dependencies")}
+        if self._adapter.process_policy is not None:
+            runtime['process_policy_ref'] = self._adapter.process_policy.identity()['policy_sha256']
+        return runtime
 
     def _kernel(self, request):
         raw = canonical(request)

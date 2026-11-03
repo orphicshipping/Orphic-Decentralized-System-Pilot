@@ -21,6 +21,8 @@ docs/adr/
 
 # Local provider/tool installations and package depots
 /tools/*
+!/tools/campaign-client/
+!/tools/campaign-client/**
 !/tools/bevy-render-view/
 !/tools/bevy-render-view/**
 !/tools/mcp-operator-console/

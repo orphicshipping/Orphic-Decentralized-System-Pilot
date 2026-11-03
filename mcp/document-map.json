@@ -309,6 +309,31 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/CAMPAIGN_AUDITED_HOST.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/CAMPAIGN_CONTRACTS.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/CAMPAIGN_DOMAIN_READ.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/CAMPAIGN_PROCESS_AUDIT.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/CAMPAIGN_QUEUE.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/CAPABILITIES.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -330,6 +355,11 @@
     },
     {
       "path": "docs/CI_INBOX_RECOVERY.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/CLIENT_CONTEXT_SELECTOR.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -1239,6 +1269,11 @@
       "owner": "docs/ODRP.md"
     },
     {
+      "path": "docs/OFFLINE_INTAKE.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/OPERATIONAL_ENGINEERING.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -1395,6 +1430,11 @@
     },
     {
       "path": "docs/PROOF_HARDENING.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/PROOF_VERIFICATION_PROFILE.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -1560,6 +1600,11 @@
     },
     {
       "path": "docs/RUN_NET.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/RUST_REQUEST_BOUNDARY.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -1789,6 +1834,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/TOOLBOX_SKILLS.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/TOOLING_VISUALIZER.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -1815,6 +1865,11 @@
     },
     {
       "path": "docs/TOOLPOINT_UPGRADES_INTEGRATION.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "docs/TOOL_PROGRAMME_ACCEPTANCE.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -2155,6 +2210,16 @@
     },
     {
       "path": "examples/computational-objects/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "examples/context-selector/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "examples/context-selector/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -3150,6 +3215,26 @@
     },
     {
       "path": "experiments/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "experiments/rust-request-boundary/src/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },
@@ -5895,6 +5980,56 @@
     },
     {
       "path": "tools/bevy-render-view/src/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/scripts/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/scripts/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/src/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/src/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/tests/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/tests/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/web/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "tools/campaign-client/web/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },

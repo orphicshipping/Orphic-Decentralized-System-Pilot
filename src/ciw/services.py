@@ -365,8 +365,20 @@ def response_postcondition(value):
 def invoke(name, arguments=None, host=None):
     """Call one named service. Unknown names refuse. Arguments cannot add a pin."""
     from .principal_policy import PrincipalFacade
+    from .audited_host import AuditedPrincipalHost
+    if isinstance(host, AuditedPrincipalHost):
+        return host.invoke(name, arguments)
     if isinstance(host, PrincipalFacade):
         return host.invoke(name, arguments)
+    if isinstance(name, str) and name.startswith("ncp_domain_read_"):
+        from .domain_read_profile import invoke_domain_read
+        return invoke_domain_read(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_intake_"):
+        from .offline_intake import invoke_intake
+        return invoke_intake(host, name, {} if arguments is None else arguments)
+    if isinstance(name, str) and name.startswith("ncp_proof_"):
+        from .proof_profile import invoke_proof
+        return invoke_proof(host, name, {} if arguments is None else arguments)
     if isinstance(name, str) and name.startswith("ncp_nise_"):
         from .nise_profile import invoke_nise
         return invoke_nise(host, name, {} if arguments is None else arguments)
@@ -430,6 +442,9 @@ def capability_map():
     from .schematic_profile import profile_manifest as schematic_manifest
     from .clocksync_profile import profile_manifest as clocksync_manifest
     from .nise_profile import profile_manifest as nise_manifest
+    from .offline_intake import profile_manifest as intake_manifest
+    from .proof_profile import profile_manifest as proof_manifest
+    from .domain_read_profile import profile_manifest as domain_read_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -467,6 +482,7 @@ def capability_map():
         "indexed": indexed,
         "reference_profiles": [profile_manifest(), state_manifest(), logistics_manifest()],
         "bounded_computation_profiles": [recompiler_manifest(), schematic_manifest(), clocksync_manifest(), nise_manifest()],
+        "inspection_profiles": [intake_manifest(), proof_manifest(), domain_read_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 
@@ -475,6 +491,30 @@ def open_reference(**bindings):
     """Bind approved catalog/evidence snapshots for the ODRP read-only profile."""
     from .reference_profile import open_reference as bind
     return bind(**bindings)
+
+
+def open_domain_read(**bindings):
+    """Bind approved offline domain records; no domain engine or external feed."""
+    from .domain_read_profile import open_domain_read as bind
+    return bind(**bindings)
+
+
+def open_audited(facade, **bindings):
+    """Add an explicit durable audit barrier without granting an operation."""
+    from .audited_host import open_audited as bind
+    return bind(facade, **bindings)
+
+
+def open_intake(**bindings):
+    """Bind an approved offline protocol capture; no live device access."""
+    from .offline_intake import OfflineIntakeHost
+    return OfflineIntakeHost(**bindings)
+
+
+def open_proof(**bindings):
+    """Bind host-selected verification keys and any qualified verifier runtime."""
+    from .proof_profile import ProofHost
+    return ProofHost(**bindings)
 
 
 def reference_tools(host):
