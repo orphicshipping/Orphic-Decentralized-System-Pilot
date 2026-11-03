@@ -359,6 +359,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/CLIENT_CONTEXT_SELECTOR.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/CLOUD_DEVELOPMENT.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -1829,6 +1834,11 @@
       "owner": "owning guide, not re-audited in this pass"
     },
     {
+      "path": "docs/TOOLBOX_SKILLS.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
       "path": "docs/TOOLING_VISUALIZER.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
@@ -2200,6 +2210,16 @@
     },
     {
       "path": "examples/computational-objects/README.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "examples/context-selector/MCP.md",
+      "status": "not_re_audited",
+      "owner": "owning guide, not re-audited in this pass"
+    },
+    {
+      "path": "examples/context-selector/README.md",
       "status": "not_re_audited",
       "owner": "owning guide, not re-audited in this pass"
     },

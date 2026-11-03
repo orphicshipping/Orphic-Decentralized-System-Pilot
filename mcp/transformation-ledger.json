@@ -9,8 +9,8 @@
     "assumption_resolved": "Vendored instruments are not the leakage or BIM checkout. Unbound engines stay blocked rather than simulated."
   },
   "counts": {
-    "retained_and_verified": 2889,
-    "generated": 257,
+    "retained_and_verified": 2910,
+    "generated": 258,
     "rewritten": 46,
     "blocked": 117,
     "vendor_exempt": 2798
@@ -1754,6 +1754,13 @@
     },
     {
       "path": "docs/CI_INBOX_RECOVERY.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "docs/CLIENT_CONTEXT_SELECTOR.md",
       "disposition": "retained_and_verified",
       "component": "record",
       "reason": "Page that owns a claim. Reading it is not a run.",
@@ -3825,6 +3832,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "docs/TOOLBOX_SKILLS.md",
+      "disposition": "retained_and_verified",
+      "component": "record",
+      "reason": "Page that owns a claim. Reading it is not a run.",
+      "authorizes_execution": false
+    },
+    {
       "path": "docs/TOOLING_VISUALIZER.md",
       "disposition": "retained_and_verified",
       "component": "record",
@@ -4568,6 +4582,34 @@
     },
     {
       "path": "examples/computational-objects/statistics.json",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/MCP.md",
+      "disposition": "generated",
+      "component": "folder_contract",
+      "reason": "Generated folder contract. authorizes_execution is false. Not a tool call and not a human console.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/README.md",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/offline_inventory.py",
+      "disposition": "retained_and_verified",
+      "component": "fixture",
+      "reason": "Labelled fixture. Not a measurement and not a live credential.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "examples/context-selector/skills_inventory.py",
       "disposition": "retained_and_verified",
       "component": "fixture",
       "reason": "Labelled fixture. Not a measurement and not a live credential.",
@@ -30306,6 +30348,20 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/context_catalog.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/context_selector.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/control_checkpoint.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -34443,6 +34499,34 @@
       "authorizes_execution": false
     },
     {
+      "path": "src/ciw/toolbox_cache.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_custody.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_recipes.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "src/ciw/toolbox_skills.py",
+      "disposition": "retained_and_verified",
+      "component": "domain",
+      "reason": "Domain implementation. MCP and ciw.services call it. The path stays because tests and pins import it.",
+      "authorizes_execution": false
+    },
+    {
       "path": "src/ciw/tooling_visualizer.py",
       "disposition": "retained_and_verified",
       "component": "domain",
@@ -35493,6 +35577,13 @@
       "authorizes_execution": false
     },
     {
+      "path": "tests/test_argument_schema_gate.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
       "path": "tests/test_artifact_provenance.py",
       "disposition": "retained_and_verified",
       "component": "verification",
@@ -35648,6 +35739,13 @@
     },
     {
       "path": "tests/test_audit_chain.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_audited_host_identity.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -35893,6 +35991,13 @@
     },
     {
       "path": "tests/test_container_calculus.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_context_selector.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
@@ -39141,6 +39246,55 @@
     },
     {
       "path": "tests/test_thermofluids_workflow.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_cache.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_campaign.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_custody.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_dispatch_scope.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_marker_integration.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_outcomes.py",
+      "disposition": "retained_and_verified",
+      "component": "verification",
+      "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",
+      "authorizes_execution": false
+    },
+    {
+      "path": "tests/test_toolbox_skills.py",
       "disposition": "retained_and_verified",
       "component": "verification",
       "reason": "Verification suite. Not weakened to widen a grant. A passing test is not physical qualification.",

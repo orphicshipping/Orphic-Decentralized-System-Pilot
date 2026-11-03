@@ -25,7 +25,7 @@ source/tree, interpreter, installed wheel and commands.
 | Knowledge | Existing ODRP reference profile | Preserve separate corpus/evidence grants; no new corpus ingestion or authority |
 | NSR / SRA / ClockSync / NISE | Existing pinned computations with optional explicit process policy | Real native input/replay tests; preserve numerical semantics and all imported trees |
 | Strict client / viewer | Read-only typed canonical client and evidence view | Static compiler, adversarial response and browser gates; no UI-derived authority |
-| Toolbox / skills / isolated cache | Independently prepared branch, awaiting verified integration | Must pass fresh combined tests after complete patch transfer; standalone evidence is insufficient |
+| Toolbox / skills / isolated cache | Client selection over current host schemas/capture/trust bindings; bounded versioned recipes through canonical/audited authority; separate immutable-read cache | Combined source and installed qualification must bind the final commit; pending/unknown results stop dependencies, current grants and fixed receipt ownership remain mandatory |
 | Rust request boundary | Installed opt-in observer, sealed Linux executable snapshot and exact Python source bindings | Actual native comparisons and official-client grant checks; cancellation/cleanup faults must preserve diagnostics and prevent unresolved observers from relaunching; Python stays authoritative |
 
 **Containment is a separate gate.** Linux process limits are not a network or

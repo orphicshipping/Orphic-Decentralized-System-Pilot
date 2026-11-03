@@ -224,6 +224,12 @@
       "contract": "examples/computational-objects/MCP.md"
     },
     {
+      "path": "examples/context-selector",
+      "class": "navigation",
+      "call": "ncp_index_list",
+      "contract": "examples/context-selector/MCP.md"
+    },
+    {
       "path": "examples/corrections",
       "class": "navigation",
       "call": "ncp_index_list",

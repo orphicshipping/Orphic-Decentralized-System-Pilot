@@ -35,6 +35,10 @@ GROUPS={
  'native':('test_campaign_native_policy.py','test_recompiler_profile.py','test_schematic_profile.py',
            'test_clocksync_profile.py','test_nise_profile.py','test_pinned_profile_policy.py',
            'test_schematic_policy.py','test_clocksync_policy.py','test_nise_policy.py'),
+ 'client_tools':('test_argument_schema_gate.py','test_audited_host_identity.py',
+                 'test_context_selector.py','test_toolbox_skills.py','test_toolbox_cache.py',
+                 'test_toolbox_campaign.py','test_toolbox_outcomes.py','test_toolbox_custody.py',
+                 'test_toolbox_marker_integration.py','test_toolbox_dispatch_scope.py'),
 }
 
 
@@ -65,12 +69,16 @@ def main(argv=None):
         'scope':'local source tests only','authorizes_execution':False,'phases':[]}
     for name in args.group or GROUPS:
         report=destination/(name+'.xml')
+        temporary=destination/(name+'-tmp')
+        temporary.mkdir()
         command=[sys.executable,'-B','-m','pytest','-q','-p','no:cacheprovider',
+                 '-o','tmp_path_retention_policy=all','--basetemp='+str(destination/(name+'-pytest')),
                  '--junitxml='+str(report),*['tests/'+file for file in GROUPS[name]]]
         phase={'name':name,'command':command,'started_at':stamp(),'wall_limit_seconds':900,
                'output_limit_bytes':1048576,'counts':None,'status':'failed'}
         try:
-            code,output=_bounded_process(command,cwd=ROOT,timeout=900,limit=1048576)
+            code,output=_bounded_process(command,cwd=ROOT,timeout=900,limit=1048576,
+                                         environment={**os.environ,'TMPDIR':str(temporary)})
             phase['return_code']=code
             (destination/(name+'.log')).write_bytes(output)
             phase['log_sha256']=sha256(output).hexdigest()

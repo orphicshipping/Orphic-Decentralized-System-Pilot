@@ -6,6 +6,23 @@ must supply the bounded `AuditChain` and durable independent anchor callbacks.
 The wrapper adds no tool, resource or scientific permission. The underlying
 facade still reads current policy immediately before dispatch.
 
+The wrapper pins its constructor facade object and principal. An observed rebind
+permanently refuses that wrapper's calls, discovery and resources, even if the
+original binding is restored later. A new correctly bound wrapper still checks
+the unchanged journal and independent anchor; construction clears no unresolved
+audit hold. Identity changes observed after a call withhold returned data and
+report uncertainty. These checks enforce host consistency, not isolation from a
+local administrator who can rewrite process memory.
+
+Trusted synchronous SDK callers can nest `scope_guard(check)` around canonical
+calls or resource reads. Each check must return exactly `True`; it confers no
+grant and is never accepted in MCP arguments. Context-local checks run under the
+policy lock at actual dispatch after audit I/O, and before returned disclosure.
+Checks cannot change another thread's call context or clone/reset the journal.
+A changed binding before dispatch refuses; a change after dispatch withholds
+data as uncertain. The toolbox uses this to bind recipes to the exact selected
+captures, schemas and trust registry while audit callbacks may block.
+
 The chain records a host-generated correlation identifier, canonical operation,
 UTC timestamp, principal/request/result hashes and effect state. It never accepts
 raw requests, results, credentials, private corpus or exception text as events.
