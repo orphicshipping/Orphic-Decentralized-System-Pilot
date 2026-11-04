@@ -370,7 +370,7 @@ def invoke(name, arguments=None, host=None):
         return host.invoke(name, arguments)
     if isinstance(host, PrincipalFacade):
         return host.invoke(name, arguments)
-    if isinstance(name, str) and name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_metrology_", "ncp_db_", "ncp_dbops_")):
+    if isinstance(name, str) and name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_metrology_", "ncp_db_", "ncp_dbops_", "ncp_pipeline_")):
         # Server toolbox calls require the principal/audited path above.
         # A raw profile object is not a replacement authorization boundary.
         raise ValueError("server_toolbox_requires_principal_host")
@@ -453,6 +453,7 @@ def capability_map():
     from .live_intake import profile_manifest as live_manifest
     from .metrology_operations import profile_manifest as metrology_manifest
     from .data_database import profile_manifest as database_manifest
+    from .survey_pipeline_profile import profile_manifest as pipeline_manifest
 
     tools = []
     for name, spec in sorted(TOOLS.items()):
@@ -494,7 +495,7 @@ def capability_map():
         "orchestration_profiles": [toolbox_manifest()],
         "observation_connection_profiles": [live_manifest()],
         "operational_metrology_profiles": [metrology_manifest()],
-        "data_systems_profiles": [database_manifest()],
+        "data_systems_profiles": [database_manifest(), pipeline_manifest()],
         "note": "Host-free tools use ciw.services.invoke. Plan and run tools use the host from ciw.services.open_demo. A row is not a grant.",
     }
 

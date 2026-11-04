@@ -704,8 +704,8 @@ class Session:
             return write_json(path, self._workspace())
 
     @classmethod
-    def from_workspace(cls, path: Path, output_dir: Path | None = None) -> Session:
-        """Reopen stored evidence/results without executing an analysis."""
+    def _read_workspace(cls, path: Path):
+        """Validate the whole saved workspace without creating files or authority."""
         workspace = read_json(path)
         if not isinstance(workspace, dict) or type(workspace.get("workspace_version")) is not int or workspace["workspace_version"] not in (1, 2, 3, 4):
             raise ValueError("Unsupported workspace format")
@@ -812,6 +812,20 @@ class Session:
         journal = (CorrectionJournal.restore(workspace.get("correction_journal"),
                     artifact_graph(run, result_map, execution_map, retained_workbench))
                    if workspace["workspace_version"] == 4 else CorrectionJournal())
+        return run, selection, result_map, execution_map, retained_workbench, journal
+
+    @classmethod
+    def inspect_workspace(cls, path: Path) -> dict:
+        """Detached validated history, with no output files or provider execution."""
+        run, selection, results, executions, workbench, journal = cls._read_workspace(path)
+        return copy.deepcopy({'run': run, 'selection': selection, 'results': results,
+            'executions': executions, 'workbench': workbench.serialize(),
+            'correction_journal': journal.serialize()})
+
+    @classmethod
+    def from_workspace(cls, path: Path, output_dir: Path | None = None) -> Session:
+        """Reopen stored evidence/results without executing an analysis."""
+        run, selection, result_map, execution_map, retained_workbench, journal = cls._read_workspace(path)
         restored = cls(run, output_dir or Path(path).parent)
         restored.selection = copy.deepcopy(selection)
         restored.results = copy.deepcopy(result_map)

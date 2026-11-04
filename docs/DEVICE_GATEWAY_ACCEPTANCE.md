@@ -1,8 +1,22 @@
 # Device gateway acceptance plan
 
-**Status: specified, not executed.** These cases qualify the proposed
-[Device and Instrument Gateway](DEVICE_GATEWAY.md). They are not test results,
-registered CIW operations or evidence that any physical device is supported.
+**Status: full gateway qualification remains open; a local read-only
+recorded/simulated subset has source execution evidence.** These cases qualify
+the proposed [Device and Instrument Gateway](DEVICE_GATEWAY.md). The case
+definitions themselves are not test results, registered CIW operations or
+evidence that any physical device is supported.
+
+The additive Atelier candidate at `ba722390` has 43 passing source checks
+(41 new observation tests, the existing command-disabled observation check and
+the corpus metadata check), with zero failures or skips. They cover read-only
+binding/argument refusal, fresh authorization and expiry, local ownership,
+idempotency, intent/partial/raw retention, process-exit recovery without resend,
+stop/deadline races, clock rollback, observation identity/order/missingness,
+declared calibration/unknown uncertainty and provider-free exported playback.
+They do not execute or qualify CNC commands, controller cancellation, physical
+completion, middleware, PDT acquisition integration or live equipment. The actual
+Atelier simulator wrapper only calls `SimCell.status` with independent sentinels
+for all command/recovery methods. This is not full DG-01 through DG-26 acceptance.
 
 ## Evidence required for a gate run
 
@@ -67,9 +81,9 @@ completion and physical assessment separate in the expected record.
 
 | Gate | Required additions | Current status |
 | --- | --- | --- |
-| G0: contract | Strict serializable schemas, explicit budgets, deterministic validation, event-transition tests and all record meanings fixed. | Proposed in the gateway contract; not implemented. |
-| G1: recorded sensor | Finite raw recording, explicit missing samples, durable journal, fault injection and provider-free reopen. | Pending implementation and tests. |
-| G2: Atelier simulation | Existing Atelier regressions plus full configuration binding, external authorization evaluation and durable recovery. | Existing tests inspected, not executed in this increment; new behavior pending. |
+| G0: contract | Strict serializable schemas, explicit budgets, deterministic validation, event-transition tests and all record meanings fixed. | Read-only recorded/simulated contracts implemented and source-tested locally. Full command/controller contracts remain proposed. |
+| G1: recorded sensor | Finite raw recording, explicit missing samples, durable journal, fault injection and provider-free reopen. | Local recording/fault/reopen checks and installed observation-journal checks pass. The missing build backend was resolved with pinned official wheels; no physical or production storage qualification. |
+| G2: Atelier simulation | Existing Atelier regressions plus full configuration binding, external authorization evaluation and durable recovery. | Existing `SimCell.status` wrapped and source-tested without command calls. Full CNC regression/action/token/recovery gates remain unrun and unqualified. |
 | G3: robot middleware simulation | One pinned middleware/controller setup, bounded joint-state/trajectory profile and timeout/cancellation tests. | No middleware installed or qualified by this increment. |
 | G4: shared PDT investigation | Qualified acquisition producer/importer, linked positioning and samples, installed-package comparison/estimation, save/reopen/replay with zero required skips. | Pending; existing acquisition support is not this gateway connection. |
 | G5: physical observation | One named instrument, read-only adapter qualification, independent timing/calibration/reference evidence and held-out measurement check. | Not performed. |
@@ -99,8 +113,15 @@ Source inspection covered the pinned Atelier runtime, tokens, policy, guard
 lattice, simulator and existing tests, the CNC seed tree, and PDT's acquisition,
 manifest and protocol documentation. It was not an execution test.
 
-Local shell/process startup fails with `helper_unknown_error: apply deny-read ACLs`.
-No gateway unit, installed-package, middleware or physical tests were run.
-Documentation structure, acceptance-case uniqueness, relative link targets,
-scope of changed files and published-content equality are checked separately;
-those checks do not close G0 through G6.
+The original documentation-only increment encountered
+`helper_unknown_error: apply deny-read ACLs`; it ran no gateway unit,
+installed-package, middleware or physical checks. That historical limitation
+does not qualify the subsequent local candidate. The source checks now listed
+above were executed separately. Its first offline wheel build failed while
+importing the missing `hatchling.build` backend. A subsequent local follow-up
+used the declared backend from hash-checked official wheel inputs and verified
+installed observation-journal and CIW retained-workbench packages without source
+package fallback. This closes that build blocker for the tested local subset;
+it does not close full command/runtime, PDT acquisition, hosted or physical
+gates. See [inspection and build provenance](INTERNAL_OPERATOR_RECOVERY.md).
+Documentation/link checks remain independent of execution qualification.

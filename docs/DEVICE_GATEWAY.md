@@ -1,7 +1,9 @@
 # Device and Instrument Gateway
 
-**Status: proposed contract and implementation sequence; no gateway runtime is
-delivered by this page.** PDT remains the laboratory. The gateway connects an
+**Status: full gateway contract remains proposed; an additive local Atelier
+candidate now implements recorded/simulated observation only.** The candidate
+is not published, registered as an MCP service or qualified for hardware. PDT
+remains the laboratory. The gateway connects an
 investigation to supported apparatus through typed capabilities, bounded
 requests and retained dispatch evidence. MCP, the terminal and direct software
 clients are interfaces to that boundary.
@@ -9,6 +11,49 @@ clients are interfaces to that boundary.
 This document owns the gateway proposal. [Acceptance cases](DEVICE_GATEWAY_ACCEPTANCE.md)
 define its unfinished qualification work. Existing executable coverage remains
 in [Integration coverage](INTEGRATION_COVERAGE.md).
+
+## Local observation candidate
+
+The local candidate adds `atelier_mcp.observation_gateway` inside Atelier on
+`ba722390d800ea214302cb40d8a6c75de723a79b`. Its existing simulator/runtime source
+is unchanged from the inspected `6a10bea7` baseline. No upstream source is
+vendored into ODSP and no command/default/security setting is changed.
+
+The candidate fixes closed device, plan, sample, event and export contracts for
+finite `synthetic_recording` and `simulated` profiles with exactly `observe_only`
+effects. It uses a private local SQLite journal, atomic plan/idempotency
+reservation, raw-chunk retention before semantic acceptance, current host
+authorization and an OS-held local acquisition lock. Recorded duplicates,
+dropouts, gaps, late data and source sessions are preserved. Unknown reads hold
+the binding and never automatically resend; explicit restart recovery makes no
+source call. Reopening exported history loads no provider, executable or grant.
+
+The finite simulator stage includes a fault-injecting recording simulator and
+an observation-only wrapper of the actual `SimCell.status`. The latter records
+the existing simulated XYZ pose without binding a job or calling any command or
+recovery method. It establishes interface behavior only. CNC action/token,
+material, extraction, envelope, stepdown and recovery qualification remains open.
+
+Atelier's `tests/test_observation_gateway.py`, its existing command-disabled
+observation test and corpus metadata check passed **43 source tests with zero
+skips/failures** on this local candidate. The new example
+`examples/recorded_sensor.py` writes exact original inputs, bindings, journals,
+events, held exports and an integrity manifest, then reopens those exports with
+sources unavailable. Its host issuer, clock and calibration are explicitly
+synthetic. No measurement, authenticated time, calibration or state admission
+is inferred from these checks.
+
+The earlier offline/no-index wheel attempt failed because `hatchling.build` was
+missing. The subsequent local operator follow-up resolved that build dependency
+using hash-pinned official-registry wheels, retained its provenance, and built
+and installed the Atelier and ODSP candidates without substituting a backend.
+Installed observation-journal and retained numerical/workbench checks now pass
+with source package imports excluded. This qualifies that local software subset,
+not Atelier's equipment-command runtime. Full gateway registration, the PDT
+acquisition adapter, robot middleware, hosted operation and a separately approved
+physical read-only pilot retain their own gates. See
+[private inspection and build provenance](INTERNAL_OPERATOR_RECOVERY.md), the
+profile gates below and the candidate's `docs/OBSERVATION_JOURNAL.md`.
 
 ## Source baseline inspected on 2026-09-26
 

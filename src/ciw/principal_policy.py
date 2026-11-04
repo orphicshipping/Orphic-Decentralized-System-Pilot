@@ -76,8 +76,9 @@ def _specs():
     from .live_intake import TOOLS as LIVE
     from .metrology_operations import TOOLS as METROLOGY
     from .data_database import TOOLS as DATA_DATABASE
+    from .survey_pipeline_profile import TOOLS as PIPELINE
     return {**TOOLS, **REFERENCE, **EVIDENCE_TOOLS, **LOGISTICS, **RECOMPILER, **SCHEMATIC, **CLOCKSYNC, **NISE,
-            **INTAKE, **PROOF, **DOMAIN_READ, **TOOLBOX, **LIVE, **METROLOGY, **DATA_DATABASE,
+            **INTAKE, **PROOF, **DOMAIN_READ, **TOOLBOX, **LIVE, **METROLOGY, **DATA_DATABASE, **PIPELINE,
             **{v["name"]: v for v in _tool_descriptions()}}
 
 
@@ -225,6 +226,8 @@ def _direct_science(name, arguments):
     retain their existing catalog/ledger capability identity rather than
     inventing a registered operation.
     """
+    if name == "ncp_pipeline_run":
+        return {"statistics.v1", "uncertainty.propagate.v1"}
     if name == "ncp_domain_run":
         from .domain_surface import OPERATIONS
         matches = [row[0] for row in OPERATIONS
@@ -348,12 +351,12 @@ class PrincipalPolicy:
         _require(scope is None or scope in grant["reference_scopes"])
         return grant
 
-    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None, intake=None, proof=None, domain_read=None, toolbox=None, live=None, metrology=None, data_database=None):
+    def facade(self, principal, *, control=None, reference=None, state=None, logistics=None, recompiler=None, schematic=None, clocksync=None, nise=None, intake=None, proof=None, domain_read=None, toolbox=None, live=None, metrology=None, data_database=None, pipeline=None):
         self.check_principal(principal)
         return PrincipalFacade(self, principal, control=control, reference=reference, state=state,
                                logistics=logistics, recompiler=recompiler, schematic=schematic, clocksync=clocksync, nise=nise,
                                intake=intake, proof=proof, domain_read=domain_read, toolbox=toolbox, live=live,
-                               metrology=metrology, data_database=data_database)
+                               metrology=metrology, data_database=data_database, pipeline=pipeline)
 
 
 class PrincipalFacade:
@@ -362,11 +365,14 @@ class PrincipalFacade:
 
     def __init__(self, policy, principal, **hosts):
         self.policy, self.principal, self.hosts = policy, principal, hosts
-        self.strict_mcp_input = any(hosts.get(key) is not None for key in ('nise', 'intake', 'proof', 'domain_read', 'toolbox', 'live', 'metrology', 'data_database'))
+        self.strict_mcp_input = any(hosts.get(key) is not None for key in ('nise', 'intake', 'proof', 'domain_read', 'toolbox', 'live', 'metrology', 'data_database', 'pipeline'))
         self.retained = None
-        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise", "intake", "proof", "domain_read", "toolbox", "live", "metrology", "data_database"):
+        for family in ("state", "logistics", "recompiler", "schematic", "clocksync", "nise", "intake", "proof", "domain_read", "toolbox", "live", "metrology", "data_database", "pipeline"):
             if hosts.get(family) is not None:
                 _require(getattr(hosts[family], "_bound_principal", None) == principal)
+        if hosts.get("pipeline") is not None:
+            from .survey_pipeline_profile import SurveyPipelineHost
+            _require(type(hosts["pipeline"]) is SurveyPipelineHost and hosts["pipeline"].policy is policy)
         if hosts.get("data_database") is not None:
             from .data_database import DataDatabaseHost
             _require(type(hosts["data_database"]) is DataDatabaseHost)
@@ -394,7 +400,8 @@ class PrincipalFacade:
                 "error": {"code": "principal_policy_refused"}}
 
     def _host(self, name):
-        family = ("data_database" if name.startswith(("ncp_db_", "ncp_dbops_")) else
+        family = ("pipeline" if name.startswith("ncp_pipeline_") else
+                  "data_database" if name.startswith(("ncp_db_", "ncp_dbops_")) else
                   "metrology" if name.startswith("ncp_metrology_") else
                   "live" if name.startswith("ncp_live_") else
                   "toolbox" if name.startswith(("ncp_toolbox_", "ncp_skill_")) else
@@ -410,6 +417,10 @@ class PrincipalFacade:
                   else "control")
         host = self.hosts.get(family)
         _require(host is not None)
+        if family == "pipeline":
+            from .survey_pipeline_profile import SurveyPipelineHost
+            _require(type(host) is SurveyPipelineHost and host.policy is self.policy
+                     and host._bound_principal == self.principal)
         return family, host
 
     def _science(self, grant, value):
@@ -504,10 +515,11 @@ class PrincipalFacade:
         from .mcp_toolbox import MCPToolboxHost
         from .live_intake import LiveIntakeHost
         from .data_database import DataDatabaseHost
-        if not name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_db_", "ncp_dbops_")):
+        from .survey_pipeline_profile import SurveyPipelineHost
+        if not name.startswith(("ncp_toolbox_", "ncp_skill_", "ncp_live_", "ncp_db_", "ncp_dbops_", "ncp_pipeline_")):
             return None
         family, host = self._host(name)
-        if type(host) not in (MCPToolboxHost, LiveIntakeHost, DataDatabaseHost):
+        if type(host) not in (MCPToolboxHost, LiveIntakeHost, DataDatabaseHost, SurveyPipelineHost):
             return None
         check = host.request_scope_guard(name, deepcopy(arguments))
         if check is None:
@@ -571,7 +583,9 @@ class PrincipalFacade:
                 value = host.call(name, arguments)
                 _require(type(value) is dict)
                 from .mcp_toolbox import MCPToolboxHost
-                before_effect = (family == "toolbox" and type(host) is MCPToolboxHost and
+                from .survey_pipeline_profile import SurveyPipelineHost
+                before_effect = (((family == "toolbox" and type(host) is MCPToolboxHost) or
+                                  (family == "pipeline" and type(host) is SurveyPipelineHost)) and
                                  value.get("effect_state") == "not_started" and
                                  (value.get("error") or {}).get("code") != "outcome_unknown")
                 if not read_only and value.get("status") != "ok" and not before_effect:
